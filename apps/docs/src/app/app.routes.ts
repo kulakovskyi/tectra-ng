@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { examplesResolver } from './doc-ui/examples.resolver';
+import { docResolver } from './doc-ui/doc.resolver';
 
 export const routes: Routes = [
   { path: '', loadComponent: () => import('./pages/home/home.page') },
@@ -11,7 +11,7 @@ export const routes: Routes = [
   {
     path: 'components/:name',
     loadComponent: () => import('./pages/component-doc/component-doc.page'),
-    resolve: { examples: examplesResolver },
+    resolve: { doc: docResolver },
   },
   { path: '**', redirectTo: '' },
 ];

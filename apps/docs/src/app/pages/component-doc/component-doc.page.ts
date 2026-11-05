@@ -2,9 +2,8 @@ import { ChangeDetectionStrategy, Component, computed, input, linkedSignal, sign
 import { RouterLink } from '@angular/router';
 import { TxOverlayInset } from '@tectra/core/overlay';
 import { TxIcon } from '@tectra/icons';
-import { DOC_COMPONENTS } from '../../../generated/registry';
 import { DOC_TABS } from '../../data/doc-tabs.data';
-import { DocTab } from '../../types/doc-component.interface';
+import { DocComponent, DocTab } from '../../types/doc-component.interface';
 import { A11yTab } from './tabs/a11y-tab/a11y-tab';
 import { ApiTab } from './tabs/api-tab/api-tab';
 import { FeaturesTab } from './tabs/features-tab/features-tab';
@@ -21,7 +20,7 @@ export default class ComponentDocPage {
   name = input.required<string>();
 
   readonly tabs = DOC_TABS;
-  doc = computed(() => DOC_COMPONENTS.find((component) => component.name === this.name()) ?? null);
+  readonly doc = input<DocComponent | null>(null);
   importLine = computed(() => {
     const doc = this.doc();
     return doc ? `import { Tx${doc.title} } from '${doc.importPath}';` : '';

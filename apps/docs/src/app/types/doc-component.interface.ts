@@ -59,4 +59,11 @@ export interface DocComponent {
   examples: DocExample[];
 }
 
+export interface DocComponentEntry {
+  name: string;
+  title: string;
+  category: string;
+  load: () => Promise<DocComponent>;
+}
+
 export type DocTab = 'features' | 'api' | 'theming' | 'a11y';

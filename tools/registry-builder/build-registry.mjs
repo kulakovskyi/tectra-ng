@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { buildSync } from 'esbuild';
 import hljs from 'highlight.js';
@@ -213,7 +213,7 @@ async function buildComponent(name) {
         title: titleCase(id),
         descriptionHtml: marked.parse(read(join(examplesDir, `${id}.md`))),
         files: await exampleFiles(read(join(examplesDir, `${id}.example.ts`))),
-        importPath: `../content/components/${name}/examples/${id}.example`,
+        importPath: `../../content/components/${name}/examples/${id}.example`,
       })),
     ),
   };
@@ -229,16 +229,18 @@ const components = (
   )
 ).sort((a, b) => a.title.localeCompare(b.title));
 
-const body = components
-  .map(({ examples, ...component }) => {
-    const exampleCode = examples
-      .map(({ importPath, ...example }) => {
-        const data = JSON.stringify(example).slice(0, -1);
-        return `${data}, load: () => import('${importPath}').then((m) => m.default) }`;
-      })
-      .join(',\n      ');
-    return `  { ...${JSON.stringify(component)},\n    examples: [\n      ${exampleCode}\n    ] }`;
-  })
+const componentModule = ({ examples, ...component }) => {
+  const exampleCode = examples
+    .map(({ importPath, ...example }) => {
+      const data = JSON.stringify(example).slice(0, -1);
+      return `${data}, load: () => import('${importPath}').then((m) => m.default) }`;
+    })
+    .join(',\n    ');
+  return `import { DocComponent } from '../../app/types/doc-component.interface';\n\nexport const DOC: DocComponent = {\n  ...${JSON.stringify(component)},\n  examples: [\n    ${exampleCode}\n  ],\n};\n`;
+};
+
+const index = components
+  .map(({ name, title, category }) => `  { name: ${JSON.stringify(name)}, title: ${JSON.stringify(title)}, category: ${JSON.stringify(category)}, load: () => import('./components/${name}').then((m) => m.DOC) }`)
   .join(',\n');
 
 const missing = components.flatMap(unresolved);
@@ -246,9 +248,14 @@ if (missing.length) {
   throw new Error(`registry: no type found in the source for ${missing.join(', ')} — check the README names and the member declarations`);
 }
 
-mkdirSync(outDir, { recursive: true });
+const componentsDir = join(outDir, 'components');
+rmSync(componentsDir, { recursive: true, force: true });
+mkdirSync(componentsDir, { recursive: true });
+for (const component of components) {
+  writeFileSync(join(componentsDir, `${component.name}.ts`), componentModule(component));
+}
 writeFileSync(
   join(outDir, 'registry.ts'),
-  `import { DocComponent } from '../app/types/doc-component.interface';\n\nexport const DOC_COMPONENTS: DocComponent[] = [\n${body}\n];\n`,
+  `import { DocComponentEntry } from '../app/types/doc-component.interface';\n\nexport const DOC_COMPONENTS: DocComponentEntry[] = [\n${index}\n];\n`,
 );
 console.log(`registry: ${components.length} components, ${components.reduce((sum, c) => sum + c.examples.length, 0)} examples`);
