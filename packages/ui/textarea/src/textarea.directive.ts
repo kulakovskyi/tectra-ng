@@ -1,3 +1,4 @@
+import { optionalNumber } from '@tectra/core/utils';
 import {
   DOCUMENT,
   DestroyRef,
@@ -9,7 +10,6 @@ import {
   effect,
   inject,
   input,
-  numberAttribute,
   output,
   signal,
 } from '@angular/core';
@@ -40,8 +40,8 @@ export class TxTextarea {
   private lastHeight = 0;
 
   readonly autoResize = input<boolean, unknown>(false, { transform: booleanAttribute });
-  readonly maxHeight = input<number | undefined, unknown>(undefined, { transform: numberAttribute });
-  readonly maxRows = input<number | undefined, unknown>(undefined, { transform: numberAttribute });
+  readonly maxHeight = input<number | undefined, unknown>(undefined, { transform: optionalNumber });
+  readonly maxRows = input<number | undefined, unknown>(undefined, { transform: optionalNumber });
   readonly resize = input<TxTextareaResize>('vertical');
   readonly borderless = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly dt = input<TectraDeepPartial<TectraTextareaTokens> | undefined>(undefined);

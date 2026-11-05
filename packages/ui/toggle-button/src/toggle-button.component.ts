@@ -6,7 +6,6 @@ import {
   forwardRef,
   inject,
   input,
-  numberAttribute,
   output,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -14,7 +13,7 @@ import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled 
 import { injectFluid } from '@tectra/core/fluid';
 import { TxRipple } from '@tectra/core/ripple';
 import { TxFormControlBase } from '@tectra/core/forms';
-import { optionalBoolean } from '@tectra/core/utils';
+import { optionalBoolean, optionalNumber } from '@tectra/core/utils';
 import { TxIcon, TxIconName, TxIconRegistry } from '@tectra/icons';
 import { TectraDeepPartial, TectraToggleButtonTokens, toStyleObject } from '@tectra/themes';
 import {
@@ -58,7 +57,7 @@ export class TxToggleButton extends TxFormControlBase<boolean> {
   readonly fluid = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
   // eslint-disable-next-line @angular-eslint/no-input-rename
   readonly disabledInput = input<boolean, unknown>(false, { alias: 'disabled', transform: booleanAttribute });
-  readonly tabindex = input<number | undefined, unknown>(undefined, { transform: numberAttribute });
+  readonly tabindex = input<number | undefined, unknown>(undefined, { transform: optionalNumber });
   readonly ariaLabel = input<string | undefined>(undefined);
   readonly dt = input<TectraDeepPartial<TectraToggleButtonTokens> | undefined>(undefined);
   readonly pt = input<TxPassThrough<TxToggleButtonPart, TxToggleButton> | undefined>(undefined);

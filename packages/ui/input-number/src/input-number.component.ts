@@ -21,7 +21,7 @@ import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled 
 import { injectFluid } from '@tectra/core/fluid';
 import { TxFormControlBase, injectFieldInvalid } from '@tectra/core/forms';
 import { TxLocaleService, injectTranslations } from '@tectra/core/i18n';
-import { optionalBoolean } from '@tectra/core/utils';
+import { optionalBoolean, optionalNumber } from '@tectra/core/utils';
 import { TxIcon, TxIconName, TxIconRegistry } from '@tectra/icons';
 import { TectraDeepPartial, TectraInputNumberTokens, toStyleObject } from '@tectra/themes';
 import { TxInput } from '@tectra/ui/input';
@@ -70,12 +70,12 @@ export class TxInputNumber extends TxFormControlBase<number> {
   readonly currencyDisplay = input<TxInputNumberCurrencyDisplay>('symbol');
   readonly locale = input<string | undefined>(undefined);
   readonly useGrouping = input<boolean, unknown>(true, { transform: booleanAttribute });
-  readonly minFractionDigits = input<number | undefined, unknown>(undefined, { transform: numberAttribute });
-  readonly maxFractionDigits = input<number | undefined, unknown>(undefined, { transform: numberAttribute });
+  readonly minFractionDigits = input<number | undefined, unknown>(undefined, { transform: optionalNumber });
+  readonly maxFractionDigits = input<number | undefined, unknown>(undefined, { transform: optionalNumber });
   readonly prefix = input<string | undefined>(undefined);
   readonly suffix = input<string | undefined>(undefined);
-  readonly min = input<number | undefined, unknown>(undefined, { transform: numberAttribute });
-  readonly max = input<number | undefined, unknown>(undefined, { transform: numberAttribute });
+  readonly min = input<number | undefined, unknown>(undefined, { transform: optionalNumber });
+  readonly max = input<number | undefined, unknown>(undefined, { transform: optionalNumber });
   readonly step = input<number, unknown>(1, { transform: numberAttribute });
   readonly showButtons = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly buttonLayout = input<TxInputNumberButtonLayout>('stacked');
@@ -96,7 +96,7 @@ export class TxInputNumber extends TxFormControlBase<number> {
   readonly inputId = input<string | undefined>(undefined);
   readonly ariaLabel = input<string | undefined>(undefined);
   readonly ariaLabelledBy = input<string | undefined>(undefined);
-  readonly tabindex = input<number | undefined, unknown>(undefined, { transform: numberAttribute });
+  readonly tabindex = input<number | undefined, unknown>(undefined, { transform: optionalNumber });
   readonly dt = input<TectraDeepPartial<TectraInputNumberTokens> | undefined>(undefined);
   readonly pt = input<TxPassThrough<TxInputNumberPart, TxInputNumber> | undefined>(undefined);
   readonly ptOptions = input<TxPassThroughOptions | undefined>(undefined);

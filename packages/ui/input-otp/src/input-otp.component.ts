@@ -17,7 +17,7 @@ import { uniqueId } from '@tectra/core/a11y';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
 import { TxFormControlBase, injectFieldInvalid } from '@tectra/core/forms';
 import { injectTranslations } from '@tectra/core/i18n';
-import { optionalBoolean } from '@tectra/core/utils';
+import { optionalBoolean, optionalNumber } from '@tectra/core/utils';
 import { TectraDeepPartial, TectraInputOtpTokens, toStyleObject } from '@tectra/themes';
 import { TxInput } from '@tectra/ui/input';
 import { TxInputOtpPart, TxInputOtpSize, TxInputOtpVariant } from './input-otp.types';
@@ -48,7 +48,7 @@ export class TxInputOtp extends TxFormControlBase<string> {
   readonly length = input<number, unknown>(6, { transform: numberAttribute });
   readonly integerOnly = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly mask = input<boolean, unknown>(false, { transform: booleanAttribute });
-  readonly groupSize = input<number | undefined, unknown>(undefined, { transform: numberAttribute });
+  readonly groupSize = input<number | undefined, unknown>(undefined, { transform: optionalNumber });
   readonly autoFocus = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly size = input<TxInputOtpSize>('medium');
   readonly variant = input<TxInputOtpVariant>('outlined');

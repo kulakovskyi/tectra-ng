@@ -9,7 +9,6 @@ import {
   forwardRef,
   inject,
   input,
-  numberAttribute,
   output,
   viewChild,
 } from '@angular/core';
@@ -17,7 +16,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { uniqueId } from '@tectra/core/a11y';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
 import { TxFormControlBase, injectFieldInvalid } from '@tectra/core/forms';
-import { optionalBoolean } from '@tectra/core/utils';
+import { optionalBoolean, optionalNumber } from '@tectra/core/utils';
 import { TxIcon, TxIconName, TxIconRegistry } from '@tectra/icons';
 import { TectraDeepPartial, TectraToggleSwitchTokens, toStyleObject } from '@tectra/themes';
 import { TxToggleSwitchHandleTemplate } from './toggle-switch-templates.directive';
@@ -64,7 +63,7 @@ export class TxToggleSwitch extends TxFormControlBase<unknown> {
   readonly inputId = input<string | undefined>(undefined);
   readonly ariaLabel = input<string | undefined>(undefined);
   readonly ariaLabelledBy = input<string | undefined>(undefined);
-  readonly tabindex = input<number | undefined, unknown>(undefined, { transform: numberAttribute });
+  readonly tabindex = input<number | undefined, unknown>(undefined, { transform: optionalNumber });
   readonly dt = input<TectraDeepPartial<TectraToggleSwitchTokens> | undefined>(undefined);
   readonly pt = input<TxPassThrough<TxToggleSwitchPart, TxToggleSwitch> | undefined>(undefined);
   readonly ptOptions = input<TxPassThroughOptions | undefined>(undefined);

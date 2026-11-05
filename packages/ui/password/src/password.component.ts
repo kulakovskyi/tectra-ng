@@ -13,7 +13,6 @@ import {
   forwardRef,
   inject,
   input,
-  numberAttribute,
   output,
   signal,
   viewChild,
@@ -25,7 +24,7 @@ import { injectFluid } from '@tectra/core/fluid';
 import { TxFormControlBase, injectFieldInvalid } from '@tectra/core/forms';
 import { injectTranslations } from '@tectra/core/i18n';
 import { TxOverlay, TxOverlayRef } from '@tectra/core/overlay';
-import { optionalBoolean } from '@tectra/core/utils';
+import { optionalBoolean, optionalNumber } from '@tectra/core/utils';
 import { TxIcon } from '@tectra/icons';
 import { TectraDeepPartial, TectraPasswordTokens, toStyleObject } from '@tectra/themes';
 import { TxInput } from '@tectra/ui/input';
@@ -78,12 +77,12 @@ export class TxPassword extends TxFormControlBase<string> {
   readonly disabledInput = input<boolean, unknown>(false, { alias: 'disabled', transform: booleanAttribute });
   readonly readonly = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly required = input<boolean, unknown>(false, { transform: booleanAttribute });
-  readonly maxlength = input<number | undefined, unknown>(undefined, { transform: numberAttribute });
+  readonly maxlength = input<number | undefined, unknown>(undefined, { transform: optionalNumber });
   readonly name = input<string | undefined>(undefined);
   readonly inputId = input<string | undefined>(undefined);
   readonly ariaLabel = input<string | undefined>(undefined);
   readonly ariaLabelledBy = input<string | undefined>(undefined);
-  readonly tabindex = input<number | undefined, unknown>(undefined, { transform: numberAttribute });
+  readonly tabindex = input<number | undefined, unknown>(undefined, { transform: optionalNumber });
   readonly dt = input<TectraDeepPartial<TectraPasswordTokens> | undefined>(undefined);
   readonly pt = input<TxPassThrough<TxPasswordPart, TxPassword> | undefined>(undefined);
   readonly ptOptions = input<TxPassThroughOptions | undefined>(undefined);

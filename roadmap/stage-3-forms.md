@@ -170,13 +170,15 @@ PrimeNG: Rating (`stars`, `readonly`, `allowHalf`, on / off icon templates, `(on
 - [x] Invalid / disabled from the form control; `rating` tokens, `dt` / `pt` / `unstyled`; `tx-field` names non-native controls with `aria-labelledby`
 - [x] Docs + tests: select, half, keyboard, readonly, clear, stars, icons, template, sizes, form, design tokens; e2e: hover preview, keys, half click, field naming
 
-## 3.14 Knob — `ui/knob`
+## 3.14 Knob — `ui/knob` ✅
 
-PrimeNG: Knob (`min`, `max`, `step`, `size`, `strokeWidth`, `valueColor`, `rangeColor`, `textColor`, `valueTemplate`, `showValue`, `readonly`). First app usage: 1: `limit`, `label`, drag + keys.
+PrimeNG: Knob (`min`, `max`, `step`, `size`, `strokeWidth`, `valueColor`, `rangeColor`, `textColor`, `valueTemplate`, `showValue`, `readonly`). First app usage: 1 (a ring slider): `min`, `max`, `step`, `limit`, `label`, drag + keys.
 
-- [ ] `<tx-knob>`: drag on the ring, keyboard (arrows, Page, Home / End), value template, colours from tokens
-- [ ] `limit` (max allowed below `max`)
-- [ ] Docs + tests: drag, keys, limit, readonly
+- [x] `<tx-knob>`: drag on the ring (pointer capture, snaps to `step`), keyboard (arrows, Page, Home / End), `role="slider"` with value text, value template (`valueTemplate` string or `txKnobValue`), colours from tokens (`dt`), `size`, `strokeWidth`, text scales with the size
+- [x] `arc`: `dial` (270°, gap at the bottom) or `ring` (full circle from the top, handle, no jump over the top)
+- [x] `limit` (max allowed below `max`, unreachable part of the ring marked, End stops there)
+- [x] Readonly, disabled / invalid from the form; `knob` tokens; `optionalNumber` in `@tectra/core/utils` for optional number inputs (an explicit `undefined` no longer becomes `NaN` in any component)
+- [x] Docs + tests: drag, keys, limit, readonly, ring, step, value template, template, sizes, form, design tokens; e2e: drag along the dial, keys, limit
 
 ## 3.15 Slider — `ui/slider`
 

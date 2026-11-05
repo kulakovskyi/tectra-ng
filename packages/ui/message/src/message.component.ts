@@ -1,8 +1,8 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, booleanAttribute, computed, contentChild, effect, inject, input, numberAttribute, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, booleanAttribute, computed, contentChild, effect, inject, input, output, signal } from '@angular/core';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
 import { injectTranslations } from '@tectra/core/i18n';
-import { optionalBoolean } from '@tectra/core/utils';
+import { optionalBoolean, optionalNumber } from '@tectra/core/utils';
 import { TxIcon, TxIconName, TxIconRegistry } from '@tectra/icons';
 import { TectraDeepPartial, TectraMessageTokens, toStyleObject } from '@tectra/themes';
 import { TxMessageCloseIconTemplate, TxMessageIconTemplate } from './message-templates.directive';
@@ -37,7 +37,7 @@ export class TxMessage {
   readonly variant = input<TxMessageVariant | undefined>(undefined);
   readonly closable = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly closeIcon = input<TxIconName | (string & {})>('times');
-  readonly life = input<number | undefined, unknown>(undefined, { transform: numberAttribute });
+  readonly life = input<number | undefined, unknown>(undefined, { transform: optionalNumber });
   readonly dt = input<TectraDeepPartial<TectraMessageTokens> | undefined>(undefined);
   readonly pt = input<TxPassThrough<TxMessagePart, TxMessage> | undefined>(undefined);
   readonly ptOptions = input<TxPassThroughOptions | undefined>(undefined);

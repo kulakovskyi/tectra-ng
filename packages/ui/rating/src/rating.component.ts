@@ -4,7 +4,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
 import { TxFormControlBase, injectFieldInvalid } from '@tectra/core/forms';
 import { TxLocaleService, injectTranslations } from '@tectra/core/i18n';
-import { optionalBoolean } from '@tectra/core/utils';
+import { optionalBoolean, optionalNumber } from '@tectra/core/utils';
 import { TxIcon, TxIconName, TxIconRegistry } from '@tectra/icons';
 import { TectraDeepPartial, TectraRatingTokens, toStyleObject } from '@tectra/themes';
 import { TxRatingOffIconTemplate, TxRatingOnIconTemplate } from './rating-templates.directive';
@@ -46,7 +46,7 @@ export class TxRating extends TxFormControlBase<number> {
   readonly readonly = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly ariaLabel = input<string | undefined>(undefined);
   readonly ariaLabelledBy = input<string | undefined>(undefined);
-  readonly tabindex = input<number | undefined, unknown>(undefined, { transform: numberAttribute });
+  readonly tabindex = input<number | undefined, unknown>(undefined, { transform: optionalNumber });
   readonly dt = input<TectraDeepPartial<TectraRatingTokens> | undefined>(undefined);
   readonly pt = input<TxPassThrough<TxRatingPart, TxRating> | undefined>(undefined);
   readonly ptOptions = input<TxPassThroughOptions | undefined>(undefined);

@@ -5,6 +5,7 @@ import { formFieldTokens } from './form-field.tokens';
 import { inputGroupTokens } from './input-group.tokens';
 import { inputNumberTokens } from './input-number.tokens';
 import { inputOtpTokens } from './input-otp.tokens';
+import { knobTokens } from './knob.tokens';
 import { floatLabelTokens, iftaLabelTokens, labelTokens } from './label.tokens';
 import { fieldTokens } from './field.tokens';
 import { fieldMessageTokens, messageTokens } from './message.tokens';
@@ -41,6 +42,7 @@ export const COMPONENT_TOKENS = {
   inputOtp: inputOtpTokens,
   inputNumber: inputNumberTokens,
   rating: ratingTokens,
+  knob: knobTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

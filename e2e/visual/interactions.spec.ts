@@ -390,6 +390,29 @@ test('rating previews on hover, rates with keys and is named by its field', asyn
   await expect(page.locator('rating-form-example').getByRole('slider', { name: 'How was your support chat?' })).toBeVisible();
 });
 
+test('knob follows a drag along the dial, steps with keys and stops at its limit', async ({ page }) => {
+  await page.goto('/components/knob');
+  const basic = page.locator('knob-basic-example');
+  const knob = basic.getByRole('slider', { name: 'Volume' });
+  const box = await knob.evaluate((element) => element.getBoundingClientRect().toJSON());
+  await page.mouse.move(box.x + box.width / 2, box.y + 4);
+  await page.mouse.down();
+  await expect(basic.locator('.hint')).toHaveText('Value: 50');
+  await page.mouse.move(box.x + box.width - 4, box.y + box.height / 2, { steps: 5 });
+  await page.mouse.up();
+  await expect(basic.locator('.hint')).toHaveText(/Value: 8[2-4]/);
+  await knob.focus();
+  await page.keyboard.press('Home');
+  await expect(basic.locator('.hint')).toHaveText('Value: 0');
+  await page.keyboard.press('PageUp');
+  await expect(knob).toHaveAttribute('aria-valuenow', '10');
+
+  const limit = page.locator('knob-limit-example').getByRole('slider');
+  await limit.focus();
+  await page.keyboard.press('End');
+  await expect(limit).toHaveAttribute('aria-valuenow', '20');
+});
+
 test.describe('with motion', () => {
   test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 

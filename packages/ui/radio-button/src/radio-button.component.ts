@@ -7,7 +7,6 @@ import {
   forwardRef,
   inject,
   input,
-  numberAttribute,
   output,
   viewChild,
 } from '@angular/core';
@@ -15,7 +14,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { uniqueId } from '@tectra/core/a11y';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
 import { TxFormControlBase, injectFieldInvalid } from '@tectra/core/forms';
-import { optionalBoolean } from '@tectra/core/utils';
+import { optionalBoolean, optionalNumber } from '@tectra/core/utils';
 import { TectraDeepPartial, TectraRadioButtonTokens, toStyleObject } from '@tectra/themes';
 import { TX_RADIO_GROUP } from './radio-group.token';
 import { TxRadioButtonChangeEvent, TxRadioButtonPart, TxRadioButtonSize, TxRadioButtonVariant } from './radio-button.types';
@@ -61,7 +60,7 @@ export class TxRadioButton extends TxFormControlBase<unknown> {
   readonly inputId = input<string | undefined>(undefined);
   readonly ariaLabel = input<string | undefined>(undefined);
   readonly ariaLabelledBy = input<string | undefined>(undefined);
-  readonly tabindex = input<number | undefined, unknown>(undefined, { transform: numberAttribute });
+  readonly tabindex = input<number | undefined, unknown>(undefined, { transform: optionalNumber });
   readonly dt = input<TectraDeepPartial<TectraRadioButtonTokens> | undefined>(undefined);
   readonly pt = input<TxPassThrough<TxRadioButtonPart, TxRadioButton> | undefined>(undefined);
   readonly ptOptions = input<TxPassThroughOptions | undefined>(undefined);

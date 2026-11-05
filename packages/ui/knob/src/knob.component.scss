@@ -1,0 +1,94 @@
+:host {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.tx-knob__control {
+  position: relative;
+  container-type: size;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  user-select: none;
+}
+
+.tx-knob__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.tx-knob__text {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+:host([data-styled]) .tx-knob__control {
+  border-radius: 50%;
+  outline: none;
+  cursor: grab;
+
+  &:focus-visible {
+    outline: var(--tx-knob-focus-ring-width) solid var(--tx-knob-focus-ring-color);
+    outline-offset: var(--tx-knob-focus-ring-offset);
+  }
+}
+
+:host([data-styled].tx-knob--dragging) .tx-knob__control {
+  cursor: grabbing;
+}
+
+:host([data-styled]) .tx-knob__range {
+  stroke: var(--tx-knob-range-color);
+  stroke-linecap: round;
+}
+
+:host([data-styled]) .tx-knob__limit {
+  stroke: var(--tx-knob-limit-color);
+}
+
+:host([data-styled]) .tx-knob__value {
+  stroke: var(--tx-knob-value-color);
+  stroke-linecap: round;
+  transition: stroke-dasharray var(--tx-knob-transition-duration);
+}
+
+:host([data-styled].tx-knob--dragging) .tx-knob__value {
+  transition: none;
+}
+
+:host([data-styled]) .tx-knob__handle {
+  fill: var(--tx-knob-handle-color);
+  stroke: var(--tx-knob-handle-border-color);
+  stroke-width: 2.5;
+}
+
+:host([data-styled]) .tx-knob__text {
+  color: var(--tx-knob-text-color);
+  font-family: var(--tx-font-family);
+  font-size: var(--tx-knob-text-font-size);
+  font-weight: var(--tx-knob-text-font-weight);
+}
+
+:host([data-styled].tx-knob--invalid) .tx-knob__range {
+  stroke: var(--tx-form-field-invalid-border-color);
+}
+
+:host([data-styled].tx-knob--readonly) .tx-knob__control {
+  cursor: default;
+}
+
+:host([data-styled].tx-knob--disabled) .tx-knob__control {
+  cursor: not-allowed;
+  opacity: var(--tx-knob-disabled-opacity);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) .tx-knob__value {
+    transition: none;
+  }
+}

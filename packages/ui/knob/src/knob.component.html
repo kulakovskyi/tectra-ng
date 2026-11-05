@@ -1,0 +1,83 @@
+<div
+  class="tx-knob__control"
+  role="slider"
+  [attr.tabindex]="isDisabled() ? -1 : (tabindex() ?? 0)"
+  [attr.aria-label]="ariaLabel() ?? null"
+  [attr.aria-labelledby]="ariaLabelledBy() ?? null"
+  [attr.aria-valuemin]="min()"
+  [attr.aria-valuemax]="ceiling()"
+  [attr.aria-valuenow]="current()"
+  [attr.aria-valuetext]="text()"
+  [attr.aria-readonly]="readonly() || null"
+  [attr.aria-disabled]="isDisabled() || null"
+  [attr.aria-invalid]="isInvalid() || null"
+  (pointerdown)="onPointerDown($event)"
+  (pointermove)="onPointerMove($event)"
+  (pointerup)="onPointerUp()"
+  (pointercancel)="onPointerUp()"
+  (keydown)="onKeydown($event)"
+  (blur)="onBlur()"
+>
+  <svg #svg class="tx-knob__svg" viewBox="0 0 100 100" aria-hidden="true" [class]="passThrough().svg?.class" [style]="passThrough().svg?.style">
+    <circle
+      class="tx-knob__range"
+      pathLength="100"
+      fill="none"
+      [class]="passThrough().range?.class"
+      [style]="passThrough().range?.style"
+      [attr.cx]="center"
+      [attr.cy]="center"
+      [attr.r]="radius()"
+      [attr.stroke-width]="strokeWidth()"
+      [attr.stroke-dasharray]="rangeDash()"
+      [attr.transform]="rotate()"
+    />
+    @if (limit() !== undefined && limitFraction() < 1) {
+      <circle
+        class="tx-knob__limit"
+        pathLength="100"
+        fill="none"
+        [attr.cx]="center"
+        [attr.cy]="center"
+        [attr.r]="radius()"
+        [attr.stroke-width]="strokeWidth()"
+        [attr.stroke-dasharray]="limitDash()"
+        [attr.transform]="rotate()"
+      />
+    }
+    @if (fraction() > 0) {
+      <circle
+        class="tx-knob__value"
+        pathLength="100"
+        fill="none"
+        [class]="passThrough().value?.class"
+        [style]="passThrough().value?.style"
+        [attr.cx]="center"
+        [attr.cy]="center"
+        [attr.r]="radius()"
+        [attr.stroke-width]="strokeWidth()"
+        [attr.stroke-dasharray]="valueDash()"
+        [attr.transform]="rotate()"
+      />
+    }
+    @if (hasHandle()) {
+      <circle
+        class="tx-knob__handle"
+        [class]="passThrough().handle?.class"
+        [style]="passThrough().handle?.style"
+        [attr.cx]="handle().x"
+        [attr.cy]="handle().y"
+        [attr.r]="strokeWidth() / 2 + 2"
+      />
+    }
+  </svg>
+  @if (showValue()) {
+    <span class="tx-knob__text" [class]="passThrough().text?.class" [style]="passThrough().text?.style">
+      @if (template(); as custom) {
+        <ng-container [ngTemplateOutlet]="custom.templateRef" [ngTemplateOutletContext]="{ $implicit: current() }" />
+      } @else {
+        {{ text() }}
+      }
+    </span>
+  }
+</div>

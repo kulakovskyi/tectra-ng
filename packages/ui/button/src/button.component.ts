@@ -10,14 +10,13 @@ import {
   contentChild,
   inject,
   input,
-  numberAttribute,
   signal,
   viewChild,
 } from '@angular/core';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
 import { injectFluid } from '@tectra/core/fluid';
 import { TxRipple } from '@tectra/core/ripple';
-import { optionalBoolean } from '@tectra/core/utils';
+import { optionalBoolean, optionalNumber } from '@tectra/core/utils';
 import { TxIcon, TxIconName, TxIconRegistry } from '@tectra/icons';
 import { TectraButtonTokens, TectraDeepPartial, toStyleObject } from '@tectra/themes';
 import { TxBadge, TxBadgeSeverity } from '@tectra/ui/badge';
@@ -71,7 +70,7 @@ export class TxButton {
   readonly plain = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly fluid = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
   readonly disabled = input<boolean, unknown>(false, { transform: booleanAttribute });
-  readonly tabindex = input<number | undefined, unknown>(undefined, { transform: numberAttribute });
+  readonly tabindex = input<number | undefined, unknown>(undefined, { transform: optionalNumber });
   readonly icon = input<TxIconName | (string & {}) | undefined>(undefined);
   readonly iconPos = input<TxButtonIconPosition>('left');
   readonly iconOnly = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
