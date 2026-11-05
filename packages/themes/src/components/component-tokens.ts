@@ -1,5 +1,6 @@
 import { badgeTokens } from './badge.tokens';
 import { buttonTokens } from './button.tokens';
+import { checkboxTokens } from './checkbox.tokens';
 import { formFieldTokens } from './form-field.tokens';
 import { inputGroupTokens } from './input-group.tokens';
 import { floatLabelTokens, iftaLabelTokens, labelTokens } from './label.tokens';
@@ -27,6 +28,7 @@ export const COMPONENT_TOKENS = {
   fieldMessage: fieldMessageTokens,
   field: fieldTokens,
   textarea: textareaTokens,
+  checkbox: checkboxTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

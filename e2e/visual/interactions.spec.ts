@@ -199,6 +199,31 @@ test('textarea grows with the text, stops at its limit and counts characters', a
   await expect(counter.locator('tx-textarea-counter')).toHaveText('5 / 160');
 });
 
+test('checkbox toggles with Space and its label; select all fills the group', async ({ page }) => {
+  await page.goto('/components/checkbox');
+  const basic = page.locator('checkbox-basic-example');
+  const box = basic.getByRole('checkbox', { name: 'Remember me on this device' });
+  await expect(box).toBeChecked();
+  await basic.getByText('Remember me on this device').click();
+  await expect(box).not.toBeChecked();
+  await box.focus();
+  await page.keyboard.press('Space');
+  await expect(box).toBeChecked();
+
+  const group = page.locator('checkbox-group-example');
+  const selectAll = group.getByRole('checkbox', { name: 'Select all' });
+  expect(await selectAll.evaluate((element: HTMLInputElement) => element.indeterminate)).toBe(true);
+  await selectAll.click();
+  for (const name of ['View pages', 'Edit pages', 'Publish', 'Manage billing']) {
+    await expect(group.getByRole('checkbox', { name })).toBeChecked();
+  }
+  await expect(group.locator('.hint')).toContainText('"view", "edit", "publish", "billing"');
+
+  const tile = page.locator('checkbox-tiles-example tx-checkbox').first();
+  await tile.locator('.tx-checkbox__description').click();
+  await expect(tile.getByRole('checkbox')).toBeChecked();
+});
+
 test.describe('with motion', () => {
   test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 

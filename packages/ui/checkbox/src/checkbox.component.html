@@ -1,0 +1,45 @@
+<span class="tx-checkbox__box" [class]="passThrough().box?.class" [style]="passThrough().box?.style">
+  <input
+    #input
+    type="checkbox"
+    class="tx-checkbox__input"
+    [class]="passThrough().input?.class"
+    [style]="passThrough().input?.style"
+    [id]="resolvedId()"
+    [checked]="checked()"
+    [indeterminate]="indeterminate() && !checked()"
+    [disabled]="isDisabled()"
+    [required]="required()"
+    [attr.name]="resolvedName() ?? null"
+    [attr.tabindex]="tabindex() ?? null"
+    [attr.aria-label]="ariaLabel() ?? null"
+    [attr.aria-labelledby]="ariaLabelledBy() ?? null"
+    [attr.aria-describedby]="description() ? descriptionId : null"
+    [attr.aria-invalid]="isInvalid() || null"
+    [attr.aria-readonly]="readonly() || null"
+    (click)="onInputClick($event)"
+    (change)="onInputChange($event)"
+    (blur)="onBlur()"
+  />
+  <span class="tx-checkbox__indicator" aria-hidden="true" [class]="passThrough().icon?.class" [style]="passThrough().icon?.style">
+    @if (iconTemplate(); as template) {
+      <ng-container [ngTemplateOutlet]="template.templateRef" [ngTemplateOutletContext]="{ $implicit: checked(), indeterminate: indeterminate() && !checked() }" />
+    } @else if (checked() || indeterminate()) {
+      @if (iconName(); as name) {
+        <tx-icon [name]="name" />
+      } @else {
+        <span [class]="iconClass()"></span>
+      }
+    }
+  </span>
+</span>
+<span class="tx-checkbox__text">
+  <label class="tx-checkbox__label" [for]="resolvedId()" [class]="passThrough().label?.class" [style]="passThrough().label?.style"
+    >{{ label() }}<ng-content
+  /></label>
+  @if (description()) {
+    <span class="tx-checkbox__description" [id]="descriptionId" [class]="passThrough().description?.class" [style]="passThrough().description?.style">{{
+      description()
+    }}</span>
+  }
+</span>

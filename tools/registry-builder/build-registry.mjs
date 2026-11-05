@@ -129,14 +129,17 @@ function readSource(packageDir) {
 
   const members = {};
   for (const m of source.matchAll(/^\s*(?:(?:readonly|protected|public|private)\s+)*(\w+)\s*=\s*(input|model)(\.required)?(?:<(.+?)>)?\(([^)]*)\);/gm)) {
-    const [, field, , required, generic, args] = m;
+    const [, field, kind, required, generic, args] = m;
     const name = args.match(/alias:\s*'(\w+)'/)?.[1] ?? field;
     const type = (generic ?? 'unknown').replace(/,\s*unknown$/, '');
     const fallback = args.split(/,\s*\{/)[0].trim();
-    members[name] = { type: resolveType(type), default: required ? 'required' : fallback || '—' };
+    members[name] ??= { type: resolveType(type), default: required ? 'required' : fallback || '—' };
+    if (kind === 'model') {
+      members[`${name}Change`] ??= { type: `EventEmitter<${resolveType(type)}>`, default: '—' };
+    }
   }
   for (const m of source.matchAll(/^\s*(?:(?:readonly|protected|public|private)\s+)*(\w+)\s*=\s*output(?:<(.+?)>)?\(\)/gm)) {
-    members[m[1]] = { type: `EventEmitter<${m[2] ?? 'void'}>`, default: '—' };
+    members[m[1]] ??= { type: `EventEmitter<${m[2] ?? 'void'}>`, default: '—' };
   }
 
   const tokens = [...source.matchAll(/\w+:\s*'(--tx-[\w-]+)'/g)].map((m) => {

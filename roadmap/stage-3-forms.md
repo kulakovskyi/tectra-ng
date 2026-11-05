@@ -89,17 +89,17 @@ PrimeNG: Textarea (`autoResize`, `onResize`). First app usage: 68: `rows`, `resi
 - [x] Docs: basic, auto resize, max rows, resize, counter, borderless, variants, states, sizes, form, design tokens
 - [x] Tests: auto resize grows and stops at max, form writes, counter, classes / tokens, invalid from the control; e2e: real growth to the limit, counter; registry builder reads inputs of host directives (`'dt: fieldDt'`)
 
-## 3.6 Checkbox — `ui/checkbox`
+## 3.6 Checkbox — `ui/checkbox` ✅
 
-PrimeNG: Checkbox (`binary`, `value` for groups, `indeterminate`, `trueValue` / `falseValue`, `checkboxIcon`, `(onChange)`, icon template). First app usage: 73: `label`, `icon`, `selectChange`.
+PrimeNG: Checkbox (`binary`, `value` for groups, `indeterminate`, `trueValue` / `falseValue`, `checkboxIcon`, `(onChange)`, icon template). First app usage: 73 (104 tags): `label`, `icon`, `control` / `ngModel`, `selectChange`.
 
-- [ ] `<tx-checkbox>` binary and group mode (array value of the form control)
-- [ ] `indeterminate`, `trueValue` / `falseValue`
-- [ ] Label (click on the label toggles), icon template
-- [ ] `<tx-checkbox-group>` helper with `select all`
-- [ ] Selection-tile look (checkboxes as option tiles)
-- [ ] Keyboard: Space toggles; native input under the hood
-- [ ] Docs + tests: binary, group, indeterminate, true / false values, disabled, invalid
+- [x] `<tx-checkbox>` on a native `input type="checkbox"`: binary by default, array mode with `value` (own form control or the group's), `binary` to force
+- [x] `indeterminate` (two-way, `aria-checked="mixed"` from the native property), `trueValue` / `falseValue`
+- [x] Label (click toggles), content after the label, `description` with `aria-describedby`, `icon` / `indeterminateIcon`, `txCheckboxIcon` template, `(changed)` `{ checked, value, originalEvent }`
+- [x] `<tx-checkbox-group>`: array value, `selectAll` (mixed when partial, translated label), vertical / horizontal, `name` / `size` / `variant` / disabled / invalid passed to the items, `role="group"`
+- [x] Selection-tile look (`tile`: the whole card toggles, checked border and background)
+- [x] Keyboard: Space toggles; native input under the hood; `readonly`, `disabled`, `required`, `inputId`, `ariaLabel`, `ariaLabelledBy`, `tabindex` (no `autofocus` — the a11y lint forbids it); sizes, `filled`; `checkbox` tokens, `dt` / `pt` / `unstyled`
+- [x] Docs + tests: binary, description, array, group + select all, indeterminate, true / false values, tiles, sizes, variants, states (disabled / readonly / invalid), icon, form with `requiredTrue`, design tokens; e2e: Space, label click, select all, tile click. Registry builder: `model()` outputs (`indeterminateChange`), first declaration wins
 
 ## 3.7 Radio button — `ui/radio-button`
 
