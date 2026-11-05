@@ -65,7 +65,14 @@ export function txAnchorPane(overlayRef: OverlayRef, origin: Element, chrome?: T
     layer.animate([], { timeline: new Timeline(tracks[index]), fill: 'both' }),
   );
 
+  let placed = '';
   const follow = () => {
+    const { top, right, bottom, left, transform } = pane.style;
+    const placement = [top, right, bottom, left, transform].join('|');
+    if (placement === placed) {
+      return;
+    }
+    placed = placement;
     tracks.forEach((track, index) => {
       const base = layers[index] === pane ? `${pane.style.transform} `.trimStart() : '';
       const from = offset(track);

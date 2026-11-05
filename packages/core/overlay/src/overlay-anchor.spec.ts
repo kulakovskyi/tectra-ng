@@ -76,6 +76,14 @@ describe('txAnchorPane', () => {
     expect(host.style.clipPath).toBe('');
   });
 
+  it('keeps its scroll base when only non-position styles change, so a closing panel does not jump', async () => {
+    txAnchorPane(overlayRef, origin);
+    scrollable(body, 260, 900, 300);
+    pane.style.pointerEvents = 'none';
+    await Promise.resolve();
+    expect(keyframes.get(pane)).toEqual([{ transform: 'translateY(120px)' }, { transform: 'translateY(-480px)' }]);
+  });
+
   it('stops following once the overlay detaches', () => {
     txAnchorPane(overlayRef, origin);
     detachments.next();

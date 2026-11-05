@@ -118,4 +118,38 @@ test.describe('with motion', () => {
     await page.keyboard.press('Escape');
     expect(new Set(await sides)).toEqual(new Set(['top']));
   });
+
+  test('popover opened before the page scrolled fades out where it is, without a jump', async ({ page }) => {
+    await page.goto('/components/popover');
+    const button = page.locator('popover-arrow-example').getByRole('button', { name: 'bottom', exact: true });
+    await button.evaluate((element) => element.scrollIntoView({ block: 'center' }));
+    await button.click();
+    const popover = page.locator('.tx-popover');
+    await expect(popover).toBeVisible();
+    await page.waitForTimeout(250);
+    await page.evaluate(() => window.scrollBy({ top: 120, behavior: 'instant' }));
+    const origin = await button.elementHandle();
+    const gaps = popover.evaluate(
+      (element, anchor) =>
+        new Promise<number[]>((resolve) => {
+          const seen: number[] = [];
+          const tick = () => {
+            if (!element.isConnected) {
+              resolve(seen);
+              return;
+            }
+            seen.push(element.getBoundingClientRect().top - (anchor as Element).getBoundingClientRect().bottom);
+            requestAnimationFrame(tick);
+          };
+          tick();
+        }),
+      origin,
+    );
+    await page.keyboard.press('Escape');
+    const seen = await gaps;
+    expect(seen.length).toBeGreaterThan(1);
+    for (const gap of seen) {
+      expect(Math.abs(gap - seen[0])).toBeLessThan(6);
+    }
+  });
 });
