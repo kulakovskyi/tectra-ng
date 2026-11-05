@@ -31,10 +31,6 @@ export class TxDialogService {
       disposeOnNavigation: true,
     });
     overlayRef.hostElement.style.zIndex = 'var(--tx-layer-modal)';
-    if (!modal) {
-      overlayRef.overlayElement.style.pointerEvents = 'none';
-      overlayRef.hostElement.style.pointerEvents = 'none';
-    }
 
     const ref = new TxDialogRef<R, C>(uniqueId('tx-dialog'), config as TxDialogConfig<unknown, R>);
     const injector = Injector.create({
@@ -46,6 +42,10 @@ export class TxDialogService {
       ],
     });
     const container = overlayRef.attach(new ComponentPortal(TxDialogContainer, null, injector));
+    if (!modal) {
+      overlayRef.overlayElement.style.pointerEvents = 'none';
+      overlayRef.hostElement.style.pointerEvents = 'none';
+    }
     container.changeDetectorRef.detectChanges();
     const componentRef = container.instance.attach(content, injector, config.data);
     ref.componentInstance = componentRef?.instance ?? null;

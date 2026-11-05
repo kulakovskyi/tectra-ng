@@ -54,14 +54,14 @@ PrimeNG: Dialog (`visible`, `header`, `modal`, `closable`, `dismissableMask`, `c
 - Found on the way: docs leads use `max-width` in `ch`, so a long lead reflows when the web font arrives and shifts the page — keep page and example leads short
 
 
-## 5.5 Drawer — `ui/drawer`
+## 5.5 Drawer — `ui/drawer` ✅
 
 PrimeNG: Drawer (`visible`, `position` left / right / top / bottom / full, `modal`, `dismissible`, `closeOnEscape`, `blockScroll`, `header`, `fullScreen`, templates). First app: 14 drawers — `[(visible)]`, `header`, a normal and a wide size, an optional footer slot; always right, modal, dismissable, Escape, block scroll.
 
-- [ ] `<tx-drawer [(visible)]>`: positions left / right / top / bottom, `size` (`small` / `medium` / `large` / `full` or a CSS size), `header` text or slot, footer slot, close button
-- [ ] `modal` with mask, `dismissable`, `closeOnEscape`, `blockScroll`, slide motion (fade with reduced motion); `TxDialog.open(…, { drawer: 'right' })` for drawers from code
-- [ ] Accessible like the dialog (focus trap, `aria-modal`, named by the header, focus back)
-- [ ] Docs + tests: positions, sizes, footer, form, non-modal, from code, design tokens; e2e: slides in, focus trap, Escape
+- [x] `<tx-drawer [(visible)]>`: positions left / right / top / bottom, `size` (`small` / `medium` / `large` / `full` or a CSS size), `header` text or slot, footer slot, close button
+- [x] `modal` with mask, `dismissable`, `closeOnEscape`, `blockScroll`, slide motion (fade with reduced motion); `TxDialog.open(…, { drawer: 'right' })` for drawers from code
+- [x] Accessible like the dialog (focus trap, `aria-modal`, named by the header, focus back)
+- [x] Docs + tests: positions, sizes, footer, form, non-modal, from code, design tokens; e2e: slides in, focus trap, Escape
 
 ## 5.6 Confirm — `ui/confirm-dialog`, `ui/confirm-popup` + `TxConfirm` service
 
