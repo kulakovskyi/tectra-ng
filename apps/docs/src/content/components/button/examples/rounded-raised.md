@@ -1,1 +1,1 @@
-`rounded` for fully round corners, `raised` for a shadow.
+Round corners and a shadow.

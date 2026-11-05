@@ -1,1 +1,1 @@
-`icon` takes a `@tectra/icons` name; `iconPos` puts it on any side.
+Any side: `iconPos` left, right, top or bottom.

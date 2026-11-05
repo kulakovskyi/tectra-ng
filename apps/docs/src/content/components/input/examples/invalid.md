@@ -1,1 +1,1 @@
-`invalid` paints the field red and sets `aria-invalid`. Leave the field empty and click outside.
+Leave it empty and click outside.

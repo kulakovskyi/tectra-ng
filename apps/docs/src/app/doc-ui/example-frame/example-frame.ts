@@ -1,5 +1,5 @@
 import { NgComponentOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Type, effect, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Type, input, signal } from '@angular/core';
 import { TxButton } from '@tectra/ui/button';
 import { DocExample } from '../../types/doc-component.interface';
 
@@ -12,19 +12,18 @@ import { DocExample } from '../../types/doc-component.interface';
 })
 export class ExampleFrame {
   example = input.required<DocExample>();
+  component = input<Type<unknown> | null>(null);
 
-  component = signal<Type<unknown> | null>(null);
   isCodeVisible = signal(false);
-
-  constructor() {
-    effect(() => {
-      const example = this.example();
-      this.component.set(null);
-      example.load().then((component) => this.component.set(component));
-    });
-  }
+  isCopied = signal(false);
 
   toggleCode(): void {
     this.isCodeVisible.update((visible) => !visible);
+  }
+
+  copyCode(): void {
+    navigator.clipboard?.writeText(this.example().source);
+    this.isCopied.set(true);
+    setTimeout(() => this.isCopied.set(false), 1600);
   }
 }

@@ -4,4 +4,4 @@ examples: severity, label, variants, icons, brands, icon-only, ripple, loading, 
 ---
 # Button
 
-Triggers an action. Put `txButton` on a native `button` or `a` — the element keeps all its native behaviour: `type`, `disabled`, `href`, focus and keyboard.
+Triggers an action. Put `txButton` on a native `button` or `a`.

@@ -1,8 +1,17 @@
 @if (doc(); as doc) {
-  <p class="eyebrow">{{ doc.category }}</p>
-  <h1>{{ doc.title }}</h1>
-  <div class="description" [innerHTML]="doc.descriptionHtml"></div>
-  <pre class="code"><code>{{ importLine() }}</code></pre>
+  <header class="doc-head">
+    <div class="doc-head__crumbs">
+      <a routerLink="/components/button">Components</a>
+      <tx-icon [name]="'angle-right'" />
+      <span>{{ doc.category }}</span>
+    </div>
+    <h1 class="doc-head__title">{{ doc.title }}</h1>
+    <div class="doc-head__lead" [innerHTML]="doc.descriptionHtml"></div>
+    <button type="button" class="import" (click)="copyImport()">
+      <code>{{ importLine() }}</code>
+      <tx-icon [name]="isImportCopied() ? 'check' : 'copy'" />
+    </button>
+  </header>
 
   <div class="tabs" role="tablist">
     @for (tab of tabs; track tab.id) {
@@ -13,25 +22,32 @@
         [class.tabs__tab--active]="activeTab() === tab.id"
         [attr.aria-selected]="activeTab() === tab.id"
         (click)="activeTab.set(tab.id)"
-      >{{ tab.label }}</button>
+      >
+        {{ tab.label }}
+        @if (tab.id === 'features') {
+          <span class="tabs__count">{{ doc.examples.length }}</span>
+        }
+      </button>
     }
   </div>
 
-  @switch (activeTab()) {
-    @case ('features') {
-      <docs-features-tab [doc]="doc" />
+  <div class="tab-panel">
+    @switch (activeTab()) {
+      @case ('features') {
+        <docs-features-tab [doc]="doc" />
+      }
+      @case ('api') {
+        <docs-api-tab [doc]="doc" />
+      }
+      @case ('theming') {
+        <docs-theming-tab [doc]="doc" />
+      }
+      @case ('a11y') {
+        <docs-a11y-tab [doc]="doc" />
+      }
     }
-    @case ('api') {
-      <docs-api-tab [doc]="doc" />
-    }
-    @case ('theming') {
-      <docs-theming-tab [doc]="doc" />
-    }
-    @case ('a11y') {
-      <docs-a11y-tab [doc]="doc" />
-    }
-  }
+  </div>
 } @else {
-  <h1>Not found</h1>
-  <p class="lead">There is no component called "{{ name() }}".</p>
+  <h1 class="doc-head__title">Not found</h1>
+  <p class="doc-head__lead">There is no component called "{{ name() }}".</p>
 }

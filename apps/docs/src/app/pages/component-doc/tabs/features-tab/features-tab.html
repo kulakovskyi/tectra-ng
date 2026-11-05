@@ -1,0 +1,15 @@
+<div class="features">
+  <div class="features__list" [class.features__list--ready]="!!components()">
+    @if (components(); as components) {
+      @for (example of doc().examples; track example.id) {
+        <docs-example-frame [example]="example" [component]="components.get(example.id) ?? null" />
+      }
+    }
+  </div>
+  <nav class="toc" aria-label="On this page">
+    <span class="toc__title">On this page</span>
+    @for (example of doc().examples; track example.id) {
+      <a class="toc__link" [href]="'#' + example.id" (click)="scrollTo($event, example.id)">{{ example.title }}</a>
+    }
+  </nav>
+</div>

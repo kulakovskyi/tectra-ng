@@ -1,35 +1,155 @@
-.description {
+:host {
+  display: block;
+  max-width: 1120px;
+}
+
+.doc-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--tx-space-3);
+  margin-bottom: var(--tx-space-8);
+}
+
+.doc-head__crumbs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   color: var(--tx-text-muted);
-  font-size: var(--tx-font-size-lg);
+  font-size: var(--tx-font-size-sm);
+
+  a {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      color: var(--tx-text-primary);
+    }
+  }
+}
+
+.doc-head__title {
+  margin: 0;
+  font-size: clamp(32px, 4vw, 44px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+}
+
+.doc-head__lead {
+  max-width: 68ch;
+  color: var(--tx-text-muted);
+  font-size: 16px;
 
   ::ng-deep p {
-    margin: 0 0 var(--tx-space-4);
+    margin: 0;
+  }
+}
+
+.import {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tx-space-3);
+  margin-top: var(--tx-space-2);
+  padding: 8px 12px;
+  border: 1px solid var(--tx-surface-border);
+  border-radius: var(--tx-radius-md);
+  background: var(--tx-surface-card);
+  color: var(--tx-text-muted);
+  font: inherit;
+  cursor: pointer;
+  transition: border-color 0.2s;
+
+  code {
+    padding: 0;
+    background: none;
+    color: var(--tx-text-primary);
+  }
+
+  &:hover {
+    border-color: var(--tx-primary-base);
   }
 }
 
 .tabs {
+  position: sticky;
+  top: 60px;
+  z-index: 5;
   display: flex;
   gap: var(--tx-space-1);
-  margin: var(--tx-space-6) 0 var(--tx-space-8);
+  margin: 0 0 var(--tx-space-8);
   border-bottom: 1px solid var(--tx-surface-border);
+  background: var(--tx-surface-ground);
 }
 
 .tabs__tab {
-  margin-bottom: -1px;
-  padding: var(--tx-space-2) var(--tx-space-4);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px var(--tx-space-3);
   border: none;
-  border-bottom: 2px solid transparent;
   background: none;
   color: var(--tx-text-muted);
   font: 500 var(--tx-font-size-md) var(--tx-font-family);
   cursor: pointer;
+  transition: color 0.2s;
+
+  &::after {
+    position: absolute;
+    right: var(--tx-space-3);
+    bottom: -1px;
+    left: var(--tx-space-3);
+    height: 2px;
+    border-radius: 2px;
+    background: var(--tx-primary-base);
+    transform: scaleX(0);
+    transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1);
+    content: '';
+  }
 
   &:hover {
     color: var(--tx-text-primary);
   }
+
+  &:focus-visible {
+    outline: 2px solid var(--tx-focus-ring-color);
+    outline-offset: -2px;
+    border-radius: var(--tx-radius-sm);
+  }
 }
 
 .tabs__tab--active {
-  border-bottom-color: var(--tx-primary-base);
-  color: var(--tx-primary-base);
+  color: var(--tx-text-primary);
+
+  &::after {
+    transform: scaleX(1);
+  }
+}
+
+.tabs__count {
+  min-width: 20px;
+  padding: 0 6px;
+  border-radius: var(--tx-radius-full);
+  background: var(--tx-surface-hover);
+  color: var(--tx-text-muted);
+  font-size: 11px;
+  line-height: 18px;
+  text-align: center;
+}
+
+.tab-panel {
+  animation: tab-in 0.2s ease-out;
+}
+
+@keyframes tab-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab-panel {
+    animation: none;
+  }
 }

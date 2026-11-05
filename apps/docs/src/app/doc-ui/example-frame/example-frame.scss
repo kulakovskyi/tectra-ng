@@ -1,47 +1,101 @@
 .example {
-  margin-bottom: var(--tx-space-10);
-  scroll-margin-top: 72px;
+  margin-bottom: 56px;
+  scroll-margin-top: 84px;
+}
+
+.example__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--tx-space-4);
+  margin-bottom: var(--tx-space-3);
 }
 
 .example__title {
-  margin: 0 0 var(--tx-space-1);
-  font-size: var(--tx-font-size-xl);
+  margin: 0;
+  font-size: var(--tx-font-size-lg);
   font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.example__anchor {
+  color: inherit;
+  text-decoration: none;
+
+  &::after {
+    margin-left: 6px;
+    color: var(--tx-text-muted);
+    opacity: 0;
+    transition: opacity 0.2s;
+    content: '#';
+  }
+
+  &:hover::after {
+    opacity: 1;
+  }
 }
 
 .example__description {
+  max-width: 62ch;
   color: var(--tx-text-muted);
+  font-size: var(--tx-font-size-sm);
 
   ::ng-deep p {
-    margin: 0 0 var(--tx-space-3);
+    margin: 2px 0 0;
   }
+}
+
+.example__actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 4px;
 }
 
 .example__card {
   overflow: hidden;
   border: 1px solid var(--tx-surface-border);
-  border-radius: var(--tx-radius-lg);
+  border-radius: 16px;
   background: var(--tx-surface-card);
 }
 
 .example__preview {
-  min-height: 96px;
-  padding: var(--tx-space-8) var(--tx-space-6);
-}
-
-.example__toolbar {
   display: flex;
-  justify-content: flex-end;
-  padding: var(--tx-space-2) var(--tx-space-3);
-  border-top: 1px solid var(--tx-surface-border);
+  flex-direction: column;
+  justify-content: center;
+  min-height: 132px;
+  padding: 32px;
+  background-color: color-mix(in srgb, var(--tx-surface-hover) 55%, var(--tx-surface-card));
+  background-image: radial-gradient(var(--tx-surface-border) 1px, transparent 1px);
+  background-size: 16px 16px;
 }
 
 .example__code {
-  margin: 0;
-  padding: var(--tx-space-4) var(--tx-space-6);
-  overflow-x: auto;
-  border-top: 1px solid var(--tx-surface-border);
-  background: var(--tx-surface-ground);
-  font-size: 13px;
-  line-height: 1.6;
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.example__code--open {
+  grid-template-rows: 1fr;
+}
+
+.example__code-inner {
+  min-height: 0;
+  overflow: hidden;
+
+  pre {
+    margin: 0;
+    padding: var(--tx-space-5) var(--tx-space-6);
+    overflow-x: auto;
+    border-top: 1px solid var(--tx-surface-border);
+    background: var(--tx-surface-card);
+    font-size: 13px;
+    line-height: 1.65;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .example__code {
+    transition: none;
+  }
 }

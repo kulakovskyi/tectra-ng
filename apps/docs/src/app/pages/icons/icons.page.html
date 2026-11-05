@@ -1,9 +1,6 @@
 <p class="eyebrow">Get started</p>
-<h1>Icons</h1>
-<p class="lead">
-  {{ names.length }} outline icons drawn for tectra, plus {{ brandNames.length }} brand logos. Names follow PrimeIcons — <code>pi pi-trash</code> becomes
-  <code>&lt;tx-icon [name]="'trash'" /&gt;</code> or <code>[icon]="'trash'"</code> on a button. Click an icon to copy its name.
-</p>
+<h1 >Icons</h1>
+<p class="lead">{{ names.length }} icons drawn for tectra + {{ brandNames.length }} brand logos. PrimeIcons names: <code>pi pi-trash</code> → <code>'trash'</code>. Click to copy.</p>
 
 <div class="card toolbar">
   <input txInput placeholder="Search icons" [value]="query()" (input)="onSearch($event)" />
@@ -25,11 +22,7 @@
 </div>
 
 <h2>Brands</h2>
-<p class="hint">
-  Optional package <code>&#64;tectra/brand-icons</code> — add <code>provideTxBrandIcons()</code> to <code>app.config</code>. Paths from Simple Icons (CC0); the
-  logos are trademarks of their owners. Amazon, LinkedIn, Microsoft and Slack are not included — register them from the official brand kits with
-  <code>provideTxIcons</code>.
-</p>
+<p class="hint">Optional <code>&#64;tectra/brand-icons</code> + <code>provideTxBrandIcons()</code>. Simple Icons, CC0; logos are trademarks of their owners.</p>
 <div class="grid">
   @for (name of visibleBrandNames(); track name) {
     <button type="button" class="tile" [class.tile--copied]="copied() === name" (click)="copyName(name)">

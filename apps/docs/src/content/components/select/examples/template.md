@@ -1,1 +1,1 @@
-`<ng-template txSelectOption let-option>` replaces the markup of every option and of the selected value.
+Your own markup for options and the value.

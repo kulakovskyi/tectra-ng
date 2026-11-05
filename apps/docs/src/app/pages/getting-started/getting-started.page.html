@@ -1,8 +1,18 @@
 <p class="eyebrow">Get started</p>
-<h1>Installation</h1>
-<p class="lead">Four steps. Every component is its own entry point, so only what you import lands in your bundle.</p>
+<h1 >Installation</h1>
+<p class="lead">Four steps. Only what you import lands in your bundle.</p>
 
-@for (step of steps; track step.title) {
-  <h2>{{ step.title }}</h2>
-  <pre class="code"><code>{{ step.code }}</code></pre>
-}
+<ol class="steps">
+  @for (step of steps; track step.title; let i = $index) {
+    <li class="step">
+      <span class="step__number">{{ i + 1 }}</span>
+      <div class="step__body">
+        <h2 class="step__title">{{ step.title }}</h2>
+        <div class="step__code">
+          <pre class="code"><code>{{ step.code }}</code></pre>
+          <button txButton class="step__copy" [size]="'small'" [text]="true" [severity]="'secondary'" [icon]="copiedIndex() === i ? 'check' : 'copy'" aria-label="Copy" (click)="copy(i, step.code)"></button>
+        </div>
+      </div>
+    </li>
+  }
+</ol>

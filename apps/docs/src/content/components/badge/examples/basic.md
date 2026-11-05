@@ -1,1 +1,1 @@
-A value — text or number.
+Text or number.

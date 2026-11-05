@@ -3,12 +3,6 @@
   --tx-select-border-color: var(--tx-field-border);
   --tx-select-hover-border-color: var(--tx-field-hover-border);
   --tx-select-focus-border-color: var(--tx-primary-base);
-  --tx-select-panel-background: var(--tx-surface-overlay);
-  --tx-select-panel-border-color: var(--tx-surface-overlay-border);
-  --tx-select-panel-shadow: var(--tx-shadow-overlay);
-  --tx-select-option-focus-background: var(--tx-list-focus-background);
-  --tx-select-option-selected-background: var(--tx-highlight-background);
-  --tx-select-option-selected-color: var(--tx-highlight-color);
 
   display: block;
   width: 100%;
@@ -84,6 +78,13 @@
 }
 
 .tx-select__panel {
+  --tx-select-panel-background: var(--tx-surface-overlay);
+  --tx-select-panel-border-color: var(--tx-surface-overlay-border);
+  --tx-select-panel-shadow: var(--tx-shadow-overlay);
+  --tx-select-option-focus-background: var(--tx-list-focus-background);
+  --tx-select-option-selected-background: var(--tx-highlight-background);
+  --tx-select-option-selected-color: var(--tx-highlight-color);
+
   box-sizing: border-box;
   width: 100%;
   overflow: hidden;

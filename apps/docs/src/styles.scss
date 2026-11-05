@@ -4,6 +4,12 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+  scrollbar-gutter: stable;
+}
+
 html,
 body {
   margin: 0;
@@ -13,19 +19,30 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+::selection {
+  background: var(--tx-highlight-background);
+  color: var(--tx-highlight-color);
+}
+
 a {
   color: var(--tx-primary-base);
 }
 
 code {
   font-family: var(--tx-font-mono);
-  font-size: 0.9em;
+  font-size: 0.88em;
 }
 
 :not(pre) > code {
-  padding: 1px 6px;
+  padding: 2px 6px;
   border-radius: var(--tx-radius-sm);
   background: var(--tx-surface-hover);
+  color: var(--tx-text-hover);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--tx-surface-border) transparent;
 }
 
 .flex {
@@ -45,6 +62,54 @@ code {
 .hint {
   color: var(--tx-text-muted);
   font-size: var(--tx-font-size-sm);
+}
+
+.reveal {
+  animation: docs-reveal 0.6s cubic-bezier(0.2, 0, 0, 1) both;
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+
+@keyframes docs-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.28s;
+  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
+::view-transition-old(docs-content) {
+  animation: docs-content-out 0.12s ease-out both;
+}
+
+::view-transition-new(docs-content) {
+  animation: docs-content-in 0.2s ease-out both;
+}
+
+::view-transition-group(docs-content) {
+  animation-duration: 0s;
+}
+
+@keyframes docs-content-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes docs-content-in {
+  from {
+    opacity: 0;
+  }
+}
+
+html.docs-theme-switch::view-transition-old(root),
+html.docs-theme-switch::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
 }
 
 .hljs-keyword,
@@ -92,5 +157,17 @@ code {
   .hljs-attr,
   .hljs-property {
     color: #ffa657;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal,
+  ::view-transition-old(docs-content),
+  ::view-transition-new(docs-content) {
+    animation: none;
   }
 }

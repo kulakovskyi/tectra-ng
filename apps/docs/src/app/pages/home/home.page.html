@@ -1,26 +1,89 @@
-<p class="eyebrow">Open-source Angular UI kit</p>
-<h1>tectra</h1>
-<p class="lead">Signals, zoneless, standalone. Themes on CSS variables. Built for consoles and admin apps.</p>
+<section class="hero">
+  <a class="hero__pill reveal" routerLink="/components/button">
+    <tx-badge [value]="'new'" [severity]="'success'" />
+    Button with full PrimeNG parity
+    <tx-icon [name]="'arrow-right'" />
+  </a>
+  <h1 class="hero__title reveal" style="--i: 1">
+    Angular UI that feels <span class="hero__accent">finished</span>.
+  </h1>
+  <p class="hero__lead reveal" style="--i: 2">Components, tokens and icons for consoles and admin apps.</p>
+  <div class="hero__actions reveal" style="--i: 3">
+    <a txButton [size]="'large'" [icon]="'arrow-right'" [iconPos]="'right'" routerLink="/getting-started">Get started</a>
+    <a txButton [size]="'large'" [outlined]="true" [severity]="'secondary'" routerLink="/components/button">Components</a>
+  </div>
+  <button type="button" class="install reveal" style="--i: 4" (click)="copyInstall()">
+    <span class="install__prompt">$</span>
+    <code>{{ installCommand }}</code>
+    <tx-icon class="install__icon" [name]="isCopied() ? 'check' : 'copy'" />
+  </button>
+</section>
 
-<div class="card demo">
-  <input txInput placeholder="Name" />
-  <tx-select [options]="roles" [formControl]="role" />
-  <button txButton>Invite</button>
-</div>
-<p class="hint">These three are real tectra components. Switch the theme in the header.</p>
+<section class="bento">
+  <div class="tile tile--wide reveal" style="--i: 5">
+    <span class="tile__label">Buttons</span>
+    <div class="tile__row">
+      <button txButton>Primary</button>
+      <button txButton [severity]="'secondary'">Secondary</button>
+      <button txButton [severity]="'success'" [icon]="'check'">Done</button>
+      <button txButton [severity]="'danger'" [outlined]="true" [icon]="'trash'">Delete</button>
+      <button txButton [icon]="'refresh'" [severity]="'secondary'" [text]="true" [rounded]="true" [rippleCentered]="true" aria-label="Refresh"></button>
+      <button txButton [icon]="'check'" [loading]="isSaving()" (click)="save()">Save</button>
+    </div>
+  </div>
 
-<h2>How it is built</h2>
-<div class="layers">
-  @for (layer of layers; track layer.name) {
-    <div class="card layer">
-      <code>{{ layer.name }}</code>
-      <span>{{ layer.text }}</span>
+  <div class="tile reveal" style="--i: 6">
+    <span class="tile__label">Form</span>
+    <div class="tile__stack">
+      <input txInput placeholder="Full name" />
+      <tx-select [options]="roles" [formControl]="role" />
+      <tx-toggle-button [onLabel]="'Notifications on'" [offLabel]="'Notifications off'" [onIcon]="'bell'" [offIcon]="'bell-slash'" />
+    </div>
+  </div>
+
+  <div class="tile reveal" style="--i: 7">
+    <span class="tile__label">Status</span>
+    <div class="tile__row">
+      <tx-badge [value]="'Live'" [severity]="'success'" />
+      <tx-badge [value]="'Draft'" [severity]="'secondary'" />
+      <tx-badge [value]="'3 issues'" [severity]="'warn'" />
+      <tx-badge [value]="'Blocked'" [severity]="'danger'" />
+    </div>
+    <div class="tile__row">
+      <button txButton [icon]="'bell'" [badge]="4" [severity]="'secondary'" [outlined]="true">Inbox</button>
+      <button txButton [icon]="'github'" [severity]="'contrast'" aria-label="GitHub"></button>
+      <button txButton [icon]="'google'" [severity]="'secondary'" [outlined]="true" aria-label="Google"></button>
+    </div>
+  </div>
+
+  <div class="tile tile--wide tile--marquee reveal" style="--i: 8">
+    <span class="tile__label">Icons</span>
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        @for (icon of marqueeIcons; track $index) {
+          <span class="marquee__item"><tx-icon [name]="icon" /></span>
+        }
+      </div>
+    </div>
+    <a class="tile__link" routerLink="/icons">All 334 icons <tx-icon [name]="'arrow-right'" /></a>
+  </div>
+</section>
+
+<section class="stats">
+  @for (stat of stats; track stat.label; let i = $index) {
+    <div class="stats__item reveal" [style.--i]="9 + i">
+      <span class="stats__value">{{ stat.value }}</span>
+      <span class="stats__label">{{ stat.label }}</span>
     </div>
   }
-</div>
+</section>
 
-<h2>Next</h2>
-<div class="flex">
-  <a txButton routerLink="/getting-started">Installation</a>
-  <a txButton [outlined]="true" [severity]="'secondary'" routerLink="/components/select">See Select</a>
-</div>
+<section class="features">
+  @for (feature of features; track feature.title; let i = $index) {
+    <div class="feature reveal" [style.--i]="12 + i">
+      <span class="feature__icon"><tx-icon [name]="feature.icon" /></span>
+      <h3 class="feature__title">{{ feature.title }}</h3>
+      <p class="feature__text">{{ feature.text }}</p>
+    </div>
+  }
+</section>

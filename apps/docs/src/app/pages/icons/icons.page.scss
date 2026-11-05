@@ -22,6 +22,7 @@
 }
 
 .tile {
+  border-radius: 14px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -33,10 +34,16 @@
   color: var(--tx-text-primary);
   font: inherit;
   cursor: pointer;
-  transition: border-color var(--tx-motion-duration), background-color var(--tx-motion-duration);
+  transition: border-color 0.2s, background-color 0.2s, transform 0.25s cubic-bezier(0.2, 0, 0, 1);
 
   &:hover {
     border-color: var(--tx-primary-base);
+    transform: translateY(-2px);
+
+    .tile__icon {
+      color: var(--tx-primary-base);
+      transform: scale(1.15);
+    }
   }
 
   &:focus-visible {
@@ -52,6 +59,7 @@
 
 .tile__icon {
   font-size: 24px;
+  transition: transform 0.25s cubic-bezier(0.2, 0, 0, 1), color 0.2s;
 }
 
 .tile__name {

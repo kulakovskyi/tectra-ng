@@ -1,19 +1,52 @@
 <header class="header">
-  <a class="header__logo" routerLink="/">
-    <span class="header__mark">tx</span>
-    tectra
-    <span class="header__version">v0.0.0</span>
-  </a>
-  <div class="header__actions">
-    <button txButton [outlined]="true" [severity]="'secondary'" [size]="'small'" (click)="toggleMode()" [attr.aria-label]="'Toggle theme'">
-      <tx-icon [name]="mode() === 'light' ? 'moon' : 'sun'" />
-      {{ mode() === 'light' ? 'Dark' : 'Light' }}
-    </button>
+  <div class="header__start">
+    <button txButton class="header__menu" [text]="true" [severity]="'secondary'" [icon]="isMenuOpen() ? 'times' : 'bars'" aria-label="Menu" (click)="toggleMenu()"></button>
+    <a class="logo" routerLink="/" (click)="closeMenu()">
+      <span class="logo__mark">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M12 7v12" /></svg>
+      </span>
+      <span class="logo__text">tectra</span>
+      <span class="logo__version">0.0</span>
+    </a>
+    <nav class="header__nav">
+      @for (link of headerLinks; track link.path) {
+        <a class="header__link" routerLinkActive="header__link--active" [routerLink]="link.path">{{ link.label }}</a>
+      }
+    </nav>
+  </div>
+
+  <div class="header__end">
+    <div class="accents" role="radiogroup" aria-label="Accent colour">
+      @for (accent of accents; track accent.value) {
+        <button
+          type="button"
+          role="radio"
+          class="accents__dot"
+          [class.accents__dot--active]="currentAccent() === accent.value"
+          [style.--dot]="accent.color"
+          [attr.aria-checked]="currentAccent() === accent.value"
+          [attr.aria-label]="accent.label"
+          [title]="accent.label"
+          (click)="setAccent(accent.value)"
+        ></button>
+      }
+    </div>
+    <button
+      txButton
+      [text]="true"
+      [severity]="'secondary'"
+      [rounded]="true"
+      [rippleCentered]="true"
+      [icon]="mode() === 'light' ? 'moon' : 'sun'"
+      [attr.aria-label]="mode() === 'light' ? 'Dark theme' : 'Light theme'"
+      (click)="toggleMode($event)"
+    ></button>
   </div>
 </header>
 
 <div class="body">
-  <nav class="sidebar">
+  <div class="backdrop" [class.backdrop--visible]="isMenuOpen()" (click)="closeMenu()"></div>
+  <nav class="sidebar" [class.sidebar--open]="isMenuOpen()">
     @for (group of navigation; track group.title) {
       <div class="sidebar__group">
         <div class="sidebar__title">{{ group.title }}</div>
@@ -23,10 +56,12 @@
             routerLinkActive="sidebar__link--active"
             [routerLink]="link.path"
             [routerLinkActiveOptions]="{ exact: true }"
+            (click)="closeMenu()"
           >{{ link.label }}</a>
         }
       </div>
     }
+    <p class="sidebar__footer">{{ componentCount }} components · more on the way</p>
   </nav>
 
   <main class="content">

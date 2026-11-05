@@ -1,1 +1,1 @@
-`pt` adds your own `class` / `style` to inner parts — `root`, `icon`, `loadingIcon`, `label`, `badge`. A part can be a function of the button state: `({ instance }) => …` re-runs whenever the signals it reads change. The same works app-wide in `provideTectra({ pt: { button: … }, ptOptions })`; `[ptOptions]` decides how a local `pt` meets the global one.
+Your classes and styles on inner parts — static or from the button state.

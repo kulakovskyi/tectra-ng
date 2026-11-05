@@ -1,1 +1,1 @@
-`plain` turns an outlined or text button grey — for toolbars where colour would be noise.
+Grey outlined or text buttons for toolbars.

@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, input, linkedSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, linkedSignal, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { TxIcon } from '@tectra/icons';
 import { DOC_COMPONENTS } from '../../../generated/registry';
 import { DOC_TABS } from '../../data/doc-tabs.data';
 import { DocTab } from '../../types/doc-component.interface';
@@ -9,9 +11,9 @@ import { ThemingTab } from './tabs/theming-tab/theming-tab';
 
 @Component({
   selector: 'docs-component-doc-page',
-  imports: [FeaturesTab, ApiTab, ThemingTab, A11yTab],
+  imports: [FeaturesTab, ApiTab, ThemingTab, A11yTab, RouterLink, TxIcon],
   templateUrl: './component-doc.page.html',
-  styleUrls: ['../page.scss', './component-doc.page.scss'],
+  styleUrl: './component-doc.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class ComponentDocPage {
@@ -24,4 +26,11 @@ export default class ComponentDocPage {
     return doc ? `import { Tx${doc.title} } from '${doc.importPath}';` : '';
   });
   activeTab = linkedSignal<string, DocTab>({ source: this.name, computation: () => 'features' });
+  isImportCopied = signal(false);
+
+  copyImport(): void {
+    navigator.clipboard?.writeText(this.importLine());
+    this.isImportCopied.set(true);
+    setTimeout(() => this.isImportCopied.set(false), 1600);
+  }
 }

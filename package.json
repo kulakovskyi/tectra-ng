@@ -31,6 +31,7 @@
     "@nx/devkit": "23.2.1",
     "@nx/js": "23.2.1",
     "@nx/workspace": "23.2.1",
+    "@playwright/test": "^1.63.0",
     "@schematics/angular": "22.2.3",
     "esbuild": "^0.28.2",
     "highlight.js": "^11.11.1",

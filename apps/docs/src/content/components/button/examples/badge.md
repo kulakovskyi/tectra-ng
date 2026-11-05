@@ -1,1 +1,1 @@
-`badge` adds a counter; `badgeSeverity` colours it.
+A counter after the text.

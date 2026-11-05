@@ -1,0 +1,50 @@
+.steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr);
+  gap: var(--tx-space-5);
+  padding-bottom: var(--tx-space-6);
+
+  &:not(:last-child)::before {
+    position: absolute;
+    top: 36px;
+    bottom: 4px;
+    left: 15px;
+    width: 2px;
+    border-radius: 2px;
+    background: var(--tx-surface-border);
+    content: '';
+  }
+}
+
+.step__number {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--tx-highlight-background);
+  color: var(--tx-highlight-color);
+  font-weight: 700;
+}
+
+.step__title {
+  margin: 4px 0 var(--tx-space-3);
+  font-size: 16px;
+}
+
+.step__code {
+  position: relative;
+}
+
+.step__copy {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}

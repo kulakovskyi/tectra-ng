@@ -138,6 +138,7 @@ function buildComponent(name) {
       id,
       title: titleCase(id),
       descriptionHtml: marked.parse(read(join(examplesDir, `${id}.md`))),
+      source: read(join(examplesDir, `${id}.example.ts`)).trim(),
       sourceHtml: highlight(read(join(examplesDir, `${id}.example.ts`))),
       importPath: `../content/components/${name}/examples/${id}.example`,
     })),

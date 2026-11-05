@@ -1,1 +1,1 @@
-An icon and no text — the button becomes square by itself (the row-action button of a table). `[iconOnly]` forces it. Always give it an `aria-label`.
+Square by itself when there is no text. Add an `aria-label`.

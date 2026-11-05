@@ -1,1 +1,1 @@
-Works as a form control; `(changed)` gives the new state.
+A form control with a `(changed)` event.

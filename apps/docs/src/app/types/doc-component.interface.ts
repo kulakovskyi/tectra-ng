@@ -26,6 +26,7 @@ export interface DocExample {
   id: string;
   title: string;
   descriptionHtml: string;
+  source: string;
   sourceHtml: string;
   load: () => Promise<Type<unknown>>;
 }

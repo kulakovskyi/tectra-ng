@@ -1,9 +1,12 @@
-export const HOME_LAYERS = [
-  { name: '@tectra/tokens', text: 'Palettes (ink surfaces, 5 accents, severities), radius, typography, shadows — plain data.' },
-  { name: '@tectra/themes', text: 'createInkPreset(accent): what is primary, surface, field, danger… in light and dark.' },
-  { name: '@tectra/core', text: 'Behaviour without looks: theme, overlay, forms, a11y, i18n.' },
-  { name: '@tectra/ui', text: 'Components. One entry point each — only what you import ships.' },
-  { name: '@tectra/blocks', text: 'Ready page parts for consoles and admin apps.' },
+import { TxIconName } from '@tectra/icons';
+
+export const HOME_FEATURES: { icon: TxIconName; title: string; text: string }[] = [
+  { icon: 'bolt', title: 'Signals, zoneless', text: 'Standalone, OnPush, signal inputs. No legacy.' },
+  { icon: 'palette', title: 'Design tokens', text: 'Every size and colour is a CSS variable.' },
+  { icon: 'sliders-h', title: 'dt · pt · unstyled', text: 'Restyle one instance or the whole app.' },
+  { icon: 'sparkles', title: 'Motion that feels right', text: 'Ripple, transitions, reduced-motion aware.' },
+  { icon: 'th-large', title: '334 icons', text: 'Drawn for tectra, PrimeIcons names.' },
+  { icon: 'shield', title: 'Accessible', text: 'Keyboard, ARIA, focus rings built in.' },
 ];
 
 export const HOME_ROLES = [
@@ -11,3 +14,10 @@ export const HOME_ROLES = [
   { label: 'Designer', value: 'designer' },
   { label: 'Manager', value: 'manager' },
 ];
+
+export const HOME_MARQUEE_ICONS: TxIconName[] = [
+  'home', 'search', 'bell', 'user', 'cog', 'heart', 'star', 'bolt', 'cloud', 'lock', 'calendar', 'chart-line', 'trash', 'pencil',
+  'send', 'gift', 'globe', 'camera', 'map-marker', 'filter', 'download', 'link', 'bookmark', 'sparkles', 'database', 'code',
+];
+
+export const INSTALL_COMMAND = 'npm i @tectra/ui @tectra/core @tectra/themes';
