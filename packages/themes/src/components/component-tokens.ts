@@ -19,7 +19,7 @@ import { progressBarTokens, progressSpinnerTokens } from './progress.tokens';
 import { radioButtonTokens } from './radio-button.tokens';
 import { ratingTokens } from './rating.tokens';
 import { selectTokens } from './select.tokens';
-import { cascadeSelectTokens, chipsInputTokens, colorPickerTokens, countryTokens, listboxTokens, mentionTokens, treeTokens } from './selection.tokens';
+import { cascadeSelectTokens, chipsInputTokens, colorPickerTokens, countryTokens, emailSuggestionTokens, listboxTokens, mentionTokens, treeTokens } from './selection.tokens';
 import { skeletonTokens } from './skeleton.tokens';
 import { sliderTokens } from './slider.tokens';
 import { chipTokens, tagTokens } from './tag.tokens';
@@ -46,6 +46,7 @@ export const COMPONENT_TOKENS = {
   mention: mentionTokens,
   tree: treeTokens,
   cascadeSelect: cascadeSelectTokens,
+  emailSuggestion: emailSuggestionTokens,
   badge: badgeTokens,
   toggleButton: toggleButtonTokens,
   message: messageTokens,

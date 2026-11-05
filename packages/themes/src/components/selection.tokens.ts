@@ -123,3 +123,13 @@ export const cascadeSelectTokens = {
 };
 
 export type TectraCascadeSelectTokens = typeof cascadeSelectTokens;
+
+export const emailSuggestionTokens = {
+  root: {
+    offset: '6px',
+    enterDistance: '6px',
+    enterDuration: '320ms',
+  },
+};
+
+export type TectraEmailSuggestionTokens = typeof emailSuggestionTokens;

@@ -1,6 +1,6 @@
 ---
 category: Form
-tokens: button
+tokens: emailSuggestion, button
 examples: basic, typos
 ---
 # EmailSuggestion
