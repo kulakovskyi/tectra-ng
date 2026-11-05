@@ -1,20 +1,48 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { TX_ICONS, TxIconName } from './icons';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { TxIconRegistry } from './icon-registry.service';
+import { TxIconName } from './icons';
 
 @Component({
   selector: 'tx-icon',
   template: `
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path [attr.d]="path()" />
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      @for (path of paths(); track $index) {
+        <path
+          [attr.d]="path.d"
+          [attr.fill]="path.fill ? 'currentColor' : null"
+          [attr.stroke]="path.stroke === false ? 'none' : null"
+          [attr.transform]="path.transform ?? null"
+        />
+      }
     </svg>
   `,
   styles: `
-    :host { display: inline-flex; width: 1em; height: 1em; }
-    svg { width: 100%; height: 100%; }
+    :host {
+      display: inline-flex;
+      flex-shrink: 0;
+      width: var(--tx-icon-size, 1em);
+      height: var(--tx-icon-size, 1em);
+    }
+
+    svg {
+      width: 100%;
+      height: 100%;
+      stroke-width: var(--tx-icon-stroke-width, 1.75);
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'tx-icon', '[attr.data-icon]': 'name()' },
 })
 export class TxIcon {
-  name = input.required<TxIconName>();
-  path = computed(() => TX_ICONS[this.name()]);
+  private txIconRegistry = inject(TxIconRegistry);
+
+  name = input.required<TxIconName | (string & {})>();
+  paths = computed(() =>
+    (this.txIconRegistry.get(this.name()) ?? []).map((path) => (typeof path === 'string' ? { d: path } : path)) as {
+      d: string;
+      fill?: true;
+      stroke?: false;
+      transform?: string;
+    }[],
+  );
 }

@@ -10,6 +10,7 @@ export const DOC_NAVIGATION: DocNavGroup[] = [
       { label: 'Introduction', path: '/' },
       { label: 'Installation', path: '/getting-started' },
       { label: 'Theming', path: '/theming' },
+      { label: 'Icons', path: '/icons' },
     ],
   },
   ...categories.map((category) => ({

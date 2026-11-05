@@ -6,7 +6,8 @@
     "docs": "npm run registry && nx serve docs",
     "docs:build": "npm run registry && nx build docs",
     "sandbox": "nx serve sandbox",
-    "build:packages": "nx run-many -t build -p tokens themes core icons ui blocks"
+    "build:packages": "nx run-many -t build -p tokens themes core icons brand-icons ui blocks",
+    "icons": "node tools/icons/build-icons.mjs && node tools/icons/build-brand-icons.mjs"
   },
   "dependencies": {
     "@angular/cdk": "22.2.3",
@@ -37,6 +38,7 @@
     "ng-packagr": "22.2.4",
     "nx": "23.2.1",
     "sass": "^1.89.0",
+    "simple-icons": "^16.36.0",
     "typescript": "6.0.3"
   }
 }

@@ -20,7 +20,8 @@ Working now: tokens, themes (light / dark, 5 accents), core (config with unstyle
 | `packages/tokens` | palettes (ink surfaces, 5 accents, severities), radius, typography, shadows — plain data | npm `@tectra/tokens` |
 | `packages/themes` | semantic light / dark, component design tokens, `createInkPreset(accent)`, `definePreset` (deep merge) | npm `@tectra/themes` |
 | `packages/core` | behaviour without looks: config (theme, unstyled, pt), overlay, a11y, forms, i18n, styles, ripple, fluid, utils | npm `@tectra/core/*` |
-| `packages/icons` | SVG icons + `<tx-icon>` | npm `@tectra/icons` |
+| `packages/icons` | 334 own outline icons (PrimeIcons names) + `<tx-icon>` + icon registry (`provideTxIcons`) | npm `@tectra/icons` |
+| `packages/brand-icons` | optional brand logos from Simple Icons (CC0) under PrimeIcons names | npm `@tectra/brand-icons` |
 | `packages/ui` | components, one entry point each | npm `@tectra/ui/<component>` |
 | `packages/blocks` | console-layout, filters-panel, stat-tiles … | npm `@tectra/blocks/<block>` |
 | `apps/docs` | the site (like primeng.org) | Cloudflare Pages |

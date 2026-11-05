@@ -18,7 +18,7 @@ import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled 
 import { injectFluid } from '@tectra/core/fluid';
 import { TxRipple } from '@tectra/core/ripple';
 import { optionalBoolean } from '@tectra/core/utils';
-import { TxIcon, TxIconName, isTxIconName } from '@tectra/icons';
+import { TxIcon, TxIconName, TxIconRegistry } from '@tectra/icons';
 import { TectraButtonTokens, TectraDeepPartial, toStyleObject } from '@tectra/themes';
 import { TxBadge, TxBadgeSeverity } from '@tectra/ui/badge';
 import { TxButtonIconTemplate, TxButtonLoadingIconTemplate } from './button-templates.directive';
@@ -57,6 +57,7 @@ import { TxButtonIconPosition, TxButtonPart, TxButtonSeverity, TxButtonSize, TxB
 })
 export class TxButton {
   private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private txIconRegistry = inject(TxIconRegistry);
 
   label = input<string | number | undefined>(undefined);
   severity = input<TxButtonSeverity>('primary');
@@ -75,7 +76,7 @@ export class TxButton {
   iconPos = input<TxButtonIconPosition>('left');
   iconOnly = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
   loading = input<boolean, unknown>(false, { transform: booleanAttribute });
-  loadingIcon = input<TxIconName | (string & {})>('loader');
+  loadingIcon = input<TxIconName | (string & {})>('spinner');
   badge = input<string | number | undefined>(undefined);
   badgeSeverity = input<TxBadgeSeverity>('secondary');
   dt = input<TectraDeepPartial<TectraButtonTokens> | undefined>(undefined);
@@ -113,11 +114,11 @@ export class TxButton {
   isIconOnly = computed(() => this.iconOnly() ?? (this.hasIcon() && !this.hasLabelText() && !this.hasProjectedLabel()));
   iconName = computed(() => {
     const icon = this.icon();
-    return isTxIconName(icon) ? icon : null;
+    return this.txIconRegistry.has(icon) ? icon : null;
   });
   loadingIconName = computed(() => {
     const icon = this.loadingIcon();
-    return isTxIconName(icon) ? icon : null;
+    return this.txIconRegistry.has(icon) ? icon : null;
   });
   hasBadge = computed(() => this.badge() !== undefined && this.badge() !== '');
   hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-button'), ...this.passThrough().root?.style }));

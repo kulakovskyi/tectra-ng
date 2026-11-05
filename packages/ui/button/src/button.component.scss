@@ -137,16 +137,18 @@ $severities: (primary, secondary, success, info, warn, danger, help, contrast);
 
 :host([data-styled].tx-button--icon-only) {
   width: var(--tx-button-icon-only-width);
-  padding-right: 0;
-  padding-left: 0;
+  height: var(--tx-button-icon-only-width);
+  padding: 0;
 }
 
 :host([data-styled].tx-button--icon-only[data-size='small']) {
   width: var(--tx-button-sm-icon-only-width);
+  height: var(--tx-button-sm-icon-only-width);
 }
 
 :host([data-styled].tx-button--icon-only[data-size='large']) {
   width: var(--tx-button-lg-icon-only-width);
+  height: var(--tx-button-lg-icon-only-width);
 }
 
 :host([data-styled].tx-button--rounded) {

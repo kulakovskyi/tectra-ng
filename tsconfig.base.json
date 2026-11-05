@@ -19,6 +19,7 @@
       "@tectra/tokens": ["./packages/tokens/src/index.ts"],
       "@tectra/themes": ["./packages/themes/src/index.ts"],
       "@tectra/icons": ["./packages/icons/src/index.ts"],
+      "@tectra/brand-icons": ["./packages/brand-icons/src/index.ts"],
       "@tectra/core/*": ["./packages/core/*/index.ts"],
       "@tectra/ui/*": ["./packages/ui/*/index.ts"],
       "@tectra/blocks/*": ["./packages/blocks/*/index.ts"]

@@ -1,0 +1,64 @@
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--tx-space-6);
+  margin-bottom: var(--tx-space-6);
+  padding: var(--tx-space-4);
+}
+
+.toolbar__stroke {
+  display: flex;
+  align-items: center;
+  gap: var(--tx-space-3);
+  color: var(--tx-text-muted);
+  font-size: var(--tx-font-size-sm);
+  white-space: nowrap;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: var(--tx-space-2);
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--tx-space-3);
+  padding: var(--tx-space-5) var(--tx-space-2) var(--tx-space-3);
+  border: 1px solid var(--tx-surface-border);
+  border-radius: var(--tx-radius-lg);
+  background: var(--tx-surface-card);
+  color: var(--tx-text-primary);
+  font: inherit;
+  cursor: pointer;
+  transition: border-color var(--tx-motion-duration), background-color var(--tx-motion-duration);
+
+  &:hover {
+    border-color: var(--tx-primary-base);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--tx-focus-ring-color);
+    outline-offset: 2px;
+  }
+}
+
+.tile--copied {
+  border-color: var(--tx-success-base);
+  background: var(--tx-success-soft);
+}
+
+.tile__icon {
+  font-size: 24px;
+}
+
+.tile__name {
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--tx-text-muted);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

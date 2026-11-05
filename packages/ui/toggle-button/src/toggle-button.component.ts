@@ -4,6 +4,7 @@ import {
   booleanAttribute,
   computed,
   forwardRef,
+  inject,
   input,
   numberAttribute,
   output,
@@ -13,7 +14,7 @@ import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled 
 import { injectFluid } from '@tectra/core/fluid';
 import { TxFormControlBase } from '@tectra/core/forms';
 import { optionalBoolean } from '@tectra/core/utils';
-import { TxIcon, TxIconName, isTxIconName } from '@tectra/icons';
+import { TxIcon, TxIconName, TxIconRegistry } from '@tectra/icons';
 import { TectraDeepPartial, TectraToggleButtonTokens, toStyleObject } from '@tectra/themes';
 import {
   TxToggleButtonChangeEvent,
@@ -43,6 +44,8 @@ import {
   },
 })
 export class TxToggleButton extends TxFormControlBase<boolean> {
+  private txIconRegistry = inject(TxIconRegistry);
+
   onLabel = input<string>('Yes');
   offLabel = input<string>('No');
   onIcon = input<TxIconName | (string & {}) | undefined>(undefined);
@@ -72,7 +75,7 @@ export class TxToggleButton extends TxFormControlBase<boolean> {
   currentIcon = computed(() => (this.checked() ? this.onIcon() : this.offIcon()));
   iconName = computed(() => {
     const icon = this.currentIcon();
-    return isTxIconName(icon) ? icon : null;
+    return this.txIconRegistry.has(icon) ? icon : null;
   });
   hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-toggle-button'), ...this.passThrough().root?.style }));
 

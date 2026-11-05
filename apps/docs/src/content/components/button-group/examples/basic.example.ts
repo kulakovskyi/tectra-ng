@@ -9,7 +9,7 @@ import { TxButtonGroup } from '@tectra/ui/button-group';
     <tx-button-group>
       <button txButton [icon]="'check'">Save</button>
       <button txButton [icon]="'trash'">Delete</button>
-      <button txButton [icon]="'close'">Cancel</button>
+      <button txButton [icon]="'times'">Cancel</button>
     </tx-button-group>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
