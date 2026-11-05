@@ -1,5 +1,5 @@
 ---
-category: Misc
+category: Display
 examples: basic, severity, sizes, dot
 ---
 # Badge

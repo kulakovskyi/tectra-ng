@@ -9,6 +9,7 @@ import { knobTokens } from './knob.tokens';
 import { floatLabelTokens, iftaLabelTokens, labelTokens } from './label.tokens';
 import { fieldTokens } from './field.tokens';
 import { fieldMessageTokens, messageTokens } from './message.tokens';
+import { overlayBadgeTokens } from './overlay-badge.tokens';
 import { passwordTokens } from './password.tokens';
 import { radioButtonTokens } from './radio-button.tokens';
 import { ratingTokens } from './rating.tokens';
@@ -45,6 +46,7 @@ export const COMPONENT_TOKENS = {
   rating: ratingTokens,
   knob: knobTokens,
   slider: sliderTokens,
+  overlayBadge: overlayBadgeTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

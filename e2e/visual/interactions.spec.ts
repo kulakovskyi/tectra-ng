@@ -458,6 +458,19 @@ test('password generator fills and reveals the password field', async ({ page })
   await expect(token.getByLabel('API token')).toHaveValue(/^[A-Za-z2-9]{32}$/);
 });
 
+test('overlay badge sits on the corner and is read with its button', async ({ page }) => {
+  await page.goto('/components/overlay-badge');
+  const example = page.locator('overlay-badge-basic-example');
+  const inbox = example.getByRole('button', { name: 'Inbox' });
+  await expect(inbox).toHaveAccessibleDescription('unread messages');
+  const badge = example.locator('tx-badge').first();
+  const [button, mark] = await Promise.all([inbox, badge].map((locator) => locator.evaluate((element) => element.getBoundingClientRect().toJSON())));
+  expect(Math.abs(mark.x + mark.width / 2 - (button.x + button.width))).toBeLessThan(2);
+  expect(Math.abs(mark.y + mark.height / 2 - button.y)).toBeLessThan(2);
+  await example.getByRole('button', { name: 'Add message' }).click();
+  await expect(badge).toHaveText('5');
+});
+
 test.describe('with motion', () => {
   test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 

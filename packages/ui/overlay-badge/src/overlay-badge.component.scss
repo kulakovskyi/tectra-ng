@@ -1,0 +1,25 @@
+:host {
+  position: relative;
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+.tx-overlay-badge__badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  transform: translate(50%, -50%);
+  pointer-events: none;
+}
+
+:host([data-styled]) .tx-overlay-badge__badge {
+  top: var(--tx-overlay-badge-offset);
+  right: var(--tx-overlay-badge-offset);
+  box-shadow: 0 0 0 var(--tx-overlay-badge-ring-width) var(--tx-overlay-badge-ring-color);
+}
+
+:host([data-styled][data-shape='circle']) .tx-overlay-badge__badge {
+  top: var(--tx-overlay-badge-circle-offset);
+  right: var(--tx-overlay-badge-circle-offset);
+}

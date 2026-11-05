@@ -74,10 +74,12 @@ Detailed checklist per component: [roadmap/stage-3-forms.md](roadmap/stage-3-for
 
 ## Stage 4 — feedback & display primitives
 
+Detailed checklist per component: [roadmap/stage-4-display.md](roadmap/stage-4-display.md).
+
 | tectra | PrimeNG equivalent | Usage | Status |
 |---|---|---|---|
 | `ui/badge` | Badge | — | ✅ |
-| `ui/overlay-badge` | OverlayBadge | 0 | ⬜ |
+| `ui/overlay-badge` | OverlayBadge | 0 | ✅ |
 | `ui/pill` — tone, icon, size | Tag (rounded) | **852** | ⬜ |
 | `ui/tag` + `ui/chip` | Tag, Chip | 43, 0 | ⬜ |
 | `ui/message` (alert) — built in 3.3 (`tx-message`) | Message | **370** | ✅ |
