@@ -1,0 +1,1 @@
+`strokeWidth`, `fill` and `animationDuration`.

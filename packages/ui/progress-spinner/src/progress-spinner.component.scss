@@ -1,0 +1,49 @@
+:host {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.tx-progress-spinner__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+:host([data-styled]) {
+  --_size: var(--tx-progress-spinner-size);
+
+  width: var(--_size);
+  height: var(--_size);
+}
+
+@each $size, $key in (small: sm, large: lg) {
+  :host([data-styled][data-size='#{$size}']) {
+    --_size: var(--tx-progress-spinner-#{$key}-size);
+  }
+}
+
+:host([data-styled]) .tx-progress-spinner__svg {
+  animation: tx-progress-spinner-rotate var(--tx-progress-spinner-duration) linear infinite;
+}
+
+:host([data-styled]) .tx-progress-spinner__track {
+  stroke: var(--tx-progress-spinner-track-color);
+}
+
+:host([data-styled]) .tx-progress-spinner__circle {
+  stroke: var(--tx-progress-spinner-color);
+  stroke-dasharray: 34 200;
+  stroke-linecap: round;
+}
+
+@keyframes tx-progress-spinner-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) .tx-progress-spinner__svg {
+    animation-duration: var(--tx-progress-spinner-reduced-duration);
+  }
+}

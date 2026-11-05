@@ -83,8 +83,8 @@ Detailed checklist per component: [roadmap/stage-4-display.md](roadmap/stage-4-d
 | `ui/pill` — tone, icon, size | Tag (rounded) | **852** | ✅ |
 | `ui/tag` + `ui/chip` | Tag, Chip | 43, 0 | ✅ |
 | `ui/message` (alert) — built in 3.3 (`tx-message`) | Message | **370** | ✅ |
-| `ui/progress-bar` | ProgressBar | 30 | ⬜ |
-| `ui/progress-spinner` (loader) | ProgressSpinner | 25 | ⬜ |
+| `ui/progress-bar` | ProgressBar | 30 | ✅ |
+| `ui/progress-spinner` (loader) | ProgressSpinner | 25 | ✅ |
 | `ui/skeleton` | Skeleton | 0 | ⬜ |
 | `ui/avatar` (+ group, initials fallback, photo) | Avatar, AvatarGroup | 174, 9, 6 | ⬜ |
 | `ui/divider` | Divider | — (parity) | ⬜ |

@@ -500,6 +500,22 @@ test('tag copies its text and chip is removed with the keyboard', async ({ page,
   await expect(chips.locator('tx-chip').nth(1)).toHaveText(/team@example.com/);
 });
 
+test('progress bar grows with the value and reports it', async ({ page }) => {
+  await page.goto('/components/progress-bar');
+  const live = page.locator('progress-bar-live-example');
+  const bar = live.getByRole('progressbar', { name: 'Upload' });
+  await expect(bar).toHaveAttribute('aria-valuenow', '0');
+  await live.getByRole('button', { name: 'Upload' }).click();
+  await expect(bar).toHaveAttribute('aria-valuenow', '100', { timeout: 5000 });
+  await expect(bar).toHaveAttribute('data-severity', 'success');
+  await expect.poll(() => bar.evaluate((element) => {
+    const track = element.querySelector('.tx-progress-bar__track') as HTMLElement;
+    const value = element.querySelector('.tx-progress-bar__value') as HTMLElement;
+    return Math.round((value.getBoundingClientRect().width / track.getBoundingClientRect().width) * 100);
+  })).toBe(100);
+  await expect(page.locator('progress-bar-indeterminate-example').getByRole('progressbar')).toHaveAttribute('aria-busy', 'true');
+});
+
 test.describe('with motion', () => {
   test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 

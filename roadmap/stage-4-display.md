@@ -34,13 +34,13 @@ PrimeNG: Tag (`value`, `severity`, `rounded`, `icon`), Chip (`label`, `icon`, `i
 - [x] `<tx-chip>`: label, icon, round image (avatar), removable with own `removeIcon` and translated label, `(removed)`, Delete / Backspace on the remove button; `chip` tokens
 - [x] Docs + tests: severities, rounded, icons, sizes, copy, remove, chip with icons / images / recipients, design tokens; e2e: copy to the clipboard, keyboard removal
 
-## 4.4 Progress bar + progress spinner — `ui/progress-bar`, `ui/progress-spinner`
+## 4.4 Progress bar + progress spinner — `ui/progress-bar`, `ui/progress-spinner` ✅
 
 PrimeNG: ProgressBar (`value`, `showValue`, `unit`, `mode` determinate / indeterminate, `color`, content template), ProgressSpinner (`strokeWidth`, `fill`, `animationDuration`). First app: progress bar 34 (`value`, `showValue`, `mode`, `color`, `size` normal / small), loader 25 (`width`, `height`).
 
-- [ ] `<tx-progress-bar>`: value 0–100 (and `min` / `max`), `showValue` + `unit` + value template, `mode="indeterminate"`, `severity` and own `color`, sizes, `role="progressbar"` with values / busy state
-- [ ] `<tx-progress-spinner>`: size (px or `small` / `medium` / `large`), `strokeWidth`, `fill`, `animationDuration`, `role="progressbar"` + label; reduced motion slows down instead of stopping
-- [ ] Docs + tests: values, label, indeterminate, colours, sizes, spinner sizes
+- [x] `<tx-progress-bar>`: value within `min` / `max` (clamped), `showValue` + `unit` (`%` or the value with a unit) + `txProgressBarValue` template, `mode="indeterminate"` (busy, slides; pulses with reduced motion), eight severities and own `color`, `small` / `medium` (`normal` alias) / `large`, `role="progressbar"` with value text and a translated default name; width animates
+- [x] `<tx-progress-spinner>`: `small` / `medium` / `large` or px, `strokeWidth`, `fill`, `animationDuration`, `color`, busy `progressbar` named "Loading" (us / ua) by default; reduced motion turns slowly instead of stopping
+- [x] Docs + tests: values, label, severities, indeterminate, sizes, units, template, live upload, spinner sizes / stroke / colours / inline, design tokens; e2e: value grows to 100 with the fill width, busy indeterminate bar
 
 ## 4.5 Skeleton — `ui/skeleton`
 

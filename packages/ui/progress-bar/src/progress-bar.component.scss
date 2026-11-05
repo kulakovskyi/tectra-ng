@@ -1,0 +1,92 @@
+:host {
+  display: flex;
+  align-items: center;
+}
+
+.tx-progress-bar__track {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.tx-progress-bar__value {
+  height: 100%;
+}
+
+:host([data-styled]) {
+  --_fill: var(--tx-progress-bar-fill, var(--tx-progress-bar-primary));
+
+  gap: var(--tx-progress-bar-gap);
+}
+
+@each $severity in (secondary, success, info, warn, danger, help, contrast) {
+  :host([data-styled][data-severity='#{$severity}']) {
+    --_fill: var(--tx-progress-bar-fill, var(--tx-progress-bar-#{$severity}));
+  }
+}
+
+:host([data-styled]) .tx-progress-bar__track {
+  height: var(--tx-progress-bar-height);
+  border-radius: var(--tx-progress-bar-border-radius);
+  background: var(--tx-progress-bar-track-background);
+}
+
+@each $size, $key in (small: sm, large: lg) {
+  :host([data-styled][data-size='#{$size}']) .tx-progress-bar__track {
+    height: var(--tx-progress-bar-#{$key}-height);
+  }
+}
+
+:host([data-styled]) .tx-progress-bar__value {
+  border-radius: inherit;
+  background: var(--_fill);
+  transition: width var(--tx-progress-bar-transition-duration) cubic-bezier(0.2, 0, 0, 1);
+}
+
+:host([data-styled][data-mode='indeterminate']) .tx-progress-bar__value {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 40%;
+  animation: tx-progress-bar-slide var(--tx-progress-bar-indeterminate-duration) cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+:host([data-styled]) .tx-progress-bar__label {
+  flex-shrink: 0;
+  min-width: 4.5ch;
+  color: var(--tx-progress-bar-label-color);
+  font-family: var(--tx-font-family);
+  font-size: var(--tx-progress-bar-label-font-size);
+  font-weight: var(--tx-progress-bar-label-font-weight);
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}
+
+@keyframes tx-progress-bar-slide {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(250%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) .tx-progress-bar__value {
+    transition: none;
+  }
+
+  :host([data-styled][data-mode='indeterminate']) .tx-progress-bar__value {
+    width: 100%;
+    animation: tx-progress-bar-pulse 2.4s ease-in-out infinite;
+  }
+}
+
+@keyframes tx-progress-bar-pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
