@@ -138,7 +138,7 @@ describe('TxMultiselect', () => {
     host.control.setValue(['design', 'backend', 'frontend']);
     host.maxLabels.set(2);
     render();
-    expect(trigger().textContent?.trim()).toBe('3 selected');
+    expect(trigger().textContent?.trim()).toBe('3 items selected');
     host.maxLabels.set(5);
     host.display.set('chip');
     render();

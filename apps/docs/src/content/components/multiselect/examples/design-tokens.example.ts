@@ -10,7 +10,7 @@ import { TxMultiselect } from '@tectra/ui/multiselect';
     [maxSelectedLabels]="10"
     [placeholder]="'Skills'"
     [dt]="{
-      chip: { borderRadius: '999px', paddingX: '10px' },
+      chip: { borderRadius: '999px', paddingStart: '10px' },
       checkbox: { borderRadius: '50%' },
     }"
   />`,

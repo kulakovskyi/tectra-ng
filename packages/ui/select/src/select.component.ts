@@ -37,7 +37,7 @@ import { TxSelectChangeEvent, TxSelectItem, TxSelectPart } from './select.types'
 export class TxSelect extends TxSelectBase<unknown> {
   readonly options = input<readonly unknown[]>([]);
   readonly editable = input<boolean, unknown>(false, { transform: booleanAttribute });
-  readonly checkmark = input<boolean, unknown>(true, { transform: booleanAttribute });
+  readonly checkmark = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly dropdownIcon = input<TxIconName>('chevron-down');
   readonly dt = input<TectraDeepPartial<TectraSelectTokens> | undefined>(undefined);
   readonly pt = input<TxPassThrough<TxSelectPart, TxSelect> | undefined>(undefined);

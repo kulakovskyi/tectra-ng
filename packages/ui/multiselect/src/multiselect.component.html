@@ -111,16 +111,17 @@
       </div>
     }
     @if (filter() || showToggleAll()) {
-      <div class="tx-select__filter" [class]="passThrough().filter?.class" [style]="passThrough().filter?.style">
+      <div class="tx-select__filter tx-multiselect__header" [class]="passThrough().filter?.class" [style]="passThrough().filter?.style">
         @if (showToggleAll()) {
           <button
             type="button"
             role="checkbox"
             class="tx-multiselect__toggle-all"
+            [class.tx-multiselect__toggle-all--full]="!filter()"
             [class]="passThrough().toggleAll?.class"
             [style]="passThrough().toggleAll?.style"
             [attr.aria-checked]="allChecked()"
-            [attr.aria-label]="filter() ? translations().selectAll : null"
+            [attr.aria-label]="translations().selectAll"
             (click)="toggleAll()"
           >
             <span class="tx-multiselect__box" aria-hidden="true">
@@ -130,29 +131,28 @@
                 <tx-icon [name]="'minus'" />
               }
             </span>
-            @if (!filter()) {
-              <span>{{ translations().selectAll }}</span>
-            }
           </button>
         }
         @if (filter()) {
-          <tx-icon class="tx-select__filter-icon" [name]="'search'" />
-          <input
-            #filterInput
-            type="text"
-            autocomplete="off"
-            class="tx-select__filter-input"
-            role="searchbox"
-            [class]="passThrough().filterInput?.class"
-            [style]="passThrough().filterInput?.style"
-            [attr.aria-label]="filterPlaceholder() ?? translations().searchPlaceholder"
-            [attr.aria-controls]="listboxId"
-            [attr.aria-activedescendant]="activeItemId()"
-            [placeholder]="filterPlaceholder() ?? translations().searchPlaceholder"
-            [value]="query()"
-            (input)="onFilterInput($event)"
-            (keydown)="onKeydown($event)"
-          />
+          <span class="tx-select__filter-field">
+            <input
+              #filterInput
+              type="text"
+              autocomplete="off"
+              class="tx-select__filter-input"
+              role="searchbox"
+              [class]="passThrough().filterInput?.class"
+              [style]="passThrough().filterInput?.style"
+              [attr.aria-label]="filterPlaceholder() ?? translations().searchPlaceholder"
+              [attr.aria-controls]="listboxId"
+              [attr.aria-activedescendant]="activeItemId()"
+              [placeholder]="filterPlaceholder() ?? translations().searchPlaceholder"
+              [value]="query()"
+              (input)="onFilterInput($event)"
+              (keydown)="onKeydown($event)"
+            />
+            <tx-icon class="tx-select__filter-icon" [name]="'search'" />
+          </span>
         }
       </div>
     }

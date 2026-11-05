@@ -40,7 +40,7 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     generatePassword: 'Generate password',
     remove: 'Remove',
     moreItems: '{count} more',
-    selectedItems: '{count} selected',
+    selectedItems: '{count} items selected',
     showOptions: 'Show options',
     removeItem: 'Remove {item}',
     itemsLimit: 'Up to {max}',

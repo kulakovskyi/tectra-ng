@@ -25,7 +25,7 @@ The option engine (`buildOptionRows`, `readOptionField`, `foldText`) is exported
 | showClear | Shows a button that clears the value |
 | editable | The field is a text input: free text is the value, unless it matches an option |
 | loading | Spinner instead of the dropdown icon, "Loading" in an empty panel |
-| checkmark | Check icon on the selected option (on by default) |
+| checkmark | Check icon on the selected option (off by default; the selected option is highlighted) |
 | lazy | Options come from a server: `lazyLoad` asks for missing rows and the search is not applied locally |
 | virtualScroll | Renders only the visible rows — for long lists |
 | virtualScrollItemSize | Height of a row in px with `virtualScroll` |

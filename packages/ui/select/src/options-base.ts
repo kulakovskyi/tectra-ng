@@ -31,7 +31,7 @@ export abstract class TxOptionsBase<T> extends TxFormControlBase<T> {
   readonly loading = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly lazy = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly virtualScroll = input<boolean, unknown>(false, { transform: booleanAttribute });
-  readonly virtualScrollItemSize = input<number>(36);
+  readonly virtualScrollItemSize = input<number>(35);
   readonly scrollHeight = input<string | undefined>(undefined);
   readonly emptyMessage = input<string | undefined>(undefined);
   readonly emptyFilterMessage = input<string | undefined>(undefined);
@@ -119,10 +119,10 @@ export abstract class TxOptionsBase<T> extends TxFormControlBase<T> {
     return sameOptionValue(a, b, this.dataKey());
   }
 
-  protected resetActive(preferSelected: boolean): void {
+  protected resetActive(preferSelected: boolean, fallbackToFirst = true): void {
     const rows = this.rows();
     const selected = preferSelected ? rows.findIndex((row) => isSelectableRow(row) && row.selected) : -1;
-    this.activeIndex.set(selected >= 0 ? selected : rows.findIndex(isSelectableRow));
+    this.activeIndex.set(selected >= 0 ? selected : fallbackToFirst ? rows.findIndex(isSelectableRow) : -1);
   }
 
   protected resetLazyRange(): void {

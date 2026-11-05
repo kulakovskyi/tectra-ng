@@ -16,7 +16,7 @@ A list of options shown inline, without a popup — pick one value or several. W
 | multiple | Several values; the value is an array |
 | checkbox | Shows a checkbox on each option (several values) |
 | metaKeySelection | With `multiple`: a plain click replaces the selection, Ctrl / ⌘ + click adds |
-| checkmark | Check icon on selected options without checkboxes (on by default) |
+| checkmark | Check icon on selected options without checkboxes (off by default) |
 | filter | Shows a search field above the list |
 | filterBy | Fields to search in, comma separated |
 | filterMatchMode | `contains`, `startsWith`, `endsWith` or `equals` |

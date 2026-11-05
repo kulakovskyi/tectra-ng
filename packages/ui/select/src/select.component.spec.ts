@@ -240,6 +240,8 @@ describe('TxSelect features', () => {
   it('skips disabled options with keys and clicks', () => {
     open();
     expect(options()[1].getAttribute('aria-disabled')).toBe('true');
+    expect(document.querySelector('.tx-select__option--active')).toBeNull();
+    key(trigger(), 'ArrowDown');
     key(trigger(), 'ArrowDown');
     key(trigger(), 'Enter');
     expect(host.control.value).toBe('odesa');
@@ -382,7 +384,7 @@ describe('TxSelect features', () => {
     render();
     const list = document.querySelector('cdk-virtual-scroll-viewport');
     expect(list?.getAttribute('role')).toBe('listbox');
-    expect((list as HTMLElement).style.height).toBe('240px');
+    expect((list as HTMLElement).style.height).toBe('200px');
     expect(options().length).toBeLessThan(500);
   });
 

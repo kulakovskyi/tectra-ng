@@ -76,7 +76,7 @@ export abstract class TxSelectBase<T> extends TxOptionsBase<T> {
       return;
     }
     this.panelWidth.set(this.box().nativeElement.offsetWidth);
-    this.resetActive(true);
+    this.activeIndex.set(-1);
     this.isOpen.set(true);
     this.hasEntered = false;
     this.resetLazyRange();
@@ -111,6 +111,21 @@ export abstract class TxSelectBase<T> extends TxOptionsBase<T> {
         this.isPanelMounted.set(false);
       }
     });
+  }
+
+  private activateFromNothing(last: boolean): void {
+    const rows = this.rows();
+    const selected = rows.findIndex((row) => isSelectableRow(row) && row.selected);
+    const edge = last ? rows.map((row, index) => (isSelectableRow(row) ? index : -1)).filter((index) => index >= 0).pop() ?? -1 : rows.findIndex(isSelectableRow);
+    this.activeIndex.set(selected >= 0 ? selected : edge);
+    this.scrollActiveIntoView();
+  }
+
+  openFromKeyboard(): void {
+    this.open();
+    if (this.isOpen() && this.activeIndex() < 0) {
+      this.resetActive(true);
+    }
   }
 
   toggle(): void {
@@ -150,7 +165,8 @@ export abstract class TxSelectBase<T> extends TxOptionsBase<T> {
     if (!this.hasEntered && panel) {
       this.hasEntered = true;
       txAnimateEnter(panel, this.panelPlacement());
-      this.scrollActiveIntoView();
+      const selected = this.rows().findIndex((row) => isSelectableRow(row) && row.selected);
+      this.optionList()?.scrollToIndex(this.activeIndex() >= 0 ? this.activeIndex() : selected);
     }
   }
 
@@ -224,7 +240,7 @@ export abstract class TxSelectBase<T> extends TxOptionsBase<T> {
     if (event.key === 'Enter' || (event.key === ' ' && !typing)) {
       event.preventDefault();
       if (!this.isOpen()) {
-        this.open();
+        this.openFromKeyboard();
       } else if (isSelectableRow(active)) {
         this.activate(active);
       } else {
@@ -236,7 +252,11 @@ export abstract class TxSelectBase<T> extends TxOptionsBase<T> {
     if (isListKey && !(typing && (event.key === 'Home' || event.key === 'End'))) {
       event.preventDefault();
       if (!this.isOpen()) {
-        this.open();
+        this.openFromKeyboard();
+        return;
+      }
+      if (this.activeIndex() < 0 && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
+        this.activateFromNothing(event.key === 'ArrowUp');
         return;
       }
       this.moveActive(event.key);

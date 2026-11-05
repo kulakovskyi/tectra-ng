@@ -33,7 +33,7 @@ export class TxListbox extends TxOptionsBase<unknown> {
   readonly multiple = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly checkbox = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly metaKeySelection = input<boolean, unknown>(false, { transform: booleanAttribute });
-  readonly checkmark = input<boolean, unknown>(true, { transform: booleanAttribute });
+  readonly checkmark = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly readonly = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly invalid = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
   readonly ariaLabel = input<string | undefined>(undefined);

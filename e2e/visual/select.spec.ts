@@ -98,7 +98,7 @@ test('lazy list loads the rows that scroll into view and searches on the server'
   const trigger = example(page, 'Lazy').getByRole('combobox');
   await trigger.click();
   await expect(page.locator('.tx-select__option[role="option"]').first()).toHaveText('Customer 1');
-  await page.locator('cdk-virtual-scroll-viewport').evaluate((viewport) => viewport.scrollTo(0, 36 * 1200));
+  await page.locator('cdk-virtual-scroll-viewport').evaluate((viewport) => viewport.scrollTo(0, 35 * 1200));
   await expect(page.getByRole('option', { name: 'Customer 1205', exact: true })).toBeVisible();
   await page.locator('.tx-select__panel').getByRole('searchbox').fill('1999');
   await expect(page.locator('.tx-select__option[role="option"]')).toHaveText(['Customer 1999']);

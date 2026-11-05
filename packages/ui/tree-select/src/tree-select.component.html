@@ -89,23 +89,25 @@
   >
     @if (filter()) {
       <div class="tx-select__filter" [class]="passThrough().filter?.class" [style]="passThrough().filter?.style">
-        <tx-icon class="tx-select__filter-icon" [name]="'search'" />
-        <input
-          #filterInput
-          type="text"
-          autocomplete="off"
-          class="tx-select__filter-input"
-          role="searchbox"
-          [class]="passThrough().filterInput?.class"
-          [style]="passThrough().filterInput?.style"
-          [attr.aria-label]="filterPlaceholder() ?? translations().searchPlaceholder"
-          [attr.aria-controls]="treeId"
-          [attr.aria-activedescendant]="activeId()"
-          [placeholder]="filterPlaceholder() ?? translations().searchPlaceholder"
-          [value]="query()"
-          (input)="onFilter($event)"
-          (keydown)="onKeydown($event)"
-        />
+        <span class="tx-select__filter-field">
+          <input
+            #filterInput
+            type="text"
+            autocomplete="off"
+            class="tx-select__filter-input"
+            role="searchbox"
+            [class]="passThrough().filterInput?.class"
+            [style]="passThrough().filterInput?.style"
+            [attr.aria-label]="filterPlaceholder() ?? translations().searchPlaceholder"
+            [attr.aria-controls]="treeId"
+            [attr.aria-activedescendant]="activeId()"
+            [placeholder]="filterPlaceholder() ?? translations().searchPlaceholder"
+            [value]="query()"
+            (input)="onFilter($event)"
+            (keydown)="onKeydown($event)"
+          />
+          <tx-icon class="tx-select__filter-icon" [name]="'search'" />
+        </span>
       </div>
     }
     @if (rows().length) {

@@ -1,4 +1,4 @@
-@use '../../styles/form-field' as field;
+@use '../../select/src/select-field';
 
 :host {
   display: flex;
@@ -7,16 +7,6 @@
 
 :host(.tx-listbox--disabled) {
   pointer-events: none;
-}
-
-.tx-listbox__filter {
-  display: flex;
-  align-items: center;
-}
-
-.tx-listbox__filter-input {
-  flex: 1;
-  min-width: 0;
 }
 
 :host([data-styled]) {
@@ -28,42 +18,25 @@
   color: var(--tx-select-option-color);
   font-family: var(--tx-font-family);
   font-size: var(--tx-form-field-font-size);
+  line-height: var(--tx-form-field-line-height);
   transition:
     border-color var(--tx-form-field-transition-duration),
     box-shadow var(--tx-form-field-transition-duration);
 
   .tx-listbox__header {
     padding: var(--tx-select-header-padding);
-    border-bottom: 1px solid var(--tx-select-header-border-color);
   }
 
   .tx-listbox__footer {
     padding: var(--tx-select-footer-padding);
-    border-top: 1px solid var(--tx-select-footer-border-color);
   }
 
   .tx-listbox__filter {
-    gap: var(--tx-space-2);
-    padding: var(--tx-select-filter-padding);
-    border-bottom: 1px solid var(--tx-select-filter-border-color);
-    color: var(--tx-form-field-icon-color);
-  }
-
-  .tx-listbox__filter-input {
-    padding: 0;
-    border: none;
-    outline: none;
-    background: transparent;
-    color: var(--tx-form-field-color);
-    font: inherit;
-
-    &::placeholder {
-      @include field.placeholder;
-    }
+    @include select-field.filter-styles;
   }
 }
 
-:host([data-styled].tx-listbox--focused:has(:focus-visible)) {
+:host([data-styled].tx-listbox--focused:has(.tx-select__list:focus-visible)) {
   border-color: var(--tx-listbox-focus-border-color);
   box-shadow: var(--tx-listbox-focus-ring-shadow), var(--tx-listbox-shadow);
 }

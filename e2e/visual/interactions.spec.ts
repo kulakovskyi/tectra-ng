@@ -8,6 +8,8 @@ test('select panel is opaque and selects with the keyboard', async ({ page }) =>
   await expect(panel).toBeVisible();
   const background = await panel.evaluate((element) => getComputedStyle(element).backgroundColor);
   expect(background).not.toBe('rgba(0, 0, 0, 0)');
+  await expect(page.locator('.tx-select__option--active')).toHaveCount(0);
+  await page.keyboard.press('ArrowDown');
   await page.keyboard.press('ArrowDown');
   await page.keyboard.press('Enter');
   await expect(trigger).toContainText('Lviv');

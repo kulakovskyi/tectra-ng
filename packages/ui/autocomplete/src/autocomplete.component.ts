@@ -115,7 +115,9 @@ export class TxAutocomplete extends TxSelectBase<unknown> {
 
   override open(): void {
     super.open();
-    if (!this.autoOptionFocus()) {
+    if (this.autoOptionFocus()) {
+      this.resetActive(true);
+    } else {
       this.activeIndex.set(-1);
     }
   }

@@ -1,5 +1,4 @@
 @use '../../styles/form-field' as field;
-@use '../../styles/input-action' as action;
 
 @mixin styles($block) {
   :host {
@@ -44,29 +43,31 @@
     .tx-select__box {
       @include field.box;
 
+      --_px: var(--tx-form-field-padding-x);
+      --_py: var(--tx-form-field-padding-y);
+
       gap: var(--tx-select-gap);
       width: 100%;
+      padding-inline-end: 0;
     }
 
     &[data-variant='filled'] .tx-select__box {
       @include field.filled;
     }
 
-    &:not(#{$block}--disabled, #{$block}--readonly) .tx-select__box:hover {
+    &:not(#{$block}--disabled, #{$block}--readonly) .tx-select__box:not(:has(.tx-select__trigger:focus)):hover {
       @include field.hover;
     }
 
-    &[data-variant='filled']:not(#{$block}--disabled, #{$block}--readonly) .tx-select__box:hover {
+    &[data-variant='filled']:not(#{$block}--disabled, #{$block}--readonly) .tx-select__box:not(:has(.tx-select__trigger:focus)):hover {
       @include field.filled-hover;
     }
 
-    .tx-select__box:has(.tx-select__trigger:focus-visible),
-    &#{$block}--open .tx-select__box {
+    .tx-select__box:has(.tx-select__trigger:focus) {
       @include field.focus;
     }
 
-    &[data-variant='filled'] .tx-select__box:has(.tx-select__trigger:focus-visible),
-    &[data-variant='filled']#{$block}--open .tx-select__box {
+    &[data-variant='filled'] .tx-select__box:has(.tx-select__trigger:focus) {
       @include field.filled-focus;
     }
 
@@ -81,8 +82,7 @@
       @include field.invalid;
     }
 
-    &#{$block}--invalid .tx-select__box:has(.tx-select__trigger:focus-visible),
-    &#{$block}--invalid#{$block}--open .tx-select__box {
+    &#{$block}--invalid .tx-select__box:has(.tx-select__trigger:focus) {
       @include field.invalid-focus;
     }
 
@@ -92,14 +92,25 @@
 
     &[data-size='small'] .tx-select__box {
       @include field.size(sm);
+
+      --_px: var(--tx-form-field-sm-padding-x);
+      --_py: var(--tx-form-field-sm-padding-y);
+
+      padding-inline-end: 0;
     }
 
     &[data-size='large'] .tx-select__box {
       @include field.size(lg);
+
+      --_px: var(--tx-form-field-lg-padding-x);
+      --_py: var(--tx-form-field-lg-padding-y);
+
+      padding-inline-end: 0;
     }
 
     .tx-select__trigger {
       padding: 0;
+      padding-inline-end: var(--_px);
       border: none;
       outline: none;
       background: transparent;
@@ -130,29 +141,47 @@
       @include field.placeholder;
     }
 
+    &[data-variant='filled'] .tx-select__value--placeholder,
+    &[data-variant='filled'] .tx-select__input::placeholder {
+      color: var(--tx-form-field-filled-placeholder-color);
+    }
+
     &#{$block}--invalid .tx-select__value--placeholder {
       color: var(--tx-form-field-invalid-placeholder-color);
     }
 
     .tx-select__clear {
-      @include action.button;
-
+      display: grid;
       flex: none;
-      margin-block: calc((1lh - 24px) / 2);
-      margin-inline-end: calc(var(--tx-select-gap) / -2);
+      place-items: center;
+      width: var(--tx-select-clear-size);
+      height: var(--tx-select-clear-size);
+      padding: 0;
+      border: none;
+      border-radius: var(--tx-radius-full);
+      background: none;
+      color: var(--tx-select-dropdown-color);
+      font-size: var(--tx-select-clear-size);
+      cursor: pointer;
+      transition: color var(--tx-motion-duration) var(--tx-motion-easing);
+
+      &:hover {
+        color: var(--tx-form-field-color);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--tx-focus-ring-color);
+        outline-offset: 2px;
+      }
     }
 
     .tx-select__dropdown {
       flex: none;
+      align-items: center;
+      align-self: stretch;
+      justify-content: center;
+      width: var(--tx-select-dropdown-width);
       color: var(--tx-select-dropdown-color);
-    }
-
-    .tx-select__chevron {
-      transition: transform var(--tx-form-field-transition-duration);
-    }
-
-    &#{$block}--open .tx-select__chevron {
-      transform: rotate(180deg);
     }
 
     .tx-select__spinner {
@@ -167,10 +196,6 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    :host([data-styled]) .tx-select__chevron {
-      transition: none;
-    }
-
     :host([data-styled]) .tx-select__spinner {
       animation-duration: 2.4s;
     }
@@ -190,40 +215,61 @@
     color: var(--tx-select-option-color);
     font-family: var(--tx-font-family);
     font-size: var(--tx-form-field-font-size);
+    line-height: var(--tx-form-field-line-height);
 
     .tx-select__header {
       padding: var(--tx-select-header-padding);
-      border-bottom: 1px solid var(--tx-select-header-border-color);
     }
 
     .tx-select__footer {
       padding: var(--tx-select-footer-padding);
-      border-top: 1px solid var(--tx-select-footer-border-color);
     }
 
     .tx-select__filter {
-      display: flex;
-      align-items: center;
-      gap: var(--tx-space-2);
-      padding: var(--tx-select-filter-padding);
-      border-bottom: 1px solid var(--tx-select-filter-border-color);
-      color: var(--tx-form-field-icon-color);
+      @include filter-styles;
+    }
+  }
+}
+
+@mixin filter-styles {
+  display: flex;
+  align-items: center;
+  gap: var(--tx-select-filter-gap);
+  padding: var(--tx-select-filter-padding);
+
+  .tx-select__filter-field {
+    position: relative;
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .tx-select__filter-input {
+    @include field.box;
+
+    width: 100%;
+    min-width: 0;
+    padding-inline-end: calc(var(--tx-form-field-padding-x) + 1em + var(--tx-select-filter-icon-inset));
+
+    &:hover {
+      @include field.hover;
     }
 
-    .tx-select__filter-input {
-      flex: 1;
-      min-width: 0;
-      padding: 0;
-      border: none;
-      outline: none;
-      background: transparent;
-      color: var(--tx-form-field-color);
-      font: inherit;
-
-      &::placeholder {
-        @include field.placeholder;
-      }
+    &:focus {
+      @include field.focus;
     }
+
+    &::placeholder {
+      @include field.placeholder;
+    }
+  }
+
+  .tx-select__filter-icon {
+    position: absolute;
+    right: var(--tx-select-filter-icon-inset);
+    color: var(--tx-form-field-icon-color);
+    pointer-events: none;
   }
 }
 
@@ -249,20 +295,23 @@
   :host([data-styled]) {
     .tx-select__chips {
       gap: var(--tx-select-chip-gap);
+      margin-block: calc((1lh - var(--tx-select-chip-font-size) * 1.5 - 2 * var(--tx-select-chip-padding-y)) / 2);
       white-space: normal;
     }
 
     .tx-select__chip {
       gap: var(--tx-select-chip-gap);
-      padding-inline: var(--tx-select-chip-padding-x) calc(var(--tx-select-chip-padding-x) / 2);
+      padding: var(--tx-select-chip-padding-y) var(--tx-select-chip-padding-end) var(--tx-select-chip-padding-y) var(--tx-select-chip-padding-start);
       border-radius: var(--tx-select-chip-border-radius);
       background: var(--tx-select-chip-background);
       color: var(--tx-select-chip-color);
       font-size: var(--tx-select-chip-font-size);
+      line-height: 1.5;
     }
 
     .tx-select__chip-remove {
       transition: color var(--tx-motion-duration) var(--tx-motion-easing);
+      font-size: var(--tx-select-chip-remove-size);
       display: inline-grid;
       place-items: center;
       border-radius: var(--tx-radius-full);

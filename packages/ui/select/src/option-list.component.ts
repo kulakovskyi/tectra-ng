@@ -29,7 +29,7 @@ export interface TxOptionRange {
   end: number;
 }
 
-const DEFAULT_LIST_HEIGHT = 240;
+const DEFAULT_LIST_HEIGHT = 200;
 
 @Component({
   selector: 'tx-option-list',
@@ -48,7 +48,7 @@ export class TxOptionList {
   readonly activeIndex = input<number>(-1);
   readonly multiple = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly checkbox = input<boolean, unknown>(false, { transform: booleanAttribute });
-  readonly checkmark = input<boolean, unknown>(true, { transform: booleanAttribute });
+  readonly checkmark = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly virtualScroll = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly itemSize = input<number>(36);
   readonly scrollHeight = input<string | undefined>(undefined);
