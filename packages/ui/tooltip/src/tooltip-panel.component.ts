@@ -1,7 +1,7 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, InjectionToken, Signal, TemplateRef, afterRenderEffect, computed, inject, signal } from '@angular/core';
 import { TxResolvedPassThrough } from '@tectra/core/config';
-import { TxPlacement, parsePlacement } from '@tectra/core/overlay';
+import { TxPlacement, parsePlacement, txArrowOffset } from '@tectra/core/overlay';
 import { TxTooltipContent, TxTooltipContext, TxTooltipPart } from './tooltip.types';
 
 export interface TxTooltipPanelState {
@@ -66,11 +66,7 @@ export class TxTooltipPanel {
   });
   readonly side = computed(() => parsePlacement(this.state.placement()).side);
   readonly rootClass = computed(() => [this.state.passThrough().root?.class, this.state.panelClass()].filter(Boolean).join(' '));
-  readonly arrowOffset = computed(() => {
-    const { side, align } = parsePlacement(this.state.placement());
-    const half = (side === 'top' || side === 'bottom' ? this.originSize().width : this.originSize().height) / 2;
-    return align === 'start' ? `${half}px` : align === 'end' ? `calc(100% - ${half}px)` : '50%';
-  });
+  readonly arrowOffset = computed(() => txArrowOffset(this.state.placement(), this.originSize()));
   readonly hostStyle = computed(() => ({
     ...this.state.style(),
     '--tx-tooltip-arrow-offset': this.arrowOffset(),

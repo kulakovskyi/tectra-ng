@@ -26,6 +26,7 @@ import { rippleTokens } from './ripple.tokens';
 import { toggleButtonTokens } from './toggle-button.tokens';
 import { toggleSwitchTokens } from './toggle-switch.tokens';
 import { tooltipTokens } from './tooltip.tokens';
+import { popoverTokens } from './popover.tokens';
 
 export const COMPONENT_TOKENS = {
   icon: iconTokens,
@@ -61,6 +62,7 @@ export const COMPONENT_TOKENS = {
   skeleton: skeletonTokens,
   avatar: avatarTokens,
   tooltip: tooltipTokens,
+  popover: popoverTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

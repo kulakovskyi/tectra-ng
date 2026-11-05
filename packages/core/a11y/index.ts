@@ -5,3 +5,4 @@ export * from './src/typeahead';
 export * from './src/focus-trap.directive';
 export * from './src/announcer.service';
 export * from './src/described-by';
+export * from './src/tabbable';

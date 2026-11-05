@@ -19,14 +19,16 @@ PrimeNG: Tooltip (`pTooltip` text or template, `tooltipPosition`, `tooltipEvent`
 - [x] `tooltipDisabled`, `tooltipOverflowOnly` (only when the text is truncated), `tooltipClass`, `provideTxTooltip()` for app-wide defaults; `dt` / `pt` / `ptOptions` / `unstyled` as `tooltipDt` / `tooltipPt` / `tooltipPtOptions` / `tooltipUnstyled` (the host element has its own `dt`)
 - [x] Docs + tests: basic, placements, triggers, delays, template, interactive, disabled, overflow, on icon buttons, manual, design tokens; e2e: hover shows above the button with the arrow on its middle, keyboard focus shows and Escape hides, flip below a stuck tab bar, stays open on the tooltip, overflow only. Found on the way: `TxOverlay` measured component panels before they rendered and CDK compared top placements with the viewport edge instead of the sticky chrome — panels now render first and the first placement with room around the insets goes first (`orderByRoom`)
 
-## 5.2 Popover — `ui/popover`
+## 5.2 Popover — `ui/popover` ✅
 
 PrimeNG: Popover (`toggle(event, target?)`, `show`, `hide`, `dismissable`, `appendTo`, `(onShow)`, `(onHide)`). First app: 16 places — a trigger + content wrapper with `(opened)` and `hide()` (notification bells, user menus, app switcher, table settings), plus direct use with `toggle(event, target)`, `dismissable`, `(onShow)` / `(onHide)` and own tokens.
 
-- [ ] `<tx-popover>` (content) + `[txPopoverTrigger]` directive: toggle on click, placements with flip, arrow, `[(open)]`, `show(target?)` / `hide()` / `toggle(event?, target?)`, `(opened)` / `(closed)`
-- [ ] Closes on outside click (`dismissable`), Escape and scroll-out; focus moves into the panel and back to the trigger; `aria-haspopup="dialog"` / `aria-expanded` / `aria-controls`
-- [ ] Header / footer slots, `closeButton`, width from content with `minWidth` / `maxWidth` tokens
-- [ ] Docs + tests: basic, placements, form inside, header / footer, programmatic target, nested (popover in popover), design tokens; e2e: focus in and back, outside click, Escape
+- [x] `<tx-popover>` (content) + `[txPopoverTrigger]` directive: toggle on click, placements with flip, arrow, `[(open)]`, `show(target?)` / `hide()` / `toggle(event?, target?)`, `(opened)` / `(closed)`
+- [x] Closes on outside click (`dismissable`), Escape and scroll-out; focus moves into the panel and back to the trigger; `aria-haspopup="dialog"` / `aria-expanded` / `aria-controls`
+- [x] Header / footer slots, `closeButton`, width from content with `minWidth` / `maxWidth` tokens
+- [x] Docs + tests: basic, placements, form inside, header / footer, programmatic target, nested (popover in popover), design tokens; e2e: focus in and back, outside click, Escape
+- Found on the way: tabbable lookups skip `inert` areas (`tabbableElements`, `nextTabbable` in `@tectra/core/a11y`); the arrow offset is shared (`txArrowOffset`)
+
 
 ## 5.3 Toast — `ui/toast` + `TxToastService`
 

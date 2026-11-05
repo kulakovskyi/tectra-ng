@@ -1,0 +1,60 @@
+<ng-template #panel>
+  <div
+    class="tx-popover"
+    role="dialog"
+    tabindex="-1"
+    [id]="id"
+    [class]="passThrough().root?.class"
+    [style]="panelStyle()"
+    [attr.data-styled]="!isUnstyled() || null"
+    [attr.data-side]="side()"
+    [attr.data-placement]="currentPlacement()"
+    [attr.aria-label]="ariaLabel() ?? null"
+    [attr.aria-labelledby]="labelledBy()"
+    (keydown)="onPanelKeydown($event)"
+  >
+    @if (arrow()) {
+      <span class="tx-popover__arrow" aria-hidden="true" [class]="passThrough().arrow?.class" [style]="passThrough().arrow?.style"></span>
+    }
+    @if (hasTitle()) {
+      <div class="tx-popover__header" [class]="passThrough().header?.class" [style]="passThrough().header?.style">
+        <div class="tx-popover__title" [id]="titleId" [class]="passThrough().title?.class" [style]="passThrough().title?.style">
+          @if (header()) {
+            {{ header() }}
+          }
+          <ng-content select="[txPopoverHeader]" />
+        </div>
+        @if (closeButton()) {
+          <ng-container [ngTemplateOutlet]="close" />
+        }
+      </div>
+    } @else if (closeButton()) {
+      <ng-container [ngTemplateOutlet]="close" />
+    }
+    <div class="tx-popover__content" [class]="passThrough().content?.class" [style]="passThrough().content?.style">
+      <ng-content />
+      @if (lazyContent(); as lazy) {
+        <ng-container [ngTemplateOutlet]="lazy.template" [ngTemplateOutletContext]="contentContext" />
+      }
+    </div>
+    @if (footerSlot()) {
+      <div class="tx-popover__footer" [class]="passThrough().footer?.class" [style]="passThrough().footer?.style">
+        <ng-content select="[txPopoverFooter]" />
+      </div>
+    }
+  </div>
+</ng-template>
+
+<ng-template #close>
+  <button
+    type="button"
+    class="tx-popover__close"
+    [class.tx-popover__close--floating]="!hasTitle()"
+    [class]="passThrough().closeButton?.class"
+    [style]="passThrough().closeButton?.style"
+    [attr.aria-label]="translations().close"
+    (click)="hide()"
+  >
+    <tx-icon name="times" />
+  </button>
+</ng-template>
