@@ -87,13 +87,13 @@ Detailed checklist per component: [roadmap/stage-4-display.md](roadmap/stage-4-d
 | `ui/progress-spinner` (loader) | ProgressSpinner | 25 | ✅ |
 | `ui/skeleton` | Skeleton | 0 | ✅ |
 | `ui/avatar` (+ group, initials fallback, photo) | Avatar, AvatarGroup | 174, 9, 6 | ✅ |
-| `ui/divider` | Divider | — (parity) | ⬜ |
-| `ui/card` / `ui/panel` | Card, Panel | 115 | ⬜ |
-| `ui/fieldset` | Fieldset | — (parity) | ⬜ |
-| `ui/highlight-text` | — | 43 | ⬜ |
-| `ui/amount` (money / number formatting) | — | 40 | ⬜ |
-| `ui/status-icon` | — | 6 | ⬜ |
-| `ui/link` (link-view, icon-link) | — | 202, 4 | ⬜ |
+| `ui/divider` | Divider | — (parity) | ✅ |
+| `ui/card` / `ui/panel` | Card, Panel | 115 | ✅ |
+| `ui/fieldset` | Fieldset | — (parity) | ✅ |
+| `ui/highlight-text` | — | 43 | ✅ |
+| `ui/amount` (money / number formatting) | — | 40 | ✅ |
+| `ui/status-icon` | — | 6 | ✅ |
+| `ui/link` (link-view, icon-link) | — | 202, 4 | ✅ |
 
 ## Stage 5 — overlays (after stage 2)
 

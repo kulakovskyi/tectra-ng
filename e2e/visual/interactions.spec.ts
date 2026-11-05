@@ -537,6 +537,121 @@ test('avatar falls back to initials and a group shows +N', async ({ page }) => {
   await expect(group.getByRole('button', { name: 'Invite' })).toBeVisible();
 });
 
+test('panel collapses by click and keyboard and hides its content', async ({ page }) => {
+  await page.goto('/components/panel');
+  const example = page.locator('panel-toggleable-example');
+  const region = example.getByRole('region', { name: 'Advanced settings' });
+  const toggle = region.getByRole('button', { name: 'Advanced settings' });
+  const content = region.getByText('Cache lifetime, request limits and webhooks.');
+  await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+  await expect(content).toBeHidden();
+  const controls = await toggle.getAttribute('aria-controls');
+  await expect(region.locator(`#${controls}`)).toHaveAttribute('inert', '');
+  await toggle.click();
+  await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+  await expect(content).toBeVisible();
+  await expect(example.locator('.status')).toHaveText('Expanded');
+  await toggle.press('Enter');
+  await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+  await expect.poll(() => region.locator(`#${controls}`).evaluate((element) => element.getBoundingClientRect().height)).toBe(0);
+  await toggle.press('Space');
+  await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+});
+
+test('fieldset collapses from its legend and keeps the legend naming the group', async ({ page }) => {
+  await page.goto('/components/fieldset');
+  const example = page.locator('fieldset-toggleable-example');
+  const group = example.getByRole('group', { name: 'Billing address' });
+  const toggle = group.getByRole('button', { name: 'Billing address' });
+  await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+  await expect(group.getByRole('textbox', { name: 'Street' })).toBeVisible();
+  await toggle.press('Enter');
+  await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+  await expect(example.locator('.status')).toHaveText('Collapsed');
+  await expect(group.getByRole('textbox', { name: 'Street' })).toBeHidden();
+  await toggle.click();
+  await expect(group.getByRole('textbox', { name: 'Street' })).toBeVisible();
+});
+
+test('divider is a separator with its orientation', async ({ page }) => {
+  await page.goto('/components/divider');
+  const vertical = page.locator('divider-vertical-example').getByRole('separator').first();
+  await expect(vertical).toHaveAttribute('aria-orientation', 'vertical');
+  const box = await vertical.boundingBox();
+  expect(box?.height).toBeGreaterThan(30);
+});
+
+test('highlight text follows the search and ignores accents', async ({ page }) => {
+  await page.goto('/components/highlight-text');
+  const example = page.locator('highlight-text-basic-example');
+  await expect(example.locator('mark')).toHaveText(['Café', 'cafe', 'café']);
+  await example.getByLabel('Search').fill('RIVER');
+  await expect(example.locator('mark')).toHaveText(['river']);
+  const list = page.locator('highlight-text-search-list-example');
+  await list.getByLabel('Search cities').fill('kh');
+  await expect(list.getByRole('listitem')).toHaveText(['Kharkiv']);
+  await expect(list.locator('mark')).toHaveText('Kh');
+});
+
+test('link copies itself, opens web links in a new tab and router links in the app', async ({ page, context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto('/components/link');
+  const basic = page.locator('link-basic-example').getByRole('link', { name: /docs\.example\.com/ });
+  await expect(basic).toHaveAttribute('href', 'https://docs.example.com');
+  await expect(basic).toHaveAttribute('target', '_blank');
+  await expect(basic).toHaveAccessibleName('docs.example.com (opens in a new tab)');
+  const copy = page.locator('link-copy-example');
+  await copy.getByRole('button', { name: 'Copy email' }).click();
+  await expect(copy.locator('.status')).toHaveText('Copied billing@example.com');
+  await expect(copy.getByRole('button', { name: 'Copied' })).toBeVisible();
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe('billing@example.com');
+  const nav = page.locator('link-icon-links-example').getByRole('navigation', { name: 'Account' });
+  await expect(nav.getByRole('link', { name: 'Link' })).toHaveAttribute('aria-current', 'page');
+  await page.locator('link-router-link-example').getByRole('link', { name: 'avatars' }).click();
+  await expect(page).toHaveURL(/\/components\/avatar$/);
+  await expect(page.locator('main h1').first()).toHaveText('Avatar');
+});
+
+test('amount and status icon read well in tables', async ({ page }) => {
+  await page.goto('/components/amount');
+  const table = page.locator('amount-in-a-table-example').getByRole('table', { name: 'Orders' });
+  await expect(table.getByRole('row').nth(1)).toContainText('$1,290.00');
+  await expect(table.locator('[data-sign="negative"]')).toHaveText('-12');
+  await page.goto('/components/status-icon');
+  const domains = page.locator('status-icon-in-a-table-example').getByRole('table', { name: 'Domains' });
+  const row = domains.getByRole('row').nth(2);
+  await expect(row.getByRole('img', { name: 'Yes', exact: true })).toBeVisible();
+  await expect(row.getByRole('img', { name: 'No certificate' })).toHaveAttribute('title', 'No certificate');
+});
+
+test('sidebar searches, collapses groups and keeps the current page in view', async ({ page }) => {
+  await page.goto('/components/panel');
+  const sidebar = page.getByRole('navigation', { name: 'Documentation' });
+  const current = sidebar.getByRole('link', { name: 'Panel' });
+  await expect(current).toHaveAttribute('aria-current', 'page');
+  await expect(current).toBeInViewport();
+  const form = sidebar.getByRole('button', { name: /Form/ });
+  await form.click();
+  await expect(form).toHaveAttribute('aria-expanded', 'false');
+  await expect(sidebar.getByRole('link', { name: 'Checkbox' })).toBeHidden();
+  await page.reload();
+  await expect(sidebar.getByRole('button', { name: /Form/ })).toHaveAttribute('aria-expanded', 'false');
+  await expect(sidebar.getByRole('link', { name: 'Panel' })).toBeInViewport();
+  await page.locator('main h1').first().click();
+  await page.keyboard.press('/');
+  const search = sidebar.getByRole('searchbox', { name: 'Search docs' });
+  await expect(search).toBeFocused();
+  await search.fill('progress');
+  await expect(sidebar.locator('.docs-nav__status')).toHaveText('2 results');
+  await expect(sidebar.getByRole('link')).toHaveText(['ProgressBar', 'ProgressSpinner']);
+  await search.press('Enter');
+  await expect(page).toHaveURL(/\/components\/progress-bar$/);
+  await search.press('Escape');
+  await expect(search).toHaveValue('');
+  await sidebar.getByRole('button', { name: /Form/ }).click();
+  await expect(sidebar.getByRole('link', { name: 'Checkbox' })).toBeVisible();
+});
+
 test.describe('with motion', () => {
   test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 

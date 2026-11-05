@@ -53,6 +53,12 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     colorPresets: 'Preset colours',
     useEmail: 'Use {email}',
     didYouMean: 'Did you mean {email}?',
+    yes: 'Yes',
+    no: 'No',
+    copyLink: 'Copy link',
+    copyEmail: 'Copy email',
+    copyPhone: 'Copy phone number',
+    opensInNewTab: 'opens in a new tab',
   },
 };
 
@@ -109,6 +115,12 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     colorPresets: 'Готові кольори',
     useEmail: 'Використати {email}',
     didYouMean: 'Можливо, {email}?',
+    yes: 'Так',
+    no: 'Ні',
+    copyLink: 'Копіювати посилання',
+    copyEmail: 'Копіювати email',
+    copyPhone: 'Копіювати номер телефону',
+    opensInNewTab: 'відкривається в новій вкладці',
   },
 };
 

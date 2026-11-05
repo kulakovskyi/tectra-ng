@@ -10,7 +10,7 @@ test('country select finds by code, shows the flag and the localized name', asyn
   const trigger = frame.getByRole('combobox');
   await expect(trigger).toContainText('Ukraine');
   await trigger.click();
-  await page.getByRole('searchbox').fill('jp');
+  await page.locator('.tx-select__panel').getByRole('searchbox').fill('jp');
   await expect(page.getByRole('option')).toHaveText([/Japan/]);
   await page.keyboard.press('Enter');
   await expect(frame.getByText('Value: JP')).toBeVisible();

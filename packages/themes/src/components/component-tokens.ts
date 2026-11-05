@@ -7,6 +7,8 @@ import { inputGroupTokens } from './input-group.tokens';
 import { inputNumberTokens } from './input-number.tokens';
 import { inputOtpTokens } from './input-otp.tokens';
 import { knobTokens } from './knob.tokens';
+import { cardTokens, dividerTokens, fieldsetTokens, panelTokens } from './layout.tokens';
+import { amountTokens, highlightTextTokens, iconLinkTokens, linkTokens, statusIconTokens } from './text.tokens';
 import { floatLabelTokens, iftaLabelTokens, labelTokens } from './label.tokens';
 import { fieldTokens } from './field.tokens';
 import { fieldMessageTokens, messageTokens } from './message.tokens';
@@ -67,6 +69,15 @@ export const COMPONENT_TOKENS = {
   progressSpinner: progressSpinnerTokens,
   skeleton: skeletonTokens,
   avatar: avatarTokens,
+  divider: dividerTokens,
+  card: cardTokens,
+  panel: panelTokens,
+  fieldset: fieldsetTokens,
+  highlightText: highlightTextTokens,
+  amount: amountTokens,
+  statusIcon: statusIconTokens,
+  link: linkTokens,
+  iconLink: iconLinkTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

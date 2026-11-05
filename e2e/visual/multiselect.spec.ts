@@ -33,7 +33,7 @@ test('select all picks the filtered options and keeps the panel open', async ({ 
   const frame = example(page, 'Filter');
   const trigger = frame.getByRole('combobox');
   await trigger.click();
-  await page.getByRole('searchbox').fill('land');
+  await page.locator('.tx-select__panel').getByRole('searchbox').fill('land');
   await expect(page.getByRole('option')).toHaveText(['Finland', 'Poland']);
   await page.keyboard.press('Shift+Tab');
   const all = page.getByRole('checkbox', { name: 'Select all' });

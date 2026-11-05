@@ -37,7 +37,7 @@ for (const mode of ['light', 'dark'] as const) {
 test('virtual list keeps the active option in view and announces its position', async ({ page }) => {
   const trigger = example(page, 'Virtual scroll').getByRole('combobox');
   await trigger.click();
-  const search = page.getByRole('searchbox');
+  const search = page.locator('.tx-select__panel').getByRole('searchbox');
   await expect(search).toBeFocused();
   expect(await page.locator('.tx-select__option').count()).toBeLessThan(60);
   await search.press('ArrowUp');
@@ -100,14 +100,14 @@ test('lazy list loads the rows that scroll into view and searches on the server'
   await expect(page.locator('.tx-select__option[role="option"]').first()).toHaveText('Customer 1');
   await page.locator('cdk-virtual-scroll-viewport').evaluate((viewport) => viewport.scrollTo(0, 36 * 1200));
   await expect(page.getByRole('option', { name: 'Customer 1205', exact: true })).toBeVisible();
-  await page.getByRole('searchbox').fill('1999');
+  await page.locator('.tx-select__panel').getByRole('searchbox').fill('1999');
   await expect(page.locator('.tx-select__option[role="option"]')).toHaveText(['Customer 1999']);
 });
 
 test('create option is reachable from the search with Tab', async ({ page }) => {
   const trigger = example(page, 'Create option').getByRole('combobox');
   await trigger.click();
-  const search = page.getByRole('searchbox');
+  const search = page.locator('.tx-select__panel').getByRole('searchbox');
   await expect(search).toBeFocused();
   await search.fill('Design');
   await page.keyboard.press('Tab');

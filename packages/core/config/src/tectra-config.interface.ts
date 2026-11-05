@@ -52,6 +52,12 @@ export interface TxTranslations {
   colorPresets: string;
   useEmail: string;
   didYouMean: string;
+  yes: string;
+  no: string;
+  copyLink: string;
+  copyEmail: string;
+  copyPhone: string;
+  opensInNewTab: string;
 }
 
 export type TxValidationMessage = string | ((error: unknown) => string);
