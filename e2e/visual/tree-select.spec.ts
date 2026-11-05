@@ -47,18 +47,28 @@ test('checking a branch checks its children', async ({ page }) => {
   await expect(page.getByRole('treeitem', { name: 'Engineering' })).toHaveAttribute('aria-checked', 'mixed');
 });
 
-test('branches open and close with motion and hovers are smooth', async ({ page }) => {
+test('branches open and close like an accordion and leaves have no toggle square', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   const trigger = example(page, 'Filter').getByRole('combobox');
   await trigger.click();
   const engineering = page.getByRole('treeitem', { name: 'Engineering' });
-  const transition = await engineering.evaluate((element) => getComputedStyle(element).transitionDuration);
-  expect(parseFloat(transition)).toBeGreaterThan(0);
+  expect(parseFloat(await engineering.evaluate((element) => getComputedStyle(element).transitionDuration))).toBeGreaterThan(0);
+  const group = page.locator('.tx-tree-select__children').first();
+  await expect(group).toHaveCSS('grid-template-rows', '0px');
   await engineering.locator('.tx-tree-select__toggler').click();
-  const child = page.getByRole('treeitem', { name: 'Web' });
-  await expect(child).toBeVisible();
-  expect(await child.evaluate((element) => element.getAnimations().length)).toBeGreaterThan(0);
+  const heights: number[] = [];
+  for (let frame = 0; frame < 6; frame += 1) {
+    heights.push(await group.evaluate((element) => element.getBoundingClientRect().height));
+    await page.waitForTimeout(30);
+  }
+  expect(heights[0]).toBeLessThan(heights[heights.length - 1]);
+  expect(new Set(heights).size).toBeGreaterThan(2);
+  const web = page.getByRole('treeitem', { name: 'Web' });
+  await expect(web).toBeVisible();
   await expect(engineering.locator('.tx-tree-select__chevron')).toHaveCSS('transform', /matrix\(0, 1, -1, 0/);
+  const api = page.getByRole('treeitem', { name: 'API' });
+  await api.locator('.tx-tree-select__toggler').hover();
+  await expect(api.locator('.tx-tree-select__toggler')).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
   await engineering.locator('.tx-tree-select__toggler').click();
-  await expect(child).toHaveCount(0);
+  await expect(web).toBeHidden();
 });

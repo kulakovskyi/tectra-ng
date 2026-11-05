@@ -121,50 +121,7 @@
         [class]="passThrough().tree?.class"
         [style]="passThrough().tree?.style"
       >
-        @for (row of rows(); track row.id) {
-          <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- tree items use aria-activedescendant: focus and keys stay on the field -->
-          <div
-            role="treeitem"
-            class="tx-tree-select__node"
-            [id]="row.id"
-            [style.--tx-tree-level]="row.level - 1"
-            [class.tx-tree-select__node--active]="row.node.key === activeKey()"
-            [class.tx-tree-select__node--selected]="row.checked && selectionMode() !== 'checkbox'"
-            [class.tx-tree-select__node--disabled]="!row.selectable"
-            [attr.aria-level]="row.level"
-            [attr.aria-setsize]="row.setSize"
-            [attr.aria-posinset]="row.posInSet"
-            [attr.aria-expanded]="row.hasChildren ? row.expanded : null"
-            [attr.aria-selected]="selectionMode() === 'checkbox' ? null : row.checked"
-            [attr.aria-checked]="selectionMode() === 'checkbox' ? checkState(row) : null"
-            [attr.aria-disabled]="!row.selectable || null"
-            [class]="passThrough().node?.class"
-            [style]="passThrough().node?.style"
-            [animate.enter]="enterClasses()"
-            [animate.leave]="leaveClasses()"
-            (mouseenter)="activeKey.set(row.node.key)"
-            (click)="onRowClick(row, $event)"
-          >
-            <span class="tx-tree-select__toggler" aria-hidden="true" [class]="passThrough().toggler?.class" [style]="passThrough().toggler?.style">
-              @if (row.hasChildren) {
-                <tx-icon class="tx-tree-select__chevron" [class.tx-tree-select__chevron--open]="row.expanded" [name]="'chevron-right'" />
-              }
-            </span>
-            @if (selectionMode() === 'checkbox') {
-              <span class="tx-select__checkbox tx-tree-select__checkbox" aria-hidden="true">
-                @if (row.checked) {
-                  <tx-icon [name]="'check'" />
-                } @else if (row.partial) {
-                  <tx-icon [name]="'minus'" />
-                }
-              </span>
-            }
-            @if (row.node.icon; as icon) {
-              <tx-icon class="tx-tree-select__icon" [name]="icon" />
-            }
-            <span class="tx-tree-select__label">{{ row.node.label }}</span>
-          </div>
-        }
+        <ng-container [ngTemplateOutlet]="branch" [ngTemplateOutletContext]="{ $implicit: branches() }" />
       </div>
     } @else {
       <div class="tx-tree-select__tree tx-tree-select__tree--empty" role="tree" [id]="treeId" [attr.aria-label]="ariaLabel() || placeholder() || null">
@@ -174,4 +131,71 @@
       </div>
     }
   </div>
+</ng-template>
+
+<ng-template #branch let-branches>
+  @for (item of branches; track item.row.id) {
+    <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- tree items use aria-activedescendant: focus and keys stay on the field -->
+    <div
+      role="treeitem"
+      class="tx-tree-select__node"
+      [id]="item.row.id"
+      [style.--tx-tree-level]="item.row.level - 1"
+      [class.tx-tree-select__node--active]="item.row.node.key === activeKey()"
+      [class.tx-tree-select__node--selected]="item.row.checked && selectionMode() !== 'checkbox'"
+      [class.tx-tree-select__node--disabled]="!item.row.selectable"
+      [attr.aria-level]="item.row.level"
+      [attr.aria-setsize]="item.row.setSize"
+      [attr.aria-posinset]="item.row.posInSet"
+      [attr.aria-expanded]="item.row.hasChildren ? item.row.expanded : null"
+      [attr.aria-selected]="selectionMode() === 'checkbox' ? null : item.row.checked"
+      [attr.aria-checked]="selectionMode() === 'checkbox' ? checkState(item.row) : null"
+      [attr.aria-disabled]="!item.row.selectable || null"
+      [attr.aria-owns]="item.children.length ? item.row.id + '-group' : null"
+      [class]="passThrough().node?.class"
+      [style]="passThrough().node?.style"
+      (mouseenter)="activeKey.set(item.row.node.key)"
+      (click)="onRowClick(item.row, $event)"
+    >
+      <span
+        class="tx-tree-select__toggler"
+        aria-hidden="true"
+        [class.tx-tree-select__toggler--leaf]="!item.row.hasChildren"
+        [class]="passThrough().toggler?.class"
+        [style]="passThrough().toggler?.style"
+      >
+        @if (item.row.hasChildren) {
+          <tx-icon class="tx-tree-select__chevron" [class.tx-tree-select__chevron--open]="item.row.expanded" [name]="'chevron-right'" />
+        }
+      </span>
+      @if (selectionMode() === 'checkbox') {
+        <span class="tx-select__checkbox tx-tree-select__checkbox" aria-hidden="true">
+          @if (item.row.checked) {
+            <tx-icon [name]="'check'" />
+          } @else if (item.row.partial) {
+            <tx-icon [name]="'minus'" />
+          }
+        </span>
+      }
+      @if (item.row.node.icon; as icon) {
+        <tx-icon class="tx-tree-select__icon" [name]="icon" />
+      }
+      <span class="tx-tree-select__label">{{ item.row.node.label }}</span>
+    </div>
+    @if (item.children.length) {
+      <div
+        role="group"
+        class="tx-tree-select__children"
+        [id]="item.row.id + '-group'"
+        [class.tx-tree-select__children--open]="item.row.expanded"
+        [attr.inert]="item.row.expanded ? null : ''"
+      >
+        <div class="tx-tree-select__children-inner">
+          @if (item.row.expanded || mounted().has(item.row.node.key)) {
+            <ng-container [ngTemplateOutlet]="branch" [ngTemplateOutletContext]="{ $implicit: item.children }" />
+          }
+        </div>
+      </div>
+    }
+  }
 </ng-template>

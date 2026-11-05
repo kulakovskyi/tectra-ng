@@ -28,6 +28,11 @@ export interface TxTreeRow {
   selectable: boolean;
 }
 
+export interface TxTreeBranch {
+  row: TxTreeRow;
+  children: TxTreeBranch[];
+}
+
 export interface TxTreeSelectChangeEvent {
   value: string | string[] | null;
   node: TxTreeNode | null;

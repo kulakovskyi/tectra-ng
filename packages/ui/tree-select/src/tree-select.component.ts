@@ -1,5 +1,5 @@
 import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedOverlayPositionChange, createRepositionScrollStrategy } from '@angular/cdk/overlay';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -36,11 +36,11 @@ import { TxIcon } from '@tectra/icons';
 import { TectraDeepPartial, TectraSelectTokens, toStyleObject } from '@tectra/themes';
 import { TxFieldVariant, TxSelectSize, foldText } from '@tectra/ui/select';
 import { descendantKeys, findNode, normalizeChecked, parentMap } from './tree';
-import { TxTreeNode, TxTreeRow, TxTreeSelectChangeEvent, TxTreeSelectDisplay, TxTreeSelectPart, TxTreeSelectionMode } from './tree-select.types';
+import { TxTreeBranch, TxTreeNode, TxTreeRow, TxTreeSelectChangeEvent, TxTreeSelectDisplay, TxTreeSelectPart, TxTreeSelectionMode } from './tree-select.types';
 
 @Component({
   selector: 'tx-tree-select',
-  imports: [CdkOverlayOrigin, CdkConnectedOverlay, TxIcon],
+  imports: [CdkOverlayOrigin, CdkConnectedOverlay, NgTemplateOutlet, TxIcon],
   templateUrl: './tree-select.component.html',
   styleUrl: './tree-select.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -97,12 +97,7 @@ export class TxTreeSelect extends TxFormControlBase<string | string[]> {
   private typeahead = new TxTypeahead();
   private stopWatching: (() => void) | null = null;
   private hasEntered = false;
-  private readonly cleanup = inject(DestroyRef).onDestroy(() => {
-    this.stopWatching?.();
-    if (this.motionTimer) {
-      clearTimeout(this.motionTimer);
-    }
-  });
+  private readonly cleanup = inject(DestroyRef).onDestroy(() => this.stopWatching?.());
 
   readonly translations = injectTranslations();
   readonly isInvalid = injectFieldInvalid(this.invalid);
@@ -119,10 +114,6 @@ export class TxTreeSelect extends TxFormControlBase<string | string[]> {
   readonly panelWidth = signal(0);
   readonly query = signal('');
   readonly activeKey = signal<string | null>(null);
-  readonly motion = signal<'expand' | 'collapse' | null>(null);
-  private motionTimer: ReturnType<typeof setTimeout> | null = null;
-  readonly enterClasses = computed(() => (this.motion() === 'expand' ? ['tx-tree-select__node--enter'] : []));
-  readonly leaveClasses = computed(() => (this.motion() === 'collapse' ? ['tx-tree-select__node--leave'] : []));
 
   readonly multiple = computed(() => this.selectionMode() !== 'single');
   readonly selectedKeys = computed<string[]>(() => {
@@ -139,16 +130,15 @@ export class TxTreeSelect extends TxFormControlBase<string | string[]> {
       .filter((node): node is TxTreeNode => !!node)
       .filter((node) => this.selectionMode() !== 'checkbox' || !this.parentChecked(node)),
   );
-  readonly rows = computed<TxTreeRow[]>(() => {
+  readonly branches = computed<TxTreeBranch[]>(() => {
     const query = foldText(this.query().trim());
     const expanded = new Set(this.expandedKeys());
     const selected = new Set(this.selectedKeys());
-    const rows: TxTreeRow[] = [];
     const matches = (node: TxTreeNode): boolean =>
       foldText(node.label).includes(query) || (node.children ?? []).some((child) => matches(child));
-    const add = (nodes: readonly TxTreeNode[], level: number, parent: TxTreeRow | null, shown: boolean) => {
+    const build = (nodes: readonly TxTreeNode[], level: number, parent: TxTreeRow | null, shown: boolean): TxTreeBranch[] => {
       const visible = query && !shown ? nodes.filter(matches) : nodes;
-      visible.forEach((node, index) => {
+      return visible.map((node, index) => {
         const children = node.children ?? [];
         const own = !!query && foldText(node.label).includes(query);
         const open = query ? children.some((child) => matches(child)) || (own && children.length > 0 && expanded.has(node.key)) : expanded.has(node.key);
@@ -164,18 +154,30 @@ export class TxTreeSelect extends TxFormControlBase<string | string[]> {
           hasChildren: children.length > 0,
           expanded: children.length > 0 && open,
           checked: selected.has(node.key),
-          partial: this.selectionMode() === 'checkbox' && !selected.has(node.key) && (checkedChildren > 0 || checkable.some((child) => this.hasCheckedDescendant(child, selected))),
+          partial:
+            this.selectionMode() === 'checkbox' &&
+            !selected.has(node.key) &&
+            (checkedChildren > 0 || checkable.some((child) => this.hasCheckedDescendant(child, selected))),
           selectable: !node.disabled && node.selectable !== false,
         };
-        rows.push(row);
-        if (row.expanded) {
-          add(children, level + 1, row, shown || own);
-        }
+        return { row, children: build(children, level + 1, row, shown || own) };
       });
     };
-    add(this.options(), 0, null, false);
+    return build(this.options(), 0, null, false);
+  });
+  readonly rows = computed<TxTreeRow[]>(() => {
+    const rows: TxTreeRow[] = [];
+    const walk = (branches: TxTreeBranch[]) =>
+      branches.forEach((branch) => {
+        rows.push(branch.row);
+        if (branch.row.expanded) {
+          walk(branch.children);
+        }
+      });
+    walk(this.branches());
     return rows;
   });
+  readonly mounted = signal<ReadonlySet<string>>(new Set());
   readonly activeRow = computed(() => this.rows().find((row) => row.node.key === this.activeKey()) ?? null);
   readonly activeId = computed(() => (this.isOpen() ? (this.activeRow()?.id ?? null) : null));
   readonly canClear = computed(() => this.showClear() && this.selectedKeys().length > 0 && !this.disabled() && !this.readonly());
@@ -191,6 +193,7 @@ export class TxTreeSelect extends TxFormControlBase<string | string[]> {
     }
     this.panelWidth.set(this.box().nativeElement.offsetWidth);
     this.revealSelected();
+    this.mounted.set(new Set(this.expandedKeys()));
     this.activeKey.set(this.selectedKeys().find((key) => this.rows().some((row) => row.node.key === key)) ?? this.rows()[0]?.node.key ?? null);
     this.isOpen.set(true);
     this.hasEntered = false;
@@ -285,11 +288,9 @@ export class TxTreeSelect extends TxFormControlBase<string | string[]> {
     } else {
       keys.add(row.node.key);
     }
-    this.motion.set(row.expanded ? 'collapse' : 'expand');
-    if (this.motionTimer) {
-      clearTimeout(this.motionTimer);
+    if (!row.expanded) {
+      this.mounted.update((mounted) => new Set([...mounted, row.node.key]));
     }
-    this.motionTimer = setTimeout(() => this.motion.set(null), 400);
     this.expandedKeys.set([...keys]);
   }
 
