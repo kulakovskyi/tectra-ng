@@ -16,6 +16,7 @@ import { radioButtonTokens } from './radio-button.tokens';
 import { ratingTokens } from './rating.tokens';
 import { selectTokens } from './select.tokens';
 import { sliderTokens } from './slider.tokens';
+import { chipTokens, tagTokens } from './tag.tokens';
 import { textareaTokens } from './textarea.tokens';
 import { iconTokens } from './icon.tokens';
 import { rippleTokens } from './ripple.tokens';
@@ -49,6 +50,8 @@ export const COMPONENT_TOKENS = {
   slider: sliderTokens,
   overlayBadge: overlayBadgeTokens,
   pill: pillTokens,
+  tag: tagTokens,
+  chip: chipTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

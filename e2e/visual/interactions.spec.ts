@@ -483,6 +483,23 @@ test('pill is removed from its button with the keyboard', async ({ page }) => {
   await expect(example.locator('tx-pill').first()).toHaveText(/accessibility/);
 });
 
+test('tag copies its text and chip is removed with the keyboard', async ({ page, context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto('/components/tag');
+  const tags = page.locator('tag-copyable-example');
+  await tags.getByRole('button', { name: 'Copy' }).first().click();
+  await expect(tags.getByRole('button', { name: 'Copied' })).toBeVisible();
+  await expect(tags.locator('.hint')).toHaveText('Copied ord_8F2KQ1');
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe('ord_8F2KQ1');
+
+  await page.goto('/components/chip');
+  const chips = page.locator('chip-removable-example');
+  await chips.getByRole('button', { name: 'Remove taras@example.com' }).focus();
+  await page.keyboard.press('Backspace');
+  await expect(chips.locator('tx-chip')).toHaveCount(2);
+  await expect(chips.locator('tx-chip').nth(1)).toHaveText(/team@example.com/);
+});
+
 test.describe('with motion', () => {
   test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 

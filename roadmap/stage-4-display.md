@@ -26,13 +26,13 @@ Not in PrimeNG as such (Tag rounded). First app usage: **1225** tags: `tone` (`n
 - [x] Dot indicator (`dot`) for status lists
 - [x] Docs + tests: tones, variants, sizes, icons, dot, removable, leading, in a table, design tokens; e2e: keyboard removal
 
-## 4.3 Tag + Chip — `ui/tag`, `ui/chip`
+## 4.3 Tag + Chip — `ui/tag`, `ui/chip` ✅
 
 PrimeNG: Tag (`value`, `severity`, `rounded`, `icon`), Chip (`label`, `icon`, `image`, `removable`, `removeIcon`, `(onRemove)`). First app: tag 30 (`value`, `severity`, `icon`, `rounded`, `size` normal / large, `removable`, `copyable`, `(changeTag)`), chip 0 tags (`label`, `icon`, `removable`, `(remove)`).
 
-- [ ] `<tx-tag>`: value or content, severities, `rounded`, icon, sizes, `removable`, `copyable` (copies the value, check icon after)
-- [ ] `<tx-chip>`: label, icon, image (avatar on the left), removable with own remove icon, `(removed)`, keyboard removal
-- [ ] Docs + tests: severities, rounded, icons, copy, remove, chip with image
+- [x] `<tx-tag>`: value or content, eight severities on a tint (AA text), `rounded`, icon, `small` / `medium` (`normal` alias) / `large`, `removable` + `(removed)`, `copyable` (copies the text, check icon and "Copied" label for a moment, `(copied)`); `tag` tokens
+- [x] `<tx-chip>`: label, icon, round image (avatar), removable with own `removeIcon` and translated label, `(removed)`, Delete / Backspace on the remove button; `chip` tokens
+- [x] Docs + tests: severities, rounded, icons, sizes, copy, remove, chip with icons / images / recipients, design tokens; e2e: copy to the clipboard, keyboard removal
 
 ## 4.4 Progress bar + progress spinner — `ui/progress-bar`, `ui/progress-spinner`
 

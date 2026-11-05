@@ -81,7 +81,7 @@ Detailed checklist per component: [roadmap/stage-4-display.md](roadmap/stage-4-d
 | `ui/badge` | Badge | — | ✅ |
 | `ui/overlay-badge` | OverlayBadge | 0 | ✅ |
 | `ui/pill` — tone, icon, size | Tag (rounded) | **852** | ✅ |
-| `ui/tag` + `ui/chip` | Tag, Chip | 43, 0 | ⬜ |
+| `ui/tag` + `ui/chip` | Tag, Chip | 43, 0 | ✅ |
 | `ui/message` (alert) — built in 3.3 (`tx-message`) | Message | **370** | ✅ |
 | `ui/progress-bar` | ProgressBar | 30 | ⬜ |
 | `ui/progress-spinner` (loader) | ProgressSpinner | 25 | ⬜ |

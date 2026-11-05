@@ -1,0 +1,97 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.tx-tag__label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tx-tag__label:empty {
+  display: none;
+}
+
+:host([data-styled]) {
+  --_tone: var(--tx-tag-primary-color);
+
+  flex-shrink: 0;
+  gap: var(--tx-tag-gap);
+  box-sizing: border-box;
+  padding: var(--tx-tag-padding-y) var(--tx-tag-padding-x);
+  border-radius: var(--tx-tag-border-radius);
+  background: color-mix(in srgb, var(--_tone) var(--tx-tag-tint), transparent);
+  color: var(--_tone);
+  font-family: var(--tx-font-family);
+  font-size: var(--tx-tag-font-size);
+  font-weight: var(--tx-tag-font-weight);
+  line-height: var(--tx-tag-line-height);
+}
+
+@each $severity in (secondary, success, info, warn, danger, help, contrast) {
+  :host([data-styled][data-severity='#{$severity}']) {
+    --_tone: var(--tx-tag-#{$severity}-color);
+  }
+}
+
+@each $size, $key in (small: sm, large: lg) {
+  :host([data-styled][data-size='#{$size}']) {
+    padding: var(--tx-tag-#{$key}-padding-y) var(--tx-tag-#{$key}-padding-x);
+    font-size: var(--tx-tag-#{$key}-font-size);
+  }
+}
+
+:host([data-styled][data-size='large']) {
+  gap: var(--tx-tag-lg-gap);
+}
+
+:host([data-styled].tx-tag--rounded) {
+  border-radius: var(--tx-tag-rounded-border-radius);
+}
+
+:host([data-styled]) .tx-tag__icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  font-size: var(--tx-tag-icon-size);
+}
+
+:host([data-styled]) .tx-tag__action {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: var(--tx-tag-action-size);
+  height: var(--tx-tag-action-size);
+  margin-inline-end: -3px;
+  padding: 0;
+  border: none;
+  border-radius: var(--tx-radius-xs);
+  background: transparent;
+  color: inherit;
+  font-size: 0.85em;
+  opacity: 0.75;
+  cursor: pointer;
+
+  &:hover {
+    background: color-mix(in srgb, currentColor 16%, transparent);
+    opacity: 1;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--tx-tag-focus-ring-color);
+    outline-offset: 1px;
+    opacity: 1;
+  }
+}
+
+:host([data-styled]) .tx-tag__action + .tx-tag__action {
+  margin-inline-start: -2px;
+}
+
+:host([data-styled]) .tx-tag__copy--done {
+  opacity: 1;
+}
