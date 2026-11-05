@@ -1,0 +1,1 @@
+An element without a name of its own is named by its tooltip: these buttons are announced as "Edit", "Duplicate", "Download as PDF" and "Delete" without an `aria-label`. Move through them with Tab — the tooltips follow without a delay.

@@ -1,5 +1,5 @@
 import { ConnectedPosition } from '@angular/cdk/overlay';
-import { TxPlacement, TxPlacementAlign, TxPlacementSide } from './overlay.types';
+import { TxOverlayBounds, TxOverlaySize, TxPlacement, TxPlacementAlign, TxPlacementSide } from './overlay.types';
 
 const OPPOSITE: Record<TxPlacementSide, TxPlacementSide> = { top: 'bottom', bottom: 'top', left: 'right', right: 'left' };
 const ALIGNS: TxPlacementAlign[] = ['start', 'center', 'end'];
@@ -43,4 +43,26 @@ export function txPositions(placement: TxPlacement = 'bottom-start', offset = 4)
 export function placementFromPosition(position: ConnectedPosition): TxPlacement | null {
   const panelClass = Array.isArray(position.panelClass) ? position.panelClass[0] : position.panelClass;
   return panelClass?.startsWith('tx-placement-') ? (panelClass.replace('tx-placement-', '') as TxPlacement) : null;
+}
+
+type TxEdge = 'start' | 'center' | 'end' | 'top' | 'bottom';
+type TxBox = Pick<DOMRect, 'top' | 'left' | 'width' | 'height'>;
+
+function anchor(start: number, size: number, edge: TxEdge): number {
+  return edge === 'center' ? start + size / 2 : edge === 'start' || edge === 'top' ? start : start + size;
+}
+
+function lead(size: number, edge: TxEdge): number {
+  return edge === 'center' ? size / 2 : edge === 'start' || edge === 'top' ? 0 : size;
+}
+
+export function fitsInBounds(position: ConnectedPosition, origin: TxBox, size: TxOverlaySize, bounds: TxOverlayBounds): boolean {
+  const left = anchor(origin.left, origin.width, position.originX) - lead(size.width, position.overlayX) + (position.offsetX ?? 0);
+  const top = anchor(origin.top, origin.height, position.originY) - lead(size.height, position.overlayY) + (position.offsetY ?? 0);
+  return left >= bounds.left && top >= bounds.top && left + size.width <= bounds.right && top + size.height <= bounds.bottom;
+}
+
+export function orderByRoom(positions: ConnectedPosition[], origin: TxBox, size: TxOverlaySize, bounds: TxOverlayBounds): ConnectedPosition[] {
+  const index = positions.findIndex((position) => fitsInBounds(position, origin, size, bounds));
+  return index > 0 ? [positions[index], ...positions.filter((_, other) => other !== index)] : positions;
 }

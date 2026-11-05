@@ -28,6 +28,7 @@ export * from './components/tag.tokens';
 export * from './components/progress.tokens';
 export * from './components/skeleton.tokens';
 export * from './components/avatar.tokens';
+export * from './components/tooltip.tokens';
 export * from './components/icon.tokens';
 export * from './components/ripple.tokens';
 export * from './components/toggle-button.tokens';

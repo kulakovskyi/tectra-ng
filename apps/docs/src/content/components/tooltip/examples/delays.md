@@ -1,0 +1,1 @@
+`tooltipShowDelay` (default 250 ms) and `tooltipHideDelay` (default 100 ms) set the timing; `tooltipLife` closes the tooltip on its own. While one tooltip was just open, the next one shows without a delay. Change the defaults for the whole app with `provideTxTooltip({ showDelay: 400 })`.

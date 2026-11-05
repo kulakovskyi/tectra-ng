@@ -48,6 +48,18 @@ export interface TxOverlayRef<TInstance = unknown> {
   updatePosition(): void;
 }
 
+export interface TxOverlayBounds {
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
+}
+
+export interface TxOverlaySize {
+  width: number;
+  height: number;
+}
+
 export interface TxOverlayInsetValues {
   top: number;
   bottom: number;

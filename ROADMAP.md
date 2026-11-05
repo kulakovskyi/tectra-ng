@@ -97,9 +97,11 @@ Detailed checklist per component: [roadmap/stage-4-display.md](roadmap/stage-4-d
 
 ## Stage 5 — overlays (after stage 2)
 
+Detailed checklist per component: [roadmap/stage-5-overlays.md](roadmap/stage-5-overlays.md).
+
 | tectra | PrimeNG equivalent | Usage | Status |
 |---|---|---|---|
-| `ui/tooltip` directive | Tooltip | used by 20+ kit libs, `[toolTip]` on 751 buttons; 4 | ⬜ |
+| `ui/tooltip` directive | Tooltip | used by 20+ kit libs, `[toolTip]` on 751 buttons; 4 | ✅ |
 | `ui/popover` | Popover | 16 | ⬜ |
 | `ui/toast` + toast service | Toast + MessageService | 4, core-utils `custom-toastr` | ⬜ |
 | `ui/dialog` + dialog service (`open(component, { data })`, `DialogRef`, close result) | Dialog, DynamicDialog | core-utils `modal` (`ModalService`, all modals), 2 | ⬜ |

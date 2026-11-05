@@ -1,0 +1,1 @@
+Pass an `<ng-template>` for rich content. `tooltipContext` arrives as `let-data`; `let-close="close"` gives a function that hides the tooltip. Text is always shown as text, so a template is the way to add markup.

@@ -1,7 +1,7 @@
 import { ViewportMargin } from '@angular/cdk/overlay';
 import { Injectable, inject } from '@angular/core';
 import { TECTRA_CONFIG } from '@tectra/core/config';
-import { TxOverlayInsetValues } from './overlay.types';
+import { TxOverlayBounds, TxOverlayInsetValues } from './overlay.types';
 
 const STUCK_TOLERANCE = 1;
 
@@ -51,6 +51,11 @@ function isPinned(element: HTMLElement, rect: DOMRect, view: Window): boolean {
 
 export function txViewportMargin(insets: TxOverlayInsetValues, margin: number): ViewportMargin {
   return { top: insets.top + margin, bottom: insets.bottom + margin, start: margin, end: margin };
+}
+
+export function txOverlayBounds(insets: TxOverlayInsetValues, margin: number, document: Document): TxOverlayBounds {
+  const { clientWidth, clientHeight } = document.documentElement;
+  return { top: insets.top + margin, right: clientWidth - margin, bottom: clientHeight - insets.bottom - margin, left: margin };
 }
 
 export function isOriginHidden(origin: Element, insets: TxOverlayInsetValues): boolean {

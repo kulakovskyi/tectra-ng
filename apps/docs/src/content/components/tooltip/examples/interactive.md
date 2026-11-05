@@ -1,0 +1,1 @@
+By default the pointer can move onto the tooltip without closing it, so its text can be selected and copied — try the full order id. `[tooltipInteractive]="false"` lets the pointer pass through, and the tooltip closes as soon as the pointer leaves the element.

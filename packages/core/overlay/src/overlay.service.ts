@@ -11,9 +11,13 @@ import {
 import { DOCUMENT, Injectable, Injector, TemplateRef, Type, inject, signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { txAnimateEnter, txAnimateLeave } from './overlay-motion';
-import { placementFromPosition, txPositions } from './placements';
-import { TxOverlayCloseReason, TxOverlayOptions, TxOverlayRef, TxOverlayScroll } from './overlay.types';
-import { TxOverlayInsets, txViewportMargin, watchOrigin } from './overlay-insets.service';
+import { orderByRoom, placementFromPosition, txPositions } from './placements';
+import { TxOverlayCloseReason, TxOverlayInsetValues, TxOverlayOptions, TxOverlayRef, TxOverlayScroll } from './overlay.types';
+import { TxOverlayInsets, txOverlayBounds, watchOrigin } from './overlay-insets.service';
+
+function connectedMargin(insets: TxOverlayInsetValues, margin: number) {
+  return { top: 0, bottom: insets.bottom + margin, start: margin, end: margin };
+}
 
 @Injectable({ providedIn: 'root' })
 export class TxOverlay {
@@ -31,10 +35,12 @@ export class TxOverlay {
     const previousFocus = this.document.activeElement as HTMLElement | null;
 
     const margin = options.viewportMargin ?? 8;
+    const positions = txPositions(placement, options.offset ?? 4);
+    let insets = this.overlayInsets.measure();
     const positionStrategy = createFlexibleConnectedPositionStrategy(injector, origin)
-      .withPositions(txPositions(placement, options.offset ?? 4))
+      .withPositions(positions)
       .withFlexibleDimensions(false)
-      .withViewportMargin(txViewportMargin(this.overlayInsets.measure(), margin))
+      .withViewportMargin(connectedMargin(insets, margin))
       .withPush(false);
 
     const overlayRef = createOverlayRef(injector, {
@@ -92,13 +98,27 @@ export class TxOverlay {
       scroll === 'reposition'
         ? watchOrigin(origin, this.overlayInsets, {
             hidden: () => close('scroll'),
-            insetsChange: (insets) => positionStrategy.withViewportMargin(txViewportMargin(insets, margin)),
+            insetsChange: (next) => {
+              insets = next;
+              positionStrategy.withViewportMargin(connectedMargin(insets, margin));
+              preferRoom();
+            },
           })
         : () => undefined;
 
-    const instance = this.attach(overlayRef, content, options);
-    if (animate) {
+    const preferRoom = () => {
+      const pane = overlayRef.overlayElement;
+      const size = { width: pane.offsetWidth, height: pane.offsetHeight };
+      positionStrategy.withPositions(orderByRoom(positions, origin.getBoundingClientRect(), size, txOverlayBounds(insets, margin, this.document)));
+    };
+    const reposition = () => {
+      preferRoom();
       overlayRef.updatePosition();
+    };
+
+    const instance = this.attach(overlayRef, content, options);
+    reposition();
+    if (animate) {
       txAnimateEnter(overlayRef.overlayElement, currentPlacement());
     }
 
@@ -108,7 +128,7 @@ export class TxOverlay {
       instance,
       element: overlayRef.overlayElement,
       close,
-      updatePosition: () => overlayRef.updatePosition(),
+      updatePosition: reposition,
     };
   }
 
@@ -121,10 +141,12 @@ export class TxOverlay {
       if (!options.viewContainerRef) {
         throw new Error('TxOverlay: a template needs options.viewContainerRef');
       }
-      overlayRef.attach(new TemplatePortal(content, options.viewContainerRef, options.context as TContext));
+      overlayRef.attach(new TemplatePortal(content, options.viewContainerRef, options.context as TContext)).detectChanges();
       return null;
     }
-    return overlayRef.attach(new ComponentPortal(content, options.viewContainerRef ?? null, options.injector)).instance;
+    const componentRef = overlayRef.attach(new ComponentPortal(content, options.viewContainerRef ?? null, options.injector));
+    componentRef.changeDetectorRef.detectChanges();
+    return componentRef.instance;
   }
 
   private scrollStrategy(injector: Injector, scroll: TxOverlayScroll) {

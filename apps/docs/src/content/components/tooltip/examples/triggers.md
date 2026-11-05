@@ -1,0 +1,1 @@
+`tooltipEvent`: `both` (default) opens on hover and on keyboard focus, `hover` on the pointer only, `focus` on any focus — a good fit for hints on fields. A click hides a hover tooltip until the pointer leaves; Escape hides any tooltip.
