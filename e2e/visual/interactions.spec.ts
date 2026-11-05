@@ -240,6 +240,24 @@ test('radio group moves with arrow keys and is named by its field', async ({ pag
   await expect(form.getByRole('radiogroup')).toHaveAttribute('aria-invalid', 'true');
 });
 
+test('toggle switch is a switch that toggles with Space and its label', async ({ page }) => {
+  await page.goto('/components/toggle-switch');
+  const basic = page.locator('toggle-switch-basic-example');
+  const wifi = basic.getByRole('switch', { name: 'Wi-Fi' });
+  await expect(wifi).toBeChecked();
+  await wifi.focus();
+  await page.keyboard.press('Space');
+  await expect(wifi).not.toBeChecked();
+  await expect(basic.locator('.hint')).toHaveText('Value: false');
+  await basic.getByText('Wi-Fi').click();
+  await expect(wifi).toBeChecked();
+  const handle = basic.locator('.tx-toggle-switch__handle');
+  const track = basic.locator('.tx-toggle-switch__track');
+  const handleRight = await handle.evaluate((element) => element.getBoundingClientRect().right);
+  const trackRight = await track.evaluate((element) => element.getBoundingClientRect().right);
+  expect(trackRight - handleRight).toBeLessThan(4);
+});
+
 test.describe('with motion', () => {
   test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 

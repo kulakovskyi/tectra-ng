@@ -1,0 +1,41 @@
+import { fade, lightDark, tokenRef } from './token-helpers';
+
+export const toggleSwitchTokens = {
+  root: {
+    width: '40px',
+    height: '22px',
+    gutter: '2px',
+    borderRadius: tokenRef('radius-full'),
+    background: lightDark(tokenRef('surface-300'), tokenRef('surface-600')),
+    hoverBackground: lightDark(tokenRef('surface-400'), tokenRef('surface-500')),
+    checkedBackground: tokenRef('primary-base'),
+    checkedHoverBackground: tokenRef('primary-hover'),
+    invalidRingColor: tokenRef('form-field-invalid-border-color'),
+    disabledBackground: lightDark(tokenRef('surface-200'), tokenRef('surface-700')),
+    disabledCheckedBackground: lightDark(tokenRef('surface-300'), tokenRef('surface-600')),
+    focusRingColor: tokenRef('focus-ring-color'),
+    focusRingWidth: '2px',
+    focusRingOffset: '2px',
+    gap: '10px',
+    labelColor: tokenRef('text-primary'),
+    labelFontSize: tokenRef('font-size-md'),
+    disabledLabelColor: tokenRef('text-muted'),
+    descriptionColor: tokenRef('text-muted'),
+    descriptionFontSize: tokenRef('font-size-sm'),
+    transitionDuration: '0.2s',
+  },
+  handle: {
+    size: '18px',
+    background: tokenRef('surface-0'),
+    checkedBackground: tokenRef('surface-0'),
+    disabledBackground: lightDark(tokenRef('surface-0'), tokenRef('surface-400')),
+    shadow: `0 1px 2px ${fade(tokenRef('surface-950'), '75%')}`,
+    iconColor: tokenRef('text-muted'),
+    checkedIconColor: tokenRef('primary-base'),
+    iconSize: '11px',
+  },
+  sm: { width: '32px', height: '18px', handleSize: '14px', iconSize: '9px', labelFontSize: tokenRef('font-size-sm') },
+  lg: { width: '50px', height: '28px', handleSize: '24px', iconSize: '14px', labelFontSize: tokenRef('font-size-lg') },
+};
+
+export type TectraToggleSwitchTokens = typeof toggleSwitchTokens;

@@ -12,6 +12,7 @@ import { textareaTokens } from './textarea.tokens';
 import { iconTokens } from './icon.tokens';
 import { rippleTokens } from './ripple.tokens';
 import { toggleButtonTokens } from './toggle-button.tokens';
+import { toggleSwitchTokens } from './toggle-switch.tokens';
 
 export const COMPONENT_TOKENS = {
   icon: iconTokens,
@@ -31,6 +32,7 @@ export const COMPONENT_TOKENS = {
   textarea: textareaTokens,
   checkbox: checkboxTokens,
   radioButton: radioButtonTokens,
+  toggleSwitch: toggleSwitchTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

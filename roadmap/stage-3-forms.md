@@ -110,14 +110,14 @@ PrimeNG: RadioButton (`value`, `(onClick)`). Not used by the first app yet (pari
 - [x] Label, `description`, sizes, `filled`, tile look, `readonly`, disabled option / group, `required`, invalid from the group control; `radioButton` tokens, `dt` / `pt` / `unstyled`
 - [x] Docs + tests: group, horizontal, description, tiles, standalone, sizes, variants, states, form, design tokens; e2e: arrow keys, group named by `tx-field`. `tx-field` now names groups (`radiogroup` / `group`) with `aria-labelledby` and describes the group
 
-## 3.8 Toggle switch — `ui/toggle-switch`
+## 3.8 Toggle switch — `ui/toggle-switch` ✅
 
-PrimeNG: ToggleSwitch (`trueValue` / `falseValue`, handle template). First app usage: 33: `changeSwitch` output.
+PrimeNG: ToggleSwitch (`trueValue` / `falseValue`, handle template). First app usage: 33 (43 tags): `control` / `ngModel`, `disabled`, `changeSwitch` output with `{ checked, originalEvent }`.
 
-- [ ] `<tx-toggle-switch>` with `role="switch"`, `aria-checked`
-- [ ] `trueValue` / `falseValue`, handle template (icon inside the handle), sizes
-- [ ] Label on the left / right
-- [ ] Docs + tests: toggle, values, keyboard, disabled, readonly
+- [x] `<tx-toggle-switch>` on a native checkbox with `role="switch"`, `aria-checked`
+- [x] `trueValue` / `falseValue`, handle template (`txToggleSwitchHandle`) and `onIcon` / `offIcon`, sizes, `(changed)` `{ checked, value, originalEvent }`
+- [x] Label on the left / right (`labelPosition`), `description`, `readonly`, disabled / invalid from the form control; `toggleSwitch` tokens, `dt` / `pt` / `unstyled`
+- [x] Docs + tests: toggle, values, handle icons / template, sizes, states, form, settings list, design tokens; e2e: Space, label click, handle position
 
 ## 3.9 Password — `ui/password`
 
