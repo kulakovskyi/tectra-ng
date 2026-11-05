@@ -34,6 +34,7 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     otpCell: 'Character {index} of {length}',
     increment: 'Increase',
     decrement: 'Decrease',
+    ratingValue: '{value} of {stars}',
   },
 };
 
@@ -71,6 +72,7 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     otpCell: 'Символ {index} з {length}',
     increment: 'Збільшити',
     decrement: 'Зменшити',
+    ratingValue: '{value} з {stars}',
   },
 };
 

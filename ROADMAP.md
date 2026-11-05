@@ -67,7 +67,7 @@ Detailed checklist per component: [roadmap/stage-3-forms.md](roadmap/stage-3-for
 | `ui/input-otp` | InputOtp | 5 | ✅ |
 | `ui/input-mask` | InputMask | 2 | ✅ |
 | `ui/input-number` | InputNumber | — (parity) | ✅ |
-| `ui/rating` | Rating | 7 | ⬜ |
+| `ui/rating` | Rating | 7 | ✅ |
 | `ui/knob` | Knob | 1 | ⬜ |
 | `ui/slider` | Slider | — (parity) | ⬜ |
 | `ui/password-generator` (button + generator service) | — | 2 | ⬜ |

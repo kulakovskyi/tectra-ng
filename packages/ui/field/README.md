@@ -1,6 +1,6 @@
 # Field
 
-A form row: label, control, hint and error in one element. It finds the control inside (input, textarea, select, `tx-select`, checkbox, switch, slider…), gives it an id when it has none, points the label at it and adds the hint and the error to its `aria-describedby`. A group (`tx-radio-group`, `tx-checkbox-group`, any `role="radiogroup"` / `role="group"`) is named by the label through `aria-labelledby` instead. The error comes from the projected `formControl` / `formControlName` / `ngModel`, or from `control`; `errorText` shows an error from outside the form and turns the control red.
+A form row: label, control, hint and error in one element. It finds the control inside (input, textarea, select, `tx-select`, checkbox, switch, slider…), gives it an id when it has none, points the label at it and adds the hint and the error to its `aria-describedby`. A group (`tx-radio-group`, `tx-checkbox-group`, any `role="radiogroup"` / `role="group"`) or a custom control that is not a native field (`role="slider"`, e.g. `tx-rating`) is named by the label through `aria-labelledby` instead. The error comes from the projected `formControl` / `formControlName` / `ngModel`, or from `control`; `errorText` shows an error from outside the form and turns the control red.
 
 ```html
 <tx-field label="Email" required hint="We never share it">

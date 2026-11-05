@@ -33,6 +33,7 @@ export interface TxTranslations {
   otpCell: string;
   increment: string;
   decrement: string;
+  ratingValue: string;
 }
 
 export type TxValidationMessage = string | ((error: unknown) => string);

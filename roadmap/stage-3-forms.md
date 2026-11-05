@@ -161,13 +161,14 @@ PrimeNG: InputNumber (`mode` decimal / currency, `currency`, `locale`, grouping,
 - [x] `min` / `max` clamp (blur, Enter, steps; buttons disable at the limits, `min ≥ 0` blocks the minus), `allowEmpty`, clear button, `(changed)`; float label (`tx-input-number--filled`), `inputNumber` tokens + `formField`
 - [x] Docs + tests: typing with separators, paste, step, clamp, currency per locale, locale switch, buttons, clear, float label, sizes, states, form with min / max, design tokens; `TxNumberFormat` specs; e2e: grouping while typing, caret in the middle, held button repeats, locale switch
 
-## 3.13 Rating — `ui/rating`
+## 3.13 Rating — `ui/rating` ✅
 
-PrimeNG: Rating (`stars`, `readonly`, `allowHalf`, on / off icon templates, `(onRate)`). First app usage: 7: `size`, clear button.
+PrimeNG: Rating (`stars`, `readonly`, `allowHalf`, on / off icon templates, `(onRate)`). First app usage: 7: `stars`, `readonly`, `size`, clear button with a label.
 
-- [ ] `<tx-rating>`: `stars`, `readonly`, `allowHalf`, sizes, icon templates
-- [ ] Hover preview, keyboard (arrows, Home / End), clear
-- [ ] Docs + tests: select, half, keyboard, readonly
+- [x] `<tx-rating>`: `stars`, `readonly`, `allowHalf` (half fill drawn by clipping the filled icon, works with any icon), sizes, `onIcon` / `offIcon`, on / off icon templates, `(rated)`
+- [x] Hover preview, keyboard (arrows, Home / End, number keys, Delete / Backspace / 0 clear), `clearable` + `clearLabel`, one focusable `role="slider"` with "3 of 5" value text (us / ua)
+- [x] Invalid / disabled from the form control; `rating` tokens, `dt` / `pt` / `unstyled`; `tx-field` names non-native controls with `aria-labelledby`
+- [x] Docs + tests: select, half, keyboard, readonly, clear, stars, icons, template, sizes, form, design tokens; e2e: hover preview, keys, half click, field naming
 
 ## 3.14 Knob — `ui/knob`
 

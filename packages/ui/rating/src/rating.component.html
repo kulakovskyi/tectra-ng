@@ -1,0 +1,65 @@
+<span
+  class="tx-rating__stars"
+  role="slider"
+  [class]="passThrough().stars?.class"
+  [style]="passThrough().stars?.style"
+  [attr.tabindex]="isDisabled() ? -1 : (tabindex() ?? 0)"
+  [attr.aria-label]="ariaLabel() ?? null"
+  [attr.aria-labelledby]="ariaLabelledBy() ?? null"
+  [attr.aria-valuemin]="0"
+  [attr.aria-valuemax]="stars()"
+  [attr.aria-valuenow]="value() ?? 0"
+  [attr.aria-valuetext]="valueText()"
+  [attr.aria-readonly]="readonly() || null"
+  [attr.aria-disabled]="isDisabled() || null"
+  [attr.aria-invalid]="isInvalid() || null"
+  (keydown)="onKeydown($event)"
+  (blur)="onBlur()"
+  (click)="onClick($event)"
+  (pointermove)="onPointerMove($event)"
+  (pointerleave)="onPointerLeave()"
+>
+  @for (index of indexes(); track index) {
+    <span
+      class="tx-rating__star"
+      [class.tx-rating__star--active]="fill(index) > 0"
+      [class]="passThrough().star?.class"
+      [style]="passThrough().star?.style"
+      [attr.data-index]="index"
+    >
+      <span class="tx-rating__off" aria-hidden="true">
+        @if (offTemplate(); as template) {
+          <ng-container [ngTemplateOutlet]="template.templateRef" [ngTemplateOutletContext]="{ $implicit: index }" />
+        } @else if (offIconName(); as name) {
+          <tx-icon [name]="name" />
+        } @else {
+          <span [class]="offIcon()"></span>
+        }
+      </span>
+      <span class="tx-rating__on" aria-hidden="true" [style.width.%]="fill(index)">
+        @if (onTemplate(); as template) {
+          <ng-container [ngTemplateOutlet]="template.templateRef" [ngTemplateOutletContext]="{ $implicit: index }" />
+        } @else if (onIconName(); as name) {
+          <tx-icon [name]="name" />
+        } @else {
+          <span [class]="onIcon()"></span>
+        }
+      </span>
+    </span>
+  }
+</span>
+@if (clearable() && isEditable() && value()) {
+  <button
+    type="button"
+    class="tx-rating__clear"
+    [class]="passThrough().clear?.class"
+    [style]="passThrough().clear?.style"
+    [attr.aria-label]="clearLabel() ? null : translations().clear"
+    (click)="clear($event)"
+  >
+    <tx-icon [name]="'times'" />
+    @if (clearLabel()) {
+      <span>{{ clearLabel() }}</span>
+    }
+  </button>
+}

@@ -10,6 +10,7 @@ import { fieldTokens } from './field.tokens';
 import { fieldMessageTokens, messageTokens } from './message.tokens';
 import { passwordTokens } from './password.tokens';
 import { radioButtonTokens } from './radio-button.tokens';
+import { ratingTokens } from './rating.tokens';
 import { selectTokens } from './select.tokens';
 import { textareaTokens } from './textarea.tokens';
 import { iconTokens } from './icon.tokens';
@@ -39,6 +40,7 @@ export const COMPONENT_TOKENS = {
   password: passwordTokens,
   inputOtp: inputOtpTokens,
   inputNumber: inputNumberTokens,
+  rating: ratingTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

@@ -364,6 +364,32 @@ test('input number groups while typing, keeps the caret and repeats a held butto
   await expect(locale.getByRole('spinbutton')).toHaveValue('25,000.75');
 });
 
+test('rating previews on hover, rates with keys and is named by its field', async ({ page }) => {
+  await page.goto('/components/rating');
+  const basic = page.locator('rating-basic-example');
+  const slider = basic.getByRole('slider', { name: 'Rate this article' });
+  await expect(slider).toHaveAttribute('aria-valuetext', '4 of 5');
+  const stars = basic.locator('.tx-rating__star');
+  await stars.nth(1).hover();
+  await expect(basic.locator('tx-rating')).toHaveClass(/tx-rating--preview/);
+  await stars.nth(1).click();
+  await expect(basic.locator('.hint')).toHaveText('Value: 2');
+  await slider.focus();
+  await page.keyboard.press('ArrowRight');
+  await page.keyboard.press('ArrowRight');
+  await expect(basic.locator('.hint')).toHaveText('Value: 4');
+  await page.keyboard.press('Delete');
+  await expect(basic.locator('.hint')).toHaveText('Value: none');
+
+  const half = page.locator('rating-half-example');
+  const third = half.locator('.tx-rating__star').nth(2);
+  const box = await third.evaluate((element) => element.getBoundingClientRect().toJSON());
+  await page.mouse.click(box.x + box.width * 0.25, box.y + box.height / 2);
+  await expect(half.locator('.hint')).toHaveText('Value: 2.5');
+
+  await expect(page.locator('rating-form-example').getByRole('slider', { name: 'How was your support chat?' })).toBeVisible();
+});
+
 test.describe('with motion', () => {
   test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 

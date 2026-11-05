@@ -1,0 +1,104 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
+.tx-rating__stars {
+  display: inline-flex;
+  align-items: center;
+}
+
+.tx-rating__star {
+  position: relative;
+  display: inline-flex;
+}
+
+.tx-rating__on {
+  position: absolute;
+  inset: 0 auto 0 0;
+  display: inline-flex;
+  overflow: hidden;
+}
+
+:host([data-styled]) {
+  --_size: var(--tx-rating-icon-size);
+  --_gap: var(--tx-rating-gap);
+
+  gap: var(--tx-rating-clear-gap);
+}
+
+@each $size, $key in (small: sm, large: lg) {
+  :host([data-styled][data-size='#{$size}']) {
+    --_size: var(--tx-rating-#{$key}-icon-size);
+    --_gap: var(--tx-rating-#{$key}-gap);
+  }
+}
+
+:host([data-styled]) .tx-rating__stars {
+  gap: var(--_gap);
+  border-radius: var(--tx-rating-border-radius);
+  outline: none;
+  font-size: var(--_size);
+
+  &:focus-visible {
+    outline: var(--tx-rating-focus-ring-width) solid var(--tx-rating-focus-ring-color);
+    outline-offset: var(--tx-rating-focus-ring-offset);
+  }
+}
+
+:host([data-styled]) .tx-rating__star {
+  color: var(--tx-rating-color);
+  cursor: pointer;
+}
+
+:host([data-styled]) .tx-rating__on {
+  color: var(--tx-rating-active-color);
+  transition: color var(--tx-rating-transition-duration);
+}
+
+:host([data-styled].tx-rating--preview) .tx-rating__on {
+  color: var(--tx-rating-hover-color);
+}
+
+:host([data-styled].tx-rating--readonly) .tx-rating__star,
+:host([data-styled].tx-rating--disabled) .tx-rating__star {
+  cursor: default;
+}
+
+:host([data-styled].tx-rating--disabled) .tx-rating__stars {
+  opacity: var(--tx-rating-disabled-opacity);
+}
+
+:host([data-styled].tx-rating--invalid) .tx-rating__star {
+  color: var(--tx-form-field-invalid-border-color);
+}
+
+:host([data-styled]) .tx-rating__clear {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  border: none;
+  border-radius: var(--tx-radius-sm);
+  background: transparent;
+  color: var(--tx-rating-clear-color);
+  font: inherit;
+  font-size: var(--tx-rating-clear-font-size);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--tx-rating-clear-hover-color);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--tx-focus-ring-color);
+    outline-offset: 1px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) .tx-rating__on {
+    transition: none;
+  }
+}

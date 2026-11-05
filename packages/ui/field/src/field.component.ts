@@ -106,10 +106,10 @@ export class TxField {
       return;
     }
     this.unlinks = describedBy.map((id) => linkDescribedBy(element, id));
-    if (group) {
-      if (this.label() && !group.hasAttribute('aria-labelledby') && !group.hasAttribute('aria-label')) {
-        group.setAttribute('aria-labelledby', this.labelId);
-        this.unlinks.push(() => group.removeAttribute('aria-labelledby'));
+    if (group || !isLabelable(element)) {
+      if (this.label() && !element.hasAttribute('aria-labelledby') && !element.hasAttribute('aria-label')) {
+        element.setAttribute('aria-labelledby', this.labelId);
+        this.unlinks.push(() => element.removeAttribute('aria-labelledby'));
       }
       this.controlId.set(null);
       return;
@@ -124,4 +124,8 @@ export class TxField {
     this.unlinks.forEach((unlink) => unlink());
     this.unlinks = [];
   }
+}
+
+function isLabelable(element: HTMLElement): boolean {
+  return ['INPUT', 'SELECT', 'TEXTAREA', 'BUTTON', 'METER', 'OUTPUT', 'PROGRESS'].includes(element.tagName);
 }
