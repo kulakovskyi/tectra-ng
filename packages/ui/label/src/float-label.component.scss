@@ -44,7 +44,8 @@ $invalid: ':is(.tx-input--invalid, tx-select.tx-select--invalid, tx-password.tx-
 :host ::ng-deep > .tx-input:not(:focus)::placeholder,
 :host ::ng-deep > tx-password:not(:focus-within) .tx-input::placeholder,
 :host ::ng-deep > tx-input-number:not(:focus-within) .tx-input::placeholder,
-:host ::ng-deep > tx-select:not(.tx-select--open) .tx-select__value--placeholder {
+:host ::ng-deep > tx-select:not(.tx-select--open) .tx-select__value--placeholder,
+:host ::ng-deep > tx-select:not(.tx-select--open, :focus-within) .tx-select__input::placeholder {
   color: transparent;
 }
 

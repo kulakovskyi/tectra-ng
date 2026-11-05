@@ -1,5 +1,8 @@
 import { defineConfig } from '@playwright/test';
 
+const port = Number(process.env['TX_E2E_PORT'] ?? 4310);
+const baseURL = `http://localhost:${port}`;
+
 export default defineConfig({
   testDir: '.',
   fullyParallel: true,
@@ -7,16 +10,16 @@ export default defineConfig({
   retries: process.env['CI'] ? 1 : 0,
   reporter: process.env['CI'] ? 'github' : 'list',
   use: {
-    baseURL: 'http://localhost:4310',
+    baseURL,
     channel: process.env['CI'] ? undefined : 'chrome',
     viewport: { width: 1440, height: 900 },
     contextOptions: { reducedMotion: 'reduce' },
     trace: 'retain-on-failure',
   },
   webServer: {
-    command: 'node tools/serve-docs.mjs dist/apps/docs/browser 4310',
+    command: `node tools/serve-docs.mjs dist/apps/docs/browser ${port}`,
     cwd: '../..',
-    url: 'http://localhost:4310',
+    url: baseURL,
     reuseExistingServer: !process.env['CI'],
   },
 });

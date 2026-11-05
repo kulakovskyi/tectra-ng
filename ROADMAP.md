@@ -111,9 +111,11 @@ Detailed checklist per component: [roadmap/stage-4-display.md](roadmap/stage-4-d
 
 ## Stage 6 — selection
 
+Detailed checklist per component: [roadmap/stage-6-selection.md](roadmap/stage-6-selection.md).
+
 | tectra | PrimeNG equivalent | Usage | Status |
 |---|---|---|---|
-| `ui/select` — parity: clear, groups, virtual scroll, lazy, editable, loading, checkmark, `dt` / `pt` (keyboard, typeahead, flip done) | Select | **403** | 🟡 |
+| `ui/select` — parity: clear, groups, disabled options, `dataKey`, filter fields / match modes / delay, virtual scroll, lazy, editable, loading, checkmark, all templates, `dt` / `pt` / `unstyled` | Select | **406** | ✅ |
 | `ui/multiselect` — chips display, select all, filter, max selected | MultiSelect | inside select (multiselect mode) | ⬜ |
 | `ui/autocomplete` — single / multiple, dropdown, force selection, groups | AutoComplete | 1, 2 | ⬜ |
 | `ui/listbox` | Listbox | — (parity) | ⬜ |

@@ -3,6 +3,7 @@ import { tokenRef } from './token-helpers';
 export const selectTokens = {
   root: {
     dropdownColor: tokenRef('field-icon'),
+    gap: '8px',
   },
   overlay: {
     background: tokenRef('surface-overlay'),
@@ -24,8 +25,24 @@ export const selectTokens = {
     selectedColor: tokenRef('highlight-color'),
     selectedFocusBackground: tokenRef('highlight-focus-background'),
     selectedFocusColor: tokenRef('highlight-focus-color'),
+    disabledColor: tokenRef('form-field-disabled-color'),
+    checkColor: tokenRef('primary-base'),
+  },
+  optionGroup: {
+    padding: '8px 12px 4px',
+    color: tokenRef('text-muted'),
+    fontSize: tokenRef('font-size-sm'),
+    fontWeight: tokenRef('font-weight-semibold'),
   },
   filter: {
+    padding: '8px 12px',
+    borderColor: tokenRef('surface-overlay-border'),
+  },
+  header: {
+    padding: '8px 12px',
+    borderColor: tokenRef('surface-overlay-border'),
+  },
+  footer: {
     padding: '8px 12px',
     borderColor: tokenRef('surface-overlay-border'),
   },
