@@ -25,6 +25,7 @@ import { TxButtonIconTemplate, TxButtonLoadingIconTemplate } from './button-temp
 import { TxButtonIconPosition, TxButtonPart, TxButtonSeverity, TxButtonSize, TxButtonVariant } from './button.types';
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector -- an attribute on native button / a keeps native behaviour
   selector: 'button[txButton], a[txButton]',
   imports: [NgTemplateOutlet, TxIcon, TxBadge],
   templateUrl: './button.component.html',
@@ -58,43 +59,43 @@ export class TxButton {
   private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private txIconRegistry = inject(TxIconRegistry);
 
-  label = input<string | number | undefined>(undefined);
-  severity = input<TxButtonSeverity>('primary');
-  size = input<TxButtonSize>('medium');
-  variant = input<TxButtonVariant | undefined>(undefined);
-  outlined = input<boolean, unknown>(false, { transform: booleanAttribute });
-  text = input<boolean, unknown>(false, { transform: booleanAttribute });
-  link = input<boolean, unknown>(false, { transform: booleanAttribute });
-  rounded = input<boolean, unknown>(false, { transform: booleanAttribute });
-  raised = input<boolean, unknown>(false, { transform: booleanAttribute });
-  plain = input<boolean, unknown>(false, { transform: booleanAttribute });
-  fluid = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
-  disabled = input<boolean, unknown>(false, { transform: booleanAttribute });
-  tabindex = input<number | undefined, unknown>(undefined, { transform: numberAttribute });
-  icon = input<TxIconName | (string & {}) | undefined>(undefined);
-  iconPos = input<TxButtonIconPosition>('left');
-  iconOnly = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
-  loading = input<boolean, unknown>(false, { transform: booleanAttribute });
-  loadingIcon = input<TxIconName | (string & {})>('spinner');
-  badge = input<string | number | undefined>(undefined);
-  badgeSeverity = input<TxBadgeSeverity>('secondary');
-  dt = input<TectraDeepPartial<TectraButtonTokens> | undefined>(undefined);
-  pt = input<TxPassThrough<TxButtonPart, TxButton> | undefined>(undefined);
-  ptOptions = input<TxPassThroughOptions | undefined>(undefined);
-  unstyled = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
+  readonly label = input<string | number | undefined>(undefined);
+  readonly severity = input<TxButtonSeverity>('primary');
+  readonly size = input<TxButtonSize>('medium');
+  readonly variant = input<TxButtonVariant | undefined>(undefined);
+  readonly outlined = input<boolean, unknown>(false, { transform: booleanAttribute });
+  readonly text = input<boolean, unknown>(false, { transform: booleanAttribute });
+  readonly link = input<boolean, unknown>(false, { transform: booleanAttribute });
+  readonly rounded = input<boolean, unknown>(false, { transform: booleanAttribute });
+  readonly raised = input<boolean, unknown>(false, { transform: booleanAttribute });
+  readonly plain = input<boolean, unknown>(false, { transform: booleanAttribute });
+  readonly fluid = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
+  readonly disabled = input<boolean, unknown>(false, { transform: booleanAttribute });
+  readonly tabindex = input<number | undefined, unknown>(undefined, { transform: numberAttribute });
+  readonly icon = input<TxIconName | (string & {}) | undefined>(undefined);
+  readonly iconPos = input<TxButtonIconPosition>('left');
+  readonly iconOnly = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
+  readonly loading = input<boolean, unknown>(false, { transform: booleanAttribute });
+  readonly loadingIcon = input<TxIconName | (string & {})>('spinner');
+  readonly badge = input<string | number | undefined>(undefined);
+  readonly badgeSeverity = input<TxBadgeSeverity>('secondary');
+  readonly dt = input<TectraDeepPartial<TectraButtonTokens> | undefined>(undefined);
+  readonly pt = input<TxPassThrough<TxButtonPart, TxButton> | undefined>(undefined);
+  readonly ptOptions = input<TxPassThroughOptions | undefined>(undefined);
+  readonly unstyled = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
 
-  iconTemplate = contentChild(TxButtonIconTemplate);
-  loadingIconTemplate = contentChild(TxButtonLoadingIconTemplate);
-  contentElement = viewChild.required<ElementRef<HTMLElement>>('content');
+  readonly iconTemplate = contentChild(TxButtonIconTemplate);
+  readonly loadingIconTemplate = contentChild(TxButtonLoadingIconTemplate);
+  readonly contentElement = viewChild.required<ElementRef<HTMLElement>>('content');
 
   readonly isNativeButton = this.elementRef.nativeElement.tagName === 'BUTTON';
 
-  hasProjectedLabel = signal(false);
+  readonly hasProjectedLabel = signal(false);
   isUnstyled = injectUnstyled(this.unstyled);
   isFluid = injectFluid(this.fluid);
   passThrough = injectPassThrough('button', this, this.pt, this.ptOptions);
 
-  resolvedVariant = computed<TxButtonVariant | null>(() => {
+  readonly resolvedVariant = computed<TxButtonVariant | null>(() => {
     const variant = this.variant();
     if (variant) {
       return variant;
@@ -107,20 +108,20 @@ export class TxButton {
     }
     return this.outlined() ? 'outlined' : null;
   });
-  isDisabled = computed(() => this.disabled() || this.loading());
-  hasIcon = computed(() => this.loading() || !!this.icon() || !!this.iconTemplate());
-  hasLabelText = computed(() => this.label() !== undefined && this.label() !== '');
-  isIconOnly = computed(() => this.iconOnly() ?? (this.hasIcon() && !this.hasLabelText() && !this.hasProjectedLabel()));
-  iconName = computed(() => {
+  readonly isDisabled = computed(() => this.disabled() || this.loading());
+  readonly hasIcon = computed(() => this.loading() || !!this.icon() || !!this.iconTemplate());
+  readonly hasLabelText = computed(() => this.label() !== undefined && this.label() !== '');
+  readonly isIconOnly = computed(() => this.iconOnly() ?? (this.hasIcon() && !this.hasLabelText() && !this.hasProjectedLabel()));
+  readonly iconName = computed(() => {
     const icon = this.icon();
     return this.txIconRegistry.has(icon) ? icon : null;
   });
-  loadingIconName = computed(() => {
+  readonly loadingIconName = computed(() => {
     const icon = this.loadingIcon();
     return this.txIconRegistry.has(icon) ? icon : null;
   });
-  hasBadge = computed(() => this.badge() !== undefined && this.badge() !== '');
-  hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-button'), ...this.passThrough().root?.style }));
+  readonly hasBadge = computed(() => this.badge() !== undefined && this.badge() !== '');
+  readonly hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-button'), ...this.passThrough().root?.style }));
 
   constructor() {
     const destroyRef = inject(DestroyRef);

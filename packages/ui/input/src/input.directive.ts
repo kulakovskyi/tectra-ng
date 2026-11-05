@@ -13,8 +13,8 @@ import { TxInputSize } from './input.types';
   },
 })
 export class TxInput {
-  invalid = input<boolean>(false);
-  size = input<TxInputSize>('medium');
+  readonly invalid = input<boolean>(false);
+  readonly size = input<TxInputSize>('medium');
 
   constructor() {
     inject(TxStyleLoader).load(TxInputStyles);

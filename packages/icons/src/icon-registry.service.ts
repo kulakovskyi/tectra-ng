@@ -4,7 +4,7 @@ import { TX_ICONS } from './icons';
 
 @Injectable({ providedIn: 'root' })
 export class TxIconRegistry {
-  private icons = signal<TxIconSet>(TX_ICONS);
+  private readonly icons = signal<TxIconSet>(TX_ICONS);
 
   register(set: TxIconSet): void {
     this.icons.update((current) => ({ ...current, ...set }));

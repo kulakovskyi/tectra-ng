@@ -15,8 +15,8 @@ class Host {
     { label: 'Odesa', value: 'odesa' },
   ];
   control = new FormControl<unknown>(null);
-  filter = signal(false);
-  optionValue = signal('value');
+  readonly filter = signal(false);
+  readonly optionValue = signal('value');
   closed = 0;
 }
 

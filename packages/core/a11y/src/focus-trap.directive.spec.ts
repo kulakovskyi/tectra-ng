@@ -14,7 +14,7 @@ import { TxFocusTrap } from './focus-trap.directive';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class Host {
-  open = signal(false);
+  readonly open = signal(false);
 }
 
 describe('TxFocusTrap', () => {

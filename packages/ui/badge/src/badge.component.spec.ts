@@ -9,9 +9,9 @@ import { TxBadgeSeverity } from './badge.types';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class Host {
-  value = signal<string | number | undefined>(3);
-  severity = signal<TxBadgeSeverity>('danger');
-  unstyled = signal(false);
+  readonly value = signal<string | number | undefined>(3);
+  readonly severity = signal<TxBadgeSeverity>('danger');
+  readonly unstyled = signal(false);
 }
 
 describe('TxBadge', () => {

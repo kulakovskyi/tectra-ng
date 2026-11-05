@@ -9,6 +9,7 @@ npm install
 npx nx serve docs          # the site on http://localhost:4300
 npx nx serve sandbox       # bare playground on http://localhost:4301
 npm run build:packages     # npm packages into dist/packages/*
+npm run lint               # ESLint + package boundaries
 npm run test               # unit tests (Vitest)
 npm run e2e                # Playwright checks of the docs site
 ```

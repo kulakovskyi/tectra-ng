@@ -32,10 +32,10 @@ Everything that `links-cms` keeps in `libs/ui-kit`, `libs/charts` and the generi
 
 | Item | Why now | Status |
 |---|---|---|
-| Unit tests: Vitest through `@angular/build:unit-test` (`npm run test`) — 52 specs for themes, core, icons, badge, button, button-group, toggle-button, input, select | every next item ships with tests | ✅ |
+| Unit tests: Vitest through `@angular/build:unit-test` (`npm run test`) — specs for themes, core, icons, badge, button, button-group, toggle-button, input, select | every next item ships with tests | ✅ |
 | Playwright checks in `e2e/visual` (`npm run e2e`): every page light + dark, console errors, layout shift, axe serious / critical; select, code panel, navigation, square buttons, theme toggle | the check we ran by hand is permanent | ✅ |
 | CI (`.github/workflows/ci.yml`): test → package build → e2e, report on failure | | ✅ |
-| ESLint (angular-eslint, Nx module boundaries from `eslint.config.mjs`) and lint in CI | rules exist only as a sketch | ⬜ |
+| ESLint (`npm run lint`): angular-eslint (OnPush, signals readonly, control flow, template a11y), typescript-eslint, Nx module boundaries by package tags; first step in CI | keeps the conventions and the package graph honest | ✅ |
 | Release flow: changesets, versions, npm publish | needed before links-cms can install from npm | ⬜ |
 
 Found and fixed while setting it up: a disabled `a[txButton]` still let the parent `(click)` run; `tx-select` had no accessible name (`ariaLabel`, `ariaLabelledBy`, falls back to the placeholder); light muted text and the white-on-green success colour were below WCAG AA (muted → surface 600, success → green 700); toggle-button text contrast.
@@ -51,7 +51,7 @@ Found and fixed while setting it up: a disabled `a[txButton]` still let the pare
 
 | Item | Package | Notes | Status |
 |---|---|---|---|
-| Overlay: `TxOverlay.open(template \| component, options)` → `TxOverlayRef` (`placement`, `closed`, `close`, `updatePosition`); 12 placements with flip (`txPositions`), viewport margin, scroll strategies, `matchWidth`, Escape / outside click, focus back to the origin; z-index layers (`--tx-layer-dropdown … toast`); CDK loads its structural CSS itself — no `overlay-prebuilt.css` needed | `@tectra/core/overlay` | docs page Core → Overlay | ✅ |
+| Overlay: `TxOverlay.open(template \| component, options)` → `TxOverlayRef` (`placement`, `closed`, `close`, `updatePosition`); 12 placements with flip (`txPositions`), enter / leave motion from the origin side (`txAnimateEnter`, `txAnimateLeave`, off with reduced motion), viewport margin, scroll strategies, `matchWidth`, Escape / outside click, focus back to the origin; z-index layers (`--tx-layer-dropdown … toast`); CDK loads its structural CSS itself — no `overlay-prebuilt.css` needed | `@tectra/core/overlay` | docs page Core → Overlay | ✅ |
 | `txFocusTrap` (auto focus, restore focus), `nextListIndex` (arrows, Home / End, Page, disabled, loop), `TxTypeahead`, `TxAnnouncer` | `@tectra/core/a11y` | | ✅ |
 | Locale: `us` / `ua` definitions, `provideTectra({ locale })`, `TxLocaleService` (runtime `setLocale`, `translate` with params, Intl numbers / dates, month and weekday names from the first day of week), `injectTranslations()` is a signal | `@tectra/core/i18n` | docs page Core → Locale | ✅ |
 | Select on the new core: placements with flip, reposition on scroll, Home / End / Page keys, type-to-find, translated texts | `@tectra/ui/select` | | ✅ |

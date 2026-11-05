@@ -1,4 +1,4 @@
-import { CdkConnectedOverlay, CdkOverlayOrigin, createRepositionScrollStrategy } from '@angular/cdk/overlay';
+import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedOverlayPositionChange, createRepositionScrollStrategy } from '@angular/cdk/overlay';
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -18,7 +18,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TxTypeahead, nextListIndex, uniqueId } from '@tectra/core/a11y';
 import { TxFormControlBase } from '@tectra/core/forms';
 import { injectTranslations } from '@tectra/core/i18n';
-import { txPositions } from '@tectra/core/overlay';
+import { TxPlacement, placementFromPosition, txAnimateEnter, txAnimateLeave, txPositions } from '@tectra/core/overlay';
 import { TxIcon } from '@tectra/icons';
 import { TxSelectOptionTemplate } from './select-option-template.directive';
 import { TxSelectItem, TxSelectSize } from './select.types';
@@ -38,21 +38,22 @@ import { TxSelectItem, TxSelectSize } from './select.types';
   },
 })
 export class TxSelect extends TxFormControlBase<unknown> {
-  options = input<object[]>([]);
-  optionLabel = input<string>('label');
-  optionValue = input<string>('value');
-  placeholder = input<string>('');
-  ariaLabel = input<string | undefined>(undefined);
-  ariaLabelledBy = input<string | undefined>(undefined);
-  filter = input<boolean>(false);
-  size = input<TxSelectSize>('medium');
+  readonly options = input<object[]>([]);
+  readonly optionLabel = input<string>('label');
+  readonly optionValue = input<string>('value');
+  readonly placeholder = input<string>('');
+  readonly ariaLabel = input<string | undefined>(undefined);
+  readonly ariaLabelledBy = input<string | undefined>(undefined);
+  readonly filter = input<boolean>(false);
+  readonly size = input<TxSelectSize>('medium');
 
   opened = output<void>();
   closed = output<void>();
 
-  optionTemplate = contentChild(TxSelectOptionTemplate);
-  trigger = viewChild.required<ElementRef<HTMLButtonElement>>('trigger');
-  filterInput = viewChild<ElementRef<HTMLInputElement>>('filterInput');
+  readonly optionTemplate = contentChild(TxSelectOptionTemplate);
+  readonly trigger = viewChild.required<ElementRef<HTMLButtonElement>>('trigger');
+  readonly filterInput = viewChild<ElementRef<HTMLInputElement>>('filterInput');
+  readonly panel = viewChild<ElementRef<HTMLElement>>('panel');
 
   private injector = inject(Injector);
   private document = inject(DOCUMENT);
@@ -63,12 +64,15 @@ export class TxSelect extends TxFormControlBase<unknown> {
   readonly scrollStrategy = createRepositionScrollStrategy(this.injector);
   readonly listboxId = uniqueId('tx-select-listbox');
 
-  isOpen = signal(false);
-  query = signal('');
-  activeIndex = signal(0);
-  panelWidth = signal(0);
+  readonly isOpen = signal(false);
+  readonly isPanelMounted = signal(false);
+  readonly panelPlacement = signal<TxPlacement>('bottom-start');
+  private hasEntered = false;
+  readonly query = signal('');
+  readonly activeIndex = signal(0);
+  readonly panelWidth = signal(0);
 
-  items = computed<TxSelectItem[]>(() =>
+  readonly items = computed<TxSelectItem[]>(() =>
     this.options().map((option, index) => {
       const value = this.optionValue() ? this.readField(option, this.optionValue()) : option;
       return {
@@ -80,12 +84,12 @@ export class TxSelect extends TxFormControlBase<unknown> {
       };
     }),
   );
-  visibleItems = computed(() => {
+  readonly visibleItems = computed(() => {
     const query = this.query().trim().toLowerCase();
     return query ? this.items().filter((item) => item.label.toLowerCase().includes(query)) : this.items();
   });
-  selectedItem = computed(() => this.items().find((item) => item.selected) ?? null);
-  activeItemId = computed(() => (this.isOpen() ? this.visibleItems()[this.activeIndex()]?.id ?? null : null));
+  readonly selectedItem = computed(() => this.items().find((item) => item.selected) ?? null);
+  readonly activeItemId = computed(() => (this.isOpen() ? this.visibleItems()[this.activeIndex()]?.id ?? null : null));
 
   open(): void {
     if (this.disabled() || this.isOpen()) {
@@ -95,6 +99,8 @@ export class TxSelect extends TxFormControlBase<unknown> {
     this.query.set('');
     this.activeIndex.set(Math.max(0, this.visibleItems().findIndex((item) => item.selected)));
     this.isOpen.set(true);
+    this.hasEntered = false;
+    this.isPanelMounted.set(true);
     this.opened.emit();
   }
 
@@ -105,6 +111,12 @@ export class TxSelect extends TxFormControlBase<unknown> {
     this.isOpen.set(false);
     this.markTouched();
     this.closed.emit();
+    const panel = this.panel()?.nativeElement;
+    (panel ? txAnimateLeave(panel, this.panelPlacement()) : Promise.resolve()).then(() => {
+      if (!this.isOpen()) {
+        this.isPanelMounted.set(false);
+      }
+    });
   }
 
   toggle(): void {
@@ -123,6 +135,20 @@ export class TxSelect extends TxFormControlBase<unknown> {
 
   onPanelAttach(): void {
     this.filterInput()?.nativeElement.focus();
+  }
+
+  onPositionChange(change: ConnectedOverlayPositionChange): void {
+    this.panelPlacement.set(placementFromPosition(change.connectionPair) ?? 'bottom-start');
+    const panel = this.panel()?.nativeElement;
+    if (!this.hasEntered && panel) {
+      this.hasEntered = true;
+      txAnimateEnter(panel, this.panelPlacement());
+    }
+  }
+
+  onPanelDetach(): void {
+    this.isPanelMounted.set(false);
+    this.close();
   }
 
   onOutsideClick(event: MouseEvent): void {
@@ -191,7 +217,7 @@ export class TxSelect extends TxFormControlBase<unknown> {
 
   private scrollActiveIntoView(): void {
     const id = this.activeItemId();
-    queueMicrotask(() => (id ? this.document.getElementById(id)?.scrollIntoView({ block: 'nearest' }) : undefined));
+    queueMicrotask(() => (id ? this.document.getElementById(id)?.scrollIntoView?.({ block: 'nearest' }) : undefined));
   }
 
   private readField(option: object, field: string): unknown {

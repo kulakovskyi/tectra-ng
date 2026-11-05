@@ -5,7 +5,7 @@ import { injectFluid } from './inject-fluid';
 
 @Component({ selector: 'test-fluid-aware', template: '', changeDetection: ChangeDetectionStrategy.OnPush })
 class FluidAware {
-  fluid = input<boolean | undefined>(undefined);
+  readonly fluid = input<boolean | undefined>(undefined);
   isFluid = injectFluid(this.fluid);
 }
 

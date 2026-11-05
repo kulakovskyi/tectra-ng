@@ -47,22 +47,23 @@ import {
 export class TxToggleButton extends TxFormControlBase<boolean> {
   private txIconRegistry = inject(TxIconRegistry);
 
-  onLabel = input<string>('Yes');
-  offLabel = input<string>('No');
-  onIcon = input<TxIconName | (string & {}) | undefined>(undefined);
-  offIcon = input<TxIconName | (string & {}) | undefined>(undefined);
-  iconPos = input<TxToggleButtonIconPosition>('left');
-  size = input<TxToggleButtonSize>('medium');
-  allowEmpty = input<boolean, unknown>(true, { transform: booleanAttribute });
-  invalid = input<boolean, unknown>(false, { transform: booleanAttribute });
-  fluid = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
-  disabledInput = input<boolean, unknown>(false, { alias: 'disabled', transform: booleanAttribute });
-  tabindex = input<number | undefined, unknown>(undefined, { transform: numberAttribute });
-  ariaLabel = input<string | undefined>(undefined);
-  dt = input<TectraDeepPartial<TectraToggleButtonTokens> | undefined>(undefined);
-  pt = input<TxPassThrough<TxToggleButtonPart, TxToggleButton> | undefined>(undefined);
-  ptOptions = input<TxPassThroughOptions | undefined>(undefined);
-  unstyled = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
+  readonly onLabel = input<string>('Yes');
+  readonly offLabel = input<string>('No');
+  readonly onIcon = input<TxIconName | (string & {}) | undefined>(undefined);
+  readonly offIcon = input<TxIconName | (string & {}) | undefined>(undefined);
+  readonly iconPos = input<TxToggleButtonIconPosition>('left');
+  readonly size = input<TxToggleButtonSize>('medium');
+  readonly allowEmpty = input<boolean, unknown>(true, { transform: booleanAttribute });
+  readonly invalid = input<boolean, unknown>(false, { transform: booleanAttribute });
+  readonly fluid = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
+  // eslint-disable-next-line @angular-eslint/no-input-rename
+  readonly disabledInput = input<boolean, unknown>(false, { alias: 'disabled', transform: booleanAttribute });
+  readonly tabindex = input<number | undefined, unknown>(undefined, { transform: numberAttribute });
+  readonly ariaLabel = input<string | undefined>(undefined);
+  readonly dt = input<TectraDeepPartial<TectraToggleButtonTokens> | undefined>(undefined);
+  readonly pt = input<TxPassThrough<TxToggleButtonPart, TxToggleButton> | undefined>(undefined);
+  readonly ptOptions = input<TxPassThroughOptions | undefined>(undefined);
+  readonly unstyled = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
 
   changed = output<TxToggleButtonChangeEvent>();
 
@@ -70,15 +71,15 @@ export class TxToggleButton extends TxFormControlBase<boolean> {
   isFluid = injectFluid(this.fluid);
   passThrough = injectPassThrough('toggleButton', this, this.pt, this.ptOptions);
 
-  checked = computed(() => !!this.value());
-  isDisabled = computed(() => this.disabled() || this.disabledInput());
-  label = computed(() => (this.checked() ? this.onLabel() : this.offLabel()));
-  currentIcon = computed(() => (this.checked() ? this.onIcon() : this.offIcon()));
-  iconName = computed(() => {
+  readonly checked = computed(() => !!this.value());
+  readonly isDisabled = computed(() => this.disabled() || this.disabledInput());
+  readonly label = computed(() => (this.checked() ? this.onLabel() : this.offLabel()));
+  readonly currentIcon = computed(() => (this.checked() ? this.onIcon() : this.offIcon()));
+  readonly iconName = computed(() => {
     const icon = this.currentIcon();
     return this.txIconRegistry.has(icon) ? icon : null;
   });
-  hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-toggle-button'), ...this.passThrough().root?.style }));
+  readonly hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-toggle-button'), ...this.passThrough().root?.style }));
 
   toggle(event: Event): void {
     if (this.isDisabled() || (this.checked() && !this.allowEmpty())) {

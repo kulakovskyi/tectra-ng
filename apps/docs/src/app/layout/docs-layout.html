@@ -45,7 +45,7 @@
 </header>
 
 <div class="body">
-  <div class="backdrop" [class.backdrop--visible]="isMenuOpen()" (click)="closeMenu()"></div>
+  <div class="backdrop" tabindex="-1" aria-hidden="true" [class.backdrop--visible]="isMenuOpen()" (click)="closeMenu()" (keydown.escape)="closeMenu()"></div>
   <nav class="sidebar" [class.sidebar--open]="isMenuOpen()">
     @for (group of navigation; track group.title) {
       <div class="sidebar__group">

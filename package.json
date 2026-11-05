@@ -9,7 +9,8 @@
     "build:packages": "nx run-many -t build -p tokens themes core icons brand-icons ui blocks",
     "icons": "node tools/icons/build-icons.mjs && node tools/icons/build-brand-icons.mjs",
     "test": "nx run-many -t test -p themes core icons ui",
-    "e2e": "nx e2e visual"
+    "e2e": "nx e2e visual",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@angular/cdk": "22.2.3",
@@ -32,11 +33,15 @@
     "@axe-core/playwright": "^4.14.0",
     "@nx/angular": "23.2.1",
     "@nx/devkit": "23.2.1",
+    "@nx/eslint": "^23.2.1",
+    "@nx/eslint-plugin": "^23.2.1",
     "@nx/js": "23.2.1",
     "@nx/workspace": "23.2.1",
     "@playwright/test": "^1.63.0",
     "@schematics/angular": "22.2.3",
+    "angular-eslint": "^22.5.0",
     "esbuild": "^0.28.2",
+    "eslint": "^9.39.5",
     "highlight.js": "^11.11.1",
     "jsdom": "^26.1.0",
     "marked": "^16.0.0",
@@ -45,6 +50,7 @@
     "sass": "^1.89.0",
     "simple-icons": "^16.36.0",
     "typescript": "6.0.3",
+    "typescript-eslint": "^8.72.1",
     "vitest": "^4.1.12"
   }
 }

@@ -35,6 +35,7 @@ export interface TxOverlayOptions<TContext = unknown> {
   closeOnEscape?: boolean;
   closeOnOutsideClick?: boolean;
   restoreFocus?: boolean;
+  animate?: boolean;
   panelClass?: string | string[];
 }
 

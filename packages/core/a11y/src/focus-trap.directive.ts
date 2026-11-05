@@ -9,9 +9,9 @@ export class TxFocusTrap implements OnDestroy {
   private focusTrap: FocusTrap = this.focusTrapFactory.create(this.elementRef.nativeElement, true);
   private previousFocus = this.document.activeElement as HTMLElement | null;
 
-  txFocusTrap = input<boolean, unknown>(true, { transform: booleanAttribute });
-  autoFocus = input<boolean, unknown>(true, { transform: booleanAttribute });
-  restoreFocus = input<boolean, unknown>(true, { transform: booleanAttribute });
+  readonly txFocusTrap = input<boolean, unknown>(true, { transform: booleanAttribute });
+  readonly autoFocus = input<boolean, unknown>(true, { transform: booleanAttribute });
+  readonly restoreFocus = input<boolean, unknown>(true, { transform: booleanAttribute });
 
   constructor() {
     effect(() => {

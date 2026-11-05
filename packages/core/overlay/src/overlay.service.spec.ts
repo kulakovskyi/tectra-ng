@@ -9,7 +9,7 @@ import { TxOverlayCloseReason } from './overlay.types';
 })
 class Host {
   viewContainerRef = inject(ViewContainerRef);
-  panel = viewChild.required<TemplateRef<{ $implicit: string }>>('panel');
+  readonly panel = viewChild.required<TemplateRef<{ $implicit: string }>>('panel');
 }
 
 @Component({ selector: 'test-panel', template: 'Component panel', changeDetection: ChangeDetectionStrategy.OnPush })
@@ -41,7 +41,7 @@ describe('TxOverlay', () => {
     ref.close();
   });
 
-  it('opens a component and closes on Escape, restoring focus', () => {
+  it('opens a component and closes on Escape, restoring focus', async () => {
     const { origin, overlay } = setup();
     origin.focus();
     const reasons: TxOverlayCloseReason[] = [];
@@ -51,6 +51,7 @@ describe('TxOverlay', () => {
     document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
     expect(reasons).toEqual(['escape']);
     expect(document.activeElement).toBe(origin);
+    await Promise.resolve();
     expect(document.querySelector('test-panel')).toBeNull();
   });
 

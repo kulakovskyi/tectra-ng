@@ -27,12 +27,12 @@ export class TxRipple {
   private ripples = new Set<TxRippleRef>();
   private container: HTMLElement | null = null;
 
-  ripple = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
-  rippleDisabled = input<boolean, unknown>(false, { transform: booleanAttribute });
-  rippleCentered = input<boolean, unknown>(false, { transform: booleanAttribute });
-  rippleColor = input<string | undefined>(undefined);
+  readonly ripple = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
+  readonly rippleDisabled = input<boolean, unknown>(false, { transform: booleanAttribute });
+  readonly rippleCentered = input<boolean, unknown>(false, { transform: booleanAttribute });
+  readonly rippleColor = input<string | undefined>(undefined);
 
-  isEnabled = computed(() => !this.rippleDisabled() && (this.ripple() ?? !!this.config?.ripple));
+  readonly isEnabled = computed(() => !this.rippleDisabled() && (this.ripple() ?? !!this.config?.ripple));
 
   onPointerDown(event: PointerEvent): void {
     if (event.button === 0 && !event.defaultPrevented) {

@@ -36,8 +36,8 @@ import { TxIconName } from './icons';
 export class TxIcon {
   private txIconRegistry = inject(TxIconRegistry);
 
-  name = input.required<TxIconName | (string & {})>();
-  paths = computed(() =>
+  readonly name = input.required<TxIconName | (string & {})>();
+  readonly paths = computed(() =>
     (this.txIconRegistry.get(this.name()) ?? []).map((path) => (typeof path === 'string' ? { d: path } : path)) as {
       d: string;
       fill?: true;

@@ -8,7 +8,7 @@ import { TxInput } from './input.directive';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class Host {
-  invalid = signal(false);
+  readonly invalid = signal(false);
 }
 
 describe('TxInput', () => {

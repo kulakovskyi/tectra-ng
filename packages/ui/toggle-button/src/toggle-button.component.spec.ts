@@ -20,7 +20,7 @@ import { TxToggleButtonChangeEvent } from './toggle-button.types';
 })
 class Host {
   control = new FormControl(false);
-  allowEmpty = signal(true);
+  readonly allowEmpty = signal(true);
   events: TxToggleButtonChangeEvent[] = [];
 }
 

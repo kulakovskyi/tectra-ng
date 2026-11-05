@@ -30,14 +30,14 @@ import { TxButtonIconTemplate } from './button-templates.directive';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class Host {
-  outlined = signal(false);
-  variant = signal<'text' | 'link' | undefined>(undefined);
-  icon = signal<string | undefined>(undefined);
-  label = signal<string | undefined>('Delete');
-  loading = signal(false);
-  disabled = signal(false);
-  badge = signal<number | undefined>(undefined);
-  clicks = signal(0);
+  readonly outlined = signal(false);
+  readonly variant = signal<'text' | 'link' | undefined>(undefined);
+  readonly icon = signal<string | undefined>(undefined);
+  readonly label = signal<string | undefined>('Delete');
+  readonly loading = signal(false);
+  readonly disabled = signal(false);
+  readonly badge = signal<number | undefined>(undefined);
+  readonly clicks = signal(0);
 }
 
 describe('TxButton', () => {

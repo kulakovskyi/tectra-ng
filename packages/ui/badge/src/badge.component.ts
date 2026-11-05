@@ -20,16 +20,16 @@ import { TxBadgePart, TxBadgeSeverity, TxBadgeSize } from './badge.types';
   },
 })
 export class TxBadge {
-  value = input<string | number | undefined>(undefined);
-  severity = input<TxBadgeSeverity>('primary');
-  size = input<TxBadgeSize>('medium');
-  dt = input<TectraDeepPartial<TectraBadgeTokens> | undefined>(undefined);
-  pt = input<TxPassThrough<TxBadgePart, TxBadge> | undefined>(undefined);
-  ptOptions = input<TxPassThroughOptions | undefined>(undefined);
-  unstyled = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
+  readonly value = input<string | number | undefined>(undefined);
+  readonly severity = input<TxBadgeSeverity>('primary');
+  readonly size = input<TxBadgeSize>('medium');
+  readonly dt = input<TectraDeepPartial<TectraBadgeTokens> | undefined>(undefined);
+  readonly pt = input<TxPassThrough<TxBadgePart, TxBadge> | undefined>(undefined);
+  readonly ptOptions = input<TxPassThroughOptions | undefined>(undefined);
+  readonly unstyled = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
 
   isUnstyled = injectUnstyled(this.unstyled);
   passThrough = injectPassThrough('badge', this, this.pt, this.ptOptions);
-  isDot = computed(() => this.value() === undefined || this.value() === '');
-  hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-badge'), ...this.passThrough().root?.style }));
+  readonly isDot = computed(() => this.value() === undefined || this.value() === '');
+  readonly hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-badge'), ...this.passThrough().root?.style }));
 }

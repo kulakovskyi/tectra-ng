@@ -85,3 +85,45 @@ test('locale switches built-in texts at runtime', async ({ page }) => {
   await page.getByRole('combobox', { name: /Open me/ }).click();
   await expect(page.locator('.tx-select__empty')).toHaveText('Нічого не знайдено');
 });
+
+test.describe('with motion', () => {
+  test.use({ contextOptions: { reducedMotion: 'no-preference' } });
+
+  test('overlay ends its enter animation exactly where it stays', async ({ page }) => {
+    await page.goto('/core/overlay');
+    await page.getByRole('button', { name: 'bottom', exact: true }).click();
+    const pane = page.locator('.tx-overlay-pane');
+    const [nearEnd, final] = await pane.evaluate((element) => {
+      const [animation] = element.getAnimations();
+      animation.pause();
+      animation.currentTime = Number(animation.effect?.getComputedTiming().duration) - 1;
+      const before = element.getBoundingClientRect().top;
+      animation.finish();
+      return [before, element.getBoundingClientRect().top];
+    });
+    expect(Math.abs(nearEnd - final)).toBeLessThan(1);
+  });
+
+  test('overlay fades out before it is removed', async ({ page }) => {
+    await page.goto('/core/overlay');
+    await page.getByRole('button', { name: 'bottom', exact: true }).click();
+    const panel = page.locator('.tx-overlay-pane');
+    await expect(panel).toHaveCount(1);
+    await page.waitForTimeout(250);
+    await page.keyboard.press('Escape');
+    const leaving = await panel.evaluate((element) => element.getAnimations().some((animation) => animation.playState === 'running'));
+    expect(leaving).toBe(true);
+    await expect(panel).toHaveCount(0);
+  });
+
+  test('select panel fades out before it is removed', async ({ page }) => {
+    await page.goto('/components/select');
+    await page.locator('tx-select .tx-select__trigger').first().click();
+    const panel = page.locator('.tx-select__panel');
+    await expect(panel).toBeVisible();
+    await page.waitForTimeout(250);
+    await page.keyboard.press('Escape');
+    await expect(panel).toHaveCount(1);
+    await expect(panel).toHaveCount(0);
+  });
+});

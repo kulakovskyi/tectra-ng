@@ -32,15 +32,17 @@
 <ng-template
   cdkConnectedOverlay
   [cdkConnectedOverlayOrigin]="origin"
-  [cdkConnectedOverlayOpen]="isOpen()"
+  [cdkConnectedOverlayOpen]="isPanelMounted()"
   [cdkConnectedOverlayPositions]="positions"
   [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
+  [cdkConnectedOverlayDisableClose]="true"
   [cdkConnectedOverlayWidth]="panelWidth()"
   (overlayOutsideClick)="onOutsideClick($event)"
   (attach)="onPanelAttach()"
-  (detach)="close()"
+  (positionChange)="onPositionChange($event)"
+  (detach)="onPanelDetach()"
 >
-  <div class="tx-select__panel">
+  <div #panel class="tx-select__panel">
     @if (filter()) {
       <div class="tx-select__filter">
         <tx-icon class="tx-select__filter-icon" [name]="'search'" />
@@ -59,6 +61,7 @@
     }
     <div class="tx-select__list" role="listbox" [id]="listboxId">
       @for (item of visibleItems(); track item.id; let index = $index) {
+        <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- options use aria-activedescendant: focus and keys stay on the field -->
         <div
           role="option"
           class="tx-select__option"

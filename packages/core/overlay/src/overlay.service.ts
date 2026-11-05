@@ -10,6 +10,7 @@ import {
 } from '@angular/cdk/overlay';
 import { DOCUMENT, Injectable, Injector, TemplateRef, Type, inject, signal } from '@angular/core';
 import { Subject } from 'rxjs';
+import { txAnimateEnter, txAnimateLeave } from './overlay-motion';
 import { placementFromPosition, txPositions } from './placements';
 import { TxOverlayCloseReason, TxOverlayOptions, TxOverlayRef, TxOverlayScroll } from './overlay.types';
 
@@ -45,18 +46,20 @@ export class TxOverlay {
     const closed = new Subject<TxOverlayCloseReason>();
     let isClosed = false;
 
+    const animate = options.animate !== false;
     const close = (reason: TxOverlayCloseReason = 'api') => {
       if (isClosed) {
         return;
       }
       isClosed = true;
       subscriptions.forEach((subscription) => subscription.unsubscribe());
-      overlayRef.dispose();
       if (options.restoreFocus !== false && reason !== 'outside' && previousFocus?.isConnected) {
         previousFocus.focus();
       }
       closed.next(reason);
       closed.complete();
+      const leave = animate && overlayRef.hasAttached() ? txAnimateLeave(overlayRef.overlayElement, currentPlacement()) : Promise.resolve();
+      leave.then(() => overlayRef.dispose());
     };
 
     const subscriptions = [
@@ -81,6 +84,10 @@ export class TxOverlay {
     ];
 
     const instance = this.attach(overlayRef, content, options);
+    if (animate) {
+      overlayRef.updatePosition();
+      txAnimateEnter(overlayRef.overlayElement, currentPlacement());
+    }
 
     return {
       placement: currentPlacement.asReadonly(),
