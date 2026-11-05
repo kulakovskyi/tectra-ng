@@ -103,7 +103,7 @@ export class TxOverlay {
             insetsChange: (next) => {
               insets = next;
               positionStrategy.withViewportMargin(txConnectedMargin(insets, margin));
-              preferRoom();
+              reposition();
             },
           })
         : () => undefined;

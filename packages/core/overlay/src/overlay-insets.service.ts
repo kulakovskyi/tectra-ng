@@ -4,6 +4,7 @@ import { TECTRA_CONFIG } from '@tectra/core/config';
 import { TxOverlayBounds, TxOverlayInsetValues } from './overlay.types';
 
 const STUCK_TOLERANCE = 1;
+const CLIPPING = /^(auto|scroll|hidden|clip|overlay)$/;
 
 @Injectable({ providedIn: 'root' })
 export class TxOverlayInsets {
@@ -73,11 +74,35 @@ export interface TxOriginWatch {
   insetsChange?: (insets: TxOverlayInsetValues) => void;
 }
 
+export function scrollParents(element: Element): Element[] {
+  const view = element.ownerDocument.defaultView;
+  const parents: Element[] = [];
+  for (let parent = element.parentElement; parent && view; parent = parent.parentElement) {
+    if (parent === element.ownerDocument.body || parent === element.ownerDocument.documentElement) {
+      break;
+    }
+    const style = view.getComputedStyle(parent);
+    if ([style.overflow, style.overflowX, style.overflowY].some((value) => CLIPPING.test(value))) {
+      parents.push(parent);
+    }
+  }
+  return parents;
+}
+
+export function isClippedOut(origin: Element, parents: Element[]): boolean {
+  const rect = origin.getBoundingClientRect();
+  return parents.some((parent) => {
+    const clip = parent.getBoundingClientRect();
+    return rect.bottom <= clip.top || rect.top >= clip.bottom || rect.right <= clip.left || rect.left >= clip.right;
+  });
+}
+
 export function watchOrigin(origin: Element, overlayInsets: TxOverlayInsets, watch: TxOriginWatch): () => void {
   const document = origin.ownerDocument;
+  const parents = scrollParents(origin);
   const listener = () => {
     const insets = overlayInsets.measure();
-    if (isOriginHidden(origin, insets)) {
+    if (isOriginHidden(origin, insets) || isClippedOut(origin, parents)) {
       watch.hidden();
       return;
     }

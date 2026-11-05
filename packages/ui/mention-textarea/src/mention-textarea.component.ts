@@ -18,7 +18,7 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
 import { injectFieldInvalid } from '@tectra/core/forms';
-import { txPositions } from '@tectra/core/overlay';
+import { TxOverlayInsets, txPositions, watchOrigin } from '@tectra/core/overlay';
 import { optionalBoolean } from '@tectra/core/utils';
 import { TectraDeepPartial, TectraMentionTokens, toStyleObject } from '@tectra/themes';
 import { TxAvatar } from '@tectra/ui/avatar';
@@ -64,6 +64,19 @@ export class TxMentionTextarea extends TxOptionsBase<string> {
 
   readonly textarea = viewChild.required<ElementRef<HTMLTextAreaElement>>('textarea');
   private injector = inject(Injector);
+  private overlayInsets = inject(TxOverlayInsets);
+  private readonly connectedOverlay = viewChild(CdkConnectedOverlay);
+  private readonly followOrigin = effect((onCleanup) => {
+    if (!this.showPanel()) {
+      return;
+    }
+    onCleanup(
+      watchOrigin(this.textarea().nativeElement, this.overlayInsets, {
+        hidden: () => this.close(),
+        insetsChange: () => this.connectedOverlay()?.overlayRef?.updatePosition(),
+      }),
+    );
+  });
 
   readonly isUnstyled = injectUnstyled(this.unstyled);
   readonly isInvalid = injectFieldInvalid(this.invalid);

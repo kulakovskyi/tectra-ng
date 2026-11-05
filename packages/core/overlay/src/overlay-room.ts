@@ -42,4 +42,11 @@ export class TxOverlayRoom {
     afterNextRender(() => overlay?.overlayRef?.updatePosition(), { injector });
     return true;
   }
+
+  follow(insets: TxOverlayInsetValues, origin: Element, panel: HTMLElement | null | undefined, overlay: CdkConnectedOverlay | undefined, injector: Injector): void {
+    this.move(insets);
+    if (!this.fit(origin, panel, overlay, injector)) {
+      overlay?.overlayRef?.updatePosition();
+    }
+  }
 }

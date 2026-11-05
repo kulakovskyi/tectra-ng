@@ -7,6 +7,7 @@ import {
   Injector,
   booleanAttribute,
   computed,
+  effect,
   forwardRef,
   inject,
   input,
@@ -19,7 +20,7 @@ import { uniqueId } from '@tectra/core/a11y';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
 import { TxFormControlBase, injectFieldInvalid } from '@tectra/core/forms';
 import { injectTranslations } from '@tectra/core/i18n';
-import { TxPlacement, placementFromPosition, txAnimateEnter, txAnimateLeave, txPositions } from '@tectra/core/overlay';
+import { TxOverlayInsets, TxPlacement, placementFromPosition, txAnimateEnter, txAnimateLeave, txPositions, watchOrigin } from '@tectra/core/overlay';
 import { optionalBoolean } from '@tectra/core/utils';
 import { TxIcon } from '@tectra/icons';
 import { TectraColorPickerTokens, TectraDeepPartial, toStyleObject } from '@tectra/themes';
@@ -77,6 +78,20 @@ export class TxColorPicker extends TxFormControlBase<TxColorValue> {
   readonly panel = viewChild<ElementRef<HTMLElement>>('panel');
 
   private injector = inject(Injector);
+  private host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private overlayInsets = inject(TxOverlayInsets);
+  private readonly connectedOverlay = viewChild(CdkConnectedOverlay);
+  private readonly followOrigin = effect((onCleanup) => {
+    if (!this.isOpen()) {
+      return;
+    }
+    onCleanup(
+      watchOrigin(this.host.nativeElement, this.overlayInsets, {
+        hidden: () => this.close(false),
+        insetsChange: () => this.connectedOverlay()?.overlayRef?.updatePosition(),
+      }),
+    );
+  });
   readonly translations = injectTranslations();
   readonly isInvalid = injectFieldInvalid(this.invalid);
   readonly isUnstyled = injectUnstyled(this.unstyled);

@@ -84,3 +84,28 @@ test('dialog moves by its header and maximizes to the viewport', async ({ page }
   await expect.poll(async () => Math.round((await dialog.boundingBox())?.width ?? 0)).toBe(viewport?.width);
   await expect(dialog.getByRole('button', { name: 'Restore' })).toBeVisible();
 });
+
+test('select panels stick to their field while the dialog body scrolls and close once it is scrolled away', async ({ page }) => {
+  await page.goto('/components/dialog');
+  await page.locator('dialog-form-example').getByRole('button', { name: 'New event' }).click();
+  const dialog = page.locator('.tx-dialog');
+  await expect(dialog).toBeVisible();
+  const content = dialog.locator('.tx-dialog-content');
+  const panel = page.locator('.tx-select__panel');
+  const gap = () =>
+    page.evaluate(() => {
+      const field = document.querySelector('.tx-dialog tx-select:has(#dialog-form-city)') as Element;
+      const list = document.querySelector('.tx-select__panel') as Element;
+      return list.getBoundingClientRect().top - field.getBoundingClientRect().bottom;
+    });
+
+  await dialog.locator('tx-select').filter({ has: page.locator('#dialog-form-city') }).click();
+  await expect(panel).toBeVisible();
+  const before = await gap();
+  await content.evaluate((element) => (element.scrollTop += 40));
+  await expect.poll(gap).toBeCloseTo(before, 0);
+
+  await content.evaluate((element) => (element.scrollTop += 400));
+  await expect(panel).toHaveCount(0);
+  await expect(dialog).toBeVisible();
+});
