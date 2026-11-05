@@ -109,7 +109,7 @@ Detailed checklist per component: [roadmap/stage-4-display.md](roadmap/stage-4-d
 | `ui/split-button` | SplitButton | — (parity, needs menu) | ⬜ |
 | `ui/speed-dial` | SpeedDial | — (parity, needs menu) | ⬜ |
 
-## Stage 6 — selection
+## Stage 6 — selection ✅
 
 Detailed checklist per component: [roadmap/stage-6-selection.md](roadmap/stage-6-selection.md).
 
@@ -120,11 +120,11 @@ Detailed checklist per component: [roadmap/stage-6-selection.md](roadmap/stage-6
 | `ui/autocomplete` — single / multiple, dropdown, force selection, local or server search, groups | AutoComplete | 1, 2 | ✅ |
 | `ui/listbox` — single / multiple, checkbox, meta key selection, filter, groups, virtual scroll | Listbox | — (parity) | ✅ |
 | `ui/chips-input` (keywords, pasted lists, pattern, limits) | AutoComplete multiple / InputChips | 3, 5 | ✅ |
-| `ui/color-picker` | ColorPicker | 3 | ⬜ |
+| `ui/color-picker` — popover or inline, area + hue + hex, presets, hex / rgb / hsb | ColorPicker | 3 | ✅ |
 | `ui/country` + `ui/country-select` (flags, `Intl.DisplayNames`, counts, hints, "+N") | — | 91 | ✅ |
-| `ui/mention-textarea` | — | 2 | ⬜ |
-| `ui/email-suggestion` | — | 4 | ⬜ |
-| `ui/tree-select`, `ui/cascade-select` | TreeSelect, CascadeSelect | — (parity) | ⬜ |
+| `ui/mention-textarea` — suggestions at the caret, mentions output | — | 2 | ✅ |
+| `ui/email-suggestion` — own domain completion, typo fixes | — | 4 | ✅ |
+| `ui/tree-select`, `ui/cascade-select` | TreeSelect, CascadeSelect | — (parity) | ✅ |
 
 ## Stage 7 — data
 

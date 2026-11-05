@@ -16,7 +16,7 @@
 :host ::ng-deep > :is(.tx-input, .tx-input-group-addon, .tx-button):not(:first-child),
 :host ::ng-deep > tx-icon-field:not(:first-child) > .tx-input,
 :host ::ng-deep > tx-select:not(:first-child) .tx-select__box,
-:host ::ng-deep > :is(tx-multiselect, tx-autocomplete):not(:first-child) .tx-select__box {
+:host ::ng-deep > :is(tx-multiselect, tx-autocomplete, tx-tree-select, tx-cascade-select):not(:first-child) .tx-select__box {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
@@ -24,18 +24,18 @@
 :host ::ng-deep > :is(.tx-input, .tx-input-group-addon, .tx-button):not(:last-child),
 :host ::ng-deep > tx-icon-field:not(:last-child) > .tx-input,
 :host ::ng-deep > tx-select:not(:last-child) .tx-select__box,
-:host ::ng-deep > :is(tx-multiselect, tx-autocomplete):not(:last-child) .tx-select__box {
+:host ::ng-deep > :is(tx-multiselect, tx-autocomplete, tx-tree-select, tx-cascade-select):not(:last-child) .tx-select__box {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
 
-:host ::ng-deep > :is(tx-select, tx-multiselect, tx-autocomplete) {
+:host ::ng-deep > :is(tx-select, tx-multiselect, tx-autocomplete, tx-tree-select, tx-cascade-select) {
   flex: 1 1 auto;
   width: auto;
   min-width: 0;
 }
 
-:host ::ng-deep > :is(.tx-input, .tx-button, tx-icon-field, tx-select, tx-multiselect, tx-autocomplete):is(:hover, :focus-within, :focus) {
+:host ::ng-deep > :is(.tx-input, .tx-button, tx-icon-field, tx-select, tx-multiselect, tx-autocomplete, tx-tree-select, tx-cascade-select):is(:hover, :focus-within, :focus) {
   position: relative;
   z-index: 1;
 }

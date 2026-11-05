@@ -113,3 +113,13 @@ export const treeTokens = {
 };
 
 export type TectraTreeTokens = typeof treeTokens;
+
+export const cascadeSelectTokens = {
+  root: {
+    columnWidth: '200px',
+    columnBorderColor: tokenRef('surface-overlay-border'),
+    groupIconColor: tokenRef('text-muted'),
+  },
+};
+
+export type TectraCascadeSelectTokens = typeof cascadeSelectTokens;

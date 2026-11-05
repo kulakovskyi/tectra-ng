@@ -67,7 +67,7 @@ Not in PrimeNG. First app: flag display 56 (`code`, `showName`, `round`, `size`)
 - [x] `<tx-country-select>` on `tx-select` / `tx-multiselect`: all countries or own options (`code`, `value`, `label`, `count`, `hint`, `disabled`), locale-aware sort, search by name or code, virtual list above `virtualScrollThreshold`, flags + "+N" for several values, clear, loading, sizes, states, form control
 - [x] Docs + tests; e2e: search by code, flags + counter, flag-only image name
 
-## 6.7 The rest — color picker, mention textarea, email suggestion, tree select, cascade select
+## 6.7 The rest — color picker, mention textarea, email suggestion, tree select, cascade select ✅
 
 PrimeNG: ColorPicker (`inline`, `format` hex / rgb / hsb), TreeSelect, CascadeSelect. First app: own colour input 1 (popover, presets, area / hue / clear labels), mention textarea 1 (users, mentioned users output), email suggestion 4 (`value`, `domain`, `apply`), tree / cascade select 0.
 
@@ -75,4 +75,5 @@ PrimeNG: ColorPicker (`inline`, `format` hex / rgb / hsb), TreeSelect, CascadeSe
 - [x] `ui/mention-textarea`: `txTextarea` with suggestions at the caret after a `trigger` (`@` by default, not inside a word), keys from the text field (`aria-activedescendant`), insert `@Name `, `mentionsChange` with who is in the text now, `mentioned`, local or server search (`filtered`, `filterDelay`, `loading`), avatar + description default option, own option template, `lines`, `autoResize`; `mention` tokens; docs, tests, e2e (panel at the caret, keyboard insert)
 - [x] `ui/email-suggestion`: completes own domains (`domain`, one or several), fixes typos in common providers (edit distance with transpositions, `knownDomains`), polite live region, text button with translated "Use {email}" / "Did you mean {email}?", `applied`; `suggestEmail` / `editDistance` exported; docs, tests, e2e
 - [x] `ui/tree-select`: field + `role="tree"` panel (flat tree items with `aria-level` / `aria-setsize` / `aria-posinset`, keys from the field), `single` / `multiple` / `checkbox` (branch check, partial parents `aria-checked="mixed"`, normalized keys), `[(expandedKeys)]`, selected nodes revealed on open, search keeping ancestors, comma / chip display, clear, disabled / not selectable nodes, icons; `tree` tokens; tree helpers exported; docs, tests, e2e (arrows, branch check, axe on the open tree)
-- [ ] `ui/cascade-select`
+- [x] `ui/cascade-select`: columns per level in one panel (`role="tree"`, a `role="group"` per column, `aria-level` / `aria-expanded`), hover or ArrowRight opens a group, ArrowLeft goes back, disabled items skipped, typeahead per column, `optionGroupChildren` per level, `showPath` + `pathSeparator`, `changed` with the path, opens at the current value, clear; `cascadeSelect` tokens; docs, tests, e2e (keys through three levels, axe on the open columns)
+- [x] Float / ifta label and input group know tree select and cascade select

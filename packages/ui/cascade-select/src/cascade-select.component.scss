@@ -1,0 +1,88 @@
+@use '../../select/src/select-field';
+
+@include select-field.styles('.tx-cascade-select');
+
+.tx-cascade-select__tree {
+  display: flex;
+  align-items: stretch;
+}
+
+.tx-cascade-select__column {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.tx-cascade-select__option {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.tx-cascade-select__option--disabled {
+  cursor: default;
+}
+
+.tx-cascade-select__label {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.tx-select__panel[data-styled] {
+  .tx-cascade-select__column {
+    gap: var(--tx-select-list-gap);
+    box-sizing: border-box;
+    width: var(--tx-cascade-select-column-width);
+    max-height: var(--tx-select-list-max-height);
+    padding: var(--tx-select-list-padding);
+
+    & + & {
+      border-inline-start: 1px solid var(--tx-cascade-select-column-border-color);
+    }
+  }
+
+  .tx-cascade-select__option {
+    gap: var(--tx-space-2);
+    padding: var(--tx-select-option-padding);
+    border-radius: var(--tx-select-option-border-radius);
+    color: var(--tx-select-option-color);
+  }
+
+  .tx-cascade-select__label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .tx-cascade-select__option--path {
+    background: var(--tx-select-option-focus-background);
+  }
+
+  .tx-cascade-select__option--active {
+    background: var(--tx-select-option-focus-background);
+    box-shadow: inset 2px 0 0 var(--tx-select-option-check-color);
+  }
+
+  .tx-cascade-select__option--selected {
+    background: var(--tx-select-option-selected-background);
+    color: var(--tx-select-option-selected-color);
+    font-weight: var(--tx-font-weight-medium);
+  }
+
+  .tx-cascade-select__option--disabled {
+    color: var(--tx-select-option-disabled-color);
+  }
+
+  .tx-cascade-select__group-icon {
+    color: var(--tx-cascade-select-group-icon-color);
+  }
+
+  .tx-cascade-select__check {
+    color: var(--tx-select-option-check-color);
+  }
+
+  .tx-select__empty {
+    padding: var(--tx-select-empty-padding);
+    color: var(--tx-select-empty-color);
+  }
+}

@@ -1,0 +1,113 @@
+<!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- the combobox inside the box takes focus and keys; the box only widens the click area -->
+<div
+  #box
+  #origin="cdkOverlayOrigin"
+  cdkOverlayOrigin
+  class="tx-select__box"
+  [class]="passThrough().box?.class"
+  [style]="passThrough().box?.style"
+  (click)="onBoxClick($event)"
+>
+  <button
+    #trigger
+    type="button"
+    role="combobox"
+    class="tx-select__trigger"
+    aria-haspopup="tree"
+    [class]="passThrough().trigger?.class"
+    [style]="passThrough().trigger?.style"
+    [attr.id]="inputId() ?? null"
+    [attr.aria-label]="ariaLabel() ?? (ariaLabelledBy() || inputId() ? null : placeholder() || null)"
+    [attr.aria-labelledby]="ariaLabelledBy() ?? null"
+    [attr.aria-expanded]="isOpen()"
+    [attr.aria-controls]="treeId"
+    [attr.aria-activedescendant]="activeId()"
+    [attr.aria-invalid]="isInvalid() || null"
+    [attr.aria-readonly]="readonly() || null"
+    [disabled]="disabled()"
+    (keydown)="onKeydown($event)"
+  >
+    @if (hasValue()) {
+      <span class="tx-select__value" [class]="passThrough().value?.class" [style]="passThrough().value?.style">{{ label() }}</span>
+    } @else {
+      <span class="tx-select__value tx-select__value--placeholder" [class]="passThrough().value?.class" [style]="passThrough().value?.style">{{
+        placeholder()
+      }}</span>
+    }
+  </button>
+  @if (canClear()) {
+    <button
+      type="button"
+      class="tx-select__clear"
+      [class]="passThrough().clear?.class"
+      [style]="passThrough().clear?.style"
+      [attr.aria-label]="translations().clear"
+      (click)="clear()"
+    >
+      <tx-icon [name]="'times'" />
+    </button>
+  }
+  <span class="tx-select__dropdown" aria-hidden="true" [class]="passThrough().dropdown?.class" [style]="passThrough().dropdown?.style">
+    <tx-icon class="tx-select__chevron" [name]="'chevron-down'" />
+  </span>
+</div>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="origin"
+  [cdkConnectedOverlayOpen]="isPanelMounted()"
+  [cdkConnectedOverlayPositions]="positions"
+  [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
+  [cdkConnectedOverlayViewportMargin]="viewportMargin()"
+  [cdkConnectedOverlayDisableClose]="true"
+  (overlayOutsideClick)="onOutsideClick($event)"
+  (positionChange)="onPositionChange($event)"
+  (detach)="close()"
+>
+  <div
+    #panel
+    class="tx-select__panel tx-cascade-select__panel"
+    [attr.data-styled]="!isUnstyled() || null"
+    [class]="passThrough().panel?.class"
+    [style]="panelStyle()"
+    (mousedown)="onPanelMousedown($event)"
+  >
+    <div class="tx-cascade-select__tree" role="tree" [id]="treeId" [attr.aria-label]="ariaLabel() || placeholder() || null">
+      @for (column of columns(); track $index; let level = $index) {
+        <div class="tx-cascade-select__column" role="group" [class]="passThrough().column?.class" [style]="passThrough().column?.style">
+          @for (item of column; track item.id) {
+            <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- items use aria-activedescendant: focus and keys stay on the field -->
+            <div
+              role="treeitem"
+              class="tx-cascade-select__option"
+              [id]="item.id"
+              [class.tx-cascade-select__option--active]="item.onPath && level === activeLevel()"
+              [class.tx-cascade-select__option--path]="item.onPath && level !== activeLevel()"
+              [class.tx-cascade-select__option--selected]="item.selected"
+              [class.tx-cascade-select__option--disabled]="item.disabled"
+              [attr.aria-level]="level + 1"
+              [attr.aria-setsize]="column.length"
+              [attr.aria-posinset]="item.index + 1"
+              [attr.aria-expanded]="item.group ? item.onPath && columns().length > level + 1 : null"
+              [attr.aria-selected]="item.group ? null : item.selected"
+              [attr.aria-disabled]="item.disabled || null"
+              [class]="passThrough().option?.class"
+              [style]="passThrough().option?.style"
+              (mouseenter)="onItemHover(item)"
+              (click)="onItemClick(item)"
+            >
+              <span class="tx-cascade-select__label">{{ item.label }}</span>
+              @if (item.group) {
+                <tx-icon class="tx-cascade-select__group-icon" [name]="'chevron-right'" />
+              } @else if (item.selected) {
+                <tx-icon class="tx-cascade-select__check" [name]="'check'" />
+              }
+            </div>
+          }
+        </div>
+      } @empty {
+        <div class="tx-select__empty" role="presentation" [class]="passThrough().empty?.class" [style]="passThrough().empty?.style">{{ emptyText() }}</div>
+      }
+    </div>
+  </div>
+</ng-template>
