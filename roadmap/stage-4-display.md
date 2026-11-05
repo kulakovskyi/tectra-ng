@@ -42,13 +42,13 @@ PrimeNG: ProgressBar (`value`, `showValue`, `unit`, `mode` determinate / indeter
 - [x] `<tx-progress-spinner>`: `small` / `medium` / `large` or px, `strokeWidth`, `fill`, `animationDuration`, `color`, busy `progressbar` named "Loading" (us / ua) by default; reduced motion turns slowly instead of stopping
 - [x] Docs + tests: values, label, severities, indeterminate, sizes, units, template, live upload, spinner sizes / stroke / colours / inline, design tokens; e2e: value grows to 100 with the fill width, busy indeterminate bar
 
-## 4.5 Skeleton — `ui/skeleton`
+## 4.5 Skeleton — `ui/skeleton` ✅
 
 PrimeNG: Skeleton (`shape` rectangle / circle, `size`, `width`, `height`, `borderRadius`, `animation` wave / none). First app: a table skeleton with `lineNumbers`.
 
-- [ ] `<tx-skeleton>`: rectangle / circle, size / width / height / radius, wave animation (off with reduced motion), `aria-hidden`
-- [ ] Ready layouts: text lines (`lines`), table rows (`rows`, `columns`)
-- [ ] Docs + tests: shapes, card / list / table layouts
+- [x] `<tx-skeleton>`: rectangle / circle, `size` / `width` / `height` / `borderRadius`, wave animation (off with reduced motion and `animation="none"`), `aria-hidden`
+- [x] Ready layouts: text lines (`lines`, last line shorter), `<tx-skeleton-table>` (`rows`, `columns`, `header`)
+- [x] Docs + tests: shapes, lines, card / list / table layouts, loading swap with `aria-busy`, no animation, design tokens; e2e: placeholder while loading, hidden from screen readers
 
 ## 4.6 Avatar — `ui/avatar`
 

@@ -1,0 +1,51 @@
+@use 'skeleton-wave' as wave;
+
+:host {
+  display: block;
+}
+
+:host([data-styled]) {
+  height: var(--tx-skeleton-line-height);
+}
+
+:host([data-styled]:not(.tx-skeleton--lines)) {
+  @include wave.surface;
+}
+
+:host([data-styled][data-shape='circle']) {
+  width: var(--tx-skeleton-circle-size);
+  height: var(--tx-skeleton-circle-size);
+  border-radius: 50%;
+}
+
+:host([data-styled].tx-skeleton--lines) {
+  display: grid;
+  gap: var(--tx-skeleton-line-gap);
+  height: auto;
+}
+
+:host([data-styled]) .tx-skeleton__line {
+  display: block;
+  height: var(--tx-skeleton-line-height);
+
+  @include wave.surface;
+
+  &:last-child:not(:first-child) {
+    width: var(--tx-skeleton-last-line-width);
+  }
+}
+
+:host([data-styled][data-animation='none']) {
+  &,
+  .tx-skeleton__line {
+    &::after {
+      display: none;
+    }
+  }
+}
+
+@keyframes tx-skeleton-wave {
+  to {
+    transform: translateX(100%);
+  }
+}

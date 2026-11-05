@@ -1,0 +1,21 @@
+@mixin surface {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--tx-skeleton-border-radius);
+  background: var(--tx-skeleton-background);
+
+  &::after {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, var(--tx-skeleton-wave-color), transparent);
+    transform: translateX(-100%);
+    animation: tx-skeleton-wave var(--tx-skeleton-duration) ease-in-out infinite;
+    content: '';
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::after {
+      display: none;
+    }
+  }
+}

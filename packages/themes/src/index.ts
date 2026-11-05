@@ -26,6 +26,7 @@ export * from './components/overlay-badge.tokens';
 export * from './components/pill.tokens';
 export * from './components/tag.tokens';
 export * from './components/progress.tokens';
+export * from './components/skeleton.tokens';
 export * from './components/icon.tokens';
 export * from './components/ripple.tokens';
 export * from './components/toggle-button.tokens';

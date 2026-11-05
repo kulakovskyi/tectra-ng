@@ -516,6 +516,16 @@ test('progress bar grows with the value and reports it', async ({ page }) => {
   await expect(page.locator('progress-bar-indeterminate-example').getByRole('progressbar')).toHaveAttribute('aria-busy', 'true');
 });
 
+test('skeleton stands in while content loads and is hidden from screen readers', async ({ page }) => {
+  await page.goto('/components/skeleton');
+  const example = page.locator('skeleton-loading-example');
+  await example.getByRole('button', { name: 'Reload' }).click();
+  await expect(example.locator('.box')).toHaveAttribute('aria-busy', 'true');
+  await expect(example.locator('tx-skeleton').first()).toHaveAttribute('aria-hidden', 'true');
+  await expect(example.getByRole('heading', { name: 'Quarterly report' })).toBeVisible({ timeout: 4000 });
+  await expect(example.locator('tx-skeleton')).toHaveCount(0);
+});
+
 test.describe('with motion', () => {
   test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 

@@ -85,7 +85,7 @@ Detailed checklist per component: [roadmap/stage-4-display.md](roadmap/stage-4-d
 | `ui/message` (alert) — built in 3.3 (`tx-message`) | Message | **370** | ✅ |
 | `ui/progress-bar` | ProgressBar | 30 | ✅ |
 | `ui/progress-spinner` (loader) | ProgressSpinner | 25 | ✅ |
-| `ui/skeleton` | Skeleton | 0 | ⬜ |
+| `ui/skeleton` | Skeleton | 0 | ✅ |
 | `ui/avatar` (+ group, initials fallback, photo) | Avatar, AvatarGroup | 174, 9, 6 | ⬜ |
 | `ui/divider` | Divider | — (parity) | ⬜ |
 | `ui/card` / `ui/panel` | Card, Panel | 115 | ⬜ |

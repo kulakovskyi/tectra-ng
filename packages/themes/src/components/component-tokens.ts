@@ -16,6 +16,7 @@ import { progressBarTokens, progressSpinnerTokens } from './progress.tokens';
 import { radioButtonTokens } from './radio-button.tokens';
 import { ratingTokens } from './rating.tokens';
 import { selectTokens } from './select.tokens';
+import { skeletonTokens } from './skeleton.tokens';
 import { sliderTokens } from './slider.tokens';
 import { chipTokens, tagTokens } from './tag.tokens';
 import { textareaTokens } from './textarea.tokens';
@@ -55,6 +56,7 @@ export const COMPONENT_TOKENS = {
   chip: chipTokens,
   progressBar: progressBarTokens,
   progressSpinner: progressSpinnerTokens,
+  skeleton: skeletonTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;
