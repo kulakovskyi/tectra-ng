@@ -73,6 +73,6 @@ PrimeNG: ColorPicker (`inline`, `format` hex / rgb / hsb), TreeSelect, CascadeSe
 
 - [x] `ui/color-picker`: button + popover (`role="dialog"`) or `inline`; saturation / brightness area and hue slider by pointer and keys (`role="slider"`, value text), hex field, presets (`aria-pressed`), clear, `format` hex / rgb / hsb (typed and preset colours stay exact), sizes, states; `colorPicker` tokens (gradients included); docs, tests, e2e (drag, keys, preset, axe on the open popover)
 - [x] `ui/mention-textarea`: `txTextarea` with suggestions at the caret after a `trigger` (`@` by default, not inside a word), keys from the text field (`aria-activedescendant`), insert `@Name `, `mentionsChange` with who is in the text now, `mentioned`, local or server search (`filtered`, `filterDelay`, `loading`), avatar + description default option, own option template, `lines`, `autoResize`; `mention` tokens; docs, tests, e2e (panel at the caret, keyboard insert)
-- [ ] `ui/email-suggestion`
+- [x] `ui/email-suggestion`: completes own domains (`domain`, one or several), fixes typos in common providers (edit distance with transpositions, `knownDomains`), polite live region, text button with translated "Use {email}" / "Did you mean {email}?", `applied`; `suggestEmail` / `editDistance` exported; docs, tests, e2e
 - [ ] `ui/tree-select`
 - [ ] `ui/cascade-select`

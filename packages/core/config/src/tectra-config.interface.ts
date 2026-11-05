@@ -50,6 +50,8 @@ export interface TxTranslations {
   colorHue: string;
   colorHex: string;
   colorPresets: string;
+  useEmail: string;
+  didYouMean: string;
 }
 
 export type TxValidationMessage = string | ((error: unknown) => string);

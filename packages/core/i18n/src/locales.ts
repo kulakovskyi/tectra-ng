@@ -51,6 +51,8 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     colorHue: 'Hue',
     colorHex: 'Hex colour',
     colorPresets: 'Preset colours',
+    useEmail: 'Use {email}',
+    didYouMean: 'Did you mean {email}?',
   },
 };
 
@@ -105,6 +107,8 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     colorHue: 'Відтінок',
     colorHex: 'Колір hex',
     colorPresets: 'Готові кольори',
+    useEmail: 'Використати {email}',
+    didYouMean: 'Можливо, {email}?',
   },
 };
 
