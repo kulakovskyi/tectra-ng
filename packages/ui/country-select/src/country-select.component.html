@@ -1,0 +1,86 @@
+@if (multiple()) {
+  <tx-multiselect
+    [options]="items()"
+    [optionLabel]="'label'"
+    [optionValue]="'value'"
+    [optionDisabled]="'disabled'"
+    [filter]="filter()"
+    [filterBy]="'label,code'"
+    [virtualScroll]="virtual()"
+    [placeholder]="placeholder()"
+    [showClear]="showClear()"
+    [loading]="loading()"
+    [inputId]="inputId()"
+    [ariaLabel]="ariaLabel()"
+    [ariaLabelledBy]="ariaLabelledBy()"
+    [size]="size()"
+    [variant]="variant()"
+    [invalid]="invalid()"
+    [readonly]="readonly()"
+    [dt]="dt()"
+    [unstyled]="unstyled()"
+    [ngModel]="value()"
+    [disabled]="disabled()"
+    (ngModelChange)="onModelChange($event)"
+    (closed)="onClosed()"
+  >
+    <ng-template txSelectOption let-item>
+      <ng-container [ngTemplateOutlet]="option" [ngTemplateOutletContext]="{ $implicit: item }" />
+    </ng-template>
+    <ng-template txSelectValue let-selected>
+      <span class="tx-country-select__flags" [class.tx-country-select__flags--styled]="!unstyled()">
+        @for (item of firstFlags(selected); track item.value) {
+          <tx-country [country]="item.code" [name]="item.label" [showName]="selected.length === 1" [shape]="shape()" />
+        }
+        @if (extraCount(selected); as extra) {
+          <span class="tx-country-select__more">+{{ extra }}</span>
+        }
+      </span>
+    </ng-template>
+  </tx-multiselect>
+} @else {
+  <tx-select
+    [options]="items()"
+    [optionLabel]="'label'"
+    [optionValue]="'value'"
+    [optionDisabled]="'disabled'"
+    [filter]="filter()"
+    [filterBy]="'label,code'"
+    [virtualScroll]="virtual()"
+    [placeholder]="placeholder()"
+    [showClear]="showClear()"
+    [loading]="loading()"
+    [inputId]="inputId()"
+    [ariaLabel]="ariaLabel()"
+    [ariaLabelledBy]="ariaLabelledBy()"
+    [size]="size()"
+    [variant]="variant()"
+    [invalid]="invalid()"
+    [readonly]="readonly()"
+    [dt]="dt()"
+    [unstyled]="unstyled()"
+    [ngModel]="value()"
+    [disabled]="disabled()"
+    (ngModelChange)="onModelChange($event)"
+    (closed)="onClosed()"
+  >
+    <ng-template txSelectOption let-item>
+      <ng-container [ngTemplateOutlet]="option" [ngTemplateOutletContext]="{ $implicit: item }" />
+    </ng-template>
+    <ng-template txSelectValue let-item>
+      <tx-country [country]="item.code" [name]="item.label" [shape]="shape()" />
+    </ng-template>
+  </tx-select>
+}
+
+<ng-template #option let-item>
+  <span class="tx-country-select__option" [class.tx-country-select__option--styled]="!unstyled()">
+    <tx-country class="tx-country-select__country" [country]="item.code" [name]="item.label" [shape]="shape()" />
+    @if (item.hint) {
+      <span class="tx-country-select__hint">{{ item.hint }}</span>
+    }
+    @if (item.count !== null) {
+      <span class="tx-country-select__count">{{ item.count }}</span>
+    }
+  </span>
+</ng-template>

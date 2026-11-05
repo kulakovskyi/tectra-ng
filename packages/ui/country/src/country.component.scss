@@ -1,0 +1,56 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  vertical-align: middle;
+}
+
+.tx-country__flag {
+  display: inline-block;
+  flex: none;
+}
+
+.tx-country__name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:host([data-styled]) {
+  --_size: var(--tx-country-small-size);
+
+  gap: var(--tx-country-gap);
+
+  .tx-country__flag:not(.tx-country__flag--emoji) {
+    width: calc(var(--_size) * 4 / 3);
+    height: var(--_size);
+    border-radius: var(--tx-country-border-radius);
+    background-position: center;
+    background-size: cover;
+    box-shadow: var(--tx-country-ring);
+    object-fit: cover;
+  }
+
+  .tx-country__flag--emoji {
+    font-size: var(--_size);
+    line-height: 1;
+  }
+
+  .tx-country__name {
+    color: var(--tx-country-name-color);
+  }
+}
+
+:host([data-styled][data-size='medium']) {
+  --_size: var(--tx-country-medium-size);
+}
+
+:host([data-styled][data-size='large']) {
+  --_size: var(--tx-country-large-size);
+}
+
+:host([data-styled][data-shape='circle']) .tx-country__flag:not(.tx-country__flag--emoji) {
+  width: var(--_size);
+  border-radius: 50%;
+}

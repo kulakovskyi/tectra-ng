@@ -1,0 +1,45 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.tx-country-select__option {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.tx-country-select__country {
+  flex: 0 1 auto;
+}
+
+.tx-country-select__flags {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
+.tx-country-select__option--styled,
+.tx-country-select__flags--styled {
+  gap: var(--tx-country-gap);
+}
+
+.tx-country-select__option--styled .tx-country-select__hint {
+  overflow: hidden;
+  color: var(--tx-country-hint-color);
+  font-size: var(--tx-country-count-font-size);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tx-country-select__option--styled .tx-country-select__count {
+  margin-inline-start: auto;
+  color: var(--tx-country-count-color);
+  font-size: var(--tx-country-count-font-size);
+  font-variant-numeric: tabular-nums;
+}
+
+.tx-country-select__flags--styled .tx-country-select__more {
+  color: var(--tx-country-hint-color);
+  font-size: var(--tx-country-count-font-size);
+}

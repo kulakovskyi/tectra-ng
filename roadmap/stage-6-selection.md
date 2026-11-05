@@ -59,11 +59,13 @@ PrimeNG: InputChips (`separator`, `max`, `maxLength`, `allowDuplicate`, `addOnBl
 - [x] `<tx-chips-input>`: Enter / separator (text or pattern) adds, paste splits by lines and the separator, Backspace removes the last, chips are `tx-chip` with a translated "Remove {item}" button (Delete / Backspace), `max` (read-only when full), `maxLength`, duplicates off (`allowDuplicate`, `caseSensitive`), `itemPattern`, `addOnBlur`, `showClear`, `added` / `removed` / `rejected`, item template, sizes, filled, invalid / readonly / disabled, form control; `chipsInput` tokens; float label and `tx-field` know it
 - [x] Docs + tests; e2e: typing, keyboard removal, field height with chips, paste
 
-## 6.6 Country + country select — `ui/country`, `ui/country-select`
+## 6.6 Country + country select — `ui/country`, `ui/country-select` ✅
 
-First app: flag display 56, country select 16 (single / multiple, counts, hints, sorted localized names).
+Not in PrimeNG. First app: flag display 56 (`code`, `showName`, `round`, `size`), country select 16 (single / multiple, counts, hints, disabled, sorted localized names, search on several fields, virtual list above a threshold, a few flags + "+N more").
 
-- [ ] `<tx-country>` flag + name from `Intl.DisplayNames`; `<tx-country-select>` on select / multiselect with flags, counts, hints, "+N" value
+- [x] `<tx-country>`: name from `Intl.DisplayNames` in the tectra locale (follows `setLocale`), own `name`, unknown values as text, sizes, rectangle / circle, flag-only mode as a named image; emoji flags by default, `provideTxFlags` with `txFlagIcons` (flag-icons CSS classes) or `txFlagImages(url)`; ISO code list and helpers; `country` tokens
+- [x] `<tx-country-select>` on `tx-select` / `tx-multiselect`: all countries or own options (`code`, `value`, `label`, `count`, `hint`, `disabled`), locale-aware sort, search by name or code, virtual list above `virtualScrollThreshold`, flags + "+N" for several values, clear, loading, sizes, states, form control
+- [x] Docs + tests; e2e: search by code, flags + counter, flag-only image name
 
 ## 6.7 The rest — color picker, mention textarea, email suggestion, tree select, cascade select
 

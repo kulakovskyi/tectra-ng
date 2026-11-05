@@ -28,3 +28,20 @@ export const chipsInputTokens = {
 };
 
 export type TectraChipsInputTokens = typeof chipsInputTokens;
+
+export const countryTokens = {
+  root: {
+    gap: '8px',
+    smallSize: '16px',
+    mediumSize: '20px',
+    largeSize: '24px',
+    borderRadius: '2px',
+    ring: `0 0 0 1px ${tokenRef('surface-border')}`,
+    nameColor: 'inherit',
+    hintColor: tokenRef('text-muted'),
+    countColor: tokenRef('text-muted'),
+    countFontSize: tokenRef('font-size-sm'),
+  },
+};
+
+export type TectraCountryTokens = typeof countryTokens;

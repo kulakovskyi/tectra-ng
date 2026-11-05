@@ -121,7 +121,7 @@ Detailed checklist per component: [roadmap/stage-6-selection.md](roadmap/stage-6
 | `ui/listbox` — single / multiple, checkbox, meta key selection, filter, groups, virtual scroll | Listbox | — (parity) | ✅ |
 | `ui/chips-input` (keywords, pasted lists, pattern, limits) | AutoComplete multiple / InputChips | 3, 5 | ✅ |
 | `ui/color-picker` | ColorPicker | 3 | ⬜ |
-| `ui/country` + `ui/country-select` (flags, `Intl.DisplayNames`) | — | 91 | ⬜ |
+| `ui/country` + `ui/country-select` (flags, `Intl.DisplayNames`, counts, hints, "+N") | — | 91 | ✅ |
 | `ui/mention-textarea` | — | 2 | ⬜ |
 | `ui/email-suggestion` | — | 4 | ⬜ |
 | `ui/tree-select`, `ui/cascade-select` | TreeSelect, CascadeSelect | — (parity) | ⬜ |
