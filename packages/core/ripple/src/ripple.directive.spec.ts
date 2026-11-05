@@ -52,4 +52,14 @@ describe('TxRipple', () => {
     expect(button.querySelector('.tx-ripple')).toBeNull();
     expect(button.classList).not.toContain('tx-ripple-host');
   });
+
+  it('spreads the wave over the border so the whole button tints', () => {
+    const fixture = TestBed.createComponent(Host);
+    fixture.detectChanges();
+    const button = fixture.nativeElement.querySelector('button') as HTMLElement;
+    button.style.border = '2px solid black';
+    press(button);
+    const container = button.querySelector('.tx-ripple-container') as HTMLElement;
+    expect([container.style.top, container.style.right, container.style.bottom, container.style.left]).toEqual(['-2px', '-2px', '-2px', '-2px']);
+  });
 });

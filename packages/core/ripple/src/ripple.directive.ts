@@ -78,7 +78,7 @@ export class TxRipple {
     element.style.width = element.style.height = `${radius * 2}px`;
     element.style.left = `${x - radius}px`;
     element.style.top = `${y - radius}px`;
-    this.ensureContainer().appendChild(element);
+    this.coverBorder(this.ensureContainer(), host).appendChild(element);
 
     const ref: TxRippleRef = { element, isEntered: false, isReleased: false, fromKeyboard };
     this.ripples.add(ref);
@@ -136,6 +136,15 @@ export class TxRipple {
       host.appendChild(this.container);
     }
     return this.container;
+  }
+
+  private coverBorder(container: HTMLElement, host: HTMLElement): HTMLElement {
+    const styles = getComputedStyle(host);
+    container.style.top = `-${styles.borderTopWidth}`;
+    container.style.right = `-${styles.borderRightWidth}`;
+    container.style.bottom = `-${styles.borderBottomWidth}`;
+    container.style.left = `-${styles.borderLeftWidth}`;
+    return container;
   }
 
   private readDuration(styles: CSSStyleDeclaration, name: string, fallback: number): number {
