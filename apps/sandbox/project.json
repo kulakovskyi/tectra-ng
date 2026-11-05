@@ -14,7 +14,7 @@
         "browser": "apps/sandbox/src/main.ts",
         "tsConfig": "apps/sandbox/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
-        "styles": ["node_modules/@angular/cdk/overlay-prebuilt.css"],
+        "styles": [],
         "optimization": false,
         "sourceMap": true
       }

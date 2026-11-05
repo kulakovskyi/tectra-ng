@@ -47,13 +47,14 @@ Found and fixed while setting it up: a disabled `a[txButton]` still let the pare
 | Consume tectra in links-cms (local build or `0.x` on npm), `provideTectra` with each app's accent + `darkSelector: '.app-dark'`, accent switch in `LayoutService` | needed to swap the first wrapper | ⬜ |
 | Swap `@ui-kit/button` (usage **1121**) onto `txButton`, keep `pTooltip` until stage 5; move the 10 `.p-button` SCSS overrides; screenshots before / after | proves the whole path on the most used component | ⬜ |
 
-## Stage 2 — overlay core (needed by tooltip, popover, select, menus, datepicker)
+## Stage 2 — overlay core ✅
 
 | Item | Package | Notes | Status |
 |---|---|---|---|
-| Overlay: connected positions, flip, `appendTo`, scroll / resize repositioning, outside click, Escape, z-index layers | `@tectra/core/overlay` | today only `TX_DROPDOWN_POSITIONS` | 🟡 |
-| Focus trap, focus restore, list key manager, live announcer | `@tectra/core/a11y` | on top of `@angular/cdk/a11y` | 🟡 |
-| Locale: date / number formats, first day of week, built-in texts per language (`us`, `ua`) | `@tectra/core/i18n` | paginator, datepicker, select texts | 🟡 |
+| Overlay: `TxOverlay.open(template \| component, options)` → `TxOverlayRef` (`placement`, `closed`, `close`, `updatePosition`); 12 placements with flip (`txPositions`), viewport margin, scroll strategies, `matchWidth`, Escape / outside click, focus back to the origin; z-index layers (`--tx-layer-dropdown … toast`); CDK loads its structural CSS itself — no `overlay-prebuilt.css` needed | `@tectra/core/overlay` | docs page Core → Overlay | ✅ |
+| `txFocusTrap` (auto focus, restore focus), `nextListIndex` (arrows, Home / End, Page, disabled, loop), `TxTypeahead`, `TxAnnouncer` | `@tectra/core/a11y` | | ✅ |
+| Locale: `us` / `ua` definitions, `provideTectra({ locale })`, `TxLocaleService` (runtime `setLocale`, `translate` with params, Intl numbers / dates, month and weekday names from the first day of week), `injectTranslations()` is a signal | `@tectra/core/i18n` | docs page Core → Locale | ✅ |
+| Select on the new core: placements with flip, reposition on scroll, Home / End / Page keys, type-to-find, translated texts | `@tectra/ui/select` | | ✅ |
 
 ## Stage 3 — form primitives (high usage, low complexity)
 
@@ -114,7 +115,7 @@ Found and fixed while setting it up: a disabled `a[txButton]` still let the pare
 
 | tectra | PrimeNG equivalent | links-cms lib (usage) | Status |
 |---|---|---|---|
-| `ui/select` — parity: clear, groups, virtual scroll, lazy, editable, loading, checkmark, sizes, `dt` / `pt` | Select | `select` (**403**) | 🟡 |
+| `ui/select` — parity: clear, groups, virtual scroll, lazy, editable, loading, checkmark, `dt` / `pt` (keyboard, typeahead, flip done) | Select | `select` (**403**) | 🟡 |
 | `ui/multiselect` — chips display, select all, filter, max selected | MultiSelect | inside `select` (multiselect mode) | ⬜ |
 | `ui/autocomplete` — single / multiple, dropdown, force selection, groups | AutoComplete | `auto-complete` (1), `combobox` (2) | ⬜ |
 | `ui/listbox` | Listbox | — (parity) | ⬜ |

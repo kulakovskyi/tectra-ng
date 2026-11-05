@@ -34,6 +34,7 @@
   [cdkConnectedOverlayOrigin]="origin"
   [cdkConnectedOverlayOpen]="isOpen()"
   [cdkConnectedOverlayPositions]="positions"
+  [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
   [cdkConnectedOverlayWidth]="panelWidth()"
   (overlayOutsideClick)="onOutsideClick($event)"
   (attach)="onPanelAttach()"
@@ -49,7 +50,7 @@
           role="searchbox"
           [attr.aria-controls]="listboxId"
           [attr.aria-activedescendant]="activeItemId()"
-          [placeholder]="translations.searchPlaceholder"
+          [placeholder]="translations().searchPlaceholder"
           [value]="query()"
           (input)="onFilter($event)"
           (keydown)="onKeydown($event)"
@@ -78,7 +79,7 @@
           }
         </div>
       } @empty {
-        <div class="tx-select__empty">{{ translations.emptyMessage }}</div>
+        <div class="tx-select__empty">{{ translations().emptyMessage }}</div>
       }
     </div>
   </div>

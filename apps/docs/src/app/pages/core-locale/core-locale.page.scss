@@ -1,0 +1,32 @@
+.picker {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: var(--tx-space-3);
+  padding: var(--tx-space-4);
+}
+
+.facts {
+  overflow: hidden;
+  border: 1px solid var(--tx-surface-border);
+  border-radius: 14px;
+  background: var(--tx-surface-card);
+}
+
+.facts__row {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr);
+  gap: var(--tx-space-4);
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--tx-surface-border);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+@media (width < 40rem) {
+  .picker,
+  .facts__row {
+    grid-template-columns: 1fr;
+  }
+}

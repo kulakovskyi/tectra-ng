@@ -1,0 +1,24 @@
+<p class="eyebrow">Core</p>
+<h1>Locale</h1>
+<p class="lead">Built-in texts and Intl formats for <code>us</code> and <code>ua</code>. Switch at runtime — components update in place.</p>
+
+<div class="card picker">
+  <tx-select [options]="locales" [formControl]="localeControl" [ariaLabel]="'Language'" />
+  <tx-select [options]="empty" [filter]="true" [placeholder]="'Open me: translated search and empty text'" />
+</div>
+
+<h2>Formats</h2>
+<div class="facts">
+  @for (sample of samples(); track sample.label) {
+    <div class="facts__row"><span class="hint">{{ sample.label }}</span><span>{{ sample.value }}</span></div>
+  }
+  <div class="facts__row"><span class="hint">Months</span><span>{{ months().join(', ') }}</span></div>
+  <div class="facts__row"><span class="hint">Week starts</span><span>{{ weekdays().join(' · ') }}</span></div>
+</div>
+
+<h2>Built-in texts</h2>
+<div class="facts">
+  @for (entry of translations(); track entry[0]) {
+    <div class="facts__row"><code>{{ entry[0] }}</code><span>{{ entry[1] }}</span></div>
+  }
+</div>

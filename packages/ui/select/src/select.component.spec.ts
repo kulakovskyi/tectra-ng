@@ -62,6 +62,15 @@ describe('TxSelect', () => {
     expect(fixture.componentInstance.control.value).toBe('lviv');
   });
 
+  it('jumps with Home / End and finds by typed letters', () => {
+    key(trigger(), 'ArrowDown');
+    key(trigger(), 'End');
+    key(trigger(), 'Enter');
+    expect(fixture.componentInstance.control.value).toBe('odesa');
+    key(trigger(), 'k');
+    expect(fixture.componentInstance.control.value).toBe('kyiv');
+  });
+
   it('filters the options', () => {
     fixture.componentInstance.filter.set(true);
     fixture.detectChanges();

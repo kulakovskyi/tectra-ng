@@ -28,7 +28,10 @@ Pick one value from a list. A `ControlValueAccessor`: works with `[formControl]`
 ## Keyboard
 | Key | Action |
 |---|---|
-| Enter | Opens the panel, selects the active option |
+| Enter / Space | Opens the panel, selects the active option |
 | ArrowDown / ArrowUp | Opens the panel, moves the active option |
+| Home / End | First / last option |
+| PageDown / PageUp | Ten options down / up |
+| Letters | Jump to the option that starts with the typed text; on a closed select, choose it |
 | Escape | Closes the panel and returns focus to the field |
 | Tab | Closes the panel and moves focus on |

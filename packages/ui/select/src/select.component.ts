@@ -1,22 +1,24 @@
-import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
-import { NgTemplateOutlet } from '@angular/common';
+import { CdkConnectedOverlay, CdkOverlayOrigin, createRepositionScrollStrategy } from '@angular/cdk/overlay';
+import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  Injector,
   computed,
   contentChild,
   forwardRef,
+  inject,
   input,
   output,
   signal,
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { uniqueId } from '@tectra/core/a11y';
+import { TxTypeahead, nextListIndex, uniqueId } from '@tectra/core/a11y';
 import { TxFormControlBase } from '@tectra/core/forms';
 import { injectTranslations } from '@tectra/core/i18n';
-import { TX_DROPDOWN_POSITIONS } from '@tectra/core/overlay';
+import { txPositions } from '@tectra/core/overlay';
 import { TxIcon } from '@tectra/icons';
 import { TxSelectOptionTemplate } from './select-option-template.directive';
 import { TxSelectItem, TxSelectSize } from './select.types';
@@ -52,8 +54,13 @@ export class TxSelect extends TxFormControlBase<unknown> {
   trigger = viewChild.required<ElementRef<HTMLButtonElement>>('trigger');
   filterInput = viewChild<ElementRef<HTMLInputElement>>('filterInput');
 
+  private injector = inject(Injector);
+  private document = inject(DOCUMENT);
+  private typeahead = new TxTypeahead();
+
   readonly translations = injectTranslations();
-  readonly positions = TX_DROPDOWN_POSITIONS;
+  readonly positions = txPositions('bottom-start', 4);
+  readonly scrollStrategy = createRepositionScrollStrategy(this.injector);
   readonly listboxId = uniqueId('tx-select-listbox');
 
   isOpen = signal(false);
@@ -130,51 +137,61 @@ export class TxSelect extends TxFormControlBase<unknown> {
   }
 
   onKeydown(event: KeyboardEvent): void {
-    switch (event.key) {
-      case 'ArrowDown':
+    const target = event.target as HTMLElement;
+    const fromFilter = target.classList.contains('tx-select__filter-input');
+    if (event.key === 'Escape') {
+      if (this.isOpen()) {
         event.preventDefault();
-        if (this.isOpen()) {
-          this.moveActive(1);
-        } else {
-          this.open();
-        }
-        break;
-      case 'ArrowUp':
-        event.preventDefault();
-        if (this.isOpen()) {
-          this.moveActive(-1);
-        } else {
-          this.open();
-        }
-        break;
-      case 'Enter': {
-        event.preventDefault();
-        const item = this.visibleItems()[this.activeIndex()];
-        if (this.isOpen() && item) {
-          this.choose(item);
-        } else {
-          this.open();
-        }
-        break;
-      }
-      case 'Escape':
-        if (this.isOpen()) {
-          event.preventDefault();
-          this.close();
-          this.trigger().nativeElement.focus();
-        }
-        break;
-      case 'Tab':
         this.close();
-        break;
+        this.trigger().nativeElement.focus();
+      }
+      return;
+    }
+    if (event.key === 'Tab') {
+      this.close();
+      return;
+    }
+    if (event.key === 'Enter' || (event.key === ' ' && !fromFilter)) {
+      event.preventDefault();
+      const item = this.visibleItems()[this.activeIndex()];
+      if (this.isOpen() && item) {
+        this.choose(item);
+      } else {
+        this.open();
+      }
+      return;
+    }
+    const isListKey = ['ArrowDown', 'ArrowUp', 'Home', 'End', 'PageDown', 'PageUp'].includes(event.key);
+    if (isListKey && (!fromFilter || event.key.startsWith('Arrow') || event.key.startsWith('Page'))) {
+      event.preventDefault();
+      if (!this.isOpen()) {
+        this.open();
+        return;
+      }
+      const next = nextListIndex(event.key, { count: this.visibleItems().length, current: this.activeIndex() });
+      if (next !== null) {
+        this.activeIndex.set(next);
+        this.scrollActiveIntoView();
+      }
+      return;
+    }
+    if (!fromFilter && event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey) {
+      const labels = this.visibleItems().map((item) => item.label);
+      const found = this.typeahead.search(event.key, labels, this.activeIndex());
+      if (found !== null) {
+        if (this.isOpen()) {
+          this.activeIndex.set(found);
+          this.scrollActiveIntoView();
+        } else {
+          this.updateValue(this.visibleItems()[found].value);
+        }
+      }
     }
   }
 
-  private moveActive(step: number): void {
-    const count = this.visibleItems().length;
-    if (count) {
-      this.activeIndex.update((index) => (index + step + count) % count);
-    }
+  private scrollActiveIntoView(): void {
+    const id = this.activeItemId();
+    queueMicrotask(() => (id ? this.document.getElementById(id)?.scrollIntoView({ block: 'nearest' }) : undefined));
   }
 
   private readField(option: object, field: string): unknown {

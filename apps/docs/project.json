@@ -21,7 +21,7 @@
         "browser": "apps/docs/src/main.ts",
         "tsConfig": "apps/docs/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
-        "styles": ["node_modules/@angular/cdk/overlay-prebuilt.css", "apps/docs/src/styles.scss"]
+        "styles": ["apps/docs/src/styles.scss"]
       },
       "configurations": {
         "production": {

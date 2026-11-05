@@ -7,3 +7,4 @@ export * from './primitives/radius';
 export * from './primitives/typography';
 export * from './primitives/shadows';
 export * from './primitives/motion';
+export * from './primitives/layers';

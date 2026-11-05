@@ -13,6 +13,13 @@ export const DOC_NAVIGATION: DocNavGroup[] = [
       { label: 'Icons', path: '/icons' },
     ],
   },
+  {
+    title: 'Core',
+    links: [
+      { label: 'Overlay', path: '/core/overlay' },
+      { label: 'Locale', path: '/core/locale' },
+    ],
+  },
   ...categories.map((category) => ({
     title: category,
     links: DOC_COMPONENTS.filter((component) => component.category === category).map((component) => ({

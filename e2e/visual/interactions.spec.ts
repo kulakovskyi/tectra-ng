@@ -53,3 +53,35 @@ test('theme toggle switches to dark', async ({ page }) => {
   await page.getByRole('button', { name: 'Dark theme' }).click();
   await expect(page.locator('html')).toHaveAttribute('data-tx-theme', 'dark');
 });
+
+test('overlay opens on the asked side and closes on Escape', async ({ page }) => {
+  await page.goto('/core/overlay');
+  const origin = page.getByRole('button', { name: 'top', exact: true });
+  await origin.click();
+  const panel = page.locator('.tx-overlay-pane .panel');
+  await expect(panel).toHaveAttribute('data-placement', 'top');
+  const originBox = await origin.boundingBox();
+  const panelBox = await panel.boundingBox();
+  expect((panelBox?.y ?? 0) + (panelBox?.height ?? 0)).toBeLessThanOrEqual(originBox?.y ?? 0);
+  await page.keyboard.press('Escape');
+  await expect(panel).toHaveCount(0);
+  await expect(page.getByText('Last close:')).toContainText('escape');
+});
+
+test('overlay flips when there is no room', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 520 });
+  await page.goto('/core/overlay');
+  const origin = page.getByRole('button', { name: 'top', exact: true });
+  await origin.evaluate((element) => window.scrollTo(0, element.getBoundingClientRect().top + window.scrollY - 24));
+  await origin.dispatchEvent('click');
+  await expect(page.locator('.tx-overlay-pane .panel')).toHaveAttribute('data-placement', 'bottom');
+});
+
+test('locale switches built-in texts at runtime', async ({ page }) => {
+  await page.goto('/core/locale');
+  await page.getByRole('combobox', { name: 'Language' }).click();
+  await page.getByRole('option', { name: 'Українська (ua)' }).click();
+  await expect(page.locator('.facts').first()).toContainText('з 42');
+  await page.getByRole('combobox', { name: /Open me/ }).click();
+  await expect(page.locator('.tx-select__empty')).toHaveText('Нічого не знайдено');
+});

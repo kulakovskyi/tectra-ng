@@ -1,0 +1,28 @@
+<p class="eyebrow">Core</p>
+<h1>Overlay</h1>
+<p class="lead">Panels next to an element: 12 placements, flip when there is no room, layers, Escape and outside click, focus back to the origin.</p>
+
+<div class="card stage">
+  <div class="compass">
+    @for (row of rows; track $index) {
+      @for (placement of row; track $index) {
+        @if (placement) {
+          <button txButton [size]="'small'" [outlined]="true" [severity]="'secondary'" (click)="open($event, placement)">{{ placement }}</button>
+        } @else {
+          <span></span>
+        }
+      }
+    }
+  </div>
+  <p class="hint">Last close: <code>{{ lastClose() }}</code> · scroll so a button sits at the edge of the window — the panel flips.</p>
+</div>
+
+<h2>Use it</h2>
+<pre class="code" tabindex="0"><code>{{ "const ref = inject(TxOverlay).open(template, {\n  origin: button,\n  viewContainerRef,\n  placement: 'bottom-start',\n  layer: 'popover',\n});\nref.placement();      // actual side after a flip\nref.closed.subscribe(reason => …); // 'escape' | 'outside' | 'api' | …" }}</code></pre>
+
+<ng-template #panel let-placement>
+  <div class="panel" [attr.data-placement]="current()?.placement()">
+    <strong>{{ current()?.placement() ?? placement }}</strong>
+    <span class="hint">asked for {{ placement }}</span>
+  </div>
+</ng-template>

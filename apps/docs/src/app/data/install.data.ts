@@ -13,10 +13,6 @@ export const appConfig: ApplicationConfig = {
 };`,
   },
   {
-    title: 'Add the overlay styles in angular.json',
-    code: `"styles": ["node_modules/@angular/cdk/overlay-prebuilt.css", "src/styles.scss"]`,
-  },
-  {
     title: 'Use a component',
     code: `import { TxSelect } from '@tectra/ui/select';
 
