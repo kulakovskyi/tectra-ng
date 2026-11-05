@@ -166,6 +166,24 @@ test('message closes and field errors are linked to their fields', async ({ page
   await expect(error.locator('.tx-field-message__text')).toHaveCount(0);
 });
 
+test('field wires label, hint and error to the control it contains', async ({ page }) => {
+  await page.goto('/components/field');
+  const horizontal = page.locator('field-horizontal-example');
+  await horizontal.getByText('Display name').click();
+  await expect(horizontal.locator('input')).toBeFocused();
+  const labelRight = await horizontal.locator('tx-label').first().evaluate((element) => element.getBoundingClientRect().right);
+  const inputLeft = await horizontal.locator('input').evaluate((element) => element.getBoundingClientRect().left);
+  expect(labelRight).toBeLessThanOrEqual(inputLeft);
+
+  const form = page.locator('field-validation-example');
+  await form.getByRole('button', { name: 'Continue' }).click();
+  const trigger = form.getByRole('combobox');
+  await expect(trigger).toHaveAttribute('aria-invalid', 'true');
+  const errorId = await form.locator('tx-field-error').nth(1).getAttribute('id');
+  await expect(trigger).toHaveAttribute('aria-describedby', new RegExp(`\\b${errorId}\\b`));
+  await expect(form.locator('tx-field-error').nth(1)).toHaveText('This field is required');
+});
+
 test.describe('with motion', () => {
   test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 

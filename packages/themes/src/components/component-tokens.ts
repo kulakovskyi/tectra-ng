@@ -3,6 +3,7 @@ import { buttonTokens } from './button.tokens';
 import { formFieldTokens } from './form-field.tokens';
 import { inputGroupTokens } from './input-group.tokens';
 import { floatLabelTokens, iftaLabelTokens, labelTokens } from './label.tokens';
+import { fieldTokens } from './field.tokens';
 import { fieldMessageTokens, messageTokens } from './message.tokens';
 import { selectTokens } from './select.tokens';
 import { iconTokens } from './icon.tokens';
@@ -23,6 +24,7 @@ export const COMPONENT_TOKENS = {
   toggleButton: toggleButtonTokens,
   message: messageTokens,
   fieldMessage: fieldMessageTokens,
+  field: fieldTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

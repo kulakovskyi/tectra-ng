@@ -1,0 +1,31 @@
+@if (label()) {
+  <tx-label
+    class="tx-field__label"
+    [class]="passThrough().label?.class"
+    [style]="passThrough().label?.style"
+    [for]="controlId() ?? undefined"
+    [required]="required()"
+    [colon]="colon()"
+    [subtle]="subtle()"
+    [tooltip]="tooltip()"
+    >{{ label() }}</tx-label
+  >
+}
+<div class="tx-field__body">
+  <div class="tx-field__control" [class]="passThrough().control?.class" [style]="passThrough().control?.style">
+    <ng-content />
+  </div>
+  @if (hint()) {
+    <tx-field-hint [id]="hintId" [class]="passThrough().hint?.class" [style]="passThrough().hint?.style">{{ hint() }}</tx-field-hint>
+  }
+  <tx-field-error
+    [id]="errorId"
+    [class]="passThrough().error?.class"
+    [style]="passThrough().error?.style"
+    [control]="formControl()"
+    [errorText]="errorText()"
+    [successText]="successText()"
+    [messages]="messages()"
+    [showImmediately]="showImmediately()"
+  />
+</div>

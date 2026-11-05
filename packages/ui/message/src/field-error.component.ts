@@ -48,7 +48,8 @@ export class TxFieldError {
   private translations = injectTranslations();
   private readonly version = signal(0);
 
-  readonly control = input.required<AbstractControl>();
+  readonly control = input<AbstractControl | undefined>(undefined);
+  readonly errorText = input<string | undefined>(undefined);
   readonly showImmediately = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly successText = input<string | undefined>(undefined);
   readonly messages = input<TxValidationMessages | undefined>(undefined);
@@ -66,13 +67,17 @@ export class TxFieldError {
 
   readonly errorKey = computed(() => {
     this.version();
-    return Object.keys(this.control().errors ?? {})[0] ?? null;
+    return Object.keys(this.control()?.errors ?? {})[0] ?? null;
   });
-  readonly errorText = computed(() => {
+  readonly shownError = computed(() => {
     this.version();
+    const external = this.errorText();
+    if (external) {
+      return external;
+    }
     const control = this.control();
     const key = this.errorKey();
-    if (!key || !(this.showImmediately() || control.touched || control.dirty)) {
+    if (!control || !key || !(this.showImmediately() || control.touched || control.dirty)) {
       return null;
     }
     return this.describe(key, control.errors?.[key]);
@@ -80,15 +85,22 @@ export class TxFieldError {
   readonly successShown = computed(() => {
     this.version();
     const control = this.control();
-    return !!this.successText() && !this.errorText() && control.valid && hasValue(control.value) && (control.touched || control.dirty);
+    return (
+      !!control &&
+      !!this.successText() &&
+      !this.shownError() &&
+      control.valid &&
+      hasValue(control.value) &&
+      (control.touched || control.dirty)
+    );
   });
-  readonly state = computed(() => (this.errorText() ? 'error' : this.successShown() ? 'success' : null));
+  readonly state = computed(() => (this.shownError() ? 'error' : this.successShown() ? 'success' : null));
 
   constructor() {
     injectDescribedBy(this.for, this.resolvedId);
     effect((onCleanup) => {
-      const subscription = this.control().events.subscribe(() => this.version.update((value) => value + 1));
-      onCleanup(() => subscription.unsubscribe());
+      const subscription = this.control()?.events.subscribe(() => this.version.update((value) => value + 1));
+      onCleanup(() => subscription?.unsubscribe());
     });
   }
 

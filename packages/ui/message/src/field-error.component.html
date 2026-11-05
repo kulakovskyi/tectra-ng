@@ -1,4 +1,4 @@
-@if (errorText(); as text) {
+@if (shownError(); as text) {
   <div class="tx-field-message__row" animate.enter="tx-field-message--enter" animate.leave="tx-field-message--leave">
     <span class="tx-field-message__inner">
       <span class="tx-field-message__icon" aria-hidden="true" [class]="passThrough().icon?.class" [style]="passThrough().icon?.style">

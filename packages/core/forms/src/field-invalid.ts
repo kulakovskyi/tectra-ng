@@ -1,9 +1,11 @@
 import { DestroyRef, Injector, Signal, afterNextRender, computed, inject, signal } from '@angular/core';
 import { AbstractControl, NgControl } from '@angular/forms';
+import { TX_FIELD_STATE } from './field-state';
 
 export function injectFieldInvalid(local: Signal<boolean | undefined>): Signal<boolean> {
   const injector = inject(Injector);
   const destroyRef = inject(DestroyRef);
+  const fieldState = inject(TX_FIELD_STATE, { optional: true });
   const version = signal(0);
   let control: AbstractControl | null = null;
 
@@ -21,6 +23,9 @@ export function injectFieldInvalid(local: Signal<boolean | undefined>): Signal<b
     const own = local();
     if (own !== undefined) {
       return own;
+    }
+    if (fieldState?.invalid()) {
+      return true;
     }
     return !!control && control.invalid && (control.touched || control.dirty);
   });

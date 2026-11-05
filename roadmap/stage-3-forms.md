@@ -68,14 +68,14 @@ PrimeNG: Message (`severity`, `variant`, `size`, `icon`, `closable`, `life`). Fi
 
 Icons: `TxIconRegistry` also accepts PrimeIcons names with the `pi-` prefix (`pi-check` → `check`); a full class (`pi pi-check`) stays a class.
 
-## 3.4 Field layout — `ui/field` (new)
+## 3.4 Field layout — `ui/field` (new) ✅
 
-Not in PrimeNG. Replaces the label + control + hint + error combination every form repeats.
+Not in PrimeNG. Replaces the label + control + hint + error combination every form repeats. The first app's input bundles `label`, `description`, `control`, `errorText`, `successText` — the same set.
 
-- [ ] `<tx-field>`: label, required mark, control slot, hint, error (from the control in the slot), success; vertical and horizontal layout
-- [ ] Generates ids and wires `for`, `aria-describedby`, `aria-invalid` automatically
-- [ ] Docs: vertical, horizontal, with every control type
-- [ ] Tests: wiring of ids and aria attributes
+- [x] `<tx-field>`: label (required, colon, tooltip, subtle), control slot, hint, error from the projected `formControl` / `formControlName` / `ngModel` (or `control`), `errorText` from outside the form (marks the control invalid through `TX_FIELD_STATE` in `@tectra/core/forms`), success text, own messages; vertical and horizontal layout (stacks below 40rem); `field` tokens, `dt` / `pt` / `unstyled`
+- [x] Finds the control inside (input, textarea, select, `tx-select` trigger, roles combobox / switch / checkbox / radiogroup / slider / spinbutton), gives it an id when it has none, points `for` at it, adds hint and error to `aria-describedby`; `aria-invalid` comes from the control
+- [x] Docs: basic, horizontal, every control type, validation, server error, success, design tokens
+- [x] Tests: id / `for` / describedby wiring, own id kept, `tx-select` trigger, error from the projected control, `errorText` invalid, layout, dt / pt; e2e: label click focuses, horizontal columns, select error linked
 
 ## 3.5 Textarea — `ui/textarea`
 

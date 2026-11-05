@@ -24,6 +24,7 @@ Error texts: `messages` on the field, then `provideTectra({ validationMessages }
 | closeIcon | `tx-message`: icon of the close button |
 | life | `tx-message`: closes itself after this many milliseconds |
 | control | `tx-field-error`: the form control whose errors are shown (`formControl`, a group's control, or `ngModel.control`) |
+| errorText | `tx-field-error`: an error from outside the form (e.g. the server) — shown as is, before the control's errors |
 | showImmediately | `tx-field-error`: shows the error before the control is touched or changed |
 | successText | `tx-field-error`: text shown when the control has a valid value and was touched or changed |
 | messages | `tx-field-error`: own texts per error key — a string with `{param}` or a function of the error |
