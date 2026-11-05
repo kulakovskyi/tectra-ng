@@ -25,6 +25,12 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     validationMax: 'Must be at most {max}',
     validationPattern: 'Invalid format',
     validationInvalid: 'Invalid value',
+    passwordPrompt: 'Enter a password',
+    passwordWeak: 'Weak',
+    passwordMedium: 'Medium',
+    passwordStrong: 'Strong',
+    showPassword: 'Show password',
+    hidePassword: 'Hide password',
   },
 };
 
@@ -53,6 +59,12 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     validationMax: 'Не більше {max}',
     validationPattern: 'Неправильний формат',
     validationInvalid: 'Некоректне значення',
+    passwordPrompt: 'Введіть пароль',
+    passwordWeak: 'Слабкий',
+    passwordMedium: 'Середній',
+    passwordStrong: 'Надійний',
+    showPassword: 'Показати пароль',
+    hidePassword: 'Сховати пароль',
   },
 };
 

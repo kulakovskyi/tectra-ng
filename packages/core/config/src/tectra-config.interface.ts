@@ -24,6 +24,12 @@ export interface TxTranslations {
   validationMax: string;
   validationPattern: string;
   validationInvalid: string;
+  passwordPrompt: string;
+  passwordWeak: string;
+  passwordMedium: string;
+  passwordStrong: string;
+  showPassword: string;
+  hidePassword: string;
 }
 
 export type TxValidationMessage = string | ((error: unknown) => string);

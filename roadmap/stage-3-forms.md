@@ -50,7 +50,7 @@ PrimeNG: FloatLabel (`variant`: over / in / on), IftaLabel. First app usage: **3
 - [x] `<tx-float-label>`: label inside the field that floats on focus / value — variants `over`, `in`, `on`; placeholder hidden until focus; focus and invalid colours; `floatLabel` tokens
 - [x] `<tx-ifta-label>`: label inside the field above the value; `iftaLabel` tokens
 - [x] Fields expose their state for labels: `tx-input--filled` (`injectFieldFilled`), `tx-select--filled`, select `inputId`; the field padding top / bottom can be raised by the label (`--tx-field-padding-top` / `-bottom`)
-- [x] Works with input, textarea and select; password, number, mask and otp join with the same filled / focus classes when they are built (3.9–3.12)
+- [x] Works with input, textarea, select and password (`tx-password--filled`); number, mask and otp join with the same filled / focus classes when they are built (3.10–3.12)
 - [x] Docs: plain, required + colon + help, subtle, float (3 variants), ifta, with a select
 - [x] Tests: `for` link, marks, filled class on value, ifta; e2e: label click focuses the field, float label moves up on focus and stays up with a value, select named by its label
 
@@ -119,15 +119,16 @@ PrimeNG: ToggleSwitch (`trueValue` / `falseValue`, handle template). First app u
 - [x] Label on the left / right (`labelPosition`), `description`, `readonly`, disabled / invalid from the form control; `toggleSwitch` tokens, `dt` / `pt` / `unstyled`
 - [x] Docs + tests: toggle, values, handle icons / template, sizes, states, form, settings list, design tokens; e2e: Space, label click, handle position
 
-## 3.9 Password — `ui/password`
+## 3.9 Password — `ui/password` ✅
 
-PrimeNG: Password (`feedback` meter in an overlay, `toggleMask`, `weak` / `medium` / `strong` labels + regexes, `showClear`, header / content / footer templates). First app usage: 20: `feedback`.
+PrimeNG: Password (`feedback` meter in an overlay, `toggleMask`, `weak` / `medium` / `strong` labels + regexes, `showClear`, header / content / footer templates). First app usage: 20 (28 tags): `label` as placeholder, `control`, `feedback`, `description`, always a show / hide toggle.
 
-- [ ] `<tx-password>` on `txInput` + icon field: show / hide toggle
-- [ ] Strength meter panel (TxOverlay): weak / medium / strong with own regexes and labels (us / ua), header / content / footer templates for requirements lists
-- [ ] Clear button
-- [ ] `autocomplete` passes through (`new-password` / `current-password`)
-- [ ] Docs + tests: toggle mask, meter levels, custom rules template
+- [x] `<tx-password>` on `txInput`: show / hide toggle (`aria-pressed`, translated label), form control value accessor, size / variant / fluid / invalid / disabled / readonly / required / maxlength / name / inputId / aria inputs
+- [x] Strength meter panel (`TxOverlay`, field width, closes on blur / Escape): weak / medium / strong with own regexes and labels (us / ua), `(strengthChange)`, header / content / footer templates for requirements lists, meter text linked with `aria-describedby` and `aria-live`
+- [x] Clear button (`showClear`, `(cleared)`)
+- [x] `autocomplete` passes through (`current-password` by default, `new-password`)
+- [x] Works in `tx-float-label` and `tx-field`; `password` tokens + `formField`; shared action button mixin `ui/styles/_input-action.scss`
+- [x] Docs + tests: toggle mask, meter levels, custom rules, requirements template, clear, float label, sizes, states, sign-up form with confirmation, design tokens; e2e: meter under the field at its width, toggle keeps focus, Escape, float label
 
 ## 3.10 Input OTP — `ui/input-otp`
 

@@ -258,6 +258,33 @@ test('toggle switch is a switch that toggles with Space and its label', async ({
   expect(trackRight - handleRight).toBeLessThan(4);
 });
 
+test('password shows the text, grades it under the field and floats its label', async ({ page }) => {
+  await page.goto('/components/password');
+  const meter = page.locator('password-meter-example');
+  const input = meter.getByLabel('New password');
+  await input.evaluate((element) => element.scrollIntoView({ block: 'center' }));
+  await input.fill('Abcdef12');
+  const panel = page.locator('.tx-password__panel');
+  await expect(panel.locator('.tx-password__info')).toHaveText('Strong');
+  const inputBox = await input.evaluate((element) => element.getBoundingClientRect().toJSON());
+  const panelBox = await panel.evaluate((element) => element.getBoundingClientRect().toJSON());
+  expect(Math.round(panelBox.width)).toBe(Math.round(inputBox.width));
+  expect(panelBox.top).toBeGreaterThanOrEqual(inputBox.bottom);
+  await expect(meter.locator('.hint')).toHaveText('Strength: strong');
+  await meter.getByRole('button', { name: 'Show password' }).click();
+  await expect(input).toHaveAttribute('type', 'text');
+  await expect(input).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(panel).toHaveCount(0);
+
+  const float = page.locator('password-float-label-example');
+  const label = float.locator('label[for="password-float"]');
+  const restTop = await label.evaluate((element) => element.getBoundingClientRect().top);
+  await float.locator('input').fill('secret');
+  await float.locator('input').blur();
+  await expect.poll(() => label.evaluate((element) => element.getBoundingClientRect().top)).toBeLessThan(restTop);
+});
+
 test.describe('with motion', () => {
   test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 

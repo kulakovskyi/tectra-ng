@@ -1,6 +1,6 @@
-$active: ':is(.tx-input--filled, .tx-input:focus, tx-select.tx-select--filled, tx-select.tx-select--open)';
-$focused: ':is(.tx-input:focus, tx-select.tx-select--open, tx-select:focus-within)';
-$invalid: ':is(.tx-input--invalid, tx-select.tx-select--invalid)';
+$active: ':is(.tx-input--filled, .tx-input:focus, tx-select.tx-select--filled, tx-select.tx-select--open, tx-password.tx-password--filled, tx-password:focus-within)';
+$focused: ':is(.tx-input:focus, tx-select.tx-select--open, tx-select:focus-within, tx-password:focus-within)';
+$invalid: ':is(.tx-input--invalid, tx-select.tx-select--invalid, tx-password.tx-password--invalid)';
 
 :host {
   position: relative;
@@ -42,6 +42,7 @@ $invalid: ':is(.tx-input--invalid, tx-select.tx-select--invalid)';
 }
 
 :host ::ng-deep > .tx-input:not(:focus)::placeholder,
+:host ::ng-deep > tx-password:not(:focus-within) .tx-input::placeholder,
 :host ::ng-deep > tx-select:not(.tx-select--open) .tx-select__value--placeholder {
   color: transparent;
 }

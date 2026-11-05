@@ -16,6 +16,7 @@ export * from './components/textarea.tokens';
 export * from './components/checkbox.tokens';
 export * from './components/radio-button.tokens';
 export * from './components/toggle-switch.tokens';
+export * from './components/password.tokens';
 export * from './components/icon.tokens';
 export * from './components/ripple.tokens';
 export * from './components/toggle-button.tokens';
