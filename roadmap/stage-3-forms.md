@@ -141,15 +141,15 @@ PrimeNG: InputOtp (`length`, `mask`, `integerOnly`, input template). First app u
 - [x] `role="group"` named by `ariaLabel` / `tx-field`, each cell "Character 1 of 6" (us / ua), invalid / disabled / readonly from the form; `inputOtp` tokens + `formField`
 - [x] Docs + tests: typing, paste, autofill, backspace, arrows, integer only, mask, groups, sizes, states, verification form, design tokens; e2e: typing jumps, Backspace, paste completes
 
-## 3.11 Input mask — `ui/input-mask`
+## 3.11 Input mask — `ui/input-mask` ✅
 
 PrimeNG: InputMask (`mask`, `slotChar`, `autoClear`, `unmask`, `characterPattern`, `keepBuffer`, `showClear`, `(onComplete)`). First app usage: 2.
 
-- [ ] `input[txInputMask]` directive: `9` digit, `a` letter, `*` any, `?` optional part
-- [ ] `slotChar`, `autoClear`, `unmask` (value without literals), `characterPattern`
-- [ ] Caret handling on typing / Backspace / paste
-- [ ] `(complete)` output
-- [ ] Docs + tests: phone, date, card patterns, unmask value
+- [x] `input[txInputMask]` directive (own value accessor, pairs with `txInput`): `9` digit, `a` letter, `*` any, `?` optional part, other characters fixed
+- [x] `slotChar` (one character or a hint of the mask's length), `autoClear` (off = keep the partial buffer), `unmask` (value without literals), `characterPattern`
+- [x] Caret handling on typing / Backspace / Delete / selection / cut / paste through `beforeinput`, never past the first empty position, `input` fallback for IME and autofill; pure engine in `mask-engine.ts`
+- [x] `(completed)` output; clear button through `tx-icon-field` + `tx-input-clear`
+- [x] Docs + tests: phone, date, card, letters, optional part, unmask, slot char, auto clear, clear, form; engine specs; e2e: typing, Backspace over literals, blur clear / keep
 
 ## 3.12 Input number — `ui/input-number`
 

@@ -304,6 +304,34 @@ test('otp moves between cells while typing, deleting and pasting', async ({ page
   await expect(cells.nth(5)).toBeFocused();
 });
 
+test('input mask formats typing, skips literals on Backspace and clears incomplete values', async ({ page }) => {
+  await page.goto('/components/input-mask');
+  const phone = page.locator('input-mask-phone-example');
+  const input = phone.getByLabel('Phone');
+  await input.click();
+  await page.keyboard.type('5012345');
+  await expect(input).toHaveValue('+380 (50) 123-45-__');
+  await page.keyboard.press('Backspace');
+  await page.keyboard.press('Backspace');
+  await page.keyboard.press('Backspace');
+  await expect(input).toHaveValue('+380 (50) 12_-__-__');
+  await page.keyboard.type('34567');
+  await expect(phone.locator('.hint')).toHaveText('Value: +380 (50) 123-45-67');
+  await input.blur();
+  await expect(input).toHaveValue('+380 (50) 123-45-67');
+
+  const clearing = page.getByLabel('Clears when incomplete');
+  await clearing.click();
+  await page.keyboard.type('12');
+  await clearing.blur();
+  await expect(clearing).toHaveValue('');
+  const keeping = page.getByLabel('Keeps partial input');
+  await keeping.click();
+  await page.keyboard.type('12');
+  await keeping.blur();
+  await expect(keeping).toHaveValue('12');
+});
+
 test.describe('with motion', () => {
   test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 
