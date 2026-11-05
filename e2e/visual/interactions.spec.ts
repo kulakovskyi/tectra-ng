@@ -537,6 +537,50 @@ test('avatar falls back to initials and a group shows +N', async ({ page }) => {
   await expect(group.getByRole('button', { name: 'Invite' })).toBeVisible();
 });
 
+test('panel collapses by click and keyboard and hides its content', async ({ page }) => {
+  await page.goto('/components/panel');
+  const example = page.locator('panel-toggleable-example');
+  const region = example.getByRole('region', { name: 'Advanced settings' });
+  const toggle = region.getByRole('button', { name: 'Advanced settings' });
+  const content = region.getByText('Cache lifetime, request limits and webhooks.');
+  await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+  await expect(content).toBeHidden();
+  const controls = await toggle.getAttribute('aria-controls');
+  await expect(region.locator(`#${controls}`)).toHaveAttribute('inert', '');
+  await toggle.click();
+  await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+  await expect(content).toBeVisible();
+  await expect(example.locator('.status')).toHaveText('Expanded');
+  await toggle.press('Enter');
+  await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+  await expect.poll(() => region.locator(`#${controls}`).evaluate((element) => element.getBoundingClientRect().height)).toBe(0);
+  await toggle.press('Space');
+  await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+});
+
+test('fieldset collapses from its legend and keeps the legend naming the group', async ({ page }) => {
+  await page.goto('/components/fieldset');
+  const example = page.locator('fieldset-toggleable-example');
+  const group = example.getByRole('group', { name: 'Billing address' });
+  const toggle = group.getByRole('button', { name: 'Billing address' });
+  await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+  await expect(group.getByRole('textbox', { name: 'Street' })).toBeVisible();
+  await toggle.press('Enter');
+  await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+  await expect(example.locator('.status')).toHaveText('Collapsed');
+  await expect(group.getByRole('textbox', { name: 'Street' })).toBeHidden();
+  await toggle.click();
+  await expect(group.getByRole('textbox', { name: 'Street' })).toBeVisible();
+});
+
+test('divider is a separator with its orientation', async ({ page }) => {
+  await page.goto('/components/divider');
+  const vertical = page.locator('divider-vertical-example').getByRole('separator').first();
+  await expect(vertical).toHaveAttribute('aria-orientation', 'vertical');
+  const box = await vertical.boundingBox();
+  expect(box?.height).toBeGreaterThan(30);
+});
+
 test.describe('with motion', () => {
   test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 

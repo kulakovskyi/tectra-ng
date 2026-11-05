@@ -59,15 +59,15 @@ PrimeNG: Avatar (`label`, `icon`, `image`, `size`, `shape`, `(onImageError)`), A
 - [x] Status dot / badge on the avatar through `tx-overlay-badge` (`shape="circle"`)
 - [x] Docs + tests: image, initials, fallback, sizes, shapes, group with max, status, labels, design tokens; e2e: broken image → initials, group +N. The first app's editable avatar (upload / remove with a confirm modal) waits for stage 5 dialogs
 
-## 4.7 Divider, card / panel, fieldset — `ui/divider`, `ui/card`, `ui/panel`, `ui/fieldset`
+## 4.7 Divider, card / panel, fieldset — `ui/divider`, `ui/card`, `ui/panel`, `ui/fieldset` ✅
 
 PrimeNG: Divider (`layout`, `type`, `align`, content), Card (header / title / subtitle / content / footer), Panel (`header`, `toggleable`, `collapsed`, templates), Fieldset (`legend`, `toggleable`, `collapsed`). First app: panel 139 (`title`, `subtitle`, `icon`, `align`, `variant` card / inset / plain, actions in the header).
 
-- [ ] `<tx-divider>`: horizontal / vertical, solid / dashed / dotted, content aligned start / center / end
-- [ ] `<tx-card>`: header media, title, subtitle, content, footer slots
-- [ ] `<tx-panel>`: title, subtitle, icon, header actions slot, `variant` (card / inset / plain), `align`, `toggleable` with `[(collapsed)]` and animation, footer
-- [ ] `<tx-fieldset>`: legend (text or template), toggleable / collapsed
-- [ ] Docs + tests: every variant, toggle by click and keyboard, `aria-expanded` / `aria-controls`
+- [x] `<tx-divider>`: horizontal / vertical (stretches to the row), solid / dashed / dotted, content aligned start / center / end, `role="separator"` with `aria-orientation`; `divider` tokens
+- [x] `<tx-card>`: `txCardHeader` media, `title` (heading, `headingLevel`) or `txCardTitle`, subtitle, content, `txCardFooter` pinned to the bottom in a grid; `card` tokens
+- [x] `<tx-panel>`: title (names the `region`), subtitle, icon in a tinted square, `txPanelActions` / `txPanelHeader` / `txPanelFooter`, `variant` card / inset / plain, `align`, `toggleable` with `[(collapsed)]` (grid-rows animation, `inert` and hidden when closed); `panel` tokens
+- [x] `<tx-fieldset>`: native `fieldset` + `legend` (text or `txFieldsetLegend`), toggleable / collapsed from a legend button; `fieldset` tokens
+- [x] Docs + tests: every variant, cards in a grid, toggle by click and keyboard, `aria-expanded` / `aria-controls`; e2e: panel and fieldset collapse by click, Enter and Space, vertical divider height. Docs: new navigation group "Layout". Soft pill and tag text moved to the 800 shade in light (AA on a white card)
 
 ## 4.8 Text helpers — `ui/highlight-text`, `ui/amount`, `ui/status-icon`, `ui/link`
 

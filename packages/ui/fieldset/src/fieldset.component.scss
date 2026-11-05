@@ -1,0 +1,99 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.tx-fieldset__box {
+  min-width: 0;
+  margin: 0;
+}
+
+.tx-fieldset__collapse {
+  display: grid;
+  grid-template-rows: 1fr;
+}
+
+:host(.tx-fieldset--collapsed) .tx-fieldset__collapse {
+  grid-template-rows: 0fr;
+}
+
+.tx-fieldset__collapse-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+:host(.tx-fieldset--collapsed) .tx-fieldset__collapse-inner {
+  visibility: hidden;
+}
+
+:host([data-styled]) .tx-fieldset__box {
+  padding: var(--tx-fieldset-padding);
+  border: 1px solid var(--tx-fieldset-border-color);
+  border-radius: var(--tx-fieldset-border-radius);
+  background: var(--tx-fieldset-background);
+  font-family: var(--tx-font-family);
+  transition: padding var(--tx-fieldset-transition-duration);
+}
+
+:host([data-styled].tx-fieldset--collapsed) .tx-fieldset__box {
+  padding-bottom: 0;
+}
+
+:host([data-styled]) .tx-fieldset__legend {
+  padding: var(--tx-fieldset-legend-padding);
+  color: var(--tx-fieldset-legend-color);
+  font-size: var(--tx-fieldset-legend-font-size);
+  font-weight: var(--tx-fieldset-legend-font-weight);
+}
+
+:host([data-styled].tx-fieldset--toggleable) .tx-fieldset__legend {
+  padding: 0;
+}
+
+:host([data-styled]) .tx-fieldset__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border: none;
+  border-radius: var(--tx-radius-md);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+
+  tx-icon {
+    color: var(--tx-text-muted);
+    transition: transform var(--tx-fieldset-transition-duration) cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  &:hover {
+    background: var(--tx-fieldset-legend-hover-background);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--tx-focus-ring-color);
+    outline-offset: 1px;
+  }
+}
+
+:host([data-styled].tx-fieldset--collapsed) .tx-fieldset__toggle tx-icon {
+  transform: rotate(-90deg);
+}
+
+:host([data-styled]) .tx-fieldset__collapse {
+  transition: grid-template-rows var(--tx-fieldset-transition-duration) cubic-bezier(0.2, 0, 0, 1);
+}
+
+:host([data-styled].tx-fieldset--collapsed) .tx-fieldset__collapse-inner {
+  transition: visibility 0s linear var(--tx-fieldset-transition-duration);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) .tx-fieldset__box,
+  :host([data-styled]) .tx-fieldset__collapse,
+  :host([data-styled].tx-fieldset--collapsed) .tx-fieldset__collapse-inner,
+  :host([data-styled]) .tx-fieldset__toggle tx-icon {
+    transition: none;
+  }
+}
