@@ -20,7 +20,7 @@ import { uniqueId } from '@tectra/core/a11y';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
 import { TxFormControlBase, injectFieldInvalid } from '@tectra/core/forms';
 import { injectTranslations } from '@tectra/core/i18n';
-import { TxOverlayInsets, TxPlacement, placementFromPosition, txAnimateEnter, txAnimateLeave, txPositions, watchOrigin } from '@tectra/core/overlay';
+import { TxOverlayInsets, TxPlacement, placementFromPosition, txAnimateEnter, txAnimateLeave, txPositions, watchOrigin, TxOverlayAnchor } from '@tectra/core/overlay';
 import { optionalBoolean } from '@tectra/core/utils';
 import { TxIcon } from '@tectra/icons';
 import { TectraColorPickerTokens, TectraDeepPartial, toStyleObject } from '@tectra/themes';
@@ -31,7 +31,7 @@ const clamp = (value: number, min: number, max: number): number => Math.min(max,
 
 @Component({
   selector: 'tx-color-picker',
-  imports: [CdkOverlayOrigin, CdkConnectedOverlay, NgTemplateOutlet, TxIcon],
+  imports: [CdkOverlayOrigin, CdkConnectedOverlay, TxOverlayAnchor, NgTemplateOutlet, TxIcon],
   templateUrl: './color-picker.component.html',
   styleUrl: './color-picker.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

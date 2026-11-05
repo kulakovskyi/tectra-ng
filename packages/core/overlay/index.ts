@@ -5,3 +5,4 @@ export * from './src/overlay-motion';
 export * from './src/overlay-insets.service';
 export * from './src/overlay-inset.directive';
 export * from './src/overlay-room';
+export * from './src/overlay-anchor';

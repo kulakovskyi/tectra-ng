@@ -29,6 +29,7 @@ import {
   txPositions,
   TxOverlayRoom,
   watchOrigin,
+  TxOverlayAnchor,
 } from '@tectra/core/overlay';
 import { optionalBoolean } from '@tectra/core/utils';
 import { TxIcon } from '@tectra/icons';
@@ -38,7 +39,7 @@ import { TxCascadeItem, TxCascadeSelectChangeEvent, TxCascadeSelectPart } from '
 
 @Component({
   selector: 'tx-cascade-select',
-  imports: [CdkOverlayOrigin, CdkConnectedOverlay, TxIcon],
+  imports: [CdkOverlayOrigin, CdkConnectedOverlay, TxOverlayAnchor, TxIcon],
   templateUrl: './cascade-select.component.html',
   styleUrl: './cascade-select.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

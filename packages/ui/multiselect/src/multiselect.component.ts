@@ -1,4 +1,5 @@
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { TxOverlayAnchor } from '@tectra/core/overlay';
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, contentChild, forwardRef, input, output, signal } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -11,7 +12,7 @@ import { TxMultiselectChangeEvent, TxMultiselectDisplay, TxMultiselectPart } fro
 
 @Component({
   selector: 'tx-multiselect',
-  imports: [CdkOverlayOrigin, CdkConnectedOverlay, NgTemplateOutlet, TxIcon, TxOptionList],
+  imports: [CdkOverlayOrigin, CdkConnectedOverlay, TxOverlayAnchor, NgTemplateOutlet, TxIcon, TxOptionList],
   templateUrl: './multiselect.component.html',
   styleUrl: './multiselect.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

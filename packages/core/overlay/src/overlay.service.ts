@@ -10,6 +10,7 @@ import {
 } from '@angular/cdk/overlay';
 import { DOCUMENT, Injectable, Injector, TemplateRef, Type, inject, signal } from '@angular/core';
 import { Subject } from 'rxjs';
+import { txAnchorPane } from './overlay-anchor';
 import { txAnimateEnter, txAnimateLeave } from './overlay-motion';
 import { orderByRoom, placementFromPosition, txPositions } from './placements';
 import { TxOverlayCloseReason, TxOverlayOptions, TxOverlayRef, TxOverlayScroll } from './overlay.types';
@@ -120,6 +121,7 @@ export class TxOverlay {
 
     const instance = this.attach(overlayRef, content, options);
     reposition();
+    txAnchorPane(overlayRef, origin);
     if (animate) {
       txAnimateEnter(motionTarget(), currentPlacement(), motion, origin);
     }

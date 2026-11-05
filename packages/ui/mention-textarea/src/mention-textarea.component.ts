@@ -18,7 +18,7 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
 import { injectFieldInvalid } from '@tectra/core/forms';
-import { TxOverlayInsets, txPositions, watchOrigin } from '@tectra/core/overlay';
+import { TxOverlayInsets, txPositions, watchOrigin, TxOverlayAnchor } from '@tectra/core/overlay';
 import { optionalBoolean } from '@tectra/core/utils';
 import { TectraDeepPartial, TectraMentionTokens, toStyleObject } from '@tectra/themes';
 import { TxAvatar } from '@tectra/ui/avatar';
@@ -29,7 +29,7 @@ import { TxMentionItem, TxMentionTextareaPart } from './mention-textarea.types';
 
 @Component({
   selector: 'tx-mention-textarea',
-  imports: [CdkOverlayOrigin, CdkConnectedOverlay, TxOptionList, TxTextarea, TxAvatar],
+  imports: [CdkOverlayOrigin, CdkConnectedOverlay, TxOverlayAnchor, TxOptionList, TxTextarea, TxAvatar],
   templateUrl: './mention-textarea.component.html',
   styleUrl: './mention-textarea.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

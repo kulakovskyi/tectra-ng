@@ -30,6 +30,7 @@ import {
   txPositions,
   TxOverlayRoom,
   watchOrigin,
+  TxOverlayAnchor,
 } from '@tectra/core/overlay';
 import { optionalBoolean } from '@tectra/core/utils';
 import { TxIcon } from '@tectra/icons';
@@ -40,7 +41,7 @@ import { TxTreeBranch, TxTreeNode, TxTreeRow, TxTreeSelectChangeEvent, TxTreeSel
 
 @Component({
   selector: 'tx-tree-select',
-  imports: [CdkOverlayOrigin, CdkConnectedOverlay, NgTemplateOutlet, TxIcon],
+  imports: [CdkOverlayOrigin, CdkConnectedOverlay, TxOverlayAnchor, NgTemplateOutlet, TxIcon],
   templateUrl: './tree-select.component.html',
   styleUrl: './tree-select.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
