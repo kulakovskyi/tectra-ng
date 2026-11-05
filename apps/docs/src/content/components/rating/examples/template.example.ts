@@ -17,8 +17,9 @@ import { TxRating, TxRatingOffIconTemplate, TxRatingOnIconTemplate } from '@tect
   `,
   styles: `
     .face {
-      display: inline-block;
-      width: 1.2em;
+      display: block;
+      width: 1em;
+      line-height: 1;
       text-align: center;
     }
 

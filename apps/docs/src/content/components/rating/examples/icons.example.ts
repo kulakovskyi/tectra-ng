@@ -8,7 +8,7 @@ import { TxRating } from '@tectra/ui/rating';
   template: `<tx-rating
     ariaLabel="Love"
     onIcon="heart-fill"
-    offIcon="heart"
+    offIcon="heart-fill"
     [allowHalf]="true"
     [dt]="{ root: { activeColor: '#e11d48', hoverColor: '#fb7185' } }"
     [(ngModel)]="love"

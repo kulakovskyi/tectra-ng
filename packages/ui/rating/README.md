@@ -12,7 +12,7 @@ A score out of a few stars. Hover to preview, click to rate; half stars with `al
 | stars | Number of stars |
 | allowHalf | Half steps: the left half of a star rates x.5, the arrow keys move by 0.5 |
 | onIcon | Icon of a filled star |
-| offIcon | Icon of an empty star |
+| offIcon | Icon of an empty star; the same filled star in a muted colour by default, so half stars line up exactly |
 | clearable | Shows a clear button while there is a rating |
 | clearLabel | Text next to the clear icon; without it the button has a translated `aria-label` |
 | size | `small`, `medium`, `large` |

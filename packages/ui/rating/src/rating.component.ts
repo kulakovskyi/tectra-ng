@@ -36,7 +36,7 @@ export class TxRating extends TxFormControlBase<number> {
   readonly stars = input<number, unknown>(5, { transform: numberAttribute });
   readonly allowHalf = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly onIcon = input<TxIconName | (string & {})>('star-fill');
-  readonly offIcon = input<TxIconName | (string & {})>('star');
+  readonly offIcon = input<TxIconName | (string & {})>('star-fill');
   readonly clearable = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly clearLabel = input<string | undefined>(undefined);
   readonly size = input<TxRatingSize>('medium');
