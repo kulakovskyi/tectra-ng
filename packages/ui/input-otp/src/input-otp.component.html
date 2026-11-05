@@ -1,0 +1,30 @@
+@for (index of indexes(); track index) {
+  @if (hasSeparator(index)) {
+    <span class="tx-input-otp__separator" aria-hidden="true" [class]="passThrough().separator?.class" [style]="passThrough().separator?.style">–</span>
+  }
+  <input
+    #cell
+    txInput
+    class="tx-input-otp__cell"
+    [class]="passThrough().cell?.class"
+    [style]="passThrough().cell?.style"
+    [type]="mask() ? 'password' : 'text'"
+    [value]="chars()[index] ?? ''"
+    [id]="index === 0 ? firstId() : firstId() + '-' + index"
+    [size]="size()"
+    [variant]="variant()"
+    [invalid]="isInvalid()"
+    [unstyled]="isUnstyled()"
+    [disabled]="isDisabled()"
+    [readOnly]="readonly()"
+    [attr.name]="name() ? name() + '-' + index : null"
+    [attr.inputmode]="integerOnly() ? 'numeric' : 'text'"
+    [attr.autocomplete]="index === 0 ? 'one-time-code' : 'off'"
+    [attr.aria-label]="cellLabel(index)"
+    (input)="onInput($event, index)"
+    (paste)="onPaste($event, index)"
+    (keydown)="onKeydown($event, index)"
+    (focus)="onFocus($event)"
+    (blur)="onBlur()"
+  />
+}

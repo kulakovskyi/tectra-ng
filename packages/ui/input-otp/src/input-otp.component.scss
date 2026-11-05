@@ -1,0 +1,37 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: top;
+}
+
+:host([data-styled]) {
+  --_cell-width: var(--tx-input-otp-cell-width);
+  --_cell-font-size: var(--tx-input-otp-cell-font-size);
+
+  gap: var(--tx-input-otp-gap);
+}
+
+@each $size, $key in (small: sm, large: lg) {
+  :host([data-styled][data-size='#{$size}']) {
+    --_cell-width: var(--tx-input-otp-#{$key}-cell-width);
+    --_cell-font-size: var(--tx-input-otp-#{$key}-cell-font-size);
+
+    gap: var(--tx-input-otp-#{$key}-gap);
+  }
+}
+
+:host([data-styled]) .tx-input-otp__cell {
+  width: var(--_cell-width);
+  padding-inline: 0;
+  font-size: var(--_cell-font-size);
+  font-weight: var(--tx-input-otp-cell-font-weight);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+:host([data-styled]) .tx-input-otp__separator {
+  display: inline-flex;
+  justify-content: center;
+  width: var(--tx-input-otp-separator-width);
+  color: var(--tx-input-otp-separator-color);
+}

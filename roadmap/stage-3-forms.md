@@ -130,15 +130,16 @@ PrimeNG: Password (`feedback` meter in an overlay, `toggleMask`, `weak` / `mediu
 - [x] Works in `tx-float-label` and `tx-field`; `password` tokens + `formField`; shared action button mixin `ui/styles/_input-action.scss`
 - [x] Docs + tests: toggle mask, meter levels, custom rules, requirements template, clear, float label, sizes, states, sign-up form with confirmation, design tokens; e2e: meter under the field at its width, toggle keeps focus, Escape, float label
 
-## 3.10 Input OTP — `ui/input-otp`
+## 3.10 Input OTP — `ui/input-otp` ✅
 
-PrimeNG: InputOtp (`length`, `mask`, `integerOnly`, input template). First app usage: 5: `length`, `integerOnly`, `mask`, `autofocus`.
+PrimeNG: InputOtp (`length`, `mask`, `integerOnly`, input template). First app usage: 5: `length`, `integerOnly`, `mask`, `autofocus`, cells split in two groups.
 
-- [ ] `<tx-input-otp>`: `length`, `integerOnly`, `mask`, sizes, variants
-- [ ] Paste the whole code into any cell, Backspace / arrows move between cells, autofocus first cell
-- [ ] `autocomplete="one-time-code"` for SMS autofill
-- [ ] `(complete)` output when all cells are filled
-- [ ] Docs + tests: typing, paste, backspace, integer only
+- [x] `<tx-input-otp>`: `length`, `integerOnly` (numeric keyboard), `mask`, `groupSize` separator, sizes, variants, one string value through the form control
+- [x] Paste the whole code into any cell (spaces dropped), Backspace / Delete / arrows / Home / End move between cells, `autoFocus` focuses the first cell (the a11y lint forbids the `autofocus` attribute)
+- [x] `autocomplete="one-time-code"` for SMS autofill (a multi-character fill spreads over the cells)
+- [x] `(completed)` output when all cells are filled
+- [x] `role="group"` named by `ariaLabel` / `tx-field`, each cell "Character 1 of 6" (us / ua), invalid / disabled / readonly from the form; `inputOtp` tokens + `formField`
+- [x] Docs + tests: typing, paste, autofill, backspace, arrows, integer only, mask, groups, sizes, states, verification form, design tokens; e2e: typing jumps, Backspace, paste completes
 
 ## 3.11 Input mask — `ui/input-mask`
 

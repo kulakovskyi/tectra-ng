@@ -31,6 +31,7 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     passwordStrong: 'Strong',
     showPassword: 'Show password',
     hidePassword: 'Hide password',
+    otpCell: 'Character {index} of {length}',
   },
 };
 
@@ -65,6 +66,7 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     passwordStrong: 'Надійний',
     showPassword: 'Показати пароль',
     hidePassword: 'Сховати пароль',
+    otpCell: 'Символ {index} з {length}',
   },
 };
 

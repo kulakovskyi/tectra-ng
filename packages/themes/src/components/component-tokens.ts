@@ -3,6 +3,7 @@ import { buttonTokens } from './button.tokens';
 import { checkboxTokens } from './checkbox.tokens';
 import { formFieldTokens } from './form-field.tokens';
 import { inputGroupTokens } from './input-group.tokens';
+import { inputOtpTokens } from './input-otp.tokens';
 import { floatLabelTokens, iftaLabelTokens, labelTokens } from './label.tokens';
 import { fieldTokens } from './field.tokens';
 import { fieldMessageTokens, messageTokens } from './message.tokens';
@@ -35,6 +36,7 @@ export const COMPONENT_TOKENS = {
   radioButton: radioButtonTokens,
   toggleSwitch: toggleSwitchTokens,
   password: passwordTokens,
+  inputOtp: inputOtpTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

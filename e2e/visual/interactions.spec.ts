@@ -285,6 +285,25 @@ test('password shows the text, grades it under the field and floats its label', 
   await expect.poll(() => label.evaluate((element) => element.getBoundingClientRect().top)).toBeLessThan(restTop);
 });
 
+test('otp moves between cells while typing, deleting and pasting', async ({ page }) => {
+  await page.goto('/components/input-otp');
+  const otp = page.locator('input-otp-integer-only-example');
+  const cells = otp.locator('input');
+  await cells.first().focus();
+  await page.keyboard.type('12x3');
+  await expect(cells.nth(3)).toBeFocused();
+  await page.keyboard.press('Backspace');
+  await expect(cells.nth(2)).toBeFocused();
+  await expect(cells.nth(2)).toHaveValue('');
+  await page.evaluate(() => {
+    const data = new DataTransfer();
+    data.setData('text/plain', '3 4 5 6');
+    document.activeElement?.dispatchEvent(new ClipboardEvent('paste', { clipboardData: data, bubbles: true, cancelable: true }));
+  });
+  await expect(otp.locator('.hint')).toHaveText('Completed: 123456');
+  await expect(cells.nth(5)).toBeFocused();
+});
+
 test.describe('with motion', () => {
   test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 
