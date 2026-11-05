@@ -21,6 +21,7 @@ export function createLightSemantic({ accent, surface }: TectraPalettes): Tectra
     warn: lightSeverity(SEVERITY_PALETTES.orange, 700, surface),
     danger: lightSeverity(SEVERITY_PALETTES.red, 600, surface),
     help: lightSeverity(SEVERITY_PALETTES.purple, 600, surface),
+    contrast: { base: surface[950], hover: surface[900], active: surface[800], contrast: surface[0], soft: surface[100] },
     surface: {
       ground: surface[100],
       card: surface[0],

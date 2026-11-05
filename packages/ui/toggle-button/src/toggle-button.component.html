@@ -1,0 +1,24 @@
+<button
+  type="button"
+  class="tx-toggle-button__control"
+  [attr.aria-pressed]="checked()"
+  [attr.aria-label]="ariaLabel()"
+  [attr.aria-invalid]="invalid() || null"
+  [attr.tabindex]="tabindex() ?? null"
+  [disabled]="isDisabled()"
+  (click)="toggle($event)"
+  (blur)="onBlur()"
+>
+  <span class="tx-toggle-button__content" [class]="passThrough().content?.class" [style]="passThrough().content?.style">
+    @if (currentIcon(); as icon) {
+      <span class="tx-toggle-button__icon" aria-hidden="true" [class]="passThrough().icon?.class" [style]="passThrough().icon?.style">
+        @if (iconName(); as name) {
+          <tx-icon [name]="name" />
+        } @else {
+          <span [class]="icon"></span>
+        }
+      </span>
+    }
+    <span class="tx-toggle-button__label" [class]="passThrough().label?.class" [style]="passThrough().label?.style">{{ label() }}</span>
+  </span>
+</button>

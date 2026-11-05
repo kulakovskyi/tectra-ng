@@ -13,6 +13,7 @@ import { TxButton } from '@tectra/ui/button';
       <button txButton [severity]="'warn'">Warn</button>
       <button txButton [severity]="'danger'">Danger</button>
       <button txButton [severity]="'help'">Help</button>
+      <button txButton [severity]="'contrast'">Contrast</button>
       <button txButton disabled>Disabled</button>
     </div>
   `,

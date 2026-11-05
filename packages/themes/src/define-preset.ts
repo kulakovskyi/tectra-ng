@@ -1,5 +1,21 @@
+import { TectraDeepPartial } from './types/deep-partial.type';
 import { TectraPreset } from './types/preset.interface';
 
-export function definePreset(base: TectraPreset, overrides: Partial<TectraPreset>): TectraPreset {
-  return { ...base, ...overrides };
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+export function deepMerge<T>(base: T, overrides: TectraDeepPartial<T> | undefined): T {
+  if (!overrides) {
+    return base;
+  }
+  const result: Record<string, unknown> = { ...(base as Record<string, unknown>) };
+  for (const [key, value] of Object.entries(overrides)) {
+    result[key] = isPlainObject(value) && isPlainObject(result[key]) ? deepMerge(result[key], value) : value;
+  }
+  return result as T;
+}
+
+export function definePreset(base: TectraPreset, overrides: TectraDeepPartial<TectraPreset>): TectraPreset {
+  return deepMerge(base, overrides);
 }

@@ -1,0 +1,44 @@
+@if (hasIcon()) {
+  @if (loading()) {
+    <span
+      class="tx-button__icon tx-button__loading-icon"
+      aria-hidden="true"
+      [class]="passThrough().loadingIcon?.class"
+      [style]="passThrough().loadingIcon?.style"
+      [class.tx-button__icon--spin]="!loadingIconTemplate()"
+    >
+      @if (loadingIconTemplate(); as template) {
+        <ng-container [ngTemplateOutlet]="template.templateRef" />
+      } @else if (loadingIconName(); as name) {
+        <tx-icon [name]="name" />
+      } @else {
+        <span [class]="loadingIcon()"></span>
+      }
+    </span>
+  } @else {
+    <span class="tx-button__icon" aria-hidden="true" [class]="passThrough().icon?.class" [style]="passThrough().icon?.style">
+      @if (iconTemplate(); as template) {
+        <ng-container [ngTemplateOutlet]="template.templateRef" />
+      } @else if (iconName(); as name) {
+        <tx-icon [name]="name" />
+      } @else {
+        <span [class]="icon()"></span>
+      }
+    </span>
+  }
+}
+<span class="tx-button__label" [class]="passThrough().label?.class" [style]="passThrough().label?.style">
+  @if (hasLabelText()) {
+    {{ label() }}
+  }
+  <span #content class="tx-button__content"><ng-content /></span>
+</span>
+@if (hasBadge()) {
+  <tx-badge
+    class="tx-button__badge"
+    [value]="badge()"
+    [severity]="badgeSeverity()"
+    [unstyled]="isUnstyled()"
+    [pt]="{ root: passThrough().badge ?? {} }"
+  />
+}

@@ -7,7 +7,7 @@ import { DocComponent } from '../../../../types/doc-component.interface';
   selector: 'docs-theming-tab',
   imports: [DocTable],
   template: `
-    <p class="hint">Each component reads its own variables, which fall back to the theme. Override them on any wrapper:</p>
+    <p class="hint">Every token is a CSS variable. Change it for the whole app in the preset (<code>definePreset</code> → <code>components</code>), for one instance with <code>[dt]</code>, or with CSS on any wrapper:</p>
     <pre class="code"><code>{{ overrideExample() }}</code></pre>
     <docs-table [title]="'Variables'" [columns]="tokenColumns" [rows]="doc().tokens" />
   `,

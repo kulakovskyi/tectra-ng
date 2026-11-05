@@ -1,6 +1,6 @@
 ---
 category: Actions
-examples: severity, outlined, sizes
+examples: severity, label, variants, icons, icon-only, loading, disabled, badge, rounded-raised, plain, fluid, sizes, template, design-tokens, pass-through, unstyled
 ---
 # Button
 

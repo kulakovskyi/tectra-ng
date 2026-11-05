@@ -1,4 +1,4 @@
-import { motion, radius, spacing, typography } from '@tectra/tokens';
+import { SEVERITY_PALETTES, motion, radius, spacing, typography } from '@tectra/tokens';
 import { TectraCssVariable, TectraPreset } from './types/preset.interface';
 
 function kebab(key: string): string {
@@ -6,19 +6,33 @@ function kebab(key: string): string {
 }
 
 export function toCssVariables(tokens: object, prefix = '--tx'): TectraCssVariable[] {
-  return Object.entries(tokens).flatMap(([key, value]) =>
-    typeof value === 'object' && value !== null
-      ? toCssVariables(value, `${prefix}-${kebab(key)}`)
-      : [{ name: `${prefix}-${kebab(key)}`, value: String(value) }],
-  );
+  return Object.entries(tokens).flatMap(([key, value]) => {
+    const name = key === 'root' ? prefix : `${prefix}-${kebab(key)}`;
+    return typeof value === 'object' && value !== null
+      ? toCssVariables(value, name)
+      : [{ name, value: String(value) }];
+  });
+}
+
+export function toStyleObject(tokens: object | undefined, prefix: string): Record<string, string> {
+  return tokens ? Object.fromEntries(toCssVariables(tokens, prefix).map(({ name, value }) => [name, value])) : {};
 }
 
 export function presetToCss(preset: TectraPreset): string {
-  const shared = toCssVariables({ radius, space: spacing, font: typography, motion });
   const block = (variables: TectraCssVariable[]) => variables.map(({ name, value }) => `${name}: ${value};`).join(' ');
+  const shared = toCssVariables({
+    radius,
+    space: spacing,
+    font: typography,
+    motion,
+    primary: preset.palettes.accent,
+    surface: preset.palettes.surface,
+    ...SEVERITY_PALETTES,
+  });
+  const components = Object.entries(preset.components).flatMap(([name, tokens]) => toCssVariables(tokens, `--tx-${kebab(name)}`));
 
   return [
-    `:root { ${block(shared)} ${block(toCssVariables(preset.light))} color-scheme: light; }`,
+    `:root { ${block(shared)} ${block(toCssVariables(preset.light))} ${block(components)} color-scheme: light; }`,
     `:root[data-tx-theme="dark"] { ${block(toCssVariables(preset.dark))} color-scheme: dark; }`,
   ].join('\n');
 }

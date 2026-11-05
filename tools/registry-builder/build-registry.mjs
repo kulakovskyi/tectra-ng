@@ -1,5 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { buildSync } from 'esbuild';
 import hljs from 'highlight.js';
 import { marked } from 'marked';
 
@@ -44,7 +45,8 @@ function parseReadmeTables(readme) {
 }
 
 function readSource(packageDir) {
-  const files = tsFiles(join(packageDir, 'src'));
+  const own = `/${packageDir.split('/').pop()}.`;
+  const files = tsFiles(join(packageDir, 'src')).sort((a, b) => Number(b.includes(own)) - Number(a.includes(own)));
   const source = files.map((file) => read(file)).join('\n');
   const styles = existsSync(join(packageDir, 'src'))
     ? readdirSync(join(packageDir, 'src')).filter((file) => file.endsWith('.scss')).map((file) => read(join(packageDir, 'src', file))).join('\n')
@@ -55,7 +57,11 @@ function readSource(packageDir) {
 
   const members = {};
   for (const m of source.matchAll(/^\s*(\w+)\s*=\s*(input|model)(\.required)?(?:<(.+?)>)?\(([^)]*)\);/gm)) {
-    members[m[1]] = { type: resolveType(m[4] ?? 'unknown'), default: m[3] ? 'required' : m[5] || '—' };
+    const [, field, , required, generic, args] = m;
+    const name = args.match(/alias:\s*'(\w+)'/)?.[1] ?? field;
+    const type = (generic ?? 'unknown').replace(/,\s*unknown$/, '');
+    const fallback = args.split(/,\s*\{/)[0].trim();
+    members[name] = { type: resolveType(type), default: required ? 'required' : fallback || '—' };
   }
   for (const m of source.matchAll(/^\s*(\w+)\s*=\s*output(?:<(.+?)>)?\(\)/gm)) {
     members[m[1]] = { type: `EventEmitter<${m[2] ?? 'void'}>`, default: '—' };
@@ -68,6 +74,23 @@ function readSource(packageDir) {
   const selector = source.match(/selector:\s*'([^']+)'/)?.[1] ?? '';
 
   return { members, tokens, selector };
+}
+
+const themesBundle = buildSync({
+  stdin: { contents: "export { InkPreset, toCssVariables } from '@tectra/themes';", resolveDir: root, loader: 'ts' },
+  bundle: true,
+  platform: 'node',
+  format: 'esm',
+  write: false,
+  tsconfig: join(root, 'tsconfig.base.json'),
+  logLevel: 'error',
+});
+const themes = await import(`data:text/javascript;base64,${Buffer.from(themesBundle.outputFiles[0].text).toString('base64')}`);
+const camel = (name) => name.replace(/-(\w)/g, (_, letter) => letter.toUpperCase());
+
+function presetTokens(name) {
+  const tokens = themes.InkPreset.components[camel(name)];
+  return tokens ? themes.toCssVariables(tokens, `--tx-${name}`) : null;
 }
 
 function buildComponent(name) {
@@ -105,7 +128,7 @@ function buildComponent(name) {
       slots: (tables.slots ?? []).map(([slotName, description]) => ({ name: slotName, description: marked.parseInline(description ?? '') })),
     },
     keyboard: (tables.keyboard ?? []).map(([key, action]) => ({ key, action: marked.parseInline(action ?? '') })),
-    tokens,
+    tokens: presetTokens(name) ?? tokens,
     examples: exampleIds.map((id) => ({
       id,
       title: titleCase(id),

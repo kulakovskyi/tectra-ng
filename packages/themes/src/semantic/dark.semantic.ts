@@ -25,6 +25,7 @@ export function createDarkSemantic({ accent, surface }: TectraPalettes): TectraS
     warn: darkSeverity(SEVERITY_PALETTES.orange, surface),
     danger: darkSeverity(SEVERITY_PALETTES.red, surface),
     help: darkSeverity(SEVERITY_PALETTES.purple, surface),
+    contrast: { base: surface[0], hover: surface[100], active: surface[200], contrast: surface[950], soft: surface[800] },
     surface: {
       ground: surface[950],
       card: surface[900],

@@ -11,15 +11,15 @@ npx nx serve sandbox       # bare playground on http://localhost:4301
 npm run build:packages     # npm packages into dist/packages/*
 ```
 
-Working now: tokens, themes (light / dark, 5 accents), core (config, overlay, forms, a11y, i18n, styles), icons, ui (button, input, select), the docs site. Planned: blocks, visual tests (`e2e/visual`), the component generator, CI.
+Working now: tokens, themes (light / dark, 5 accents), core (config with unstyled + pass-through, overlay, forms, a11y, i18n, styles, ripple, fluid), icons, ui (button with the full PrimeNG feature set + design tokens, button-group, toggle-button, badge, input, select), the docs site. Planned: blocks, visual tests (`e2e/visual`), the component generator, CI.
 
 ## Layout
 
 | Folder | What lives there | Published |
 |---|---|---|
 | `packages/tokens` | palettes (ink surfaces, 5 accents, severities), radius, typography, shadows — plain data | npm `@tectra/tokens` |
-| `packages/themes` | semantic light / dark + `createInkPreset(accent)` (blue, green, purple, cyan, teal) | npm `@tectra/themes` |
-| `packages/core` | behaviour without looks: config (theme), overlay, a11y, forms, i18n, styles | npm `@tectra/core/*` |
+| `packages/themes` | semantic light / dark, component design tokens, `createInkPreset(accent)`, `definePreset` (deep merge) | npm `@tectra/themes` |
+| `packages/core` | behaviour without looks: config (theme, unstyled, pt), overlay, a11y, forms, i18n, styles, ripple, fluid, utils | npm `@tectra/core/*` |
 | `packages/icons` | SVG icons + `<tx-icon>` | npm `@tectra/icons` |
 | `packages/ui` | components, one entry point each | npm `@tectra/ui/<component>` |
 | `packages/blocks` | console-layout, filters-panel, stat-tiles … | npm `@tectra/blocks/<block>` |

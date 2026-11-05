@@ -1,0 +1,20 @@
+:host {
+  display: inline-flex;
+}
+
+:host ::ng-deep > .tx-button:not(:first-child) {
+  margin-left: -1px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+:host ::ng-deep > .tx-button:not(:last-child) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+:host ::ng-deep > .tx-button:hover,
+:host ::ng-deep > .tx-button:focus-visible {
+  position: relative;
+  z-index: 1;
+}

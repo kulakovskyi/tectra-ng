@@ -1,0 +1,42 @@
+:host([data-styled]) {
+  --_background: var(--tx-badge-primary-background);
+  --_color: var(--tx-badge-primary-color);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: var(--tx-badge-min-width);
+  height: var(--tx-badge-height);
+  padding: var(--tx-badge-padding);
+  border-radius: var(--tx-badge-border-radius);
+  background: var(--_background);
+  color: var(--_color);
+  font-family: var(--tx-font-family);
+  font-size: var(--tx-badge-font-size);
+  font-weight: var(--tx-badge-font-weight);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+@each $severity in (secondary, success, info, warn, danger, help, contrast) {
+  :host([data-styled][data-severity='#{$severity}']) {
+    --_background: var(--tx-badge-#{$severity}-background);
+    --_color: var(--tx-badge-#{$severity}-color);
+  }
+}
+
+@each $size, $key in (small: sm, large: lg, xlarge: xl) {
+  :host([data-styled][data-size='#{$size}']) {
+    min-width: var(--tx-badge-#{$key}-min-width);
+    height: var(--tx-badge-#{$key}-height);
+    font-size: var(--tx-badge-#{$key}-font-size);
+  }
+}
+
+:host([data-styled].tx-badge--dot) {
+  width: var(--tx-badge-dot-size);
+  min-width: var(--tx-badge-dot-size);
+  height: var(--tx-badge-dot-size);
+  padding: 0;
+}

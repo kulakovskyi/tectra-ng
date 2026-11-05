@@ -14,6 +14,7 @@ export interface TectraSemanticTokens {
   warn: TectraSeverityTokens;
   danger: TectraSeverityTokens;
   help: TectraSeverityTokens;
+  contrast: TectraSeverityTokens;
   surface: { ground: string; card: string; hover: string; border: string; overlay: string; overlayBorder: string };
   text: { primary: string; hover: string; muted: string; mutedHover: string };
   field: {
