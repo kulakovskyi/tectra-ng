@@ -9,9 +9,13 @@ npm install
 npx nx serve docs          # the site on http://localhost:4300
 npx nx serve sandbox       # bare playground on http://localhost:4301
 npm run build:packages     # npm packages into dist/packages/*
+npm run test               # unit tests (Vitest)
+npm run e2e                # Playwright checks of the docs site
 ```
 
 Working now: tokens, themes (light / dark, 5 accents), core (config with unstyled + pass-through, overlay, forms, a11y, i18n, styles, ripple, fluid), icons, ui (button with the full PrimeNG feature set + design tokens, button-group, toggle-button, badge, input, select), the docs site. Planned: blocks, visual tests (`e2e/visual`), the component generator, CI.
+
+Plan of what moves in next and in which order: [ROADMAP.md](ROADMAP.md).
 
 ## Layout
 

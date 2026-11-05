@@ -5,7 +5,7 @@ import { TxSelect } from '@tectra/ui/select';
 @Component({
   selector: 'select-disabled-example',
   imports: [TxSelect, ReactiveFormsModule],
-  template: `<tx-select [options]="plans" [formControl]="plan" />`,
+  template: `<tx-select [options]="plans" [formControl]="plan" [ariaLabel]="'Plan'" />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class SelectDisabledExample {

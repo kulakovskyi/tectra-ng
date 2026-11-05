@@ -10,6 +10,8 @@ Pick one value from a list. A `ControlValueAccessor`: works with `[formControl]`
 | optionValue | Field of an item written into the form value; empty string = the whole item |
 | placeholder | Text shown while nothing is selected |
 | filter | Shows a search field at the top of the panel |
+| ariaLabel | Accessible name of the field; the placeholder is used when it is empty |
+| ariaLabelledBy | Id of the element that labels the field (e.g. a `<label>`) |
 | size | Height and font size |
 
 ## Outputs

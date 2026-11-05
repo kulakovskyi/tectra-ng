@@ -36,7 +36,7 @@
     <span class="tile__label">Form</span>
     <div class="tile__stack">
       <input txInput placeholder="Full name" />
-      <tx-select [options]="roles" [formControl]="role" />
+      <tx-select [options]="roles" [formControl]="role" [ariaLabel]="'Role'" />
       <tx-toggle-button [onLabel]="'Notifications on'" [offLabel]="'Notifications off'" [onIcon]="'bell'" [offIcon]="'bell-slash'" />
     </div>
   </div>

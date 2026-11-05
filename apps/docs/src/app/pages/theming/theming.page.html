@@ -4,7 +4,7 @@
 
 <div class="card picker">
   <span>Accent</span>
-  <tx-select [options]="accents" [formControl]="accentControl" />
+  <tx-select [options]="accents" [formControl]="accentControl" [ariaLabel]="'Accent'" />
 </div>
 
 <h2>Variables of the {{ mode() }} mode</h2>
@@ -19,4 +19,4 @@
 </div>
 
 <h2>Use an accent in your app</h2>
-<pre class="code"><code>{{ "import { createInkPreset } from '@tectra/themes';\n\nprovideTectra({ preset: createInkPreset('teal') });" }}</code></pre>
+<pre class="code" tabindex="0"><code>{{ "import { createInkPreset } from '@tectra/themes';\n\nprovideTectra({ preset: createInkPreset('teal') });" }}</code></pre>

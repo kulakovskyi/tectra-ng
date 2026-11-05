@@ -3,14 +3,27 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
   "sourceRoot": "packages/ui",
-  "tags": ["pkg:ui"],
+  "tags": [
+    "pkg:ui"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/angular:package",
-      "outputs": ["{workspaceRoot}/dist/packages/ui"],
+      "outputs": [
+        "{workspaceRoot}/dist/packages/ui"
+      ],
       "options": {
         "project": "packages/ui/ng-package.json",
         "tsConfig": "packages/ui/tsconfig.lib.json"
+      }
+    },
+    "test": {
+      "executor": "@angular/build:unit-test",
+      "options": {
+        "buildTarget": "sandbox:build",
+        "tsConfig": "packages/ui/tsconfig.spec.json",
+        "runner": "vitest",
+        "watch": false
       }
     }
   }

@@ -8,6 +8,8 @@
   aria-haspopup="listbox"
   [attr.aria-expanded]="isOpen()"
   [attr.aria-controls]="listboxId"
+  [attr.aria-label]="ariaLabelledBy() ? null : ariaLabel() || placeholder() || null"
+  [attr.aria-labelledby]="ariaLabelledBy() ?? null"
   [attr.aria-activedescendant]="filter() ? null : activeItemId()"
   [disabled]="disabled()"
   (click)="toggle()"

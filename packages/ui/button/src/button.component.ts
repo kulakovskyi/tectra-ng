@@ -52,7 +52,6 @@ import { TxButtonIconPosition, TxButtonPart, TxButtonSeverity, TxButtonSize, TxB
     '[attr.aria-disabled]': '!isNativeButton && isDisabled() ? true : null',
     '[attr.tabindex]': '!isNativeButton && isDisabled() ? -1 : (tabindex() ?? null)',
     '[attr.aria-busy]': 'loading() || null',
-    '(click)': 'onClick($event)',
   },
 })
 export class TxButton {
@@ -125,6 +124,15 @@ export class TxButton {
 
   constructor() {
     const destroyRef = inject(DestroyRef);
+    const host = this.elementRef.nativeElement;
+    const blockClick = (event: Event) => {
+      if (this.isDisabled()) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      }
+    };
+    host.addEventListener('click', blockClick, { capture: true });
+    destroyRef.onDestroy(() => host.removeEventListener('click', blockClick, { capture: true }));
     afterNextRender(() => {
       const content = this.contentElement().nativeElement;
       const update = () => this.hasProjectedLabel.set(!!content.textContent?.trim() || content.children.length > 0);
@@ -133,12 +141,5 @@ export class TxButton {
       observer.observe(content, { childList: true, characterData: true, subtree: true });
       destroyRef.onDestroy(() => observer.disconnect());
     });
-  }
-
-  onClick(event: Event): void {
-    if (this.isDisabled()) {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-    }
   }
 }

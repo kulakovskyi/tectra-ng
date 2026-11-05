@@ -16,7 +16,7 @@ export function createLightSemantic({ accent, surface }: TectraPalettes): Tectra
   return {
     primary: { ...lightSeverity(accent, 600, surface), softText: accent[700] },
     secondary: { base: surface[100], hover: surface[200], active: surface[300], border: surface[200], contrast: surface[800] },
-    success: lightSeverity(SEVERITY_PALETTES.green, 600, surface),
+    success: lightSeverity(SEVERITY_PALETTES.green, 700, surface),
     info: lightSeverity(SEVERITY_PALETTES.sky, 700, surface),
     warn: lightSeverity(SEVERITY_PALETTES.orange, 700, surface),
     danger: lightSeverity(SEVERITY_PALETTES.red, 600, surface),
@@ -30,7 +30,7 @@ export function createLightSemantic({ accent, surface }: TectraPalettes): Tectra
       overlay: surface[0],
       overlayBorder: surface[200],
     },
-    text: { primary: surface[900], hover: surface[950], muted: surface[500], mutedHover: surface[700] },
+    text: { primary: surface[900], hover: surface[950], muted: surface[600], mutedHover: surface[700] },
     field: {
       background: surface[0],
       disabledBackground: surface[100],

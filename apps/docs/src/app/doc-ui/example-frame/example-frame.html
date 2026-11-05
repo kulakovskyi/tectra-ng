@@ -37,9 +37,9 @@
         <ng-container [ngComponentOutlet]="component" />
       }
     </div>
-    <div class="example__code" [class.example__code--open]="isCodeVisible()">
+    <div class="example__code" [class.example__code--open]="isCodeVisible()" [attr.aria-hidden]="isCodeVisible() ? null : true" [attr.inert]="isCodeVisible() ? null : ''">
       <div class="example__code-inner">
-        <pre><code class="hljs" [innerHTML]="example().sourceHtml"></code></pre>
+        <pre tabindex="0" [attr.aria-label]="example().title + ' code'"><code class="hljs" [innerHTML]="example().sourceHtml"></code></pre>
       </div>
     </div>
   </div>

@@ -1,6 +1,12 @@
-# visual + accessibility tests (Playwright)
+# e2e/visual — Playwright checks of the docs site
 
-Opens every example of `apps/docs/src/content/components/*/examples` and:
+```bash
+npx nx e2e visual
+```
 
-- `visual.spec.ts` — takes a screenshot in light / dark × LTR / RTL, compares with `__screenshots__/`
-- `a11y.spec.ts` — runs axe; any violation fails the pull request
+Builds the docs, serves `dist/apps/docs/browser` on port 4310 (`tools/serve-docs.mjs`) and runs:
+
+- `pages.spec.ts` — every page (home, installation, theming, icons, each component) in light and dark: no console errors, cumulative layout shift below 0.02, no serious / critical axe violations inside `main`
+- `interactions.spec.ts` — select panel is opaque and works from the keyboard, example code opens without moving the preview, navigation keeps the heading in place, icon-only buttons are square, theme toggle
+
+Locally it uses the installed Chrome (`channel: 'chrome'`); in CI the Playwright Chromium.

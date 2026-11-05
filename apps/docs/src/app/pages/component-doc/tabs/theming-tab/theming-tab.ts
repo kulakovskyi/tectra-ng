@@ -8,7 +8,7 @@ import { DocComponent } from '../../../../types/doc-component.interface';
   imports: [DocTable],
   template: `
     <p class="hint">Change in the preset, per instance with <code>[dt]</code>, or with CSS:</p>
-    <pre class="code"><code>{{ overrideExample() }}</code></pre>
+    <pre class="code" tabindex="0"><code>{{ overrideExample() }}</code></pre>
     <docs-table [title]="'Variables'" [columns]="tokenColumns" [rows]="doc().tokens" />
   `,
   styleUrl: '../../../page.scss',

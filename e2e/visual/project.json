@@ -1,0 +1,15 @@
+{
+  "name": "visual",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "e2e/visual",
+  "tags": ["type:e2e"],
+  "implicitDependencies": ["docs"],
+  "targets": {
+    "e2e": {
+      "executor": "nx:run-commands",
+      "dependsOn": [{ "projects": ["docs"], "target": "build" }],
+      "options": { "command": "npx playwright test -c e2e/visual/playwright.config.ts" }
+    }
+  }
+}

@@ -20,6 +20,13 @@
         "^production"
       ],
       "cache": true
+    },
+    "test": {
+      "cache": true,
+      "inputs": [
+        "default",
+        "^production"
+      ]
     }
   },
   "analytics": false

@@ -1,5 +1,6 @@
 # Contributing
 
-1. `nx g tools:component <name>` for a new component.
-2. Every change to a package adds a changeset: `pnpm changeset`.
-3. A pull request is green only when unit tests, visual screenshots and axe pass.
+1. Pick the next item in [ROADMAP.md](ROADMAP.md) and follow its definition of done.
+2. Component in `packages/ui/<name>`, tokens in `packages/themes/src/components/<name>.tokens.ts`, README with Inputs / Outputs / Slots / Keyboard, docs content in `apps/docs/src/content/components/<name>`.
+3. A `*.spec.ts` next to every component, directive and service: `npm run test`.
+4. `npm run e2e` must stay green — no console errors, no layout shift, no serious axe violations in light and dark.

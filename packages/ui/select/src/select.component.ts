@@ -40,6 +40,8 @@ export class TxSelect extends TxFormControlBase<unknown> {
   optionLabel = input<string>('label');
   optionValue = input<string>('value');
   placeholder = input<string>('');
+  ariaLabel = input<string | undefined>(undefined);
+  ariaLabelledBy = input<string | undefined>(undefined);
   filter = input<boolean>(false);
   size = input<TxSelectSize>('medium');
 

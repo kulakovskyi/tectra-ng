@@ -3,14 +3,27 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
   "sourceRoot": "packages/icons",
-  "tags": ["pkg:icons"],
+  "tags": [
+    "pkg:icons"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/angular:package",
-      "outputs": ["{workspaceRoot}/dist/packages/icons"],
+      "outputs": [
+        "{workspaceRoot}/dist/packages/icons"
+      ],
       "options": {
         "project": "packages/icons/ng-package.json",
         "tsConfig": "packages/icons/tsconfig.lib.json"
+      }
+    },
+    "test": {
+      "executor": "@angular/build:unit-test",
+      "options": {
+        "buildTarget": "sandbox:build",
+        "tsConfig": "packages/icons/tsconfig.spec.json",
+        "runner": "vitest",
+        "watch": false
       }
     }
   }
