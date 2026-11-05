@@ -17,7 +17,7 @@ import { progressBarTokens, progressSpinnerTokens } from './progress.tokens';
 import { radioButtonTokens } from './radio-button.tokens';
 import { ratingTokens } from './rating.tokens';
 import { selectTokens } from './select.tokens';
-import { listboxTokens } from './selection.tokens';
+import { chipsInputTokens, listboxTokens } from './selection.tokens';
 import { skeletonTokens } from './skeleton.tokens';
 import { sliderTokens } from './slider.tokens';
 import { chipTokens, tagTokens } from './tag.tokens';
@@ -38,6 +38,7 @@ export const COMPONENT_TOKENS = {
   button: buttonTokens,
   select: selectTokens,
   listbox: listboxTokens,
+  chipsInput: chipsInputTokens,
   badge: badgeTokens,
   toggleButton: toggleButtonTokens,
   message: messageTokens,

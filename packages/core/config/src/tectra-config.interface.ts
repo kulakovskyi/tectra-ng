@@ -41,6 +41,8 @@ export interface TxTranslations {
   moreItems: string;
   selectedItems: string;
   showOptions: string;
+  removeItem: string;
+  itemsLimit: string;
 }
 
 export type TxValidationMessage = string | ((error: unknown) => string);

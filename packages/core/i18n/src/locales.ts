@@ -42,6 +42,8 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     moreItems: '{count} more',
     selectedItems: '{count} selected',
     showOptions: 'Show options',
+    removeItem: 'Remove {item}',
+    itemsLimit: 'Up to {max}',
   },
 };
 
@@ -87,6 +89,8 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     moreItems: 'ще {count}',
     selectedItems: 'Вибрано: {count}',
     showOptions: 'Показати варіанти',
+    removeItem: 'Видалити {item}',
+    itemsLimit: 'Не більше {max}',
   },
 };
 

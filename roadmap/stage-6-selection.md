@@ -52,11 +52,12 @@ PrimeNG: AutoComplete (`suggestions`, `(completeMethod)`, `delay`, `minLength`, 
 - [x] Groups, virtual scroll, lazy, templates; float / ifta label and input group know it
 - [x] Docs + tests; e2e: typing + keys, forced selection on Tab, chips, axe on the open panel in light and dark
 
-## 6.5 Chips input — `ui/chips-input`
+## 6.5 Chips input — `ui/chips-input` ✅
 
-First app: keywords input 3 (`max`, `maxLength`, `[(keywords)]`), domains input 5 (paste splits by separators / lines).
+PrimeNG: InputChips (`separator`, `max`, `maxLength`, `allowDuplicate`, `addOnBlur`, `addOnTab`, item template). First app: keywords input 3 (`max`, `maxLength`, `[(keywords)]`), domains input 5 (paste splits by separators / lines).
 
-- [ ] `<tx-chips-input>`: Enter / separator / paste adds, Backspace removes the last, `max`, `maxLength`, duplicates off, `separator`, `addOnBlur`, form control
+- [x] `<tx-chips-input>`: Enter / separator (text or pattern) adds, paste splits by lines and the separator, Backspace removes the last, chips are `tx-chip` with a translated "Remove {item}" button (Delete / Backspace), `max` (read-only when full), `maxLength`, duplicates off (`allowDuplicate`, `caseSensitive`), `itemPattern`, `addOnBlur`, `showClear`, `added` / `removed` / `rejected`, item template, sizes, filled, invalid / readonly / disabled, form control; `chipsInput` tokens; float label and `tx-field` know it
+- [x] Docs + tests; e2e: typing, keyboard removal, field height with chips, paste
 
 ## 6.6 Country + country select — `ui/country`, `ui/country-select`
 

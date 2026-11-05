@@ -15,3 +15,16 @@ export const listboxTokens = {
 };
 
 export type TectraListboxTokens = typeof listboxTokens;
+
+export const chipsInputTokens = {
+  root: {
+    gap: '4px',
+    chipHeight: '24px',
+    chipFontSize: tokenRef('font-size-sm'),
+    chipPaddingX: '8px',
+    chipBorderRadius: tokenRef('radius-sm'),
+    inputMinWidth: '80px',
+  },
+};
+
+export type TectraChipsInputTokens = typeof chipsInputTokens;

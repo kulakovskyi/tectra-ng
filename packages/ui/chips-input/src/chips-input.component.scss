@@ -1,0 +1,104 @@
+@use '../../styles/form-field' as field;
+@use '../../styles/input-action' as action;
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.tx-chips-input__box {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  cursor: text;
+}
+
+.tx-chips-input__list {
+  display: contents;
+}
+
+.tx-chips-input__input {
+  flex: 1 1 var(--tx-chips-input-input-min-width, 80px);
+  min-width: var(--tx-chips-input-input-min-width, 80px);
+}
+
+:host(.tx-chips-input--disabled) .tx-chips-input__box {
+  cursor: not-allowed;
+}
+
+:host([data-styled]) {
+  font-family: var(--tx-font-family);
+
+  .tx-chips-input__box {
+    @include field.box;
+
+    gap: var(--tx-chips-input-gap);
+    width: 100%;
+  }
+
+  &[data-variant='filled'] .tx-chips-input__box {
+    @include field.filled;
+  }
+
+  &:not(.tx-chips-input--disabled, .tx-chips-input--readonly) .tx-chips-input__box:hover {
+    @include field.hover;
+  }
+
+  .tx-chips-input__box:focus-within {
+    @include field.focus;
+  }
+
+  &.tx-chips-input--readonly .tx-chips-input__box {
+    @include field.readonly;
+  }
+
+  &.tx-chips-input--invalid .tx-chips-input__box {
+    @include field.invalid;
+  }
+
+  &.tx-chips-input--invalid .tx-chips-input__box:focus-within {
+    @include field.invalid-focus;
+  }
+
+  &.tx-chips-input--disabled .tx-chips-input__box {
+    @include field.disabled;
+  }
+
+  &[data-size='small'] .tx-chips-input__box {
+    @include field.size(sm);
+  }
+
+  &[data-size='large'] .tx-chips-input__box {
+    @include field.size(lg);
+  }
+
+  .tx-chips-input__chip {
+    --tx-chip-height: var(--tx-chips-input-chip-height);
+    --tx-chip-font-size: var(--tx-chips-input-chip-font-size);
+    --tx-chip-padding-x: var(--tx-chips-input-chip-padding-x);
+    --tx-chip-border-radius: var(--tx-chips-input-chip-border-radius);
+    --tx-chip-remove-size: 16px;
+
+    margin-block: calc((1lh - var(--tx-chips-input-chip-height)) / 2);
+  }
+
+  .tx-chips-input__input {
+    padding: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+
+    &::placeholder {
+      @include field.placeholder;
+    }
+  }
+
+  .tx-chips-input__clear {
+    @include action.button;
+
+    margin-block: calc((1lh - 24px) / 2);
+    margin-inline-start: auto;
+  }
+}
