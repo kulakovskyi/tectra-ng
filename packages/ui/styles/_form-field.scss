@@ -1,0 +1,69 @@
+@mixin box {
+  box-sizing: border-box;
+  padding: var(--tx-form-field-padding-y) var(--tx-form-field-padding-x);
+  border: 1px solid var(--tx-form-field-border-color);
+  border-radius: var(--tx-form-field-border-radius);
+  outline: none;
+  background: var(--tx-form-field-background);
+  box-shadow: var(--tx-form-field-shadow);
+  color: var(--tx-form-field-color);
+  font-family: var(--tx-font-family);
+  font-size: var(--tx-form-field-font-size);
+  line-height: var(--tx-form-field-line-height);
+  transition:
+    background-color var(--tx-form-field-transition-duration),
+    border-color var(--tx-form-field-transition-duration),
+    box-shadow var(--tx-form-field-transition-duration);
+}
+
+@mixin hover {
+  border-color: var(--tx-form-field-hover-border-color);
+}
+
+@mixin focus {
+  border-color: var(--tx-form-field-focus-border-color);
+  box-shadow: var(--tx-form-field-focus-ring-shadow), var(--tx-form-field-shadow);
+}
+
+@mixin filled {
+  background: var(--tx-form-field-filled-background);
+}
+
+@mixin filled-hover {
+  background: var(--tx-form-field-filled-hover-background);
+}
+
+@mixin filled-focus {
+  background: var(--tx-form-field-filled-focus-background);
+}
+
+@mixin invalid {
+  border-color: var(--tx-form-field-invalid-border-color);
+}
+
+@mixin invalid-focus {
+  border-color: var(--tx-form-field-invalid-border-color);
+  box-shadow: var(--tx-form-field-invalid-focus-ring-shadow), var(--tx-form-field-shadow);
+}
+
+@mixin readonly {
+  background: var(--tx-form-field-readonly-background);
+  cursor: default;
+}
+
+@mixin disabled {
+  background: var(--tx-form-field-disabled-background);
+  box-shadow: none;
+  color: var(--tx-form-field-disabled-color);
+  cursor: not-allowed;
+}
+
+@mixin placeholder {
+  color: var(--tx-form-field-placeholder-color);
+}
+
+@mixin size($key) {
+  padding: var(--tx-form-field-#{$key}-padding-y) var(--tx-form-field-#{$key}-padding-x);
+  font-size: var(--tx-form-field-#{$key}-font-size);
+  line-height: var(--tx-form-field-#{$key}-line-height);
+}

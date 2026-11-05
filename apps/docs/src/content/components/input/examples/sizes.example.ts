@@ -6,9 +6,9 @@ import { TxInput } from '@tectra/ui/input';
   imports: [TxInput],
   template: `
     <div class="stack">
-      <input txInput [size]="'small'" placeholder="Small" />
-      <input txInput placeholder="Medium" />
-      <input txInput [size]="'large'" placeholder="Large" />
+      <input txInput [size]="'small'" placeholder="Small" aria-label="Small" />
+      <input txInput placeholder="Medium" aria-label="Medium" />
+      <input txInput [size]="'large'" placeholder="Large" aria-label="Large" />
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

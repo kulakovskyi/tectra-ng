@@ -62,7 +62,7 @@ Detailed checklist per component: [roadmap/stage-3-forms.md](roadmap/stage-3-for
 
 | tectra | PrimeNG equivalent | links-cms lib (usage) | Status |
 |---|---|---|---|
-| form-field foundation — shared tokens, `filled` variant, focus / invalid / readonly states | BaseInput | — | ⬜ |
+| form-field foundation — shared tokens, `filled` variant, focus / invalid / readonly states, invalid from the form control | BaseInput | — | ✅ |
 | `ui/input` — icon field, input group, prefix / suffix, clear, copy, key filter (`noSpaces`, `onlyLatin`, `positive`), sizes, `fluid` | InputText, IconField, InputIcon, InputGroup, KeyFilter | `input` (239) | 🟡 |
 | `ui/label` | FloatLabel / IftaLabel | `label` (353) | ⬜ |
 | `ui/message` (field part) — hint, error from the control, success | Message | `validation-message` (18) | ⬜ |

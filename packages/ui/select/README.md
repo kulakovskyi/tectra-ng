@@ -12,7 +12,10 @@ Pick one value from a list. A `ControlValueAccessor`: works with `[formControl]`
 | filter | Shows a search field at the top of the panel |
 | ariaLabel | Accessible name of the field; the placeholder is used when it is empty |
 | ariaLabelledBy | Id of the element that labels the field (e.g. a `<label>`) |
-| size | Height and font size |
+| size | `small`, `medium`, `large` |
+| variant | `outlined` (border) or `filled` (tinted background) |
+| invalid | Red border and `aria-invalid`. Without it the select follows its form control: invalid once touched or changed |
+| readonly | Shows the value, does not open |
 
 ## Outputs
 | Name | Description |

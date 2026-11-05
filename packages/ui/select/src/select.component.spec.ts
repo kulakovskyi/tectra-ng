@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TxSelect } from './select.component';
 
 @Component({
   imports: [TxSelect, ReactiveFormsModule],
-  template: `<tx-select [options]="options" [formControl]="control" [placeholder]="'City'" [filter]="filter()" [optionValue]="optionValue()" (closed)="closed = closed + 1" />`,
+  template: `<tx-select [options]="options" [formControl]="control" [placeholder]="'City'" [filter]="filter()" [optionValue]="optionValue()" [variant]="'filled'" [readonly]="readonly()" (closed)="closed = closed + 1" />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class Host {
@@ -17,6 +17,7 @@ class Host {
   control = new FormControl<unknown>(null);
   readonly filter = signal(false);
   readonly optionValue = signal('value');
+  readonly readonly = signal(false);
   closed = 0;
 }
 
@@ -90,6 +91,28 @@ describe('TxSelect', () => {
     fixture.detectChanges();
     options()[0].click();
     expect(fixture.componentInstance.control.value).toEqual({ label: 'Kyiv', value: 'kyiv' });
+  });
+
+  it('does not open when readonly and shows the variant', () => {
+    fixture.componentRef.instance.readonly.set(true);
+    fixture.detectChanges();
+    trigger().click();
+    fixture.detectChanges();
+    expect(options()).toHaveLength(0);
+    expect(trigger().getAttribute('aria-readonly')).toBe('true');
+    expect((fixture.nativeElement.querySelector('tx-select') as HTMLElement).getAttribute('data-variant')).toBe('filled');
+  });
+
+  it('turns invalid when a required control is touched without a value', async () => {
+    fixture.componentInstance.control.setValidators(Validators.required);
+    fixture.componentInstance.control.updateValueAndValidity();
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    trigger().click();
+    fixture.detectChanges();
+    key(trigger(), 'Escape');
+    await fixture.whenStable();
+    expect(trigger().getAttribute('aria-invalid')).toBe('true');
   });
 
   it('follows the disabled state of the form control', () => {

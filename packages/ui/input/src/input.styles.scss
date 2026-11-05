@@ -1,64 +1,64 @@
-.tx-input {
-  --tx-input-background: var(--tx-field-background);
-  --tx-input-border-color: var(--tx-field-border);
-  --tx-input-hover-border-color: var(--tx-field-hover-border);
-  --tx-input-focus-border-color: var(--tx-primary-base);
-  --tx-input-invalid-border-color: var(--tx-danger-base);
+@use '../../styles/form-field' as field;
 
-  box-sizing: border-box;
+.tx-input {
+  @include field.box;
+
   width: 100%;
-  height: 37px;
-  padding: 0 var(--tx-space-3);
-  border: 1px solid var(--tx-input-border-color);
-  border-radius: var(--tx-radius-md);
-  background: var(--tx-input-background);
-  box-shadow: var(--tx-shadow-field);
-  color: var(--tx-field-color);
-  font: var(--tx-font-size-md) var(--tx-font-family);
-  transition: border-color var(--tx-motion-duration);
 
   &::placeholder {
-    color: var(--tx-field-placeholder);
+    @include field.placeholder;
   }
 
-  &:hover:not(:disabled) {
-    border-color: var(--tx-input-hover-border-color);
+  &[data-variant='filled'] {
+    @include field.filled;
   }
 
-  &:focus,
-  &:focus:hover {
-    outline: none;
-    border-color: var(--tx-input-focus-border-color);
+  &:enabled:not([readonly]):hover {
+    @include field.hover;
+
+    &[data-variant='filled'] {
+      @include field.filled-hover;
+    }
+  }
+
+  &:enabled:not([readonly]):focus {
+    @include field.focus;
+
+    &[data-variant='filled'] {
+      @include field.filled-focus;
+    }
+  }
+
+  &[readonly] {
+    @include field.readonly;
+  }
+
+  &.tx-input--invalid {
+    @include field.invalid;
+
+    &::placeholder {
+      color: var(--tx-form-field-invalid-placeholder-color);
+    }
+
+    &:focus {
+      @include field.invalid-focus;
+    }
   }
 
   &:disabled {
-    background: var(--tx-field-disabled-background);
-    color: var(--tx-text-muted);
-    cursor: not-allowed;
+    @include field.disabled;
+  }
+
+  &[data-size='small'] {
+    @include field.size(sm);
+  }
+
+  &[data-size='large'] {
+    @include field.size(lg);
   }
 }
 
 textarea.tx-input {
-  height: auto;
   min-height: 80px;
-  padding: var(--tx-space-2) var(--tx-space-3);
   resize: vertical;
-}
-
-.tx-input--invalid,
-.tx-input--invalid:hover:not(:disabled),
-.tx-input--invalid:focus {
-  border-color: var(--tx-input-invalid-border-color);
-}
-
-.tx-input[data-size='small'] {
-  height: 30px;
-  padding: 0 var(--tx-space-2);
-  font-size: var(--tx-font-size-sm);
-}
-
-.tx-input[data-size='large'] {
-  height: 44px;
-  padding: 0 var(--tx-space-4);
-  font-size: var(--tx-font-size-lg);
 }

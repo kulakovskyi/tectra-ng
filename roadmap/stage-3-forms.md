@@ -10,16 +10,18 @@ Sources: PrimeNG 22 component APIs (`primeng/types/*.d.ts`) and the links-cms wr
 
 ---
 
-## 3.0 Form-field foundation
+## 3.0 Form-field foundation ✅
 
 Shared tokens and behaviour so every field looks and behaves the same.
 
-- [ ] `formField` design tokens: background, filled background, disabled background, border / hover / focus / invalid border, text, placeholder, icon colour, radius, shadow, padding X / Y and font size for sm / md / lg, transition
-- [ ] `variant="filled"` styling for every field
-- [ ] Focus ring the same on all fields (border + ring token)
-- [ ] Invalid state: `invalid` input, `aria-invalid`, red border, works from `control.invalid && control.touched` in the wrapper
-- [ ] `readonly` look (no hover border, default cursor)
-- [ ] Move `ui/input` and `ui/select` onto these tokens
+- [x] `formField` design tokens: background, filled background (+ hover, focus), disabled and readonly background, border / hover / focus / invalid border, text, disabled text, placeholder (+ invalid), icon colour, radius, shadow, padding X / Y, font size and line height for sm / md / lg, transition — `packages/themes/src/components/form-field.tokens.ts`
+- [x] `variant="filled"` styling (input, select)
+- [x] Focus the same on all fields: border token + `focusRing.shadow` / `invalidFocusRing.shadow` tokens (none by default, like links-cms)
+- [x] Invalid state: `invalid` input, `aria-invalid`, red border and placeholder; without the input the field follows its form control (`injectFieldInvalid`: invalid once touched or dirty)
+- [x] `readonly` look (no hover border, default cursor, own background); select does not open
+- [x] `ui/input` and `ui/select` moved onto these tokens through shared SCSS mixins (`packages/ui/styles/_form-field.scss`); select panel got its own `select` tokens (overlay, list, option, filter, empty)
+- [x] Docs: input variants / states / invalid, select variants / invalid; Theming tab shows `formField` (+ `select`) tokens
+- [x] Tests: `injectFieldInvalid`, input variant / invalid from control, select readonly / variant / invalid; e2e: filled differs from outlined, invalid border after blur equals the danger token
 
 ## 3.1 Input — `ui/input` 🟡
 

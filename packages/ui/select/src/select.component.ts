@@ -2,6 +2,7 @@ import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedOverlayPositionChange, 
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
+  booleanAttribute,
   Component,
   ElementRef,
   Injector,
@@ -16,12 +17,13 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TxTypeahead, nextListIndex, uniqueId } from '@tectra/core/a11y';
-import { TxFormControlBase } from '@tectra/core/forms';
+import { TxFormControlBase, injectFieldInvalid } from '@tectra/core/forms';
 import { injectTranslations } from '@tectra/core/i18n';
 import { TxPlacement, placementFromPosition, txAnimateEnter, txAnimateLeave, txPositions } from '@tectra/core/overlay';
 import { TxIcon } from '@tectra/icons';
 import { TxSelectOptionTemplate } from './select-option-template.directive';
-import { TxSelectItem, TxSelectSize } from './select.types';
+import { TxFieldVariant, TxSelectItem, TxSelectSize } from './select.types';
+import { optionalBoolean } from '@tectra/core/utils';
 
 @Component({
   selector: 'tx-select',
@@ -35,6 +37,9 @@ import { TxSelectItem, TxSelectSize } from './select.types';
     '[attr.data-size]': 'size()',
     '[class.tx-select--open]': 'isOpen()',
     '[class.tx-select--disabled]': 'disabled()',
+    '[class.tx-select--invalid]': 'isInvalid()',
+    '[class.tx-select--readonly]': 'readonly()',
+    '[attr.data-variant]': 'variant()',
   },
 })
 export class TxSelect extends TxFormControlBase<unknown> {
@@ -46,6 +51,9 @@ export class TxSelect extends TxFormControlBase<unknown> {
   readonly ariaLabelledBy = input<string | undefined>(undefined);
   readonly filter = input<boolean>(false);
   readonly size = input<TxSelectSize>('medium');
+  readonly variant = input<TxFieldVariant>('outlined');
+  readonly invalid = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
+  readonly readonly = input<boolean, unknown>(false, { transform: booleanAttribute });
 
   opened = output<void>();
   closed = output<void>();
@@ -60,6 +68,7 @@ export class TxSelect extends TxFormControlBase<unknown> {
   private typeahead = new TxTypeahead();
 
   readonly translations = injectTranslations();
+  readonly isInvalid = injectFieldInvalid(this.invalid);
   readonly positions = txPositions('bottom-start', 4);
   readonly scrollStrategy = createRepositionScrollStrategy(this.injector);
   readonly listboxId = uniqueId('tx-select-listbox');
@@ -92,7 +101,7 @@ export class TxSelect extends TxFormControlBase<unknown> {
   readonly activeItemId = computed(() => (this.isOpen() ? this.visibleItems()[this.activeIndex()]?.id ?? null : null));
 
   open(): void {
-    if (this.disabled() || this.isOpen()) {
+    if (this.disabled() || this.readonly() || this.isOpen()) {
       return;
     }
     this.panelWidth.set(this.trigger().nativeElement.offsetWidth);
@@ -163,6 +172,9 @@ export class TxSelect extends TxFormControlBase<unknown> {
   }
 
   onKeydown(event: KeyboardEvent): void {
+    if (this.readonly()) {
+      return;
+    }
     const target = event.target as HTMLElement;
     const fromFilter = target.classList.contains('tx-select__filter-input');
     if (event.key === 'Escape') {

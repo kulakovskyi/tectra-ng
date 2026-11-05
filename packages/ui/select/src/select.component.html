@@ -6,6 +6,8 @@
   role="combobox"
   class="tx-select__trigger"
   aria-haspopup="listbox"
+  [attr.aria-invalid]="isInvalid() || null"
+  [attr.aria-readonly]="readonly() || null"
   [attr.aria-expanded]="isOpen()"
   [attr.aria-controls]="listboxId"
   [attr.aria-label]="ariaLabelledBy() ? null : ariaLabel() || placeholder() || null"

@@ -6,15 +6,13 @@ import { TxInput } from '@tectra/ui/input';
   selector: 'input-invalid-example',
   imports: [TxInput, ReactiveFormsModule],
   template: `
-    <input
-      txInput
-      placeholder="Email (required)"
-      [formControl]="email"
-      [invalid]="email.invalid && email.touched"
-    />
+    <div class="stack">
+      <input txInput placeholder="Email — leave empty and click outside" aria-label="Email" [formControl]="email" />
+      <input txInput [invalid]="true" value="Forced invalid" aria-label="Forced invalid" />
+    </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class InputInvalidExample {
-  email = new FormControl('', [Validators.required, Validators.email]);
+  readonly email = new FormControl('', [Validators.required, Validators.email]);
 }

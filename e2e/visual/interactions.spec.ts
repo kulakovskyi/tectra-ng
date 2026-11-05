@@ -139,3 +139,27 @@ test('API tab shows a type and a default for every input', async ({ page }) => {
     expect(types.filter((type) => type.trim() === '—'), `${name}: inputs without a type`).toEqual([]);
   }
 });
+
+test('fields share the form-field look: filled and invalid', async ({ page }) => {
+  await page.goto('/components/input');
+  const outlined = page.getByRole('textbox', { name: 'Outlined', exact: true });
+  const filled = page.getByRole('textbox', { name: 'Filled', exact: true });
+  const background = (locator: typeof outlined) => locator.evaluate((element) => getComputedStyle(element).backgroundColor);
+  expect(await background(filled)).not.toBe(await background(outlined));
+
+  const email = page.getByRole('textbox', { name: 'Email', exact: true });
+  await expect(email).not.toHaveAttribute('aria-invalid');
+  await email.focus();
+  await email.blur();
+  await expect(email).toHaveAttribute('aria-invalid', 'true');
+  const danger = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--tx-danger-base').trim());
+  const probe = await page.evaluate((color) => {
+    const element = document.createElement('span');
+    element.style.color = color;
+    document.body.appendChild(element);
+    const value = getComputedStyle(element).color;
+    element.remove();
+    return value;
+  }, danger);
+  await expect.poll(() => email.evaluate((element) => getComputedStyle(element).borderTopColor)).toBe(probe);
+});

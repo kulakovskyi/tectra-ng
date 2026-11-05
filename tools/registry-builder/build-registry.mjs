@@ -88,9 +88,10 @@ const themesBundle = buildSync({
 const themes = await import(`data:text/javascript;base64,${Buffer.from(themesBundle.outputFiles[0].text).toString('base64')}`);
 const camel = (name) => name.replace(/-(\w)/g, (_, letter) => letter.toUpperCase());
 
-function presetTokens(name) {
-  const tokens = themes.InkPreset.components[camel(name)];
-  return tokens ? themes.toCssVariables(tokens, `--tx-${name}`) : null;
+function presetTokens(name, keys) {
+  const kebab = (key) => key.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
+  const found = (keys ?? [camel(name)]).filter((key) => themes.InkPreset.components[key]);
+  return found.length ? found.flatMap((key) => themes.toCssVariables(themes.InkPreset.components[key], `--tx-${kebab(key)}`)) : null;
 }
 
 const coreMembers = readdirSync(join(root, 'packages/core'), { withFileTypes: true })
@@ -133,7 +134,7 @@ function buildComponent(name) {
       slots: (tables.slots ?? []).map(([slotName, description]) => ({ name: slotName, description: marked.parseInline(description ?? '') })),
     },
     keyboard: (tables.keyboard ?? []).map(([key, action]) => ({ key, action: marked.parseInline(action ?? '') })),
-    tokens: presetTokens(name) ?? tokens,
+    tokens: presetTokens(name, meta.tokens?.split(',').map((key) => key.trim())) ?? tokens,
     examples: exampleIds.map((id) => ({
       id,
       title: titleCase(id),

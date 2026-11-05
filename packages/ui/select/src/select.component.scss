@@ -1,59 +1,69 @@
-:host {
-  --tx-select-background: var(--tx-field-background);
-  --tx-select-border-color: var(--tx-field-border);
-  --tx-select-hover-border-color: var(--tx-field-hover-border);
-  --tx-select-focus-border-color: var(--tx-primary-base);
+@use '../../styles/form-field' as field;
 
+:host {
   display: block;
   width: 100%;
-  font: var(--tx-font-size-md) var(--tx-font-family);
+  font-family: var(--tx-font-family);
 }
 
 .tx-select__trigger {
+  @include field.box;
+
   display: flex;
   align-items: center;
   gap: var(--tx-space-2);
-  box-sizing: border-box;
   width: 100%;
-  height: 37px;
-  padding: 0 var(--tx-space-3);
-  border: 1px solid var(--tx-select-border-color);
-  border-radius: var(--tx-radius-md);
-  background: var(--tx-select-background);
-  box-shadow: var(--tx-shadow-field);
-  color: var(--tx-field-color);
-  font: inherit;
   text-align: left;
   cursor: pointer;
-  transition: border-color var(--tx-motion-duration);
 
-  &:hover:not(:disabled) {
-    border-color: var(--tx-select-hover-border-color);
+  :host([data-variant='filled']) & {
+    @include field.filled;
+  }
+
+  &:enabled:hover {
+    @include field.hover;
+
+    :host([data-variant='filled']) & {
+      @include field.filled-hover;
+    }
   }
 
   &:focus-visible,
   :host(.tx-select--open) & {
-    outline: none;
-    border-color: var(--tx-select-focus-border-color);
+    @include field.focus;
+
+    :host([data-variant='filled']) & {
+      @include field.filled-focus;
+    }
+  }
+
+  :host(.tx-select--readonly) &,
+  :host(.tx-select--readonly) &:hover {
+    @include field.readonly;
+
+    border-color: var(--tx-form-field-border-color);
+  }
+
+  :host(.tx-select--invalid) & {
+    @include field.invalid;
+  }
+
+  :host(.tx-select--invalid) &:focus-visible,
+  :host(.tx-select--invalid.tx-select--open) & {
+    @include field.invalid-focus;
   }
 
   &:disabled {
-    background: var(--tx-field-disabled-background);
-    color: var(--tx-text-muted);
-    cursor: not-allowed;
+    @include field.disabled;
   }
 }
 
 :host([data-size='small']) .tx-select__trigger {
-  height: 30px;
-  padding: 0 var(--tx-space-2);
-  font-size: var(--tx-font-size-sm);
+  @include field.size(sm);
 }
 
 :host([data-size='large']) .tx-select__trigger {
-  height: 44px;
-  padding: 0 var(--tx-space-4);
-  font-size: var(--tx-font-size-lg);
+  @include field.size(lg);
 }
 
 .tx-select__value {
@@ -65,12 +75,16 @@
 }
 
 .tx-select__value--placeholder {
-  color: var(--tx-field-placeholder);
+  @include field.placeholder;
+
+  :host(.tx-select--invalid) & {
+    color: var(--tx-form-field-invalid-placeholder-color);
+  }
 }
 
 .tx-select__chevron {
-  color: var(--tx-field-icon);
-  transition: transform var(--tx-motion-duration);
+  color: var(--tx-select-dropdown-color);
+  transition: transform var(--tx-form-field-transition-duration);
 
   :host(.tx-select--open) & {
     transform: rotate(180deg);
@@ -78,31 +92,25 @@
 }
 
 .tx-select__panel {
-  --tx-select-panel-background: var(--tx-surface-overlay);
-  --tx-select-panel-border-color: var(--tx-surface-overlay-border);
-  --tx-select-panel-shadow: var(--tx-shadow-overlay);
-  --tx-select-option-focus-background: var(--tx-list-focus-background);
-  --tx-select-option-selected-background: var(--tx-highlight-background);
-  --tx-select-option-selected-color: var(--tx-highlight-color);
-
   box-sizing: border-box;
   width: 100%;
   overflow: hidden;
-  border: 1px solid var(--tx-select-panel-border-color);
-  border-radius: var(--tx-radius-lg);
-  background: var(--tx-select-panel-background);
-  box-shadow: var(--tx-select-panel-shadow);
-  color: var(--tx-text-primary);
-  font: var(--tx-font-size-md) var(--tx-font-family);
+  border: 1px solid var(--tx-select-overlay-border-color);
+  border-radius: var(--tx-select-overlay-border-radius);
+  background: var(--tx-select-overlay-background);
+  box-shadow: var(--tx-select-overlay-shadow);
+  color: var(--tx-select-option-color);
+  font-family: var(--tx-font-family);
+  font-size: var(--tx-form-field-font-size);
 }
 
 .tx-select__filter {
   display: flex;
   align-items: center;
   gap: var(--tx-space-2);
-  padding: var(--tx-space-2) var(--tx-space-3);
-  border-bottom: 1px solid var(--tx-select-panel-border-color);
-  color: var(--tx-field-icon);
+  padding: var(--tx-select-filter-padding);
+  border-bottom: 1px solid var(--tx-select-filter-border-color);
+  color: var(--tx-form-field-icon-color);
 }
 
 .tx-select__filter-input {
@@ -110,17 +118,20 @@
   border: none;
   outline: none;
   background: transparent;
-  color: var(--tx-field-color);
+  color: var(--tx-form-field-color);
   font: inherit;
 
   &::placeholder {
-    color: var(--tx-field-placeholder);
+    @include field.placeholder;
   }
 }
 
 .tx-select__list {
-  max-height: 240px;
-  padding: var(--tx-space-1);
+  display: flex;
+  flex-direction: column;
+  gap: var(--tx-select-list-gap);
+  max-height: var(--tx-select-list-max-height);
+  padding: var(--tx-select-list-padding);
   overflow-y: auto;
 }
 
@@ -129,8 +140,8 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--tx-space-2);
-  padding: var(--tx-space-2) var(--tx-space-3);
-  border-radius: var(--tx-radius-sm);
+  padding: var(--tx-select-option-padding);
+  border-radius: var(--tx-select-option-border-radius);
   cursor: pointer;
 }
 
@@ -142,9 +153,14 @@
   background: var(--tx-select-option-selected-background);
   color: var(--tx-select-option-selected-color);
   font-weight: var(--tx-font-weight-medium);
+
+  &.tx-select__option--active {
+    background: var(--tx-select-option-selected-focus-background);
+    color: var(--tx-select-option-selected-focus-color);
+  }
 }
 
 .tx-select__empty {
-  padding: var(--tx-space-3);
-  color: var(--tx-text-muted);
+  padding: var(--tx-select-empty-padding);
+  color: var(--tx-select-empty-color);
 }
