@@ -53,6 +53,10 @@ export function txViewportMargin(insets: TxOverlayInsetValues, margin: number): 
   return { top: insets.top + margin, bottom: insets.bottom + margin, start: margin, end: margin };
 }
 
+export function txConnectedMargin(insets: TxOverlayInsetValues, margin: number): ViewportMargin {
+  return { top: 0, bottom: insets.bottom + margin, start: margin, end: margin };
+}
+
 export function txOverlayBounds(insets: TxOverlayInsetValues, margin: number, document: Document): TxOverlayBounds {
   const { clientWidth, clientHeight } = document.documentElement;
   return { top: insets.top + margin, right: clientWidth - margin, bottom: clientHeight - insets.bottom - margin, left: margin };

@@ -7,6 +7,7 @@ import {
   DestroyRef,
   ElementRef,
   Injector,
+  afterNextRender,
   computed,
   contentChild,
   forwardRef,
@@ -26,8 +27,11 @@ import {
   txAnimateEnter,
   txAnimateLeave,
   txPositions,
+  TxOverlayInsetValues,
   TxOverlayInsets,
-  txViewportMargin,
+  orderByRoom,
+  txConnectedMargin,
+  txOverlayBounds,
   watchOrigin,
 } from '@tectra/core/overlay';
 import { TxIcon } from '@tectra/icons';
@@ -74,6 +78,7 @@ export class TxSelect extends TxFormControlBase<unknown> {
   readonly trigger = viewChild.required<ElementRef<HTMLButtonElement>>('trigger');
   readonly filterInput = viewChild<ElementRef<HTMLInputElement>>('filterInput');
   readonly panel = viewChild<ElementRef<HTMLElement>>('panel');
+  private readonly connectedOverlay = viewChild.required(CdkConnectedOverlay);
 
   private injector = inject(Injector);
   private document = inject(DOCUMENT);
@@ -81,10 +86,12 @@ export class TxSelect extends TxFormControlBase<unknown> {
 
   readonly translations = injectTranslations();
   readonly isInvalid = injectFieldInvalid(this.invalid);
-  readonly positions = txPositions('bottom-start', 4);
+  private readonly preferredPositions = txPositions('bottom-start', 4);
+  readonly positions = signal(this.preferredPositions);
   readonly scrollStrategy = createRepositionScrollStrategy(this.injector);
   private overlayInsets = inject(TxOverlayInsets);
-  readonly viewportMargin = signal(txViewportMargin({ top: 0, bottom: 0 }, 8));
+  private insets: TxOverlayInsetValues = { top: 0, bottom: 0 };
+  readonly viewportMargin = signal(txConnectedMargin(this.insets, 8));
   private stopWatchingTrigger: (() => void) | null = null;
   private readonly stopOnDestroy = inject(DestroyRef).onDestroy(() => this.stopWatchingTrigger?.());
   readonly listboxId = uniqueId('tx-select-listbox');
@@ -126,10 +133,16 @@ export class TxSelect extends TxFormControlBase<unknown> {
     this.isOpen.set(true);
     this.hasEntered = false;
     this.isPanelMounted.set(true);
-    this.viewportMargin.set(txViewportMargin(this.overlayInsets.measure(), 8));
+    this.insets = this.overlayInsets.measure();
+    this.viewportMargin.set(txConnectedMargin(this.insets, 8));
+    this.positions.set(this.preferredPositions);
     this.stopWatchingTrigger = watchOrigin(this.trigger().nativeElement, this.overlayInsets, {
       hidden: () => this.close(),
-      insetsChange: (insets) => this.viewportMargin.set(txViewportMargin(insets, 8)),
+      insetsChange: (insets) => {
+        this.insets = insets;
+        this.viewportMargin.set(txConnectedMargin(insets, 8));
+        this.preferRoom();
+      },
     });
     this.opened.emit();
   }
@@ -172,10 +185,29 @@ export class TxSelect extends TxFormControlBase<unknown> {
   onPositionChange(change: ConnectedOverlayPositionChange): void {
     this.panelPlacement.set(placementFromPosition(change.connectionPair) ?? 'bottom-start');
     const panel = this.panel()?.nativeElement;
+    if (!this.hasEntered && this.preferRoom()) {
+      return;
+    }
     if (!this.hasEntered && panel) {
       this.hasEntered = true;
       txAnimateEnter(panel, this.panelPlacement());
     }
+  }
+
+  private preferRoom(): boolean {
+    const panel = this.panel()?.nativeElement;
+    if (!panel) {
+      return false;
+    }
+    const size = { width: panel.offsetWidth, height: panel.offsetHeight };
+    const bounds = txOverlayBounds(this.insets, 8, this.document);
+    const ordered = orderByRoom(this.preferredPositions, this.trigger().nativeElement.getBoundingClientRect(), size, bounds);
+    if (ordered[0] === this.positions()[0]) {
+      return false;
+    }
+    this.positions.set(ordered);
+    afterNextRender(() => this.connectedOverlay().overlayRef?.updatePosition(), { injector: this.injector });
+    return true;
   }
 
   onPanelDetach(): void {

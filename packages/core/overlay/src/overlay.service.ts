@@ -12,12 +12,8 @@ import { DOCUMENT, Injectable, Injector, TemplateRef, Type, inject, signal } fro
 import { Subject } from 'rxjs';
 import { txAnimateEnter, txAnimateLeave } from './overlay-motion';
 import { orderByRoom, placementFromPosition, txPositions } from './placements';
-import { TxOverlayCloseReason, TxOverlayInsetValues, TxOverlayOptions, TxOverlayRef, TxOverlayScroll } from './overlay.types';
-import { TxOverlayInsets, txOverlayBounds, watchOrigin } from './overlay-insets.service';
-
-function connectedMargin(insets: TxOverlayInsetValues, margin: number) {
-  return { top: 0, bottom: insets.bottom + margin, start: margin, end: margin };
-}
+import { TxOverlayCloseReason, TxOverlayOptions, TxOverlayRef, TxOverlayScroll } from './overlay.types';
+import { TxOverlayInsets, txConnectedMargin, txOverlayBounds, watchOrigin } from './overlay-insets.service';
 
 @Injectable({ providedIn: 'root' })
 export class TxOverlay {
@@ -40,7 +36,7 @@ export class TxOverlay {
     const positionStrategy = createFlexibleConnectedPositionStrategy(injector, origin)
       .withPositions(positions)
       .withFlexibleDimensions(false)
-      .withViewportMargin(connectedMargin(insets, margin))
+      .withViewportMargin(txConnectedMargin(insets, margin))
       .withPush(false);
 
     const overlayRef = createOverlayRef(injector, {
@@ -100,7 +96,7 @@ export class TxOverlay {
             hidden: () => close('scroll'),
             insetsChange: (next) => {
               insets = next;
-              positionStrategy.withViewportMargin(connectedMargin(insets, margin));
+              positionStrategy.withViewportMargin(txConnectedMargin(insets, margin));
               preferRoom();
             },
           })

@@ -69,3 +69,33 @@ test('tooltip shows only for cut-off text', async ({ page }) => {
   await example.getByRole('link', { name: /running shoe/ }).hover();
   await expect(page.locator('tx-tooltip')).toContainText('trails and roads');
 });
+
+test('select opens downward while it fits below, even with a stuck tab bar', async ({ page }) => {
+  await page.goto('/components/select');
+  await page.mouse.wheel(0, 700);
+  const tabsBar = page.locator('.tabs-bar');
+  await expect.poll(() => tabsBar.evaluate((bar) => Math.round(bar.getBoundingClientRect().top))).toBe(56);
+  const chromeBottom = await tabsBar.evaluate((bar) => bar.getBoundingClientRect().bottom);
+  const trigger = page.locator('docs-example-frame').nth(1).locator('.tx-select__trigger').first();
+  const panel = page.locator('.tx-select__panel');
+  const scrollTriggerTo = (top: number) =>
+    trigger.evaluate((element, target) => window.scrollBy(0, element.getBoundingClientRect().top - target), top);
+
+  await scrollTriggerTo(chromeBottom + 8);
+  await trigger.click();
+  await expect(panel).toBeVisible();
+  const panelHeight = await panel.evaluate((element) => element.getBoundingClientRect().height);
+  await page.keyboard.press('Escape');
+  await expect(panel).toHaveCount(0);
+
+  const { triggerHeight, viewportHeight } = await trigger.evaluate((element) => ({
+    triggerHeight: element.getBoundingClientRect().height,
+    viewportHeight: document.documentElement.clientHeight,
+  }));
+  await scrollTriggerTo(viewportHeight - 8 - 4 - panelHeight - 6 - triggerHeight);
+  await trigger.click();
+  await expect(panel).toBeVisible();
+  const [triggerBox, panelBox] = await Promise.all([trigger, panel].map((locator) => locator.evaluate((element) => element.getBoundingClientRect().toJSON())));
+  expect(panelBox.top).toBeGreaterThanOrEqual(triggerBox.bottom);
+  expect(panelBox.bottom).toBeLessThanOrEqual(viewportHeight);
+});
