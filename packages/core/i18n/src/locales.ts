@@ -35,6 +35,8 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     increment: 'Increase',
     decrement: 'Decrease',
     ratingValue: '{value} of {stars}',
+    rangeStart: 'from',
+    rangeEnd: 'to',
   },
 };
 
@@ -73,6 +75,8 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     increment: 'Збільшити',
     decrement: 'Зменшити',
     ratingValue: '{value} з {stars}',
+    rangeStart: 'від',
+    rangeEnd: 'до',
   },
 };
 

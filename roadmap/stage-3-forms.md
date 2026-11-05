@@ -180,13 +180,14 @@ PrimeNG: Knob (`min`, `max`, `step`, `size`, `strokeWidth`, `valueColor`, `range
 - [x] Readonly, disabled / invalid from the form; `knob` tokens; `optionalNumber` in `@tectra/core/utils` for optional number inputs (an explicit `undefined` no longer becomes `NaN` in any component)
 - [x] Docs + tests: drag, keys, limit, readonly, ring, step, value template, template, sizes, form, design tokens; e2e: drag along the dial, keys, limit
 
-## 3.15 Slider — `ui/slider`
+## 3.15 Slider — `ui/slider` ✅
 
 PrimeNG: Slider (`min`, `max`, `step`, `range` with two handles, `orientation`, `animate`, `minStepsBetweenHandles`, `(onSlideEnd)`). Not used by the first app yet (parity).
 
-- [ ] `<tx-slider>`: single and range, horizontal / vertical, step marks
-- [ ] Keyboard on each handle, `minStepsBetweenHandles`, `(slideEnd)`
-- [ ] Docs + tests: drag, range, keyboard, vertical
+- [x] `<tx-slider>`: single and range (`[start, end]`), horizontal / vertical, step marks (`showSteps`) and labelled marks (`marks`), `animate` on track clicks
+- [x] Keyboard on each handle (arrows, Page, Home / End within the other handle), `minStepsBetweenHandles`, `(changed)`, `(slideEnd)`; every handle is a `role="slider"` named "Price, from / to" (us / ua), value text template
+- [x] Track click jumps the nearest handle, drag with pointer capture, readonly, disabled / invalid from the form; `slider` tokens, `dt` / `pt` / `unstyled`
+- [x] Docs + tests: drag, range, keyboard, vertical, step, marks, animate, with an input number, states, form, design tokens; e2e: track click, drag position, range keys
 
 ## 3.16 Password generator — `ui/password-generator`
 

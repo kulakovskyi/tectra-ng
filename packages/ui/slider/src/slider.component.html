@@ -1,0 +1,64 @@
+<div
+  #track
+  class="tx-slider__track"
+  [class]="passThrough().track?.class"
+  [style]="passThrough().track?.style"
+  (pointerdown)="onPointerDown($event)"
+  (pointermove)="onPointerMove($event)"
+  (pointerup)="onPointerUp($event)"
+  (pointercancel)="onPointerUp($event)"
+>
+  <span
+    class="tx-slider__range"
+    [class]="passThrough().range?.class"
+    [style]="passThrough().range?.style"
+    [style.--_start.%]="rangeStart()"
+    [style.--_size.%]="rangeSize()"
+  ></span>
+  @for (mark of allMarks(); track mark.value) {
+    <span
+      class="tx-slider__mark"
+      [class.tx-slider__mark--active]="mark.active"
+      [class]="passThrough().mark?.class"
+      [style]="passThrough().mark?.style"
+      [style.--_at.%]="mark.percent"
+      aria-hidden="true"
+    ></span>
+    @if (mark.label) {
+      <span
+        class="tx-slider__label"
+        [class.tx-slider__label--start]="mark.percent === 0"
+        [class.tx-slider__label--end]="mark.percent === 100"
+        [class]="passThrough().label?.class"
+        [style]="passThrough().label?.style"
+        [style.--_at.%]="mark.percent"
+        aria-hidden="true"
+        >{{
+        mark.label
+      }}</span>
+    }
+  }
+  @for (handle of handles(); track handle) {
+    <span
+      class="tx-slider__handle"
+      role="slider"
+      [class]="passThrough().handle?.class"
+      [style]="passThrough().handle?.style"
+      [style.--_at.%]="percents()[handle]"
+      [attr.data-handle]="handle"
+      [attr.tabindex]="isDisabled() ? -1 : (tabindex() ?? 0)"
+      [attr.aria-label]="handleLabel(handle)"
+      [attr.aria-labelledby]="ariaLabelledBy() ?? null"
+      [attr.aria-orientation]="orientation()"
+      [attr.aria-valuemin]="handleMin(handle)"
+      [attr.aria-valuemax]="handleMax(handle)"
+      [attr.aria-valuenow]="values()[handle]"
+      [attr.aria-valuetext]="valueText(handle)"
+      [attr.aria-readonly]="readonly() || null"
+      [attr.aria-disabled]="isDisabled() || null"
+      [attr.aria-invalid]="isInvalid() || null"
+      (keydown)="onKeydown($event, handle)"
+      (blur)="onBlur()"
+    ></span>
+  }
+</div>

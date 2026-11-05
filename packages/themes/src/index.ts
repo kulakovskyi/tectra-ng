@@ -21,6 +21,7 @@ export * from './components/input-otp.tokens';
 export * from './components/input-number.tokens';
 export * from './components/rating.tokens';
 export * from './components/knob.tokens';
+export * from './components/slider.tokens';
 export * from './components/icon.tokens';
 export * from './components/ripple.tokens';
 export * from './components/toggle-button.tokens';

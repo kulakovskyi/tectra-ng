@@ -34,6 +34,8 @@ export interface TxTranslations {
   increment: string;
   decrement: string;
   ratingValue: string;
+  rangeStart: string;
+  rangeEnd: string;
 }
 
 export type TxValidationMessage = string | ((error: unknown) => string);

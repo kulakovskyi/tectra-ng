@@ -13,6 +13,7 @@ import { passwordTokens } from './password.tokens';
 import { radioButtonTokens } from './radio-button.tokens';
 import { ratingTokens } from './rating.tokens';
 import { selectTokens } from './select.tokens';
+import { sliderTokens } from './slider.tokens';
 import { textareaTokens } from './textarea.tokens';
 import { iconTokens } from './icon.tokens';
 import { rippleTokens } from './ripple.tokens';
@@ -43,6 +44,7 @@ export const COMPONENT_TOKENS = {
   inputNumber: inputNumberTokens,
   rating: ratingTokens,
   knob: knobTokens,
+  slider: sliderTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

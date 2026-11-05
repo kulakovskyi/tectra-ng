@@ -413,6 +413,35 @@ test('knob follows a drag along the dial, steps with keys and stops at its limit
   await expect(limit).toHaveAttribute('aria-valuenow', '20');
 });
 
+test('slider follows a drag, jumps to a track click and keeps a range in order', async ({ page }) => {
+  await page.goto('/components/slider');
+  const basic = page.locator('slider-basic-example');
+  const track = basic.locator('.tx-slider__track');
+  const box = await track.evaluate((element) => element.getBoundingClientRect().toJSON());
+  await page.mouse.click(box.x + box.width * 0.75, box.y + box.height / 2);
+  await expect(basic.locator('.hint')).toHaveText('Value: 75');
+  const handle = basic.getByRole('slider', { name: 'Volume' });
+  await expect(handle).toBeFocused();
+  await page.mouse.move(box.x + box.width * 0.75, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width * 0.2, box.y + box.height / 2, { steps: 4 });
+  await page.mouse.up();
+  await expect(basic.locator('.hint')).toHaveText('Value: 20');
+  const handleCenter = await handle.evaluate((element) => {
+    const rect = element.getBoundingClientRect();
+    return rect.left + rect.width / 2;
+  });
+  expect(Math.abs(handleCenter - (box.x + box.width * 0.2))).toBeLessThan(2);
+
+  const range = page.locator('slider-range-example');
+  const from = range.getByRole('slider', { name: 'Price, from' });
+  await from.focus();
+  await page.keyboard.press('End');
+  await expect(range.locator('.hint')).toHaveText('$600 – $650');
+  await page.keyboard.press('Home');
+  await expect(range.locator('.hint')).toHaveText('$0 – $650');
+});
+
 test.describe('with motion', () => {
   test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 

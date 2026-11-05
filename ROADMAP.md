@@ -69,7 +69,7 @@ Detailed checklist per component: [roadmap/stage-3-forms.md](roadmap/stage-3-for
 | `ui/input-number` | InputNumber | — (parity) | ✅ |
 | `ui/rating` | Rating | 7 | ✅ |
 | `ui/knob` | Knob | 1 | ✅ |
-| `ui/slider` | Slider | — (parity) | ⬜ |
+| `ui/slider` | Slider | — (parity) | ✅ |
 | `ui/password-generator` (button + generator service) | — | 2 | ⬜ |
 
 ## Stage 4 — feedback & display primitives
