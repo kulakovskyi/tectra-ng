@@ -7,9 +7,9 @@
 
 .facts {
   overflow: hidden;
-  border: 1px solid var(--tx-surface-border);
-  border-radius: 14px;
-  background: var(--tx-surface-card);
+  border-radius: 16px;
+  background: var(--docs-panel);
+  box-shadow: var(--docs-elevation);
 }
 
 .facts__row {
@@ -17,7 +17,7 @@
   grid-template-columns: 160px minmax(0, 1fr);
   gap: var(--tx-space-4);
   padding: 10px 16px;
-  border-bottom: 1px solid var(--tx-surface-border);
+  border-bottom: 1px solid var(--docs-hairline);
 
   &:last-child {
     border-bottom: none;

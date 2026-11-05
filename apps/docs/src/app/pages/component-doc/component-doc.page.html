@@ -7,13 +7,21 @@
     </div>
     <h1 class="doc-head__title">{{ doc.title }}</h1>
     <div class="doc-head__lead" [innerHTML]="doc.descriptionHtml"></div>
-    <button type="button" class="import" (click)="copyImport()">
-      <code>{{ importLine() }}</code>
-      <tx-icon [name]="isImportCopied() ? 'check' : 'copy'" />
+    <button type="button" class="import" [attr.aria-label]="'Copy import: ' + importLine()" (click)="copyImport()">
+      <code
+        ><span class="hljs-keyword">import</span>{{ ' { ' }}<span class="hljs-title class_">Tx{{ doc.title }}</span>{{ ' } ' }}<span
+          class="hljs-keyword"
+          >from</span
+        >{{ ' ' }}<span class="hljs-string">'{{ doc.importPath }}'</span>;</code
+      >
+      <span class="import__icon" [class.import__icon--done]="isImportCopied()">
+        <tx-icon [name]="isImportCopied() ? 'check' : 'copy'" />
+      </span>
     </button>
   </header>
 
-  <div class="tabs" role="tablist">
+  <div class="tabs-bar" txOverlayInset>
+  <div class="tabs" role="tablist" [attr.aria-label]="doc.title + ' documentation'">
     @for (tab of tabs; track tab.id) {
       <button
         type="button"
@@ -29,6 +37,7 @@
         }
       </button>
     }
+  </div>
   </div>
 
   <div class="tab-panel">

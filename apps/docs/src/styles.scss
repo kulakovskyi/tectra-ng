@@ -4,19 +4,65 @@
   box-sizing: border-box;
 }
 
+:root {
+  --docs-header-height: 56px;
+  --docs-ease: cubic-bezier(0.2, 0, 0, 1);
+  --docs-bg: var(--tx-surface-0);
+  --docs-bg-subtle: var(--tx-surface-50);
+  --docs-panel: var(--tx-surface-0);
+  --docs-canvas: var(--tx-surface-0);
+  --docs-chrome: color-mix(in srgb, var(--tx-surface-0) 78%, transparent);
+  --docs-ink: var(--tx-surface-950);
+  --docs-hairline: color-mix(in srgb, var(--docs-ink) 9%, transparent);
+  --docs-hairline-strong: color-mix(in srgb, var(--docs-ink) 14%, transparent);
+  --docs-fill: color-mix(in srgb, var(--docs-ink) 4%, transparent);
+  --docs-fill-strong: color-mix(in srgb, var(--docs-ink) 7%, transparent);
+  --docs-dot: color-mix(in srgb, var(--docs-ink) 11%, transparent);
+  --docs-glow: color-mix(in srgb, var(--tx-primary-base) 14%, transparent);
+  --docs-elevation:
+    0 0 0 1px var(--docs-hairline),
+    0 1px 2px color-mix(in srgb, var(--docs-ink) 4%, transparent),
+    0 8px 24px -12px color-mix(in srgb, var(--docs-ink) 10%, transparent);
+  --docs-elevation-hover:
+    0 0 0 1px var(--docs-hairline-strong),
+    0 2px 4px color-mix(in srgb, var(--docs-ink) 5%, transparent),
+    0 18px 40px -16px color-mix(in srgb, var(--docs-ink) 18%, transparent);
+  --docs-raised: 0 0 0 0.5px var(--docs-hairline-strong), 0 1px 3px color-mix(in srgb, var(--docs-ink) 10%, transparent);
+}
+
+:root[data-tx-theme='dark'] {
+  --docs-bg: var(--tx-surface-950);
+  --docs-bg-subtle: color-mix(in srgb, var(--tx-surface-900) 55%, var(--tx-surface-950));
+  --docs-panel: color-mix(in srgb, var(--tx-surface-900) 70%, var(--tx-surface-950));
+  --docs-canvas: color-mix(in srgb, var(--tx-surface-900) 70%, var(--tx-surface-950));
+  --docs-chrome: color-mix(in srgb, var(--tx-surface-950) 72%, transparent);
+  --docs-ink: var(--tx-surface-0);
+  --docs-hairline: color-mix(in srgb, var(--docs-ink) 8%, transparent);
+  --docs-hairline-strong: color-mix(in srgb, var(--docs-ink) 14%, transparent);
+  --docs-fill: color-mix(in srgb, var(--docs-ink) 5%, transparent);
+  --docs-fill-strong: color-mix(in srgb, var(--docs-ink) 9%, transparent);
+  --docs-dot: color-mix(in srgb, var(--docs-ink) 9%, transparent);
+  --docs-glow: color-mix(in srgb, var(--tx-primary-base) 22%, transparent);
+  --docs-elevation: 0 0 0 1px var(--docs-hairline), 0 1px 0 0 color-mix(in srgb, var(--docs-ink) 4%, transparent) inset;
+  --docs-elevation-hover: 0 0 0 1px var(--docs-hairline-strong), 0 1px 0 0 color-mix(in srgb, var(--docs-ink) 6%, transparent) inset, 0 18px 40px -16px color-mix(in srgb, var(--tx-surface-950) 80%, transparent);
+  --docs-raised: 0 0 0 1px var(--docs-hairline-strong), 0 1px 0 0 color-mix(in srgb, var(--docs-ink) 8%, transparent) inset;
+}
+
 html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 80px;
+  scroll-padding-top: 116px;
   scrollbar-gutter: stable;
 }
 
 html,
 body {
   margin: 0;
-  background: var(--tx-surface-ground);
+  background: var(--docs-bg);
   color: var(--tx-text-primary);
   font: var(--tx-font-size-md) / 1.6 var(--tx-font-family);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'kern', 'calt';
 }
 
 ::selection {
@@ -34,15 +80,16 @@ code {
 }
 
 :not(pre) > code {
-  padding: 2px 6px;
+  padding: 0.12em 0.42em;
   border-radius: var(--tx-radius-sm);
-  background: var(--tx-surface-hover);
+  background: var(--docs-fill-strong);
   color: var(--tx-text-hover);
+  font-size: 0.86em;
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--tx-surface-border) transparent;
+  scrollbar-color: var(--docs-hairline-strong) transparent;
 }
 
 .flex {
@@ -91,9 +138,24 @@ tx-fluid.stack,
   animation: docs-content-in 0.2s ease-out both;
 }
 
-::view-transition-group(docs-content) {
+::view-transition-group(docs-content),
+::view-transition-group(docs-header),
+::view-transition-group(docs-sidebar) {
   animation-duration: 0s;
 }
+
+::view-transition-old(docs-header),
+::view-transition-new(docs-header),
+::view-transition-old(docs-sidebar),
+::view-transition-new(docs-sidebar) {
+  animation: none;
+}
+
+::view-transition-old(docs-header),
+::view-transition-old(docs-sidebar) {
+  opacity: 0;
+}
+
 
 @keyframes docs-content-out {
   to {
@@ -126,7 +188,10 @@ html.docs-theme-switch::view-transition-new(root) {
 .hljs-title,
 .hljs-title.class_,
 .hljs-title.function_,
-.hljs-name {
+.hljs-name,
+.hljs-selector-tag,
+.hljs-selector-class,
+.hljs-selector-id {
   color: #0550ae;
 }
 
@@ -162,7 +227,10 @@ html.docs-theme-switch::view-transition-new(root) {
   .hljs-title,
   .hljs-title.class_,
   .hljs-title.function_,
-  .hljs-name {
+  .hljs-name,
+  .hljs-selector-tag,
+  .hljs-selector-class,
+  .hljs-selector-id {
     color: #79c0ff;
   }
 
@@ -178,10 +246,6 @@ html.docs-theme-switch::view-transition-new(root) {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
   .reveal,
   ::view-transition-old(docs-content),
   ::view-transition-new(docs-content) {

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input, linkedSignal, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { TxOverlayInset } from '@tectra/core/overlay';
 import { TxIcon } from '@tectra/icons';
 import { DOC_COMPONENTS } from '../../../generated/registry';
 import { DOC_TABS } from '../../data/doc-tabs.data';
@@ -11,7 +12,7 @@ import { ThemingTab } from './tabs/theming-tab/theming-tab';
 
 @Component({
   selector: 'docs-component-doc-page',
-  imports: [FeaturesTab, ApiTab, ThemingTab, A11yTab, RouterLink, TxIcon],
+  imports: [FeaturesTab, ApiTab, ThemingTab, A11yTab, RouterLink, TxIcon, TxOverlayInset],
   templateUrl: './component-doc.page.html',
   styleUrl: './component-doc.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

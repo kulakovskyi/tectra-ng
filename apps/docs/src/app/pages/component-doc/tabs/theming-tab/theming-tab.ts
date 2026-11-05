@@ -1,17 +1,17 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { TOKEN_COLUMNS } from '../../../../data/doc-columns.data';
+import { CodeBlock } from '../../../../doc-ui/code-block/code-block';
 import { DocTable } from '../../../../doc-ui/doc-table/doc-table';
 import { DocComponent } from '../../../../types/doc-component.interface';
 
 @Component({
   selector: 'docs-theming-tab',
-  imports: [DocTable],
+  imports: [DocTable, CodeBlock],
   template: `
     <p class="hint">Change in the preset, per instance with <code>[dt]</code>, or with CSS:</p>
-    <pre class="code" tabindex="0"><code>{{ overrideExample() }}</code></pre>
+    <docs-code-block [code]="overrideExample()" [language]="'css'" [label]="'CSS override example'" />
     <docs-table [title]="'Variables'" [columns]="tokenColumns" [rows]="doc().tokens" />
   `,
-  styleUrl: '../../../page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ThemingTab {

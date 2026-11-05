@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TxButton } from '@tectra/ui/button';
+import { CodeBlock } from '../../doc-ui/code-block/code-block';
 import { INSTALL_STEPS } from '../../data/install.data';
 
 @Component({
   selector: 'docs-getting-started-page',
-  imports: [TxButton],
+  imports: [TxButton, CodeBlock],
   templateUrl: './getting-started.page.html',
   styleUrls: ['../page.scss', './getting-started.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

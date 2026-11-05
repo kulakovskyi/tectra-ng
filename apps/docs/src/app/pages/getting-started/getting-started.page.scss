@@ -18,7 +18,7 @@
     left: 15px;
     width: 2px;
     border-radius: 2px;
-    background: var(--tx-surface-border);
+    background: var(--docs-hairline);
     content: '';
   }
 }
@@ -29,14 +29,18 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: var(--tx-highlight-background);
-  color: var(--tx-highlight-color);
-  font-weight: 700;
+  background: var(--docs-panel);
+  box-shadow: var(--docs-elevation);
+  color: var(--tx-text-primary);
+  font-size: var(--tx-font-size-sm);
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
 }
 
 .step__title {
   margin: 4px 0 var(--tx-space-3);
-  font-size: 16px;
+  font-size: 17px;
+  letter-spacing: -0.015em;
 }
 
 .step__code {
@@ -47,4 +51,8 @@
   position: absolute;
   top: 8px;
   right: 8px;
+}
+
+.step__code docs-code-block {
+  margin-bottom: var(--tx-space-2);
 }

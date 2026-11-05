@@ -18,7 +18,11 @@
 </div>
 
 <h2>Use it</h2>
-<pre class="code" tabindex="0"><code>{{ "const ref = inject(TxOverlay).open(template, {\n  origin: button,\n  viewContainerRef,\n  placement: 'bottom-start',\n  layer: 'popover',\n});\nref.placement();      // actual side after a flip\nref.closed.subscribe(reason => …); // 'escape' | 'outside' | 'api' | …" }}</code></pre>
+<docs-code-block [code]="usageExample" [label]="'Overlay usage example'" />
+
+<h2>Sticky headers</h2>
+<p class="hint">Mark sticky or fixed chrome with <code>txOverlayInset</code>. While it is pinned, panels fit around it and close once their origin scrolls under it. This site marks its header and the tab bar of component pages.</p>
+<docs-code-block [code]="insetsExample" [label]="'Viewport insets example'" />
 
 <ng-template #panel let-placement>
   <div class="panel" [attr.data-placement]="current()?.placement()">

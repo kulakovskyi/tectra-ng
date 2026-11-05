@@ -1,4 +1,4 @@
-<header class="header">
+<header class="header" txOverlayInset>
   <div class="header__start">
     <button txButton class="header__menu" [text]="true" [severity]="'secondary'" [icon]="isMenuOpen() ? 'times' : 'bars'" aria-label="Menu" (click)="toggleMenu()"></button>
     <a class="logo" routerLink="/" (click)="closeMenu()">
@@ -10,7 +10,13 @@
     </a>
     <nav class="header__nav">
       @for (link of headerLinks; track link.path) {
-        <a class="header__link" routerLinkActive="header__link--active" [routerLink]="link.path">{{ link.label }}</a>
+        <a
+          class="header__link"
+          [class.header__link--active]="currentUrl().startsWith(link.section)"
+          [attr.aria-current]="currentUrl().startsWith(link.section) ? 'page' : null"
+          [routerLink]="link.path"
+          >{{ link.label }}</a
+        >
       }
     </nav>
   </div>

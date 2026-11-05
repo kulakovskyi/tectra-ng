@@ -22,22 +22,25 @@
 }
 
 .tile {
-  border-radius: 14px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--tx-space-3);
   padding: var(--tx-space-5) var(--tx-space-2) var(--tx-space-3);
-  border: 1px solid var(--tx-surface-border);
-  border-radius: var(--tx-radius-lg);
-  background: var(--tx-surface-card);
+  border: none;
+  border-radius: 14px;
+  background: var(--docs-panel);
+  box-shadow: var(--docs-elevation);
   color: var(--tx-text-primary);
   font: inherit;
   cursor: pointer;
-  transition: border-color 0.2s, background-color 0.2s, transform 0.25s cubic-bezier(0.2, 0, 0, 1);
+  transition:
+    box-shadow 0.25s var(--docs-ease),
+    background-color 0.2s,
+    transform 0.25s var(--docs-ease);
 
   &:hover {
-    border-color: var(--tx-primary-base);
+    box-shadow: var(--docs-elevation-hover);
     transform: translateY(-2px);
 
     .tile__icon {
@@ -53,8 +56,8 @@
 }
 
 .tile--copied {
-  border-color: var(--tx-success-base);
   background: var(--tx-success-soft);
+  box-shadow: 0 0 0 1.5px var(--tx-success-base);
 }
 
 .tile__icon {

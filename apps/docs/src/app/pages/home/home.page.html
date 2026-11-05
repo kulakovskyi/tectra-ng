@@ -15,7 +15,7 @@
   <button type="button" class="install reveal" style="--i: 4" (click)="copyInstall()">
     <span class="install__prompt">$</span>
     <code>{{ installCommand }}</code>
-    <tx-icon class="install__icon" [name]="isCopied() ? 'check' : 'copy'" />
+    <span class="install__icon" [class.install__icon--done]="isCopied()"><tx-icon [name]="isCopied() ? 'check' : 'copy'" /></span>
   </button>
 </section>
 

@@ -3,9 +3,10 @@
 }
 
 .doc-table__title {
-  margin: 40px 0 var(--tx-space-3);
-  font-size: 16px;
-  font-weight: 600;
+  margin: 48px 0 var(--tx-space-4);
+  font-size: 20px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
 
   :host:first-child & {
     margin-top: 0;
@@ -14,9 +15,9 @@
 
 .doc-table {
   overflow-x: auto;
-  border: 1px solid var(--tx-surface-border);
-  border-radius: 14px;
-  background: var(--tx-surface-card);
+  border-radius: 16px;
+  background: var(--docs-panel);
+  box-shadow: var(--docs-elevation);
 }
 
 table {
@@ -27,26 +28,24 @@ table {
 
 th,
 td {
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--tx-surface-border);
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--docs-hairline);
   text-align: left;
   vertical-align: top;
 }
 
 th {
-  background: var(--tx-surface-ground);
+  background: var(--docs-bg-subtle);
   color: var(--tx-text-muted);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
 }
 
 tbody tr {
   transition: background-color 0.15s;
 
   &:hover {
-    background: var(--tx-surface-hover);
+    background: var(--docs-fill);
   }
 
   &:last-child td {

@@ -107,6 +107,45 @@ test('locale switches built-in texts at runtime', async ({ page }) => {
   await expect(page.locator('.tx-select__empty')).toHaveText('Нічого не знайдено');
 });
 
+test('select panel never covers the sticky header', async ({ page }) => {
+  await page.goto('/theming');
+  const trigger = page.locator('tx-select .tx-select__trigger').first();
+  const panel = page.locator('.tx-select__panel');
+  const headerBottom = await page.locator('.header').evaluate((header) => header.getBoundingClientRect().bottom);
+  const scrollTriggerTo = (top: number) =>
+    trigger.evaluate((element, target) => window.scrollBy(0, element.getBoundingClientRect().top - target), top);
+
+  await scrollTriggerTo(headerBottom + 8);
+  await trigger.click();
+  await expect(panel).toBeVisible();
+  const panelTop = await panel.evaluate((element) => element.getBoundingClientRect().top);
+  expect(panelTop).toBeGreaterThanOrEqual(headerBottom);
+
+  await scrollTriggerTo(headerBottom - 60);
+  await expect(panel).toHaveCount(0);
+  await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+});
+
+test('select panel stays clear of the stuck tab bar', async ({ page }) => {
+  await page.goto('/components/select');
+  await page.mouse.wheel(0, 700);
+  const tabsBar = page.locator('.tabs-bar');
+  await expect.poll(() => tabsBar.evaluate((bar) => Math.round(bar.getBoundingClientRect().top))).toBe(56);
+  const chromeBottom = await tabsBar.evaluate((bar) => bar.getBoundingClientRect().bottom);
+  const trigger = page.locator('docs-example-frame').nth(1).locator('.tx-select__trigger').first();
+  const panel = page.locator('.tx-select__panel');
+  const scrollTriggerTo = (top: number) =>
+    trigger.evaluate((element, target) => window.scrollBy(0, element.getBoundingClientRect().top - target), top);
+
+  await scrollTriggerTo(chromeBottom + 8);
+  await trigger.click();
+  await expect(panel).toBeVisible();
+  expect(await panel.evaluate((element) => element.getBoundingClientRect().top)).toBeGreaterThanOrEqual(chromeBottom);
+
+  await scrollTriggerTo(chromeBottom - 60);
+  await expect(panel).toHaveCount(0);
+});
+
 test.describe('with motion', () => {
   test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 

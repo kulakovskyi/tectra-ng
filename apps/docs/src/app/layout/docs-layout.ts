@@ -1,8 +1,10 @@
 import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { filter, map } from 'rxjs';
 import { TxThemeService } from '@tectra/core/config';
-import { TxIcon } from '@tectra/icons';
+import { TxOverlayInset } from '@tectra/core/overlay';
 import { createInkPreset } from '@tectra/themes';
 import { TectraAccent } from '@tectra/tokens';
 import { TxButton } from '@tectra/ui/button';
@@ -13,7 +15,7 @@ import { THEME_ACCENTS } from '../data/theme-accents.data';
 
 @Component({
   selector: 'docs-layout',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, TxButton, TxIcon],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, TxButton, TxOverlayInset],
   templateUrl: './docs-layout.html',
   styleUrl: './docs-layout.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,12 +23,21 @@ import { THEME_ACCENTS } from '../data/theme-accents.data';
 export class DocsLayout {
   private txThemeService = inject(TxThemeService);
   private document = inject(DOCUMENT);
+  private router = inject(Router);
 
   readonly navigation = DOC_NAVIGATION;
   readonly headerLinks = HEADER_LINKS;
   readonly accents = THEME_ACCENTS;
   readonly componentCount = DOC_COMPONENTS.length;
   readonly mode = this.txThemeService.mode;
+
+  readonly currentUrl = toSignal(
+    this.router.events.pipe(
+      filter((event) => event instanceof NavigationEnd),
+      map((event) => event.urlAfterRedirects),
+    ),
+    { initialValue: this.router.url },
+  );
 
   isMenuOpen = signal(false);
   currentAccent = computed(() => this.txThemeService.preset()?.name.replace('ink-', '') ?? 'blue');

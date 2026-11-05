@@ -7,9 +7,10 @@
 }
 
 .vars {
-  border: 1px solid var(--tx-surface-border);
-  border-radius: var(--tx-radius-lg);
-  background: var(--tx-surface-card);
+  overflow: hidden;
+  border-radius: 16px;
+  background: var(--docs-panel);
+  box-shadow: var(--docs-elevation);
 }
 
 .vars__row {
@@ -18,7 +19,7 @@
   align-items: center;
   gap: var(--tx-space-3);
   padding: var(--tx-space-2) var(--tx-space-4);
-  border-bottom: 1px solid var(--tx-surface-border);
+  border-bottom: 1px solid var(--docs-hairline);
 
   &:last-child {
     border-bottom: none;
@@ -28,8 +29,8 @@
 .vars__swatch {
   width: 20px;
   height: 20px;
-  border: 1px solid var(--tx-surface-border);
-  border-radius: var(--tx-radius-sm);
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px var(--docs-hairline) inset;
 }
 
 .vars__value {

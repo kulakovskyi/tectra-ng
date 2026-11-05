@@ -9,7 +9,14 @@
   <nav class="toc" aria-label="On this page">
     <span class="toc__title">On this page</span>
     @for (example of doc().examples; track example.id) {
-      <a class="toc__link" [href]="'#' + example.id" (click)="scrollTo($event, example.id)">{{ example.title }}</a>
+      <a
+        class="toc__link"
+        [class.toc__link--active]="activeId() === example.id"
+        [attr.aria-current]="activeId() === example.id ? 'location' : null"
+        [href]="'#' + example.id"
+        (click)="scrollTo($event, example.id)"
+        >{{ example.title }}</a
+      >
     }
   </nav>
 </div>
