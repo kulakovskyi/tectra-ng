@@ -128,8 +128,3 @@
     color: var(--tx-select-empty-color);
   }
 }
-
-:host([data-styled]) .tx-select__list:focus-visible {
-  border-radius: inherit;
-  box-shadow: inset 0 0 0 2px var(--tx-focus-ring-color);
-}

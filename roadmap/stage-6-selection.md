@@ -35,9 +35,13 @@ PrimeNG: MultiSelect (`display` comma / chip, `maxSelectedLabels`, `selectedItem
 - [x] Filter, groups, virtual scroll, lazy, loading, templates (`txSelectValue` gets the selected items) as in select; float / ifta label and input group know it
 - [x] Docs + tests; e2e: select all with the filter (Shift+Tab to the checkbox), chips removal by click and Backspace, the limit, axe on open panels in light and dark
 
-## 6.3 Listbox — `ui/listbox`
+## 6.3 Listbox — `ui/listbox` ✅
 
-- [ ] `<tx-listbox>`: single / multiple (`metaKeySelection`, checkbox), filter, groups, virtual scroll, disabled options, templates, form control
+PrimeNG: Listbox (`multiple`, `checkbox`, `metaKeySelection`, `filter`, groups, virtual scroll, templates). First app: 0 tags (parity).
+
+- [x] `<tx-listbox>` on the option engine: focusable `role="listbox"` with `aria-activedescendant`, single / multiple (`aria-multiselectable`), `checkbox`, `metaKeySelection` (Ctrl / ⌘ + click adds), Shift + arrows extend, Ctrl / ⌘ + A, typeahead, filter field that drives the list, groups, virtual scroll, lazy, disabled options, header / footer / empty templates, readonly / invalid / disabled, form control; `listbox` tokens
+- [x] `tx-field` names a listbox with `aria-labelledby` and describes it with the hint and the error
+- [x] Docs + tests; e2e: keyboard selection, field label, virtual list with the search field
 
 ## 6.4 Autocomplete — `ui/autocomplete`
 

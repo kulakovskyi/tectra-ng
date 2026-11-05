@@ -47,6 +47,7 @@ export class TxOptionList {
   readonly listboxId = input.required<string>();
   readonly activeIndex = input<number>(-1);
   readonly multiple = input<boolean, unknown>(false, { transform: booleanAttribute });
+  readonly checkbox = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly checkmark = input<boolean, unknown>(true, { transform: booleanAttribute });
   readonly virtualScroll = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly itemSize = input<number>(36);

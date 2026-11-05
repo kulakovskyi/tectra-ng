@@ -9,6 +9,7 @@ export * from './components/form-field.tokens';
 export * from './components/input-group.tokens';
 export * from './components/label.tokens';
 export * from './components/select.tokens';
+export * from './components/selection.tokens';
 export * from './components/badge.tokens';
 export * from './components/message.tokens';
 export * from './components/field.tokens';

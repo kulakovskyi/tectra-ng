@@ -124,7 +124,7 @@
         [class.tx-select__option--active]="index === activeIndex()"
         [class.tx-select__option--selected]="row.selected"
         [class.tx-select__option--disabled]="row.disabled"
-        [class.tx-select__option--multiple]="multiple()"
+        [class.tx-select__option--multiple]="checkbox()"
         [attr.aria-selected]="row.selected"
         [attr.aria-disabled]="row.disabled || null"
         [attr.aria-setsize]="virtual ? optionCount() : null"
@@ -134,7 +134,7 @@
         (mouseenter)="row.disabled || optionHover.emit(index)"
         (click)="row.disabled || optionClick.emit(row)"
       >
-        @if (multiple()) {
+        @if (checkbox()) {
           <span class="tx-select__checkbox" aria-hidden="true" [class]="passThrough().check?.class" [style]="passThrough().check?.style">
             @if (row.selected) {
               <tx-icon [name]="'check'" />
@@ -151,7 +151,7 @@
             {{ row.label }}
           }
         </span>
-        @if (!multiple() && checkmark() && row.selected) {
+        @if (!checkbox() && checkmark() && row.selected) {
           <tx-icon class="tx-select__check" [name]="'check'" [class]="passThrough().check?.class" [style]="passThrough().check?.style" />
         }
       </div>
