@@ -49,6 +49,7 @@ export class TxDialogContainer {
   private checker = inject(InteractivityChecker);
   private focusTrapFactory = inject(FocusTrapFactory);
   private viewContainerRef = inject(ViewContainerRef);
+  private host = inject<ElementRef<HTMLElement>>(ElementRef);
   private focusTrap: FocusTrap | null = null;
 
   readonly config = this.ref.config;
@@ -146,8 +147,10 @@ export class TxDialogContainer {
 
   leave(): Promise<void> {
     this.leaving.set(true);
-    const host = this.panel().nativeElement.parentElement as HTMLElement;
-    const animations = typeof host.getAnimations === 'function' ? host.getAnimations({ subtree: true }) : [];
+    this.host.nativeElement.classList.add('tx-dialog-container--leaving');
+    const panel = this.panel().nativeElement;
+    const mask = panel.parentElement?.querySelector(':scope > .tx-dialog-mask');
+    const animations = [panel, mask].flatMap((element) => (element && typeof element.getAnimations === 'function' ? element.getAnimations() : []));
     const finished = Promise.all(animations.map((animation) => animation.finished.catch(() => undefined))).then(() => undefined);
     return animations.length ? Promise.race([finished, new Promise<void>((resolve) => setTimeout(resolve, LEAVE_LIMIT))]) : finished;
   }
