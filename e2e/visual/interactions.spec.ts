@@ -526,6 +526,17 @@ test('skeleton stands in while content loads and is hidden from screen readers',
   await expect(example.locator('tx-skeleton')).toHaveCount(0);
 });
 
+test('avatar falls back to initials and a group shows +N', async ({ page }) => {
+  await page.goto('/components/avatar');
+  const fallback = page.locator('avatar-fallback-example');
+  await expect(fallback.locator('.hint')).toHaveText('The photo failed — initials instead');
+  await expect(fallback.getByRole('img', { name: 'Kateryna Moroz' })).toHaveText('KM');
+  const group = page.locator('avatar-group-example').getByRole('group', { name: 'Project members' });
+  await expect(group.getByRole('img')).toHaveCount(5);
+  await expect(group.getByRole('img', { name: '3 more' })).toHaveText('+3');
+  await expect(group.getByRole('button', { name: 'Invite' })).toBeVisible();
+});
+
 test.describe('with motion', () => {
   test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 

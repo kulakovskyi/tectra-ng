@@ -1,3 +1,4 @@
+import { avatarTokens } from './avatar.tokens';
 import { badgeTokens } from './badge.tokens';
 import { buttonTokens } from './button.tokens';
 import { checkboxTokens } from './checkbox.tokens';
@@ -57,6 +58,7 @@ export const COMPONENT_TOKENS = {
   progressBar: progressBarTokens,
   progressSpinner: progressSpinnerTokens,
   skeleton: skeletonTokens,
+  avatar: avatarTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

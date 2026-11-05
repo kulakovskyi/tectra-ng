@@ -50,14 +50,14 @@ PrimeNG: Skeleton (`shape` rectangle / circle, `size`, `width`, `height`, `borde
 - [x] Ready layouts: text lines (`lines`, last line shorter), `<tx-skeleton-table>` (`rows`, `columns`, `header`)
 - [x] Docs + tests: shapes, lines, card / list / table layouts, loading swap with `aria-busy`, no animation, design tokens; e2e: placeholder while loading, hidden from screen readers
 
-## 4.6 Avatar — `ui/avatar`
+## 4.6 Avatar — `ui/avatar` ✅
 
 PrimeNG: Avatar (`label`, `icon`, `image`, `size`, `shape`, `(onImageError)`), AvatarGroup. First app: user avatar 186 (`src`, `name`), avatar 6 (editable photo), user image 10 (a group with `limit` and an add button).
 
-- [ ] `<tx-avatar>`: image → initials from `name` → icon fallback (broken image falls back too), sizes (`small` … `xlarge` + px), circle / square, colour from the name, `(imageError)`
-- [ ] `<tx-avatar-group>`: overlap, `max` with `+N`, add button slot
-- [ ] Status dot / badge on the avatar (through `tx-overlay-badge`)
-- [ ] Docs + tests: image, initials, icon, fallback, sizes, shapes, group with max
+- [x] `<tx-avatar>`: image → initials from `name` → icon fallback (a broken image falls back too and resets when the image changes), `label`, sizes (`small` … `xlarge` + px, text scales), circle / square, colour picked from the name out of six tones (or `tone`), `(imageError)`, named by `name` / `ariaLabel` (`role="img"`, decorative otherwise)
+- [x] `<tx-avatar-group>`: overlap proportional to each avatar's size, ring in the surface colour, `max` with `+N` (translated "N more"), `txAvatarGroupEnd` slot for an add button, size / shape passed to the avatars, `role="group"`
+- [x] Status dot / badge on the avatar through `tx-overlay-badge` (`shape="circle"`)
+- [x] Docs + tests: image, initials, fallback, sizes, shapes, group with max, status, labels, design tokens; e2e: broken image → initials, group +N. The first app's editable avatar (upload / remove with a confirm modal) waits for stage 5 dialogs
 
 ## 4.7 Divider, card / panel, fieldset — `ui/divider`, `ui/card`, `ui/panel`, `ui/fieldset`
 

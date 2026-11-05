@@ -38,6 +38,7 @@ export interface TxTranslations {
   rangeEnd: string;
   generatePassword: string;
   remove: string;
+  moreItems: string;
 }
 
 export type TxValidationMessage = string | ((error: unknown) => string);

@@ -39,6 +39,7 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     rangeEnd: 'to',
     generatePassword: 'Generate password',
     remove: 'Remove',
+    moreItems: '{count} more',
   },
 };
 
@@ -81,6 +82,7 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     rangeEnd: 'до',
     generatePassword: 'Згенерувати пароль',
     remove: 'Видалити',
+    moreItems: 'ще {count}',
   },
 };
 
