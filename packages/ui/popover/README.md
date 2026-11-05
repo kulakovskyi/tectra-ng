@@ -16,7 +16,7 @@ A panel of content next to an element — a share box, a small form, a list of n
 |---|---|
 | placement | `bottom-start` (default) or any of the 12 placements; flips when there is no room |
 | offset | Gap to the element in px (default 10, the arrow fills it) |
-| arrow | Shows the arrow near the start of the element (default on; `[arrow]="false"` hides it) |
+| arrow | Shows the arrow: at the middle of the element for a centred placement, near its start or end for `-start` / `-end` (default on; `[arrow]="false"` hides it) |
 | header | Title text; also names the dialog |
 | closeButton | Shows a close button (translated "Close" label) |
 | dismissable | Closes on a click outside (default on) |

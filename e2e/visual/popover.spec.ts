@@ -66,3 +66,56 @@ test('popover follows the clicked element and a nested one keeps its parent open
   await expect(page.getByRole('dialog', { name: 'Period' })).toHaveCount(0);
   await expect(filters).toBeVisible();
 });
+
+test('popover arrow points at the middle of a centred element', async ({ page }) => {
+  await page.goto('/components/popover');
+  const frame = page.locator('popover-arrow-example');
+  for (const name of ['top', 'bottom', 'left', 'right']) {
+    const button = frame.getByRole('button', { name, exact: true });
+    await button.click();
+    const arrow = page.locator('.tx-popover__arrow');
+    await expect(arrow).toBeVisible();
+    const [origin, tip] = await Promise.all([button, arrow].map((locator) => locator.evaluate((element) => element.getBoundingClientRect().toJSON())));
+    const vertical = name === 'top' || name === 'bottom';
+    const miss = vertical ? tip.x + tip.width / 2 - (origin.x + origin.width / 2) : tip.y + tip.height / 2 - (origin.y + origin.height / 2);
+    expect(Math.abs(miss)).toBeLessThan(1);
+    await page.keyboard.press('Escape');
+    await expect(arrow).toHaveCount(0);
+  }
+});
+
+test.describe('with motion', () => {
+  test.use({ contextOptions: { reducedMotion: 'no-preference' } });
+
+  test('flipped popover keeps its side while it fades out', async ({ page }) => {
+    await page.goto('/components/popover');
+    const button = page.locator('popover-arrow-example').getByRole('button', { name: 'bottom', exact: true });
+    await expect(button).toBeVisible();
+    await button.evaluate((element) =>
+      window.scrollTo({ top: element.getBoundingClientRect().bottom + window.scrollY - window.innerHeight + 12, behavior: 'instant' }),
+    );
+    await expect.poll(() => button.evaluate((element) => window.innerHeight - element.getBoundingClientRect().bottom)).toBeLessThan(14);
+    const box = await button.boundingBox();
+    await page.mouse.click((box?.x ?? 0) + (box?.width ?? 0) / 2, (box?.y ?? 0) + (box?.height ?? 0) / 2);
+    const popover = page.locator('.tx-popover');
+    await expect(popover).toHaveAttribute('data-side', 'top');
+    await page.waitForTimeout(250);
+    const sides = popover.evaluate(
+      (element) =>
+        new Promise<string[]>((resolve) => {
+          const seen: string[] = [];
+          const tick = () => {
+            if (!element.isConnected) {
+              resolve(seen);
+              return;
+            }
+            seen.push(element.getAttribute('data-side') ?? '');
+            requestAnimationFrame(tick);
+          };
+          tick();
+        }),
+    );
+    await page.keyboard.press('Escape');
+    expect(new Set(await sides)).toEqual(new Set(['top']));
+  });
+});

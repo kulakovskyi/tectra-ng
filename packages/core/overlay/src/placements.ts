@@ -45,10 +45,11 @@ export function placementFromPosition(position: ConnectedPosition): TxPlacement 
   return panelClass?.startsWith('tx-placement-') ? (panelClass.replace('tx-placement-', '') as TxPlacement) : null;
 }
 
-export function txArrowOffset(placement: TxPlacement, origin: TxOverlaySize): string {
+export function txArrowOffset(placement: TxPlacement, origin: TxOverlaySize, inset?: string): string {
   const { side, align } = parsePlacement(placement);
   const half = (side === 'top' || side === 'bottom' ? origin.width : origin.height) / 2;
-  return align === 'start' ? `${half}px` : align === 'end' ? `calc(100% - ${half}px)` : '50%';
+  const lead = inset ? `min(${inset}, ${half}px)` : `${half}px`;
+  return align === 'start' ? lead : align === 'end' ? `calc(100% - ${lead})` : '50%';
 }
 
 type TxEdge ='start' | 'center' | 'end' | 'top' | 'bottom';

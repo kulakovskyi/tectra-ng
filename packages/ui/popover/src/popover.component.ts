@@ -23,7 +23,7 @@ import {
 import { nextTabbable, tabbableElements, uniqueId } from '@tectra/core/a11y';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
 import { injectTranslations } from '@tectra/core/i18n';
-import { TxOverlay, TxOverlayRef, TxOverlayScroll, TxPlacement, parsePlacement } from '@tectra/core/overlay';
+import { TxOverlay, TxOverlayRef, TxOverlayScroll, TxPlacement, parsePlacement, txArrowOffset } from '@tectra/core/overlay';
 import { optionalBoolean } from '@tectra/core/utils';
 import { TxIcon } from '@tectra/icons';
 import { TectraDeepPartial, TectraPopoverTokens, toStyleObject } from '@tectra/themes';
@@ -82,13 +82,13 @@ export class TxPopover {
   private readonly ref = signal<TxOverlayRef | null>(null);
   private readonly anchor = signal<Element | null>(null);
   private readonly anchorSize = signal({ width: 0, height: 0 });
-  private readonly panelSize = signal({ width: 0, height: 0 });
+  private readonly shown = signal<TxOverlayRef | null>(null);
   private readonly triggers: Element[] = [];
   private closeReason: TxPopoverCloseReason | null = null;
   private destroyed = false;
 
   readonly isOpen = computed(() => this.ref() !== null);
-  readonly currentPlacement = computed(() => this.ref()?.placement() ?? this.placement());
+  readonly currentPlacement = computed(() => this.shown()?.placement() ?? this.placement());
   readonly side = computed(() => parsePlacement(this.currentPlacement()).side);
   readonly hasTitle = computed(() => Boolean(this.header()) || Boolean(this.headerSlot()));
   readonly labelledBy = computed(() => this.ariaLabelledBy() ?? (this.hasTitle() && !this.ariaLabel() ? this.titleId : null));
@@ -97,14 +97,7 @@ export class TxPopover {
     '--tx-popover-arrow-offset': this.arrowOffset(),
     ...this.passThrough().root?.style,
   }));
-  readonly arrowOffset = computed(() => {
-    const { side, align } = parsePlacement(this.currentPlacement());
-    const vertical = side === 'top' || side === 'bottom';
-    const anchor = vertical ? this.anchorSize().width : this.anchorSize().height;
-    const panel = vertical ? this.panelSize().width : this.panelSize().height;
-    const start = align === 'start' ? 0 : align === 'end' ? panel - anchor : (panel - anchor) / 2;
-    return `calc(${start}px + var(--tx-popover-arrow-inset))`;
-  });
+  readonly arrowOffset = computed(() => txArrowOffset(this.currentPlacement(), this.anchorSize(), 'var(--tx-popover-arrow-inset)'));
   readonly contentContext: TxPopoverContentContext = { $implicit: () => this.hide(), close: () => this.hide() };
 
   constructor() {
@@ -163,11 +156,10 @@ export class TxPopover {
         this.closed.emit(emitted);
       }
     });
+    this.shown.set(ref);
     this.ref.set(ref);
     this.open.set(true);
     this.opened.emit();
-    const panel = ref.element.querySelector<HTMLElement>('.tx-popover');
-    this.panelSize.set({ width: panel?.offsetWidth ?? 0, height: panel?.offsetHeight ?? 0 });
     this.focusInitial(ref.element);
   }
 

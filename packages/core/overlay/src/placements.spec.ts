@@ -1,4 +1,4 @@
-import { fitsInBounds, orderByRoom, parsePlacement, placementFromPosition, toPlacement, txPositions } from './placements';
+import { fitsInBounds, orderByRoom, parsePlacement, placementFromPosition, toPlacement, txArrowOffset, txPositions } from './placements';
 
 describe('placements', () => {
   it('parses and builds placement names', () => {
@@ -39,5 +39,13 @@ describe('orderByRoom', () => {
   it('leaves the order alone when nothing fits', () => {
     const positions = txPositions('top', 8);
     expect(orderByRoom(positions, origin, size, { top: 140, right: 1432, bottom: 160, left: 8 })).toBe(positions);
+  });
+
+  it('points the arrow at the middle of a centred origin and near the edge of an aligned one', () => {
+    const origin = { width: 96, height: 37 };
+    expect(txArrowOffset('bottom', origin, 'var(--inset)')).toBe('50%');
+    expect(txArrowOffset('top-start', origin, 'var(--inset)')).toBe('min(var(--inset), 48px)');
+    expect(txArrowOffset('bottom-end', origin, 'var(--inset)')).toBe('calc(100% - min(var(--inset), 48px))');
+    expect(txArrowOffset('right-start', origin)).toBe('18.5px');
   });
 });

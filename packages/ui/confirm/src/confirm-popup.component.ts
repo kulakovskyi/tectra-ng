@@ -1,6 +1,6 @@
 import { FocusTrapFactory } from '@angular/cdk/a11y';
 import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, InjectionToken, Signal, computed, inject } from '@angular/core';
-import { TxOverlayRef, TxPlacement, parsePlacement } from '@tectra/core/overlay';
+import { TxOverlayRef, TxPlacement, parsePlacement, txArrowOffset } from '@tectra/core/overlay';
 import { TxIcon } from '@tectra/icons';
 import { TxButton } from '@tectra/ui/button';
 import { confirmView } from './confirm-content';
@@ -75,13 +75,7 @@ export class TxConfirmPopup {
   readonly view = confirmView(this.data.state);
   readonly placement = computed<TxPlacement>(() => this.data.ref()?.placement() ?? this.data.state.options.placement ?? 'bottom');
   readonly side = computed(() => parsePlacement(this.placement()).side);
-  readonly arrowOffset = computed(() => {
-    const { side, align } = parsePlacement(this.placement());
-    const vertical = side === 'top' || side === 'bottom';
-    const anchor = vertical ? this.data.originSize.width : this.data.originSize.height;
-    const start = align === 'start' ? '0px' : align === 'end' ? `calc(100% - ${anchor}px)` : `calc(50% - ${anchor / 2}px)`;
-    return `calc(${start} + var(--tx-confirm-popup-arrow-inset))`;
-  });
+  readonly arrowOffset = computed(() => txArrowOffset(this.placement(), this.data.originSize, 'var(--tx-confirm-popup-arrow-inset)'));
   readonly hostStyle = computed(() => ({ ...this.view.style, '--tx-confirm-arrow-offset': this.arrowOffset() }));
 
   constructor() {
