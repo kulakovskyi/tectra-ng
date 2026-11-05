@@ -35,7 +35,7 @@ describe('overlay motion', () => {
     element.animate = animate;
     txAnimateEnter(element, 'top', 'pop', anchor);
     const [frames] = animate.mock.calls[0] as unknown as [Keyframe[]];
-    expect(frames[0]).toMatchObject({ opacity: 0, transform: 'scale(0.86)', transformOrigin: '40px 100%' });
+    expect(frames[0]).toMatchObject({ opacity: 0, transform: 'scale(0.9)', transformOrigin: '40px 100%' });
     expect(frames[1]).toMatchObject({ opacity: 1, transform: 'scale(1)' });
   });
 

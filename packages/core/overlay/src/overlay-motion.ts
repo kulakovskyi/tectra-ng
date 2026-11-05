@@ -54,7 +54,7 @@ export function txAnimateEnter(element: Element, placement: TxPlacement, motion:
     return;
   }
   if (motion === 'pop') {
-    element.animate(popFrames(element, placement, anchor, 0.86), { duration: 220, easing: 'cubic-bezier(0.34, 1.4, 0.64, 1)' });
+    element.animate(popFrames(element, placement, anchor, 0.9), { duration: 180, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' });
     return;
   }
   element.animate(slideFrames(element, placement), { duration: 160, easing: 'cubic-bezier(0.2, 0, 0, 1)' });

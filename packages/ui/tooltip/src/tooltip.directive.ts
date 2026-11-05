@@ -251,12 +251,14 @@ export class TxTooltip implements TxTooltipHandle {
 
   private open(): void {
     this.showTimer = undefined;
+    const requested = this.placement();
+    const opened = signal<TxOverlayRef | null>(null);
     const state: TxTooltipPanelState = {
       id: this.id,
       origin: this.host,
       content: this.txTooltip,
       context: this.context,
-      placement: computed(() => this.ref()?.placement() ?? this.placement()),
+      placement: computed(() => opened()?.placement() ?? requested),
       arrow: this.arrow,
       interactive: this.interactive,
       hiddenFromReaders: this.describesAhead,
@@ -273,7 +275,7 @@ export class TxTooltip implements TxTooltipHandle {
       origin: this.host,
       viewContainerRef: this.viewContainerRef,
       injector: Injector.create({ providers: [{ provide: TX_TOOLTIP_PANEL, useValue: state }], parent: this.injector }),
-      placement: this.placement(),
+      placement: requested,
       offset: this.offset(),
       layer: 'tooltip',
       motion: 'pop',
@@ -293,6 +295,7 @@ export class TxTooltip implements TxTooltipHandle {
         this.tooltipHidden.emit();
       }
     });
+    opened.set(ref);
     this.ref.set(ref);
     this.tooltipShown.emit();
     const life = this.life();

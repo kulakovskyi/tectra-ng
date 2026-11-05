@@ -704,6 +704,39 @@ test.describe('with motion', () => {
     }
   });
 
+  test('flipped tooltip keeps its arrow side while it fades out', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 520 });
+    await page.goto('/components/tooltip');
+    const origin = page.locator('tooltip-placements-example').getByRole('button', { name: 'top', exact: true });
+    await expect(origin).toBeVisible();
+    const scrollBelow = (top: number) => origin.evaluate((element, offset) => window.scrollTo(0, element.getBoundingClientRect().top + window.scrollY - offset), top);
+    await scrollBelow(200);
+    const stuckBottom = await page.locator('.tabs-bar').evaluate((bar) => bar.getBoundingClientRect().bottom);
+    await scrollBelow(stuckBottom + 12);
+    await origin.hover();
+    const tooltip = page.locator('tx-tooltip');
+    await expect(tooltip).toHaveAttribute('data-side', 'bottom');
+    await page.waitForTimeout(250);
+    await page.mouse.move(0, 0);
+    const sides = await tooltip.evaluate(
+      (element) =>
+        new Promise<string[]>((resolve) => {
+          const seen: string[] = [];
+          const tick = () => {
+            if (!element.isConnected) {
+              resolve(seen);
+              return;
+            }
+            seen.push(element.getAttribute('data-side') ?? '');
+            requestAnimationFrame(tick);
+          };
+          tick();
+        }),
+    );
+    expect(sides.length).toBeGreaterThan(1);
+    expect(new Set(sides)).toEqual(new Set(['bottom']));
+  });
+
   test('overlay fades out before it is removed', async ({ page }) => {
     await page.goto('/core/overlay');
     await page.getByRole('button', { name: 'bottom', exact: true }).click();
