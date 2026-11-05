@@ -93,7 +93,8 @@ test('overlay flips when there is no room', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 520 });
   await page.goto('/core/overlay');
   const origin = page.getByRole('button', { name: 'top', exact: true });
-  await origin.evaluate((element) => window.scrollTo(0, element.getBoundingClientRect().top + window.scrollY - 24));
+  const headerBottom = await page.locator('.header').evaluate((header) => header.getBoundingClientRect().bottom);
+  await origin.evaluate((element, top) => window.scrollTo(0, element.getBoundingClientRect().top + window.scrollY - top), headerBottom + 16);
   await origin.dispatchEvent('click');
   await expect(page.locator('.tx-overlay-pane .panel')).toHaveAttribute('data-placement', 'bottom');
 });
@@ -144,6 +145,25 @@ test('select panel stays clear of the stuck tab bar', async ({ page }) => {
 
   await scrollTriggerTo(chromeBottom - 60);
   await expect(panel).toHaveCount(0);
+});
+
+test('message closes and field errors are linked to their fields', async ({ page }) => {
+  await page.goto('/components/message');
+  const closable = page.locator('message-closable-example');
+  await closable.getByRole('button', { name: 'Close', exact: true }).click();
+  await expect(closable.locator('tx-message')).toHaveCount(0);
+  await expect(closable.getByRole('button', { name: 'Show again' })).toBeVisible();
+
+  const form = page.locator('message-field-error-example');
+  const email = form.locator('#error-email');
+  await form.getByRole('button', { name: 'Create account' }).click();
+  const error = form.locator('tx-field-error').first();
+  await expect(error).toHaveText('This field is required');
+  await expect(email).toHaveAttribute('aria-invalid', 'true');
+  const errorId = await error.getAttribute('id');
+  await expect(email).toHaveAttribute('aria-describedby', new RegExp(`\\b${errorId}\\b`));
+  await email.fill('ann@site.dev');
+  await expect(error.locator('.tx-field-message__text')).toHaveCount(0);
 });
 
 test.describe('with motion', () => {

@@ -11,10 +11,14 @@ export class TxIconRegistry {
   }
 
   get(name: string): TxIconPath[] | undefined {
-    return this.icons()[name];
+    return this.icons()[name] ?? this.icons()[withoutPrefix(name)];
   }
 
   has(name: string | undefined): boolean {
-    return !!name && name in this.icons();
+    return !!name && (name in this.icons() || withoutPrefix(name) in this.icons());
   }
+}
+
+function withoutPrefix(name: string): string {
+  return name.replace(/^pi-/, '');
 }

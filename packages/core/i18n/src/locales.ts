@@ -17,6 +17,14 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     pageReport: '{first}–{last} of {total}',
     copy: 'Copy',
     copied: 'Copied',
+    validationRequired: 'This field is required',
+    validationEmail: 'Enter a valid email',
+    validationMinlength: 'At least {requiredLength} characters',
+    validationMaxlength: 'At most {requiredLength} characters',
+    validationMin: 'Must be at least {min}',
+    validationMax: 'Must be at most {max}',
+    validationPattern: 'Invalid format',
+    validationInvalid: 'Invalid value',
   },
 };
 
@@ -37,6 +45,14 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     pageReport: '{first}–{last} з {total}',
     copy: 'Копіювати',
     copied: 'Скопійовано',
+    validationRequired: "Обов'язкове поле",
+    validationEmail: 'Введіть коректний email',
+    validationMinlength: 'Щонайменше {requiredLength} символів',
+    validationMaxlength: 'Не більше {requiredLength} символів',
+    validationMin: 'Не менше {min}',
+    validationMax: 'Не більше {max}',
+    validationPattern: 'Неправильний формат',
+    validationInvalid: 'Некоректне значення',
   },
 };
 

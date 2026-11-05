@@ -1,0 +1,19 @@
+@if (errorText(); as text) {
+  <div class="tx-field-message__row" animate.enter="tx-field-message--enter" animate.leave="tx-field-message--leave">
+    <span class="tx-field-message__inner">
+      <span class="tx-field-message__icon" aria-hidden="true" [class]="passThrough().icon?.class" [style]="passThrough().icon?.style">
+        <tx-icon [name]="'exclamation-circle'" />
+      </span>
+      <span class="tx-field-message__text" [class]="passThrough().text?.class" [style]="passThrough().text?.style">{{ text }}</span>
+    </span>
+  </div>
+} @else if (successShown()) {
+  <div class="tx-field-message__row tx-field-message__row--success" animate.enter="tx-field-message--enter" animate.leave="tx-field-message--leave">
+    <span class="tx-field-message__inner">
+      <span class="tx-field-message__icon" aria-hidden="true" [class]="passThrough().icon?.class" [style]="passThrough().icon?.style">
+        <tx-icon [name]="'check-circle'" />
+      </span>
+      <span class="tx-field-message__text" [class]="passThrough().text?.class" [style]="passThrough().text?.style">{{ successText() }}</span>
+    </span>
+  </div>
+}

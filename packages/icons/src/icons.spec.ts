@@ -31,6 +31,13 @@ describe('icons', () => {
     expect(logoPath.getAttribute('stroke')).toBe('none');
   });
 
+  it('accepts PrimeIcons names with the pi- prefix, but keeps full icon classes as classes', () => {
+    const registry = TestBed.inject(TxIconRegistry);
+    expect(registry.has('pi-check')).toBe(true);
+    expect(registry.get('pi-check')).toEqual(registry.get('check'));
+    expect(registry.has('pi pi-check')).toBe(false);
+  });
+
   it('registers sets at runtime', () => {
     const registry = TestBed.inject(TxIconRegistry);
     expect(registry.has('custom')).toBe(false);

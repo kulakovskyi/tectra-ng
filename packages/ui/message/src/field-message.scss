@@ -1,0 +1,75 @@
+:host {
+  display: block;
+}
+
+:host([data-styled]) {
+  --_color: var(--tx-field-message-hint-color);
+
+  color: var(--_color);
+  font-family: var(--tx-font-family);
+  font-size: var(--tx-field-message-font-size);
+  line-height: var(--tx-field-message-line-height);
+}
+
+:host([data-styled].tx-field-hint) {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--tx-field-message-gap);
+  margin-top: var(--tx-field-message-margin-top);
+}
+
+:host([data-styled][data-severity='success']),
+:host([data-styled]) .tx-field-message__row--success {
+  --_color: var(--tx-field-message-success-color);
+
+  color: var(--_color);
+}
+
+:host([data-styled].tx-field-error) {
+  --_color: var(--tx-field-message-error-color);
+}
+
+:host([data-styled]) .tx-field-message__row {
+  display: grid;
+  grid-template-rows: 1fr;
+}
+
+:host([data-styled]) .tx-field-message__inner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--tx-field-message-gap);
+  min-height: 0;
+  padding-top: var(--tx-field-message-margin-top);
+  overflow: hidden;
+}
+
+:host([data-styled]) .tx-field-message__icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  height: 1lh;
+  font-size: var(--tx-field-message-icon-size);
+}
+
+:host([data-styled]) .tx-field-message--enter {
+  animation: tx-field-message-in var(--tx-field-message-transition-duration) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:host([data-styled]) .tx-field-message--leave {
+  animation: tx-field-message-in calc(var(--tx-field-message-transition-duration) * 0.8) ease-in reverse forwards;
+}
+
+@keyframes tx-field-message-in {
+  from {
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) .tx-field-message--enter,
+  :host([data-styled]) .tx-field-message--leave {
+    animation-duration: 1ms;
+  }
+}

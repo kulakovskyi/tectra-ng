@@ -16,7 +16,18 @@ export interface TxTranslations {
   pageReport: string;
   copy: string;
   copied: string;
+  validationRequired: string;
+  validationEmail: string;
+  validationMinlength: string;
+  validationMaxlength: string;
+  validationMin: string;
+  validationMax: string;
+  validationPattern: string;
+  validationInvalid: string;
 }
+
+export type TxValidationMessage = string | ((error: unknown) => string);
+export type TxValidationMessages = Record<string, TxValidationMessage>;
 
 export interface TxLocaleDefinition {
   code: string;
@@ -47,4 +58,5 @@ export interface TectraConfig {
   locale?: TxLocaleCode | TxLocaleDefinition;
   translations?: Partial<TxTranslations>;
   overlay?: TxOverlayConfig;
+  validationMessages?: TxValidationMessages;
 }

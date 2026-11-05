@@ -54,17 +54,19 @@ PrimeNG: FloatLabel (`variant`: over / in / on), IftaLabel. First app usage: **3
 - [x] Docs: plain, required + colon + help, subtle, float (3 variants), ifta, with a select
 - [x] Tests: `for` link, marks, filled class on value, ifta; e2e: label click focuses the field, float label moves up on focus and stays up with a value, select named by its label
 
-## 3.3 Message & hints — `ui/message` (field part)
+## 3.3 Message & hints — `ui/message` (field part) ✅
 
-PrimeNG: Message (`severity`, `variant`, `size`, `icon`, `closable`, `life`). First app usage: 18; fields also need a description, an error text and a success text.
+PrimeNG: Message (`severity`, `variant`, `size`, `icon`, `closable`, `life`). First app usage: 18; fields also need a description, an error text and a success text. The first app's own alert (546 uses: `severity`, `text`, `icon` with the `pi-` prefix, `size`, `variant`) and validation message (`control`, `showImmediately`, `successText`, `error.message`) map onto these one to one.
 
-- [ ] `<tx-message>`: severities, `variant` (outlined / simple / filled), `size`, icon, closable + `(close)`, auto hide after `life` ms, icon / content / close templates — shared with stage 4 alert
-- [ ] `<tx-field-hint>`: help text under a field, linked with `aria-describedby`
-- [ ] `<tx-field-error [control]>`: shows the first validation error of a form control after touch (or `showImmediately`); built-in texts for `required`, `email`, `minlength`, `maxlength`, `min`, `max`, `pattern` in us / ua via the locale; custom messages per error key
-- [ ] Success text variant
-- [ ] `aria-live` for errors
-- [ ] Docs: severities, variants, closable, life, field hint, field error with a reactive form
-- [ ] Tests: error appears after touch, custom message, locale switch, describedby
+- [x] `<tx-message>`: 8 severities, `variant` (tinted by default, `outlined`, `text`, `simple`), `size` (small / medium / large), icon (none by default; tectra name, `pi-` name or icon class), `text` or content, closable + `(closed)` after the leave animation, auto close after `life` ms, icon / close icon templates; `role="alert"` for danger / warn, `status` otherwise; `message` tokens — shared with stage 4 alert
+- [x] `<tx-field-hint>`: help text under a field (`secondary` / `success`, icon), `for` adds it to the field's `aria-describedby`
+- [x] `<tx-field-error [control]>`: first validation error after touch or change (or `showImmediately`); built-in texts for `required`, `email`, `minlength`, `maxlength`, `min`, `max`, `pattern` + fallback in us / ua via the locale; own texts per error key (`messages`, string with `{param}` or function), app-wide `provideTectra({ validationMessages })`, `error.message` of custom validators
+- [x] Success text (`successText` on the error, `severity="success"` on the hint)
+- [x] `aria-live="polite"` for errors; `for` wires `aria-describedby` (`linkDescribedBy` / `injectDescribedBy` in `@tectra/core/a11y`)
+- [x] Docs: severities, variants, sizes, icons, content, closable, life, field hint, field error with a reactive form, custom messages, success, design tokens, pass-through
+- [x] Tests: error appears after touch, next errors, success, custom / function / global messages, `error.message`, locale switch, describedby, close after animation, life, dt / pt / unstyled; e2e: close, errors on submit linked to the field
+
+Icons: `TxIconRegistry` also accepts PrimeIcons names with the `pi-` prefix (`pi-check` → `check`); a full class (`pi pi-check`) stays a class.
 
 ## 3.4 Field layout — `ui/field` (new)
 

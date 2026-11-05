@@ -1,0 +1,36 @@
+@if (hasIcon()) {
+  <span class="tx-message__icon" aria-hidden="true" [class]="passThrough().icon?.class" [style]="passThrough().icon?.style">
+    @if (iconTemplate(); as template) {
+      <ng-container [ngTemplateOutlet]="template.templateRef" />
+    } @else if (iconName(); as name) {
+      <tx-icon [name]="name" />
+    } @else {
+      <span [class]="icon()"></span>
+    }
+  </span>
+}
+<div class="tx-message__content" [class]="passThrough().content?.class" [style]="passThrough().content?.style">
+  @if (text()) {
+    {{ text() }}
+  } @else {
+    <ng-content />
+  }
+</div>
+@if (closable()) {
+  <button
+    type="button"
+    class="tx-message__close"
+    [class]="passThrough().closeButton?.class"
+    [style]="passThrough().closeButton?.style"
+    [attr.aria-label]="translations().close"
+    (click)="close()"
+  >
+    @if (closeIconTemplate(); as template) {
+      <ng-container [ngTemplateOutlet]="template.templateRef" />
+    } @else if (closeIconName(); as name) {
+      <tx-icon [name]="name" />
+    } @else {
+      <span [class]="closeIcon()" aria-hidden="true"></span>
+    }
+  </button>
+}
