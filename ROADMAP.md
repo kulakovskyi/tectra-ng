@@ -107,7 +107,7 @@ Detailed checklist per component: [roadmap/stage-5-overlays.md](roadmap/stage-5-
 | `ui/dialog` + dialog service (`open(component, { data })`, `DialogRef`, close result) | Dialog, DynamicDialog | core-utils `modal` (`ModalService`, all modals), 2 | ✅ |
 | `ui/drawer` | Drawer | 13 | ✅ |
 | `ui/confirm` (dialog + popup) + confirm service | ConfirmPopup, ConfirmDialog | 1 | ✅ |
-| `ui/menu`, `ui/tiered-menu`, `ui/context-menu` | Menu, TieredMenu, ContextMenu | table row menu, 6 | ⬜ |
+| `ui/menu` — menu, tiered menu, context menu | Menu, TieredMenu, ContextMenu | table row menu, 6 | ✅ |
 | `ui/split-button` | SplitButton | — (parity, needs menu) | ⬜ |
 | `ui/speed-dial` | SpeedDial | — (parity, needs menu) | ⬜ |
 

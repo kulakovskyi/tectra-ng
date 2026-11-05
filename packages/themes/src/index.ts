@@ -33,6 +33,7 @@ export * from './components/popover.tokens';
 export * from './components/toast.tokens';
 export * from './components/dialog.tokens';
 export * from './components/confirm.tokens';
+export * from './components/menu.tokens';
 export * from './components/icon.tokens';
 export * from './components/ripple.tokens';
 export * from './components/toggle-button.tokens';

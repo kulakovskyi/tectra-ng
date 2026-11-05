@@ -74,15 +74,17 @@ PrimeNG: ConfirmDialog / ConfirmPopup + ConfirmationService (`confirm({ header, 
 - Found on the way: a docs page can name its import line (`import:` in the front matter) — service-only pages had a wrong `Tx<Title>` import; dialogs keep no motion under reduced motion and stop waiting for a leave animation after 400 ms
 
 
-## 5.7 Menus — `ui/menu` (popup + inline), `ui/tiered-menu`, `ui/context-menu`
+## 5.7 Menus — `ui/menu`: `tx-menu` (inline + popup), `tx-tiered-menu`, `tx-context-menu` ✅
 
 PrimeNG: Menu, TieredMenu, ContextMenu (`model: MenuItem[]` — `label`, `icon`, `command`, `routerLink`, `url`, `disabled`, `visible`, `separator`, `items`, `badge`, `styleClass`; `popup`, `toggle(event)`, item template). First app: an actions menu behind an ellipsis button (`id`, `label`, `icon`, `danger`, `(itemSelect)` with the id), table row actions that overflow into a menu, a row context menu built from the same actions with item templates.
 
-- [ ] `TxMenuItem` model (`id`, `label`, `icon`, `command`, `routerLink` + extras, `url` + `target`, `disabled`, `visible`, `separator`, `severity` (danger), `badge`, `shortcut`, `items`, `data`), item template slot
-- [ ] `<tx-menu>` inline and popup (`[txMenuTrigger]` on any button), groups with headers, `(itemSelected)`
-- [ ] `<tx-tiered-menu>` with sub-menus (hover intent, arrow keys), `<tx-context-menu>` on `(contextmenu)` of a target or globally
-- [ ] Keyboard (WAI-ARIA menu / menubar): arrows, Home / End, type-ahead, Enter / Space, Escape / Left closes a level, Tab closes; `role="menu"` / `menuitem`, `aria-haspopup`, `aria-expanded`
-- [ ] Docs + tests: inline, popup, groups, icons and shortcuts, danger item, router links, nested, context menu on a table row, template, design tokens; e2e: keyboard path, sub-menu flip at the viewport edge
+- [x] `TxMenuItem` model (`id`, `label`, `icon`, `command`, `routerLink` + extras, `url` + `target`, `disabled`, `visible`, `separator`, `severity` (danger), `badge`, `shortcut`, `items`, `data`), item template slot
+- [x] `<tx-menu>` inline and popup (`[txMenuTrigger]` on any button), groups with headers, `(itemSelected)`
+- [x] `<tx-tiered-menu>` with sub-menus (hover intent, arrow keys), `<tx-context-menu>` on `(contextmenu)` of a target or globally
+- [x] Keyboard (WAI-ARIA menu / menubar): arrows, Home / End, type-ahead, Enter / Space, Escape / Left closes a level, Tab closes; `role="menu"` / `menuitem`, `aria-haspopup`, `aria-expanded`
+- [x] Docs + tests: inline, popup, groups, icons and shortcuts, danger item, router links, nested, context menu on a table row, template, design tokens; e2e: keyboard path, sub-menu flip at the viewport edge
+- Found on the way: a context menu closes on `pointerdown` outside — the `auxclick` after a right-click counted as an outside click; `@angular/router` is an optional peer of `@tectra/ui` for menu links
+
 
 ## 5.8 Split button + speed dial — `ui/split-button`, `ui/speed-dial`
 

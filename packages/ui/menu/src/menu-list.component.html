@@ -1,0 +1,118 @@
+@for (entry of entries(); track entry.id) {
+  @switch (entry.kind) {
+    @case ('separator') {
+      <div role="separator" class="tx-menu__separator" [class]="pt()?.separator?.class" [style]="pt()?.separator?.style"></div>
+    }
+    @case ('group') {
+      <div role="presentation" class="tx-menu__group-label" [id]="entry.id" [class]="pt()?.groupLabel?.class" [style]="pt()?.groupLabel?.style">
+        {{ entry.item.label }}
+      </div>
+    }
+    @default {
+      <div role="none" class="tx-menu__entry">
+        @if (entry.item.routerLink && !entry.item.disabled) {
+          <a
+            #element
+            role="menuitem"
+            class="tx-menu__item"
+            [id]="entry.id"
+            [class]="pt()?.item?.class"
+            [style]="pt()?.item?.style"
+            [attr.data-severity]="entry.item.severity ?? null"
+            [attr.title]="entry.item.title ?? null"
+            [attr.tabindex]="tabIndex(entry)"
+            [routerLink]="entry.item.routerLink"
+            [queryParams]="entry.item.queryParams"
+            [fragment]="entry.item.fragment"
+            (click)="onItemClick(entry, $event)"
+            (keydown)="onKeydown($event)"
+            (mouseenter)="onItemEnter(entry, element)"
+            (focus)="onItemFocus(entry)"
+          >
+            <ng-container [ngTemplateOutlet]="content" [ngTemplateOutletContext]="{ $implicit: entry.item }" />
+          </a>
+        } @else if (entry.item.url && !entry.item.disabled) {
+          <a
+            #element
+            role="menuitem"
+            class="tx-menu__item"
+            [id]="entry.id"
+            [class]="pt()?.item?.class"
+            [style]="pt()?.item?.style"
+            [attr.data-severity]="entry.item.severity ?? null"
+            [attr.title]="entry.item.title ?? null"
+            [attr.tabindex]="tabIndex(entry)"
+            [attr.href]="entry.item.url"
+            [attr.target]="entry.item.target ?? null"
+            [attr.rel]="entry.item.target === '_blank' ? 'noopener noreferrer' : null"
+            (click)="onItemClick(entry, $event)"
+            (keydown)="onKeydown($event)"
+            (mouseenter)="onItemEnter(entry, element)"
+            (focus)="onItemFocus(entry)"
+          >
+            <ng-container [ngTemplateOutlet]="content" [ngTemplateOutletContext]="{ $implicit: entry.item }" />
+          </a>
+        } @else {
+          <div
+            #element
+            role="menuitem"
+            class="tx-menu__item"
+            [id]="entry.id"
+            [class]="pt()?.item?.class"
+            [style]="pt()?.item?.style"
+            [class.tx-menu__item--expanded]="expanded() === entry.id"
+            [attr.data-severity]="entry.item.severity ?? null"
+            [attr.title]="entry.item.title ?? null"
+            [attr.tabindex]="tabIndex(entry)"
+            [attr.aria-disabled]="entry.item.disabled || null"
+            [attr.aria-haspopup]="hasSubmenu(entry.item) ? 'menu' : null"
+            [attr.aria-expanded]="hasSubmenu(entry.item) ? expanded() === entry.id : null"
+            (click)="onItemClick(entry, $event)"
+            (keydown)="onKeydown($event)"
+            (mouseenter)="onItemEnter(entry, element)"
+            (focus)="onItemFocus(entry)"
+          >
+            <ng-container [ngTemplateOutlet]="content" [ngTemplateOutletContext]="{ $implicit: entry.item }" />
+          </div>
+        }
+      </div>
+    }
+  }
+}
+
+<ng-template #content let-item>
+  @if (itemTemplate(); as template) {
+    <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="context(item)" />
+  } @else {
+    @if (item.icon) {
+      <tx-icon class="tx-menu__icon" aria-hidden="true" [name]="item.icon" [class]="pt()?.icon?.class" [style]="pt()?.icon?.style" />
+    }
+    <span class="tx-menu__label" [class]="pt()?.label?.class" [style]="pt()?.label?.style">{{ item.label }}</span>
+    @if (item.badge !== undefined && item.badge !== null) {
+      <tx-badge class="tx-menu__badge" size="small" severity="secondary" [value]="item.badge" [unstyled]="unstyled()" />
+    }
+    @if (item.shortcut) {
+      <kbd class="tx-menu__shortcut" [class]="pt()?.shortcut?.class" [style]="pt()?.shortcut?.style">{{ item.shortcut }}</kbd>
+    }
+    @if (hasSubmenu(item)) {
+      <tx-icon class="tx-menu__submenu-icon" aria-hidden="true" name="angle-right" [class]="pt()?.submenuIcon?.class" [style]="pt()?.submenuIcon?.style" />
+    }
+  }
+</ng-template>
+
+<ng-template #submenuPanel let-items let-focus="focus">
+  <tx-menu-list
+    panel="submenu"
+    [items]="items"
+    [tiered]="true"
+    [level]="level() + 1"
+    [focusOnInit]="focus"
+    [itemTemplate]="itemTemplate()"
+    [unstyled]="unstyled()"
+    [pt]="pt()"
+    [ariaLabel]="undefined"
+    (selected)="onChildSelected($event)"
+    (leave)="onSubmenuLeave()"
+    (tabbed)="tabbed.emit()"
+  />
+</ng-template>
