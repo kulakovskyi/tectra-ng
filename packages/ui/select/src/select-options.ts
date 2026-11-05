@@ -49,6 +49,7 @@ export interface TxOptionRowsRequest {
   filterFields: readonly string[];
   matchMode: TxFilterMatchMode;
   isSelected: (value: unknown) => boolean;
+  isBlocked?: (value: unknown) => boolean;
 }
 
 export function buildOptionRows(request: TxOptionRowsRequest): TxSelectRow[] {
@@ -66,7 +67,9 @@ export function buildOptionRows(request: TxOptionRowsRequest): TxSelectRow[] {
       value,
       option,
       selected: isSelected(value),
-      disabled: !!(fields.disabled && option !== null && typeof option === 'object' && readOptionField(option, fields.disabled)),
+      disabled:
+        !!(fields.disabled && option !== null && typeof option === 'object' && readOptionField(option, fields.disabled)) ||
+        !!request.isBlocked?.(value),
     };
     index += 1;
     return item;

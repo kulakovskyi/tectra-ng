@@ -141,130 +141,37 @@
           [attr.aria-activedescendant]="activeItemId()"
           [placeholder]="filterPlaceholder() ?? translations().searchPlaceholder"
           [value]="query()"
-          (input)="onFilter($event)"
+          (input)="onFilterInput($event)"
           (keydown)="onKeydown($event)"
         />
       </div>
     }
-    @if (virtualScroll() && rows().length) {
-      <cdk-virtual-scroll-viewport
-        class="tx-select__list tx-select__list--virtual"
-        role="listbox"
-        [id]="listboxId"
-        [itemSize]="virtualScrollItemSize()"
-        [style.height.px]="virtualHeight()"
-        [attr.aria-busy]="loading() || null"
-        [class]="passThrough().list?.class"
-        [style]="passThrough().list?.style"
-      >
-        <ng-container *cdkVirtualFor="let row of rows(); let index = index; trackBy: trackRow">
-          <ng-container [ngTemplateOutlet]="rowTemplate" [ngTemplateOutletContext]="{ $implicit: row, index: index, virtual: true }" />
-        </ng-container>
-      </cdk-virtual-scroll-viewport>
-    } @else if (rows().length) {
-      <div
-        class="tx-select__list"
-        role="listbox"
-        [id]="listboxId"
-        [style.max-height]="listMaxHeight()"
-        [attr.aria-busy]="loading() || null"
-        [class]="passThrough().list?.class"
-        [style]="passThrough().list?.style"
-      >
-        @for (section of sections(); track section.group?.id ?? 'options') {
-          @if (section.group; as group) {
-            <div role="group" class="tx-select__group-block" [attr.aria-labelledby]="group.id">
-              <ng-container [ngTemplateOutlet]="rowTemplate" [ngTemplateOutletContext]="{ $implicit: group, index: -1, virtual: false }" />
-              @for (entry of section.rows; track entry.row.id) {
-                <ng-container [ngTemplateOutlet]="rowTemplate" [ngTemplateOutletContext]="{ $implicit: entry.row, index: entry.index, virtual: false }" />
-              }
-            </div>
-          } @else {
-            @for (entry of section.rows; track entry.row.id) {
-              <ng-container [ngTemplateOutlet]="rowTemplate" [ngTemplateOutletContext]="{ $implicit: entry.row, index: entry.index, virtual: false }" />
-            }
-          }
-        }
-      </div>
-    } @else {
-      <div class="tx-select__list tx-select__list--empty" role="listbox" [id]="listboxId" [attr.aria-busy]="loading() || null">
-        <div class="tx-select__empty" role="presentation" [class]="passThrough().empty?.class" [style]="passThrough().empty?.style">
-          @if (loading()) {
-            {{ translations().loading }}
-          } @else if (query().trim() && emptyFilterTemplate(); as template) {
-            <ng-container [ngTemplateOutlet]="template.templateRef" [ngTemplateOutletContext]="{ $implicit: query().trim() }" />
-          } @else if (emptyTemplate(); as template) {
-            <ng-container [ngTemplateOutlet]="template.templateRef" />
-          } @else {
-            {{ emptyText() }}
-          }
-        </div>
-      </div>
-    }
+    <tx-option-list
+      [rows]="rows()"
+      [listboxId]="listboxId"
+      [activeIndex]="activeIndex()"
+      [checkmark]="checkmark()"
+      [virtualScroll]="virtualScroll()"
+      [itemSize]="virtualScrollItemSize()"
+      [scrollHeight]="scrollHeight()"
+      [loading]="loading()"
+      [query]="query()"
+      [emptyText]="emptyText()"
+      [loadingText]="translations().loading"
+      [optionTemplate]="optionTemplate()?.templateRef"
+      [groupTemplate]="groupTemplate()?.templateRef"
+      [emptyTemplate]="emptyTemplate()?.templateRef"
+      [emptyFilterTemplate]="emptyFilterTemplate()?.templateRef"
+      [passThrough]="passThrough()"
+      [unstyled]="isUnstyled()"
+      (optionClick)="onOptionClick($event)"
+      (optionHover)="activeIndex.set($event)"
+      (rangeChange)="onRangeChange($event)"
+    />
     @if (footerTemplate(); as template) {
       <div class="tx-select__footer" [class]="passThrough().footer?.class" [style]="passThrough().footer?.style">
         <ng-container [ngTemplateOutlet]="template.templateRef" />
       </div>
     }
   </div>
-</ng-template>
-
-<ng-template #rowTemplate let-row let-index="index" let-virtual="virtual">
-  @switch (row.type) {
-    @case ('group') {
-      <div
-        role="presentation"
-        class="tx-select__group"
-        [id]="row.id"
-        [style.height.px]="virtual ? virtualScrollItemSize() : null"
-        [class]="passThrough().group?.class"
-        [style]="passThrough().group?.style"
-      >
-        @if (groupTemplate(); as template) {
-          <ng-container [ngTemplateOutlet]="template.templateRef" [ngTemplateOutletContext]="{ $implicit: row.group }" />
-        } @else {
-          {{ row.label }}
-        }
-      </div>
-    }
-    @case ('loader') {
-      <div role="presentation" class="tx-select__option tx-select__option--loader" [style.height.px]="virtual ? virtualScrollItemSize() : null">
-        <tx-skeleton [width]="'60%'" />
-      </div>
-    }
-    @default {
-      <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- options use aria-activedescendant: focus and keys stay on the field -->
-      <div
-        role="option"
-        class="tx-select__option"
-        [id]="row.id"
-        [style.height.px]="virtual ? virtualScrollItemSize() : null"
-        [class.tx-select__option--active]="index === activeIndex()"
-        [class.tx-select__option--selected]="row.selected"
-        [class.tx-select__option--disabled]="row.disabled"
-        [attr.aria-selected]="row.selected"
-        [attr.aria-disabled]="row.disabled || null"
-        [attr.aria-setsize]="virtual ? optionCount() : null"
-        [attr.aria-posinset]="virtual ? row.index + 1 : null"
-        [class]="passThrough().option?.class"
-        [style]="passThrough().option?.style"
-        (mouseenter)="row.disabled || activeIndex.set(index)"
-        (click)="choose(row)"
-      >
-        <span class="tx-select__option-label">
-          @if (optionTemplate(); as template) {
-            <ng-container
-              [ngTemplateOutlet]="template.templateRef"
-              [ngTemplateOutletContext]="{ $implicit: row.option, selected: row.selected, disabled: row.disabled, index: row.index }"
-            />
-          } @else {
-            {{ row.label }}
-          }
-        </span>
-        @if (checkmark() && row.selected) {
-          <tx-icon class="tx-select__check" [name]="'check'" [class]="passThrough().check?.class" [style]="passThrough().check?.style" />
-        }
-      </div>
-    }
-  }
 </ng-template>

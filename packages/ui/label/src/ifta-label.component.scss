@@ -24,10 +24,10 @@
   pointer-events: none;
 }
 
-:host ::ng-deep > :is(.tx-input:focus, tx-select.tx-select--open, tx-select:focus-within) ~ label {
+:host ::ng-deep > :is(.tx-input:focus, tx-select.tx-select--open, tx-select:focus-within, tx-multiselect.tx-multiselect--open, tx-multiselect:focus-within) ~ label {
   color: var(--tx-ifta-label-focus-color);
 }
 
-:host ::ng-deep > :is(.tx-input--invalid, tx-select.tx-select--invalid) ~ label {
+:host ::ng-deep > :is(.tx-input--invalid, tx-select.tx-select--invalid, tx-multiselect.tx-multiselect--invalid) ~ label {
   color: var(--tx-ifta-label-invalid-color);
 }

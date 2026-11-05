@@ -15,25 +15,27 @@
 
 :host ::ng-deep > :is(.tx-input, .tx-input-group-addon, .tx-button):not(:first-child),
 :host ::ng-deep > tx-icon-field:not(:first-child) > .tx-input,
-:host ::ng-deep > tx-select:not(:first-child) .tx-select__box {
+:host ::ng-deep > tx-select:not(:first-child) .tx-select__box,
+:host ::ng-deep > tx-multiselect:not(:first-child) .tx-select__box {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
 
 :host ::ng-deep > :is(.tx-input, .tx-input-group-addon, .tx-button):not(:last-child),
 :host ::ng-deep > tx-icon-field:not(:last-child) > .tx-input,
-:host ::ng-deep > tx-select:not(:last-child) .tx-select__box {
+:host ::ng-deep > tx-select:not(:last-child) .tx-select__box,
+:host ::ng-deep > tx-multiselect:not(:last-child) .tx-select__box {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
 
-:host ::ng-deep > tx-select {
+:host ::ng-deep > :is(tx-select, tx-multiselect) {
   flex: 1 1 auto;
   width: auto;
   min-width: 0;
 }
 
-:host ::ng-deep > :is(.tx-input, .tx-button, tx-icon-field, tx-select):is(:hover, :focus-within, :focus) {
+:host ::ng-deep > :is(.tx-input, .tx-button, tx-icon-field, tx-select, tx-multiselect):is(:hover, :focus-within, :focus) {
   position: relative;
   z-index: 1;
 }

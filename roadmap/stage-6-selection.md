@@ -26,13 +26,14 @@ PrimeNG: Select (`options`, `optionLabel` / `optionValue` / `optionDisabled`, `g
 - [x] `dt` / `pt` / `ptOptions` / `unstyled` (panel too)
 - [x] Docs + tests: every feature above, image / flag options, server-side infinite list; e2e: virtual scroll with keys, clear, editable
 
-## 6.2 Multiselect — `ui/multiselect`
+## 6.2 Multiselect — `ui/multiselect` ✅
 
 PrimeNG: MultiSelect (`display` comma / chip, `maxSelectedLabels`, `selectedItemsLabel`, `selectionLimit`, `showToggleAll`, filter, groups, virtual scroll, lazy, templates). First app: 129 + 8 (country), `maxSelectedLabels` 2, `showToggleAll` 6, `selectionLimit`, filter, virtual scroll, lazy.
 
-- [ ] `<tx-multiselect>` on the select option engine: checkbox options, `display` comma / chip (removable chips), `maxSelectedLabels` + translated "{count} selected", `selectionLimit`, toggle all (filtered options only), `showClear`
-- [ ] Filter, groups, virtual scroll, lazy, loading, templates as in select
-- [ ] Docs + tests; e2e: select all with the filter, chips removal by keyboard
+- [x] Shared pieces in `ui/select`: `tx-option-list` (list, groups, virtual rows, loaders, empty state), `TxOptionsBase` (rows, filter, keys, lazy) and `TxSelectBase` (field + overlay panel), the field styles as a Sass mixin; select rebuilt on them
+- [x] `<tx-multiselect>`: checkbox options (`aria-multiselectable`), the panel stays open, `display` comma / chip (remove icon, Backspace removes the last), `maxSelectedLabels` + translated "{count} selected" (`selectedItemsLabel`), `selectionLimit` disables the rest, toggle all as a tri-state checkbox for the visible options and Ctrl / ⌘ + A, `showClear`, `null` value is an empty array
+- [x] Filter, groups, virtual scroll, lazy, loading, templates (`txSelectValue` gets the selected items) as in select; float / ifta label and input group know it
+- [x] Docs + tests; e2e: select all with the filter (Shift+Tab to the checkbox), chips removal by click and Backspace, the limit, axe on open panels in light and dark
 
 ## 6.3 Listbox — `ui/listbox`
 

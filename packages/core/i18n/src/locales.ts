@@ -40,6 +40,7 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     generatePassword: 'Generate password',
     remove: 'Remove',
     moreItems: '{count} more',
+    selectedItems: '{count} selected',
   },
 };
 
@@ -83,6 +84,7 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     generatePassword: 'Згенерувати пароль',
     remove: 'Видалити',
     moreItems: 'ще {count}',
+    selectedItems: 'Вибрано: {count}',
   },
 };
 
