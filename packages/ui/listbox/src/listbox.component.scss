@@ -38,7 +38,7 @@
 
 :host([data-styled].tx-listbox--focused:has(.tx-select__list:focus-visible)) {
   border-color: var(--tx-listbox-focus-border-color);
-  box-shadow: var(--tx-listbox-focus-ring-shadow), var(--tx-listbox-shadow);
+  box-shadow: var(--tx-listbox-focus-ring-shadow);
 }
 
 :host([data-styled].tx-listbox--invalid) {

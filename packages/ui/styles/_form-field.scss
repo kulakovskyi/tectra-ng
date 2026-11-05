@@ -25,7 +25,7 @@
 
 @mixin focus {
   border-color: var(--tx-form-field-focus-border-color);
-  box-shadow: var(--tx-form-field-focus-ring-shadow), var(--tx-form-field-shadow);
+  box-shadow: var(--tx-form-field-focus-ring-shadow);
 }
 
 @mixin filled {
@@ -46,7 +46,7 @@
 
 @mixin invalid-focus {
   border-color: var(--tx-form-field-invalid-border-color);
-  box-shadow: var(--tx-form-field-invalid-focus-ring-shadow), var(--tx-form-field-shadow);
+  box-shadow: var(--tx-form-field-invalid-focus-ring-shadow);
 }
 
 @mixin readonly {
