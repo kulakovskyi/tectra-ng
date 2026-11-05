@@ -50,7 +50,7 @@ PrimeNG: FloatLabel (`variant`: over / in / on), IftaLabel. First app usage: **3
 - [x] `<tx-float-label>`: label inside the field that floats on focus / value — variants `over`, `in`, `on`; placeholder hidden until focus; focus and invalid colours; `floatLabel` tokens
 - [x] `<tx-ifta-label>`: label inside the field above the value; `iftaLabel` tokens
 - [x] Fields expose their state for labels: `tx-input--filled` (`injectFieldFilled`), `tx-select--filled`, select `inputId`; the field padding top / bottom can be raised by the label (`--tx-field-padding-top` / `-bottom`)
-- [x] Works with input, textarea, select and password (`tx-password--filled`); number, mask and otp join with the same filled / focus classes when they are built (3.10–3.12)
+- [x] Works with input, textarea, select, password (`tx-password--filled`), input number (`tx-input-number--filled`) and masked inputs (`txInput`)
 - [x] Docs: plain, required + colon + help, subtle, float (3 variants), ifta, with a select
 - [x] Tests: `for` link, marks, filled class on value, ifta; e2e: label click focuses the field, float label moves up on focus and stays up with a value, select named by its label
 
@@ -151,15 +151,15 @@ PrimeNG: InputMask (`mask`, `slotChar`, `autoClear`, `unmask`, `characterPattern
 - [x] `(completed)` output; clear button through `tx-icon-field` + `tx-input-clear`
 - [x] Docs + tests: phone, date, card, letters, optional part, unmask, slot char, auto clear, clear, form; engine specs; e2e: typing, Backspace over literals, blur clear / keep
 
-## 3.12 Input number — `ui/input-number`
+## 3.12 Input number — `ui/input-number` ✅
 
 PrimeNG: InputNumber (`mode` decimal / currency, `currency`, `locale`, grouping, min / max fraction digits, `prefix` / `suffix`, `showButtons` + `buttonLayout` stacked / horizontal / vertical, `min` / `max` / `step`, `allowEmpty`, `showClear`). Not used by the first app yet (parity); it formats amounts for display elsewhere.
 
-- [ ] `<tx-input-number>` formatting while typing with `TxLocaleService` (us / ua separators)
-- [ ] Decimal and currency modes, fraction digits, grouping, prefix / suffix
-- [ ] Step buttons: stacked, horizontal, vertical; ArrowUp / ArrowDown step; hold to repeat
-- [ ] `min` / `max` clamp, `allowEmpty`, clear button
-- [ ] Docs + tests: typing with separators, paste, step, clamp, currency per locale
+- [x] `<tx-input-number>` formatting while typing with `Intl.NumberFormat` and `TxLocaleService` (us / ua separators, switches at runtime, `locale` override), caret kept by digit count, `role="spinbutton"` with `aria-valuenow` / `min` / `max`
+- [x] Decimal and currency modes (`currency`, `currencyDisplay`, symbol placed per locale), fraction digits, grouping, prefix / suffix; `.` and `,` both start the fraction when the locale uses a comma
+- [x] Step buttons: stacked, horizontal, vertical; ArrowUp / ArrowDown step (decimal steps without float noise), Home / End to min / max, hold to repeat
+- [x] `min` / `max` clamp (blur, Enter, steps; buttons disable at the limits, `min ≥ 0` blocks the minus), `allowEmpty`, clear button, `(changed)`; float label (`tx-input-number--filled`), `inputNumber` tokens + `formField`
+- [x] Docs + tests: typing with separators, paste, step, clamp, currency per locale, locale switch, buttons, clear, float label, sizes, states, form with min / max, design tokens; `TxNumberFormat` specs; e2e: grouping while typing, caret in the middle, held button repeats, locale switch
 
 ## 3.13 Rating — `ui/rating`
 

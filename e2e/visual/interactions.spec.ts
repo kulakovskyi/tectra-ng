@@ -332,6 +332,38 @@ test('input mask formats typing, skips literals on Backspace and clears incomple
   await expect(keeping).toHaveValue('12');
 });
 
+test('input number groups while typing, keeps the caret and repeats a held button', async ({ page }) => {
+  await page.goto('/components/input-number');
+  const basic = page.locator('input-number-basic-example');
+  const visitors = basic.getByRole('spinbutton', { name: 'Visitors' });
+  await visitors.fill('');
+  await visitors.pressSequentially('1234567');
+  await expect(visitors).toHaveValue('1,234,567');
+  await expect(basic.locator('.hint')).toHaveText('Model: 1234567');
+  await visitors.press('Home');
+  await visitors.press('ArrowRight');
+  await visitors.pressSequentially('9');
+  await expect(visitors).toHaveValue('19,234,567');
+  expect(await visitors.evaluate((element: HTMLInputElement) => element.selectionStart)).toBe(2);
+  await visitors.press('ArrowUp');
+  await expect(basic.locator('.hint')).toHaveText('Model: 19234568');
+
+  const stacked = page.locator('input-number-buttons-example').getByRole('spinbutton', { name: 'Stacked' });
+  const increase = page.locator('input-number-buttons-example tx-input-number').first().getByRole('button', { name: 'Increase' });
+  await increase.hover();
+  await page.mouse.down();
+  await page.waitForTimeout(800);
+  await page.mouse.up();
+  const held = Number(await stacked.inputValue());
+  expect(held).toBeGreaterThan(22);
+
+  const locale = page.locator('input-number-locale-example');
+  await locale.getByRole('button', { name: /Locale/ }).click();
+  await expect(locale.getByRole('spinbutton')).toHaveValue('25 000,75');
+  await locale.getByRole('button', { name: /Locale/ }).click();
+  await expect(locale.getByRole('spinbutton')).toHaveValue('25,000.75');
+});
+
 test.describe('with motion', () => {
   test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 

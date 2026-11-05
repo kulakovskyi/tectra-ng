@@ -32,6 +32,8 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     showPassword: 'Show password',
     hidePassword: 'Hide password',
     otpCell: 'Character {index} of {length}',
+    increment: 'Increase',
+    decrement: 'Decrease',
   },
 };
 
@@ -67,6 +69,8 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     showPassword: 'Показати пароль',
     hidePassword: 'Сховати пароль',
     otpCell: 'Символ {index} з {length}',
+    increment: 'Збільшити',
+    decrement: 'Зменшити',
   },
 };
 

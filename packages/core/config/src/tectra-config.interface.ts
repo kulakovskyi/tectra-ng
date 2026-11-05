@@ -31,6 +31,8 @@ export interface TxTranslations {
   showPassword: string;
   hidePassword: string;
   otpCell: string;
+  increment: string;
+  decrement: string;
 }
 
 export type TxValidationMessage = string | ((error: unknown) => string);

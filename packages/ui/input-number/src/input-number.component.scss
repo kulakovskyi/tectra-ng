@@ -1,0 +1,154 @@
+@use '../../styles/input-action' as action;
+
+:host {
+  position: relative;
+  display: inline-flex;
+  align-items: stretch;
+  vertical-align: top;
+}
+
+:host(.tx-input-number--fluid) {
+  display: flex;
+  width: 100%;
+}
+
+.tx-input-number__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+:host([data-styled]) {
+  --_inset: 0px;
+}
+
+:host([data-styled][data-layout='stacked']) {
+  --_inset: var(--tx-input-number-button-stacked-width);
+}
+
+:host([data-styled]) .tx-input-number__input {
+  --tx-field-inset-end: calc(var(--_inset) + var(--_clear, 0px));
+}
+
+:host([data-styled]:has(.tx-input-number__clear)) {
+  --_clear: 28px;
+}
+
+.tx-input-number__clear {
+  position: absolute;
+  top: 50%;
+  right: calc(var(--_inset, 0px) + 8px);
+  transform: translateY(-50%);
+}
+
+:host([data-styled]) .tx-input-number__clear {
+  @include action.button;
+}
+
+:host([data-styled]) .tx-input-number__button {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: var(--tx-input-number-button-width);
+  padding: 0;
+  border: 1px solid var(--tx-input-number-button-border-color);
+  background: var(--tx-input-number-button-background);
+  color: var(--tx-input-number-button-color);
+  font-size: var(--tx-input-number-button-icon-size);
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  transition:
+    background-color var(--tx-form-field-transition-duration),
+    color var(--tx-form-field-transition-duration);
+
+  &:hover:enabled {
+    background: var(--tx-input-number-button-hover-background);
+    color: var(--tx-input-number-button-hover-color);
+  }
+
+  &:active:enabled {
+    background: var(--tx-input-number-button-active-background);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+.tx-input-number__stack {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  bottom: 1px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+:host([data-styled]) .tx-input-number__stack {
+  width: var(--tx-input-number-button-stacked-width);
+  border-radius: 0 calc(var(--tx-form-field-border-radius) - 1px) calc(var(--tx-form-field-border-radius) - 1px) 0;
+
+  .tx-input-number__button {
+    flex: 1 1 0;
+    width: 100%;
+    min-height: 0;
+    border-width: 0 0 0 1px;
+  }
+
+  .tx-input-number__increment {
+    border-bottom-width: 1px;
+  }
+}
+
+:host([data-styled][data-layout='horizontal']) {
+  .tx-input-number__input {
+    border-radius: 0;
+  }
+
+  .tx-input-number__decrement {
+    border-right: none;
+    border-radius: var(--tx-form-field-border-radius) 0 0 var(--tx-form-field-border-radius);
+  }
+
+  .tx-input-number__increment {
+    border-left: none;
+    border-radius: 0 var(--tx-form-field-border-radius) var(--tx-form-field-border-radius) 0;
+  }
+}
+
+:host([data-layout='vertical']) {
+  flex-direction: column;
+}
+
+:host([data-styled][data-layout='vertical']) {
+  .tx-input-number__input {
+    border-radius: 0;
+    text-align: center;
+  }
+
+  .tx-input-number__button {
+    width: auto;
+    height: var(--tx-input-number-button-width);
+  }
+
+  .tx-input-number__increment {
+    order: -1;
+    border-bottom: none;
+    border-radius: var(--tx-form-field-border-radius) var(--tx-form-field-border-radius) 0 0;
+  }
+
+  .tx-input-number__decrement {
+    order: 1;
+    border-top: none;
+    border-radius: 0 0 var(--tx-form-field-border-radius) var(--tx-form-field-border-radius);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) .tx-input-number__button {
+    transition: none;
+  }
+}
