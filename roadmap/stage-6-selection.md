@@ -69,4 +69,10 @@ Not in PrimeNG. First app: flag display 56 (`code`, `showName`, `round`, `size`)
 
 ## 6.7 The rest — color picker, mention textarea, email suggestion, tree select, cascade select
 
-- [ ] `ui/color-picker` (popover + presets), `ui/mention-textarea`, `ui/email-suggestion`, `ui/tree-select`, `ui/cascade-select` (parity)
+PrimeNG: ColorPicker (`inline`, `format` hex / rgb / hsb), TreeSelect, CascadeSelect. First app: own colour input 1 (popover, presets, area / hue / clear labels), mention textarea 1 (users, mentioned users output), email suggestion 4 (`value`, `domain`, `apply`), tree / cascade select 0.
+
+- [x] `ui/color-picker`: button + popover (`role="dialog"`) or `inline`; saturation / brightness area and hue slider by pointer and keys (`role="slider"`, value text), hex field, presets (`aria-pressed`), clear, `format` hex / rgb / hsb (typed and preset colours stay exact), sizes, states; `colorPicker` tokens (gradients included); docs, tests, e2e (drag, keys, preset, axe on the open popover)
+- [ ] `ui/mention-textarea`
+- [ ] `ui/email-suggestion`
+- [ ] `ui/tree-select`
+- [ ] `ui/cascade-select`

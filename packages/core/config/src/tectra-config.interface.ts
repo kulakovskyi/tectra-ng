@@ -43,6 +43,13 @@ export interface TxTranslations {
   showOptions: string;
   removeItem: string;
   itemsLimit: string;
+  pickColor: string;
+  noColor: string;
+  colorArea: string;
+  colorAreaValue: string;
+  colorHue: string;
+  colorHex: string;
+  colorPresets: string;
 }
 
 export type TxValidationMessage = string | ((error: unknown) => string);

@@ -45,3 +45,47 @@ export const countryTokens = {
 };
 
 export type TectraCountryTokens = typeof countryTokens;
+
+export const colorPickerTokens = {
+  root: {
+    gap: '8px',
+    swatchSize: '20px',
+    swatchBorderRadius: tokenRef('radius-sm'),
+    swatchRing: `inset 0 0 0 1px ${tokenRef('surface-border')}`,
+  },
+  panel: {
+    width: '240px',
+    padding: '12px',
+    gap: '12px',
+    background: tokenRef('surface-overlay'),
+    borderColor: tokenRef('surface-overlay-border'),
+    borderRadius: tokenRef('radius-lg'),
+    shadow: tokenRef('shadow-overlay'),
+  },
+  area: {
+    height: '160px',
+    borderRadius: tokenRef('radius-md'),
+    saturationGradient: 'linear-gradient(to right, rgb(255 255 255), rgb(255 255 255 / 0))',
+    brightnessGradient: 'linear-gradient(to top, rgb(0 0 0), rgb(0 0 0 / 0))',
+  },
+  hue: {
+    height: '12px',
+    borderRadius: tokenRef('radius-full'),
+    gradient:
+      'linear-gradient(to right, rgb(255 0 0), rgb(255 255 0), rgb(0 255 0), rgb(0 255 255), rgb(0 0 255), rgb(255 0 255), rgb(255 0 0))',
+  },
+  handle: {
+    size: '16px',
+    borderColor: tokenRef('surface-0'),
+    ring: `0 0 0 1px ${tokenRef('surface-900')}, ${tokenRef('shadow-overlay')}`,
+    focusRing: `0 0 0 2px ${tokenRef('surface-0')}, 0 0 0 4px ${tokenRef('focus-ring-color')}`,
+  },
+  preset: {
+    size: '22px',
+    gap: '6px',
+    borderRadius: tokenRef('radius-sm'),
+    selectedRing: `0 0 0 2px ${tokenRef('surface-overlay')}, 0 0 0 4px ${tokenRef('primary-base')}`,
+  },
+};
+
+export type TectraColorPickerTokens = typeof colorPickerTokens;

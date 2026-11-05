@@ -44,6 +44,13 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     showOptions: 'Show options',
     removeItem: 'Remove {item}',
     itemsLimit: 'Up to {max}',
+    pickColor: 'Pick a colour',
+    noColor: 'No colour',
+    colorArea: 'Saturation and brightness',
+    colorAreaValue: 'Saturation {saturation}%, brightness {brightness}%',
+    colorHue: 'Hue',
+    colorHex: 'Hex colour',
+    colorPresets: 'Preset colours',
   },
 };
 
@@ -91,6 +98,13 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     showOptions: 'Показати варіанти',
     removeItem: 'Видалити {item}',
     itemsLimit: 'Не більше {max}',
+    pickColor: 'Вибрати колір',
+    noColor: 'Без кольору',
+    colorArea: 'Насиченість і яскравість',
+    colorAreaValue: 'Насиченість {saturation}%, яскравість {brightness}%',
+    colorHue: 'Відтінок',
+    colorHex: 'Колір hex',
+    colorPresets: 'Готові кольори',
   },
 };
 

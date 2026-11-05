@@ -17,7 +17,7 @@ import { progressBarTokens, progressSpinnerTokens } from './progress.tokens';
 import { radioButtonTokens } from './radio-button.tokens';
 import { ratingTokens } from './rating.tokens';
 import { selectTokens } from './select.tokens';
-import { chipsInputTokens, countryTokens, listboxTokens } from './selection.tokens';
+import { chipsInputTokens, colorPickerTokens, countryTokens, listboxTokens } from './selection.tokens';
 import { skeletonTokens } from './skeleton.tokens';
 import { sliderTokens } from './slider.tokens';
 import { chipTokens, tagTokens } from './tag.tokens';
@@ -40,6 +40,7 @@ export const COMPONENT_TOKENS = {
   listbox: listboxTokens,
   chipsInput: chipsInputTokens,
   country: countryTokens,
+  colorPicker: colorPickerTokens,
   badge: badgeTokens,
   toggleButton: toggleButtonTokens,
   message: messageTokens,
