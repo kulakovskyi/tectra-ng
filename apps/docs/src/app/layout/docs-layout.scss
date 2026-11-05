@@ -169,7 +169,7 @@
   height: calc(100vh - var(--docs-header-height));
   overflow: hidden;
   border-right: 1px solid var(--docs-hairline);
-  background: var(--docs-bg);
+  background: var(--docs-sidebar);
   view-transition-name: docs-sidebar;
 }
 
@@ -179,6 +179,7 @@
 
 .content {
   min-width: 0;
+  background: radial-gradient(1200px 440px at 50% -140px, var(--docs-aura), transparent 70%) no-repeat;
   padding: 36px clamp(20px, 4vw, 64px) 96px;
   view-transition-name: docs-content;
 }

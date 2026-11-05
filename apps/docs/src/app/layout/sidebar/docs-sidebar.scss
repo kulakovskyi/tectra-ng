@@ -11,8 +11,8 @@
 }
 
 .docs-nav__input {
-  border-color: transparent;
-  background: var(--docs-fill-strong);
+  border-color: var(--docs-hairline);
+  background: var(--docs-panel);
 
   &:hover {
     border-color: var(--docs-hairline-strong);
@@ -179,13 +179,13 @@
 
 .docs-nav__links {
   position: relative;
-  margin: 2px 0 10px 20px;
-  padding: 0 0 0 1px;
+  margin: 0 -4px 6px 20px;
+  padding: 2px 4px 4px 1px;
   list-style: none;
 
   &::before {
     position: absolute;
-    inset: 4px auto 4px 0;
+    inset: 6px auto 8px 0;
     width: 1px;
     background: var(--docs-hairline-strong);
     content: '';
@@ -234,7 +234,8 @@
 
 .docs-nav__link--active,
 .docs-nav__link--active:hover {
-  background: var(--tx-highlight-background);
+  background: var(--docs-nav-active-bg);
+  box-shadow: var(--docs-nav-active-shadow);
   color: var(--tx-highlight-color);
   font-weight: 550;
 
