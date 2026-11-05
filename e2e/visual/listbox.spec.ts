@@ -17,7 +17,16 @@ test('listbox is reached with Tab and picks with the keys', async ({ page }) => 
   await page.keyboard.press('Enter');
   await expect(frame.getByText('Value: odesa')).toBeVisible();
   await expect(frame.getByRole('option', { name: 'Odesa' })).toHaveAttribute('aria-selected', 'true');
-  await expect(frame.locator('tx-listbox')).toHaveCSS('box-shadow', /rgb/);
+  const ring = await frame.locator('tx-listbox').evaluate((host) => {
+    host.getAnimations().forEach((animation) => animation.finish());
+    const probe = host.ownerDocument.createElement('span');
+    probe.style.color = 'var(--tx-listbox-focus-border-color)';
+    host.appendChild(probe);
+    const expected = getComputedStyle(probe).color;
+    probe.remove();
+    return { actual: getComputedStyle(host).borderTopColor, expected };
+  });
+  expect(ring.actual).toBe(ring.expected);
 });
 
 test('field label names the listbox and the hint describes it', async ({ page }) => {
