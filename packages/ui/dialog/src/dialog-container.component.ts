@@ -23,6 +23,7 @@ import { TxDialogRef } from './dialog-ref';
 import { TxDialogPart, TxDialogTemplateContext } from './dialog.types';
 
 const FIELDS = ['.tx-dialog-content', '.tx-dialog-footer', '.tx-dialog-header'];
+const LEAVE_LIMIT = 400;
 
 @Component({
   selector: 'tx-dialog-container',
@@ -115,6 +116,9 @@ export class TxDialogContainer {
       return null;
     }
     const componentRef = this.outlet().attachComponentPortal(new ComponentPortal(content, this.config.viewContainerRef ?? null, injector));
+    const body = componentRef.location.nativeElement as HTMLElement;
+    body.classList.add('tx-dialog__body');
+    body.style.display = 'contents';
     for (const [name, value] of Object.entries(this.config.inputs ?? {})) {
       componentRef.setInput(name, value);
     }
@@ -143,7 +147,8 @@ export class TxDialogContainer {
     this.leaving.set(true);
     const host = this.panel().nativeElement.parentElement as HTMLElement;
     const animations = typeof host.getAnimations === 'function' ? host.getAnimations({ subtree: true }) : [];
-    return Promise.all(animations.map((animation) => animation.finished.catch(() => undefined))).then(() => undefined);
+    const finished = Promise.all(animations.map((animation) => animation.finished.catch(() => undefined))).then(() => undefined);
+    return animations.length ? Promise.race([finished, new Promise<void>((resolve) => setTimeout(resolve, LEAVE_LIMIT))]) : finished;
   }
 
   updateSize(width?: string, height?: string): void {

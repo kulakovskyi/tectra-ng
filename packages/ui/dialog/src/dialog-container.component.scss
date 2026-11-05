@@ -240,15 +240,19 @@
     .tx-dialog,
     .tx-dialog-mask {
       transition: none;
-      animation-duration: 1ms;
+      animation: none;
     }
   }
 
-  :host([data-styled][data-drawer]) .tx-dialog {
-    animation-name: tx-dialog-fade-in;
+  :host([data-styled].tx-dialog-container--leaving) {
+    .tx-dialog,
+    .tx-dialog-mask {
+      animation: none;
+    }
   }
 
+  :host([data-styled][data-drawer]) .tx-dialog,
   :host([data-styled][data-drawer].tx-dialog-container--leaving) .tx-dialog {
-    animation-name: tx-dialog-fade-out;
+    animation: none;
   }
 }

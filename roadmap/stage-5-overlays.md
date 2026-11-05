@@ -59,18 +59,20 @@ PrimeNG: Dialog (`visible`, `header`, `modal`, `closable`, `dismissableMask`, `c
 PrimeNG: Drawer (`visible`, `position` left / right / top / bottom / full, `modal`, `dismissible`, `closeOnEscape`, `blockScroll`, `header`, `fullScreen`, templates). First app: 14 drawers — `[(visible)]`, `header`, a normal and a wide size, an optional footer slot; always right, modal, dismissable, Escape, block scroll.
 
 - [x] `<tx-drawer [(visible)]>`: positions left / right / top / bottom, `size` (`small` / `medium` / `large` / `full` or a CSS size), `header` text or slot, footer slot, close button
-- [x] `modal` with mask, `dismissable`, `closeOnEscape`, `blockScroll`, slide motion (fade with reduced motion); `TxDialog.open(…, { drawer: 'right' })` for drawers from code
+- [x] `modal` with mask, `dismissable`, `closeOnEscape`, `blockScroll`, slide motion (none with reduced motion); `TxDialog.open(…, { drawer: 'right' })` for drawers from code
 - [x] Accessible like the dialog (focus trap, `aria-modal`, named by the header, focus back)
 - [x] Docs + tests: positions, sizes, footer, form, non-modal, from code, design tokens; e2e: slides in, focus trap, Escape
 
-## 5.6 Confirm — `ui/confirm-dialog`, `ui/confirm-popup` + `TxConfirm` service
+## 5.6 Confirm — `ui/confirm` (dialog + popup) + `TxConfirmService` ✅
 
 PrimeNG: ConfirmDialog / ConfirmPopup + ConfirmationService (`confirm({ header, message, icon, accept, reject, acceptLabel, rejectLabel, acceptButtonProps, defaultFocus, target })`). First app: one confirm modal (title, description, confirm / cancel labels, confirm severity — danger by default, an icon) and ~100 bespoke delete / remove / archive / cancel / revoke modals that are the same shape.
 
-- [ ] `TxConfirm.dialog({ title, message, icon, severity, acceptLabel, rejectLabel, acceptIcon, defaultFocus })` → `Promise<boolean>` / observable; async `accept` with a loading button that closes when it resolves
-- [ ] `TxConfirm.popup(target, { … })` — the same next to the element, with an arrow
-- [ ] Translated default labels (us / ua "Confirm", "Cancel", "Delete"), `role="alertdialog"`, focus on the safe button by default
-- [ ] Docs + tests: delete, severities, async accept, popup, custom content, design tokens; e2e: keyboard confirm, focus back
+- [x] `TxConfirmService.dialog({ title, message, icon, severity, acceptLabel, rejectLabel, acceptIcon, defaultFocus })` → `Promise<boolean>`; async `accept` with a loading button that closes when it resolves
+- [x] `TxConfirmService.popup(target, { … })` — the same next to the element, with an arrow
+- [x] Translated default labels (us / ua "Confirm", "Cancel", "Delete"), `role="alertdialog"`, focus on the safe button by default
+- [x] Docs + tests: delete, severities, async accept, popup, custom content, design tokens; e2e: keyboard confirm, focus back
+- Found on the way: a docs page can name its import line (`import:` in the front matter) — service-only pages had a wrong `Tx<Title>` import; dialogs keep no motion under reduced motion and stop waiting for a leave animation after 400 ms
+
 
 ## 5.7 Menus — `ui/menu` (popup + inline), `ui/tiered-menu`, `ui/context-menu`
 

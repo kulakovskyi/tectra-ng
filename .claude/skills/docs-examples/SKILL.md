@@ -64,6 +64,7 @@ What it is, in one or two sentences.
 - `category` — navigation group. Existing: `Form`, `Actions`, `Misc`; reuse them, add a new one (`Overlay`, `Data`, `Navigation`, `Media` …) only for a new kind of component.
 - `tokens` — registry keys from `COMPONENT_TOKENS` shown on the Theming tab.
 - `examples` — order on the page; title = id in title case (`more-presets` → "More presets").
+- `import` — optional: the name in the import line when it is not `Tx<Title>` (a service-only page: `import: TxConfirmService`).
 
 ## 3. Examples
 

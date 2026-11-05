@@ -219,6 +219,7 @@ async function buildComponent(name) {
     category: meta.category ?? 'Other',
     selector,
     importPath: `@tectra/ui/${name}`,
+    importName: meta.import ?? `Tx${title.replace(/\s+/g, '')}`,
     descriptionHtml: marked.parse(body.replace(/^#\s+.+\n/m, '')),
     api: {
       inputs: withSource(tables.inputs),

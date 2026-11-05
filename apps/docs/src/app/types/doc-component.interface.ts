@@ -52,6 +52,7 @@ export interface DocComponent {
   category: string;
   selector: string;
   importPath: string;
+  importName: string;
   descriptionHtml: string;
   api: { inputs: DocApiMember[]; outputs: DocApiMember[]; slots: DocSlot[] };
   keyboard: DocKeyboardRow[];

@@ -23,7 +23,7 @@ export default class ComponentDocPage {
   readonly doc = input<DocComponent | null>(null);
   importLine = computed(() => {
     const doc = this.doc();
-    return doc ? `import { Tx${doc.title} } from '${doc.importPath}';` : '';
+    return doc ? `import { ${doc.importName} } from '${doc.importPath}';` : '';
   });
   activeTab = linkedSignal<string, DocTab>({ source: this.name, computation: () => 'features' });
   isImportCopied = signal(false);

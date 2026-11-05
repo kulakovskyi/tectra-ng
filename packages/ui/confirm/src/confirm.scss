@@ -1,0 +1,151 @@
+.tx-confirm {
+  --_tone: var(--tx-confirm-primary-tone);
+
+  display: flex;
+  align-items: flex-start;
+  gap: var(--tx-confirm-gap);
+}
+
+@each $severity in (info, success, warn, danger) {
+  .tx-confirm[data-severity='#{$severity}'] {
+    --_tone: var(--tx-confirm-#{$severity}-tone);
+  }
+}
+
+.tx-confirm__icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--tx-confirm-icon-size);
+  height: var(--tx-confirm-icon-size);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--_tone) var(--tx-confirm-icon-tint), transparent);
+  color: var(--_tone);
+  font-size: var(--tx-confirm-icon-font-size);
+}
+
+.tx-confirm__text {
+  flex: 1;
+  min-width: 0;
+  align-self: center;
+  overflow-wrap: anywhere;
+}
+
+.tx-confirm__title {
+  margin: 0;
+  font-size: var(--tx-dialog-title-font-size);
+  font-weight: var(--tx-dialog-title-font-weight);
+  line-height: var(--tx-dialog-title-line-height);
+}
+
+.tx-confirm__message {
+  margin: 4px 0 0;
+  color: var(--tx-confirm-message-color);
+}
+
+.tx-confirm__title + .tx-confirm__message {
+  margin-top: 4px;
+}
+
+:host(.tx-confirm-popup) {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--tx-confirm-popup-gap);
+  box-sizing: border-box;
+  max-width: var(--tx-confirm-popup-max-width);
+  padding: var(--tx-confirm-popup-padding);
+  border: 1px solid var(--tx-confirm-popup-border-color);
+  border-radius: var(--tx-confirm-popup-border-radius);
+  background: var(--tx-confirm-popup-background);
+  color: var(--tx-confirm-popup-color);
+  font-family: var(--tx-font-family);
+  font-size: var(--tx-confirm-popup-font-size);
+  box-shadow: var(--tx-confirm-popup-shadow);
+  outline: none;
+
+  .tx-confirm {
+    gap: var(--tx-confirm-popup-gap);
+  }
+
+  .tx-confirm__icon {
+    width: var(--tx-confirm-popup-icon-size);
+    height: var(--tx-confirm-popup-icon-size);
+    font-size: var(--tx-confirm-popup-icon-font-size);
+  }
+
+  .tx-confirm__title {
+    font-size: inherit;
+    line-height: inherit;
+  }
+
+  .tx-confirm__message:first-child {
+    margin: 0;
+    color: inherit;
+  }
+}
+
+.tx-confirm-popup__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.tx-confirm-popup__arrow {
+  position: absolute;
+  box-sizing: border-box;
+  width: var(--tx-confirm-popup-arrow-size);
+  height: var(--tx-confirm-popup-arrow-size);
+  border: 1px solid transparent;
+  background: var(--tx-confirm-popup-background);
+  transform: rotate(45deg);
+}
+
+:host([data-side='top']) .tx-confirm-popup__arrow,
+:host([data-side='bottom']) .tx-confirm-popup__arrow {
+  inset-inline-start: clamp(
+    calc(var(--tx-confirm-popup-arrow-size) * 1.5),
+    var(--tx-confirm-arrow-offset),
+    calc(100% - var(--tx-confirm-popup-arrow-size) * 1.5)
+  );
+  margin-inline-start: calc(var(--tx-confirm-popup-arrow-size) / -2);
+}
+
+:host([data-side='left']) .tx-confirm-popup__arrow,
+:host([data-side='right']) .tx-confirm-popup__arrow {
+  top: clamp(
+    calc(var(--tx-confirm-popup-arrow-size) * 1.5),
+    var(--tx-confirm-arrow-offset),
+    calc(100% - var(--tx-confirm-popup-arrow-size) * 1.5)
+  );
+  margin-top: calc(var(--tx-confirm-popup-arrow-size) / -2);
+}
+
+:host([data-side='bottom']) .tx-confirm-popup__arrow {
+  top: calc(var(--tx-confirm-popup-arrow-size) / -2);
+  border-top-color: var(--tx-confirm-popup-border-color);
+  border-left-color: var(--tx-confirm-popup-border-color);
+}
+
+:host([data-side='top']) .tx-confirm-popup__arrow {
+  bottom: calc(var(--tx-confirm-popup-arrow-size) / -2);
+  border-right-color: var(--tx-confirm-popup-border-color);
+  border-bottom-color: var(--tx-confirm-popup-border-color);
+}
+
+:host([data-side='right']) .tx-confirm-popup__arrow {
+  left: calc(var(--tx-confirm-popup-arrow-size) / -2);
+  border-bottom-color: var(--tx-confirm-popup-border-color);
+  border-left-color: var(--tx-confirm-popup-border-color);
+}
+
+:host([data-side='left']) .tx-confirm-popup__arrow {
+  right: calc(var(--tx-confirm-popup-arrow-size) / -2);
+  border-top-color: var(--tx-confirm-popup-border-color);
+  border-right-color: var(--tx-confirm-popup-border-color);
+}
+
+:host(tx-confirm-dialog) .tx-confirm {
+  padding-top: 8px;
+}

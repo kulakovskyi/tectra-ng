@@ -29,6 +29,7 @@ import { tooltipTokens } from './tooltip.tokens';
 import { popoverTokens } from './popover.tokens';
 import { toastTokens } from './toast.tokens';
 import { dialogTokens } from './dialog.tokens';
+import { confirmTokens } from './confirm.tokens';
 
 export const COMPONENT_TOKENS = {
   icon: iconTokens,
@@ -67,6 +68,7 @@ export const COMPONENT_TOKENS = {
   popover: popoverTokens,
   toast: toastTokens,
   dialog: dialogTokens,
+  confirm: confirmTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

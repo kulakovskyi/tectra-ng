@@ -9,7 +9,7 @@
     <div class="doc-head__lead" [innerHTML]="doc.descriptionHtml"></div>
     <button type="button" class="import" [attr.aria-label]="'Copy import: ' + importLine()" (click)="copyImport()">
       <code
-        ><span class="hljs-keyword">import</span>{{ ' { ' }}<span class="hljs-title class_">Tx{{ doc.title }}</span>{{ ' } ' }}<span
+        ><span class="hljs-keyword">import</span>{{ ' { ' }}<span class="hljs-title class_">{{ doc.importName }}</span>{{ ' } ' }}<span
           class="hljs-keyword"
           >from</span
         >{{ ' ' }}<span class="hljs-string">'{{ doc.importPath }}'</span>;</code
