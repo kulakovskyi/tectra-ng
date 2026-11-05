@@ -85,7 +85,6 @@
 }
 
 :host([data-styled]) ::ng-deep > [txPillLeading] {
-  display: block;
   flex-shrink: 0;
   margin-inline-start: calc(var(--tx-pill-padding-x) * -0.5);
 }
