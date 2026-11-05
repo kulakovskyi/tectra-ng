@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, TemplateRef, ViewContainerRef, inject, viewChild } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { InkPreset } from '@tectra/themes';
+import { TECTRA_CONFIG } from '@tectra/core/config';
 import { TxOverlay } from './overlay.service';
 import { TxOverlayCloseReason } from './overlay.types';
 
@@ -66,5 +68,44 @@ describe('TxOverlay', () => {
   it('needs a view container for templates', () => {
     const { fixture, origin, overlay } = setup();
     expect(() => overlay.open(fixture.componentInstance.panel(), { origin })).toThrow(/viewContainerRef/);
+  });
+
+  describe('with a sticky header inset', () => {
+    function placeOrigin(origin: HTMLElement, top: number) {
+      origin.getBoundingClientRect = () => ({ top, bottom: top + 32, left: 0, right: 100, width: 100, height: 32, x: 0, y: top, toJSON: () => ({}) });
+    }
+
+    beforeEach(() => {
+      TestBed.configureTestingModule({ providers: [{ provide: TECTRA_CONFIG, useValue: { preset: InkPreset, overlay: { viewportInsets: { top: 56 } } } }] });
+    });
+
+    it('closes once the origin scrolls under the header, without scrolling back', () => {
+      const { origin, overlay } = setup();
+      origin.focus();
+      const focus = vi.spyOn(origin, 'focus');
+      const reasons: TxOverlayCloseReason[] = [];
+      const ref = overlay.open(Panel, { origin });
+      ref.closed.subscribe((reason) => reasons.push(reason));
+
+      placeOrigin(origin, 40);
+      document.dispatchEvent(new Event('scroll'));
+      expect(reasons).toEqual([]);
+
+      placeOrigin(origin, 10);
+      document.dispatchEvent(new Event('scroll'));
+      expect(reasons).toEqual(['scroll']);
+      expect(focus).toHaveBeenCalledWith({ preventScroll: true });
+    });
+
+    it('keeps the panel when scroll is not reposition', () => {
+      const { origin, overlay } = setup();
+      const reasons: TxOverlayCloseReason[] = [];
+      const ref = overlay.open(Panel, { origin, scroll: 'none' });
+      ref.closed.subscribe((reason) => reasons.push(reason));
+      placeOrigin(origin, 0);
+      document.dispatchEvent(new Event('scroll'));
+      expect(reasons).toEqual([]);
+      ref.close();
+    });
   });
 });

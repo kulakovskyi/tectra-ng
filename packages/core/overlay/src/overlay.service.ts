@@ -13,11 +13,13 @@ import { Subject } from 'rxjs';
 import { txAnimateEnter, txAnimateLeave } from './overlay-motion';
 import { placementFromPosition, txPositions } from './placements';
 import { TxOverlayCloseReason, TxOverlayOptions, TxOverlayRef, TxOverlayScroll } from './overlay.types';
+import { TxOverlayInsets, txViewportMargin, watchOrigin } from './overlay-insets.service';
 
 @Injectable({ providedIn: 'root' })
 export class TxOverlay {
   private injector = inject(Injector);
   private document = inject(DOCUMENT);
+  private overlayInsets = inject(TxOverlayInsets);
 
   open<TInstance = unknown, TContext = unknown>(
     content: TemplateRef<TContext> | Type<TInstance>,
@@ -28,10 +30,11 @@ export class TxOverlay {
     const origin = options.origin as HTMLElement;
     const previousFocus = this.document.activeElement as HTMLElement | null;
 
+    const margin = options.viewportMargin ?? 8;
     const positionStrategy = createFlexibleConnectedPositionStrategy(injector, origin)
       .withPositions(txPositions(placement, options.offset ?? 4))
       .withFlexibleDimensions(false)
-      .withViewportMargin(options.viewportMargin ?? 8)
+      .withViewportMargin(txViewportMargin(this.overlayInsets.measure(), margin))
       .withPush(false);
 
     const overlayRef = createOverlayRef(injector, {
@@ -53,8 +56,9 @@ export class TxOverlay {
       }
       isClosed = true;
       subscriptions.forEach((subscription) => subscription.unsubscribe());
+      stopWatchingOrigin();
       if (options.restoreFocus !== false && reason !== 'outside' && previousFocus?.isConnected) {
-        previousFocus.focus();
+        previousFocus.focus({ preventScroll: reason === 'scroll' });
       }
       closed.next(reason);
       closed.complete();
@@ -82,6 +86,15 @@ export class TxOverlay {
       }),
       overlayRef.detachments().subscribe(() => close(options.scroll === 'close' ? 'scroll' : 'detached')),
     ];
+
+    const scroll = options.scroll ?? 'reposition';
+    const stopWatchingOrigin =
+      scroll === 'reposition'
+        ? watchOrigin(origin, this.overlayInsets, {
+            hidden: () => close('scroll'),
+            insetsChange: (insets) => positionStrategy.withViewportMargin(txViewportMargin(insets, margin)),
+          })
+        : () => undefined;
 
     const instance = this.attach(overlayRef, content, options);
     if (animate) {

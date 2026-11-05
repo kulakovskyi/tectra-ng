@@ -47,3 +47,8 @@ export interface TxOverlayRef<TInstance = unknown> {
   close(reason?: TxOverlayCloseReason): void;
   updatePosition(): void;
 }
+
+export interface TxOverlayInsetValues {
+  top: number;
+  bottom: number;
+}

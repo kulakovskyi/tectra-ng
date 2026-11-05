@@ -27,6 +27,15 @@ export interface TxLocaleDefinition {
 
 export type TxLocaleCode = 'us' | 'ua' | (string & {});
 
+export interface TxViewportInsets {
+  top?: number;
+  bottom?: number;
+}
+
+export interface TxOverlayConfig {
+  viewportInsets?: TxViewportInsets;
+}
+
 export interface TectraConfig {
   preset: TectraPreset;
   mode?: TxThemeMode;
@@ -37,4 +46,5 @@ export interface TectraConfig {
   ptOptions?: TxPassThroughOptions;
   locale?: TxLocaleCode | TxLocaleDefinition;
   translations?: Partial<TxTranslations>;
+  overlay?: TxOverlayConfig;
 }

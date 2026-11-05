@@ -120,4 +120,14 @@ describe('TxSelect', () => {
     fixture.detectChanges();
     expect(trigger().disabled).toBe(true);
   });
+
+  it('closes when the trigger scrolls out of the window', () => {
+    trigger().click();
+    fixture.detectChanges();
+    trigger().getBoundingClientRect = () => ({ top: -60, bottom: -28, left: 0, right: 100, width: 100, height: 32, x: 0, y: -60, toJSON: () => ({}) });
+    document.dispatchEvent(new Event('scroll'));
+    fixture.detectChanges();
+    expect(trigger().getAttribute('aria-expanded')).toBe('false');
+    expect(fixture.componentInstance.closed).toBe(1);
+  });
 });

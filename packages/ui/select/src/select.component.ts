@@ -4,6 +4,7 @@ import {
   ChangeDetectionStrategy,
   booleanAttribute,
   Component,
+  DestroyRef,
   ElementRef,
   Injector,
   computed,
@@ -19,7 +20,16 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TxTypeahead, nextListIndex, uniqueId } from '@tectra/core/a11y';
 import { TxFormControlBase, injectFieldInvalid } from '@tectra/core/forms';
 import { injectTranslations } from '@tectra/core/i18n';
-import { TxPlacement, placementFromPosition, txAnimateEnter, txAnimateLeave, txPositions } from '@tectra/core/overlay';
+import {
+  TxPlacement,
+  placementFromPosition,
+  txAnimateEnter,
+  txAnimateLeave,
+  txPositions,
+  TxOverlayInsets,
+  txViewportMargin,
+  watchOrigin,
+} from '@tectra/core/overlay';
 import { TxIcon } from '@tectra/icons';
 import { TxSelectOptionTemplate } from './select-option-template.directive';
 import { TxFieldVariant, TxSelectItem, TxSelectSize } from './select.types';
@@ -73,6 +83,10 @@ export class TxSelect extends TxFormControlBase<unknown> {
   readonly isInvalid = injectFieldInvalid(this.invalid);
   readonly positions = txPositions('bottom-start', 4);
   readonly scrollStrategy = createRepositionScrollStrategy(this.injector);
+  private overlayInsets = inject(TxOverlayInsets);
+  readonly viewportMargin = signal(txViewportMargin({ top: 0, bottom: 0 }, 8));
+  private stopWatchingTrigger: (() => void) | null = null;
+  private readonly stopOnDestroy = inject(DestroyRef).onDestroy(() => this.stopWatchingTrigger?.());
   readonly listboxId = uniqueId('tx-select-listbox');
 
   readonly isOpen = signal(false);
@@ -112,6 +126,11 @@ export class TxSelect extends TxFormControlBase<unknown> {
     this.isOpen.set(true);
     this.hasEntered = false;
     this.isPanelMounted.set(true);
+    this.viewportMargin.set(txViewportMargin(this.overlayInsets.measure(), 8));
+    this.stopWatchingTrigger = watchOrigin(this.trigger().nativeElement, this.overlayInsets, {
+      hidden: () => this.close(),
+      insetsChange: (insets) => this.viewportMargin.set(txViewportMargin(insets, 8)),
+    });
     this.opened.emit();
   }
 
@@ -120,6 +139,8 @@ export class TxSelect extends TxFormControlBase<unknown> {
       return;
     }
     this.isOpen.set(false);
+    this.stopWatchingTrigger?.();
+    this.stopWatchingTrigger = null;
     this.markTouched();
     this.closed.emit();
     const panel = this.panel()?.nativeElement;
