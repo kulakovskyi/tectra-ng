@@ -138,12 +138,14 @@
             [attr.aria-disabled]="!row.selectable || null"
             [class]="passThrough().node?.class"
             [style]="passThrough().node?.style"
+            [animate.enter]="enterClasses()"
+            [animate.leave]="leaveClasses()"
             (mouseenter)="activeKey.set(row.node.key)"
             (click)="onRowClick(row, $event)"
           >
             <span class="tx-tree-select__toggler" aria-hidden="true" [class]="passThrough().toggler?.class" [style]="passThrough().toggler?.style">
               @if (row.hasChildren) {
-                <tx-icon [name]="row.expanded ? 'chevron-down' : 'chevron-right'" />
+                <tx-icon class="tx-tree-select__chevron" [class.tx-tree-select__chevron--open]="row.expanded" [name]="'chevron-right'" />
               }
             </span>
             @if (selectionMode() === 'checkbox') {

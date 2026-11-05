@@ -106,6 +106,8 @@ export class TxCascadeSelect extends TxFormControlBase<unknown> {
   readonly scrollStrategy = createRepositionScrollStrategy(this.injector);
   readonly viewportMargin = signal(txViewportMargin({ top: 0, bottom: 0 }, 8));
   readonly treeId = uniqueId('tx-cascade');
+  readonly columnEnter = ['tx-cascade-select__column--enter'];
+  readonly noClasses: string[] = [];
 
   readonly isOpen = signal(false);
   readonly isPanelMounted = signal(false);
@@ -370,7 +372,7 @@ export class TxCascadeSelect extends TxFormControlBase<unknown> {
   private toItem(option: unknown, level: number, index: number, path: number[], selected: number[]): TxCascadeItem {
     const group = this.childrenOf(option, level).length > 0;
     return {
-      id: `${this.treeId}-${level}-${index}`,
+      id: `${this.treeId}-${[...path.slice(0, level), index].join('-')}`,
       label: String(readOptionField(option, group ? this.optionGroupLabel() : this.optionLabel()) ?? ''),
       value: group ? null : readOptionField(option, this.optionValue()),
       option,

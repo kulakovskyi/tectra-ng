@@ -187,6 +187,9 @@
   }
 
   .tx-color-picker__preset {
+    transition:
+      box-shadow var(--tx-motion-duration) var(--tx-motion-easing),
+      transform var(--tx-motion-duration) var(--tx-motion-easing);
     width: var(--tx-color-picker-preset-size);
     height: var(--tx-color-picker-preset-size);
     padding: 0;
@@ -199,6 +202,10 @@
       box-shadow: var(--tx-color-picker-preset-selected-ring);
     }
 
+    &:enabled:hover {
+      transform: scale(1.1);
+    }
+
     &:focus-visible {
       outline: 2px solid var(--tx-focus-ring-color);
       outline-offset: 2px;
@@ -208,5 +215,11 @@
       cursor: not-allowed;
       opacity: 0.6;
     }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tx-color-picker__panel[data-styled] .tx-color-picker__preset:enabled:hover {
+    transform: none;
   }
 }

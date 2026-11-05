@@ -27,6 +27,9 @@
   }
 
   .tx-multiselect__box {
+    transition:
+      background-color var(--tx-motion-duration) var(--tx-motion-easing),
+      border-color var(--tx-motion-duration) var(--tx-motion-easing);
     display: inline-grid;
     place-items: center;
     box-sizing: border-box;

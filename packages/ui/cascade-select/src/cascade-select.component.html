@@ -73,8 +73,8 @@
     (mousedown)="onPanelMousedown($event)"
   >
     <div class="tx-cascade-select__tree" role="tree" [id]="treeId" [attr.aria-label]="ariaLabel() || placeholder() || null">
-      @for (column of columns(); track $index; let level = $index) {
-        <div class="tx-cascade-select__column" role="group" [class]="passThrough().column?.class" [style]="passThrough().column?.style">
+      @for (column of columns(); track column[0]?.id ?? $index; let level = $index) {
+        <div class="tx-cascade-select__column" role="group" [animate.enter]="level > 0 ? columnEnter : noClasses" [class]="passThrough().column?.class" [style]="passThrough().column?.style">
           @for (item of column; track item.id) {
             <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- items use aria-activedescendant: focus and keys stay on the field -->
             <div

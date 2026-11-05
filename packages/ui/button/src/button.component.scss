@@ -64,7 +64,8 @@ $severities: (primary, secondary, success, info, warn, danger, help, contrast);
     border-color var(--tx-button-transition-duration),
     color var(--tx-button-transition-duration),
     box-shadow var(--tx-button-transition-duration),
-    outline-color var(--tx-button-transition-duration);
+    outline-color var(--tx-button-transition-duration),
+    text-decoration-color var(--tx-button-transition-duration);
 
   &:hover:not(.tx-button--disabled) {
     border-color: var(--_hover-border-color);
@@ -118,8 +119,11 @@ $severities: (primary, secondary, success, info, warn, danger, help, contrast);
   --_hover-color: var(--tx-button-link-hover-color);
   --_active-color: var(--tx-button-link-active-color);
 
+  text-decoration: underline;
+  text-decoration-color: transparent;
+
   &:hover:not(.tx-button--disabled) {
-    text-decoration: underline;
+    text-decoration-color: currentColor;
   }
 }
 

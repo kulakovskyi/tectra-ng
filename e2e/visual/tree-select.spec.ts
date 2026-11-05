@@ -46,3 +46,19 @@ test('checking a branch checks its children', async ({ page }) => {
   await expect(page.getByRole('treeitem', { name: 'Sales' })).toHaveAttribute('aria-checked', 'true');
   await expect(page.getByRole('treeitem', { name: 'Engineering' })).toHaveAttribute('aria-checked', 'mixed');
 });
+
+test('branches open and close with motion and hovers are smooth', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  const trigger = example(page, 'Filter').getByRole('combobox');
+  await trigger.click();
+  const engineering = page.getByRole('treeitem', { name: 'Engineering' });
+  const transition = await engineering.evaluate((element) => getComputedStyle(element).transitionDuration);
+  expect(parseFloat(transition)).toBeGreaterThan(0);
+  await engineering.locator('.tx-tree-select__toggler').click();
+  const child = page.getByRole('treeitem', { name: 'Web' });
+  await expect(child).toBeVisible();
+  expect(await child.evaluate((element) => element.getAnimations().length)).toBeGreaterThan(0);
+  await expect(engineering.locator('.tx-tree-select__chevron')).toHaveCSS('transform', /matrix\(0, 1, -1, 0/);
+  await engineering.locator('.tx-tree-select__toggler').click();
+  await expect(child).toHaveCount(0);
+});

@@ -203,7 +203,8 @@
   text-decoration: none;
   transition:
     color 0.15s,
-    background-color 0.15s;
+    background-color 0.15s,
+    box-shadow 0.15s;
 
   &::before {
     position: absolute;

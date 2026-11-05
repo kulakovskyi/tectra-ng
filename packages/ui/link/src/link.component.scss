@@ -28,13 +28,17 @@
 :host([data-styled]) .tx-link__anchor {
   border-radius: 2px;
   color: var(--tx-link-color);
-  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: var(--tx-link-underline-offset);
   cursor: pointer;
+  transition:
+    color var(--tx-motion-duration) var(--tx-motion-easing),
+    text-decoration-color var(--tx-motion-duration) var(--tx-motion-easing);
 
   &:hover {
     color: var(--tx-link-hover-color);
-    text-decoration: underline;
-    text-underline-offset: var(--tx-link-underline-offset);
+    text-decoration-color: currentColor;
   }
 
   &:focus-visible {

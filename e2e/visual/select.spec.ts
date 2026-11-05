@@ -121,3 +121,9 @@ test('create option is reachable from the search with Tab', async ({ page }) => 
   await expect(trigger).toContainText('Design');
   await expect(trigger).toBeFocused();
 });
+
+test('options and checkboxes change colour smoothly on hover', async ({ page }) => {
+  await example(page, 'Basic').getByRole('combobox').click();
+  const option = page.getByRole('option').first();
+  expect(parseFloat(await option.evaluate((element) => getComputedStyle(element).transitionDuration))).toBeGreaterThan(0);
+});

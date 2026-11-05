@@ -37,3 +37,14 @@ test('columns open with the keys and a leaf is picked', async ({ page }) => {
   await expect(trigger).toBeFocused();
   await expect(trigger).toHaveText('Kraków');
 });
+
+test('a new column slides in and options change colour smoothly', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await example(page, 'Basic').getByRole('combobox').click();
+  const option = page.getByRole('treeitem', { name: 'Poland' });
+  expect(parseFloat(await option.evaluate((element) => getComputedStyle(element).transitionDuration))).toBeGreaterThan(0);
+  await option.hover();
+  const column = page.locator('.tx-cascade-select__column').nth(1);
+  await expect(column).toContainText('Masovia');
+  expect(await column.evaluate((element) => element.getAnimations().length)).toBeGreaterThan(0);
+});

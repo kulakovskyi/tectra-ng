@@ -262,6 +262,7 @@
     }
 
     .tx-select__chip-remove {
+      transition: color var(--tx-motion-duration) var(--tx-motion-easing);
       display: inline-grid;
       place-items: center;
       border-radius: var(--tx-radius-full);

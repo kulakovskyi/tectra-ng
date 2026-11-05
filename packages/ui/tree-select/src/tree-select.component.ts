@@ -97,7 +97,12 @@ export class TxTreeSelect extends TxFormControlBase<string | string[]> {
   private typeahead = new TxTypeahead();
   private stopWatching: (() => void) | null = null;
   private hasEntered = false;
-  private readonly cleanup = inject(DestroyRef).onDestroy(() => this.stopWatching?.());
+  private readonly cleanup = inject(DestroyRef).onDestroy(() => {
+    this.stopWatching?.();
+    if (this.motionTimer) {
+      clearTimeout(this.motionTimer);
+    }
+  });
 
   readonly translations = injectTranslations();
   readonly isInvalid = injectFieldInvalid(this.invalid);
@@ -114,6 +119,10 @@ export class TxTreeSelect extends TxFormControlBase<string | string[]> {
   readonly panelWidth = signal(0);
   readonly query = signal('');
   readonly activeKey = signal<string | null>(null);
+  readonly motion = signal<'expand' | 'collapse' | null>(null);
+  private motionTimer: ReturnType<typeof setTimeout> | null = null;
+  readonly enterClasses = computed(() => (this.motion() === 'expand' ? ['tx-tree-select__node--enter'] : []));
+  readonly leaveClasses = computed(() => (this.motion() === 'collapse' ? ['tx-tree-select__node--leave'] : []));
 
   readonly multiple = computed(() => this.selectionMode() !== 'single');
   readonly selectedKeys = computed<string[]>(() => {
@@ -276,6 +285,11 @@ export class TxTreeSelect extends TxFormControlBase<string | string[]> {
     } else {
       keys.add(row.node.key);
     }
+    this.motion.set(row.expanded ? 'collapse' : 'expand');
+    if (this.motionTimer) {
+      clearTimeout(this.motionTimer);
+    }
+    this.motionTimer = setTimeout(() => this.motion.set(null), 400);
     this.expandedKeys.set([...keys]);
   }
 

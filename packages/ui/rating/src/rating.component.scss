@@ -111,6 +111,7 @@
   font: inherit;
   font-size: var(--tx-rating-clear-font-size);
   cursor: pointer;
+  transition: color var(--tx-motion-duration) var(--tx-motion-easing);
 
   &:hover {
     color: var(--tx-rating-clear-hover-color);

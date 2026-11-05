@@ -65,6 +65,9 @@
 
   .tx-select__option {
     gap: var(--tx-space-2);
+    transition:
+      background-color var(--tx-motion-duration) var(--tx-motion-easing),
+      color var(--tx-motion-duration) var(--tx-motion-easing);
     padding: var(--tx-select-option-padding);
     border-radius: var(--tx-select-option-border-radius);
     color: var(--tx-select-option-color);
@@ -101,6 +104,9 @@
   }
 
   .tx-select__checkbox {
+    transition:
+      background-color var(--tx-motion-duration) var(--tx-motion-easing),
+      border-color var(--tx-motion-duration) var(--tx-motion-easing);
     display: inline-grid;
     flex: none;
     place-items: center;
