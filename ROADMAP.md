@@ -56,7 +56,7 @@ Detailed checklist per component: [roadmap/stage-3-forms.md](roadmap/stage-3-for
 |---|---|---|---|
 | form-field foundation — shared tokens, `filled` variant, focus / invalid / readonly states, invalid from the form control | BaseInput | — | ✅ |
 | `ui/input` + `ui/icon-field` + `ui/input-group` + `ui/key-filter` — icons, addons, prefix / suffix, clear, copy, key filter (PrimeNG presets + `positive`, `nospace`, `latin`), sizes, `fluid`, `dt` / `pt` / `unstyled` | InputText, IconField, InputIcon, InputGroup, KeyFilter | 239 | ✅ |
-| `ui/label` | FloatLabel / IftaLabel | 353 | ⬜ |
+| `ui/label` — label (required, colon, help, subtle), float label (over / in / on), ifta label | FloatLabel / IftaLabel | 353 | ✅ |
 | `ui/message` (field part) — hint, error from the control, success | Message | 18 | ⬜ |
 | `ui/field` — label + control + hint + error, ids and aria wired | — | every form | ⬜ |
 | `ui/textarea` — auto resize | Textarea | 68 | ⬜ |

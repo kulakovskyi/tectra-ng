@@ -39,6 +39,7 @@ import { optionalBoolean } from '@tectra/core/utils';
     '[class.tx-select--disabled]': 'disabled()',
     '[class.tx-select--invalid]': 'isInvalid()',
     '[class.tx-select--readonly]': 'readonly()',
+    '[class.tx-select--filled]': '!!selectedItem()',
     '[attr.data-variant]': 'variant()',
   },
 })
@@ -47,6 +48,7 @@ export class TxSelect extends TxFormControlBase<unknown> {
   readonly optionLabel = input<string>('label');
   readonly optionValue = input<string>('value');
   readonly placeholder = input<string>('');
+  readonly inputId = input<string | undefined>(undefined);
   readonly ariaLabel = input<string | undefined>(undefined);
   readonly ariaLabelledBy = input<string | undefined>(undefined);
   readonly filter = input<boolean>(false);

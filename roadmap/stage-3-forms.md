@@ -42,16 +42,17 @@ PrimeNG: InputText (`pInputText`), IconField + InputIcon, InputGroup + InputGrou
 
 Icons and group addons use the muted text colour (surface 600) instead of surface 500 so text addons pass WCAG AA.
 
-## 3.2 Label — `ui/label`
+## 3.2 Label — `ui/label` ✅
 
 PrimeNG: FloatLabel (`variant`: over / in / on), IftaLabel. First app usage: **353**.
 
-- [ ] `<tx-label>` (native `label` underneath, `for` binding): text, `required` mark, `tooltip` icon, `colon`, `subtle` look, bottom spacing token
-- [ ] `<tx-float-label>`: label inside the field that floats on focus / value — variants `over`, `in`, `on`
-- [ ] `<tx-ifta-label>`: label inside the field, above the value
-- [ ] Works with input, textarea, select, password, number, mask, otp
-- [ ] Docs: plain, required, tooltip, float (3 variants), ifta
-- [ ] Tests: `for` / `id` link, required mark, floating on value and on focus
+- [x] `<tx-label>` (native `label` underneath, `for`): text, `required` mark, `tooltip` help icon (focusable, `title` until the stage 5 tooltip), `colon`, `subtle` look; `label` tokens incl. bottom spacing
+- [x] `<tx-float-label>`: label inside the field that floats on focus / value — variants `over`, `in`, `on`; placeholder hidden until focus; focus and invalid colours; `floatLabel` tokens
+- [x] `<tx-ifta-label>`: label inside the field above the value; `iftaLabel` tokens
+- [x] Fields expose their state for labels: `tx-input--filled` (`injectFieldFilled`), `tx-select--filled`, select `inputId`; the field padding top / bottom can be raised by the label (`--tx-field-padding-top` / `-bottom`)
+- [x] Works with input, textarea and select; password, number, mask and otp join with the same filled / focus classes when they are built (3.9–3.12)
+- [x] Docs: plain, required + colon + help, subtle, float (3 variants), ifta, with a select
+- [x] Tests: `for` link, marks, filled class on value, ifta; e2e: label click focuses the field, float label moves up on focus and stays up with a value, select named by its label
 
 ## 3.3 Message & hints — `ui/message` (field part)
 

@@ -1,7 +1,7 @@
 import { Directive, computed, inject, input } from '@angular/core';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
 import { injectFluid } from '@tectra/core/fluid';
-import { injectFieldInvalid } from '@tectra/core/forms';
+import { injectFieldFilled, injectFieldInvalid } from '@tectra/core/forms';
 import { TxStyleLoader } from '@tectra/core/styles';
 import { optionalBoolean } from '@tectra/core/utils';
 import { TectraDeepPartial, TectraFormFieldTokens, toStyleObject } from '@tectra/themes';
@@ -17,6 +17,7 @@ import { TxFieldVariant, TxInputPart, TxInputSize } from './input.types';
     '[attr.data-styled]': '!isUnstyled() || null',
     '[class.tx-input--invalid]': 'isInvalid()',
     '[class.tx-input--fluid]': 'isFluid()',
+    '[class.tx-input--filled]': 'isFilled()',
     '[attr.aria-invalid]': 'isInvalid() || null',
     '[attr.data-size]': 'size()',
     '[attr.data-variant]': 'variant()',
@@ -33,6 +34,7 @@ export class TxInput {
   readonly unstyled = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
 
   readonly isInvalid = injectFieldInvalid(this.invalid);
+  readonly isFilled = injectFieldFilled();
   readonly isFluid = injectFluid(this.fluid);
   readonly isUnstyled = injectUnstyled(this.unstyled);
   readonly passThrough = injectPassThrough('input', this, this.pt, this.ptOptions);

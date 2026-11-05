@@ -222,3 +222,48 @@ test('input group quantity stepper changes the value', async ({ page }) => {
   await page.getByRole('button', { name: 'Search' }).click();
   await expect(page.getByText('Searched: tectra')).toBeVisible();
 });
+
+test('float label moves up on focus and stays up with a value', async ({ page }) => {
+  await page.goto('/components/label');
+  const input = page.locator('#float-over');
+  const label = page.locator('label[for="float-over"]');
+  const restingTop = await label.evaluate((element) => element.getBoundingClientRect().top);
+  await input.focus();
+  await expect.poll(() => label.evaluate((element) => element.getBoundingClientRect().top)).toBeLessThan(restingTop - 10);
+  await input.fill('Ann');
+  await input.blur();
+  await expect(input).toHaveClass(/tx-input--filled/);
+  await expect.poll(() => label.evaluate((element) => element.getBoundingClientRect().top)).toBeLessThan(restingTop - 10);
+});
+
+test('resting float labels sit in the middle of their field and hosts hug the field', async ({ page }) => {
+  await page.goto('/components/label');
+  await expect(page.locator('#label-select-city')).toBeVisible();
+  const layout = await page.evaluate(() =>
+    ['float-over', 'float-on', 'label-select-city'].map((id) => {
+      const field = document.getElementById(id) as HTMLElement;
+      const host = field.closest('tx-float-label') as HTMLElement;
+      const label = host.querySelector(':scope > label') as HTMLElement;
+      const fieldBox = (field.closest('tx-select') ?? field).getBoundingClientRect();
+      const labelBox = label.getBoundingClientRect();
+      return {
+        id,
+        hostExtra: host.getBoundingClientRect().height - fieldBox.height,
+        offset: labelBox.top + labelBox.height / 2 - (fieldBox.top + fieldBox.height / 2),
+        fieldHeight: fieldBox.height,
+      };
+    }),
+  );
+  for (const item of layout) {
+    expect(Math.abs(item.hostExtra), item.id).toBeLessThan(1);
+    expect(Math.abs(item.offset), item.id).toBeLessThan(1.5);
+    expect(item.fieldHeight, item.id).toBeCloseTo(layout[0].fieldHeight, 0);
+  }
+});
+
+test('labels name their fields', async ({ page }) => {
+  await page.goto('/components/label');
+  await page.getByText('Full name', { exact: true }).click();
+  await expect(page.locator('#label-basic-name')).toBeFocused();
+  await expect(page.getByRole('combobox', { name: 'City' })).toBeVisible();
+});
