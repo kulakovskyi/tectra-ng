@@ -39,6 +39,12 @@ export interface TxTranslations {
   generatePassword: string;
   remove: string;
   moreItems: string;
+  yes: string;
+  no: string;
+  copyLink: string;
+  copyEmail: string;
+  copyPhone: string;
+  opensInNewTab: string;
 }
 
 export type TxValidationMessage = string | ((error: unknown) => string);

@@ -1,0 +1,39 @@
+:host {
+  display: inline;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+:host([data-styled]) {
+  color: var(--tx-amount-color);
+  font-weight: var(--tx-amount-font-weight);
+}
+
+:host([data-styled].tx-amount--strong) {
+  font-weight: var(--tx-amount-strong-font-weight);
+}
+
+:host([data-styled].tx-amount--zero),
+:host([data-styled].tx-amount--empty) {
+  color: var(--tx-amount-muted-color);
+  font-weight: var(--tx-amount-muted-font-weight);
+}
+
+:host([data-styled][data-sign='positive']) {
+  color: var(--tx-amount-positive-color);
+}
+
+:host([data-styled][data-sign='negative']) {
+  color: var(--tx-amount-negative-color);
+}
+
+:host([data-styled]) .tx-amount__currency {
+  color: var(--tx-amount-currency-color);
+  font-size: var(--tx-amount-currency-font-size);
+  font-weight: var(--tx-amount-currency-font-weight);
+}
+
+:host([data-styled][data-sign='positive']) .tx-amount__currency,
+:host([data-styled][data-sign='negative']) .tx-amount__currency {
+  color: inherit;
+}

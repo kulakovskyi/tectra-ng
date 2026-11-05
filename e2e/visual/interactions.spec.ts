@@ -581,6 +581,49 @@ test('divider is a separator with its orientation', async ({ page }) => {
   expect(box?.height).toBeGreaterThan(30);
 });
 
+test('highlight text follows the search and ignores accents', async ({ page }) => {
+  await page.goto('/components/highlight-text');
+  const example = page.locator('highlight-text-basic-example');
+  await expect(example.locator('mark')).toHaveText(['Café', 'cafe', 'café']);
+  await example.getByLabel('Search').fill('RIVER');
+  await expect(example.locator('mark')).toHaveText(['river']);
+  const list = page.locator('highlight-text-search-list-example');
+  await list.getByLabel('Search cities').fill('kh');
+  await expect(list.getByRole('listitem')).toHaveText(['Kharkiv']);
+  await expect(list.locator('mark')).toHaveText('Kh');
+});
+
+test('link copies itself, opens web links in a new tab and router links in the app', async ({ page, context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto('/components/link');
+  const basic = page.locator('link-basic-example').getByRole('link', { name: /docs\.example\.com/ });
+  await expect(basic).toHaveAttribute('href', 'https://docs.example.com');
+  await expect(basic).toHaveAttribute('target', '_blank');
+  await expect(basic).toHaveAccessibleName('docs.example.com (opens in a new tab)');
+  const copy = page.locator('link-copy-example');
+  await copy.getByRole('button', { name: 'Copy email' }).click();
+  await expect(copy.locator('.status')).toHaveText('Copied billing@example.com');
+  await expect(copy.getByRole('button', { name: 'Copied' })).toBeVisible();
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe('billing@example.com');
+  const nav = page.locator('link-icon-links-example').getByRole('navigation', { name: 'Account' });
+  await expect(nav.getByRole('link', { name: 'Link' })).toHaveAttribute('aria-current', 'page');
+  await page.locator('link-router-link-example').getByRole('link', { name: 'avatars' }).click();
+  await expect(page).toHaveURL(/\/components\/avatar$/);
+  await expect(page.locator('main h1').first()).toHaveText('Avatar');
+});
+
+test('amount and status icon read well in tables', async ({ page }) => {
+  await page.goto('/components/amount');
+  const table = page.locator('amount-in-a-table-example').getByRole('table', { name: 'Orders' });
+  await expect(table.getByRole('row').nth(1)).toContainText('$1,290.00');
+  await expect(table.locator('[data-sign="negative"]')).toHaveText('-12');
+  await page.goto('/components/status-icon');
+  const domains = page.locator('status-icon-in-a-table-example').getByRole('table', { name: 'Domains' });
+  const row = domains.getByRole('row').nth(2);
+  await expect(row.getByRole('img', { name: 'Yes', exact: true })).toBeVisible();
+  await expect(row.getByRole('img', { name: 'No certificate' })).toHaveAttribute('title', 'No certificate');
+});
+
 test.describe('with motion', () => {
   test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 

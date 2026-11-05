@@ -7,6 +7,7 @@
     "@angular/common": "^22.0.0",
     "@angular/core": "^22.0.0",
     "@angular/forms": "^22.0.0",
+    "@angular/router": "^22.0.0",
     "@tectra/core": "0.0.0",
     "@tectra/icons": "0.0.0"
   }

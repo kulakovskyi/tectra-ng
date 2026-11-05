@@ -69,12 +69,12 @@ PrimeNG: Divider (`layout`, `type`, `align`, content), Card (header / title / su
 - [x] `<tx-fieldset>`: native `fieldset` + `legend` (text or `txFieldsetLegend`), toggleable / collapsed from a legend button; `fieldset` tokens
 - [x] Docs + tests: every variant, cards in a grid, toggle by click and keyboard, `aria-expanded` / `aria-controls`; e2e: panel and fieldset collapse by click, Enter and Space, vertical divider height. Docs: new navigation group "Layout". Soft pill and tag text moved to the 800 shade in light (AA on a white card)
 
-## 4.8 Text helpers — `ui/highlight-text`, `ui/amount`, `ui/status-icon`, `ui/link`
+## 4.8 Text helpers — `ui/highlight-text`, `ui/amount`, `ui/status-icon`, `ui/link` ✅
 
 Not in PrimeNG. First app: highlight text 59 (`text`, `highlight`), amount 79 (`amount`, `currency`, `format`, `strong`), status icon 14 (`status`, tooltip), link view 252 (`link`, `type` url / email, `copyBtn`, `linkText`, `highlight`, `maxLength`, `routerLink`), icon link 8 (`icon`, `text`, `routerLink`, `href`).
 
-- [ ] `<tx-highlight-text>`: marks every match (case and accent insensitive), several terms, `<mark>` with tokens
-- [ ] `<tx-amount>`: number / money through the locale (`Intl`), currency, fraction digits, compact, sign colour, `strong`
-- [ ] `<tx-status-icon>`: on / off (or severity) icon with an accessible label and a title until the stage 5 tooltip
-- [ ] `<tx-link>`: url / email / phone, shortened text (`maxLength`), highlight, copy button, external icon + `rel`, `routerLink`; icon link variant
-- [ ] Docs + tests: each part, copy, router link, highlight with the search
+- [x] `<tx-highlight-text>`: marks every match (case and accent insensitive, combining marks stay with their letter), several terms, `caseSensitive`, `<mark>` with tokens (new `yellow` palette), text never parsed as HTML; `highlightParts()` for own markup
+- [x] `<tx-amount>`: number / money through the locale (`Intl`, current tectra locale or `locale`), ISO currency with `currencyDisplay` (unknown codes shown as is), digits `format` (`1.0-2`), `compact`, `showSign` + `signColor`, muted zero, dash when empty (`emptyText`), `strong`; `formatAmount()` for own markup
+- [x] `<tx-status-icon>`: on / off (`status`) or `severity` icon, named "Yes" / "No" (us / ua) or by `label` / `toolTip`, native title until the stage 5 tooltip, decorative without a name, sizes
+- [x] `<tx-link>`: url (adds `https://`) / email (`mailto:`) / phone (`tel:`), `linkText`, shortened text (`maxLength`, full text in the title), highlight, copy button (`copyable`, translated label, `(copied)`), new tab with an arrow icon, `rel="noopener noreferrer"` and a hidden "opens in a new tab", `routerLink`; `<tx-icon-link>`: router link with the active state and `aria-current`, external link, or a button. `@angular/router` is a peer of `@tectra/ui`
+- [x] Docs + tests: each part, copy, router link, highlight with the search, amounts and status icons in tables, locales; e2e: highlight follows typing, copy to the clipboard, new tab attributes, in-app navigation, active icon link

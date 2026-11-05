@@ -1,0 +1,42 @@
+<ng-template #content>
+  @if (icon(); as icon) {
+    @if (iconName(); as name) {
+      <tx-icon class="tx-icon-link__icon" [name]="name" [class]="passThrough().icon?.class" [style]="passThrough().icon?.style" />
+    } @else {
+      <span class="tx-icon-link__icon" aria-hidden="true" [class]="icon" [ngClass]="passThrough().icon?.class ?? null" [style]="passThrough().icon?.style"></span>
+    }
+  }
+  <span class="tx-icon-link__text" [class]="passThrough().text?.class" [style]="passThrough().text?.style">{{ text() }}<ng-content /></span>
+  @if (opensNewTab()) {
+    <span class="tx-icon-link__hint">({{ translations().opensInNewTab }})</span>
+  }
+</ng-template>
+
+@if (routerLink(); as commands) {
+  <a
+    class="tx-icon-link__anchor"
+    [routerLink]="$any(commands)"
+    routerLinkActive="tx-icon-link__anchor--active"
+    ariaCurrentWhenActive="page"
+    [routerLinkActiveOptions]="{ exact: exact() }"
+    [class]="passThrough().anchor?.class"
+    [style]="passThrough().anchor?.style"
+  >
+    <ng-container [ngTemplateOutlet]="content" />
+  </a>
+} @else if (href()) {
+  <a
+    class="tx-icon-link__anchor"
+    [href]="href()"
+    [attr.target]="resolvedTarget()"
+    [attr.rel]="opensNewTab() ? 'noopener noreferrer' : null"
+    [class]="passThrough().anchor?.class"
+    [style]="passThrough().anchor?.style"
+  >
+    <ng-container [ngTemplateOutlet]="content" />
+  </a>
+} @else {
+  <button type="button" class="tx-icon-link__anchor" [class]="passThrough().anchor?.class" [style]="passThrough().anchor?.style">
+    <ng-container [ngTemplateOutlet]="content" />
+  </button>
+}
