@@ -145,6 +145,23 @@ function readSource(packageDir) {
   });
   const selector = source.match(/selector:\s*'([^']+)'/)?.[1] ?? '';
 
+  const imported = Object.fromEntries(
+    [...source.matchAll(/import \{([^}]+)\} from '@tectra\/ui\/([\w-]+)'/g)].flatMap((m) => m[1].split(',').map((name) => [name.trim(), m[2]])),
+  );
+  for (const m of source.matchAll(/directive:\s*(\w+),\s*inputs:\s*\[([^\]]*)\]/g)) {
+    const hostPackage = imported[m[1]];
+    if (!hostPackage) {
+      continue;
+    }
+    const hostMembers = readSource(join(root, 'packages/ui', hostPackage)).members;
+    for (const entry of m[2].split(',').map((item) => item.trim().replace(/'/g, '')).filter(Boolean)) {
+      const [original, alias] = entry.split(':').map((part) => part.trim());
+      if (hostMembers[original] && !members[alias ?? original]) {
+        members[alias ?? original] = hostMembers[original];
+      }
+    }
+  }
+
   return { members, tokens, selector };
 }
 

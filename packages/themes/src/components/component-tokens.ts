@@ -6,6 +6,7 @@ import { floatLabelTokens, iftaLabelTokens, labelTokens } from './label.tokens';
 import { fieldTokens } from './field.tokens';
 import { fieldMessageTokens, messageTokens } from './message.tokens';
 import { selectTokens } from './select.tokens';
+import { textareaTokens } from './textarea.tokens';
 import { iconTokens } from './icon.tokens';
 import { rippleTokens } from './ripple.tokens';
 import { toggleButtonTokens } from './toggle-button.tokens';
@@ -25,6 +26,7 @@ export const COMPONENT_TOKENS = {
   message: messageTokens,
   fieldMessage: fieldMessageTokens,
   field: fieldTokens,
+  textarea: textareaTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

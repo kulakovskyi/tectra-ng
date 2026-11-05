@@ -59,7 +59,7 @@ Detailed checklist per component: [roadmap/stage-3-forms.md](roadmap/stage-3-for
 | `ui/label` — label (required, colon, help, subtle), float label (over / in / on), ifta label | FloatLabel / IftaLabel | 353 | ✅ |
 | `ui/message` (field part) — hint, error from the control, success | Message | 18 | ✅ |
 | `ui/field` — label + control + hint + error, ids and aria wired | — | every form | ✅ |
-| `ui/textarea` — auto resize | Textarea | 68 | ⬜ |
+| `ui/textarea` — auto resize | Textarea | 68 | ✅ |
 | `ui/checkbox` — binary, group, indeterminate | Checkbox | 73 | ⬜ |
 | `ui/radio-button` | RadioButton | — (parity) | ⬜ |
 | `ui/toggle-switch` | ToggleSwitch | 33 | ⬜ |

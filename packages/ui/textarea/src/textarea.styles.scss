@@ -1,0 +1,40 @@
+.tx-textarea.tx-input[data-styled] {
+  display: block;
+  min-height: var(--tx-textarea-min-height);
+  resize: vertical;
+
+  &[data-resize='none'],
+  &.tx-textarea--auto-resize {
+    resize: none;
+  }
+
+  &[data-resize='horizontal'] {
+    resize: horizontal;
+  }
+
+  &[data-resize='both'] {
+    resize: both;
+  }
+
+  &[rows] {
+    min-height: 0;
+  }
+
+  &.tx-textarea--borderless {
+    border-color: transparent;
+    background: var(--tx-textarea-borderless-background);
+    box-shadow: none;
+
+    &:enabled:not([readonly]):hover,
+    &:enabled:not([readonly]):focus {
+      border-color: transparent;
+      background: var(--tx-textarea-borderless-focus-background);
+      box-shadow: none;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--tx-focus-ring-color);
+      outline-offset: 2px;
+    }
+  }
+}

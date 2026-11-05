@@ -12,6 +12,7 @@ export * from './components/select.tokens';
 export * from './components/badge.tokens';
 export * from './components/message.tokens';
 export * from './components/field.tokens';
+export * from './components/textarea.tokens';
 export * from './components/icon.tokens';
 export * from './components/ripple.tokens';
 export * from './components/toggle-button.tokens';

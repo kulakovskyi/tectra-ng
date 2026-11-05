@@ -1,0 +1,1 @@
+Native `readonly` and `disabled`.

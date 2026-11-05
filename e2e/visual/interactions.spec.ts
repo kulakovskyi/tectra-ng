@@ -184,6 +184,21 @@ test('field wires label, hint and error to the control it contains', async ({ pa
   await expect(form.locator('tx-field-error').nth(1)).toHaveText('This field is required');
 });
 
+test('textarea grows with the text, stops at its limit and counts characters', async ({ page }) => {
+  await page.goto('/components/textarea');
+  const field = page.locator('textarea-auto-resize-example textarea');
+  const start = await field.evaluate((element) => element.getBoundingClientRect().height);
+  await field.fill('one\ntwo\nthree\nfour');
+  await expect.poll(() => field.evaluate((element) => element.getBoundingClientRect().height)).toBeGreaterThan(start);
+  await field.fill(Array.from({ length: 30 }, (_, index) => `line ${index}`).join('\n'));
+  await expect.poll(() => field.evaluate((element) => Math.round(element.getBoundingClientRect().height))).toBe(220);
+  await expect(field).toHaveCSS('overflow-y', 'auto');
+
+  const counter = page.locator('textarea-counter-example');
+  await counter.locator('textarea').fill('Hello');
+  await expect(counter.locator('tx-textarea-counter')).toHaveText('5 / 160');
+});
+
 test.describe('with motion', () => {
   test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 

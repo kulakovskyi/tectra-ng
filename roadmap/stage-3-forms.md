@@ -77,16 +77,17 @@ Not in PrimeNG. Replaces the label + control + hint + error combination every fo
 - [x] Docs: basic, horizontal, every control type, validation, server error, success, design tokens
 - [x] Tests: id / `for` / describedby wiring, own id kept, `tx-select` trigger, error from the projected control, `errorText` invalid, layout, dt / pt; e2e: label click focuses, horizontal columns, select error linked
 
-## 3.5 Textarea — `ui/textarea`
+## 3.5 Textarea — `ui/textarea` ✅
 
 PrimeNG: Textarea (`autoResize`, `onResize`). First app usage: 68: `rows`, `resize`, `autoResize`, `maxHeight`, `transparent`, `borderless`.
 
-- [ ] `textarea[txTextarea]` on the form-field tokens (today `txInput` styles it)
-- [ ] `autoResize` up to `maxHeight` / `maxRows`, then scroll; `(resize)` output
-- [ ] `resize` control (none / vertical), `rows`
-- [ ] Counter `maxlength` (`12 / 200`)
-- [ ] Borderless / transparent look
-- [ ] Docs + tests: auto resize grows and stops at max, counter
+- [x] `textarea[txTextarea]` on the form-field tokens — `TxInput` is a host directive, so size / variant / invalid / fluid / `pt` / `unstyled` are the same; `fieldDt` for the `formField` tokens, `dt` for the new `textarea` tokens (`textarea[txInput]` keeps working)
+- [x] `autoResize` up to `maxHeight` (px) / `maxRows`, then scroll; follows form writes and width changes; `(heightChange)` output
+- [x] `resize` control (none / vertical / horizontal / both; off with auto resize), `rows`
+- [x] Counter `<tx-textarea-counter [for]>` (`12 / 200`, red at the limit, plain length without `maxlength`)
+- [x] Borderless / transparent look (`borderless`, focus ring kept)
+- [x] Docs: basic, auto resize, max rows, resize, counter, borderless, variants, states, sizes, form, design tokens
+- [x] Tests: auto resize grows and stops at max, form writes, counter, classes / tokens, invalid from the control; e2e: real growth to the limit, counter; registry builder reads inputs of host directives (`'dt: fieldDt'`)
 
 ## 3.6 Checkbox — `ui/checkbox`
 
