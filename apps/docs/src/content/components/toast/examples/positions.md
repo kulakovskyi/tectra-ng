@@ -1,0 +1,1 @@
+`position` puts the outlet in one of six places. Several outlets can live side by side: give each a `key` and send toasts with the same `key`. Toasts at the top stack newest first, at the bottom newest last.

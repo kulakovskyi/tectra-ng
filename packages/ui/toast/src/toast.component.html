@@ -1,0 +1,78 @@
+@for (toast of visible(); track toast.id) {
+  <div
+    class="tx-toast__item"
+    animate.enter="tx-toast__item--enter"
+    animate.leave="tx-toast__item--leave"
+    [class]="passThrough().item?.class"
+    [style]="passThrough().item?.style"
+    [attr.data-severity]="toast.severity"
+    [class.tx-toast__item--loading]="toast.loading"
+    [attr.aria-busy]="toast.loading || null"
+    (mouseenter)="pause(toast)"
+    (mouseleave)="resume(toast)"
+    (focusin)="onFocusIn(toast, $event)"
+    (focusout)="onFocusOut(toast, $event)"
+  >
+    @if (toast.template ?? customTemplate()?.template; as template) {
+      <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="contextOf(toast)" />
+    } @else {
+      @if (toast.loading) {
+        <span class="tx-toast__icon" aria-hidden="true" [class]="passThrough().icon?.class" [style]="passThrough().icon?.style">
+          <tx-progress-spinner class="tx-toast__spinner" [size]="16" [strokeWidth]="5" />
+        </span>
+      } @else if (iconOf(toast); as icon) {
+        <span class="tx-toast__icon" aria-hidden="true" [class]="passThrough().icon?.class" [style]="passThrough().icon?.style">
+          <tx-icon [name]="icon" />
+        </span>
+      }
+      <div class="tx-toast__body" [class]="passThrough().body?.class" [style]="passThrough().body?.style">
+        @if (toast.title) {
+          <div class="tx-toast__title" [class]="passThrough().title?.class" [style]="passThrough().title?.style">{{ toast.title }}</div>
+        }
+        @if (toast.text) {
+          <div class="tx-toast__text" [class]="passThrough().text?.class" [style]="passThrough().text?.style">{{ toast.text }}</div>
+        }
+        @if (toast.actions.length) {
+          <div class="tx-toast__actions" [class]="passThrough().actions?.class" [style]="passThrough().actions?.style">
+            @for (action of toast.actions; track action.label) {
+              <button
+                txButton
+                size="small"
+                [severity]="action.severity ?? 'secondary'"
+                [text]="(action.severity ?? 'secondary') === 'secondary'"
+                [unstyled]="isUnstyled()"
+                (click)="run(toast, action)"
+              >
+                {{ action.label }}
+              </button>
+            }
+          </div>
+        }
+      </div>
+    }
+    @if (toast.closable) {
+      <button
+        type="button"
+        class="tx-toast__close"
+        [class]="passThrough().closeButton?.class"
+        [style]="passThrough().closeButton?.style"
+        [attr.aria-label]="translations().close"
+        (click)="close(toast)"
+      >
+        <tx-icon name="times" />
+      </button>
+    }
+    @if (toast.showProgress && !toast.sticky && toast.life > 0) {
+      @for (version of [toast.version]; track version) {
+        <span
+          class="tx-toast__progress"
+          aria-hidden="true"
+          [class]="passThrough().progress?.class"
+          [style]="passThrough().progress?.style"
+          [style.animation-duration.ms]="toast.life"
+          [class.tx-toast__progress--paused]="toast.paused"
+        ></span>
+      }
+    }
+  </div>
+}

@@ -1,0 +1,146 @@
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TxAnnouncer } from '@tectra/core/a11y';
+import { TxToastTemplate } from './toast-template.directive';
+import { TxToast } from './toast.component';
+import { TxToastService } from './toast.service';
+import { TxToastCloseReason } from './toast.types';
+
+@Component({
+  imports: [TxToast, TxToastTemplate],
+  template: `
+    <tx-toast id="main" [dt]="{ root: { width: '400px' } }" [pt]="{ title: { class: 'own-title' } }" />
+    <tx-toast id="side" key="side" position="bottom-left" [max]="2">
+      <ng-template txToastTemplate let-toast let-close="close">
+        <span class="custom">{{ toast.text }}</span>
+        <button class="custom-close" (click)="close()">x</button>
+      </ng-template>
+    </tx-toast>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class Host {}
+
+describe('TxToast', () => {
+  let fixture: ComponentFixture<Host>;
+  let toasts: TxToastService;
+  let announce: ReturnType<typeof vi.fn>;
+  const items = (outlet = '#main') => [...document.querySelectorAll(`${outlet} .tx-toast__item`)] as HTMLElement[];
+  const render = async () => {
+    fixture.detectChanges();
+    await Promise.resolve();
+    fixture.detectChanges();
+  };
+
+  beforeEach(async () => {
+    vi.useFakeTimers();
+    announce = vi.fn(() => Promise.resolve());
+    TestBed.configureTestingModule({ providers: [{ provide: TxAnnouncer, useValue: { announce, clear: vi.fn() } }] });
+    toasts = TestBed.inject(TxToastService);
+    fixture = TestBed.createComponent(Host);
+    await render();
+  });
+
+  afterEach(() => {
+    toasts.clear();
+    fixture.destroy();
+    vi.useRealTimers();
+  });
+
+  it('moves its outlet to the end of the page', () => {
+    expect(document.querySelector('#main')?.parentElement).toBe(document.body);
+  });
+
+  it('shows a toast in a named region, announces it and closes it after its life', async () => {
+    const closed: TxToastCloseReason[] = [];
+    toasts.success('Saved', { title: 'Profile' }).closed.subscribe((reason) => closed.push(reason));
+    await render();
+    const host = document.querySelector('#main') as HTMLElement;
+    expect(host.getAttribute('role')).toBe('region');
+    expect(host.getAttribute('aria-label')).toBe('Notifications');
+    expect(host.getAttribute('data-position')).toBe('top-right');
+    expect(host.style.getPropertyValue('--tx-toast-width')).toBe('400px');
+    const [item] = items();
+    expect(item.getAttribute('data-severity')).toBe('success');
+    expect(item.querySelector('.tx-toast__title')?.textContent).toBe('Profile');
+    expect(item.querySelector('.tx-toast__title')?.classList).toContain('own-title');
+    expect(item.querySelector('.tx-toast__text')?.textContent).toBe('Saved');
+    expect(item.querySelector('tx-icon')?.getAttribute('data-icon')).toBe('check-circle');
+    expect(item.querySelector('.tx-toast__close')?.getAttribute('aria-label')).toBe('Close');
+    expect(announce).toHaveBeenCalledWith('Profile. Saved', 'polite');
+
+    vi.advanceTimersByTime(5000);
+    await render();
+    expect(toasts.toasts()).toEqual([]);
+    expect(closed).toEqual(['timeout']);
+  });
+
+  it('announces errors assertively, stacks newest first and closes from the button', async () => {
+    toasts.info('First');
+    toasts.error('Second');
+    await render();
+    expect(announce).toHaveBeenLastCalledWith('Second', 'assertive');
+    expect(items().map((item) => item.querySelector('.tx-toast__text')?.textContent)).toEqual(['Second', 'First']);
+    (items()[0].querySelector('.tx-toast__close') as HTMLButtonElement).click();
+    await render();
+    expect(toasts.toasts().map((toast) => toast.text)).toEqual(['First']);
+  });
+
+  it('pauses its life while hovered or focused and keeps sticky toasts', async () => {
+    toasts.warn('Paused', { life: 1000, showProgress: true });
+    toasts.info('Stays', { sticky: true });
+    await render();
+    const item = items().find((element) => element.textContent?.includes('Paused')) as HTMLElement;
+    vi.advanceTimersByTime(600);
+    item.dispatchEvent(new Event('mouseenter'));
+    item.dispatchEvent(new FocusEvent('focusin'));
+    await render();
+    expect(item.querySelector('.tx-toast__progress')?.classList).toContain('tx-toast__progress--paused');
+    vi.advanceTimersByTime(5000);
+    item.dispatchEvent(new Event('mouseleave'));
+    vi.advanceTimersByTime(5000);
+    expect(toasts.toasts().length).toBe(2);
+    item.dispatchEvent(new FocusEvent('focusout'));
+    vi.advanceTimersByTime(399);
+    expect(toasts.toasts().length).toBe(2);
+    vi.advanceTimersByTime(1);
+    expect(toasts.toasts().map((toast) => toast.text)).toEqual(['Stays']);
+  });
+
+  it('turns a loading toast into a result and runs actions', async () => {
+    const ref = toasts.loading('Exporting');
+    await render();
+    let [item] = items();
+    expect(item.querySelector('tx-progress-spinner')).not.toBeNull();
+    expect(item.getAttribute('aria-busy')).toBe('true');
+    expect(item.querySelector('.tx-toast__close')).toBeNull();
+    vi.advanceTimersByTime(60000);
+    expect(toasts.toasts().length).toBe(1);
+
+    ref.update({ severity: 'success', text: 'Exported', actions: [{ label: 'Open', run: () => opened.push(ref.id) }] });
+    await render();
+    [item] = items();
+    expect(item.querySelector('tx-progress-spinner')).toBeNull();
+    expect(item.getAttribute('data-severity')).toBe('success');
+    expect(announce).toHaveBeenLastCalledWith('Exported', 'polite');
+    const opened: number[] = [];
+    (item.querySelector('.tx-toast__actions button') as HTMLButtonElement).click();
+    await render();
+    expect(opened).toEqual([ref.id]);
+    expect(toasts.toasts()).toEqual([]);
+  });
+
+  it('routes toasts by key, caps them and renders a custom template', async () => {
+    toasts.info('One', { key: 'side' });
+    toasts.info('Two', { key: 'side' });
+    toasts.info('Three', { key: 'side' });
+    await render();
+    expect(items()).toEqual([]);
+    expect(items('#side').map((item) => item.querySelector('.custom')?.textContent)).toEqual(['Two', 'Three']);
+    (items('#side')[0].querySelector('.custom-close') as HTMLButtonElement).click();
+    await render();
+    expect(toasts.toasts().map((toast) => toast.text)).toEqual(['One', 'Three']);
+    toasts.clear('side');
+    expect(toasts.toasts()).toEqual([]);
+  });
+});

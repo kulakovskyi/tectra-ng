@@ -40,6 +40,14 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     generatePassword: 'Generate password',
     remove: 'Remove',
     moreItems: '{count} more',
+    notifications: 'Notifications',
+    confirm: 'Confirm',
+    cancel: 'Cancel',
+    delete: 'Delete',
+    confirmQuestion: 'Are you sure?',
+    maximize: 'Maximize',
+    restore: 'Restore',
+    moreActions: 'More actions',
   },
 };
 
@@ -83,6 +91,14 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     generatePassword: 'Згенерувати пароль',
     remove: 'Видалити',
     moreItems: 'ще {count}',
+    notifications: 'Сповіщення',
+    confirm: 'Підтвердити',
+    cancel: 'Скасувати',
+    delete: 'Видалити',
+    confirmQuestion: 'Ви впевнені?',
+    maximize: 'Розгорнути',
+    restore: 'Відновити',
+    moreActions: 'Більше дій',
   },
 };
 

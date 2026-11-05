@@ -8,6 +8,7 @@ import { TxOverlayInset } from '@tectra/core/overlay';
 import { createInkPreset } from '@tectra/themes';
 import { TectraAccent } from '@tectra/tokens';
 import { TxButton } from '@tectra/ui/button';
+import { TxToast } from '@tectra/ui/toast';
 import { DOC_COMPONENTS } from '../../generated/registry';
 import { HEADER_LINKS } from '../data/header-links.data';
 import { DOC_NAVIGATION } from '../data/navigation.data';
@@ -15,7 +16,7 @@ import { THEME_ACCENTS } from '../data/theme-accents.data';
 
 @Component({
   selector: 'docs-layout',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, TxButton, TxOverlayInset],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, TxButton, TxOverlayInset, TxToast],
   templateUrl: './docs-layout.html',
   styleUrl: './docs-layout.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

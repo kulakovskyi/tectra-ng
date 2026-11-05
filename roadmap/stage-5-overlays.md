@@ -30,15 +30,15 @@ PrimeNG: Popover (`toggle(event, target?)`, `show`, `hide`, `dismissable`, `appe
 - Found on the way: tabbable lookups skip `inert` areas (`tabbableElements`, `nextTabbable` in `@tectra/core/a11y`); the arrow offset is shared (`txArrowOffset`)
 
 
-## 5.3 Toast — `ui/toast` + `TxToastService`
+## 5.3 Toast — `ui/toast` + `TxToastService` ✅
 
 PrimeNG: Toast + MessageService (`add`, `addAll`, `clear(key)`, `severity`, `summary`, `detail`, `life`, `sticky`, `closable`, `key`, `position`, `icon`, templates). First app: one service used in ~200 files — `success` (~414 calls), `error` (37), `warning` (22), a sticky pending toast with a spinner and a Cancel action, messages are i18n keys with params; the toast sits at the bottom centre, the pending one at the top centre.
 
-- [ ] `<tx-toast>` outlet: 6 positions, stacking with newest on top, enter / leave motion, `key` for several outlets
-- [ ] `TxToastService`: `show(options)` + `success` / `info` / `warn` / `error` / `loading`, returns a `TxToastRef` (`close()`, `update()`, `closed`); `clear(key?)`; `life` (pauses on hover and focus), `sticky`, `closable`, title + text, icon per severity
-- [ ] Actions: buttons in the toast (`actions: [{ label, run }]`, e.g. Undo / Cancel), progress of the remaining life
-- [ ] Accessible: `role="status"` (polite) / `role="alert"` for errors, close button with a translated label, keyboard reachable actions; F6-free — focus never jumps into a toast
-- [ ] Docs + tests: severities, positions, sticky, actions, loading → success, update, template, design tokens; e2e: auto close, hover pauses, stacking without layout shift
+- [x] `<tx-toast>` outlet: 6 positions, stacking with newest on top, enter / leave motion, `key` for several outlets
+- [x] `TxToastService`: `show(options)` + `success` / `info` / `warn` / `error` / `loading`, returns a `TxToastRef` (`close()`, `update()`, `closed`); `clear(key?)`; `life` (pauses on hover and focus), `sticky`, `closable`, title + text, icon per severity
+- [x] Actions: buttons in the toast (`actions: [{ label, run }]`, e.g. Undo / Cancel), progress of the remaining life
+- [x] Accessible: `role="status"` (polite) / `role="alert"` for errors, close button with a translated label, keyboard reachable actions inside a translated "Notifications" region; focus never jumps into a toast, the outlet moves to the end of `body` (`inPlace` to keep it)
+- [x] Docs + tests: severities, positions, sticky, actions, loading → success, update, template, design tokens; e2e: auto close, hover pauses, stacking without layout shift
 
 ## 5.4 Dialog — `ui/dialog` + `TxDialog` service
 
