@@ -67,3 +67,14 @@ test('the selection limit disables the remaining options', async ({ page }) => {
   await expect(page.getByRole('option', { name: 'Docker' })).toHaveAttribute('aria-disabled', 'true');
   await expect(page.getByRole('option', { selected: true })).toHaveCount(3);
 });
+
+test('without a search the select-all row shows the count and toggles from anywhere', async ({ page }) => {
+  const frame = example(page, 'Basic');
+  await frame.getByRole('combobox').click();
+  const all = page.getByRole('checkbox', { name: /Select all/ });
+  await expect(all).toContainText('2 of 7');
+  const box = await all.boundingBox();
+  await page.mouse.click((box?.x ?? 0) + (box?.width ?? 0) - 60, (box?.y ?? 0) + (box?.height ?? 0) / 2);
+  await expect(all).toHaveAttribute('aria-checked', 'true');
+  await expect(all).toContainText('7 of 7');
+});

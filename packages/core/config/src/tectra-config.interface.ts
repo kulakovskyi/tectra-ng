@@ -40,6 +40,7 @@ export interface TxTranslations {
   remove: string;
   moreItems: string;
   selectedItems: string;
+  selectedOfTotal: string;
   showOptions: string;
   removeItem: string;
   itemsLimit: string;

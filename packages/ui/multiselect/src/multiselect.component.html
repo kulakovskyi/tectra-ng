@@ -111,7 +111,10 @@
       </div>
     }
     @if (filter() || showToggleAll()) {
-      <div class="tx-select__filter tx-multiselect__header" [class]="passThrough().filter?.class" [style]="passThrough().filter?.style">
+      <div
+        class="tx-select__filter tx-multiselect__header"
+        [class.tx-multiselect__header--plain]="!filter()"
+        [class]="passThrough().filter?.class" [style]="passThrough().filter?.style">
         @if (showToggleAll()) {
           <button
             type="button"
@@ -121,7 +124,7 @@
             [class]="passThrough().toggleAll?.class"
             [style]="passThrough().toggleAll?.style"
             [attr.aria-checked]="allChecked()"
-            [attr.aria-label]="translations().selectAll"
+            [attr.aria-label]="filter() ? allLabel() : null"
             (click)="toggleAll()"
           >
             <span class="tx-multiselect__box" aria-hidden="true">
@@ -131,6 +134,10 @@
                 <tx-icon [name]="'minus'" />
               }
             </span>
+            @if (!filter()) {
+              <span class="tx-multiselect__all-label">{{ allLabel() }}</span>
+              <span class="tx-multiselect__count">{{ countText() }}</span>
+            }
           </button>
         }
         @if (filter()) {

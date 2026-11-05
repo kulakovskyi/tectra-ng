@@ -36,6 +36,8 @@ export class TxMultiselect extends TxSelectBase<unknown[]> {
   readonly display = input<TxMultiselectDisplay>('comma');
   readonly maxSelectedLabels = input<number>(3);
   readonly selectedItemsLabel = input<string | undefined>(undefined);
+  readonly selectAllLabel = input<string | undefined>(undefined);
+  readonly countLabel = input<string | undefined>(undefined);
   readonly selectionLimit = input<number | undefined>(undefined);
   readonly showToggleAll = input<boolean, unknown>(true, { transform: booleanAttribute });
   readonly dropdownIcon = input<TxIconName>('chevron-down');
@@ -74,6 +76,13 @@ export class TxMultiselect extends TxSelectBase<unknown[]> {
     (this.selectedItemsLabel() ?? this.translations().selectedItems).replace('{count}', String(this.selectedValues().length)),
   );
   readonly commaText = computed(() => this.selectedItems().map((item) => item.label).join(', '));
+  readonly countText = computed(() => {
+    const items = this.rows().filter((row): row is TxSelectItem => row.type === 'option');
+    return (this.countLabel() ?? this.translations().selectedOfTotal)
+      .replace('{selected}', String(items.filter((item) => item.selected).length))
+      .replace('{total}', String(items.length));
+  });
+  readonly allLabel = computed(() => this.selectAllLabel() ?? this.translations().selectAll);
   readonly allChecked = computed(() => ({ all: 'true', some: 'mixed', none: 'false' })[this.allState()]);
   readonly allState = computed<'all' | 'some' | 'none'>(() => {
     const items = this.rows().filter((row): row is TxSelectItem => row.type === 'option' && (!row.disabled || row.selected));

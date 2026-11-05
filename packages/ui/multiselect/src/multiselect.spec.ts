@@ -173,3 +173,24 @@ describe('TxMultiselect', () => {
     expect(root().hasAttribute('data-styled')).toBe(false);
   });
 });
+
+@Component({
+  imports: [TxMultiselect],
+  template: `<tx-multiselect [options]="['a', 'b', 'c']" [selectAllLabel]="'Усі'" [countLabel]="'{selected}/{total}'" [ariaLabel]="'Letters'" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class LabelsHost {}
+
+describe('TxMultiselect texts', () => {
+  afterEach(() => document.querySelector('.cdk-overlay-container')?.replaceChildren());
+
+  it('takes own select-all and count texts', () => {
+    const fixture = TestBed.createComponent(LabelsHost);
+    fixture.detectChanges();
+    (fixture.nativeElement.querySelector('.tx-select__trigger') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    const all = document.querySelector('.tx-multiselect__toggle-all') as HTMLElement;
+    expect(all.querySelector('.tx-multiselect__all-label')?.textContent?.trim()).toBe('Усі');
+    expect(all.querySelector('.tx-multiselect__count')?.textContent?.trim()).toBe('0/3');
+  });
+});

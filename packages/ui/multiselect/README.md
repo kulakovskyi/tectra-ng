@@ -2,6 +2,8 @@
 
 Pick several values from a list. The value is an array; works with `[formControl]`, `ngModel` and signal forms. Shares the option engine, keyboard and panel with `tx-select`: groups, search, virtual scroll, lazy loading and templates work the same.
 
+Texts come from the tectra locale — `selectAll`, `selectedOfTotal`, `selectedItems`, `searchPlaceholder`, `emptyMessage`, `clear`. Override them for the whole app with `provideTectra({ translations: { selectAll: '…' } })`, switch languages at runtime with `TxLocaleService.setLocale(…)`, or set them on one field with `selectAllLabel`, `countLabel`, `selectedItemsLabel`, `filterPlaceholder`, `emptyMessage`.
+
 ## Inputs
 | Name | Description |
 |---|---|
@@ -16,8 +18,10 @@ Pick several values from a list. The value is an array; works with `[formControl
 | display | `comma` (text) or `chip` (removable chips) |
 | maxSelectedLabels | Above this many values the field shows "N selected" |
 | selectedItemsLabel | Own summary text, `{count}` is replaced |
+| selectAllLabel | Own text of the select-all checkbox (the translated "Select all" by default) |
+| countLabel | Own count text in the select-all row, `{selected}` and `{total}` are replaced |
 | selectionLimit | Maximum number of values; other options turn disabled |
-| showToggleAll | Checkbox that selects or clears all visible options (on by default) |
+| showToggleAll | Checkbox that selects or clears all visible options (on by default): next to the search, or without it a full row with "Select all" and the count |
 | placeholder | Text shown while nothing is selected |
 | filter | Shows a search field at the top of the panel |
 | filterBy | Fields to search in, comma separated |
