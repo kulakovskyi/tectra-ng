@@ -276,6 +276,7 @@ export class TxTooltip implements TxTooltipHandle {
       placement: this.placement(),
       offset: this.offset(),
       layer: 'tooltip',
+      motion: 'pop',
       closeOnOutsideClick: false,
       restoreFocus: false,
       panelClass: 'tx-tooltip-pane',

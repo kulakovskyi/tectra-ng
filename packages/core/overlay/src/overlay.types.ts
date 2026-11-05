@@ -20,6 +20,7 @@ export type TxPlacement =
 export type TxOverlayLayer = 'dropdown' | 'popover' | 'tooltip' | 'modal' | 'toast';
 export type TxOverlayScroll = 'reposition' | 'close' | 'block' | 'none';
 export type TxOverlayCloseReason = 'escape' | 'outside' | 'scroll' | 'api' | 'detached';
+export type TxOverlayMotion = 'slide' | 'pop';
 
 export interface TxOverlayOptions<TContext = unknown> {
   origin: Element;
@@ -36,6 +37,7 @@ export interface TxOverlayOptions<TContext = unknown> {
   closeOnOutsideClick?: boolean;
   restoreFocus?: boolean;
   animate?: boolean;
+  motion?: TxOverlayMotion;
   panelClass?: string | string[];
 }
 

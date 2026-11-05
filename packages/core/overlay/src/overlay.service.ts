@@ -52,6 +52,8 @@ export class TxOverlay {
     let isClosed = false;
 
     const animate = options.animate !== false;
+    const motion = options.motion ?? 'slide';
+    const motionTarget = () => overlayRef.overlayElement.firstElementChild ?? overlayRef.overlayElement;
     const close = (reason: TxOverlayCloseReason = 'api') => {
       if (isClosed) {
         return;
@@ -64,7 +66,11 @@ export class TxOverlay {
       }
       closed.next(reason);
       closed.complete();
-      const leave = animate && overlayRef.hasAttached() ? txAnimateLeave(overlayRef.overlayElement, currentPlacement()) : Promise.resolve();
+      let leave = Promise.resolve();
+      if (animate && overlayRef.hasAttached()) {
+        overlayRef.overlayElement.style.pointerEvents = 'none';
+        leave = txAnimateLeave(motionTarget(), currentPlacement(), motion, origin);
+      }
       leave.then(() => overlayRef.dispose());
     };
 
@@ -115,7 +121,7 @@ export class TxOverlay {
     const instance = this.attach(overlayRef, content, options);
     reposition();
     if (animate) {
-      txAnimateEnter(overlayRef.overlayElement, currentPlacement());
+      txAnimateEnter(motionTarget(), currentPlacement(), motion, origin);
     }
 
     return {

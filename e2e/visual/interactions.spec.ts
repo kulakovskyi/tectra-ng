@@ -662,7 +662,7 @@ test.describe('with motion', () => {
     await page.getByRole('button', { name: 'bottom', exact: true }).click();
     const pane = page.locator('.tx-overlay-pane');
     const [nearEnd, final] = await pane.evaluate((element) => {
-      const [animation] = element.getAnimations();
+      const [animation] = element.getAnimations({ subtree: true });
       animation.pause();
       animation.currentTime = Number(animation.effect?.getComputedTiming().duration) - 1;
       const before = element.getBoundingClientRect().top;
@@ -672,6 +672,38 @@ test.describe('with motion', () => {
     expect(Math.abs(nearEnd - final)).toBeLessThan(1);
   });
 
+  test('tooltip grows out of its arrow, which stays on the middle of the button', async ({ page }) => {
+    await page.goto('/components/tooltip');
+    const button = page.locator('tooltip-icon-buttons-example').getByRole('button', { name: 'Duplicate', exact: true });
+    await expect(button).toBeVisible();
+    await button.hover();
+    const tooltip = page.locator('tx-tooltip');
+    await expect(tooltip).toBeVisible();
+    const frames = await tooltip.evaluate((element, origin) => {
+      const [animation] = element.getAnimations();
+      animation.pause();
+      const duration = Number(animation.effect?.getComputedTiming().duration);
+      const center = (target: Element) => {
+        const box = target.getBoundingClientRect();
+        return { x: box.left + box.width / 2, bottom: box.bottom };
+      };
+      const arrow = element.querySelector('.tx-tooltip__arrow') as Element;
+      const samples = [0.1, 0.3, 0.6, 1].map((part) => {
+        animation.currentTime = duration * part;
+        return center(arrow);
+      });
+      animation.finish();
+      return { samples, origin: center(origin as Element) };
+    }, await button.elementHandle());
+    for (const sample of frames.samples) {
+      expect(Math.abs(sample.x - frames.origin.x)).toBeLessThan(0.5);
+    }
+    const settled = frames.samples[frames.samples.length - 1].bottom;
+    for (const sample of frames.samples) {
+      expect(Math.abs(sample.bottom - settled)).toBeLessThan(1);
+    }
+  });
+
   test('overlay fades out before it is removed', async ({ page }) => {
     await page.goto('/core/overlay');
     await page.getByRole('button', { name: 'bottom', exact: true }).click();
@@ -679,7 +711,7 @@ test.describe('with motion', () => {
     await expect(panel).toHaveCount(1);
     await page.waitForTimeout(250);
     await page.keyboard.press('Escape');
-    const leaving = await panel.evaluate((element) => element.getAnimations().some((animation) => animation.playState === 'running'));
+    const leaving = await panel.evaluate((element) => element.getAnimations({ subtree: true }).some((animation) => animation.playState === 'running'));
     expect(leaving).toBe(true);
     await expect(panel).toHaveCount(0);
   });
