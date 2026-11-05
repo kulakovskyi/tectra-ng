@@ -164,6 +164,9 @@
   background: transparent;
   color: var(--tx-text-muted);
   cursor: pointer;
+  transition:
+    color var(--tx-motion-duration),
+    background-color var(--tx-motion-duration);
 
   tx-icon {
     transition: transform var(--tx-panel-transition-duration) cubic-bezier(0.2, 0, 0, 1);
@@ -211,6 +214,7 @@
 @media (prefers-reduced-motion: reduce) {
   :host([data-styled]),
   :host([data-styled]) .tx-panel__collapse,
+  :host([data-styled]) .tx-panel__toggle,
   :host([data-styled].tx-panel--collapsed) .tx-panel__collapse-inner,
   :host([data-styled]) .tx-panel__toggle tx-icon {
     transition: none;

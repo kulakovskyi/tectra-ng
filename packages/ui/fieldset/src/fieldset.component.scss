@@ -61,6 +61,9 @@
   color: inherit;
   font: inherit;
   cursor: pointer;
+  transition:
+    color var(--tx-motion-duration),
+    background-color var(--tx-motion-duration);
 
   tx-icon {
     color: var(--tx-text-muted);
@@ -92,6 +95,7 @@
 @media (prefers-reduced-motion: reduce) {
   :host([data-styled]) .tx-fieldset__box,
   :host([data-styled]) .tx-fieldset__collapse,
+  :host([data-styled]) .tx-fieldset__toggle,
   :host([data-styled].tx-fieldset--collapsed) .tx-fieldset__collapse-inner,
   :host([data-styled]) .tx-fieldset__toggle tx-icon {
     transition: none;
