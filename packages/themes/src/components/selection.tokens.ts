@@ -100,3 +100,16 @@ export const mentionTokens = {
 };
 
 export type TectraMentionTokens = typeof mentionTokens;
+
+export const treeTokens = {
+  root: {
+    indent: '18px',
+    gap: '6px',
+    togglerSize: '20px',
+    togglerColor: tokenRef('text-muted'),
+    togglerHoverBackground: tokenRef('surface-hover'),
+    iconColor: tokenRef('text-muted'),
+  },
+};
+
+export type TectraTreeTokens = typeof treeTokens;

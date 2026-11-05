@@ -1,0 +1,173 @@
+<!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- the combobox inside the box takes focus and keys; the box only widens the click area -->
+<div
+  #box
+  #origin="cdkOverlayOrigin"
+  cdkOverlayOrigin
+  class="tx-select__box"
+  [class]="passThrough().box?.class"
+  [style]="passThrough().box?.style"
+  (click)="onBoxClick($event)"
+>
+  <button
+    #trigger
+    type="button"
+    role="combobox"
+    class="tx-select__trigger"
+    aria-haspopup="tree"
+    [class]="passThrough().trigger?.class"
+    [style]="passThrough().trigger?.style"
+    [attr.id]="inputId() ?? null"
+    [attr.aria-label]="ariaLabel() ?? (ariaLabelledBy() || inputId() ? null : placeholder() || null)"
+    [attr.aria-labelledby]="ariaLabelledBy() ?? null"
+    [attr.aria-expanded]="isOpen()"
+    [attr.aria-controls]="treeId"
+    [attr.aria-activedescendant]="filter() ? null : activeId()"
+    [attr.aria-invalid]="isInvalid() || null"
+    [attr.aria-readonly]="readonly() || null"
+    [disabled]="disabled()"
+    (keydown)="onKeydown($event)"
+  >
+    @if (!selectedNodes().length) {
+      <span class="tx-select__value tx-select__value--placeholder" [class]="passThrough().value?.class" [style]="passThrough().value?.style">{{
+        placeholder()
+      }}</span>
+    } @else if (multiple() && display() === 'chip') {
+      <span class="tx-select__value tx-select__chips" [class]="passThrough().value?.class" [style]="passThrough().value?.style">
+        @for (node of selectedNodes(); track node.key) {
+          <span class="tx-select__chip" [class]="passThrough().chip?.class" [style]="passThrough().chip?.style">
+            <span class="tx-select__chip-label">{{ node.label }}</span>
+            @if (!disabled() && !readonly()) {
+              <span class="tx-select__chip-remove" aria-hidden="true" (click)="removeNode(node, $event)">
+                <tx-icon [name]="'times'" />
+              </span>
+            }
+          </span>
+        }
+      </span>
+    } @else {
+      <span class="tx-select__value" [class]="passThrough().value?.class" [style]="passThrough().value?.style">{{ commaText() }}</span>
+    }
+  </button>
+  @if (canClear()) {
+    <button
+      type="button"
+      class="tx-select__clear"
+      [class]="passThrough().clear?.class"
+      [style]="passThrough().clear?.style"
+      [attr.aria-label]="translations().clear"
+      (click)="clear()"
+    >
+      <tx-icon [name]="'times'" />
+    </button>
+  }
+  <span class="tx-select__dropdown" aria-hidden="true" [class]="passThrough().dropdown?.class" [style]="passThrough().dropdown?.style">
+    <tx-icon class="tx-select__chevron" [name]="'chevron-down'" />
+  </span>
+</div>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="origin"
+  [cdkConnectedOverlayOpen]="isPanelMounted()"
+  [cdkConnectedOverlayPositions]="positions"
+  [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
+  [cdkConnectedOverlayViewportMargin]="viewportMargin()"
+  [cdkConnectedOverlayDisableClose]="true"
+  [cdkConnectedOverlayWidth]="panelWidth()"
+  (overlayOutsideClick)="onOutsideClick($event)"
+  (attach)="onAttach()"
+  (positionChange)="onPositionChange($event)"
+  (detach)="close()"
+>
+  <div
+    #panel
+    class="tx-select__panel"
+    [attr.data-styled]="!isUnstyled() || null"
+    [class]="passThrough().panel?.class"
+    [style]="panelStyle()"
+    (mousedown)="onPanelMousedown($event)"
+  >
+    @if (filter()) {
+      <div class="tx-select__filter" [class]="passThrough().filter?.class" [style]="passThrough().filter?.style">
+        <tx-icon class="tx-select__filter-icon" [name]="'search'" />
+        <input
+          #filterInput
+          type="text"
+          autocomplete="off"
+          class="tx-select__filter-input"
+          role="searchbox"
+          [class]="passThrough().filterInput?.class"
+          [style]="passThrough().filterInput?.style"
+          [attr.aria-label]="filterPlaceholder() ?? translations().searchPlaceholder"
+          [attr.aria-controls]="treeId"
+          [attr.aria-activedescendant]="activeId()"
+          [placeholder]="filterPlaceholder() ?? translations().searchPlaceholder"
+          [value]="query()"
+          (input)="onFilter($event)"
+          (keydown)="onKeydown($event)"
+        />
+      </div>
+    }
+    @if (rows().length) {
+      <div
+        class="tx-tree-select__tree"
+        role="tree"
+        [id]="treeId"
+        [attr.aria-multiselectable]="multiple() || null"
+        [attr.aria-label]="ariaLabel() || placeholder() || null"
+        [style.max-height]="scrollHeight() ?? null"
+        [class]="passThrough().tree?.class"
+        [style]="passThrough().tree?.style"
+      >
+        @for (row of rows(); track row.id) {
+          <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- tree items use aria-activedescendant: focus and keys stay on the field -->
+          <div
+            role="treeitem"
+            class="tx-tree-select__node"
+            [id]="row.id"
+            [style.--tx-tree-level]="row.level - 1"
+            [class.tx-tree-select__node--active]="row.node.key === activeKey()"
+            [class.tx-tree-select__node--selected]="row.checked && selectionMode() !== 'checkbox'"
+            [class.tx-tree-select__node--disabled]="!row.selectable"
+            [attr.aria-level]="row.level"
+            [attr.aria-setsize]="row.setSize"
+            [attr.aria-posinset]="row.posInSet"
+            [attr.aria-expanded]="row.hasChildren ? row.expanded : null"
+            [attr.aria-selected]="selectionMode() === 'checkbox' ? null : row.checked"
+            [attr.aria-checked]="selectionMode() === 'checkbox' ? checkState(row) : null"
+            [attr.aria-disabled]="!row.selectable || null"
+            [class]="passThrough().node?.class"
+            [style]="passThrough().node?.style"
+            (mouseenter)="activeKey.set(row.node.key)"
+            (click)="onRowClick(row, $event)"
+          >
+            <span class="tx-tree-select__toggler" aria-hidden="true" [class]="passThrough().toggler?.class" [style]="passThrough().toggler?.style">
+              @if (row.hasChildren) {
+                <tx-icon [name]="row.expanded ? 'chevron-down' : 'chevron-right'" />
+              }
+            </span>
+            @if (selectionMode() === 'checkbox') {
+              <span class="tx-select__checkbox tx-tree-select__checkbox" aria-hidden="true">
+                @if (row.checked) {
+                  <tx-icon [name]="'check'" />
+                } @else if (row.partial) {
+                  <tx-icon [name]="'minus'" />
+                }
+              </span>
+            }
+            @if (row.node.icon; as icon) {
+              <tx-icon class="tx-tree-select__icon" [name]="icon" />
+            }
+            <span class="tx-tree-select__label">{{ row.node.label }}</span>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="tx-tree-select__tree tx-tree-select__tree--empty" role="tree" [id]="treeId" [attr.aria-label]="ariaLabel() || placeholder() || null">
+        <div class="tx-select__empty tx-tree-select__empty" role="presentation" [class]="passThrough().empty?.class" [style]="passThrough().empty?.style">
+          {{ emptyText() }}
+        </div>
+      </div>
+    }
+  </div>
+</ng-template>
