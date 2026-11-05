@@ -7,7 +7,9 @@ import { TxButton } from '@tectra/ui/button';
   template: `
     <div class="flex">
       <button txButton [icon]="'plus'">Create</button>
-      <button txButton [icon]="'download'" [iconPos]="'right'" [severity]="'secondary'">Export</button>
+      <button txButton [icon]="'download'" [iconPos]="'right'" [severity]="'secondary'">
+        Export
+      </button>
       <button txButton [icon]="'upload'" [iconPos]="'top'" [outlined]="true">Upload</button>
       <button txButton [icon]="'bell'" [iconPos]="'bottom'" [text]="true">Alerts</button>
     </div>

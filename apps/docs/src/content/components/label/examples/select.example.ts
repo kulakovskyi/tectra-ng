@@ -18,7 +18,14 @@ import { TxSelect } from '@tectra/ui/select';
       </tx-ifta-label>
     </div>
   `,
-  styles: `.row { display: grid; grid-template-columns: repeat(2, minmax(0, 260px)); gap: 16px; padding-top: 12px; }`,
+  styles: `
+    .row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 260px));
+      gap: 16px;
+      padding-top: 12px;
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class LabelSelectExample {

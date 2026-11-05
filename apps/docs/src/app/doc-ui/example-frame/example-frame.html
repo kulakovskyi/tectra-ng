@@ -14,7 +14,7 @@
         [severity]="'secondary'"
         [icon]="isCopied() ? 'check' : 'copy'"
         [attr.aria-label]="'Copy code'"
-        [title]="isCopied() ? 'Copied' : 'Copy code'"
+        [title]="isCopied() ? 'Copied' : 'Copy ' + activeFile().label"
         (click)="copyCode()"
       ></button>
       <button
@@ -37,9 +37,43 @@
         <ng-container [ngComponentOutlet]="component" />
       }
     </div>
-    <div class="example__code" [class.example__code--open]="isCodeVisible()" [attr.aria-hidden]="isCodeVisible() ? null : true" [attr.inert]="isCodeVisible() ? null : ''">
+    <div
+      class="example__code"
+      [class.example__code--open]="isCodeVisible()"
+      [attr.aria-hidden]="isCodeVisible() ? null : true"
+      [attr.inert]="isCodeVisible() ? null : ''"
+    >
       <div class="example__code-inner">
-        <pre tabindex="0" [attr.aria-label]="example().title + ' code'"><code class="hljs" [innerHTML]="example().sourceHtml"></code></pre>
+        <div class="code">
+          <div class="code__bar">
+            <div class="code__tabs" role="tablist" [attr.aria-label]="example().title + ' source'">
+              @for (file of example().files; track file.label; let index = $index) {
+                <button
+                  type="button"
+                  role="tab"
+                  class="code__tab"
+                  [id]="example().id + '-tab-' + index"
+                  [class.code__tab--active]="activeFileIndex() === index"
+                  [attr.aria-selected]="activeFileIndex() === index"
+                  [attr.aria-controls]="example().id + '-panel'"
+                  [attr.tabindex]="activeFileIndex() === index ? 0 : -1"
+                  (click)="activeFileIndex.set(index)"
+                  (keydown)="moveTab($event)"
+                >
+                  {{ file.label }}
+                </button>
+              }
+            </div>
+            <span class="code__meta">{{ lineCount() }} lines</span>
+          </div>
+          <pre
+            class="code__body"
+            role="tabpanel"
+            tabindex="0"
+            [id]="example().id + '-panel'"
+            [attr.aria-labelledby]="example().id + '-tab-' + activeFileIndex()"
+          ><code class="hljs">@if (activeFile().fold; as fold) {<span class="code__part" [innerHTML]="fold.before"></span>@if (isTemplateExpanded()) {<span class="code__part" [innerHTML]="fold.inner"></span>} @else {<span class="code__fold-line"><button type="button" class="code__fold" [style.margin-left.ch]="fold.indent" (click)="isTemplateExpanded.set(true)"><span class="code__fold-dots" aria-hidden="true">…</span>Show template ({{ fold.lines }} lines, same as HTML)</button></span>}<span class="code__part" [style.counter-set]="'line ' + fold.resumeAt" [innerHTML]="fold.after"></span>} @else {<span class="code__part" [innerHTML]="activeFile().html"></span>}</code></pre>
+        </div>
       </div>
     </div>
   </div>

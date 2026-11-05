@@ -9,7 +9,13 @@ import { TxInput } from '@tectra/ui/input';
     <tx-fluid class="stack">
       <input txInput value="Read only" readonly aria-label="Read only" />
       <input txInput value="Disabled" disabled aria-label="Disabled" />
-      <input txInput [variant]="'filled'" value="Filled, disabled" disabled aria-label="Filled disabled" />
+      <input
+        txInput
+        [variant]="'filled'"
+        value="Filled, disabled"
+        disabled
+        aria-label="Filled disabled"
+      />
     </tx-fluid>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

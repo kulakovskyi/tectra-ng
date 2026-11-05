@@ -24,6 +24,27 @@ test('example code opens without moving the preview', async ({ page }) => {
   expect(await preview.boundingBox()).toEqual(before);
 });
 
+test('example code shows the template and the full file in tabs', async ({ page }) => {
+  await page.goto('/components/key-filter');
+  const example = page.locator('docs-example-frame', { hasText: 'More presets' });
+  await example.getByRole('button', { name: 'Show code' }).click();
+  const htmlTab = example.getByRole('tab', { name: 'HTML' });
+  await expect(htmlTab).toHaveAttribute('aria-selected', 'true');
+  const panel = example.getByRole('tabpanel');
+  await expect(panel).toContainText('<tx-fluid');
+  await expect(panel).not.toContainText('@Component');
+  await expect(panel.locator('.hljs-name').first()).toBeVisible();
+  await htmlTab.focus();
+  await page.keyboard.press('ArrowRight');
+  await expect(example.getByRole('tab', { name: 'TypeScript' })).toBeFocused();
+  await expect(panel).toContainText('@Component');
+  await expect(panel).not.toContainText('<tx-fluid');
+  await panel.getByRole('button', { name: /Show template/ }).click();
+  await expect(panel).toContainText('<tx-fluid');
+  const widest = await panel.evaluate((element) => element.scrollWidth - element.clientWidth);
+  expect(widest).toBeLessThanOrEqual(0);
+});
+
 test('navigation keeps the page heading in place', async ({ page }) => {
   await page.goto('/components/button');
   const heading = page.locator('main h1');

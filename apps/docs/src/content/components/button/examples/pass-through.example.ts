@@ -8,7 +8,15 @@ import { TxButton } from '@tectra/ui/button';
   template: `
     <div class="flex">
       <button txButton [icon]="'bell'" [badge]="5" [pt]="decorated">Notifications</button>
-      <button txButton [icon]="'refresh'" [loading]="isSyncing()" [pt]="stateAware" (click)="sync()">Sync</button>
+      <button
+        txButton
+        [icon]="'refresh'"
+        [loading]="isSyncing()"
+        [pt]="stateAware"
+        (click)="sync()"
+      >
+        Sync
+      </button>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

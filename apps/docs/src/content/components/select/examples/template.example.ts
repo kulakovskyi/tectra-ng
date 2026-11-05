@@ -5,7 +5,12 @@ import { TxSelect, TxSelectOptionTemplate } from '@tectra/ui/select';
   selector: 'select-template-example',
   imports: [TxSelect, TxSelectOptionTemplate],
   template: `
-    <tx-select [options]="users" [optionLabel]="'name'" [optionValue]="'id'" [placeholder]="'Assignee'">
+    <tx-select
+      [options]="users"
+      [optionLabel]="'name'"
+      [optionValue]="'id'"
+      [placeholder]="'Assignee'"
+    >
       <ng-template txSelectOption let-user>
         <span class="user">
           <span class="user__avatar">{{ user.name[0] }}</span>
@@ -16,10 +21,21 @@ import { TxSelect, TxSelectOptionTemplate } from '@tectra/ui/select';
     </tx-select>
   `,
   styles: `
-    .user { display: inline-flex; align-items: center; gap: 8px; }
+    .user {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
     .user__avatar {
-      display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%;
-      background: var(--tx-primary-soft); color: var(--tx-primary-base); font-size: 12px; font-weight: 600;
+      display: inline-grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--tx-primary-soft);
+      color: var(--tx-primary-base);
+      font-size: 12px;
+      font-weight: 600;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

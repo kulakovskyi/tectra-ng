@@ -8,7 +8,12 @@ import { TxInput } from '@tectra/ui/input';
   imports: [TxFluid, TxInput, ReactiveFormsModule],
   template: `
     <tx-fluid class="stack">
-      <input txInput placeholder="Email — leave empty and click outside" aria-label="Email" [formControl]="email" />
+      <input
+        txInput
+        placeholder="Email — leave empty and click outside"
+        aria-label="Email"
+        [formControl]="email"
+      />
       <input txInput [invalid]="true" value="Forced invalid" aria-label="Forced invalid" />
     </tx-fluid>
   `,

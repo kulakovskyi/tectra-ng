@@ -7,7 +7,12 @@ import { TxToggleButton } from '@tectra/ui/toggle-button';
   imports: [TxToggleButton, ReactiveFormsModule],
   template: `
     <div class="stack">
-      <tx-toggle-button [formControl]="notify" [onLabel]="'Email on'" [offLabel]="'Email off'" (changed)="clicks.update((n) => n + 1)" />
+      <tx-toggle-button
+        [formControl]="notify"
+        [onLabel]="'Email on'"
+        [offLabel]="'Email off'"
+        (changed)="clicks.update((n) => n + 1)"
+      />
       <span class="hint">Value: {{ notify.value }} · changed {{ clicks() }} times</span>
     </div>
   `,

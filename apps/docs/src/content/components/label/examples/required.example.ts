@@ -7,11 +7,21 @@ import { TxLabel } from '@tectra/ui/label';
   imports: [TxLabel, TxInput],
   template: `
     <div class="field">
-      <tx-label for="label-required-email" [required]="true" [colon]="true" [tooltip]="'We send the invoice here'">Email</tx-label>
+      <tx-label
+        for="label-required-email"
+        [required]="true"
+        [colon]="true"
+        [tooltip]="'We send the invoice here'"
+        >Email</tx-label
+      >
       <input txInput id="label-required-email" type="email" required [fluid]="true" />
     </div>
   `,
-  styles: `.field { max-width: 360px; }`,
+  styles: `
+    .field {
+      max-width: 360px;
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class LabelRequiredExample {}

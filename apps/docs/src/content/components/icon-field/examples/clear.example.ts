@@ -10,7 +10,12 @@ import { TxInput } from '@tectra/ui/input';
     <div class="stack">
       <tx-icon-field>
         <tx-input-icon [icon]="'search'" />
-        <input txInput placeholder="Type to see the clear button" aria-label="Search" [formControl]="query" />
+        <input
+          txInput
+          placeholder="Type to see the clear button"
+          aria-label="Search"
+          [formControl]="query"
+        />
         <tx-input-clear />
       </tx-icon-field>
       <span class="hint">Value: {{ query.value || '—' }}</span>

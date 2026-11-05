@@ -17,7 +17,13 @@ import { TxLabel } from '@tectra/ui/label';
       </div>
     </div>
   `,
-  styles: `.filters { display: grid; grid-template-columns: repeat(2, minmax(0, 220px)); gap: 12px; }`,
+  styles: `
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 220px));
+      gap: 12px;
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class LabelSubtleExample {}

@@ -4,7 +4,13 @@ import { TxSelect } from '@tectra/ui/select';
 @Component({
   selector: 'select-filter-example',
   imports: [TxSelect],
-  template: `<tx-select [options]="countries" [optionLabel]="'name'" [optionValue]="'code'" [filter]="true" [placeholder]="'Country'" />`,
+  template: `<tx-select
+    [options]="countries"
+    [optionLabel]="'name'"
+    [optionValue]="'code'"
+    [filter]="true"
+    [placeholder]="'Country'"
+  />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class SelectFilterExample {

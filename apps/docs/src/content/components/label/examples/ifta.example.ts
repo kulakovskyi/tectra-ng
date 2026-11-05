@@ -17,7 +17,13 @@ import { TxIftaLabel } from '@tectra/ui/label';
       </tx-ifta-label>
     </div>
   `,
-  styles: `.row { display: grid; grid-template-columns: repeat(2, minmax(0, 260px)); gap: 16px; }`,
+  styles: `
+    .row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 260px));
+      gap: 16px;
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class LabelIftaExample {}

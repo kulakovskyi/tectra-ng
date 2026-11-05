@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { buildSync } from 'esbuild';
 import hljs from 'highlight.js';
 import { marked } from 'marked';
+import { format, resolveConfig } from 'prettier';
 
 const root = new URL('../../', import.meta.url).pathname;
 const contentDir = join(root, 'apps/docs/src/content/components');
@@ -12,7 +13,78 @@ const read = (path) => (existsSync(path) ? readFileSync(path, 'utf8') : '');
 const tsFiles = (dir) =>
   existsSync(dir) ? readdirSync(dir).filter((file) => file.endsWith('.ts') && !file.endsWith('.spec.ts')).map((file) => join(dir, file)) : [];
 const titleCase = (id) => id.charAt(0).toUpperCase() + id.slice(1).replace(/-/g, ' ');
-const highlight = (code) => hljs.highlight(code.trim(), { language: 'typescript' }).value;
+const highlightAs = (language, code) => hljs.highlight(code, { language }).value;
+const prettierOptions = { ...(await resolveConfig(join(root, '.prettierrc.json'))), parser: 'typescript' };
+
+function dedent(code) {
+  const lines = code.replace(/^\s*\n|\n\s*$/g, '').split('\n');
+  const indent = Math.min(...lines.filter((line) => line.trim()).map((line) => line.match(/^\s*/)[0].length));
+  return lines.map((line) => line.slice(indent)).join('\n');
+}
+
+function toLines(html) {
+  const open = [];
+  const lines = [];
+  let line = '';
+  for (const token of html.split(/(<span[^>]*>|<\/span>|\n)/)) {
+    if (token === '\n') {
+      lines.push(`<span class="line">${line}${'</span>'.repeat(open.length)}</span>`);
+      line = open.join('');
+    } else {
+      if (token.startsWith('<span')) {
+        open.push(token);
+      } else if (token === '</span>') {
+        open.pop();
+      }
+      line += token;
+    }
+  }
+  lines.push(`<span class="line">${line}</span>`);
+  return lines;
+}
+
+function templateFold(source, lines) {
+  const sourceLines = source.split('\n');
+  const start = sourceLines.findIndex((line) => /template:\s*`\s*$/.test(line));
+  const end = sourceLines.findIndex((line, index) => index > start && /^\s*`/.test(line));
+  if (start < 0 || end < 0) {
+    return null;
+  }
+  return {
+    before: lines.slice(0, start + 1).join(''),
+    inner: lines.slice(start + 1, end).join(''),
+    after: lines.slice(end).join(''),
+    lines: end - start - 1,
+    indent: sourceLines[start + 1].match(/^\s*/)[0].length,
+    resumeAt: end,
+  };
+}
+
+async function exampleFiles(raw) {
+  const source = (await format(raw, prettierOptions)).trim();
+  const template = source.match(/(template:\s*`)([\s\S]*?)(`)/);
+  if (!template) {
+    return [{ label: 'TypeScript', source, html: toLines(highlightAs('typescript', source)).join(''), fold: null }];
+  }
+  const start = template.index + template[1].length;
+  const end = start + template[2].length;
+  const markup = template[2];
+  const tick = '<span class="hljs-string">`</span>';
+  const typescriptLines = toLines(
+    [
+      highlightAs('typescript', source.slice(0, start - 1)),
+      tick,
+      highlightAs('xml', markup),
+      tick,
+      highlightAs('typescript', source.slice(end + 1)),
+    ].join(''),
+  );
+  const html = dedent(markup);
+  return [
+    { label: 'HTML', source: html, html: toLines(highlightAs('xml', html)).join(''), fold: null },
+    { label: 'TypeScript', source, html: typescriptLines.join(''), fold: templateFold(source, typescriptLines) },
+  ];
+}
 
 function parseFrontMatter(markdown) {
   const match = markdown.match(/^---\n([\s\S]*?)\n---\n?/);
@@ -98,7 +170,7 @@ const coreMembers = readdirSync(join(root, 'packages/core'), { withFileTypes: tr
   .filter((entry) => entry.isDirectory())
   .reduce((all, entry) => ({ ...all, ...readSource(join(root, 'packages/core', entry.name)).members }), {});
 
-function buildComponent(name) {
+async function buildComponent(name) {
   const dir = join(contentDir, name);
   const { meta, body } = parseFrontMatter(read(join(dir, 'overview.md')));
   const title = body.match(/^#\s+(.+)/m)?.[1] ?? titleCase(name);
@@ -135,23 +207,27 @@ function buildComponent(name) {
     },
     keyboard: (tables.keyboard ?? []).map(([key, action]) => ({ key, action: marked.parseInline(action ?? '') })),
     tokens: presetTokens(name, meta.tokens?.split(',').map((key) => key.trim())) ?? tokens,
-    examples: exampleIds.map((id) => ({
-      id,
-      title: titleCase(id),
-      descriptionHtml: marked.parse(read(join(examplesDir, `${id}.md`))),
-      source: read(join(examplesDir, `${id}.example.ts`)).trim(),
-      sourceHtml: highlight(read(join(examplesDir, `${id}.example.ts`))),
-      importPath: `../content/components/${name}/examples/${id}.example`,
-    })),
+    examples: await Promise.all(
+      exampleIds.map(async (id) => ({
+        id,
+        title: titleCase(id),
+        descriptionHtml: marked.parse(read(join(examplesDir, `${id}.md`))),
+        files: await exampleFiles(read(join(examplesDir, `${id}.example.ts`))),
+        importPath: `../content/components/${name}/examples/${id}.example`,
+      })),
+    ),
   };
 }
 
 const unresolved = (component) => [...component.api.inputs, ...component.api.outputs].filter((member) => member.type === '—').map((member) => `${component.name}.${member.name}`);
 
-const components = readdirSync(contentDir, { withFileTypes: true })
-  .filter((entry) => entry.isDirectory())
-  .map((entry) => buildComponent(entry.name))
-  .sort((a, b) => a.title.localeCompare(b.title));
+const components = (
+  await Promise.all(
+    readdirSync(contentDir, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => buildComponent(entry.name)),
+  )
+).sort((a, b) => a.title.localeCompare(b.title));
 
 const body = components
   .map(({ examples, ...component }) => {

@@ -15,8 +15,20 @@ import { TxButton } from '@tectra/ui/button';
 export default class ButtonDesignTokensExample {
   teal = {
     root: {
-      primary: { background: '#0f766e', hoverBackground: '#115e59', activeBackground: '#134e4a', borderColor: '#0f766e', hoverBorderColor: '#115e59', activeBorderColor: '#134e4a', color: '#ffffff', hoverColor: '#ffffff', activeColor: '#ffffff' },
+      primary: {
+        background: '#0f766e',
+        hoverBackground: '#115e59',
+        activeBackground: '#134e4a',
+        borderColor: '#0f766e',
+        hoverBorderColor: '#115e59',
+        activeBorderColor: '#134e4a',
+        color: '#ffffff',
+        hoverColor: '#ffffff',
+        activeColor: '#ffffff',
+      },
     },
   };
-  chunky = { root: { borderRadius: '2px', paddingX: '24px', paddingY: '14px', label: { fontWeight: '800' } } };
+  chunky = {
+    root: { borderRadius: '2px', paddingX: '24px', paddingY: '14px', label: { fontWeight: '800' } },
+  };
 }

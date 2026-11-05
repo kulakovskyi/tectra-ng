@@ -21,7 +21,14 @@ import { TxFloatLabel } from '@tectra/ui/label';
       </tx-float-label>
     </div>
   `,
-  styles: `.row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding-top: 12px; }`,
+  styles: `
+    .row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      padding-top: 12px;
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class LabelFloatExample {}

@@ -14,7 +14,12 @@ import { TxButton } from '@tectra/ui/button';
       </tx-fluid>
     </div>
   `,
-  styles: `.footer { display: flex; gap: 8px; }`,
+  styles: `
+    .footer {
+      display: flex;
+      gap: 8px;
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class ButtonFluidExample {}

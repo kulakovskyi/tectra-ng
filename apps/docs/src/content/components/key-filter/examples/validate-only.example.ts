@@ -9,7 +9,14 @@ import { TxKeyFilter } from '@tectra/ui/key-filter';
   imports: [TxFluid, TxInput, TxKeyFilter, ReactiveFormsModule],
   template: `
     <tx-fluid class="stack">
-      <input txInput [txKeyFilter]="'alphanum'" [validateOnly]="true" [formControl]="code" placeholder="Type a space or a dash" aria-label="Code" />
+      <input
+        txInput
+        [txKeyFilter]="'alphanum'"
+        [validateOnly]="true"
+        [formControl]="code"
+        placeholder="Type a space or a dash"
+        aria-label="Code"
+      />
       <span class="hint">Errors: {{ code.errors ? 'keyFilter' : 'none' }}</span>
     </tx-fluid>
   `,

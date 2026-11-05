@@ -6,8 +6,19 @@ import { TxToggleButton } from '@tectra/ui/toggle-button';
   imports: [TxToggleButton],
   template: `
     <div class="flex">
-      <tx-toggle-button [onLabel]="'Locked'" [offLabel]="'Unlocked'" [onIcon]="'check'" [offIcon]="'times'" />
-      <tx-toggle-button [onLabel]="'Subscribed'" [offLabel]="'Subscribe'" [onIcon]="'bell'" [offIcon]="'bell'" [iconPos]="'right'" />
+      <tx-toggle-button
+        [onLabel]="'Locked'"
+        [offLabel]="'Unlocked'"
+        [onIcon]="'check'"
+        [offIcon]="'times'"
+      />
+      <tx-toggle-button
+        [onLabel]="'Subscribed'"
+        [offLabel]="'Subscribe'"
+        [onIcon]="'bell'"
+        [offIcon]="'bell'"
+        [iconPos]="'right'"
+      />
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

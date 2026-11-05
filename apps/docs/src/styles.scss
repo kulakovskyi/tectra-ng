@@ -125,8 +125,18 @@ html.docs-theme-switch::view-transition-new(root) {
 
 .hljs-title,
 .hljs-title.class_,
-.hljs-title.function_ {
+.hljs-title.function_,
+.hljs-name {
   color: #0550ae;
+}
+
+.hljs-tag {
+  color: var(--tx-text-muted);
+}
+
+.hljs-number,
+.hljs-literal {
+  color: #0a3069;
 }
 
 .hljs-comment {
@@ -151,8 +161,14 @@ html.docs-theme-switch::view-transition-new(root) {
 
   .hljs-title,
   .hljs-title.class_,
-  .hljs-title.function_ {
+  .hljs-title.function_,
+  .hljs-name {
     color: #79c0ff;
+  }
+
+  .hljs-number,
+  .hljs-literal {
+    color: #a5d6ff;
   }
 
   .hljs-attr,

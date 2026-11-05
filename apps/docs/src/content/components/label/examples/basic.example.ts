@@ -11,7 +11,11 @@ import { TxLabel } from '@tectra/ui/label';
       <input txInput id="label-basic-name" [fluid]="true" />
     </div>
   `,
-  styles: `.field { max-width: 360px; }`,
+  styles: `
+    .field {
+      max-width: 360px;
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class LabelBasicExample {}

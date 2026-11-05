@@ -9,11 +9,23 @@ import { TxSelect } from '@tectra/ui/select';
   imports: [TxInputGroup, TxInput, TxSelect, ReactiveFormsModule],
   template: `
     <tx-input-group [fluid]="true" class="group">
-      <tx-select class="group__select" [options]="protocols" [formControl]="protocol" [ariaLabel]="'Protocol'" />
+      <tx-select
+        class="group__select"
+        [options]="protocols"
+        [formControl]="protocol"
+        [ariaLabel]="'Protocol'"
+      />
       <input txInput placeholder="example.com" aria-label="Domain" />
     </tx-input-group>
   `,
-  styles: `.group { max-width: 420px; } .group__select { flex: 0 0 120px !important; }`,
+  styles: `
+    .group {
+      max-width: 420px;
+    }
+    .group__select {
+      flex: 0 0 120px !important;
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class InputGroupSelectExample {

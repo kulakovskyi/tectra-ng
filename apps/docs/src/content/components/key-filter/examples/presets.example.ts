@@ -16,11 +16,29 @@ import { TxKeyFilter, TxKeyFilterPreset } from '@tectra/ui/key-filter';
     </div>
   `,
   styles: `
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
-    .grid__item { display: flex; flex-direction: column; gap: 6px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 12px;
+    }
+    .grid__item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class KeyFilterPresetsExample {
-  readonly presets: TxKeyFilterPreset[] = ['pint', 'int', 'pnum', 'num', 'money', 'hex', 'email', 'alpha', 'alphanum'];
+  readonly presets: TxKeyFilterPreset[] = [
+    'pint',
+    'int',
+    'pnum',
+    'num',
+    'money',
+    'hex',
+    'email',
+    'alpha',
+    'alphanum',
+  ];
 }

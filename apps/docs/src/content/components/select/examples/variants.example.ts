@@ -8,7 +8,12 @@ import { TxSelect } from '@tectra/ui/select';
   template: `
     <div class="stack">
       <tx-select [options]="cities" [variant]="'filled'" [placeholder]="'Filled'" />
-      <tx-select [options]="cities" [readonly]="true" [formControl]="city" [ariaLabel]="'Read only'" />
+      <tx-select
+        [options]="cities"
+        [readonly]="true"
+        [formControl]="city"
+        [ariaLabel]="'Read only'"
+      />
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

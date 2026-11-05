@@ -16,9 +16,29 @@ import { TxKeyFilter } from '@tectra/ui/key-filter';
       </tx-input-group>
       <span class="hint">Searched: {{ searched || '—' }}</span>
       <tx-input-group>
-        <button txButton [severity]="'secondary'" [icon]="'minus'" aria-label="Less" [disabled]="quantity.value <= min" (click)="step(-1)"></button>
-        <input txInput [txKeyFilter]="'pint'" aria-label="Quantity" [formControl]="quantity" (blur)="clamp()" />
-        <button txButton [severity]="'secondary'" [icon]="'plus'" aria-label="More" [disabled]="quantity.value >= max" (click)="step(1)"></button>
+        <button
+          txButton
+          [severity]="'secondary'"
+          [icon]="'minus'"
+          aria-label="Less"
+          [disabled]="quantity.value <= min"
+          (click)="step(-1)"
+        ></button>
+        <input
+          txInput
+          [txKeyFilter]="'pint'"
+          aria-label="Quantity"
+          [formControl]="quantity"
+          (blur)="clamp()"
+        />
+        <button
+          txButton
+          [severity]="'secondary'"
+          [icon]="'plus'"
+          aria-label="More"
+          [disabled]="quantity.value >= max"
+          (click)="step(1)"
+        ></button>
       </tx-input-group>
     </div>
   `,
@@ -36,7 +56,9 @@ export default class InputGroupButtonsExample {
   }
 
   step(delta: number): void {
-    this.quantity.setValue(Math.min(this.max, Math.max(this.min, Number(this.quantity.value) + delta)));
+    this.quantity.setValue(
+      Math.min(this.max, Math.max(this.min, Number(this.quantity.value) + delta)),
+    );
   }
 
   clamp(): void {

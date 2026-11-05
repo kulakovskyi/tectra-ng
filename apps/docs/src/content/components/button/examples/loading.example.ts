@@ -7,7 +7,14 @@ import { TxButton } from '@tectra/ui/button';
   template: `
     <div class="flex">
       <button txButton [icon]="'check'" [loading]="isSaving()" (click)="save()">Save</button>
-      <button txButton [icon]="'refresh'" [severity]="'secondary'" [loading]="isSaving()" (click)="save()" aria-label="Refresh"></button>
+      <button
+        txButton
+        [icon]="'refresh'"
+        [severity]="'secondary'"
+        [loading]="isSaving()"
+        (click)="save()"
+        aria-label="Refresh"
+      ></button>
       <button txButton [outlined]="true" [loading]="isSaving()" (click)="save()">Sync</button>
     </div>
   `,

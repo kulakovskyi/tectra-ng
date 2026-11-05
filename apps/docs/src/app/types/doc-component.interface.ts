@@ -22,12 +22,27 @@ export interface DocToken {
   value: string;
 }
 
+export interface DocCodeFold {
+  before: string;
+  inner: string;
+  after: string;
+  lines: number;
+  indent: number;
+  resumeAt: number;
+}
+
+export interface DocCodeFile {
+  label: string;
+  source: string;
+  html: string;
+  fold: DocCodeFold | null;
+}
+
 export interface DocExample {
   id: string;
   title: string;
   descriptionHtml: string;
-  source: string;
-  sourceHtml: string;
+  files: DocCodeFile[];
   load: () => Promise<Type<unknown>>;
 }
 

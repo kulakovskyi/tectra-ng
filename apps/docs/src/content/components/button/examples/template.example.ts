@@ -12,7 +12,9 @@ import { TxButton, TxButtonIconTemplate } from '@tectra/ui/button';
       </button>
       <button txButton [outlined]="true">
         <ng-template txButtonIcon>
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><circle cx="12" cy="12" r="6" /></svg>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+            <circle cx="12" cy="12" r="6" />
+          </svg>
         </ng-template>
         Custom SVG
       </button>
