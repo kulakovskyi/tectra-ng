@@ -12,6 +12,7 @@ export const menuTokens = {
     minWidth: '200px',
     maxHeight: 'min(420px, calc(100vh - 32px))',
     fontSize: tokenRef('font-size-md'),
+    lineHeight: '1.45',
   },
   item: {
     padding: '7px 10.5px',
@@ -58,6 +59,7 @@ export const menuTokens = {
     itemBorderRadius: tokenRef('radius-md'),
     fontSize: '12.25px',
     fontWeight: tokenRef('font-weight-medium'),
+    itemBorderWidth: '1px',
   },
   context: {
     background: `color-mix(in srgb, ${tokenRef('surface-card')} 92%, transparent)`,
@@ -69,6 +71,10 @@ export const menuTokens = {
     maxHeight: 'min(70vh, 448px)',
     itemPadding: '5.25px 7px',
     itemGap: '8.75px',
+    iconButtonSize: '21px',
+    iconButtonFontSize: '10.5px',
+    iconButtonBorderRadius: tokenRef('radius-md'),
+    disabledOpacity: '0.5',
     itemBorderRadius: tokenRef('radius-md'),
     fontSize: '12.25px',
   },

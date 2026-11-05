@@ -67,6 +67,7 @@ export class TxTooltip implements TxTooltipHandle {
   readonly tooltipInteractive = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
   readonly tooltipDisabled = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly tooltipOverflowOnly = input<boolean, unknown>(false, { transform: booleanAttribute });
+  readonly tooltipMultiline = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly tooltipContext = input<unknown>(undefined);
   readonly tooltipClass = input<string | undefined>(undefined);
   readonly tooltipDt = input<TectraDeepPartial<TectraTooltipTokens> | undefined>(undefined);
@@ -259,6 +260,7 @@ export class TxTooltip implements TxTooltipHandle {
       arrow: this.arrow,
       interactive: this.interactive,
       hiddenFromReaders: this.describesAhead,
+      multiline: this.tooltipMultiline,
       unstyled: this.isUnstyled,
       passThrough: this.passThrough,
       style: this.panelStyle,

@@ -78,10 +78,11 @@ export default class MenuContextMenuExample {
   readonly selected = signal<StoredFile | null>(null);
   readonly items: TxMenuItem[] = [
     { id: 'open', label: 'Open', icon: 'eye' },
-    { id: 'download', label: 'Download', icon: 'download' },
+    { id: 'download', label: 'Download', icon: 'download', iconSeverity: 'info' },
     {
       label: 'Share',
       icon: 'share-alt',
+      iconSeverity: 'help',
       items: [
         { label: 'Copy link', icon: 'link' },
         { label: 'Email', icon: 'send' },

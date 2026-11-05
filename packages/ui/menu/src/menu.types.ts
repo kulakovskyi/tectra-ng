@@ -1,6 +1,7 @@
 import { TemplateRef } from '@angular/core';
 
 export type TxMenuItemSeverity = 'danger';
+export type TxMenuIconSeverity = 'primary' | 'secondary' | 'success' | 'info' | 'warn' | 'danger' | 'help' | 'contrast';
 export type TxMenuPart = 'root' | 'item' | 'icon' | 'label' | 'shortcut' | 'badge' | 'separator' | 'groupLabel' | 'submenuIcon';
 
 export interface TxMenuItemEvent<TData = unknown> {
@@ -12,6 +13,7 @@ export interface TxMenuItem<TData = unknown> {
   id?: string;
   label?: string;
   icon?: string;
+  iconSeverity?: TxMenuIconSeverity;
   command?: (event: TxMenuItemEvent<TData>) => void;
   routerLink?: string | readonly unknown[];
   queryParams?: Record<string, unknown>;

@@ -84,7 +84,17 @@
   @if (itemTemplate(); as template) {
     <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="context(item)" />
   } @else {
-    @if (item.icon) {
+    @if (item.icon && variant() === 'context') {
+      <span
+        class="tx-menu__icon-button"
+        aria-hidden="true"
+        [attr.data-severity]="item.iconSeverity ?? (item.severity === 'danger' ? 'danger' : 'primary')"
+        [class]="pt()?.icon?.class"
+        [style]="pt()?.icon?.style"
+      >
+        <tx-icon [name]="item.icon" />
+      </span>
+    } @else if (item.icon) {
       <tx-icon class="tx-menu__icon" aria-hidden="true" [name]="item.icon" [class]="pt()?.icon?.class" [style]="pt()?.icon?.style" />
     }
     <span class="tx-menu__label" [class]="pt()?.label?.class" [style]="pt()?.label?.style">{{ item.label }}</span>

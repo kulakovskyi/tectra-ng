@@ -58,6 +58,7 @@
   color: var(--tx-menu-color);
   font-family: var(--tx-font-family);
   font-size: var(--_font-size);
+  line-height: var(--tx-menu-line-height);
 
   .tx-menu__item {
     gap: var(--_item-gap);
@@ -159,6 +160,16 @@
 
   max-height: var(--tx-menu-max-height);
   box-shadow: var(--tx-menu-shadow);
+
+  .tx-menu__item {
+    border: var(--tx-menu-popup-item-border-width) solid transparent;
+  }
+
+  .tx-menu__item .tx-menu__icon,
+  .tx-menu__item:focus .tx-menu__icon,
+  .tx-menu__item:hover .tx-menu__icon {
+    color: inherit;
+  }
 }
 
 :host([data-styled][data-variant='context']) {
@@ -175,4 +186,44 @@
 
   max-height: var(--tx-menu-context-max-height);
   backdrop-filter: blur(var(--tx-menu-context-blur));
+}
+
+:host([data-styled]) .tx-menu__icon-button {
+  --_icon-background: var(--tx-button-primary-background);
+  --_icon-color: var(--tx-button-primary-color);
+
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--tx-menu-context-icon-button-size);
+  height: var(--tx-menu-context-icon-button-size);
+  border-radius: var(--tx-menu-context-icon-button-border-radius);
+  background: var(--_icon-background);
+  color: var(--_icon-color);
+  font-size: var(--tx-menu-context-icon-button-font-size);
+}
+
+@each $severity in (secondary, success, info, warn, danger, help, contrast) {
+  :host([data-styled]) .tx-menu__icon-button[data-severity='#{$severity}'] {
+    --_icon-background: var(--tx-button-#{$severity}-background);
+    --_icon-color: var(--tx-button-#{$severity}-color);
+  }
+}
+
+:host([data-styled][data-variant='context']) {
+  .tx-menu__item[data-severity='danger'],
+  .tx-menu__item[data-severity='danger']:focus,
+  .tx-menu__item[data-severity='danger']:hover {
+    color: var(--tx-menu-item-color);
+  }
+
+  .tx-menu__item[data-severity='danger']:focus,
+  .tx-menu__item[data-severity='danger']:hover {
+    background: var(--tx-menu-item-focus-background);
+  }
+
+  .tx-menu__item[aria-disabled='true'] {
+    opacity: var(--tx-menu-context-disabled-opacity);
+  }
 }

@@ -8,21 +8,21 @@
 }
 
 :host([data-position^='top']) {
-  top: var(--tx-toast-inset);
+  top: var(--tx-toast-inset-top);
 }
 
 :host([data-position^='bottom']) {
   --_raise: -1;
 
-  bottom: var(--tx-toast-inset);
+  bottom: var(--tx-toast-inset-bottom);
 }
 
 :host([data-position$='left']) {
-  left: var(--tx-toast-inset);
+  left: var(--tx-toast-inset-x);
 }
 
 :host([data-position$='right']) {
-  right: var(--tx-toast-inset);
+  right: var(--tx-toast-inset-x);
 }
 
 :host([data-position$='center']) {
@@ -173,6 +173,7 @@
     background: color-mix(in srgb, var(--_tone) var(--tx-toast-icon-tint), transparent);
     color: var(--_tone);
     font-size: var(--tx-toast-icon-font-size);
+    --tx-icon-stroke-width: var(--tx-toast-icon-stroke-width);
   }
 
   .tx-toast__spinner {

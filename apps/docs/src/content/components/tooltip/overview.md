@@ -1,7 +1,7 @@
 ---
 category: Overlay
 tokens: tooltip
-examples: basic, icon-buttons, placements, triggers, delays, template, interactive, overflow, disabled, manual, design-tokens
+examples: basic, icon-buttons, placements, triggers, delays, multiline, template, interactive, overflow, disabled, manual, design-tokens
 ---
 # Tooltip
 

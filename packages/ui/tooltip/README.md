@@ -24,6 +24,7 @@ App-wide defaults: `provideTxTooltip({ placement: 'bottom', showDelay: 400 })`.
 | tooltipArrow | Shows the arrow pointing at the middle of the element (default on) |
 | tooltipInteractive | The pointer can move onto the tooltip without closing it — to select or copy its text (default off) |
 | tooltipDisabled | Turns the tooltip off |
+| tooltipMultiline | Wider (360px) with taller lines — for several lines of text |
 | tooltipOverflowOnly | Shows only when the element's text is cut off (`text-overflow: ellipsis`) |
 | tooltipContext | Value passed to the template as `$implicit` |
 | tooltipClass | Class added to the tooltip panel |

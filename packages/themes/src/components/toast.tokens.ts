@@ -7,7 +7,9 @@ function tone(palette: string) {
 export const toastTokens = {
   root: {
     width: 'min(448px, calc(100vw - 28px))',
-    inset: '28px',
+    insetX: '28px',
+    insetTop: '70px',
+    insetBottom: '28px',
     gap: '8px',
     duration: '0.3s',
   },
@@ -29,6 +31,7 @@ export const toastTokens = {
   icon: {
     size: '31.5px',
     fontSize: '12.25px',
+    strokeWidth: '2.5',
     tint: '14%',
   },
   text: {

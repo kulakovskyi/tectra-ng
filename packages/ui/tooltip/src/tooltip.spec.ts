@@ -34,6 +34,7 @@ import { TxTooltipEvent } from './tooltip.types';
     </ng-template>
     <span id="manual" txTooltip="Copied" tooltipEvent="manual" [tooltipLife]="1000" #copied="txTooltip">Link</span>
     <span id="overflow" txTooltip="Full text" tooltipOverflowOnly>Short</span>
+    <button id="lines" txTooltip="One&#10;Two" tooltipMultiline>Lines</button>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -197,6 +198,12 @@ describe('TxTooltip', () => {
     vi.advanceTimersByTime(1000);
     await flush();
     expect(panel()).toBeNull();
+  });
+
+  it('widens for several lines', async () => {
+    fire(el('#lines'), 'mouseenter');
+    await settle();
+    expect(panel()?.classList).toContain('tx-tooltip--multiline');
   });
 
   it('shows only when the text overflows in overflow mode', async () => {

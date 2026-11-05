@@ -1,1 +1,1 @@
-`<tx-context-menu [target]>` opens at the pointer on right-click, and at the focused element with Shift + F10 or the context menu key. Nested items open as sub-menus.
+`<tx-context-menu [target]>` opens at the pointer on right-click, and at the focused element with Shift + F10 or the context menu key. Nested items open as sub-menus; each icon sits in a small filled button of its `iconSeverity`, like the row's own action.

@@ -13,6 +13,7 @@ export interface TxTooltipPanelState {
   arrow: Signal<boolean>;
   interactive: Signal<boolean>;
   hiddenFromReaders: Signal<boolean>;
+  multiline: Signal<boolean>;
   unstyled: Signal<boolean>;
   passThrough: Signal<TxResolvedPassThrough<TxTooltipPart>>;
   style: Signal<Record<string, string>>;
@@ -51,6 +52,7 @@ export const TX_TOOLTIP_PANEL = new InjectionToken<TxTooltipPanelState>('TX_TOOL
     '[attr.data-placement]': 'state.placement()',
     '[attr.aria-hidden]': 'state.hiddenFromReaders() || null',
     '[class.tx-tooltip--interactive]': 'state.interactive()',
+    '[class.tx-tooltip--multiline]': 'state.multiline()',
     '(mouseenter)': 'state.pointerEnter()',
     '(mouseleave)': 'state.pointerLeave()',
   },

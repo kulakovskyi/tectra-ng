@@ -23,6 +23,11 @@
   white-space: pre-line;
 }
 
+:host([data-styled].tx-tooltip--multiline) {
+  max-width: var(--tx-tooltip-multiline-max-width);
+  line-height: var(--tx-tooltip-multiline-line-height);
+}
+
 .tx-tooltip__content {
   position: relative;
 }

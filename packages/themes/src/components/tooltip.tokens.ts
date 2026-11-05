@@ -12,6 +12,10 @@ export const tooltipTokens = {
     lineHeight: '1.45',
     shadow: tokenRef('shadow-overlay'),
   },
+  multiline: {
+    maxWidth: '360px',
+    lineHeight: '1.5',
+  },
   arrow: {
     size: '5px',
     inset: '10px',
