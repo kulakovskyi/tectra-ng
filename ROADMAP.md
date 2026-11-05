@@ -117,7 +117,7 @@ Detailed checklist per component: [roadmap/stage-6-selection.md](roadmap/stage-6
 |---|---|---|---|
 | `ui/select` — parity: clear, groups, disabled options, `dataKey`, filter fields / match modes / delay, virtual scroll, lazy, editable, loading, checkmark, all templates, `dt` / `pt` / `unstyled` | Select | **406** | ✅ |
 | `ui/multiselect` — chips display, select all, filter, max selected, selection limit | MultiSelect | 129 + 8 (multiselect mode of the select wrapper) | ✅ |
-| `ui/autocomplete` — single / multiple, dropdown, force selection, groups | AutoComplete | 1, 2 | ⬜ |
+| `ui/autocomplete` — single / multiple, dropdown, force selection, local or server search, groups | AutoComplete | 1, 2 | ✅ |
 | `ui/listbox` — single / multiple, checkbox, meta key selection, filter, groups, virtual scroll | Listbox | — (parity) | ✅ |
 | `ui/chips-input` (keywords) | AutoComplete multiple / InputChips | 3, 5 | ⬜ |
 | `ui/color-picker` | ColorPicker | 3 | ⬜ |

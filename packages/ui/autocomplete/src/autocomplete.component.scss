@@ -1,0 +1,31 @@
+@use '../../select/src/select-field';
+@use '../../styles/input-action' as action;
+
+@include select-field.styles('.tx-autocomplete');
+@include select-field.chips;
+
+:host .tx-select__box {
+  cursor: text;
+}
+
+.tx-autocomplete__chips {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.tx-autocomplete__chips .tx-select__input {
+  flex: 1 1 64px;
+  min-width: 64px;
+}
+
+:host([data-styled]) .tx-autocomplete__dropdown {
+  @include action.button;
+
+  flex: none;
+  margin-block: calc((1lh - 24px) / 2);
+  margin-inline-end: calc(var(--tx-select-gap) / -2);
+}
+
+:host([data-styled].tx-autocomplete--open) .tx-select__chevron {
+  transform: rotate(180deg);
+}

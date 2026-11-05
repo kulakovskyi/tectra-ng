@@ -79,7 +79,8 @@ export abstract class TxOptionsBase<T> extends TxFormControlBase<T> {
   );
 
   readonly allRows = computed(() => this.buildRows(''));
-  readonly rows = computed(() => (this.filter() && !this.lazy() && this.query().trim() ? this.buildRows(this.query()) : this.allRows()));
+  protected readonly localQuery: Signal<string> = computed(() => (this.filter() && !this.lazy() ? this.query().trim() : ''));
+  readonly rows = computed(() => (this.localQuery() ? this.buildRows(this.localQuery()) : this.allRows()));
   readonly selectableItems = computed(() => this.rows().filter(isSelectableRow));
   readonly activeItemId = computed(() => {
     const row = this.isListActive() ? this.rows()[this.activeIndex()] : undefined;

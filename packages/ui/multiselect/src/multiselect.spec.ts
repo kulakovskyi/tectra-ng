@@ -142,7 +142,7 @@ describe('TxMultiselect', () => {
     host.maxLabels.set(5);
     host.display.set('chip');
     render();
-    const chips = Array.from(fixture.nativeElement.querySelectorAll('.tx-multiselect__chip')) as HTMLElement[];
+    const chips = Array.from(fixture.nativeElement.querySelectorAll('.tx-select__chip')) as HTMLElement[];
     expect(chips.map((chip) => chip.textContent?.trim())).toEqual(['Design', 'Backend', 'Frontend']);
     expect(chips[0].classList).toContain('own-chip');
     (chips[1].querySelector('.tx-select__chip-remove') as HTMLElement).click();

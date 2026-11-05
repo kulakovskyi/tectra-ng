@@ -226,3 +226,51 @@
     }
   }
 }
+
+@mixin chips {
+  .tx-select__chips {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .tx-select__chip {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+  }
+
+  .tx-select__chip-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  :host([data-styled]) {
+    .tx-select__chips {
+      gap: var(--tx-select-chip-gap);
+      white-space: normal;
+    }
+
+    .tx-select__chip {
+      gap: var(--tx-select-chip-gap);
+      padding-inline: var(--tx-select-chip-padding-x) calc(var(--tx-select-chip-padding-x) / 2);
+      border-radius: var(--tx-select-chip-border-radius);
+      background: var(--tx-select-chip-background);
+      color: var(--tx-select-chip-color);
+      font-size: var(--tx-select-chip-font-size);
+    }
+
+    .tx-select__chip-remove {
+      display: inline-grid;
+      place-items: center;
+      border-radius: var(--tx-radius-full);
+      color: var(--tx-select-chip-remove-color);
+      cursor: pointer;
+
+      &:hover {
+        color: var(--tx-select-chip-remove-hover-color);
+      }
+    }
+  }
+}

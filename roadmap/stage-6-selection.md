@@ -43,11 +43,14 @@ PrimeNG: Listbox (`multiple`, `checkbox`, `metaKeySelection`, `filter`, groups, 
 - [x] `tx-field` names a listbox with `aria-labelledby` and describes it with the hint and the error
 - [x] Docs + tests; e2e: keyboard selection, field label, virtual list with the search field
 
-## 6.4 Autocomplete — `ui/autocomplete`
+## 6.4 Autocomplete — `ui/autocomplete` ✅
 
-First app: free-text combobox with a dropdown button (2), prefix-filtered suggestions with an icon (1).
+PrimeNG: AutoComplete (`suggestions`, `(completeMethod)`, `delay`, `minLength`, `dropdown` + `dropdownMode`, `forceSelection`, `multiple`, `completeOnFocus`, `autoOptionFocus`, `showEmptyMessage`, groups, virtual scroll, templates). First app: free-text combobox with a dropdown button (2), prefix-filtered suggestions with an icon (1).
 
-- [ ] `<tx-autocomplete>`: `suggestions` + `(completed)` with `delay` and `minLength`, `dropdown` button, `forceSelection`, free text, groups, `multiple` with chips, loading, templates
+- [x] `<tx-autocomplete>` on the select base: input `role="combobox"` with `aria-autocomplete="list"`, `suggestions` + `(completed)` after `delay` / `minLength`, `completeOnFocus`, `dropdown` button (`blank` / `current`), free text or `forceSelection` (unknown text cleared on Tab / blur, an exact match is taken), `autoOptionFocus`, `showEmptyMessage`, `localSearch` for fixed lists (match modes, `filterBy`), `maxlength`, `showClear`, loading
+- [x] `multiple` with chips (option template inside the chip, Backspace removes the last), values not in the suggestions still shown
+- [x] Groups, virtual scroll, lazy, templates; float / ifta label and input group know it
+- [x] Docs + tests; e2e: typing + keys, forced selection on Tab, chips, axe on the open panel in light and dark
 
 ## 6.5 Chips input — `ui/chips-input`
 

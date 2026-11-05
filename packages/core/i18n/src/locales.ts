@@ -41,6 +41,7 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     remove: 'Remove',
     moreItems: '{count} more',
     selectedItems: '{count} selected',
+    showOptions: 'Show options',
   },
 };
 
@@ -85,6 +86,7 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     remove: 'Видалити',
     moreItems: 'ще {count}',
     selectedItems: 'Вибрано: {count}',
+    showOptions: 'Показати варіанти',
   },
 };
 

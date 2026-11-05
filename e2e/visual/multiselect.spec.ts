@@ -49,7 +49,7 @@ test('select all picks the filtered options and keeps the panel open', async ({ 
 test('chips are removed by click and by Backspace without moving the page', async ({ page }) => {
   const frame = example(page, 'Chips');
   const trigger = frame.getByRole('combobox');
-  const chips = frame.locator('.tx-multiselect__chip');
+  const chips = frame.locator('.tx-select__chip');
   await expect(chips).toHaveText(['Angular', 'RxJS', 'Docker']);
   await chips.nth(1).locator('.tx-select__chip-remove').click();
   await expect(chips).toHaveText(['Angular', 'Docker']);

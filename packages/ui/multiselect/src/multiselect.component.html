@@ -42,10 +42,10 @@
     } @else if (summarized()) {
       <span class="tx-select__value" [class]="passThrough().value?.class" [style]="passThrough().value?.style">{{ summary() }}</span>
     } @else if (display() === 'chip') {
-      <span class="tx-select__value tx-multiselect__chips" [class]="passThrough().value?.class" [style]="passThrough().value?.style">
+      <span class="tx-select__value tx-select__chips" [class]="passThrough().value?.class" [style]="passThrough().value?.style">
         @for (item of selectedItems(); track item.id) {
-          <span class="tx-multiselect__chip" [class]="passThrough().chip?.class" [style]="passThrough().chip?.style">
-            <span class="tx-multiselect__chip-label">{{ item.label }}</span>
+          <span class="tx-select__chip" [class]="passThrough().chip?.class" [style]="passThrough().chip?.style">
+            <span class="tx-select__chip-label">{{ item.label }}</span>
             @if (!disabled() && !readonly()) {
               <span class="tx-select__chip-remove" aria-hidden="true" (click)="removeItem(item, $event)">
                 <tx-icon [name]="'times'" />

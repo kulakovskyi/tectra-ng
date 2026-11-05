@@ -40,6 +40,7 @@ export interface TxTranslations {
   remove: string;
   moreItems: string;
   selectedItems: string;
+  showOptions: string;
 }
 
 export type TxValidationMessage = string | ((error: unknown) => string);
