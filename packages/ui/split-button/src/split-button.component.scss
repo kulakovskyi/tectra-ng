@@ -1,0 +1,8 @@
+:host {
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+:host([data-styled][data-filled]) .tx-split-button__menu-button {
+  box-shadow: inset var(--tx-split-button-divider-width) 0 0 var(--tx-split-button-divider-color);
+}

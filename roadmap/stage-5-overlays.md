@@ -86,10 +86,10 @@ PrimeNG: Menu, TieredMenu, ContextMenu (`model: MenuItem[]` — `label`, `icon`,
 - Found on the way: a context menu closes on `pointerdown` outside — the `auxclick` after a right-click counted as an outside click; `@angular/router` is an optional peer of `@tectra/ui` for menu links
 
 
-## 5.8 Split button + speed dial — `ui/split-button`, `ui/speed-dial`
+## 5.8 Split button + speed dial — `ui/split-button`, `ui/speed-dial` ✅
 
 PrimeNG: SplitButton (`label`, `icon`, `model`, `severity`, `(onClick)`, `(onDropdownClick)`, `menuButtonProps`), SpeedDial (`model`, `direction`, `type` linear / circle / semi-circle / quarter-circle, `radius`, `mask`, `hideOnClickOutside`). First app: none (parity).
 
-- [ ] `<tx-split-button>`: main action + menu button (`tx-menu` popup), severities, variants and sizes from `txButton`, disabled parts
-- [ ] `<tx-speed-dial>`: linear (4 directions) and circle / semi / quarter layouts, mask, tooltips on items, keyboard
-- [ ] Docs + tests: every variant, keyboard, design tokens
+- [x] `<tx-split-button>`: main action + menu button (`tx-menu` popup), severities, variants and sizes from `txButton`, disabled parts
+- [x] `<tx-speed-dial>`: linear (4 directions) and circle / semi / quarter layouts, mask, tooltips on items, keyboard
+- [x] Docs + tests: every variant, keyboard, design tokens

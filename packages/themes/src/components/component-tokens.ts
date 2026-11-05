@@ -31,6 +31,8 @@ import { toastTokens } from './toast.tokens';
 import { dialogTokens } from './dialog.tokens';
 import { confirmTokens } from './confirm.tokens';
 import { menuTokens } from './menu.tokens';
+import { splitButtonTokens } from './split-button.tokens';
+import { speedDialTokens } from './speed-dial.tokens';
 
 export const COMPONENT_TOKENS = {
   icon: iconTokens,
@@ -71,6 +73,8 @@ export const COMPONENT_TOKENS = {
   dialog: dialogTokens,
   confirm: confirmTokens,
   menu: menuTokens,
+  splitButton: splitButtonTokens,
+  speedDial: speedDialTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

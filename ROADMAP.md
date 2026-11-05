@@ -95,7 +95,7 @@ Detailed checklist per component: [roadmap/stage-4-display.md](roadmap/stage-4-d
 | `ui/status-icon` | — | 6 | ⬜ |
 | `ui/link` (link-view, icon-link) | — | 202, 4 | ⬜ |
 
-## Stage 5 — overlays (after stage 2)
+## Stage 5 — overlays (after stage 2) ✅
 
 Detailed checklist per component: [roadmap/stage-5-overlays.md](roadmap/stage-5-overlays.md).
 
@@ -108,8 +108,8 @@ Detailed checklist per component: [roadmap/stage-5-overlays.md](roadmap/stage-5-
 | `ui/drawer` | Drawer | 13 | ✅ |
 | `ui/confirm` (dialog + popup) + confirm service | ConfirmPopup, ConfirmDialog | 1 | ✅ |
 | `ui/menu` — menu, tiered menu, context menu | Menu, TieredMenu, ContextMenu | table row menu, 6 | ✅ |
-| `ui/split-button` | SplitButton | — (parity, needs menu) | ⬜ |
-| `ui/speed-dial` | SpeedDial | — (parity, needs menu) | ⬜ |
+| `ui/split-button` | SplitButton | — (parity, needs menu) | ✅ |
+| `ui/speed-dial` | SpeedDial | — (parity, needs menu) | ✅ |
 
 ## Stage 6 — selection
 

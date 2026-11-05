@@ -1,0 +1,55 @@
+@if (mask() && visible()) {
+  <div class="tx-speed-dial__mask" aria-hidden="true" [class]="passThrough().mask?.class" [style]="passThrough().mask?.style"></div>
+}
+<button
+  #button
+  txButton
+  type="button"
+  class="tx-speed-dial__button"
+  aria-haspopup="menu"
+  [class]="passThrough().button?.class"
+  [style]="passThrough().button?.style"
+  [icon]="currentIcon()"
+  [rounded]="true"
+  [severity]="severity()"
+  [size]="size()"
+  [disabled]="disabled()"
+  [unstyled]="isUnstyled()"
+  [attr.aria-label]="ariaLabel() ?? null"
+  [attr.aria-expanded]="visible()"
+  [attr.aria-controls]="listId"
+  (click)="toggle($event)"
+  (keydown)="onButtonKeydown($event)"
+></button>
+<div
+  class="tx-speed-dial__list"
+  role="menu"
+  [id]="listId"
+  [class]="passThrough().list?.class"
+  [style]="passThrough().list?.style"
+  [attr.aria-label]="ariaLabel() ?? null"
+>
+  @for (item of items(); track $index) {
+    <button
+      txButton
+      type="button"
+      role="menuitem"
+      class="tx-speed-dial__item"
+      [class]="passThrough().item?.class"
+      [style]="itemStyle($index)"
+      [icon]="item.icon"
+      [rounded]="true"
+      [tabindex]="-1"
+      [severity]="item.severity === 'danger' ? 'danger' : itemSeverity()"
+      [size]="size()"
+      [disabled]="item.disabled ?? false"
+      [unstyled]="isUnstyled()"
+      [attr.aria-label]="item.label ?? null"
+      [txTooltip]="item.label"
+      [tooltipPlacement]="tooltipPlacement()"
+      [tooltipDisabled]="!visible()"
+      (click)="run(item, $event)"
+      (keydown)="onListKeydown($event)"
+    ></button>
+  }
+</div>
