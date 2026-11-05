@@ -471,6 +471,18 @@ test('overlay badge sits on the corner and is read with its button', async ({ pa
   await expect(badge).toHaveText('5');
 });
 
+test('pill is removed from its button with the keyboard', async ({ page }) => {
+  await page.goto('/components/pill');
+  const example = page.locator('pill-removable-example');
+  await expect(example.locator('tx-pill')).toHaveCount(4);
+  await example.getByRole('button', { name: 'Remove design' }).focus();
+  await page.keyboard.press('Delete');
+  await expect(example.locator('tx-pill')).toHaveCount(3);
+  await example.getByRole('button', { name: 'Remove frontend' }).click();
+  await expect(example.locator('tx-pill')).toHaveCount(2);
+  await expect(example.locator('tx-pill').first()).toHaveText(/accessibility/);
+});
+
 test.describe('with motion', () => {
   test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 

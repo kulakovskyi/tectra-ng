@@ -11,6 +11,7 @@ import { fieldTokens } from './field.tokens';
 import { fieldMessageTokens, messageTokens } from './message.tokens';
 import { overlayBadgeTokens } from './overlay-badge.tokens';
 import { passwordTokens } from './password.tokens';
+import { pillTokens } from './pill.tokens';
 import { radioButtonTokens } from './radio-button.tokens';
 import { ratingTokens } from './rating.tokens';
 import { selectTokens } from './select.tokens';
@@ -47,6 +48,7 @@ export const COMPONENT_TOKENS = {
   knob: knobTokens,
   slider: sliderTokens,
   overlayBadge: overlayBadgeTokens,
+  pill: pillTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

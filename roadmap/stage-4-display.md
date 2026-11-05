@@ -17,14 +17,14 @@ PrimeNG: OverlayBadge (`value`, `severity`, `size`, `badgeDisabled`) around any 
 - [x] Accessible: `ariaLabel` on the badge, the badge is added to the `aria-describedby` of the focusable content
 - [x] Docs + tests: on icons, buttons, avatars, dot, max, severities, sizes, zero, design tokens; e2e: corner position, read with the button. Docs: new navigation group "Display" (Badge moved from Misc)
 
-## 4.2 Pill — `ui/pill`
+## 4.2 Pill — `ui/pill` ✅
 
-Not in PrimeNG as such (Tag rounded). First app usage: **1225** tags: `tone` (`neutral`, `primary`, `success`, `info`, `warn`, `danger`), `size` (`small` 1027×), `variant` (`soft`, `solid`, `outline`), `icon` (721×), `removable` + `removeLabel` + `(removed)`.
+Not in PrimeNG as such (Tag rounded). First app usage: **1225** tags: `tone` (`neutral`, `primary`, `success`, `info`, `warn`, `danger`), `size` (`small` 1027×), `variant` (`soft`, `solid`, `outline`), `icon` (721×), `removable` + `removeLabel` + `(removed)`, a `[pillLeading]` slot.
 
-- [ ] `<tx-pill>`: the first app's tones (+ `help`, `contrast`), `soft` / `solid` / `outline`, `small` / `medium` / `large`, icon (name, `pi-` name, class, template), text or content
-- [ ] Removable: button with a translated label, `(removed)`, Backspace / Delete on the focused pill
-- [ ] Dot indicator (`dot`) for status lists
-- [ ] Docs + tests: tones × variants, sizes, icons, removable, in a table cell
+- [x] `<tx-pill>`: the first app's tones (+ `help`, `contrast`), `soft` / `solid` / `outline`, `small` / `medium` (`normal` alias) / `large`, icon (name, `pi-` name, class), `value` or content, `txPillLeading` slot; text keeps AA (700 shades in light, solid on 700)
+- [x] Removable: button with a translated label (us / ua "Remove"), `(removed)`, Enter / Space / Delete / Backspace on the button
+- [x] Dot indicator (`dot`) for status lists
+- [x] Docs + tests: tones, variants, sizes, icons, dot, removable, leading, in a table, design tokens; e2e: keyboard removal
 
 ## 4.3 Tag + Chip — `ui/tag`, `ui/chip`
 
