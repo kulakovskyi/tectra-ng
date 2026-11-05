@@ -67,6 +67,18 @@
   height: var(--_front-height);
   overflow: hidden;
   transform: translateY(calc(var(--_raise) * var(--_index) * var(--tx-toast-gap))) scale(calc(1 - var(--_index) * 0.05));
+
+  .tx-toast__pill > * {
+    opacity: 0;
+  }
+}
+
+:host([data-position^='bottom']:not([data-expanded])) .tx-toast__item[data-mounted]:not([data-front]) {
+  align-items: flex-start;
+}
+
+:host([data-position^='top']:not([data-expanded])) .tx-toast__item[data-mounted]:not([data-front]) {
+  align-items: flex-end;
 }
 
 :host([data-expanded]) .tx-toast__item[data-mounted] {
@@ -133,6 +145,10 @@
       transform var(--tx-toast-duration),
       opacity var(--tx-toast-duration),
       height var(--tx-toast-duration);
+  }
+
+  .tx-toast__pill > * {
+    transition: opacity var(--tx-toast-duration);
   }
 
   .tx-toast__pill {
@@ -314,6 +330,7 @@
 @media (prefers-reduced-motion: reduce) {
   :host([data-styled]) {
     .tx-toast__item,
+    .tx-toast__pill > *,
     .tx-toast__close {
       transition: none;
     }
