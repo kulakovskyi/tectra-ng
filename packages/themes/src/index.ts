@@ -7,6 +7,7 @@ export * from './components/token-helpers';
 export * from './components/button.tokens';
 export * from './components/badge.tokens';
 export * from './components/icon.tokens';
+export * from './components/ripple.tokens';
 export * from './components/toggle-button.tokens';
 export * from './components/component-tokens';
 export * from './presets/ink/ink.preset';

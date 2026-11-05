@@ -30,7 +30,7 @@ import { TxButtonIconPosition, TxButtonPart, TxButtonSeverity, TxButtonSize, TxB
   templateUrl: './button.component.html',
   styleUrl: './button.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  hostDirectives: [TxRipple],
+  hostDirectives: [{ directive: TxRipple, inputs: ['ripple', 'rippleCentered', 'rippleColor'] }],
   host: {
     class: 'tx-button',
     '[class]': 'passThrough().root?.class',

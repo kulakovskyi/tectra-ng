@@ -4,18 +4,30 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
   selector: 'tx-ripple-styles',
   template: '',
   styles: `
-    .tx-ripple-host { position: relative; overflow: hidden; }
+    .tx-ripple-host {
+      position: relative;
+      isolation: isolate;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .tx-ripple-container {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      border-radius: inherit;
+      pointer-events: none;
+    }
+
     .tx-ripple {
       position: absolute;
       border-radius: 50%;
-      background: currentColor;
-      opacity: 0.25;
+      background: var(--tx-ripple-color, currentColor);
+      opacity: var(--tx-ripple-opacity, 0.2);
       transform: scale(0);
       pointer-events: none;
-      animation: tx-ripple 0.5s ease-out forwards;
+      will-change: transform, opacity;
     }
-    @keyframes tx-ripple { to { transform: scale(2.5); opacity: 0; } }
-    @media (prefers-reduced-motion: reduce) { .tx-ripple { display: none; } }
   `,
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

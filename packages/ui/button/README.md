@@ -25,6 +25,9 @@ Triggers an action. The text goes into `label` or inside the button. An attribut
 | loadingIcon | Icon shown while loading — a `@tectra/icons` name or any icon class |
 | badge | Counter after the text, rendered with `<tx-badge>` |
 | badgeSeverity | Colour of the badge |
+| ripple | Click wave for this button; without it the global `provideTectra({ ripple })` decides |
+| rippleCentered | The wave always starts from the centre (handy for round icon buttons) |
+| rippleColor | Colour of the wave; by default the text colour of the button |
 | dt | Design tokens of this one button, e.g. `{ root: { primary: { background: '#0d9488' } } }` — same shape as the preset tokens |
 | pt | Extra `class` / `style` for the parts `root`, `icon`, `loadingIcon`, `label`, `badge` — an object or a function `({ instance }) => ({ class, style })` that reacts to the button state |
 | ptOptions | How this `pt` meets the global one from `provideTectra({ pt })`: `mergeSections` (default `true` — keep global parts this `pt` does not mention), `mergeProps` (default `false` — a local part replaces the global one; `true` joins classes and styles) |

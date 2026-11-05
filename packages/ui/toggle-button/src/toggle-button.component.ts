@@ -12,6 +12,7 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
 import { injectFluid } from '@tectra/core/fluid';
+import { TxRipple } from '@tectra/core/ripple';
 import { TxFormControlBase } from '@tectra/core/forms';
 import { optionalBoolean } from '@tectra/core/utils';
 import { TxIcon, TxIconName, TxIconRegistry } from '@tectra/icons';
@@ -25,7 +26,7 @@ import {
 
 @Component({
   selector: 'tx-toggle-button',
-  imports: [TxIcon],
+  imports: [TxIcon, TxRipple],
   templateUrl: './toggle-button.component.html',
   styleUrl: './toggle-button.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

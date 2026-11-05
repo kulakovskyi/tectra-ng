@@ -93,13 +93,18 @@ function presetTokens(name) {
   return tokens ? themes.toCssVariables(tokens, `--tx-${name}`) : null;
 }
 
+const coreMembers = readdirSync(join(root, 'packages/core'), { withFileTypes: true })
+  .filter((entry) => entry.isDirectory())
+  .reduce((all, entry) => ({ ...all, ...readSource(join(root, 'packages/core', entry.name)).members }), {});
+
 function buildComponent(name) {
   const dir = join(contentDir, name);
   const { meta, body } = parseFrontMatter(read(join(dir, 'overview.md')));
   const title = body.match(/^#\s+(.+)/m)?.[1] ?? titleCase(name);
   const packageDir = join(root, 'packages/ui', name);
   const tables = parseReadmeTables(read(join(packageDir, 'README.md')));
-  const { members, tokens, selector } = readSource(packageDir);
+  const { members: ownMembers, tokens, selector } = readSource(packageDir);
+  const members = { ...coreMembers, ...ownMembers };
   const withSource = (rows) =>
     (rows ?? []).map(([memberName, description]) => ({
       name: memberName,

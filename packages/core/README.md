@@ -10,7 +10,7 @@ Behaviour without looks. Every component of `@tectra/ui` stands on it. Built on 
 | `@tectra/core/forms` | base for `ControlValueAccessor` + disabled / invalid / touched state, signal forms support |
 | `@tectra/core/i18n` | built-in texts ("No results", week days…), RTL direction |
 | `@tectra/core/styles` | `TxStyleLoader` — loads global styles of directive-based components once |
-| `@tectra/core/ripple` | `txRipple` — click wave, on when `provideTectra({ ripple: true })` |
+| `@tectra/core/ripple` | `txRipple` — ink wave: grows from the pointer while pressed, fades on release, starts from the centre on Enter / Space, calm fade with reduced motion. On with `provideTectra({ ripple: true })` or `[ripple]`; `rippleCentered`, `rippleColor`, `rippleDisabled`; tokens `--tx-ripple-{color,opacity,enter-duration,exit-duration,easing}` |
 | `@tectra/core/fluid` | `<tx-fluid>` / `[txFluid]` — every fluid-aware component inside takes the full width |
 | `@tectra/core/utils` | `optionalBoolean` input transform |
 

@@ -9,7 +9,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZonelessChangeDetection(),
     provideRouter(routes, withComponentInputBinding(), withInMemoryScrolling({ scrollPositionRestoration: 'top' })),
-    provideTectra({ preset: InkPreset }),
+    provideTectra({ preset: InkPreset, ripple: true }),
     provideTxBrandIcons(),
   ],
 };

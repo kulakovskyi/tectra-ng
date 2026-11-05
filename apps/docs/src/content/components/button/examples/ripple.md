@@ -1,0 +1,1 @@
+Press and hold: the wave grows from the pointer and fades when you let go; Enter / Space starts it from the centre. Turned on for the whole app with `provideTectra({ ripple: true })` (this site has it on), per button with `[ripple]`. Speed, opacity and easing are the `ripple` tokens.
