@@ -4,6 +4,12 @@
   pointer-events: none;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  :host {
+    will-change: transform;
+  }
+}
+
 :host(.tx-tooltip--interactive) {
   pointer-events: auto;
 }
