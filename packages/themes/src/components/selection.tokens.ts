@@ -89,3 +89,14 @@ export const colorPickerTokens = {
 };
 
 export type TectraColorPickerTokens = typeof colorPickerTokens;
+
+export const mentionTokens = {
+  root: {
+    panelWidth: '280px',
+    optionGap: '8px',
+    descriptionColor: tokenRef('text-muted'),
+    descriptionFontSize: tokenRef('font-size-sm'),
+  },
+};
+
+export type TectraMentionTokens = typeof mentionTokens;

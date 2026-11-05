@@ -1,0 +1,46 @@
+:host {
+  position: relative;
+  display: block;
+}
+
+.tx-mention-textarea__textarea {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.tx-mention-textarea__caret {
+  position: absolute;
+  width: 0;
+  pointer-events: none;
+}
+
+.tx-mention-textarea__person {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.tx-mention-textarea__person--styled {
+  gap: var(--tx-mention-option-gap);
+
+  .tx-mention-textarea__description {
+    overflow: hidden;
+    color: var(--tx-mention-description-color);
+    font-size: var(--tx-mention-description-font-size);
+    text-overflow: ellipsis;
+  }
+}
+
+.tx-mention-textarea__panel[data-styled] {
+  box-sizing: border-box;
+  width: var(--tx-mention-panel-width);
+  overflow: hidden;
+  border: 1px solid var(--tx-select-overlay-border-color);
+  border-radius: var(--tx-select-overlay-border-radius);
+  background: var(--tx-select-overlay-background);
+  box-shadow: var(--tx-select-overlay-shadow);
+  color: var(--tx-select-option-color);
+  font-family: var(--tx-font-family);
+  font-size: var(--tx-form-field-font-size);
+}

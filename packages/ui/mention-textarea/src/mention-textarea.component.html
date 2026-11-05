@@ -1,0 +1,78 @@
+<textarea
+  #textarea
+  txTextarea
+  class="tx-mention-textarea__textarea"
+  aria-autocomplete="list"
+  [class]="passThrough().textarea?.class"
+  [style]="passThrough().textarea?.style"
+  [autoResize]="autoResize()"
+  [rows]="lines()"
+  [placeholder]="placeholder()"
+  [invalid]="isInvalid()"
+  [unstyled]="isUnstyled()"
+  [readOnly]="readonly()"
+  [disabled]="disabled()"
+  [value]="text()"
+  [attr.id]="inputId() ?? null"
+  [attr.aria-label]="ariaLabel() ?? null"
+  [attr.aria-labelledby]="ariaLabelledBy() ?? null"
+  [attr.aria-controls]="showPanel() ? listboxId : null"
+  [attr.aria-activedescendant]="showPanel() ? activeItemId() : null"
+  (input)="onInput()"
+  (keydown)="onKeydown($event)"
+  (keyup)="onCaretMove()"
+  (click)="onCaretMove()"
+  (blur)="onBlur()"
+></textarea>
+<span
+  #origin="cdkOverlayOrigin"
+  cdkOverlayOrigin
+  class="tx-mention-textarea__caret"
+  aria-hidden="true"
+  [style.top.px]="caret().top"
+  [style.left.px]="caret().left"
+  [style.height.px]="caret().height"
+></span>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="origin"
+  [cdkConnectedOverlayOpen]="showPanel()"
+  [cdkConnectedOverlayPositions]="positions"
+  [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
+  [cdkConnectedOverlayDisableClose]="true"
+>
+  <div
+    class="tx-select__panel tx-mention-textarea__panel"
+    [attr.data-styled]="!isUnstyled() || null"
+    [class]="passThrough().panel?.class"
+    [style]="passThrough().panel?.style"
+    (mousedown)="onPanelMousedown($event)"
+  >
+    <tx-option-list
+      [rows]="rows()"
+      [listboxId]="listboxId"
+      [activeIndex]="activeIndex()"
+      [checkmark]="false"
+      [loading]="loading()"
+      [query]="query()"
+      [emptyText]="emptyText()"
+      [loadingText]="translations().loading"
+      [optionTemplate]="optionTemplate()?.templateRef ?? person"
+      [passThrough]="passThrough()"
+      [unstyled]="isUnstyled()"
+      (optionClick)="onOptionClick($event)"
+      (optionHover)="activeIndex.set($event)"
+    />
+  </div>
+</ng-template>
+
+<ng-template #person let-item>
+  <span class="tx-mention-textarea__person" [class.tx-mention-textarea__person--styled]="!isUnstyled()">
+    <span class="tx-mention-textarea__avatar" aria-hidden="true"><tx-avatar [image]="item.image" [name]="item.label" [size]="'small'" /></span>
+    <span class="tx-mention-textarea__label">{{ item.label }}</span>
+    @if (item.description) {
+      <span class="tx-mention-textarea__description">{{ item.description }}</span>
+    }
+  </span>
+</ng-template>
