@@ -1,0 +1,39 @@
+<span class="tx-radio-button__box" [class]="passThrough().box?.class" [style]="passThrough().box?.style">
+  <input
+    #input
+    type="radio"
+    class="tx-radio-button__input"
+    [class]="passThrough().input?.class"
+    [style]="passThrough().input?.style"
+    [id]="resolvedId()"
+    [checked]="checked()"
+    [disabled]="isDisabled()"
+    [required]="isRequired()"
+    [attr.name]="resolvedName() ?? null"
+    [attr.tabindex]="tabindex() ?? null"
+    [attr.aria-label]="ariaLabel() ?? null"
+    [attr.aria-labelledby]="ariaLabelledBy() ?? null"
+    [attr.aria-describedby]="description() ? descriptionId : null"
+    [attr.aria-invalid]="isInvalid() || null"
+    (click)="onInputClick($event)"
+    (change)="onInputChange($event)"
+    (blur)="onBlur()"
+  />
+  <span class="tx-radio-button__indicator" aria-hidden="true">
+    <span class="tx-radio-button__dot" [class]="passThrough().dot?.class" [style]="passThrough().dot?.style"></span>
+  </span>
+</span>
+<span class="tx-radio-button__text">
+  <label class="tx-radio-button__label" [for]="resolvedId()" [class]="passThrough().label?.class" [style]="passThrough().label?.style"
+    >{{ label() }}<ng-content
+  /></label>
+  @if (description()) {
+    <span
+      class="tx-radio-button__description"
+      [id]="descriptionId"
+      [class]="passThrough().description?.class"
+      [style]="passThrough().description?.style"
+      >{{ description() }}</span
+    >
+  }
+</span>

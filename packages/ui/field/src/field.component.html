@@ -1,6 +1,7 @@
 @if (label()) {
   <tx-label
     class="tx-field__label"
+    [id]="labelId"
     [class]="passThrough().label?.class"
     [style]="passThrough().label?.style"
     [for]="controlId() ?? undefined"

@@ -224,6 +224,22 @@ test('checkbox toggles with Space and its label; select all fills the group', as
   await expect(tile.getByRole('checkbox')).toBeChecked();
 });
 
+test('radio group moves with arrow keys and is named by its field', async ({ page }) => {
+  await page.goto('/components/radio-button');
+  const group = page.locator('radio-button-group-example');
+  const standard = group.getByRole('radio', { name: 'Standard — 3 to 5 days' });
+  await standard.focus();
+  await page.keyboard.press('ArrowDown');
+  await expect(group.getByRole('radio', { name: 'Express — next day' })).toBeChecked();
+  await expect(group.getByRole('radio', { name: 'Express — next day' })).toBeFocused();
+  await expect(group.locator('.hint')).toHaveText('Value: express');
+
+  const form = page.locator('radio-button-form-example');
+  await expect(form.getByRole('radiogroup', { name: 'How did you hear about us?' })).toBeVisible();
+  await form.getByRole('button', { name: 'Continue' }).click();
+  await expect(form.getByRole('radiogroup')).toHaveAttribute('aria-invalid', 'true');
+});
+
 test.describe('with motion', () => {
   test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 

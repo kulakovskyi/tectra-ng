@@ -2,12 +2,13 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TxInput } from '@tectra/ui/input';
+import { TxRadioButton, TxRadioGroup } from '@tectra/ui/radio-button';
 import { TxSelect } from '@tectra/ui/select';
 import { TxField } from './field.component';
 import { TxFieldLayout } from './field.types';
 
 @Component({
-  imports: [TxField, TxInput, TxSelect, ReactiveFormsModule],
+  imports: [TxField, TxInput, TxSelect, TxRadioGroup, TxRadioButton, ReactiveFormsModule],
   template: `
     <form [formGroup]="form">
       <tx-field
@@ -28,6 +29,12 @@ import { TxFieldLayout } from './field.types';
       <tx-field id="plan-field" label="Plan">
         <tx-select [options]="plans" formControlName="plan" />
       </tx-field>
+      <tx-field id="size-field" label="Size" hint="Pick one">
+        <tx-radio-group formControlName="size">
+          <tx-radio-button value="s" label="S" />
+          <tx-radio-button value="m" label="M" />
+        </tx-radio-group>
+      </tx-field>
     </form>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,6 +44,7 @@ class Host {
     email: new FormControl('', [Validators.required, Validators.email]),
     name: new FormControl(''),
     plan: new FormControl<unknown>(null),
+    size: new FormControl<string | null>(null),
   });
   readonly plans = [{ label: 'Free' }, { label: 'Team' }];
   readonly serverError = signal<string | undefined>(undefined);
@@ -70,6 +78,14 @@ describe('TxField', () => {
     const trigger = query('#plan-field [role="combobox"]');
     expect(trigger.id).toBeTruthy();
     expect(query('#plan-field label').getAttribute('for')).toBe(trigger.id);
+  });
+
+  it('names a group with aria-labelledby instead of pointing for at the first option', () => {
+    const group = query('#size-field [role="radiogroup"]');
+    const label = query('#size-field tx-label');
+    expect(group.getAttribute('aria-labelledby')).toBe(label.id);
+    expect(query('#size-field label.tx-label__text').getAttribute('for')).toBeNull();
+    expect(group.getAttribute('aria-describedby')?.split(' ')).toContain(query('#size-field tx-field-hint').id);
   });
 
   it('shows the error of the projected control after touch', async () => {

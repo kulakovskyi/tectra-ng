@@ -61,7 +61,7 @@ Detailed checklist per component: [roadmap/stage-3-forms.md](roadmap/stage-3-for
 | `ui/field` — label + control + hint + error, ids and aria wired | — | every form | ✅ |
 | `ui/textarea` — auto resize | Textarea | 68 | ✅ |
 | `ui/checkbox` — binary, group, indeterminate | Checkbox | 73 | ✅ |
-| `ui/radio-button` | RadioButton | — (parity) | ⬜ |
+| `ui/radio-button` | RadioButton | — (parity) | ✅ |
 | `ui/toggle-switch` | ToggleSwitch | 33 | ⬜ |
 | `ui/password` — strength meter, toggle mask | Password | 20 | ⬜ |
 | `ui/input-otp` | InputOtp | 5 | ⬜ |

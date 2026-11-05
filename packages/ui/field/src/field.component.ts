@@ -28,7 +28,6 @@ const CONTROL_SELECTOR = [
   '[role="combobox"]',
   '[role="switch"]',
   '[role="checkbox"]',
-  '[role="radiogroup"]',
   '[role="slider"]',
   '[role="spinbutton"]',
   '[contenteditable="true"]',
@@ -77,6 +76,7 @@ export class TxField {
 
   readonly isUnstyled = injectUnstyled(this.unstyled);
   readonly passThrough = injectPassThrough('field', this, this.pt, this.ptOptions);
+  readonly labelId = `${this.generatedId}-label`;
   readonly hintId = `${this.generatedId}-hint`;
   readonly errorId = `${this.generatedId}-error`;
   readonly controlId = signal<string | null>(null);
@@ -91,9 +91,10 @@ export class TxField {
 
   private linkControl(): void {
     const host = this.elementRef.nativeElement;
-    const element = host.querySelector<HTMLElement>(`.tx-field__control :is(${CONTROL_SELECTOR})`);
+    const group = host.querySelector<HTMLElement>('.tx-field__control :is([role="radiogroup"], [role="group"])');
+    const element = group ?? host.querySelector<HTMLElement>(`.tx-field__control :is(${CONTROL_SELECTOR})`);
     const describedBy = [host.querySelector(`#${this.hintId}`) ? this.hintId : null, this.errorId].filter((id): id is string => !!id);
-    const key = describedBy.join(' ');
+    const key = `${describedBy.join(' ')}|${this.label() ? 'label' : ''}`;
     if (element === this.linkedElement && key === this.linkedKey) {
       return;
     }
@@ -104,10 +105,18 @@ export class TxField {
       this.controlId.set(null);
       return;
     }
+    this.unlinks = describedBy.map((id) => linkDescribedBy(element, id));
+    if (group) {
+      if (this.label() && !group.hasAttribute('aria-labelledby') && !group.hasAttribute('aria-label')) {
+        group.setAttribute('aria-labelledby', this.labelId);
+        this.unlinks.push(() => group.removeAttribute('aria-labelledby'));
+      }
+      this.controlId.set(null);
+      return;
+    }
     if (!element.id) {
       element.id = `${this.generatedId}-control`;
     }
-    this.unlinks = describedBy.map((id) => linkDescribedBy(element, id));
     this.controlId.set(element.id);
   }
 

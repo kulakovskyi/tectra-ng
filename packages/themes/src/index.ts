@@ -14,6 +14,7 @@ export * from './components/message.tokens';
 export * from './components/field.tokens';
 export * from './components/textarea.tokens';
 export * from './components/checkbox.tokens';
+export * from './components/radio-button.tokens';
 export * from './components/icon.tokens';
 export * from './components/ripple.tokens';
 export * from './components/toggle-button.tokens';

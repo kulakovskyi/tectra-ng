@@ -101,14 +101,14 @@ PrimeNG: Checkbox (`binary`, `value` for groups, `indeterminate`, `trueValue` / 
 - [x] Keyboard: Space toggles; native input under the hood; `readonly`, `disabled`, `required`, `inputId`, `ariaLabel`, `ariaLabelledBy`, `tabindex` (no `autofocus` — the a11y lint forbids it); sizes, `filled`; `checkbox` tokens, `dt` / `pt` / `unstyled`
 - [x] Docs + tests: binary, description, array, group + select all, indeterminate, true / false values, tiles, sizes, variants, states (disabled / readonly / invalid), icon, form with `requiredTrue`, design tokens; e2e: Space, label click, select all, tile click. Registry builder: `model()` outputs (`indeterminateChange`), first declaration wins
 
-## 3.7 Radio button — `ui/radio-button`
+## 3.7 Radio button — `ui/radio-button` ✅
 
 PrimeNG: RadioButton (`value`, `(onClick)`). Not used by the first app yet (parity).
 
-- [ ] `<tx-radio-button>` + `<tx-radio-group>` (`name`, value from the form control)
-- [ ] Arrow keys move inside the group (roving tabindex)
-- [ ] Label, sizes, variants, tile look
-- [ ] Docs + tests: group, keyboard, disabled option, invalid
+- [x] `<tx-radio-button>` + `<tx-radio-group>` (`role="radiogroup"`, generated `name`, value from the form control; a radio also works alone with a control)
+- [x] Arrow keys move inside the group and Tab enters at the checked option — native radios with one `name`
+- [x] Label, `description`, sizes, `filled`, tile look, `readonly`, disabled option / group, `required`, invalid from the group control; `radioButton` tokens, `dt` / `pt` / `unstyled`
+- [x] Docs + tests: group, horizontal, description, tiles, standalone, sizes, variants, states, form, design tokens; e2e: arrow keys, group named by `tx-field`. `tx-field` now names groups (`radiogroup` / `group`) with `aria-labelledby` and describes the group
 
 ## 3.8 Toggle switch — `ui/toggle-switch`
 
