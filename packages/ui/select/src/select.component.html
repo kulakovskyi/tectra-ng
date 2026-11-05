@@ -1,36 +1,98 @@
-<button
-  #trigger
+<!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- the combobox inside the box takes focus and keys; the box only widens the click area -->
+<div
+  #box
   #origin="cdkOverlayOrigin"
   cdkOverlayOrigin
-  type="button"
-  role="combobox"
-  class="tx-select__trigger"
-  aria-haspopup="listbox"
-  [attr.aria-invalid]="isInvalid() || null"
-  [attr.aria-readonly]="readonly() || null"
-  [attr.aria-expanded]="isOpen()"
-  [attr.aria-controls]="listboxId"
-  [attr.id]="inputId() ?? null"
-  [attr.aria-label]="ariaLabel() ?? (ariaLabelledBy() || inputId() ? null : placeholder() || null)"
-  [attr.aria-labelledby]="ariaLabelledBy() ?? null"
-  [attr.aria-activedescendant]="filter() ? null : activeItemId()"
-  [disabled]="disabled()"
-  (click)="toggle()"
-  (keydown)="onKeydown($event)"
+  class="tx-select__box"
+  [class]="passThrough().box?.class"
+  [style]="passThrough().box?.style"
+  (click)="onBoxClick($event)"
 >
-  @if (selectedItem(); as item) {
-    <span class="tx-select__value">
-      @if (optionTemplate(); as template) {
-        <ng-container [ngTemplateOutlet]="template.templateRef" [ngTemplateOutletContext]="{ $implicit: item.option }" />
-      } @else {
-        {{ item.label }}
-      }
-    </span>
+  @if (editable()) {
+    <input
+      #trigger
+      type="text"
+      role="combobox"
+      autocomplete="off"
+      class="tx-select__trigger tx-select__input"
+      aria-autocomplete="none"
+      aria-haspopup="listbox"
+      [class]="passThrough().trigger?.class"
+      [style]="passThrough().trigger?.style"
+      [attr.aria-invalid]="isInvalid() || null"
+      [attr.aria-expanded]="isOpen()"
+      [attr.aria-controls]="listboxId"
+      [attr.id]="inputId() ?? null"
+      [attr.aria-label]="ariaLabel() ?? (ariaLabelledBy() || inputId() ? null : placeholder() || null)"
+      [attr.aria-labelledby]="ariaLabelledBy() ?? null"
+      [attr.aria-activedescendant]="activeItemId()"
+      [attr.aria-busy]="loading() || null"
+      [placeholder]="placeholder()"
+      [value]="editableText()"
+      [readOnly]="readonly()"
+      [disabled]="disabled()"
+      (input)="onEditableInput($event)"
+      (keydown)="onKeydown($event)"
+    />
   } @else {
-    <span class="tx-select__value tx-select__value--placeholder">{{ placeholder() }}</span>
+    <button
+      #trigger
+      type="button"
+      role="combobox"
+      class="tx-select__trigger"
+      aria-haspopup="listbox"
+      [class]="passThrough().trigger?.class"
+      [style]="passThrough().trigger?.style"
+      [attr.aria-invalid]="isInvalid() || null"
+      [attr.aria-readonly]="readonly() || null"
+      [attr.aria-expanded]="isOpen()"
+      [attr.aria-controls]="listboxId"
+      [attr.id]="inputId() ?? null"
+      [attr.aria-label]="ariaLabel() ?? (ariaLabelledBy() || inputId() ? null : placeholder() || null)"
+      [attr.aria-labelledby]="ariaLabelledBy() ?? null"
+      [attr.aria-activedescendant]="filter() ? null : activeItemId()"
+      [attr.aria-busy]="loading() || null"
+      [disabled]="disabled()"
+      (keydown)="onKeydown($event)"
+    >
+      @if (selectedItem(); as item) {
+        <span class="tx-select__value" [class]="passThrough().value?.class" [style]="passThrough().value?.style">
+          @if (valueTemplate() ?? optionTemplate(); as template) {
+            <ng-container
+              [ngTemplateOutlet]="template.templateRef"
+              [ngTemplateOutletContext]="{ $implicit: item.option, selected: true, disabled: item.disabled, index: item.index }"
+            />
+          } @else {
+            {{ item.label }}
+          }
+        </span>
+      } @else {
+        <span class="tx-select__value tx-select__value--placeholder" [class]="passThrough().value?.class" [style]="passThrough().value?.style">{{
+          placeholder()
+        }}</span>
+      }
+    </button>
   }
-  <tx-icon class="tx-select__chevron" [name]="'chevron-down'" />
-</button>
+  @if (canClear()) {
+    <button
+      type="button"
+      class="tx-select__clear"
+      [class]="passThrough().clear?.class"
+      [style]="passThrough().clear?.style"
+      [attr.aria-label]="translations().clear"
+      (click)="clear()"
+    >
+      <tx-icon [name]="'times'" />
+    </button>
+  }
+  <span class="tx-select__dropdown" aria-hidden="true" [class]="passThrough().dropdown?.class" [style]="passThrough().dropdown?.style">
+    @if (loading()) {
+      <tx-icon class="tx-select__spinner" [name]="'spinner'" />
+    } @else {
+      <tx-icon class="tx-select__chevron" [name]="dropdownIcon()" />
+    }
+  </span>
+</div>
 
 <ng-template
   cdkConnectedOverlay
@@ -46,48 +108,72 @@
   (positionChange)="onPositionChange($event)"
   (detach)="onPanelDetach()"
 >
-  <div #panel class="tx-select__panel">
-    @if (filter()) {
-      <div class="tx-select__filter">
-        <tx-icon class="tx-select__filter-icon" [name]="'search'" />
-        <input
-          #filterInput
-          class="tx-select__filter-input"
-          role="searchbox"
-          [attr.aria-controls]="listboxId"
-          [attr.aria-activedescendant]="activeItemId()"
-          [placeholder]="translations().searchPlaceholder"
-          [value]="query()"
-          (input)="onFilter($event)"
-          (keydown)="onKeydown($event)"
-        />
+  <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -- the panel only listens to keys and focus that bubble from its search field and actions -->
+  <div
+    #panel
+    class="tx-select__panel"
+    [attr.data-styled]="!isUnstyled() || null"
+    [attr.data-size]="size()"
+    [class]="passThrough().panel?.class"
+    [style]="panelStyle()"
+    (keydown)="onPanelKeydown($event)"
+    (mousedown)="onPanelMousedown($event)"
+    (focusout)="onPanelFocusOut($event)"
+  >
+    @if (headerTemplate(); as template) {
+      <div class="tx-select__header" [class]="passThrough().header?.class" [style]="passThrough().header?.style">
+        <ng-container [ngTemplateOutlet]="template.templateRef" />
       </div>
     }
-    <div class="tx-select__list" role="listbox" [id]="listboxId">
-      @for (item of visibleItems(); track item.id; let index = $index) {
-        <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- options use aria-activedescendant: focus and keys stay on the field -->
-        <div
-          role="option"
-          class="tx-select__option"
-          [id]="item.id"
-          [class.tx-select__option--active]="index === activeIndex()"
-          [class.tx-select__option--selected]="item.selected"
-          [attr.aria-selected]="item.selected"
-          (mouseenter)="activeIndex.set(index)"
-          (click)="choose(item)"
-        >
-          @if (optionTemplate(); as template) {
-            <ng-container [ngTemplateOutlet]="template.templateRef" [ngTemplateOutletContext]="{ $implicit: item.option }" />
-          } @else {
-            <span>{{ item.label }}</span>
-          }
-          @if (item.selected) {
-            <tx-icon class="tx-select__check" [name]="'check'" />
-          }
-        </div>
-      } @empty {
-        <div class="tx-select__empty">{{ translations().emptyMessage }}</div>
-      }
-    </div>
+    @if (filter()) {
+      <div class="tx-select__filter" [class]="passThrough().filter?.class" [style]="passThrough().filter?.style">
+        <span class="tx-select__filter-field">
+          <input
+            #filterInput
+            type="text"
+            autocomplete="off"
+            class="tx-select__filter-input"
+            role="searchbox"
+            [class]="passThrough().filterInput?.class"
+            [style]="passThrough().filterInput?.style"
+            [attr.aria-label]="filterPlaceholder() ?? translations().searchPlaceholder"
+            [attr.aria-controls]="listboxId"
+            [attr.aria-activedescendant]="activeItemId()"
+            [placeholder]="filterPlaceholder() ?? translations().searchPlaceholder"
+            [value]="query()"
+            (input)="onFilterInput($event)"
+            (keydown)="onKeydown($event)"
+          />
+          <tx-icon class="tx-select__filter-icon" [name]="'search'" />
+        </span>
+      </div>
+    }
+    <tx-option-list
+      [rows]="rows()"
+      [listboxId]="listboxId"
+      [activeIndex]="activeIndex()"
+      [checkmark]="checkmark()"
+      [virtualScroll]="virtualScroll()"
+      [itemSize]="virtualScrollItemSize()"
+      [scrollHeight]="scrollHeight()"
+      [loading]="loading()"
+      [query]="query()"
+      [emptyText]="emptyText()"
+      [loadingText]="translations().loading"
+      [optionTemplate]="optionTemplate()?.templateRef"
+      [groupTemplate]="groupTemplate()?.templateRef"
+      [emptyTemplate]="emptyTemplate()?.templateRef"
+      [emptyFilterTemplate]="emptyFilterTemplate()?.templateRef"
+      [passThrough]="passThrough()"
+      [unstyled]="isUnstyled()"
+      (optionClick)="onOptionClick($event)"
+      (optionHover)="activeIndex.set($event)"
+      (rangeChange)="onRangeChange($event)"
+    />
+    @if (footerTemplate(); as template) {
+      <div class="tx-select__footer" [class]="passThrough().footer?.class" [style]="passThrough().footer?.style">
+        <ng-container [ngTemplateOutlet]="template.templateRef" />
+      </div>
+    }
   </div>
 </ng-template>

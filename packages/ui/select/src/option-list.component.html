@@ -1,0 +1,160 @@
+@if (rows().length) {
+  @if (virtualScroll()) {
+    <cdk-virtual-scroll-viewport
+      class="tx-select__list tx-select__list--virtual"
+      role="listbox"
+      [id]="listboxId()"
+      [itemSize]="itemSize()"
+      [style.height.px]="virtualHeight()"
+      [attr.tabindex]="focusable() ? (disabled() ? -1 : 0) : null"
+      [attr.aria-activedescendant]="focusable() ? activeId() : null"
+      [attr.aria-multiselectable]="multiple() || null"
+      [attr.aria-busy]="loading() || null"
+      [attr.aria-label]="ariaLabel() ?? null"
+      [attr.aria-labelledby]="ariaLabelledBy() ?? null"
+      [attr.aria-describedby]="ariaDescribedBy() ?? null"
+      [attr.aria-invalid]="ariaInvalid() || null"
+      [attr.aria-disabled]="disabled() || null"
+      [class]="passThrough().list?.class"
+      [style]="passThrough().list?.style"
+      (keydown)="listKeydown.emit($event)"
+      (focus)="listFocus.emit($event)"
+      (blur)="listBlur.emit($event)"
+    >
+      <ng-container *cdkVirtualFor="let row of rows(); let index = index; trackBy: trackRow">
+        <ng-container [ngTemplateOutlet]="rowTemplate" [ngTemplateOutletContext]="{ $implicit: row, index: index, virtual: true }" />
+      </ng-container>
+    </cdk-virtual-scroll-viewport>
+  } @else {
+    <div
+      #list
+      class="tx-select__list"
+      role="listbox"
+      [id]="listboxId()"
+      [style.max-height]="scrollHeight() ?? null"
+      [attr.tabindex]="focusable() ? (disabled() ? -1 : 0) : null"
+      [attr.aria-activedescendant]="focusable() ? activeId() : null"
+      [attr.aria-multiselectable]="multiple() || null"
+      [attr.aria-busy]="loading() || null"
+      [attr.aria-label]="ariaLabel() ?? null"
+      [attr.aria-labelledby]="ariaLabelledBy() ?? null"
+      [attr.aria-describedby]="ariaDescribedBy() ?? null"
+      [attr.aria-invalid]="ariaInvalid() || null"
+      [attr.aria-disabled]="disabled() || null"
+      [class]="passThrough().list?.class"
+      [style]="passThrough().list?.style"
+      (keydown)="listKeydown.emit($event)"
+      (focus)="listFocus.emit($event)"
+      (blur)="listBlur.emit($event)"
+    >
+      @for (section of sections(); track section.group?.id ?? 'options') {
+        @if (section.group; as group) {
+          <div role="group" class="tx-select__group-block" [attr.aria-labelledby]="group.id">
+            <ng-container [ngTemplateOutlet]="rowTemplate" [ngTemplateOutletContext]="{ $implicit: group, index: -1, virtual: false }" />
+            @for (entry of section.rows; track entry.row.id) {
+              <ng-container [ngTemplateOutlet]="rowTemplate" [ngTemplateOutletContext]="{ $implicit: entry.row, index: entry.index, virtual: false }" />
+            }
+          </div>
+        } @else {
+          @for (entry of section.rows; track entry.row.id) {
+            <ng-container [ngTemplateOutlet]="rowTemplate" [ngTemplateOutletContext]="{ $implicit: entry.row, index: entry.index, virtual: false }" />
+          }
+        }
+      }
+    </div>
+  }
+} @else {
+  <div
+    #list
+    class="tx-select__list tx-select__list--empty"
+    role="listbox"
+    [id]="listboxId()"
+    [attr.tabindex]="focusable() ? (disabled() ? -1 : 0) : null"
+    [attr.aria-busy]="loading() || null"
+    [attr.aria-label]="ariaLabel() ?? null"
+    [attr.aria-labelledby]="ariaLabelledBy() ?? null"
+    (keydown)="listKeydown.emit($event)"
+    (focus)="listFocus.emit($event)"
+    (blur)="listBlur.emit($event)"
+  >
+    <div class="tx-select__empty" role="presentation" [class]="passThrough().empty?.class" [style]="passThrough().empty?.style">
+      @if (loading()) {
+        {{ loadingText() }}
+      } @else if (query().trim() && emptyFilterTemplate(); as template) {
+        <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: query().trim() }" />
+      } @else if (emptyTemplate(); as template) {
+        <ng-container [ngTemplateOutlet]="template" />
+      } @else {
+        {{ emptyText() }}
+      }
+    </div>
+  </div>
+}
+
+<ng-template #rowTemplate let-row let-index="index" let-virtual="virtual">
+  @switch (row.type) {
+    @case ('group') {
+      <div
+        role="presentation"
+        class="tx-select__group"
+        [id]="row.id"
+        [style.height.px]="virtual ? itemSize() : null"
+        [class]="passThrough().group?.class"
+        [style]="passThrough().group?.style"
+      >
+        @if (groupTemplate(); as template) {
+          <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: row.group }" />
+        } @else {
+          {{ row.label }}
+        }
+      </div>
+    }
+    @case ('loader') {
+      <div role="presentation" class="tx-select__option tx-select__option--loader" [style.height.px]="virtual ? itemSize() : null">
+        <tx-skeleton [width]="'60%'" />
+      </div>
+    }
+    @default {
+      <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- options use aria-activedescendant: focus and keys stay on the field or the list -->
+      <div
+        role="option"
+        class="tx-select__option"
+        [id]="row.id"
+        [style.height.px]="virtual ? itemSize() : null"
+        [class.tx-select__option--active]="index === activeIndex()"
+        [class.tx-select__option--selected]="row.selected"
+        [class.tx-select__option--disabled]="row.disabled"
+        [class.tx-select__option--multiple]="checkbox()"
+        [attr.aria-selected]="row.selected"
+        [attr.aria-disabled]="row.disabled || null"
+        [attr.aria-setsize]="virtual ? optionCount() : null"
+        [attr.aria-posinset]="virtual ? row.index + 1 : null"
+        [class]="passThrough().option?.class"
+        [style]="passThrough().option?.style"
+        (mouseenter)="row.disabled || optionHover.emit(index)"
+        (click)="row.disabled || optionClick.emit(row)"
+      >
+        @if (checkbox()) {
+          <span class="tx-select__checkbox" aria-hidden="true" [class]="passThrough().check?.class" [style]="passThrough().check?.style">
+            @if (row.selected) {
+              <tx-icon [name]="'check'" />
+            }
+          </span>
+        }
+        <span class="tx-select__option-label">
+          @if (optionTemplate(); as template) {
+            <ng-container
+              [ngTemplateOutlet]="template"
+              [ngTemplateOutletContext]="{ $implicit: row.option, selected: row.selected, disabled: row.disabled, index: row.index }"
+            />
+          } @else {
+            {{ row.label }}
+          }
+        </span>
+        @if (!checkbox() && checkmark() && row.selected) {
+          <tx-icon class="tx-select__check" [name]="'check'" [class]="passThrough().check?.class" [style]="passThrough().check?.style" />
+        }
+      </div>
+    }
+  }
+</ng-template>

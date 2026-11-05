@@ -1,0 +1,100 @@
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { TxCascadeSelect } from '@tectra/ui/cascade-select';
+
+@Component({
+  selector: 'cascade-select-states-example',
+  imports: [TxCascadeSelect, ReactiveFormsModule],
+  template: `
+    <div class="stack">
+      <tx-cascade-select
+        [options]="places"
+        [size]="'small'"
+        [optionLabel]="'city'"
+        [optionValue]="'code'"
+        [optionGroupLabel]="'name'"
+        [optionGroupChildren]="['regions', 'cities']"
+        [placeholder]="'Small'"
+      />
+      <tx-cascade-select
+        [options]="places"
+        [variant]="'filled'"
+        [optionLabel]="'city'"
+        [optionValue]="'code'"
+        [optionGroupLabel]="'name'"
+        [optionGroupChildren]="['regions', 'cities']"
+        [placeholder]="'Filled'"
+      />
+      <tx-cascade-select
+        [options]="places"
+        [formControl]="locked"
+        [optionLabel]="'city'"
+        [optionValue]="'code'"
+        [optionGroupLabel]="'name'"
+        [optionGroupChildren]="['regions', 'cities']"
+        [ariaLabel]="'Disabled'"
+      />
+      <tx-cascade-select
+        [options]="places"
+        [formControl]="shown"
+        [readonly]="true"
+        [optionLabel]="'city'"
+        [optionValue]="'code'"
+        [optionGroupLabel]="'name'"
+        [optionGroupChildren]="['regions', 'cities']"
+        [ariaLabel]="'Read only'"
+      />
+    </div>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export default class CascadeSelectStatesExample {
+  readonly places = [
+    {
+      name: 'Ukraine',
+      regions: [
+        {
+          name: 'Kyiv region',
+          cities: [
+            { city: 'Kyiv', code: 'UA-KYI' },
+            { city: 'Bila Tserkva', code: 'UA-BTS' },
+          ],
+        },
+        {
+          name: 'Lviv region',
+          cities: [
+            { city: 'Lviv', code: 'UA-LWO' },
+            { city: 'Stryi', code: 'UA-STR' },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'Poland',
+      regions: [
+        {
+          name: 'Masovia',
+          cities: [
+            { city: 'Warsaw', code: 'PL-WAW' },
+            { city: 'Radom', code: 'PL-RDO' },
+          ],
+        },
+        { name: 'Lesser Poland', cities: [{ city: 'Kraków', code: 'PL-KRK' }] },
+      ],
+    },
+    {
+      name: 'Germany',
+      regions: [
+        {
+          name: 'Bavaria',
+          cities: [
+            { city: 'Munich', code: 'DE-MUC' },
+            { city: 'Nuremberg', code: 'DE-NUE', closed: true },
+          ],
+        },
+      ],
+    },
+  ];
+  readonly locked = new FormControl({ value: 'UA-KYI', disabled: true });
+  readonly shown = new FormControl('DE-MUC');
+}

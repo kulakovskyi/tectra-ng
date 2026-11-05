@@ -52,22 +52,8 @@
 
 <div class="body">
   <div class="backdrop" tabindex="-1" aria-hidden="true" [class.backdrop--visible]="isMenuOpen()" (click)="closeMenu()" (keydown.escape)="closeMenu()"></div>
-  <nav class="sidebar" [class.sidebar--open]="isMenuOpen()">
-    @for (group of navigation; track group.title) {
-      <div class="sidebar__group">
-        <div class="sidebar__title">{{ group.title }}</div>
-        @for (link of group.links; track link.path) {
-          <a
-            class="sidebar__link"
-            routerLinkActive="sidebar__link--active"
-            [routerLink]="link.path"
-            [routerLinkActiveOptions]="{ exact: true }"
-            (click)="closeMenu()"
-          >{{ link.label }}</a>
-        }
-      </div>
-    }
-    <p class="sidebar__footer">{{ componentCount }} components · more on the way</p>
+  <nav class="sidebar" aria-label="Documentation" [class.sidebar--open]="isMenuOpen()">
+    <docs-sidebar [currentUrl]="currentUrl()" (navigate)="closeMenu()" />
   </nav>
 
   <main class="content">

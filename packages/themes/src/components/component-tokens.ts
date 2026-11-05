@@ -7,6 +7,8 @@ import { inputGroupTokens } from './input-group.tokens';
 import { inputNumberTokens } from './input-number.tokens';
 import { inputOtpTokens } from './input-otp.tokens';
 import { knobTokens } from './knob.tokens';
+import { cardTokens, dividerTokens, fieldsetTokens, panelTokens } from './layout.tokens';
+import { amountTokens, highlightTextTokens, iconLinkTokens, linkTokens, statusIconTokens } from './text.tokens';
 import { floatLabelTokens, iftaLabelTokens, labelTokens } from './label.tokens';
 import { fieldTokens } from './field.tokens';
 import { fieldMessageTokens, messageTokens } from './message.tokens';
@@ -17,6 +19,7 @@ import { progressBarTokens, progressSpinnerTokens } from './progress.tokens';
 import { radioButtonTokens } from './radio-button.tokens';
 import { ratingTokens } from './rating.tokens';
 import { selectTokens } from './select.tokens';
+import { cascadeSelectTokens, chipsInputTokens, colorPickerTokens, countryTokens, emailSuggestionTokens, listboxTokens, mentionTokens, treeTokens } from './selection.tokens';
 import { skeletonTokens } from './skeleton.tokens';
 import { sliderTokens } from './slider.tokens';
 import { chipTokens, tagTokens } from './tag.tokens';
@@ -44,6 +47,14 @@ export const COMPONENT_TOKENS = {
   iftaLabel: iftaLabelTokens,
   button: buttonTokens,
   select: selectTokens,
+  listbox: listboxTokens,
+  chipsInput: chipsInputTokens,
+  country: countryTokens,
+  colorPicker: colorPickerTokens,
+  mention: mentionTokens,
+  tree: treeTokens,
+  cascadeSelect: cascadeSelectTokens,
+  emailSuggestion: emailSuggestionTokens,
   badge: badgeTokens,
   toggleButton: toggleButtonTokens,
   message: messageTokens,
@@ -67,6 +78,15 @@ export const COMPONENT_TOKENS = {
   progressSpinner: progressSpinnerTokens,
   skeleton: skeletonTokens,
   avatar: avatarTokens,
+  divider: dividerTokens,
+  card: cardTokens,
+  panel: panelTokens,
+  fieldset: fieldsetTokens,
+  highlightText: highlightTextTokens,
+  amount: amountTokens,
+  statusIcon: statusIconTokens,
+  link: linkTokens,
+  iconLink: iconLinkTokens,
   tooltip: tooltipTokens,
   popover: popoverTokens,
   toast: toastTokens,

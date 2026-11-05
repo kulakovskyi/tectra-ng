@@ -1,7 +1,7 @@
 import { lightDark, tokenRef } from './token-helpers';
 
 function tone(palette: string) {
-  return { color: lightDark(tokenRef(`${palette}-700`), tokenRef(`${palette}-300`)) };
+  return { color: lightDark(tokenRef(`${palette}-800`), tokenRef(`${palette}-300`)) };
 }
 
 export const tagTokens = {

@@ -1,0 +1,8 @@
+:host([data-styled]) .tx-highlight-text__mark {
+  padding-inline: var(--tx-highlight-text-mark-padding-x);
+  border-radius: var(--tx-highlight-text-mark-border-radius);
+  background: var(--tx-highlight-text-mark-background);
+  color: var(--tx-highlight-text-mark-color);
+  font-weight: var(--tx-highlight-text-mark-font-weight);
+  box-decoration-break: clone;
+}

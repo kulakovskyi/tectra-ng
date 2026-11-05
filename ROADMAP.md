@@ -87,13 +87,13 @@ Detailed checklist per component: [roadmap/stage-4-display.md](roadmap/stage-4-d
 | `ui/progress-spinner` (loader) | ProgressSpinner | 25 | ✅ |
 | `ui/skeleton` | Skeleton | 0 | ✅ |
 | `ui/avatar` (+ group, initials fallback, photo) | Avatar, AvatarGroup | 174, 9, 6 | ✅ |
-| `ui/divider` | Divider | — (parity) | ⬜ |
-| `ui/card` / `ui/panel` | Card, Panel | 115 | ⬜ |
-| `ui/fieldset` | Fieldset | — (parity) | ⬜ |
-| `ui/highlight-text` | — | 43 | ⬜ |
-| `ui/amount` (money / number formatting) | — | 40 | ⬜ |
-| `ui/status-icon` | — | 6 | ⬜ |
-| `ui/link` (link-view, icon-link) | — | 202, 4 | ⬜ |
+| `ui/divider` | Divider | — (parity) | ✅ |
+| `ui/card` / `ui/panel` | Card, Panel | 115 | ✅ |
+| `ui/fieldset` | Fieldset | — (parity) | ✅ |
+| `ui/highlight-text` | — | 43 | ✅ |
+| `ui/amount` (money / number formatting) | — | 40 | ✅ |
+| `ui/status-icon` | — | 6 | ✅ |
+| `ui/link` (link-view, icon-link) | — | 202, 4 | ✅ |
 
 ## Stage 5 — overlays (after stage 2) ✅
 
@@ -111,20 +111,22 @@ Detailed checklist per component: [roadmap/stage-5-overlays.md](roadmap/stage-5-
 | `ui/split-button` | SplitButton | — (parity, needs menu) | ✅ |
 | `ui/speed-dial` | SpeedDial | — (parity, needs menu) | ✅ |
 
-## Stage 6 — selection
+## Stage 6 — selection ✅
+
+Detailed checklist per component: [roadmap/stage-6-selection.md](roadmap/stage-6-selection.md).
 
 | tectra | PrimeNG equivalent | Usage | Status |
 |---|---|---|---|
-| `ui/select` — parity: clear, groups, virtual scroll, lazy, editable, loading, checkmark, `dt` / `pt` (keyboard, typeahead, flip done) | Select | **403** | 🟡 |
-| `ui/multiselect` — chips display, select all, filter, max selected | MultiSelect | inside select (multiselect mode) | ⬜ |
-| `ui/autocomplete` — single / multiple, dropdown, force selection, groups | AutoComplete | 1, 2 | ⬜ |
-| `ui/listbox` | Listbox | — (parity) | ⬜ |
-| `ui/chips-input` (keywords) | AutoComplete multiple / InputChips | 3, 5 | ⬜ |
-| `ui/color-picker` | ColorPicker | 3 | ⬜ |
-| `ui/country` + `ui/country-select` (flags, `Intl.DisplayNames`) | — | 91 | ⬜ |
-| `ui/mention-textarea` | — | 2 | ⬜ |
-| `ui/email-suggestion` | — | 4 | ⬜ |
-| `ui/tree-select`, `ui/cascade-select` | TreeSelect, CascadeSelect | — (parity) | ⬜ |
+| `ui/select` — parity: clear, groups, disabled options, `dataKey`, filter fields / match modes / delay, virtual scroll, lazy, editable, loading, checkmark, all templates, `dt` / `pt` / `unstyled` | Select | **406** | ✅ |
+| `ui/multiselect` — chips display, select all, filter, max selected, selection limit | MultiSelect | 129 + 8 (multiselect mode of the select wrapper) | ✅ |
+| `ui/autocomplete` — single / multiple, dropdown, force selection, local or server search, groups | AutoComplete | 1, 2 | ✅ |
+| `ui/listbox` — single / multiple, checkbox, meta key selection, filter, groups, virtual scroll | Listbox | — (parity) | ✅ |
+| `ui/chips-input` (keywords, pasted lists, pattern, limits) | AutoComplete multiple / InputChips | 3, 5 | ✅ |
+| `ui/color-picker` — popover or inline, area + hue + hex, presets, hex / rgb / hsb | ColorPicker | 3 | ✅ |
+| `ui/country` + `ui/country-select` (flags, `Intl.DisplayNames`, counts, hints, "+N") | — | 91 | ✅ |
+| `ui/mention-textarea` — suggestions at the caret, mentions output | — | 2 | ✅ |
+| `ui/email-suggestion` — own domain completion, typo fixes | — | 4 | ✅ |
+| `ui/tree-select`, `ui/cascade-select` | TreeSelect, CascadeSelect | — (parity) | ✅ |
 
 ## Stage 7 — data
 

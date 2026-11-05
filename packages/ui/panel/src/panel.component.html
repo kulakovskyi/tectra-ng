@@ -1,0 +1,47 @@
+<header class="tx-panel__header" [class]="passThrough().header?.class" [style]="passThrough().header?.style">
+  <div class="tx-panel__lead">
+    @if (icon(); as icon) {
+      <span class="tx-panel__icon" aria-hidden="true" [class]="passThrough().icon?.class" [style]="passThrough().icon?.style">
+        @if (iconName(); as name) {
+          <tx-icon [name]="name" />
+        } @else {
+          <span [class]="icon"></span>
+        }
+      </span>
+    }
+    <div class="tx-panel__heading">
+      @if (title()) {
+        <div class="tx-panel__title" role="heading" [id]="titleId" [attr.aria-level]="headingLevel()" [class]="passThrough().title?.class" [style]="passThrough().title?.style">
+          {{ title() }}
+        </div>
+      }
+      @if (subtitle()) {
+        <p class="tx-panel__subtitle" [class]="passThrough().subtitle?.class" [style]="passThrough().subtitle?.style">{{ subtitle() }}</p>
+      }
+      <ng-content select="[txPanelHeader]" />
+    </div>
+  </div>
+  <div class="tx-panel__actions" [class]="passThrough().actions?.class" [style]="passThrough().actions?.style">
+    <ng-content select="[txPanelActions]" />
+    @if (toggleable()) {
+      <button
+        type="button"
+        class="tx-panel__toggle"
+        [class]="passThrough().toggle?.class"
+        [style]="passThrough().toggle?.style"
+        [attr.aria-expanded]="!collapsed()"
+        [attr.aria-controls]="bodyId"
+        [attr.aria-label]="toggleLabel() ?? title() ?? null"
+        (click)="toggle()"
+      >
+        <tx-icon [name]="'chevron-down'" />
+      </button>
+    }
+  </div>
+</header>
+<div class="tx-panel__collapse" [id]="bodyId" [attr.inert]="isOpen() ? null : ''">
+  <div class="tx-panel__collapse-inner">
+    <div class="tx-panel__body" [class]="passThrough().body?.class" [style]="passThrough().body?.style"><ng-content /></div>
+    <div class="tx-panel__footer" [class]="passThrough().footer?.class" [style]="passThrough().footer?.style"><ng-content select="[txPanelFooter]" /></div>
+  </div>
+</div>

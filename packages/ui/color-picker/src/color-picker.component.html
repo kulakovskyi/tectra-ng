@@ -1,0 +1,154 @@
+@if (inline()) {
+  <ng-container [ngTemplateOutlet]="content" />
+} @else {
+  <button
+    #trigger
+    #origin="cdkOverlayOrigin"
+    cdkOverlayOrigin
+    type="button"
+    class="tx-color-picker__trigger"
+    aria-haspopup="dialog"
+    [class]="passThrough().trigger?.class"
+    [style]="passThrough().trigger?.style"
+    [attr.id]="inputId() ?? null"
+    [attr.aria-expanded]="isOpen()"
+    [attr.aria-controls]="isOpen() ? panelId : null"
+    [attr.aria-label]="triggerLabel()"
+    [attr.aria-labelledby]="ariaLabelledBy() ? ariaLabelledBy() + ' ' + valueId : null"
+    [attr.aria-invalid]="isInvalid() || null"
+    [attr.aria-description]="showValue() ? null : triggerText()"
+    [disabled]="disabled()"
+    (click)="toggle()"
+  >
+    <span
+      class="tx-color-picker__swatch"
+      aria-hidden="true"
+      [class.tx-color-picker__swatch--empty]="!hasColor()"
+      [style.background-color]="hasColor() ? hex() : null"
+      [class]="passThrough().swatch?.class"
+      [style]="passThrough().swatch?.style"
+    ></span>
+    @if (showValue()) {
+      <span class="tx-color-picker__value" [id]="valueId" [class.tx-color-picker__value--empty]="!hasColor()">{{ triggerText() }}</span>
+    }
+  </button>
+  <ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="origin"
+    [cdkConnectedOverlayOpen]="isPanelMounted()"
+    [cdkConnectedOverlayPositions]="positions"
+    [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
+    [cdkConnectedOverlayDisableClose]="true"
+    (attach)="onAttach()"
+    (positionChange)="onPositionChange($event)"
+    (overlayOutsideClick)="onOutsideClick($event)"
+    (detach)="close(false)"
+  >
+    <ng-container [ngTemplateOutlet]="content" />
+  </ng-template>
+}
+
+<ng-template #content>
+  <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -- the panel only listens to keys and focus that bubble from its controls -->
+  <div
+    #panel
+    class="tx-color-picker__panel"
+    [attr.role]="inline() ? 'group' : 'dialog'"
+    [attr.id]="panelId"
+    [attr.aria-label]="ariaLabel() ?? translations().pickColor"
+    [attr.data-styled]="!isUnstyled() || null"
+    [class]="passThrough().panel?.class"
+    [style]="panelStyle()"
+    (keydown)="onPanelKeydown($event)"
+    (focusout)="onPanelFocusOut($event)"
+  >
+    <div
+      #area
+      class="tx-color-picker__area"
+      role="slider"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      [attr.tabindex]="editable() ? 0 : -1"
+      [attr.aria-label]="translations().colorArea"
+      [attr.aria-valuenow]="hsb().s"
+      [attr.aria-valuetext]="areaText()"
+      [attr.aria-disabled]="!editable() || null"
+      [style.background-color]="hueColor()"
+      [class]="passThrough().area?.class"
+      [style]="passThrough().area?.style"
+      (pointerdown)="onAreaPointer($event)"
+      (pointermove)="onAreaPointer($event)"
+      (keydown)="onAreaKeydown($event)"
+    >
+      <span class="tx-color-picker__handle" [style.left.%]="hsb().s" [style.top.%]="100 - hsb().b" [style.background-color]="hex()"></span>
+    </div>
+    <div
+      class="tx-color-picker__hue"
+      role="slider"
+      aria-valuemin="0"
+      aria-valuemax="360"
+      [attr.tabindex]="editable() ? 0 : -1"
+      [attr.aria-label]="translations().colorHue"
+      [attr.aria-valuenow]="hsb().h"
+      [attr.aria-disabled]="!editable() || null"
+      [class]="passThrough().hue?.class"
+      [style]="passThrough().hue?.style"
+      (pointerdown)="onHuePointer($event)"
+      (pointermove)="onHuePointer($event)"
+      (keydown)="onHueKeydown($event)"
+    >
+      <span class="tx-color-picker__handle" [style.left.%]="(hsb().h / 360) * 100" [style.background-color]="hueColor()"></span>
+    </div>
+    @if (showInput() || showClear()) {
+      <div class="tx-color-picker__row">
+        @if (showInput()) {
+          <span class="tx-color-picker__preview" aria-hidden="true" [style.background-color]="hasColor() ? hex() : null"></span>
+          <input
+            type="text"
+            spellcheck="false"
+            autocomplete="off"
+            maxlength="7"
+            class="tx-color-picker__input"
+            [class]="passThrough().input?.class"
+            [style]="passThrough().input?.style"
+            [attr.aria-label]="translations().colorHex"
+            [value]="draft() ?? (hasColor() ? hex() : '')"
+            [readOnly]="readonly()"
+            [disabled]="disabled()"
+            (input)="onHexInput($event)"
+            (blur)="onHexBlur()"
+          />
+        }
+        @if (showClear() && hasColor() && editable()) {
+          <button
+            type="button"
+            class="tx-color-picker__clear"
+            [class]="passThrough().clear?.class"
+            [style]="passThrough().clear?.style"
+            [attr.aria-label]="translations().clear"
+            (click)="clear()"
+          >
+            <tx-icon [name]="'times'" />
+          </button>
+        }
+      </div>
+    }
+    @if (presets().length) {
+      <div class="tx-color-picker__presets" role="group" [attr.aria-label]="translations().colorPresets" [class]="passThrough().presets?.class" [style]="passThrough().presets?.style">
+        @for (color of presets(); track color) {
+          <button
+            type="button"
+            class="tx-color-picker__preset"
+            [style.background-color]="color"
+            [attr.aria-label]="color"
+            [attr.aria-pressed]="isPreset(color)"
+            [disabled]="!editable()"
+            [class]="passThrough().preset?.class"
+            [style]="passThrough().preset?.style"
+            (click)="pickPreset(color)"
+          ></button>
+        }
+      </div>
+    }
+  </div>
+</ng-template>

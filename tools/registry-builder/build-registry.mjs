@@ -165,6 +165,12 @@ function readSource(packageDir) {
     }
   }
 
+  for (const base of new Set([...source.matchAll(/extends (\w+)(?:<[^>]*>)? \{/g)].map((m) => imported[m[1]]).filter(Boolean))) {
+    for (const [baseName, baseMember] of Object.entries(readSource(join(root, 'packages/ui', base)).members)) {
+      members[baseName] ??= baseMember;
+    }
+  }
+
   return { members, tokens, selector };
 }
 

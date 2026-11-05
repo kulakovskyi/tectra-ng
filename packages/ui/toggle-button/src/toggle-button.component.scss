@@ -68,6 +68,7 @@
 :host([data-styled]) .tx-toggle-button__icon {
   display: inline-flex;
   color: var(--tx-toggle-button-icon-color);
+  transition: color var(--tx-motion-duration) var(--tx-motion-easing);
 }
 
 :host([data-styled].tx-toggle-button--checked) .tx-toggle-button__control {

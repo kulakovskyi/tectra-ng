@@ -88,14 +88,19 @@ test('select opens downward while it fits below, even with a stuck tab bar', asy
   await page.keyboard.press('Escape');
   await expect(panel).toHaveCount(0);
 
-  const { triggerHeight, viewportHeight } = await trigger.evaluate((element) => ({
-    triggerHeight: element.getBoundingClientRect().height,
-    viewportHeight: document.documentElement.clientHeight,
-  }));
-  await scrollTriggerTo(viewportHeight - 8 - 4 - panelHeight - 6 - triggerHeight);
+  const field = page.locator('docs-example-frame').nth(1).locator('tx-select').first();
+  const { offset, fieldHeight, viewportHeight } = await field.evaluate((element, inner) => {
+    const box = element.getBoundingClientRect();
+    return {
+      offset: (inner as HTMLElement).getBoundingClientRect().top - box.top,
+      fieldHeight: box.height,
+      viewportHeight: document.documentElement.clientHeight,
+    };
+  }, await trigger.elementHandle());
+  await scrollTriggerTo(viewportHeight - 8 - 4 - panelHeight - 6 - fieldHeight + offset);
   await trigger.click();
   await expect(panel).toBeVisible();
-  const [triggerBox, panelBox] = await Promise.all([trigger, panel].map((locator) => locator.evaluate((element) => element.getBoundingClientRect().toJSON())));
-  expect(panelBox.top).toBeGreaterThanOrEqual(triggerBox.bottom);
+  const [fieldBox, panelBox] = await Promise.all([field, panel].map((locator) => locator.evaluate((element) => element.getBoundingClientRect().toJSON())));
+  expect(panelBox.top).toBeGreaterThanOrEqual(fieldBox.bottom);
   expect(panelBox.bottom).toBeLessThanOrEqual(viewportHeight);
 });

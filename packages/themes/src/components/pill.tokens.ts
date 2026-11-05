@@ -2,7 +2,7 @@ import { lightDark, tokenRef } from './token-helpers';
 
 function tone(palette: string) {
   return {
-    color: lightDark(tokenRef(`${palette}-700`), tokenRef(`${palette}-300`)),
+    color: lightDark(tokenRef(`${palette}-800`), tokenRef(`${palette}-300`)),
     solidBackground: lightDark(tokenRef(`${palette}-700`), tokenRef(`${palette}-400`)),
     solidColor: lightDark(tokenRef('surface-0'), tokenRef('surface-950')),
   };

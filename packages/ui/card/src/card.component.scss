@@ -1,0 +1,62 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.tx-card__header:empty,
+.tx-card__footer:empty,
+.tx-card__content:empty {
+  display: none;
+}
+
+.tx-card__header ::ng-deep > img {
+  display: block;
+  width: 100%;
+  object-fit: cover;
+}
+
+.tx-card__body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+}
+
+:host([data-styled]) {
+  overflow: hidden;
+  border: 1px solid var(--tx-card-border-color);
+  border-radius: var(--tx-card-border-radius);
+  background: var(--tx-card-background);
+  box-shadow: var(--tx-card-shadow);
+  color: var(--tx-card-color);
+  font-family: var(--tx-font-family);
+}
+
+:host([data-styled]) .tx-card__body {
+  gap: var(--tx-card-gap);
+  padding: var(--tx-card-padding);
+}
+
+:host([data-styled]) .tx-card__title {
+  font-size: var(--tx-card-title-font-size);
+  font-weight: var(--tx-card-title-font-weight);
+  line-height: 1.3;
+}
+
+:host([data-styled]) .tx-card__subtitle {
+  margin-top: calc(var(--tx-card-gap) * -0.6);
+  color: var(--tx-card-subtitle-color);
+  font-size: var(--tx-card-subtitle-font-size);
+}
+
+:host([data-styled]) .tx-card__footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 4px;
+}
+
+:host([data-styled]) .tx-card__footer:empty {
+  display: none;
+}

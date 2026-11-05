@@ -1,8 +1,11 @@
-import { tokenRef } from './token-helpers';
+import { lightDark, tokenRef } from './token-helpers';
 
 export const selectTokens = {
   root: {
-    dropdownColor: tokenRef('field-icon'),
+    dropdownColor: tokenRef('form-field-icon-color'),
+    dropdownWidth: '31.5px',
+    clearSize: '14px',
+    gap: '0px',
   },
   overlay: {
     background: tokenRef('surface-overlay'),
@@ -11,12 +14,13 @@ export const selectTokens = {
     shadow: tokenRef('shadow-overlay'),
   },
   list: {
-    padding: '4px',
+    padding: '3.5px',
     gap: '2px',
-    maxHeight: '240px',
+    maxHeight: '200px',
   },
   option: {
-    padding: '8px 12px',
+    padding: '7px 10.5px',
+    gap: '7px',
     borderRadius: tokenRef('radius-sm'),
     color: tokenRef('text-primary'),
     focusBackground: tokenRef('list-focus-background'),
@@ -24,14 +28,60 @@ export const selectTokens = {
     selectedColor: tokenRef('highlight-color'),
     selectedFocusBackground: tokenRef('highlight-focus-background'),
     selectedFocusColor: tokenRef('highlight-focus-color'),
+    selectedFontWeight: tokenRef('font-weight-regular'),
+    disabledColor: tokenRef('form-field-disabled-color'),
+    checkColor: tokenRef('primary-base'),
+  },
+  checkbox: {
+    size: '15.75px',
+    borderRadius: tokenRef('radius-sm'),
+    borderColor: tokenRef('form-field-border-color'),
+    background: tokenRef('form-field-background'),
+    checkedBackground: tokenRef('primary-base'),
+    checkedColor: tokenRef('primary-contrast'),
+    iconSize: '10.5px',
+    shadow: tokenRef('shadow-field'),
+  },
+  chip: {
+    gap: '5.25px',
+    paddingY: '3.5px',
+    paddingStart: '8.75px',
+    paddingEnd: '5.25px',
+    borderRadius: tokenRef('radius-sm'),
+    background: lightDark(tokenRef('surface-100'), tokenRef('surface-800')),
+    color: lightDark(tokenRef('surface-800'), tokenRef('surface-0')),
+    fontSize: '10.5px',
+    removeSize: '12.25px',
+    removeColor: lightDark(tokenRef('surface-800'), tokenRef('surface-0')),
+    removeHoverColor: tokenRef('text-primary'),
+  },
+  optionGroup: {
+    padding: '3.5px 8.75px',
+    color: lightDark(tokenRef('surface-500'), tokenRef('surface-400')),
+    fontSize: tokenRef('font-size-md'),
+    fontWeight: tokenRef('font-weight-semibold'),
   },
   filter: {
-    padding: '8px 12px',
-    borderColor: tokenRef('surface-overlay-border'),
+    padding: '7px 12.25px 1.75px',
+    gap: '7px',
+    iconInset: '10.5px',
+    minHeight: '37px',
+  },
+  dropdownButton: {
+    background: lightDark(tokenRef('surface-100'), tokenRef('surface-800')),
+    hoverBackground: lightDark(tokenRef('surface-200'), tokenRef('surface-700')),
+    color: lightDark(tokenRef('surface-600'), tokenRef('surface-300')),
+    hoverColor: lightDark(tokenRef('surface-700'), tokenRef('surface-200')),
+  },
+  header: {
+    padding: '7px 12.25px 1.75px',
+  },
+  footer: {
+    padding: '1.75px 12.25px 7px',
   },
   empty: {
-    padding: '12px',
-    color: tokenRef('text-muted'),
+    padding: '7px 10.5px',
+    color: tokenRef('text-primary'),
   },
 };
 

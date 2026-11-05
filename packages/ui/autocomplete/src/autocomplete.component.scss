@@ -1,0 +1,60 @@
+@use '../../select/src/select-field';
+@use '../../styles/input-action' as action;
+
+@include select-field.styles('.tx-autocomplete');
+@include select-field.chips;
+
+:host .tx-select__box {
+  cursor: text;
+}
+
+.tx-autocomplete__chips {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.tx-autocomplete__chips .tx-select__input {
+  flex: 1 1 64px;
+  min-width: 64px;
+}
+
+:host([data-styled]) .tx-autocomplete__dropdown {
+  display: grid;
+  flex: none;
+  place-items: center;
+  align-self: stretch;
+  width: var(--tx-select-dropdown-width);
+  margin-block: calc(-1 * var(--_py));
+  padding: 0;
+  border: none;
+  border-inline-start: 1px solid var(--tx-form-field-border-color);
+  border-start-end-radius: calc(var(--tx-form-field-border-radius) - 1px);
+  border-end-end-radius: calc(var(--tx-form-field-border-radius) - 1px);
+  background: var(--tx-select-dropdown-button-background);
+  color: var(--tx-select-dropdown-button-color);
+  font-size: var(--tx-form-field-font-size);
+  cursor: pointer;
+  transition:
+    background-color var(--tx-motion-duration) var(--tx-motion-easing),
+    color var(--tx-motion-duration) var(--tx-motion-easing);
+
+  &:enabled:hover {
+    background: var(--tx-select-dropdown-button-hover-background);
+    color: var(--tx-select-dropdown-button-hover-color);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--tx-focus-ring-color);
+    outline-offset: -2px;
+  }
+}
+
+:host([data-styled].tx-autocomplete--multiple) .tx-select__box {
+  padding-block: calc(var(--_py) / 2 + 0.75px);
+  padding-inline-start: calc(var(--_px) / 3);
+}
+
+:host([data-styled].tx-autocomplete--multiple) .tx-autocomplete__chips {
+  margin-block: 0;
+  gap: calc(var(--_px) / 3);
+}

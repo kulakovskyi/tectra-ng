@@ -1,0 +1,29 @@
+:host {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+}
+
+:host([data-styled]) {
+  --_color: var(--tx-status-icon-secondary-color);
+
+  color: var(--_color);
+  font-size: var(--tx-status-icon-size);
+  line-height: 1;
+}
+
+:host([data-styled][data-size='small']) {
+  font-size: var(--tx-status-icon-sm-size);
+}
+
+:host([data-styled][data-size='large']) {
+  font-size: var(--tx-status-icon-lg-size);
+}
+
+@each $severity in ('success', 'info', 'warn', 'danger') {
+  :host([data-styled][data-severity='#{$severity}']) {
+    --_color: var(--tx-status-icon-#{$severity}-color);
+  }
+}

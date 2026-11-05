@@ -1,0 +1,36 @@
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
+import { optionalBoolean } from '@tectra/core/utils';
+import { TectraDeepPartial, TectraDividerTokens, toStyleObject } from '@tectra/themes';
+import { TxDividerAlign, TxDividerLayout, TxDividerPart, TxDividerType } from './divider.types';
+
+@Component({
+  selector: 'tx-divider',
+  template: `<span class="tx-divider__content" [class]="passThrough().content?.class" [style]="passThrough().content?.style"><ng-content /></span>`,
+  styleUrl: './divider.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'tx-divider',
+    role: 'separator',
+    '[class]': 'passThrough().root?.class',
+    '[style]': 'hostStyle()',
+    '[attr.data-styled]': '!isUnstyled() || null',
+    '[attr.data-layout]': 'layout()',
+    '[attr.data-type]': 'type()',
+    '[attr.data-align]': 'align()',
+    '[attr.aria-orientation]': 'layout()',
+  },
+})
+export class TxDivider {
+  readonly layout = input<TxDividerLayout>('horizontal');
+  readonly type = input<TxDividerType>('solid');
+  readonly align = input<TxDividerAlign>('center');
+  readonly dt = input<TectraDeepPartial<TectraDividerTokens> | undefined>(undefined);
+  readonly pt = input<TxPassThrough<TxDividerPart, TxDivider> | undefined>(undefined);
+  readonly ptOptions = input<TxPassThroughOptions | undefined>(undefined);
+  readonly unstyled = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
+
+  readonly isUnstyled = injectUnstyled(this.unstyled);
+  readonly passThrough = injectPassThrough('divider', this, this.pt, this.ptOptions);
+  readonly hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-divider'), ...this.passThrough().root?.style }));
+}

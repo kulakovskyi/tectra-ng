@@ -1,0 +1,67 @@
+@if (headerTemplate(); as template) {
+  <div class="tx-listbox__header" [class]="passThrough().header?.class" [style]="passThrough().header?.style">
+    <ng-container [ngTemplateOutlet]="template.templateRef" />
+  </div>
+}
+@if (filter()) {
+  <div class="tx-listbox__filter" [class]="passThrough().filter?.class" [style]="passThrough().filter?.style">
+    <span class="tx-select__filter-field">
+      <input
+        type="text"
+        autocomplete="off"
+        class="tx-select__filter-input tx-listbox__filter-input"
+        role="searchbox"
+        [class]="passThrough().filterInput?.class"
+        [style]="passThrough().filterInput?.style"
+        [attr.aria-label]="filterPlaceholder() ?? translations().searchPlaceholder"
+        [attr.aria-controls]="listboxId"
+        [attr.aria-activedescendant]="activeItemId()"
+        [placeholder]="filterPlaceholder() ?? translations().searchPlaceholder"
+        [value]="query()"
+        [disabled]="disabled()"
+        (input)="onFilterInput($event)"
+        (keydown)="onListKeydown($event)"
+        (focus)="onFilterFocus()"
+        (blur)="onListBlur()"
+      />
+      <tx-icon class="tx-select__filter-icon" [name]="'search'" />
+    </span>
+  </div>
+}
+<tx-option-list
+  [rows]="rows()"
+  [listboxId]="listboxId"
+  [activeIndex]="shownActiveIndex()"
+  [multiple]="isMultiple()"
+  [checkbox]="checkbox()"
+  [checkmark]="checkmark()"
+  [virtualScroll]="virtualScroll()"
+  [itemSize]="virtualScrollItemSize()"
+  [scrollHeight]="scrollHeight()"
+  [loading]="loading()"
+  [query]="query()"
+  [emptyText]="emptyText()"
+  [loadingText]="translations().loading"
+  [optionTemplate]="optionTemplate()?.templateRef"
+  [groupTemplate]="groupTemplate()?.templateRef"
+  [emptyTemplate]="emptyTemplate()?.templateRef"
+  [emptyFilterTemplate]="emptyFilterTemplate()?.templateRef"
+  [passThrough]="passThrough()"
+  [unstyled]="isUnstyled()"
+  [focusable]="true"
+  [disabled]="disabled()"
+  [ariaLabel]="ariaLabel()"
+  [ariaLabelledBy]="ariaLabelledBy()"
+  [ariaInvalid]="isInvalid()"
+  (optionClick)="onOptionClick($event)"
+  (optionHover)="focused() && activeIndex.set($event)"
+  (rangeChange)="onRangeChange($event)"
+  (listKeydown)="onListKeydown($event)"
+  (listFocus)="onListFocus()"
+  (listBlur)="onListBlur()"
+/>
+@if (footerTemplate(); as template) {
+  <div class="tx-listbox__footer" [class]="passThrough().footer?.class" [style]="passThrough().footer?.style">
+    <ng-container [ngTemplateOutlet]="template.templateRef" />
+  </div>
+}

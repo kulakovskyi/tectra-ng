@@ -1,293 +1,137 @@
-import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedOverlayPositionChange, createRepositionScrollStrategy } from '@angular/cdk/overlay';
-import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  booleanAttribute,
-  Component,
-  DestroyRef,
-  ElementRef,
-  Injector,
-  afterNextRender,
-  computed,
-  contentChild,
-  forwardRef,
-  inject,
-  input,
-  output,
-  signal,
-  viewChild,
-} from '@angular/core';
+import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { NgTemplateOutlet } from '@angular/common';
+import { ChangeDetectionStrategy, Component, booleanAttribute, computed, contentChild, forwardRef, input, output, signal } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { TxTypeahead, nextListIndex, uniqueId } from '@tectra/core/a11y';
-import { TxFormControlBase, injectFieldInvalid } from '@tectra/core/forms';
-import { injectTranslations } from '@tectra/core/i18n';
-import {
-  TxPlacement,
-  placementFromPosition,
-  txAnimateEnter,
-  txAnimateLeave,
-  txPositions,
-  TxOverlayInsetValues,
-  TxOverlayInsets,
-  orderByRoom,
-  txConnectedMargin,
-  txOverlayBounds,
-  watchOrigin,
-} from '@tectra/core/overlay';
-import { TxIcon } from '@tectra/icons';
-import { TxSelectOptionTemplate } from './select-option-template.directive';
-import { TxFieldVariant, TxSelectItem, TxSelectSize } from './select.types';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
 import { optionalBoolean } from '@tectra/core/utils';
+import { TxIcon, TxIconName } from '@tectra/icons';
+import { TectraDeepPartial, TectraSelectTokens, toStyleObject } from '@tectra/themes';
+import { TxOptionList } from './option-list.component';
+import { TxSelectBase } from './select-base';
+import { TxSelectValueTemplate } from './select-option-template.directive';
+import { foldText, isSelectableRow } from './select-options';
+import { TxSelectChangeEvent, TxSelectItem, TxSelectPart } from './select.types';
 
 @Component({
   selector: 'tx-select',
-  imports: [CdkOverlayOrigin, CdkConnectedOverlay, NgTemplateOutlet, TxIcon],
+  imports: [CdkOverlayOrigin, CdkConnectedOverlay, NgTemplateOutlet, TxIcon, TxOptionList],
   templateUrl: './select.component.html',
   styleUrl: './select.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => TxSelect), multi: true }],
   host: {
     class: 'tx-select',
+    '[class]': 'passThrough().root?.class',
+    '[style]': 'hostStyle()',
+    '[attr.data-styled]': '!isUnstyled() || null',
     '[attr.data-size]': 'size()',
+    '[attr.data-variant]': 'variant()',
     '[class.tx-select--open]': 'isOpen()',
     '[class.tx-select--disabled]': 'disabled()',
     '[class.tx-select--invalid]': 'isInvalid()',
     '[class.tx-select--readonly]': 'readonly()',
-    '[class.tx-select--filled]': '!!selectedItem()',
-    '[attr.data-variant]': 'variant()',
+    '[class.tx-select--filled]': 'hasValue()',
+    '[class.tx-select--editable]': 'editable()',
   },
 })
-export class TxSelect extends TxFormControlBase<unknown> {
-  readonly options = input<object[]>([]);
-  readonly optionLabel = input<string>('label');
-  readonly optionValue = input<string>('value');
-  readonly placeholder = input<string>('');
-  readonly inputId = input<string | undefined>(undefined);
-  readonly ariaLabel = input<string | undefined>(undefined);
-  readonly ariaLabelledBy = input<string | undefined>(undefined);
-  readonly filter = input<boolean>(false);
-  readonly size = input<TxSelectSize>('medium');
-  readonly variant = input<TxFieldVariant>('outlined');
-  readonly invalid = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
-  readonly readonly = input<boolean, unknown>(false, { transform: booleanAttribute });
+export class TxSelect extends TxSelectBase<unknown> {
+  readonly options = input<readonly unknown[]>([]);
+  readonly editable = input<boolean, unknown>(false, { transform: booleanAttribute });
+  readonly checkmark = input<boolean, unknown>(false, { transform: booleanAttribute });
+  readonly dropdownIcon = input<TxIconName>('chevron-down');
+  readonly dt = input<TectraDeepPartial<TectraSelectTokens> | undefined>(undefined);
+  readonly pt = input<TxPassThrough<TxSelectPart, TxSelect> | undefined>(undefined);
+  readonly ptOptions = input<TxPassThroughOptions | undefined>(undefined);
+  readonly unstyled = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
 
-  opened = output<void>();
-  closed = output<void>();
+  readonly changed = output<TxSelectChangeEvent>();
 
-  readonly optionTemplate = contentChild(TxSelectOptionTemplate);
-  readonly trigger = viewChild.required<ElementRef<HTMLButtonElement>>('trigger');
-  readonly filterInput = viewChild<ElementRef<HTMLInputElement>>('filterInput');
-  readonly panel = viewChild<ElementRef<HTMLElement>>('panel');
-  private readonly connectedOverlay = viewChild.required(CdkConnectedOverlay);
+  readonly valueTemplate = contentChild(TxSelectValueTemplate);
 
-  private injector = inject(Injector);
-  private document = inject(DOCUMENT);
-  private typeahead = new TxTypeahead();
+  readonly isUnstyled = injectUnstyled(this.unstyled);
+  readonly passThrough = injectPassThrough('select', this, this.pt, this.ptOptions);
+  private readonly chosen = signal<TxSelectItem | null>(null);
+  protected readonly source = this.options;
 
-  readonly translations = injectTranslations();
-  readonly isInvalid = injectFieldInvalid(this.invalid);
-  private readonly preferredPositions = txPositions('bottom-start', 4);
-  readonly positions = signal(this.preferredPositions);
-  readonly scrollStrategy = createRepositionScrollStrategy(this.injector);
-  private overlayInsets = inject(TxOverlayInsets);
-  private insets: TxOverlayInsetValues = { top: 0, bottom: 0 };
-  readonly viewportMargin = signal(txConnectedMargin(this.insets, 8));
-  private stopWatchingTrigger: (() => void) | null = null;
-  private readonly stopOnDestroy = inject(DestroyRef).onDestroy(() => this.stopWatchingTrigger?.());
-  readonly listboxId = uniqueId('tx-select-listbox');
-
-  readonly isOpen = signal(false);
-  readonly isPanelMounted = signal(false);
-  readonly panelPlacement = signal<TxPlacement>('bottom-start');
-  private hasEntered = false;
-  readonly query = signal('');
-  readonly activeIndex = signal(0);
-  readonly panelWidth = signal(0);
-
-  readonly items = computed<TxSelectItem[]>(() =>
-    this.options().map((option, index) => {
-      const value = this.optionValue() ? this.readField(option, this.optionValue()) : option;
-      return {
-        id: `${this.listboxId}-${index}`,
-        label: String(this.readField(option, this.optionLabel()) ?? ''),
-        value,
-        option,
-        selected: value === this.value(),
-      };
-    }),
-  );
-  readonly visibleItems = computed(() => {
-    const query = this.query().trim().toLowerCase();
-    return query ? this.items().filter((item) => item.label.toLowerCase().includes(query)) : this.items();
+  readonly selectedItem = computed<TxSelectItem | null>(() => {
+    const found = this.allRows().find((row): row is TxSelectItem => row.type === 'option' && row.selected);
+    const chosen = this.chosen();
+    return found ?? (chosen && this.isSelected(chosen.value) ? chosen : null);
   });
-  readonly selectedItem = computed(() => this.items().find((item) => item.selected) ?? null);
-  readonly activeItemId = computed(() => (this.isOpen() ? this.visibleItems()[this.activeIndex()]?.id ?? null : null));
+  readonly hasValue = computed(() => {
+    const value = this.value();
+    return value !== null && value !== undefined && value !== '';
+  });
+  readonly editableText = computed(() => {
+    const value = this.value();
+    return this.selectedItem()?.label ?? (value === null || value === undefined ? '' : String(value));
+  });
+  readonly tokenStyle = computed(() => toStyleObject(this.dt(), '--tx-select'));
+  readonly hostStyle = computed(() => ({ ...this.tokenStyle(), ...this.passThrough().root?.style }));
+  readonly panelStyle = computed(() => ({ ...this.tokenStyle(), ...this.passThrough().panel?.style }));
 
-  open(): void {
-    if (this.disabled() || this.readonly() || this.isOpen()) {
-      return;
-    }
-    this.panelWidth.set(this.trigger().nativeElement.offsetWidth);
-    this.query.set('');
-    this.activeIndex.set(Math.max(0, this.visibleItems().findIndex((item) => item.selected)));
-    this.isOpen.set(true);
-    this.hasEntered = false;
-    this.isPanelMounted.set(true);
-    this.insets = this.overlayInsets.measure();
-    this.viewportMargin.set(txConnectedMargin(this.insets, 8));
-    this.positions.set(this.preferredPositions);
-    this.stopWatchingTrigger = watchOrigin(this.trigger().nativeElement, this.overlayInsets, {
-      hidden: () => this.close(),
-      insetsChange: (insets) => {
-        this.insets = insets;
-        this.viewportMargin.set(txConnectedMargin(insets, 8));
-        this.preferRoom();
-      },
-    });
-    this.opened.emit();
-  }
-
-  close(): void {
-    if (!this.isOpen()) {
-      return;
-    }
-    this.isOpen.set(false);
-    this.stopWatchingTrigger?.();
-    this.stopWatchingTrigger = null;
-    this.markTouched();
-    this.closed.emit();
-    const panel = this.panel()?.nativeElement;
-    (panel ? txAnimateLeave(panel, this.panelPlacement()) : Promise.resolve()).then(() => {
-      if (!this.isOpen()) {
-        this.isPanelMounted.set(false);
-      }
-    });
-  }
-
-  toggle(): void {
-    if (this.isOpen()) {
-      this.close();
-    } else {
-      this.open();
-    }
+  protected override get typingTarget(): boolean {
+    return this.editable();
   }
 
   choose(item: TxSelectItem): void {
+    if (item.disabled) {
+      return;
+    }
+    this.select(item);
+    this.close();
+    this.focusTrigger();
+  }
+
+  onEditableInput(event: Event): void {
+    const text = (event.target as HTMLInputElement).value;
+    const folded = foldText(text.trim());
+    const match = folded
+      ? this.allRows().find((row): row is TxSelectItem => isSelectableRow(row) && foldText(row.label) === folded)
+      : undefined;
+    this.chosen.set(match ?? null);
+    this.updateValue(match ? match.value : text || null);
+    this.changed.emit({ value: this.value(), option: match?.option ?? null });
+    if (!this.isOpen()) {
+      this.open();
+    }
+    const startsWith = folded ? this.rows().findIndex((row) => isSelectableRow(row) && foldText(row.label).startsWith(folded)) : -1;
+    if (startsWith >= 0) {
+      this.activeIndex.set(startsWith);
+      this.scrollActiveIntoView();
+    }
+  }
+
+  protected isSelected(value: unknown): boolean {
+    const current = this.value();
+    return current !== null && current !== undefined && this.sameValue(value, current);
+  }
+
+  protected activate(item: TxSelectItem): void {
+    this.choose(item);
+  }
+
+  protected clearValue(): void {
+    this.chosen.set(null);
+    this.updateValue(null);
+    this.changed.emit({ value: null, option: null });
+  }
+
+  protected onTypeaheadClosed(item: TxSelectItem): void {
+    this.select(item);
+  }
+
+  protected handleExtraKey(): boolean {
+    return false;
+  }
+
+  protected ignoreBoxClick(target: HTMLElement): boolean {
+    return this.editable() && !!target.closest('.tx-select__input');
+  }
+
+  private select(item: TxSelectItem): void {
+    this.chosen.set(item);
     this.updateValue(item.value);
-    this.close();
-    this.trigger().nativeElement.focus();
-  }
-
-  onPanelAttach(): void {
-    this.filterInput()?.nativeElement.focus();
-  }
-
-  onPositionChange(change: ConnectedOverlayPositionChange): void {
-    this.panelPlacement.set(placementFromPosition(change.connectionPair) ?? 'bottom-start');
-    const panel = this.panel()?.nativeElement;
-    if (!this.hasEntered && this.preferRoom()) {
-      return;
-    }
-    if (!this.hasEntered && panel) {
-      this.hasEntered = true;
-      txAnimateEnter(panel, this.panelPlacement());
-    }
-  }
-
-  private preferRoom(): boolean {
-    const panel = this.panel()?.nativeElement;
-    if (!panel) {
-      return false;
-    }
-    const size = { width: panel.offsetWidth, height: panel.offsetHeight };
-    const bounds = txOverlayBounds(this.insets, 8, this.document);
-    const ordered = orderByRoom(this.preferredPositions, this.trigger().nativeElement.getBoundingClientRect(), size, bounds);
-    if (ordered[0] === this.positions()[0]) {
-      return false;
-    }
-    this.positions.set(ordered);
-    afterNextRender(() => this.connectedOverlay().overlayRef?.updatePosition(), { injector: this.injector });
-    return true;
-  }
-
-  onPanelDetach(): void {
-    this.isPanelMounted.set(false);
-    this.close();
-  }
-
-  onOutsideClick(event: MouseEvent): void {
-    if (!this.trigger().nativeElement.contains(event.target as Node)) {
-      this.close();
-    }
-  }
-
-  onFilter(event: Event): void {
-    this.query.set((event.target as HTMLInputElement).value);
-    this.activeIndex.set(0);
-  }
-
-  onKeydown(event: KeyboardEvent): void {
-    if (this.readonly()) {
-      return;
-    }
-    const target = event.target as HTMLElement;
-    const fromFilter = target.classList.contains('tx-select__filter-input');
-    if (event.key === 'Escape') {
-      if (this.isOpen()) {
-        event.preventDefault();
-        this.close();
-        this.trigger().nativeElement.focus();
-      }
-      return;
-    }
-    if (event.key === 'Tab') {
-      this.close();
-      return;
-    }
-    if (event.key === 'Enter' || (event.key === ' ' && !fromFilter)) {
-      event.preventDefault();
-      const item = this.visibleItems()[this.activeIndex()];
-      if (this.isOpen() && item) {
-        this.choose(item);
-      } else {
-        this.open();
-      }
-      return;
-    }
-    const isListKey = ['ArrowDown', 'ArrowUp', 'Home', 'End', 'PageDown', 'PageUp'].includes(event.key);
-    if (isListKey && (!fromFilter || event.key.startsWith('Arrow') || event.key.startsWith('Page'))) {
-      event.preventDefault();
-      if (!this.isOpen()) {
-        this.open();
-        return;
-      }
-      const next = nextListIndex(event.key, { count: this.visibleItems().length, current: this.activeIndex() });
-      if (next !== null) {
-        this.activeIndex.set(next);
-        this.scrollActiveIntoView();
-      }
-      return;
-    }
-    if (!fromFilter && event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey) {
-      const labels = this.visibleItems().map((item) => item.label);
-      const found = this.typeahead.search(event.key, labels, this.activeIndex());
-      if (found !== null) {
-        if (this.isOpen()) {
-          this.activeIndex.set(found);
-          this.scrollActiveIntoView();
-        } else {
-          this.updateValue(this.visibleItems()[found].value);
-        }
-      }
-    }
-  }
-
-  private scrollActiveIntoView(): void {
-    const id = this.activeItemId();
-    queueMicrotask(() => (id ? this.document.getElementById(id)?.scrollIntoView?.({ block: 'nearest' }) : undefined));
-  }
-
-  private readField(option: object, field: string): unknown {
-    return (option as Record<string, unknown>)[field];
+    this.changed.emit({ value: item.value, option: item.option });
   }
 }

@@ -75,6 +75,9 @@
   font-size: 0.85em;
   opacity: 0.75;
   cursor: pointer;
+  transition:
+    background-color var(--tx-motion-duration) var(--tx-motion-easing),
+    opacity var(--tx-motion-duration) var(--tx-motion-easing);
 
   &:hover {
     background: color-mix(in srgb, currentColor 16%, transparent);
