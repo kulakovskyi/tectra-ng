@@ -85,7 +85,7 @@ test('dialog moves by its header and maximizes to the viewport', async ({ page }
   await expect(dialog.getByRole('button', { name: 'Restore' })).toBeVisible();
 });
 
-test('select panels stick to their field while the dialog body scrolls and close once it is scrolled away', async ({ page }) => {
+test('select panels ride with their field while the dialog body scrolls, even past its edge', async ({ page }) => {
   await page.goto('/components/dialog');
   await page.locator('dialog-form-example').getByRole('button', { name: 'New event' }).click();
   const dialog = page.locator('.tx-dialog');
@@ -106,6 +106,7 @@ test('select panels stick to their field while the dialog body scrolls and close
   await expect.poll(gap).toBeCloseTo(before, 0);
 
   await content.evaluate((element) => (element.scrollTop += 400));
-  await expect(panel).toHaveCount(0);
+  await expect.poll(gap).toBeCloseTo(before, 0);
+  await expect(panel).toHaveCount(1);
   await expect(dialog).toBeVisible();
 });

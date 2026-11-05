@@ -1,4 +1,4 @@
-import { CdkConnectedOverlay, CdkOverlayOrigin, createRepositionScrollStrategy } from '@angular/cdk/overlay';
+import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -18,7 +18,7 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
 import { injectFieldInvalid } from '@tectra/core/forms';
-import { TxOverlayInsets, txPositions, watchOrigin, TxOverlayAnchor } from '@tectra/core/overlay';
+import { TxOverlayInsets, txPositions, watchOrigin, TxOverlayAnchor, txScrollStrategy } from '@tectra/core/overlay';
 import { optionalBoolean } from '@tectra/core/utils';
 import { TectraDeepPartial, TectraMentionTokens, toStyleObject } from '@tectra/themes';
 import { TxAvatar } from '@tectra/ui/avatar';
@@ -72,7 +72,6 @@ export class TxMentionTextarea extends TxOptionsBase<string> {
     }
     onCleanup(
       watchOrigin(this.textarea().nativeElement, this.overlayInsets, {
-        hidden: () => this.close(),
         insetsChange: () => this.connectedOverlay()?.overlayRef?.updatePosition(),
       }),
     );
@@ -82,7 +81,7 @@ export class TxMentionTextarea extends TxOptionsBase<string> {
   readonly isInvalid = injectFieldInvalid(this.invalid);
   readonly passThrough = injectPassThrough('mentionTextarea', this, this.pt, this.ptOptions);
   readonly positions = txPositions('bottom-start', 4);
-  readonly scrollStrategy = createRepositionScrollStrategy(this.injector);
+  readonly scrollStrategy = txScrollStrategy(this.injector);
   protected readonly source = this.suggestions;
   protected override readonly localQuery = computed(() => (this.localSearch() ? this.query().trim() : ''));
 

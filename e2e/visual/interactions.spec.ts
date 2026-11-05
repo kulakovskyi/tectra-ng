@@ -110,7 +110,7 @@ test('locale switches built-in texts at runtime', async ({ page }) => {
   await expect(page.locator('.tx-select__empty')).toHaveText('Нічого не знайдено');
 });
 
-test('select panel never covers the sticky header', async ({ page }) => {
+test('select panel opens clear of the sticky header and rides with its field while the page scrolls', async ({ page }) => {
   await page.goto('/theming');
   const trigger = page.locator('tx-select .tx-select__trigger').first();
   const panel = page.locator('.tx-select__panel');
@@ -121,15 +121,17 @@ test('select panel never covers the sticky header', async ({ page }) => {
   await scrollTriggerTo(headerBottom + 8);
   await trigger.click();
   await expect(panel).toBeVisible();
-  const panelTop = await panel.evaluate((element) => element.getBoundingClientRect().top);
-  expect(panelTop).toBeGreaterThanOrEqual(headerBottom);
+  expect(await panel.evaluate((element) => element.getBoundingClientRect().top)).toBeGreaterThanOrEqual(headerBottom);
 
+  const field = await trigger.elementHandle();
+  const gap = () => panel.evaluate((element, origin) => element.getBoundingClientRect().top - (origin as Element).getBoundingClientRect().bottom, field);
+  const opened = await gap();
   await scrollTriggerTo(headerBottom - 60);
-  await expect(panel).toHaveCount(0);
-  await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+  await expect.poll(gap).toBeCloseTo(opened, 0);
+  await expect(trigger).toHaveAttribute('aria-expanded', 'true');
 });
 
-test('select panel stays clear of the stuck tab bar', async ({ page }) => {
+test('select panel opens clear of the stuck tab bar', async ({ page }) => {
   await page.goto('/components/select');
   await page.mouse.wheel(0, 700);
   const tabsBar = page.locator('.tabs-bar');
@@ -137,16 +139,10 @@ test('select panel stays clear of the stuck tab bar', async ({ page }) => {
   const chromeBottom = await tabsBar.evaluate((bar) => bar.getBoundingClientRect().bottom);
   const trigger = page.locator('docs-example-frame').nth(1).locator('.tx-select__trigger').first();
   const panel = page.locator('.tx-select__panel');
-  const scrollTriggerTo = (top: number) =>
-    trigger.evaluate((element, target) => window.scrollBy(0, element.getBoundingClientRect().top - target), top);
-
-  await scrollTriggerTo(chromeBottom + 8);
+  await trigger.evaluate((element, target) => window.scrollBy(0, element.getBoundingClientRect().top - target), chromeBottom + 8);
   await trigger.click();
   await expect(panel).toBeVisible();
   expect(await panel.evaluate((element) => element.getBoundingClientRect().top)).toBeGreaterThanOrEqual(chromeBottom);
-
-  await scrollTriggerTo(chromeBottom - 60);
-  await expect(panel).toHaveCount(0);
 });
 
 test('message closes and field errors are linked to their fields', async ({ page }) => {

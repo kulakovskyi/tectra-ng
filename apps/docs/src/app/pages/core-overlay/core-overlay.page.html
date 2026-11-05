@@ -21,7 +21,7 @@
 <docs-code-block [code]="usageExample" [label]="'Overlay usage example'" />
 
 <h2>Sticky headers</h2>
-<p class="hint">Mark sticky or fixed chrome with <code>txOverlayInset</code>. While it is pinned, panels fit around it and close once their origin scrolls under it. This site marks its header and the tab bar of component pages.</p>
+<p class="hint">Mark sticky or fixed chrome with <code>txOverlayInset</code>. While it is pinned, panels open clear of it. Once open, a panel rides with its origin while the page or a container scrolls and stays open until it is dismissed. This site marks its header and the tab bar of component pages.</p>
 <docs-code-block [code]="insetsExample" [label]="'Viewport insets example'" />
 
 <ng-template #panel let-placement>

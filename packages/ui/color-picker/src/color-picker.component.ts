@@ -1,4 +1,4 @@
-import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedOverlayPositionChange, createRepositionScrollStrategy } from '@angular/cdk/overlay';
+import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
 import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -20,7 +20,7 @@ import { uniqueId } from '@tectra/core/a11y';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
 import { TxFormControlBase, injectFieldInvalid } from '@tectra/core/forms';
 import { injectTranslations } from '@tectra/core/i18n';
-import { TxOverlayInsets, TxPlacement, placementFromPosition, txAnimateEnter, txAnimateLeave, txPositions, watchOrigin, TxOverlayAnchor } from '@tectra/core/overlay';
+import { TxOverlayInsets, TxPlacement, placementFromPosition, txAnimateEnter, txAnimateLeave, txPositions, watchOrigin, TxOverlayAnchor, txScrollStrategy } from '@tectra/core/overlay';
 import { optionalBoolean } from '@tectra/core/utils';
 import { TxIcon } from '@tectra/icons';
 import { TectraColorPickerTokens, TectraDeepPartial, toStyleObject } from '@tectra/themes';
@@ -87,7 +87,6 @@ export class TxColorPicker extends TxFormControlBase<TxColorValue> {
     }
     onCleanup(
       watchOrigin(this.host.nativeElement, this.overlayInsets, {
-        hidden: () => this.close(false),
         insetsChange: () => this.connectedOverlay()?.overlayRef?.updatePosition(),
       }),
     );
@@ -97,7 +96,7 @@ export class TxColorPicker extends TxFormControlBase<TxColorValue> {
   readonly isUnstyled = injectUnstyled(this.unstyled);
   readonly passThrough = injectPassThrough('colorPicker', this, this.pt, this.ptOptions);
   readonly positions = txPositions('bottom-start', 4);
-  readonly scrollStrategy = createRepositionScrollStrategy(this.injector);
+  readonly scrollStrategy = txScrollStrategy(this.injector);
   readonly panelId = uniqueId('tx-color-picker');
   readonly valueId = `${this.panelId}-value`;
 

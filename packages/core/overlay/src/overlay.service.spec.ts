@@ -79,22 +79,16 @@ describe('TxOverlay', () => {
       TestBed.configureTestingModule({ providers: [{ provide: TECTRA_CONFIG, useValue: { preset: InkPreset, overlay: { viewportInsets: { top: 56 } } } }] });
     });
 
-    it('closes once the origin scrolls under the header, without scrolling back', () => {
+    it('keeps the panel open while the origin scrolls under the header', () => {
       const { origin, overlay } = setup();
-      origin.focus();
-      const focus = vi.spyOn(origin, 'focus');
       const reasons: TxOverlayCloseReason[] = [];
       const ref = overlay.open(Panel, { origin });
       ref.closed.subscribe((reason) => reasons.push(reason));
-
-      placeOrigin(origin, 40);
-      document.dispatchEvent(new Event('scroll'));
-      expect(reasons).toEqual([]);
-
       placeOrigin(origin, 10);
       document.dispatchEvent(new Event('scroll'));
-      expect(reasons).toEqual(['scroll']);
-      expect(focus).toHaveBeenCalledWith({ preventScroll: true });
+      expect(reasons).toEqual([]);
+      expect(document.querySelector('test-panel')).not.toBeNull();
+      ref.close();
     });
 
     it('keeps the panel when scroll is not reposition', () => {

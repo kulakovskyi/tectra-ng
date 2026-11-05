@@ -1,5 +1,5 @@
-import { CdkConnectedOverlay, OverlayRef } from '@angular/cdk/overlay';
-import { DestroyRef, Directive, ElementRef, inject } from '@angular/core';
+import { CdkConnectedOverlay, OverlayRef, ScrollStrategy, createNoopScrollStrategy, createRepositionScrollStrategy } from '@angular/cdk/overlay';
+import { DOCUMENT, DestroyRef, Directive, ElementRef, Injector, inject } from '@angular/core';
 
 type ScrollAxis = 'block' | 'inline';
 type ScrollTimelineConstructor = new (options: { source: Element; axis: ScrollAxis }) => AnimationTimeline;
@@ -8,6 +8,14 @@ const SCROLLABLE = /^(auto|scroll|overlay)$/;
 
 function scrollTimeline(view: Window | null): ScrollTimelineConstructor | undefined {
   return (view as unknown as { ScrollTimeline?: ScrollTimelineConstructor } | null)?.ScrollTimeline;
+}
+
+export function txFollowsScroll(view: Window | null): boolean {
+  return typeof scrollTimeline(view) === 'function';
+}
+
+export function txScrollStrategy(injector: Injector): ScrollStrategy {
+  return txFollowsScroll(injector.get(DOCUMENT).defaultView) ? createNoopScrollStrategy() : createRepositionScrollStrategy(injector);
 }
 
 export function scrollersOf(origin: Element): Element[] {

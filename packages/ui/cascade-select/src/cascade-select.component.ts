@@ -1,4 +1,4 @@
-import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedOverlayPositionChange, createRepositionScrollStrategy } from '@angular/cdk/overlay';
+import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -30,6 +30,7 @@ import {
   TxOverlayRoom,
   watchOrigin,
   TxOverlayAnchor,
+  txScrollStrategy,
 } from '@tectra/core/overlay';
 import { optionalBoolean } from '@tectra/core/utils';
 import { TxIcon } from '@tectra/icons';
@@ -106,7 +107,7 @@ export class TxCascadeSelect extends TxFormControlBase<unknown> {
   private readonly room = new TxOverlayRoom(txPositions('bottom-start', 4));
   private readonly connectedOverlay = viewChild(CdkConnectedOverlay);
   readonly positions = this.room.positions;
-  readonly scrollStrategy = createRepositionScrollStrategy(this.injector);
+  readonly scrollStrategy = txScrollStrategy(this.injector);
   readonly viewportMargin = this.room.viewportMargin;
   readonly treeId = uniqueId('tx-cascade');
   readonly columnEnter = ['tx-cascade-select__column--enter'];
@@ -169,7 +170,6 @@ export class TxCascadeSelect extends TxFormControlBase<unknown> {
     this.isPanelMounted.set(true);
     this.room.open(this.overlayInsets.measure());
     this.stopWatching = watchOrigin(this.box().nativeElement, this.overlayInsets, {
-      hidden: () => this.close(),
       insetsChange: (insets) => this.room.follow(insets, this.box().nativeElement, this.panel()?.nativeElement, this.connectedOverlay(), this.injector),
     });
     this.opened.emit();

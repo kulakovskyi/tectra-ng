@@ -1,4 +1,4 @@
-import { CdkConnectedOverlay, ConnectedOverlayPositionChange, createRepositionScrollStrategy } from '@angular/cdk/overlay';
+import { CdkConnectedOverlay, ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
 import { DestroyRef, Directive, ElementRef, Injector, booleanAttribute, computed, inject, input, output, signal, viewChild } from '@angular/core';
 import { injectFieldInvalid } from '@tectra/core/forms';
@@ -11,6 +11,7 @@ import {
   txPositions,
   TxOverlayRoom,
   watchOrigin,
+  txScrollStrategy,
 } from '@tectra/core/overlay';
 import { optionalBoolean } from '@tectra/core/utils';
 import { TxOptionsBase } from './options-base';
@@ -50,7 +51,7 @@ export abstract class TxSelectBase<T> extends TxOptionsBase<T> {
   private readonly room = new TxOverlayRoom(txPositions('bottom-start', 4));
   private readonly connectedOverlay = viewChild(CdkConnectedOverlay);
   readonly positions = this.room.positions;
-  readonly scrollStrategy = createRepositionScrollStrategy(this.injector);
+  readonly scrollStrategy = txScrollStrategy(this.injector);
   readonly viewportMargin = this.room.viewportMargin;
   readonly isOpen = signal(false);
   readonly isPanelMounted = signal(false);
@@ -85,7 +86,6 @@ export abstract class TxSelectBase<T> extends TxOptionsBase<T> {
     this.isPanelMounted.set(true);
     this.room.open(this.overlayInsets.measure());
     this.stopWatchingTrigger = watchOrigin(this.box().nativeElement, this.overlayInsets, {
-      hidden: () => this.close(),
       insetsChange: (insets) => this.room.follow(insets, this.box().nativeElement, this.panel()?.nativeElement, this.connectedOverlay(), this.injector),
     });
     if (this.lazy() && !this.virtualScroll()) {

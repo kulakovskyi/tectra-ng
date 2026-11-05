@@ -6,11 +6,10 @@ import {
   createFlexibleConnectedPositionStrategy,
   createNoopScrollStrategy,
   createOverlayRef,
-  createRepositionScrollStrategy,
 } from '@angular/cdk/overlay';
 import { DOCUMENT, Injectable, Injector, TemplateRef, Type, inject, signal } from '@angular/core';
 import { Subject } from 'rxjs';
-import { txAnchorPane } from './overlay-anchor';
+import { txAnchorPane, txScrollStrategy } from './overlay-anchor';
 import { txAnimateEnter, txAnimateLeave } from './overlay-motion';
 import { orderByRoom, placementFromPosition, txPositions } from './placements';
 import { TxOverlayCloseReason, TxOverlayOptions, TxOverlayRef, TxOverlayScroll } from './overlay.types';
@@ -100,7 +99,6 @@ export class TxOverlay {
     const stopWatchingOrigin =
       scroll === 'reposition'
         ? watchOrigin(origin, this.overlayInsets, {
-            hidden: () => close('scroll'),
             insetsChange: (next) => {
               insets = next;
               positionStrategy.withViewportMargin(txConnectedMargin(insets, margin));
@@ -162,7 +160,7 @@ export class TxOverlay {
       case 'none':
         return createNoopScrollStrategy();
       default:
-        return createRepositionScrollStrategy(injector);
+        return txScrollStrategy(injector);
     }
   }
 }
