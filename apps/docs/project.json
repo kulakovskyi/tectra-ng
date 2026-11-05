@@ -21,7 +21,8 @@
         "browser": "apps/docs/src/main.ts",
         "tsConfig": "apps/docs/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
-        "styles": ["apps/docs/src/styles.scss"]
+        "styles": ["apps/docs/src/styles.scss"],
+        "assets": [{ "glob": "**/*", "input": "apps/docs/public" }]
       },
       "configurations": {
         "production": {
