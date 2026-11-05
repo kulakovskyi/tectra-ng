@@ -1,7 +1,7 @@
 <section class="hero">
   <a class="hero__pill reveal" routerLink="/components/button">
     <tx-badge [value]="'new'" [severity]="'success'" />
-    Button with full PrimeNG parity
+    Every button variant, tokens and ripple
     <tx-icon [name]="'arrow-right'" />
   </a>
   <h1 class="hero__title reveal" style="--i: 1">
@@ -35,7 +35,7 @@
   <div class="tile reveal" style="--i: 6">
     <span class="tile__label">Form</span>
     <div class="tile__stack">
-      <input txInput placeholder="Full name" />
+      <input txInput [fluid]="true" placeholder="Full name" aria-label="Full name" />
       <tx-select [options]="roles" [formControl]="role" [ariaLabel]="'Role'" />
       <tx-toggle-button [onLabel]="'Notifications on'" [offLabel]="'Notifications off'" [onIcon]="'bell'" [offIcon]="'bell-slash'" />
     </div>

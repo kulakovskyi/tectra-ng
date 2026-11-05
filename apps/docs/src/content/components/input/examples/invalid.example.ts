@@ -1,15 +1,16 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TxFluid } from '@tectra/core/fluid';
 import { TxInput } from '@tectra/ui/input';
 
 @Component({
   selector: 'input-invalid-example',
-  imports: [TxInput, ReactiveFormsModule],
+  imports: [TxFluid, TxInput, ReactiveFormsModule],
   template: `
-    <div class="stack">
+    <tx-fluid class="stack">
       <input txInput placeholder="Email — leave empty and click outside" aria-label="Email" [formControl]="email" />
       <input txInput [invalid]="true" value="Forced invalid" aria-label="Forced invalid" />
-    </div>
+    </tx-fluid>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

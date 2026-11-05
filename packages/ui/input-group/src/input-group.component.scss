@@ -1,0 +1,39 @@
+:host {
+  display: inline-flex;
+  align-items: stretch;
+  max-width: 100%;
+}
+
+:host(.tx-input-group--fluid) {
+  display: flex;
+  width: 100%;
+}
+
+:host ::ng-deep > *:not(:first-child) {
+  margin-left: -1px;
+}
+
+:host ::ng-deep > :is(.tx-input, .tx-input-group-addon, .tx-button):not(:first-child),
+:host ::ng-deep > tx-icon-field:not(:first-child) > .tx-input,
+:host ::ng-deep > tx-select:not(:first-child) .tx-select__trigger {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+:host ::ng-deep > :is(.tx-input, .tx-input-group-addon, .tx-button):not(:last-child),
+:host ::ng-deep > tx-icon-field:not(:last-child) > .tx-input,
+:host ::ng-deep > tx-select:not(:last-child) .tx-select__trigger {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+:host ::ng-deep > tx-select {
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+}
+
+:host ::ng-deep > :is(.tx-input, .tx-button, tx-icon-field, tx-select):is(:hover, :focus-within, :focus) {
+  position: relative;
+  z-index: 1;
+}

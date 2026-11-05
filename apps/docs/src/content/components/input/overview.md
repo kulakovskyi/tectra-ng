@@ -1,7 +1,7 @@
 ---
 category: Form
 tokens: formField
-examples: basic, variants, states, invalid, sizes
+examples: basic, variants, states, invalid, sizes, fluid, design-tokens
 ---
 # Input
 

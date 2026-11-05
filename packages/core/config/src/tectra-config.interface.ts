@@ -14,6 +14,8 @@ export interface TxTranslations {
   previousPage: string;
   nextPage: string;
   pageReport: string;
+  copy: string;
+  copied: string;
 }
 
 export interface TxLocaleDefinition {

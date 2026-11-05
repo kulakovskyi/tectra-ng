@@ -3,7 +3,7 @@
 <p class="lead">{{ names.length }} icons drawn for tectra + {{ brandNames.length }} brand logos. PrimeIcons names: <code>pi pi-trash</code> → <code>'trash'</code>. Click to copy.</p>
 
 <div class="card toolbar">
-  <input txInput placeholder="Search icons" [value]="query()" (input)="onSearch($event)" />
+  <input txInput [fluid]="true" placeholder="Search icons" aria-label="Search icons" [value]="query()" (input)="onSearch($event)" />
   <label class="toolbar__stroke">
     Stroke {{ strokeWidth() }}
     <input type="range" min="1" max="2.5" step="0.25" [value]="strokeWidth()" (input)="onStrokeWidth($event)" />

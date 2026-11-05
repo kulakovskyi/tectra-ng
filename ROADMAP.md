@@ -1,20 +1,19 @@
 # tectra roadmap
 
-Everything that `links-cms` keeps in `libs/ui-kit`, `libs/charts` and the generic part of `libs/core-utils`, in the order it moves into tectra. We go top to bottom, one item at a time.
+Everything tectra covers, ordered by dependencies and by how much the first consumer app needs each part. We go top to bottom, one item at a time.
 
-**Legend:** ✅ done · 🟡 started, not at parity · ⬜ to do · 🏠 stays in links-cms
+**Legend:** ✅ done · 🟡 started, not at parity · ⬜ to do
 
-**Usage** = number of files in links-cms that import the lib (counted 2026-11-05). It is the main signal for priority inside a stage.
+**Usage** = how many files of the first consumer app use the part (counted 2026-11-05). It is the main signal for priority inside a stage.
 
 ## Definition of done (every item)
 
 1. Component in `packages/<pkg>/<name>` — signals, OnPush, standalone, keyboard + ARIA.
-2. Design tokens in `packages/themes/src/components/<name>.tokens.ts`, values taken from `LinksCmsPreset` / Aura, light + dark.
+2. Design tokens in `packages/themes/src/components/<name>.tokens.ts`, light + dark.
 3. `dt`, `pt` (+ `ptOptions`), `unstyled` where the component has parts.
 4. Feature parity with the PrimeNG component of the same role (inputs, outputs, templates) — list in the README.
 5. `README.md` (Inputs / Outputs / Slots / Keyboard) and docs content: overview + one example per feature.
 6. Unit tests (once the test runner exists) and a Playwright check of the docs page (light + dark, no layout shifts).
-7. links-cms: the `@ui-kit/<name>` wrapper switched to the tectra component with the same wrapper API, screenshots before / after.
 
 ---
 
@@ -36,16 +35,9 @@ Everything that `links-cms` keeps in `libs/ui-kit`, `libs/charts` and the generi
 | Playwright checks in `e2e/visual` (`npm run e2e`): every page light + dark, console errors, layout shift, axe serious / critical; select, code panel, navigation, square buttons, theme toggle | the check we ran by hand is permanent | ✅ |
 | CI (`.github/workflows/ci.yml`): test → package build → e2e, report on failure | | ✅ |
 | ESLint (`npm run lint`): angular-eslint (OnPush, signals readonly, control flow, template a11y), typescript-eslint, Nx module boundaries by package tags; first step in CI | keeps the conventions and the package graph honest | ✅ |
-| Release flow: changesets, versions, npm publish | needed before links-cms can install from npm | ⬜ |
+| Release flow: changesets, versions, npm publish | needed before apps can install from npm | ⬜ |
 
 Found and fixed while setting it up: a disabled `a[txButton]` still let the parent `(click)` run; `tx-select` had no accessible name (`ariaLabel`, `ariaLabelledBy`, falls back to the placeholder); light muted text and the white-on-green success colour were below WCAG AA (muted → surface 600, success → green 700); toggle-button text contrast.
-
-## Stage 1b — links-cms bridge (later, on request)
-
-| Item | Why | Status |
-|---|---|---|
-| Consume tectra in links-cms (local build or `0.x` on npm), `provideTectra` with each app's accent + `darkSelector: '.app-dark'`, accent switch in `LayoutService` | needed to swap the first wrapper | ⬜ |
-| Swap `@ui-kit/button` (usage **1121**) onto `txButton`, keep `pTooltip` until stage 5; move the 10 `.p-button` SCSS overrides; screenshots before / after | proves the whole path on the most used component | ⬜ |
 
 ## Stage 2 — overlay core ✅
 
@@ -60,145 +52,145 @@ Found and fixed while setting it up: a disabled `a[txButton]` still let the pare
 
 Detailed checklist per component: [roadmap/stage-3-forms.md](roadmap/stage-3-forms.md).
 
-| tectra | PrimeNG equivalent | links-cms lib (usage) | Status |
+| tectra | PrimeNG equivalent | Usage | Status |
 |---|---|---|---|
 | form-field foundation — shared tokens, `filled` variant, focus / invalid / readonly states, invalid from the form control | BaseInput | — | ✅ |
-| `ui/input` — icon field, input group, prefix / suffix, clear, copy, key filter (`noSpaces`, `onlyLatin`, `positive`), sizes, `fluid` | InputText, IconField, InputIcon, InputGroup, KeyFilter | `input` (239) | 🟡 |
-| `ui/label` | FloatLabel / IftaLabel | `label` (353) | ⬜ |
-| `ui/message` (field part) — hint, error from the control, success | Message | `validation-message` (18) | ⬜ |
-| `ui/field` — label + control + hint + error, ids and aria wired | — | repeated in every links-cms form | ⬜ |
-| `ui/textarea` — auto resize | Textarea | `textarea` (68) | ⬜ |
-| `ui/checkbox` — binary, group, indeterminate | Checkbox | `checkbox` (73) | ⬜ |
+| `ui/input` + `ui/icon-field` + `ui/input-group` + `ui/key-filter` — icons, addons, prefix / suffix, clear, copy, key filter (PrimeNG presets + `positive`, `nospace`, `latin`), sizes, `fluid`, `dt` / `pt` / `unstyled` | InputText, IconField, InputIcon, InputGroup, KeyFilter | 239 | ✅ |
+| `ui/label` | FloatLabel / IftaLabel | 353 | ⬜ |
+| `ui/message` (field part) — hint, error from the control, success | Message | 18 | ⬜ |
+| `ui/field` — label + control + hint + error, ids and aria wired | — | every form | ⬜ |
+| `ui/textarea` — auto resize | Textarea | 68 | ⬜ |
+| `ui/checkbox` — binary, group, indeterminate | Checkbox | 73 | ⬜ |
 | `ui/radio-button` | RadioButton | — (parity) | ⬜ |
-| `ui/toggle-switch` | ToggleSwitch | `switch` (33) | ⬜ |
-| `ui/password` — strength meter, toggle mask | Password | `password` (20) | ⬜ |
-| `ui/input-otp` | InputOtp | `input-otp` (5) | ⬜ |
-| `ui/input-mask` | InputMask | `input-mask` (2) | ⬜ |
+| `ui/toggle-switch` | ToggleSwitch | 33 | ⬜ |
+| `ui/password` — strength meter, toggle mask | Password | 20 | ⬜ |
+| `ui/input-otp` | InputOtp | 5 | ⬜ |
+| `ui/input-mask` | InputMask | 2 | ⬜ |
 | `ui/input-number` | InputNumber | — (parity) | ⬜ |
-| `ui/rating` | Rating | `rating` (7) | ⬜ |
-| `ui/knob` | Knob | `ring-slider` (1) | ⬜ |
+| `ui/rating` | Rating | 7 | ⬜ |
+| `ui/knob` | Knob | 1 | ⬜ |
 | `ui/slider` | Slider | — (parity) | ⬜ |
-| `ui/password-generator` (button + generator service) | — | `password-generator` (2) | ⬜ |
+| `ui/password-generator` (button + generator service) | — | 2 | ⬜ |
 
 ## Stage 4 — feedback & display primitives
 
-| tectra | PrimeNG equivalent | links-cms lib (usage) | Status |
+| tectra | PrimeNG equivalent | Usage | Status |
 |---|---|---|---|
 | `ui/badge` | Badge | — | ✅ |
-| `ui/overlay-badge` | OverlayBadge | `overlay-badge` (0) | ⬜ |
-| `ui/pill` — tone, icon, size | Tag (rounded) | `pill` (**852**) | ⬜ |
-| `ui/tag` + `ui/chip` | Tag, Chip | `tag` (43), `chip` (0) | ⬜ |
-| `ui/message` (alert) | Message | `alert` (**370**) | ⬜ |
-| `ui/progress-bar` | ProgressBar | `progress-bar` (30) | ⬜ |
-| `ui/progress-spinner` (loader) | ProgressSpinner | `loader` (25) | ⬜ |
-| `ui/skeleton` | Skeleton | `skeleton-table` (0) | ⬜ |
-| `ui/avatar` (+ group, initials fallback, photo) | Avatar, AvatarGroup | `user-avatar` (174), `user-image` (9), `avatar` (6) | ⬜ |
+| `ui/overlay-badge` | OverlayBadge | 0 | ⬜ |
+| `ui/pill` — tone, icon, size | Tag (rounded) | **852** | ⬜ |
+| `ui/tag` + `ui/chip` | Tag, Chip | 43, 0 | ⬜ |
+| `ui/message` (alert) | Message | **370** | ⬜ |
+| `ui/progress-bar` | ProgressBar | 30 | ⬜ |
+| `ui/progress-spinner` (loader) | ProgressSpinner | 25 | ⬜ |
+| `ui/skeleton` | Skeleton | 0 | ⬜ |
+| `ui/avatar` (+ group, initials fallback, photo) | Avatar, AvatarGroup | 174, 9, 6 | ⬜ |
 | `ui/divider` | Divider | — (parity) | ⬜ |
-| `ui/card` / `ui/panel` | Card, Panel | `panel` (115) | ⬜ |
+| `ui/card` / `ui/panel` | Card, Panel | 115 | ⬜ |
 | `ui/fieldset` | Fieldset | — (parity) | ⬜ |
-| `ui/highlight-text` | — | `highlight-text` (43) | ⬜ |
-| `ui/amount` (money / number formatting) | — | `amount` (40) | ⬜ |
-| `ui/status-icon` | — | `status-icon` (6) | ⬜ |
-| `ui/link` (link-view, icon-link) | — | `link-view` (202), `icon-link` (4) | ⬜ |
+| `ui/highlight-text` | — | 43 | ⬜ |
+| `ui/amount` (money / number formatting) | — | 40 | ⬜ |
+| `ui/status-icon` | — | 6 | ⬜ |
+| `ui/link` (link-view, icon-link) | — | 202, 4 | ⬜ |
 
 ## Stage 5 — overlays (after stage 2)
 
-| tectra | PrimeNG equivalent | links-cms lib (usage) | Status |
+| tectra | PrimeNG equivalent | Usage | Status |
 |---|---|---|---|
-| `ui/tooltip` directive | Tooltip | used by 20+ kit libs, `[toolTip]` on 751 buttons; `tooltip-text` (4) | ⬜ |
-| `ui/popover` | Popover | `popover` (16) | ⬜ |
-| `ui/toast` + toast service | Toast + MessageService | `toast` (4), core-utils `custom-toastr` | ⬜ |
-| `ui/dialog` + dialog service (`open(component, { data })`, `DialogRef`, close result) | Dialog, DynamicDialog | core-utils `modal` (`ModalService`, all modals), `editor-preview` (2) | ⬜ |
-| `ui/drawer` | Drawer | `drawer` (13) | ⬜ |
-| `ui/confirm-popup` / `ui/confirm-dialog` | ConfirmPopup, ConfirmDialog | `confirm-modal` (1) — links-cms rule forbids shared confirm modals; kit parity only | ⬜ |
-| `ui/menu`, `ui/tiered-menu`, `ui/context-menu` | Menu, TieredMenu, ContextMenu | table row menu, `actions-menu` (6) | ⬜ |
+| `ui/tooltip` directive | Tooltip | used by 20+ kit libs, `[toolTip]` on 751 buttons; 4 | ⬜ |
+| `ui/popover` | Popover | 16 | ⬜ |
+| `ui/toast` + toast service | Toast + MessageService | 4, core-utils `custom-toastr` | ⬜ |
+| `ui/dialog` + dialog service (`open(component, { data })`, `DialogRef`, close result) | Dialog, DynamicDialog | core-utils `modal` (`ModalService`, all modals), 2 | ⬜ |
+| `ui/drawer` | Drawer | 13 | ⬜ |
+| `ui/confirm-popup` / `ui/confirm-dialog` | ConfirmPopup, ConfirmDialog | 1 | ⬜ |
+| `ui/menu`, `ui/tiered-menu`, `ui/context-menu` | Menu, TieredMenu, ContextMenu | table row menu, 6 | ⬜ |
 | `ui/split-button` | SplitButton | — (parity, needs menu) | ⬜ |
 | `ui/speed-dial` | SpeedDial | — (parity, needs menu) | ⬜ |
 
 ## Stage 6 — selection
 
-| tectra | PrimeNG equivalent | links-cms lib (usage) | Status |
+| tectra | PrimeNG equivalent | Usage | Status |
 |---|---|---|---|
-| `ui/select` — parity: clear, groups, virtual scroll, lazy, editable, loading, checkmark, `dt` / `pt` (keyboard, typeahead, flip done) | Select | `select` (**403**) | 🟡 |
-| `ui/multiselect` — chips display, select all, filter, max selected | MultiSelect | inside `select` (multiselect mode) | ⬜ |
-| `ui/autocomplete` — single / multiple, dropdown, force selection, groups | AutoComplete | `auto-complete` (1), `combobox` (2) | ⬜ |
+| `ui/select` — parity: clear, groups, virtual scroll, lazy, editable, loading, checkmark, `dt` / `pt` (keyboard, typeahead, flip done) | Select | **403** | 🟡 |
+| `ui/multiselect` — chips display, select all, filter, max selected | MultiSelect | inside select (multiselect mode) | ⬜ |
+| `ui/autocomplete` — single / multiple, dropdown, force selection, groups | AutoComplete | 1, 2 | ⬜ |
 | `ui/listbox` | Listbox | — (parity) | ⬜ |
-| `ui/chips-input` (keywords) | AutoComplete multiple / InputChips | `keywords-input` (3), `tags` (5) | ⬜ |
-| `ui/color-picker` | ColorPicker | `color-input` (3) | ⬜ |
-| `ui/country` + `ui/country-select` (flags, `Intl.DisplayNames`) | — | `country` (91) | ⬜ |
-| `ui/mention-textarea` | — | `mention-textarea` (2) | ⬜ |
-| `ui/email-suggestion` | — | `email-suggestion` (4) | ⬜ |
+| `ui/chips-input` (keywords) | AutoComplete multiple / InputChips | 3, 5 | ⬜ |
+| `ui/color-picker` | ColorPicker | 3 | ⬜ |
+| `ui/country` + `ui/country-select` (flags, `Intl.DisplayNames`) | — | 91 | ⬜ |
+| `ui/mention-textarea` | — | 2 | ⬜ |
+| `ui/email-suggestion` | — | 4 | ⬜ |
 | `ui/tree-select`, `ui/cascade-select` | TreeSelect, CascadeSelect | — (parity) | ⬜ |
 
 ## Stage 7 — data
 
-| tectra | PrimeNG equivalent | links-cms lib (usage) | Status |
+| tectra | PrimeNG equivalent | Usage | Status |
 |---|---|---|---|
-| `ui/paginator` — compact mode below 40rem, page size options, `PaginationInterface` | Paginator | `pagination` (170) | ⬜ |
-| `ui/table` — sort, selection, resize, reorder, sticky columns, row actions, context menu, settings (visible / order / width persistence), cards below 1024px, loading overlay, virtual scroll, row expansion | Table | `table` (**356**) | ⬜ |
+| `ui/paginator` — compact mode below 40rem, page size options, `PaginationInterface` | Paginator | 170 | ⬜ |
+| `ui/table` — sort, selection, resize, reorder, sticky columns, row actions, context menu, settings (visible / order / width persistence), cards below 1024px, loading overlay, virtual scroll, row expansion | Table | **356** | ⬜ |
 | `ui/tree`, `ui/tree-table` | Tree, TreeTable | — (parity) | ⬜ |
 | `ui/data-view`, `ui/virtual-scroller` | DataView, VirtualScroller | — (parity) | ⬜ |
 | `ui/timeline` | Timeline | — (parity) | ⬜ |
-| `ui/stat-tiles` | — | `stat-tiles` (48) | ⬜ |
-| `ui/sparkline` | — | `sparkline` (4) | ⬜ |
-| `ui/export` (CSV / Excel buttons) | — | `export-csv` (0), `export-excel` (2) | ⬜ |
+| `ui/stat-tiles` | — | 48 | ⬜ |
+| `ui/sparkline` | — | 4 | ⬜ |
+| `ui/export` (CSV / Excel buttons) | — | 0, 2 | ⬜ |
 
 ## Stage 8 — date & time
 
-| tectra | PrimeNG equivalent | links-cms lib (usage) | Status |
+| tectra | PrimeNG equivalent | Usage | Status |
 |---|---|---|---|
-| `ui/datepicker` — single / range / multiple, time, month / year views, inline, min / max, locale | DatePicker | `calendar` (58) | ⬜ |
-| `ui/month-calendar` (events grid) | — | `month-calendar` (23) | ⬜ |
-| `ui/countdown` (on `ClockService`) | — | `countdown` (1) | ⬜ |
-| `ui/analog-clock` | — | `analog-clock` (1) | ⬜ |
+| `ui/datepicker` — single / range / multiple, time, month / year views, inline, min / max, locale | DatePicker | 58 | ⬜ |
+| `ui/month-calendar` (events grid) | — | 23 | ⬜ |
+| `ui/countdown` (on `ClockService`) | — | 1 | ⬜ |
+| `ui/analog-clock` | — | 1 | ⬜ |
 
 ## Stage 9 — navigation & structure
 
-| tectra | PrimeNG equivalent | links-cms lib (usage) | Status |
+| tectra | PrimeNG equivalent | Usage | Status |
 |---|---|---|---|
-| `ui/tabs` — scrollable, icons, counters, lazy panels | Tabs | `tabs` (182) | ⬜ |
-| `ui/accordion` | Accordion | `accordion` (8) | ⬜ |
-| `ui/stepper` | Stepper / Steps | `stepper` (12) | ⬜ |
-| `ui/breadcrumb` | Breadcrumb | inside `console-layout` crumbs | ⬜ |
-| `ui/menubar`, `ui/panel-menu` | Menubar, PanelMenu | inside `layout` (sidebar menu) | ⬜ |
+| `ui/tabs` — scrollable, icons, counters, lazy panels | Tabs | 182 | ⬜ |
+| `ui/accordion` | Accordion | 8 | ⬜ |
+| `ui/stepper` | Stepper / Steps | 12 | ⬜ |
+| `ui/breadcrumb` | Breadcrumb | console crumbs | ⬜ |
+| `ui/menubar`, `ui/panel-menu` | Menubar, PanelMenu | sidebar menu | ⬜ |
 | `ui/splitter`, `ui/scroll-panel`, `ui/toolbar` | Splitter, ScrollPanel, Toolbar | — (parity) | ⬜ |
-| `ui/file-upload` | FileUpload | `upload-file` (8) | ⬜ |
-| `ui/editor` (rich text, Tiptap / ProseMirror instead of Quill) — own package `@tectra/editor` | Editor | `editor` (6), `code-editor-tem` (16) | ⬜ |
-| `ui/image` (preview, zoom), `ui/galleria`, `ui/carousel` | Image, Galleria, Carousel | `editor-preview` (2) | ⬜ |
+| `ui/file-upload` | FileUpload | 8 | ⬜ |
+| `ui/editor` (rich text, Tiptap / ProseMirror instead of Quill) — own package `@tectra/editor` | Editor | 6, 16 | ⬜ |
+| `ui/image` (preview, zoom), `ui/galleria`, `ui/carousel` | Image, Galleria, Carousel | 2 | ⬜ |
 
 ## Stage 10 — blocks (`@tectra/blocks`, what PrimeNG does not have)
 
-| Block | links-cms lib (usage) | Status |
+| Block | Usage | Status |
 |---|---|---|
-| `filters-panel` (card above a table, popover below 1024px, reset, field state) | `filters-panel` (81) | ⬜ |
-| `page-header` | `page-header` (186) | ⬜ |
-| `empty-state` | `empty-state` (**193**) | ⬜ |
-| `console-layout` (header + crumbs, icon rail, footer, panel) | `console-layout` (10) | ⬜ |
-| `app-layout` (sidebar + topbar + menu, responsive) | `layout` (22) | ⬜ |
-| `wizard` (stages, step head, progress, footer) | `wizard` (53) | ⬜ |
-| `pinned-tabs` | `pinned-tabs` (1) | ⬜ |
-| `command-palette` | `command-palette` (13) | ⬜ |
-| `kanban` | `kanban` (6) | ⬜ |
-| `actions-menu` | `actions-menu` (6) | ⬜ |
-| `action-tile` | `action-tile` (1) | ⬜ |
-| `topbar-preferences`, `switch-theme` (circle reveal), `switch-language` | `topbar-preferences` (12), `switch-theme` (1), `switch-language` (2) | ⬜ |
-| `public-header`, `app-footer`, `cookie-notice` | `public-header` (5), `app-footer` (7), `cookie-notice` (4) | ⬜ |
-| `network-status` | `network-status` (4) | ⬜ |
-| `qr-code` | `qr-code` (1) | ⬜ |
-| `confetti`, `hover-effect` | `confetti` (7), `hover-effect` (0) | ⬜ |
+| `filters-panel` (card above a table, popover below 1024px, reset, field state) | 81 | ⬜ |
+| `page-header` | 186 | ⬜ |
+| `empty-state` | **193** | ⬜ |
+| `console-layout` (header + crumbs, icon rail, footer, panel) | 10 | ⬜ |
+| `app-layout` (sidebar + topbar + menu, responsive) | 22 | ⬜ |
+| `wizard` (stages, step head, progress, footer) | 53 | ⬜ |
+| `pinned-tabs` | 1 | ⬜ |
+| `command-palette` | 13 | ⬜ |
+| `kanban` | 6 | ⬜ |
+| `actions-menu` | 6 | ⬜ |
+| `action-tile` | 1 | ⬜ |
+| `topbar-preferences`, `switch-theme` (circle reveal), `switch-language` | 12, 1, 2 | ⬜ |
+| `public-header`, `app-footer`, `cookie-notice` | 5, 7, 4 | ⬜ |
+| `network-status` | 4 | ⬜ |
+| `qr-code` | 1 | ⬜ |
+| `confetti`, `hover-effect` | 7, 0 | ⬜ |
 
 ## Stage 11 — charts (`@tectra/charts`, own package because of the chart engine)
 
 Decide first: keep ApexCharts as a peer dependency or draw own SVG charts.
 
-| Chart | links-cms lib (usage) | Status |
+| Chart | Usage | Status |
 |---|---|---|
-| core (locale, no-data, theme from tokens) | `charts/core` (46) | ⬜ |
-| column, spline, pie | `column` (18), `spline` (18), `pie` (9) | ⬜ |
-| bar-list, segmented-bar | `bar-list` (17), `segmented-bar` (11) | ⬜ |
-| heatmap, treemap, org-chart | `heatmap` (10), `treemap` (2), `org-chart` (3) | ⬜ |
+| core (locale, no-data, theme from tokens) | 46 | ⬜ |
+| column, spline, pie | 18, 18, 9 | ⬜ |
+| bar-list, segmented-bar | 17, 11 | ⬜ |
+| heatmap, treemap, org-chart | 10, 2, 3 | ⬜ |
 
-## Stage 12 — utils (`@tectra/utils`, generic part of core-utils)
+## Stage 12 — utils (`@tectra/utils`)
 
 | Group | Items | Status |
 |---|---|---|
@@ -207,10 +199,3 @@ Decide first: keep ApexCharts as a peer dependency or draw own SVG charts.
 | Services | `clock` (+ `remainingTime`), `polling` (`Poller`, `poll`, `refreshEvery`), `selection`, `track-breakpoint`, `form-change-tracker`, `form-validation` | ⬜ |
 | Functions | `validators`, `http-params`, `date`, `file`, `string`, `memory-storage` | ⬜ |
 
-## Stays in links-cms 🏠
-
-Company- or app-specific — not part of a public kit:
-
-- `ui-kit/i18n` (`UiKitTranslationScope`), `ui-kit/styles` (Tailwind setup), `ui-kit/mascot`, `ui-kit/domains-input`
-- core-utils: `app-title`, `custom-toastr` (becomes a thin layer over `ui/toast`), `dynamic-loader`, `error-reporter`, `fetch-api`, `interceptor`, `session-refresh`, `session-expiry`, `save-filters-base`, `url-filters-base`, `unsubscribe-base`, `upload-image`, `feature-flags`, `constants`, `tokens`, `app-splash`, `app-version`
-- `@ui-kit/*` wrappers themselves: after each swap they become thin adapters (project conventions, transloco texts, `control` input) over tectra components

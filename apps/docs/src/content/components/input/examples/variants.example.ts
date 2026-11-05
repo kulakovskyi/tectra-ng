@@ -1,14 +1,15 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { TxFluid } from '@tectra/core/fluid';
 import { TxInput } from '@tectra/ui/input';
 
 @Component({
   selector: 'input-variants-example',
-  imports: [TxInput],
+  imports: [TxFluid, TxInput],
   template: `
-    <div class="stack">
+    <tx-fluid class="stack">
       <input txInput placeholder="Outlined" aria-label="Outlined" />
       <input txInput [variant]="'filled'" placeholder="Filled" aria-label="Filled" />
-    </div>
+    </tx-fluid>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

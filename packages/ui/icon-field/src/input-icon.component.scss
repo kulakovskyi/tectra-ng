@@ -1,0 +1,10 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+  color: var(--tx-form-field-icon-color);
+  font-family: var(--tx-font-family);
+  font-size: var(--tx-form-field-font-size);
+  font-weight: var(--tx-font-weight-medium);
+  line-height: 1;
+  white-space: nowrap;
+}

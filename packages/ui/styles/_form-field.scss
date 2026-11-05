@@ -1,6 +1,8 @@
 @mixin box {
   box-sizing: border-box;
-  padding: var(--tx-form-field-padding-y) var(--tx-form-field-padding-x);
+  padding-block: var(--tx-form-field-padding-y);
+  padding-inline: calc(var(--tx-form-field-padding-x) + var(--tx-field-inset-start, 0px))
+    calc(var(--tx-form-field-padding-x) + var(--tx-field-inset-end, 0px));
   border: 1px solid var(--tx-form-field-border-color);
   border-radius: var(--tx-form-field-border-radius);
   outline: none;
@@ -63,7 +65,9 @@
 }
 
 @mixin size($key) {
-  padding: var(--tx-form-field-#{$key}-padding-y) var(--tx-form-field-#{$key}-padding-x);
+  padding-block: var(--tx-form-field-#{$key}-padding-y);
+  padding-inline: calc(var(--tx-form-field-#{$key}-padding-x) + var(--tx-field-inset-start, 0px))
+    calc(var(--tx-form-field-#{$key}-padding-x) + var(--tx-field-inset-end, 0px));
   font-size: var(--tx-form-field-#{$key}-font-size);
   line-height: var(--tx-form-field-#{$key}-line-height);
 }

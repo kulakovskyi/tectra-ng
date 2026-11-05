@@ -1,16 +1,17 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { TxFluid } from '@tectra/core/fluid';
 import { TxInput } from '@tectra/ui/input';
 
 @Component({
   selector: 'input-basic-example',
-  imports: [TxInput, ReactiveFormsModule],
+  imports: [TxFluid, TxInput, ReactiveFormsModule],
   template: `
-    <div class="stack">
+    <tx-fluid class="stack">
       <input txInput placeholder="Your name" [formControl]="name" />
       <textarea txInput placeholder="About you"></textarea>
       <span class="hint">Value: {{ name.value || '—' }}</span>
-    </div>
+    </tx-fluid>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

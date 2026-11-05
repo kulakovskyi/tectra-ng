@@ -1,0 +1,23 @@
+:host {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: var(--tx-input-group-addon-min-width);
+  padding: 0 var(--tx-input-group-addon-padding-x);
+  border: 1px solid var(--tx-input-group-addon-border-color);
+  border-radius: var(--tx-input-group-addon-border-radius);
+  background: var(--tx-input-group-addon-background);
+  color: var(--tx-input-group-addon-color);
+  font-family: var(--tx-font-family);
+  font-size: var(--tx-form-field-font-size);
+  font-weight: var(--tx-font-weight-medium);
+  white-space: nowrap;
+}
+
+:host:has(> .tx-button) {
+  padding: 0;
+  border: none;
+  background: none;
+}

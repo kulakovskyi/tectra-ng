@@ -14,7 +14,7 @@ npm run test               # unit tests (Vitest)
 npm run e2e                # Playwright checks of the docs site
 ```
 
-Working now: tokens, themes (light / dark, 5 accents), core (config with unstyled + pass-through, overlay, forms, a11y, i18n, styles, ripple, fluid), icons, ui (button with the full PrimeNG feature set + design tokens, button-group, toggle-button, badge, input, select), the docs site. Planned: blocks, visual tests (`e2e/visual`), the component generator, CI.
+Working now: tokens, themes (light / dark, 5 accents), core (config with unstyled + pass-through, overlay, forms, a11y, i18n, styles, ripple, fluid), icons + brand icons, ui (button, button-group, toggle-button, badge, input, icon-field, input-group, key-filter, select), the docs site, unit tests, Playwright checks and CI.
 
 Plan of what moves in next and in which order: [ROADMAP.md](ROADMAP.md).
 
@@ -29,7 +29,7 @@ Plan of what moves in next and in which order: [ROADMAP.md](ROADMAP.md).
 | `packages/brand-icons` | optional brand logos from Simple Icons (CC0) under PrimeIcons names | npm `@tectra/brand-icons` |
 | `packages/ui` | components, one entry point each | npm `@tectra/ui/<component>` |
 | `packages/blocks` | console-layout, filters-panel, stat-tiles … | npm `@tectra/blocks/<block>` |
-| `apps/docs` | the site (like primeng.org) | Cloudflare Pages |
+| `apps/docs` | the documentation site | Cloudflare Pages |
 | `apps/sandbox` | local playground | — |
 | `e2e/visual` | Playwright screenshots + axe | — |
 | `tools` | Nx generators, docs extractors, AI docs | — |

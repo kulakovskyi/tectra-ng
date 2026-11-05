@@ -1,0 +1,34 @@
+:host {
+  position: relative;
+  display: inline-flex;
+  align-items: stretch;
+  max-width: 100%;
+}
+
+:host(.tx-icon-field--fluid) {
+  display: flex;
+  width: 100%;
+}
+
+.tx-icon-field__slot {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transform: translateY(-50%);
+  pointer-events: none;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.tx-icon-field__slot--start {
+  left: var(--tx-form-field-padding-x);
+}
+
+.tx-icon-field__slot--end {
+  right: calc(var(--tx-form-field-padding-x) - 4px);
+}

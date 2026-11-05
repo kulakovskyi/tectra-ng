@@ -1,4 +1,4 @@
-# docs — the tectra site (like primeng.org)
+# docs — the tectra site
 
 ```bash
 npx nx serve docs      # http://localhost:4300

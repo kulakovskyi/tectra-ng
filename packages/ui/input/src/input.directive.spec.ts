@@ -8,6 +8,7 @@ import { TxInput } from './input.directive';
   template: `
     <input txInput id="plain" [invalid]="invalid()" [size]="'small'" [variant]="'filled'" />
     <input txInput id="bound" [formControl]="control" />
+    <input txInput id="custom" [fluid]="true" [dt]="{ root: { borderRadius: '0' } }" [pt]="{ root: { class: 'mine' } }" [unstyled]="true" />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -38,6 +39,15 @@ describe('TxInput', () => {
     await fixture.whenStable();
     expect(plain.getAttribute('aria-invalid')).toBe('true');
     expect(plain.classList).toContain('tx-input--invalid');
+  });
+
+  it('takes fluid, design tokens, pass-through and unstyled', async () => {
+    const { fixture } = await render();
+    const custom = fixture.nativeElement.querySelector('#custom') as HTMLInputElement;
+    expect(custom.classList).toContain('tx-input--fluid');
+    expect(custom.classList).toContain('mine');
+    expect(custom.style.getPropertyValue('--tx-form-field-border-radius')).toBe('0');
+    expect(custom.hasAttribute('data-styled')).toBe(false);
   });
 
   it('follows the form control once it is touched', async () => {

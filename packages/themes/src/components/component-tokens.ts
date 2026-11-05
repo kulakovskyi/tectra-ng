@@ -1,6 +1,7 @@
 import { badgeTokens } from './badge.tokens';
 import { buttonTokens } from './button.tokens';
 import { formFieldTokens } from './form-field.tokens';
+import { inputGroupTokens } from './input-group.tokens';
 import { selectTokens } from './select.tokens';
 import { iconTokens } from './icon.tokens';
 import { rippleTokens } from './ripple.tokens';
@@ -10,6 +11,7 @@ export const COMPONENT_TOKENS = {
   icon: iconTokens,
   ripple: rippleTokens,
   formField: formFieldTokens,
+  inputGroup: inputGroupTokens,
   button: buttonTokens,
   select: selectTokens,
   badge: badgeTokens,

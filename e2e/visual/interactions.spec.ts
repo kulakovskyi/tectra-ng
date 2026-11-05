@@ -163,3 +163,62 @@ test('fields share the form-field look: filled and invalid', async ({ page }) =>
   }, danger);
   await expect.poll(() => email.evaluate((element) => getComputedStyle(element).borderTopColor)).toBe(probe);
 });
+
+test('icon field makes room for icons and the clear button works', async ({ page }) => {
+  await page.goto('/components/icon-field');
+  const search = page.getByRole('textbox', { name: 'Search' }).first();
+  const plain = await page.evaluate(() => parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--tx-form-field-padding-x')));
+  const paddingLeft = await search.evaluate((element) => parseFloat(getComputedStyle(element).paddingLeft));
+  expect(paddingLeft).toBeGreaterThan(plain + 10);
+
+  const field = page.locator('icon-field-clear-example');
+  await field.getByRole('button', { name: 'Clear' }).click();
+  await expect(field.getByText('Value: —')).toBeVisible();
+  await expect(field.getByRole('button', { name: 'Clear' })).toHaveCount(0);
+});
+
+test('key filter blocks typing and cleans paste', async ({ page }) => {
+  await page.goto('/components/key-filter');
+  const pint = page.getByRole('textbox', { name: 'pint', exact: true });
+  await pint.click();
+  await page.keyboard.type('1a2-b3');
+  await expect(pint).toHaveValue('123');
+
+  const positive = page.getByRole('textbox', { name: 'Positive' });
+  await positive.click();
+  await page.keyboard.type('12.5.7');
+  await expect(positive).toHaveValue('12.57');
+
+  const latin = page.getByRole('textbox', { name: 'Latin' });
+  await latin.focus();
+  await latin.evaluate((element) => {
+    const event = new ClipboardEvent('paste', { clipboardData: new DataTransfer(), cancelable: true, bubbles: true });
+    event.clipboardData?.setData('text', 'ab-c1д_e');
+    element.dispatchEvent(event);
+  });
+  await expect(latin).toHaveValue('ab-c_e');
+});
+
+test('input group joins borders', async ({ page }) => {
+  await page.goto('/components/input-group');
+  const input = page.getByRole('textbox', { name: 'Site' });
+  const radii = await input.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return [style.borderTopLeftRadius, style.borderTopRightRadius];
+  });
+  expect(radii).toEqual(['0px', '0px']);
+});
+
+test('input group quantity stepper changes the value', async ({ page }) => {
+  await page.goto('/components/input-group');
+  const quantity = page.getByRole('textbox', { name: 'Quantity' });
+  await expect(quantity).toHaveValue('3');
+  await page.getByRole('button', { name: 'More' }).click();
+  await page.getByRole('button', { name: 'More' }).click();
+  await expect(quantity).toHaveValue('5');
+  await page.getByRole('button', { name: 'Less' }).click();
+  await expect(quantity).toHaveValue('4');
+  await page.getByRole('textbox', { name: 'Keyword' }).fill('tectra');
+  await page.getByRole('button', { name: 'Search' }).click();
+  await expect(page.getByText('Searched: tectra')).toBeVisible();
+});

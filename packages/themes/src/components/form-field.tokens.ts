@@ -16,7 +16,7 @@ export const formFieldTokens = {
     disabledColor: tokenRef('text-muted'),
     placeholderColor: tokenRef('text-muted'),
     invalidPlaceholderColor: lightDark(tokenRef('red-600'), tokenRef('red-400')),
-    iconColor: tokenRef('field-icon'),
+    iconColor: tokenRef('text-muted'),
     shadow: tokenRef('shadow-field'),
     borderRadius: tokenRef('radius-md'),
     paddingX: '12px',

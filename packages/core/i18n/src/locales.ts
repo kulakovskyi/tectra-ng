@@ -15,6 +15,8 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     previousPage: 'Previous page',
     nextPage: 'Next page',
     pageReport: '{first}–{last} of {total}',
+    copy: 'Copy',
+    copied: 'Copied',
   },
 };
 
@@ -33,6 +35,8 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     previousPage: 'Попередня сторінка',
     nextPage: 'Наступна сторінка',
     pageReport: '{first}–{last} з {total}',
+    copy: 'Копіювати',
+    copied: 'Скопійовано',
   },
 };
 
