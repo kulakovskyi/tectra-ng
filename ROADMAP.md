@@ -48,7 +48,7 @@ Found and fixed while setting it up: a disabled `a[txButton]` still let the pare
 | Locale: `us` / `ua` definitions, `provideTectra({ locale })`, `TxLocaleService` (runtime `setLocale`, `translate` with params, Intl numbers / dates, month and weekday names from the first day of week), `injectTranslations()` is a signal | `@tectra/core/i18n` | docs page Core → Locale | ✅ |
 | Select on the new core: placements with flip, reposition on scroll, Home / End / Page keys, type-to-find, translated texts | `@tectra/ui/select` | | ✅ |
 
-## Stage 3 — form primitives (high usage, low complexity)
+## Stage 3 — form primitives (high usage, low complexity) ✅
 
 Detailed checklist per component: [roadmap/stage-3-forms.md](roadmap/stage-3-forms.md).
 
@@ -70,7 +70,7 @@ Detailed checklist per component: [roadmap/stage-3-forms.md](roadmap/stage-3-for
 | `ui/rating` | Rating | 7 | ✅ |
 | `ui/knob` | Knob | 1 | ✅ |
 | `ui/slider` | Slider | — (parity) | ✅ |
-| `ui/password-generator` (button + generator service) | — | 2 | ⬜ |
+| `ui/password-generator` (button + generator service) | — | 2 | ✅ |
 
 ## Stage 4 — feedback & display primitives
 

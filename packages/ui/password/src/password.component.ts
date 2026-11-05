@@ -185,6 +185,13 @@ export class TxPassword extends TxFormControlBase<string> {
     this.panelRef?.close();
   }
 
+  fill(value: string, reveal = true): void {
+    this.updateValue(value);
+    if (reveal) {
+      this.isMasked.set(false);
+    }
+  }
+
   toggleVisibility(): void {
     this.isMasked.update((masked) => !masked);
     this.focus();

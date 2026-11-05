@@ -442,6 +442,22 @@ test('slider follows a drag, jumps to a track click and keeps a range in order',
   await expect(range.locator('.hint')).toHaveText('$0 – $650');
 });
 
+test('password generator fills and reveals the password field', async ({ page }) => {
+  await page.goto('/components/password-generator');
+  const example = page.locator('password-generator-password-example');
+  const input = example.getByLabel('New password');
+  await expect(input).toHaveAttribute('type', 'password');
+  await example.getByRole('button', { name: 'Generate' }).click();
+  await expect(input).toHaveAttribute('type', 'text');
+  const first = await input.inputValue();
+  expect(first).toHaveLength(16);
+  await example.getByRole('button', { name: 'Generate' }).click();
+  await expect(input).not.toHaveValue(first);
+  const token = page.locator('password-generator-control-example');
+  await token.getByRole('button', { name: 'New token' }).click();
+  await expect(token.getByLabel('API token')).toHaveValue(/^[A-Za-z2-9]{32}$/);
+});
+
 test.describe('with motion', () => {
   test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 

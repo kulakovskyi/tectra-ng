@@ -37,6 +37,7 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     ratingValue: '{value} of {stars}',
     rangeStart: 'from',
     rangeEnd: 'to',
+    generatePassword: 'Generate password',
   },
 };
 
@@ -77,6 +78,7 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     ratingValue: '{value} з {stars}',
     rangeStart: 'від',
     rangeEnd: 'до',
+    generatePassword: 'Згенерувати пароль',
   },
 };
 

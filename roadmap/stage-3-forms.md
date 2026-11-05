@@ -189,10 +189,10 @@ PrimeNG: Slider (`min`, `max`, `step`, `range` with two handles, `orientation`, 
 - [x] Track click jumps the nearest handle, drag with pointer capture, readonly, disabled / invalid from the form; `slider` tokens, `dt` / `pt` / `unstyled`
 - [x] Docs + tests: drag, range, keyboard, vertical, step, marks, animate, with an input number, states, form, design tokens; e2e: track click, drag position, range keys
 
-## 3.16 Password generator — `ui/password-generator`
+## 3.16 Password generator — `ui/password-generator` ✅
 
 Not in PrimeNG. First app usage: 2: button that generates a password, `PasswordGeneratorService.generatePassword(length)`.
 
-- [ ] `TxPasswordGenerator` service: length, character sets, crypto random
-- [ ] `<button txPasswordGenerate>` directive that fills a password field and shows the password
-- [ ] Docs + tests: length, sets, fills the bound control
+- [x] `TxPasswordGenerator` service: length, character sets (lower / upper / digits / symbols, own symbol set), `excludeSimilar`, crypto random without modulo bias, at least one character of every set, shuffled; `generatePassword(length)` kept for the first app's call
+- [x] `<button txPasswordGenerate>` directive that fills a `tx-password` (and shows the password through `fill()`) or any form control, `(generated)`
+- [x] Docs + tests: length, sets, fills the bound control, fills and reveals a password, options panel, service; e2e: fill and reveal, new value each time, token without look-alikes
