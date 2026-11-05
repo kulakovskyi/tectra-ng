@@ -56,14 +56,14 @@ function readSource(packageDir) {
   const resolveType = (type) => aliases[type] ?? type;
 
   const members = {};
-  for (const m of source.matchAll(/^\s*(\w+)\s*=\s*(input|model)(\.required)?(?:<(.+?)>)?\(([^)]*)\);/gm)) {
+  for (const m of source.matchAll(/^\s*(?:(?:readonly|protected|public|private)\s+)*(\w+)\s*=\s*(input|model)(\.required)?(?:<(.+?)>)?\(([^)]*)\);/gm)) {
     const [, field, , required, generic, args] = m;
     const name = args.match(/alias:\s*'(\w+)'/)?.[1] ?? field;
     const type = (generic ?? 'unknown').replace(/,\s*unknown$/, '');
     const fallback = args.split(/,\s*\{/)[0].trim();
     members[name] = { type: resolveType(type), default: required ? 'required' : fallback || '—' };
   }
-  for (const m of source.matchAll(/^\s*(\w+)\s*=\s*output(?:<(.+?)>)?\(\)/gm)) {
+  for (const m of source.matchAll(/^\s*(?:(?:readonly|protected|public|private)\s+)*(\w+)\s*=\s*output(?:<(.+?)>)?\(\)/gm)) {
     members[m[1]] = { type: `EventEmitter<${m[2] ?? 'void'}>`, default: '—' };
   }
 
@@ -145,6 +145,8 @@ function buildComponent(name) {
   };
 }
 
+const unresolved = (component) => [...component.api.inputs, ...component.api.outputs].filter((member) => member.type === '—').map((member) => `${component.name}.${member.name}`);
+
 const components = readdirSync(contentDir, { withFileTypes: true })
   .filter((entry) => entry.isDirectory())
   .map((entry) => buildComponent(entry.name))
@@ -161,6 +163,11 @@ const body = components
     return `  { ...${JSON.stringify(component)},\n    examples: [\n      ${exampleCode}\n    ] }`;
   })
   .join(',\n');
+
+const missing = components.flatMap(unresolved);
+if (missing.length) {
+  throw new Error(`registry: no type found in the source for ${missing.join(', ')} — check the README names and the member declarations`);
+}
 
 mkdirSync(outDir, { recursive: true });
 writeFileSync(

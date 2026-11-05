@@ -127,3 +127,15 @@ test.describe('with motion', () => {
     await expect(panel).toHaveCount(0);
   });
 });
+
+test('API tab shows a type and a default for every input', async ({ page }) => {
+  for (const name of ['button', 'select', 'toggle-button', 'badge']) {
+    await page.goto(`/components/${name}`);
+    await page.getByRole('tab', { name: 'API' }).click();
+    const rows = page.locator('docs-table').first().locator('tbody tr');
+    await expect(rows.first()).toBeVisible();
+    const types = await rows.locator('td:nth-child(2)').allInnerTexts();
+    expect(types.length).toBeGreaterThan(0);
+    expect(types.filter((type) => type.trim() === '—'), `${name}: inputs without a type`).toEqual([]);
+  }
+});

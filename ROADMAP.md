@@ -58,11 +58,15 @@ Found and fixed while setting it up: a disabled `a[txButton]` still let the pare
 
 ## Stage 3 — form primitives (high usage, low complexity)
 
+Detailed checklist per component: [roadmap/stage-3-forms.md](roadmap/stage-3-forms.md).
+
 | tectra | PrimeNG equivalent | links-cms lib (usage) | Status |
 |---|---|---|---|
-| `ui/input` — icon field, prefix / suffix, clear, copy, filters (`noSpaces`, `onlyLatin`, `positive`), sizes, `fluid` | InputText, IconField, InputIcon, KeyFilter | `input` (239) | 🟡 |
+| form-field foundation — shared tokens, `filled` variant, focus / invalid / readonly states | BaseInput | — | ⬜ |
+| `ui/input` — icon field, input group, prefix / suffix, clear, copy, key filter (`noSpaces`, `onlyLatin`, `positive`), sizes, `fluid` | InputText, IconField, InputIcon, InputGroup, KeyFilter | `input` (239) | 🟡 |
 | `ui/label` | FloatLabel / IftaLabel | `label` (353) | ⬜ |
-| `ui/validation-message` — `Message` for fields | Message | `validation-message` (18) | ⬜ |
+| `ui/message` (field part) — hint, error from the control, success | Message | `validation-message` (18) | ⬜ |
+| `ui/field` — label + control + hint + error, ids and aria wired | — | repeated in every links-cms form | ⬜ |
 | `ui/textarea` — auto resize | Textarea | `textarea` (68) | ⬜ |
 | `ui/checkbox` — binary, group, indeterminate | Checkbox | `checkbox` (73) | ⬜ |
 | `ui/radio-button` | RadioButton | — (parity) | ⬜ |
