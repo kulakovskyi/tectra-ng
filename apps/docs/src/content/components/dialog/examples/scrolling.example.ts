@@ -23,7 +23,7 @@ import { TxDialog, TxDialogClose, TxDialogFooter } from '@tectra/ui/dialog';
         </p>
       }
       <tx-dialog-footer>
-        <button txButton severity="secondary" [text]="true" txDialogClose>Decline</button>
+        <button txButton severity="secondary" txDialogClose>Decline</button>
         <button txButton txDialogClose>Accept</button>
       </tx-dialog-footer>
     </tx-dialog>

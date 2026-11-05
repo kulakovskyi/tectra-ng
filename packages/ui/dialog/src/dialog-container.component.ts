@@ -24,6 +24,7 @@ import { TxDialogPart, TxDialogTemplateContext } from './dialog.types';
 
 const FIELDS = ['.tx-dialog-content', '.tx-dialog-footer', '.tx-dialog-header'];
 const LEAVE_LIMIT = 400;
+const DEFAULT_BREAKPOINTS: Record<string, string> = { '960px': '500px', '640px': '90vw' };
 
 @Component({
   selector: 'tx-dialog-container',
@@ -189,7 +190,8 @@ export class TxDialogContainer {
 
   private watchBreakpoints(): void {
     const view = this.document.defaultView;
-    const entries = Object.entries(this.config.breakpoints ?? {})
+    const fitsDefaults = !this.drawer && this.size !== 'fullscreen';
+    const entries = Object.entries(this.config.breakpoints ?? (fitsDefaults ? DEFAULT_BREAKPOINTS : {}))
       .map(([max, width]) => ({ query: view?.matchMedia?.(`(max-width: ${max})`), max: parseFloat(max), width }))
       .sort((a, b) => a.max - b.max);
     if (!entries.length || !entries[0].query) {

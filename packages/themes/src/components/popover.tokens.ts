@@ -1,4 +1,4 @@
-import { tokenRef } from './token-helpers';
+import { fade, tokenRef } from './token-helpers';
 
 export const popoverTokens = {
   root: {
@@ -8,32 +8,37 @@ export const popoverTokens = {
     borderRadius: tokenRef('radius-lg'),
     color: tokenRef('text-primary'),
     shadow: tokenRef('shadow-overlay'),
-    minWidth: '200px',
-    maxWidth: 'min(420px, calc(100vw - 16px))',
-    padding: '14px 16px',
-    gap: '10px',
+    minWidth: '0',
+    maxWidth: 'calc(100vw - 16px)',
+    padding: '0',
+    gap: '0',
     fontSize: tokenRef('font-size-md'),
   },
   header: {
-    gap: '8px',
+    padding: '10.5px 10.5px 0',
+    gap: '7px',
   },
   title: {
     fontSize: tokenRef('font-size-md'),
     fontWeight: tokenRef('font-weight-semibold'),
   },
+  content: {
+    padding: '10.5px',
+  },
   footer: {
-    gap: '8px',
+    padding: '0 10.5px 10.5px',
+    gap: '5.25px',
   },
   closeButton: {
-    size: '28px',
+    size: '30px',
     color: tokenRef('text-muted'),
     hoverColor: tokenRef('text-primary'),
-    hoverBackground: tokenRef('surface-hover'),
-    borderRadius: tokenRef('radius-sm'),
+    hoverBackground: fade(tokenRef('text-primary'), '92%'),
+    borderRadius: tokenRef('radius-md'),
   },
   arrow: {
-    size: '10px',
-    inset: '14px',
+    size: '14px',
+    inset: '15.75px',
   },
   focusRing: {
     width: '2px',

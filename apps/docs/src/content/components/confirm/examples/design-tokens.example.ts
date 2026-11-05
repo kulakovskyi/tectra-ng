@@ -22,8 +22,8 @@ export default class ConfirmDesignTokensExample {
       severity: 'warn',
       acceptLabel: 'Archive',
       dt: {
-        popup: { borderRadius: '16px', padding: '18px 20px', maxWidth: '280px' },
-        icon: { tint: '25%' },
+        popup: { borderRadius: '16px', padding: '16px', maxWidth: '280px' },
+        icon: { fontSize: '16px' },
       },
     });
   }

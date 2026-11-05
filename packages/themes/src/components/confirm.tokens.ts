@@ -1,18 +1,24 @@
 import { lightDark, tokenRef } from './token-helpers';
 
-function tone(palette: string) {
-  return { tone: lightDark(tokenRef(`${palette}-600`), tokenRef(`${palette}-400`)) };
+function badge(color: string, base: string, tint = '14%') {
+  return { color, background: `color-mix(in srgb, ${tokenRef(`${base}-500`)} ${tint}, transparent)` };
 }
 
 export const confirmTokens = {
   root: {
     gap: '14px',
-    messageColor: tokenRef('text-muted'),
+    padding: '14px',
+    borderRadius: tokenRef('radius-lg'),
+    background: tokenRef('surface-ground'),
   },
   icon: {
-    size: '40px',
-    fontSize: '18px',
-    tint: '14%',
+    size: '38.5px',
+    fontSize: tokenRef('font-size-md'),
+  },
+  message: {
+    color: tokenRef('text-muted'),
+    fontSize: '12.25px',
+    lineHeight: '1.625',
   },
   popup: {
     background: tokenRef('surface-overlay'),
@@ -20,19 +26,20 @@ export const confirmTokens = {
     borderRadius: tokenRef('radius-lg'),
     shadow: tokenRef('shadow-overlay'),
     color: tokenRef('text-primary'),
-    padding: '14px 16px',
-    gap: '12px',
+    padding: '10.5px',
+    gap: '7px',
+    footerGap: '5.25px',
     maxWidth: 'min(340px, calc(100vw - 16px))',
     fontSize: tokenRef('font-size-md'),
-    iconSize: '28px',
-    iconFontSize: '14px',
-    arrowSize: '10px',
+    iconSize: '17.5px',
+    arrowSize: '14px',
+    arrowInset: '15.75px',
   },
-  primary: tone('primary'),
-  info: tone('sky'),
-  success: tone('green'),
-  warn: tone('orange'),
-  danger: tone('red'),
+  primary: { color: tokenRef('primary-base'), background: `color-mix(in srgb, ${tokenRef('primary-base')} 14%, transparent)` },
+  info: badge(lightDark(tokenRef('blue-600'), tokenRef('blue-400')), 'blue'),
+  success: badge(lightDark(tokenRef('green-700'), tokenRef('green-400')), 'green'),
+  warn: badge(lightDark(tokenRef('amber-700'), tokenRef('amber-400')), 'amber', '16%'),
+  danger: badge(lightDark(tokenRef('red-600'), tokenRef('red-400')), 'red'),
 };
 
 export type TectraConfirmTokens = typeof confirmTokens;

@@ -36,7 +36,7 @@ export function confirmView(state: TxConfirmState): TxConfirmView {
     message: options.message,
     acceptLabel: computed(() => options.acceptLabel ?? (severity === 'danger' ? translations().delete : translations().confirm)),
     rejectLabel: computed(() => options.rejectLabel ?? translations().cancel),
-    acceptIcon: options.acceptIcon,
+    acceptIcon: options.acceptIcon ?? (severity === 'danger' ? 'trash' : undefined),
     style: toStyleObject(options.dt, '--tx-confirm'),
     busy,
     async accept(finish) {

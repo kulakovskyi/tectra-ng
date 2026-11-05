@@ -41,7 +41,7 @@
       [rounded]="true"
       [tabindex]="-1"
       [severity]="item.severity === 'danger' ? 'danger' : itemSeverity()"
-      [size]="size()"
+      [size]="itemSize()"
       [disabled]="item.disabled ?? false"
       [unstyled]="isUnstyled()"
       [attr.aria-label]="item.label ?? null"

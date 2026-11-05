@@ -79,6 +79,7 @@ export class TxSpeedDial {
   readonly severity = input<TxButtonSeverity>('primary');
   readonly itemSeverity = input<TxButtonSeverity>('secondary');
   readonly size = input<TxButtonSize>('medium');
+  readonly itemSize = input<TxButtonSize>('small');
   readonly disabled = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly ariaLabel = input<string | undefined>(undefined);
   readonly dt = input<TectraDeepPartial<TectraSpeedDialTokens> | undefined>(undefined);
@@ -91,7 +92,7 @@ export class TxSpeedDial {
   readonly closed = output<void>();
 
   private readonly button = viewChild.required('button', { read: ElementRef });
-  private readonly step = signal(52);
+  private readonly sizes = signal({ button: 37, item: 30, gap: 7 });
 
   readonly listId = uniqueId('tx-speed-dial');
   readonly isUnstyled = injectUnstyled(this.unstyled);
@@ -112,7 +113,11 @@ export class TxSpeedDial {
     const direction = this.direction();
     if (type === 'linear') {
       const [dx, dy] = LINEAR[direction] ?? LINEAR['up'];
-      return this.items().map((_, index) => ({ x: dx * this.step() * (index + 1), y: dy * this.step() * (index + 1) }));
+      const { button, item, gap } = this.sizes();
+      return this.items().map((_, index) => {
+        const distance = button / 2 + gap + item / 2 + index * (item + gap);
+        return { x: dx * distance, y: dy * distance };
+      });
     }
     const [start, end] = type === 'circle' ? [-90, 270] : (ARCS[`${type} ${direction}`] ?? ARCS[`${type} up`] ?? [180, 270]);
     const spread = type === 'circle' ? (end - start) / Math.max(count, 1) : (end - start) / Math.max(count - 1, 1);
@@ -238,9 +243,10 @@ export class TxSpeedDial {
 
   private measure(): void {
     const button = this.button().nativeElement as HTMLElement;
-    const gap = parseFloat(this.document.defaultView?.getComputedStyle(this.host).getPropertyValue('--tx-speed-dial-gap') ?? '') || 10;
+    const item = this.host.querySelector<HTMLElement>('.tx-speed-dial__item');
+    const gap = parseFloat(this.document.defaultView?.getComputedStyle(this.host).getPropertyValue('--tx-speed-dial-gap') ?? '') || 7;
     if (button.offsetWidth) {
-      this.step.set(button.offsetWidth + gap);
+      this.sizes.set({ button: button.offsetWidth, item: item?.offsetWidth || button.offsetWidth, gap });
     }
   }
 }

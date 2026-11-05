@@ -35,7 +35,7 @@ import { TxInput } from '@tectra/ui/input';
       </tx-field>
     </tx-dialog-content>
     <tx-dialog-footer>
-      <button txButton severity="secondary" [text]="true" txDialogClose>Cancel</button>
+      <button txButton severity="secondary" txDialogClose>Cancel</button>
       <button txButton [txDialogClose]="name.trim()" [disabled]="!name.trim()">Rename</button>
     </tx-dialog-footer>
   `,

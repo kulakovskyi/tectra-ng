@@ -32,7 +32,7 @@ interface Order {
       </p>
     </tx-dialog-content>
     <tx-dialog-footer>
-      <button txButton severity="secondary" [text]="true" txDialogClose>Close</button>
+      <button txButton severity="secondary" txDialogClose>Close</button>
       <button txButton [txDialogClose]="'refund'">Refund</button>
     </tx-dialog-footer>
   `,

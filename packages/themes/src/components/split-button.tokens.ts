@@ -1,7 +1,7 @@
 export const splitButtonTokens = {
   root: {
     dividerColor: 'color-mix(in srgb, currentColor 32%, transparent)',
-    dividerWidth: '1px',
+    dividerWidth: '0px',
   },
 };
 

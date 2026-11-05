@@ -19,7 +19,7 @@
   font-weight: var(--tx-tooltip-font-weight);
   line-height: var(--tx-tooltip-line-height);
   box-shadow: var(--tx-tooltip-shadow);
-  overflow-wrap: anywhere;
+  word-break: break-word;
   white-space: pre-line;
 }
 

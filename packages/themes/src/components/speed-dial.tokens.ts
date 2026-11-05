@@ -2,8 +2,8 @@ import { tokenRef } from './token-helpers';
 
 export const speedDialTokens = {
   root: {
-    gap: '10px',
-    duration: '0.22s',
+    gap: '7px',
+    duration: '0.15s',
     stagger: '30ms',
   },
   mask: {

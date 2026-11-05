@@ -28,6 +28,7 @@ A popup menu opens from `[txMenuTrigger]` (click, Arrow Down / Up), or from code
 | tiered | Nested items open as sub-menus (on by default for `tx-tiered-menu`) |
 | placement | Popup placement, `bottom-start` by default; flips when there is no room |
 | offset | Gap between the popup and its trigger in px |
+| variant | `default`, or `context` for the look of a context menu (set by `tx-context-menu`) |
 | ariaLabel | Name of the menu |
 | ariaLabelledBy | Id of the element that names the menu |
 | target | `tx-context-menu`: element that opens the menu on right-click, the context menu key or Shift + F10 |

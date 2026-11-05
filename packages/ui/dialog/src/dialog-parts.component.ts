@@ -3,7 +3,7 @@ import { uniqueId } from '@tectra/core/a11y';
 import { injectPassThrough, injectUnstyled } from '@tectra/core/config';
 import { injectTranslations } from '@tectra/core/i18n';
 import { optionalBoolean } from '@tectra/core/utils';
-import { TxIcon } from '@tectra/icons';
+import { TxButton } from '@tectra/ui/button';
 import { injectCurrentDialog } from './dialog-ref';
 import { TxDialogPart } from './dialog.types';
 
@@ -32,7 +32,7 @@ export class TxDialogTitle {
 
 @Component({
   selector: 'tx-dialog-header',
-  imports: [TxIcon],
+  imports: [TxButton],
   template: `
     <div class="tx-dialog-header__text">
       @if (title()) {
@@ -48,27 +48,35 @@ export class TxDialogTitle {
       <div class="tx-dialog-header__buttons">
         @if (showMaximize()) {
           <button
+            txButton
             type="button"
             class="tx-dialog-header__button"
+            severity="secondary"
             [class]="passThrough().headerButton?.class"
             [style]="passThrough().headerButton?.style"
+            [icon]="ref()?.maximized() ? 'window-minimize' : 'window-maximize'"
+            [text]="inDrawer()"
+            [rounded]="inDrawer()"
+            [unstyled]="isUnstyled()"
             [attr.aria-label]="ref()?.maximized() ? translations().restore : translations().maximize"
             (click)="ref()?.toggleMaximize()"
-          >
-            <tx-icon [name]="ref()?.maximized() ? 'window-minimize' : 'window-maximize'" />
-          </button>
+          ></button>
         }
         @if (showClose()) {
           <button
+            txButton
             type="button"
             class="tx-dialog-header__button"
+            icon="times"
+            severity="secondary"
             [class]="passThrough().headerButton?.class"
             [style]="passThrough().headerButton?.style"
+            [text]="inDrawer()"
+            [rounded]="inDrawer()"
+            [unstyled]="isUnstyled()"
             [attr.aria-label]="translations().close"
             (click)="ref()?.close()"
-          >
-            <tx-icon name="times" />
-          </button>
+          ></button>
         }
       </div>
     }
@@ -81,6 +89,7 @@ export class TxDialogTitle {
     '[style]': 'passThrough().header?.style',
     '[attr.data-styled]': '!isUnstyled() || null',
     '[class.tx-dialog-header--draggable]': 'draggable()',
+    '[class.tx-dialog-header--drawer]': 'inDrawer()',
     '(pointerdown)': 'ref()?.dragFrom($event)',
   },
 })
@@ -97,6 +106,7 @@ export class TxDialogHeader {
   readonly passThrough = injectPassThrough<TxDialogPart, TxDialogHeader>('dialog', this, signal(undefined), signal(undefined));
   readonly titleId = uniqueId('tx-dialog-title');
   readonly draggable = computed(() => Boolean(this.ref()?.config.draggable));
+  readonly inDrawer = computed(() => Boolean(this.ref()?.config.drawer));
   readonly showClose = computed(() => this.closeButton() ?? this.ref()?.config.closable ?? true);
   readonly showMaximize = computed(() => this.maximizeButton() ?? this.ref()?.config.maximizable ?? false);
 
@@ -118,11 +128,14 @@ export class TxDialogHeader {
   host: {
     class: 'tx-dialog-content',
     '[class]': 'passThrough().content?.class',
+    '[class.tx-dialog-content--drawer]': 'inDrawer()',
     '[style]': 'passThrough().content?.style',
     '[attr.data-styled]': '!isUnstyled() || null',
   },
 })
 export class TxDialogContent {
+  private readonly ref = injectCurrentDialog();
+  readonly inDrawer = computed(() => Boolean(this.ref()?.config.drawer));
   readonly isUnstyled = injectPartStyling();
   readonly passThrough = injectPassThrough<TxDialogPart, TxDialogContent>('dialog', this, signal(undefined), signal(undefined));
 }
@@ -135,11 +148,14 @@ export class TxDialogContent {
   host: {
     class: 'tx-dialog-footer',
     '[class]': 'passThrough().footer?.class',
+    '[class.tx-dialog-footer--drawer]': 'inDrawer()',
     '[style]': 'passThrough().footer?.style',
     '[attr.data-styled]': '!isUnstyled() || null',
   },
 })
 export class TxDialogFooter {
+  private readonly ref = injectCurrentDialog();
+  readonly inDrawer = computed(() => Boolean(this.ref()?.config.drawer));
   readonly isUnstyled = injectPartStyling();
   readonly passThrough = injectPassThrough<TxDialogPart, TxDialogFooter>('dialog', this, signal(undefined), signal(undefined));
 }

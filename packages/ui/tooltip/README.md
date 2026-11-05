@@ -17,12 +17,12 @@ App-wide defaults: `provideTxTooltip({ placement: 'bottom', showDelay: 400 })`.
 | txTooltip | Text (a new line with `\n`) or an `<ng-template>`; empty — no tooltip |
 | tooltipPlacement | `top` (default), `bottom`, `left`, `right`, each with `-start` / `-end`; flips when there is no room |
 | tooltipEvent | `both` (hover and keyboard focus, default), `hover`, `focus` (any focus — hints on fields), `manual` (only `show()` / `hide()`) |
-| tooltipShowDelay | Milliseconds before it shows (default 250); no delay while another tooltip was just open |
-| tooltipHideDelay | Milliseconds before it hides (default 100) |
+| tooltipShowDelay | Milliseconds before it shows (default 0); no delay while another tooltip was just open |
+| tooltipHideDelay | Milliseconds before it hides (default 0) |
 | tooltipLife | Hides by itself after this many milliseconds |
-| tooltipOffset | Gap to the element in px (default 8) |
+| tooltipOffset | Gap to the element in px (default 3.5 — the arrow fills it) |
 | tooltipArrow | Shows the arrow pointing at the middle of the element (default on) |
-| tooltipInteractive | The pointer can move onto the tooltip without closing it — to select or copy its text (default on) |
+| tooltipInteractive | The pointer can move onto the tooltip without closing it — to select or copy its text (default off) |
 | tooltipDisabled | Turns the tooltip off |
 | tooltipOverflowOnly | Shows only when the element's text is cut off (`text-overflow: ellipsis`) |
 | tooltipContext | Value passed to the template as `$implicit` |

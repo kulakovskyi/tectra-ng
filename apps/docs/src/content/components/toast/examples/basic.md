@@ -1,1 +1,1 @@
-`success`, `info`, `warn` and `error` show a toast with the matching icon and colour. It closes after 5 seconds; hover it to keep it. Screen readers hear it without losing focus.
+`success`, `info`, `warn` and `error` show a toast with the matching icon and colour. It closes after 3 seconds; several toasts form a stack that spreads out under the pointer and keeps them open. Screen readers hear every toast without losing focus.

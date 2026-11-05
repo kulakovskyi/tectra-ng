@@ -1,1 +1,1 @@
-`title` adds a bold first line; the text below it becomes secondary.
+`title` names the message for screen readers; with a `text` it stays hidden, alone it is the visible line.

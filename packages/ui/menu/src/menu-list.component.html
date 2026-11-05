@@ -103,6 +103,7 @@
 <ng-template #submenuPanel let-items let-focus="focus">
   <tx-menu-list
     panel="submenu"
+    [variant]="variant()"
     [items]="items"
     [tiered]="true"
     [level]="level() + 1"

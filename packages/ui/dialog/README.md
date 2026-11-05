@@ -14,7 +14,7 @@ ref.closed.subscribe((name) => name && this.rename(project, name));
     <tx-dialog-header title="Rename project" />
     <tx-dialog-content><input txInput aria-label="Name" [(ngModel)]="name" /></tx-dialog-content>
     <tx-dialog-footer>
-      <button txButton severity="secondary" [text]="true" txDialogClose>Cancel</button>
+      <button txButton severity="secondary" txDialogClose>Cancel</button>
       <button txButton [txDialogClose]="name">Save</button>
     </tx-dialog-footer>
   `,
@@ -26,7 +26,7 @@ export class RenameDialog {
 
 `TxDialogService.open(component | template, config)` returns a `TxDialogRef`: `close(result?)` (asks `canClose` first), `closed` (the result, `undefined` when dismissed), `afterOpened`, `componentInstance`, `maximized()`, `toggleMaximize()`, `updateSize(width, height)`. Inside the dialog `injectDialogData<T>()` reads `data` and `injectDialogRef<R>()` gives the ref; `config.inputs` sets component inputs. `closeAll()` and `openDialogs()` cover every open dialog. Config: `data`, `inputs`, `size`, `width`, `minWidth`, `maxWidth`, `height`, `maxHeight`, `breakpoints` (`{ '960px': '90vw' }` — width below a viewport width), `position`, `drawer` / `drawerSize` (see Drawer), `modal`, `closable`, `closeOnEscape`, `dismissableMask`, `blockScroll`, `draggable`, `maximizable`, `autoFocus`, `restoreFocus`, `role`, `ariaLabel`, `ariaLabelledBy`, `ariaDescribedBy`, `panelClass`, `canClose`, `dt`, `unstyled`, `injector`, `viewContainerRef`.
 
-Layout parts: `<tx-dialog-header title subtitle>` (names the dialog, close and maximize buttons, drag handle), `<tx-dialog-content>` (scrolls), `<tx-dialog-footer>` (actions at the end), `[txDialogTitle]` for an own title element, `[txDialogClose]="result"` on any button.
+Layout parts: `<tx-dialog-header title subtitle>` (names the dialog, close and maximize buttons, drag handle), `<tx-dialog-content>` (scrolls), `<tx-dialog-footer>` (actions side by side in equal widths), `[txDialogTitle]` for an own title element, `[txDialogClose]="result"` on any button.
 
 ## Inputs
 | Name | Description |
@@ -34,10 +34,10 @@ Layout parts: `<tx-dialog-header title subtitle>` (names the dialog, close and m
 | visible | Two-way open state (`[(visible)]`) |
 | header | Title; also names the dialog |
 | subtitle | Second line under the title |
-| size | `small`, `medium` (default), `large`, `xlarge`, `fullscreen` |
+| size | `small` (500px), `medium` (700px, default), `large` (900px), `xlarge` (1100px), `fullscreen` |
 | width | Own width (any CSS length), wins over `size` |
 | height | Own height |
-| breakpoints | Width per viewport width, e.g. `{ '960px': '90vw' }` |
+| breakpoints | Width per viewport width; by default `{ '960px': '500px', '640px': '90vw' }` |
 | position | `center` (default), `top`, `bottom`, `left`, `right`, `top-left`, `top-right`, `bottom-left`, `bottom-right` |
 | drawer | Slides in from `left`, `right`, `top` or `bottom` instead (see Drawer) |
 | drawerSize | Drawer size: `small`, `medium`, `large`, `full` or a CSS length |

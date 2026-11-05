@@ -22,7 +22,7 @@ import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled 
 import { TxOverlay, TxOverlayRef, TxPlacement } from '@tectra/core/overlay';
 import { optionalBoolean } from '@tectra/core/utils';
 import { TectraDeepPartial, TectraMenuTokens, toStyleObject } from '@tectra/themes';
-import { TxMenuFocus, TxMenuList } from './menu-list.component';
+import { TxMenuFocus, TxMenuList, TxMenuVariant } from './menu-list.component';
 import { TxMenuItem, TxMenuItemContext, TxMenuItemEvent, TxMenuPart } from './menu.types';
 
 @Directive({ selector: 'ng-template[txMenuItem]' })
@@ -51,6 +51,7 @@ export class TxMenuItemTemplate {
     <ng-template #panel let-focus="focus">
       <tx-menu-list
         panel="popup"
+        [variant]="variant()"
         [id]="id"
         [style]="tokens()"
         [items]="model()"
@@ -84,6 +85,7 @@ export class TxMenu {
   readonly tiered = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
   readonly placement = input<TxPlacement>('bottom-start');
   readonly offset = input<number, unknown>(4, { transform: numberAttribute });
+  readonly variant = input<TxMenuVariant>('default');
   readonly ariaLabel = input<string | undefined>(undefined);
   readonly ariaLabelledBy = input<string | undefined>(undefined);
   readonly dt = input<TectraDeepPartial<TectraMenuTokens> | undefined>(undefined);

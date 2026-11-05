@@ -21,9 +21,7 @@ import { TxTextarea } from '@tectra/ui/textarea';
     <tx-dialog-header title="Discard changes?" [closeButton]="false" />
     <tx-dialog-content>Your note has not been saved.</tx-dialog-content>
     <tx-dialog-footer>
-      <button txButton severity="secondary" [text]="true" [txDialogClose]="false">
-        Keep editing
-      </button>
+      <button txButton severity="secondary" [txDialogClose]="false">Keep editing</button>
       <button txButton severity="danger" [txDialogClose]="true">Discard</button>
     </tx-dialog-footer>
   `,
@@ -57,7 +55,7 @@ export class DiscardChangesDialog {}
       </tx-field>
     </tx-dialog-content>
     <tx-dialog-footer>
-      <button txButton severity="secondary" [text]="true" txDialogClose>Cancel</button>
+      <button txButton severity="secondary" txDialogClose>Cancel</button>
       <button txButton (click)="save()">Save</button>
     </tx-dialog-footer>
   `,

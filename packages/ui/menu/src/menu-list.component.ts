@@ -29,6 +29,7 @@ const HOVER_DELAY = 120;
 
 export type TxMenuPanel = 'inline' | 'popup' | 'submenu';
 export type TxMenuFocus = 'first' | 'last' | null;
+export type TxMenuVariant = 'default' | 'context';
 
 interface TxMenuEntry {
   kind: 'item' | 'separator' | 'group';
@@ -49,6 +50,7 @@ interface TxMenuEntry {
     '[attr.aria-labelledby]': 'ariaLabelledBy() ?? null',
     '[attr.data-styled]': '!unstyled() || null',
     '[attr.data-panel]': 'panel()',
+    '[attr.data-variant]': 'variant()',
     '[class]': 'pt()?.root?.class',
     '[style]': 'pt()?.root?.style',
   },
@@ -66,6 +68,7 @@ export class TxMenuList {
   readonly tiered = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly level = input<number, unknown>(0, { transform: numberAttribute });
   readonly panel = input<TxMenuPanel>('inline');
+  readonly variant = input<TxMenuVariant>('default');
   readonly itemTemplate = input<TemplateRef<TxMenuItemContext> | null>(null);
   readonly focusOnInit = input<TxMenuFocus>(null);
   readonly ariaLabel = input<string | undefined>(undefined);

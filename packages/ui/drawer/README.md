@@ -20,7 +20,7 @@ Open a component as a drawer from code with `TxDialogService.open(Component, { d
 | visible | Two-way open state (`[(visible)]`) |
 | header | Title; also names the drawer |
 | position | Edge it slides from: `left`, `right` (default), `top`, `bottom` |
-| size | `small`, `medium` (default), `large`, `full` or a CSS length — width for left / right, height for top / bottom |
+| size | `small` (320px), `medium` (440px, default), `large` (640px), `full` or a CSS length — width for left / right (the whole screen below 640px), height for top / bottom |
 | modal | Dims the page and keeps focus inside (default on) |
 | closable | Close button, Escape and a click on the mask close it (default on) |
 | dismissable | Overrides `closable` for a click on the mask |

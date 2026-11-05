@@ -32,7 +32,7 @@ An `accept` function runs before the answer: the accept button shows a spinner, 
 | icon | Own icon name, or `false` for none; by default it follows the severity |
 | acceptLabel | Text of the accept button; "Confirm", or "Delete" for `danger` (translated) |
 | rejectLabel | Text of the reject button; "Cancel" (translated) |
-| acceptIcon | Icon on the accept button |
+| acceptIcon | Icon on the accept button; a trash can for `danger` |
 | defaultFocus | `reject` (default — the safe choice) or `accept` |
 | accept | Runs on accept; may return a promise — the button waits, a rejection keeps the dialog open |
 | placement | Popup only: one of the 12 placements, `bottom` by default |

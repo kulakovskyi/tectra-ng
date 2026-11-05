@@ -1,61 +1,61 @@
-import { fade, tokenRef } from './token-helpers';
+import { lightDark, tokenRef } from './token-helpers';
 
 export const dialogTokens = {
   root: {
     background: tokenRef('surface-overlay'),
-    borderColor: tokenRef('surface-overlay-border'),
+    borderColor: lightDark(tokenRef('surface-200'), tokenRef('surface-800')),
     borderWidth: '1px',
-    borderRadius: tokenRef('radius-lg'),
+    borderRadius: tokenRef('radius-xl'),
     color: tokenRef('text-primary'),
     shadow: tokenRef('shadow-modal'),
-    inset: '16px',
+    maxHeight: '90%',
+    positionMargin: '10.5px',
     fontSize: tokenRef('font-size-md'),
-    enterDuration: '0.2s',
-    leaveDuration: '0.14s',
+    lineHeight: '1.45',
+    enterDuration: '0.15s',
+    leaveDuration: '0.15s',
   },
   mask: {
     background: tokenRef('mask-background'),
   },
   header: {
-    padding: '20px 24px 4px',
-    gap: '12px',
+    padding: '17.5px 21px',
+    gap: '7px',
   },
   title: {
-    fontSize: tokenRef('font-size-lg'),
+    fontSize: '15.75px',
     fontWeight: tokenRef('font-weight-semibold'),
-    lineHeight: '1.35',
   },
   subtitle: {
     color: tokenRef('text-muted'),
-    fontSize: tokenRef('font-size-sm'),
+    fontSize: '12.25px',
   },
   content: {
-    padding: '12px 24px',
-    lineHeight: '1.5',
+    padding: '0 21px',
+    lastPaddingBottom: '21px',
   },
   footer: {
-    padding: '12px 24px 20px',
-    gap: '8px',
-  },
-  headerButton: {
-    size: '32px',
-    borderRadius: tokenRef('radius-md'),
-    color: tokenRef('text-muted'),
-    hoverColor: tokenRef('text-primary'),
-    hoverBackground: fade(tokenRef('text-primary'), '92%'),
+    padding: '21px',
+    gap: '7px',
   },
   focusRing: {
     width: '2px',
     color: tokenRef('focus-ring-color'),
   },
-  sm: { width: '420px' },
-  md: { width: '640px' },
-  lg: { width: '880px' },
-  xl: { width: '1120px' },
+  sm: { width: '500px' },
+  md: { width: '700px' },
+  lg: { width: '900px' },
+  xl: { width: '1100px' },
   drawer: {
     sm: '320px',
     md: '440px',
     lg: '640px',
+    background: tokenRef('surface-card'),
+    dividerColor: tokenRef('surface-border'),
+    headerPadding: '10.5px 17.5px',
+    titleFontSize: tokenRef('font-size-md'),
+    contentPadding: '14px 17.5px',
+    footerPadding: '10.5px 17.5px',
   },
 };
 

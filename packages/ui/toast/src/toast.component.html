@@ -1,78 +1,91 @@
-@for (toast of visible(); track toast.id) {
+@for (toast of ordered(); track toast.id; let index = $index) {
   <div
     class="tx-toast__item"
-    animate.enter="tx-toast__item--enter"
     animate.leave="tx-toast__item--leave"
-    [class]="passThrough().item?.class"
-    [style]="passThrough().item?.style"
-    [attr.data-severity]="toast.severity"
-    [class.tx-toast__item--loading]="toast.loading"
-    [attr.aria-busy]="toast.loading || null"
-    (mouseenter)="pause(toast)"
-    (mouseleave)="resume(toast)"
-    (focusin)="onFocusIn(toast, $event)"
-    (focusout)="onFocusOut(toast, $event)"
+    [attr.data-front]="index === 0 ? '' : null"
+    [attr.data-visible]="index < max() ? '' : null"
+    [attr.data-mounted]="isMounted(toast) ? '' : null"
+    [attr.data-swiping]="swiping()?.id === toast.id ? '' : null"
+    [style.--_index]="index"
+    [style.--_z]="ordered().length - index"
+    [style.--_offset.px]="offsets()[index]"
+    [style.--_height.px]="heightOf(toast)"
+    [style.--_front-height.px]="frontHeight()"
+    [style.--_swipe-x.px]="swiping()?.id === toast.id ? swiping()?.x : 0"
+    [style.--_swipe-y.px]="swiping()?.id === toast.id ? swiping()?.y : 0"
+    [attr.aria-hidden]="index < max() ? null : true"
+    (pointerdown)="onPointerDown(toast, $event)"
+    (pointermove)="onPointerMove($event)"
+    (pointerup)="onPointerUp()"
+    (pointercancel)="onPointerUp()"
   >
-    @if (toast.template ?? customTemplate()?.template; as template) {
-      <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="contextOf(toast)" />
-    } @else {
-      @if (toast.loading) {
-        <span class="tx-toast__icon" aria-hidden="true" [class]="passThrough().icon?.class" [style]="passThrough().icon?.style">
-          <tx-progress-spinner class="tx-toast__spinner" [size]="16" [strokeWidth]="5" />
-        </span>
-      } @else if (iconOf(toast); as icon) {
-        <span class="tx-toast__icon" aria-hidden="true" [class]="passThrough().icon?.class" [style]="passThrough().icon?.style">
-          <tx-icon [name]="icon" />
-        </span>
-      }
-      <div class="tx-toast__body" [class]="passThrough().body?.class" [style]="passThrough().body?.style">
-        @if (toast.title) {
-          <div class="tx-toast__title" [class]="passThrough().title?.class" [style]="passThrough().title?.style">{{ toast.title }}</div>
+    <div
+      class="tx-toast__pill"
+      [class]="passThrough().item?.class"
+      [style]="passThrough().item?.style"
+      [attr.data-severity]="toast.severity"
+      [class.tx-toast__pill--loading]="toast.loading"
+      [attr.aria-busy]="toast.loading || null"
+    >
+      @if (toast.template ?? customTemplate()?.template; as template) {
+        <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="contextOf(toast)" />
+      } @else {
+        @if (toast.loading) {
+          <span class="tx-toast__icon" aria-hidden="true" [class]="passThrough().icon?.class" [style]="passThrough().icon?.style">
+            <tx-progress-spinner class="tx-toast__spinner" [size]="14" [strokeWidth]="6" />
+          </span>
+        } @else if (iconOf(toast); as icon) {
+          <span class="tx-toast__icon" aria-hidden="true" [class]="passThrough().icon?.class" [style]="passThrough().icon?.style">
+            <tx-icon [name]="icon" />
+          </span>
         }
-        @if (toast.text) {
-          <div class="tx-toast__text" [class]="passThrough().text?.class" [style]="passThrough().text?.style">{{ toast.text }}</div>
-        }
+        <span class="tx-toast__body" [class]="passThrough().body?.class" [style]="passThrough().body?.style">
+          @if (toast.title) {
+            <span
+              class="tx-toast__title"
+              [class.tx-toast__title--hidden]="!!toast.text"
+              [class]="passThrough().title?.class"
+              [style]="passThrough().title?.style"
+              >{{ toast.title }}</span
+            >
+          }
+          @if (toast.text) {
+            <span class="tx-toast__text" [class]="passThrough().text?.class" [style]="passThrough().text?.style">{{ toast.text }}</span>
+          }
+        </span>
         @if (toast.actions.length) {
-          <div class="tx-toast__actions" [class]="passThrough().actions?.class" [style]="passThrough().actions?.style">
+          <span class="tx-toast__actions" [class]="passThrough().actions?.class" [style]="passThrough().actions?.style">
             @for (action of toast.actions; track action.label) {
-              <button
-                txButton
-                size="small"
-                [severity]="action.severity ?? 'secondary'"
-                [text]="(action.severity ?? 'secondary') === 'secondary'"
-                [unstyled]="isUnstyled()"
-                (click)="run(toast, action)"
-              >
-                {{ action.label }}
-              </button>
+              <button type="button" class="tx-toast__action" (click)="run(toast, action)">{{ action.label }}</button>
             }
-          </div>
+          </span>
         }
-      </div>
-    }
-    @if (toast.closable) {
-      <button
-        type="button"
-        class="tx-toast__close"
-        [class]="passThrough().closeButton?.class"
-        [style]="passThrough().closeButton?.style"
-        [attr.aria-label]="translations().close"
-        (click)="close(toast)"
-      >
-        <tx-icon name="times" />
-      </button>
-    }
-    @if (toast.showProgress && !toast.sticky && toast.life > 0) {
-      @for (version of [toast.version]; track version) {
-        <span
-          class="tx-toast__progress"
-          aria-hidden="true"
-          [class]="passThrough().progress?.class"
-          [style]="passThrough().progress?.style"
-          [style.animation-duration.ms]="toast.life"
-          [class.tx-toast__progress--paused]="toast.paused"
-        ></span>
       }
-    }
+      @if (toast.closable) {
+        <button
+          type="button"
+          class="tx-toast__close"
+          [class]="passThrough().closeButton?.class"
+          [style]="passThrough().closeButton?.style"
+          [attr.aria-label]="translations().close"
+          (click)="close(toast)"
+        >
+          <tx-icon name="times" />
+        </button>
+      }
+      @if (toast.showProgress && !toast.sticky && toast.life > 0) {
+        <span class="tx-toast__progress-track" aria-hidden="true">
+          @for (version of [toast.version]; track version) {
+            <span
+              class="tx-toast__progress"
+              [class]="passThrough().progress?.class"
+              [style]="passThrough().progress?.style"
+              [style.animation-duration.ms]="toast.life"
+              [class.tx-toast__progress--paused]="toast.paused"
+            ></span>
+          }
+        </span>
+      }
+    </div>
   </div>
 }

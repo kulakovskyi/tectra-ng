@@ -13,9 +13,10 @@ import { TxToast, TxToastService } from '@tectra/ui/toast';
       key="compact"
       position="top-center"
       [dt]="{
-        root: { width: '280px' },
-        item: { borderRadius: 'var(--tx-radius-full)', paddingY: '6px', accentWidth: '0px' },
-        icon: { size: '22px', fontSize: '12px' },
+        root: { width: '320px' },
+        item: { paddingY: '4px', paddingEnd: '12px', fontSize: '12.25px' },
+        icon: { size: '24px', fontSize: '11px' },
+        text: { paddingY: '2px', lineHeight: '18px' },
       }"
     />
   `,

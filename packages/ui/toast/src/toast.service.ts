@@ -9,7 +9,7 @@ export function provideTxToast(options: Partial<TxToastOptions>): Provider {
   return { provide: TX_TOAST_OPTIONS, useValue: options };
 }
 
-const DEFAULT_LIFE = 5000;
+const DEFAULT_LIFE = 3000;
 
 type TxToastText = Omit<TxToastOptions, 'severity' | 'text'>;
 

@@ -1,4 +1,4 @@
-import { fade, lightDark, tokenRef } from './token-helpers';
+import { lightDark, tokenRef } from './token-helpers';
 
 function tone(palette: string) {
   return { tone: lightDark(tokenRef(`${palette}-600`), tokenRef(`${palette}-400`)) };
@@ -6,54 +6,62 @@ function tone(palette: string) {
 
 export const toastTokens = {
   root: {
-    width: '360px',
-    inset: '16px',
-    gap: '10px',
+    width: 'min(448px, calc(100vw - 28px))',
+    inset: '28px',
+    gap: '8px',
+    duration: '0.3s',
   },
   item: {
-    background: tokenRef('surface-overlay'),
-    borderColor: tokenRef('surface-overlay-border'),
-    borderRadius: tokenRef('radius-lg'),
+    background: `color-mix(in srgb, ${tokenRef('surface-card')} 88%, transparent)`,
+    blur: '24px',
+    ringColor: tokenRef('surface-border'),
     shadow: tokenRef('shadow-overlay'),
     color: tokenRef('text-primary'),
-    paddingY: '12px',
-    paddingStart: '16px',
-    paddingEnd: '10px',
-    gap: '12px',
-    fontSize: tokenRef('font-size-md'),
-    lineHeight: '1.45',
-    accentWidth: '3px',
-    enterDuration: '0.2s',
-    leaveDuration: '0.15s',
-  },
-  title: {
-    fontWeight: tokenRef('font-weight-semibold'),
-  },
-  text: {
-    color: tokenRef('text-muted'),
-    fontSize: tokenRef('font-size-sm'),
+    borderRadius: '24.5px',
+    gap: '10.5px',
+    paddingY: '8.75px',
+    paddingStart: '8.75px',
+    paddingEnd: '17.5px',
+    loadingPaddingEnd: '8.75px',
+    fontSize: '13.125px',
+    fontWeight: tokenRef('font-weight-medium'),
   },
   icon: {
-    size: '28px',
-    fontSize: '14px',
-    tint: '15%',
+    size: '31.5px',
+    fontSize: '12.25px',
+    tint: '14%',
   },
-  actions: {
-    gap: '6px',
+  text: {
+    paddingY: '5.25px',
+    lineHeight: '21px',
+    lines: '3',
   },
   closeButton: {
-    size: '26px',
-    borderRadius: tokenRef('radius-md'),
+    size: '21px',
+    offset: '-5.25px',
+    fontSize: '8.75px',
+    background: tokenRef('surface-card'),
     color: tokenRef('text-muted'),
     hoverColor: tokenRef('text-primary'),
-    hoverBackground: fade(tokenRef('text-primary'), '92%'),
+    ringColor: tokenRef('surface-border'),
+    shadow: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',
+  },
+  action: {
+    padding: '5.25px 12.25px',
+    fontSize: '12.25px',
+    fontWeight: tokenRef('font-weight-semibold'),
+    tint: '14%',
+    hoverTint: '22%',
+  },
+  focusRing: {
+    shadow: `0 0 0 2px ${tokenRef('surface-card')}, 0 0 0 4px ${tokenRef('primary-base')}`,
   },
   progress: {
-    height: '3px',
+    height: '2px',
   },
-  success: tone('green'),
   info: tone('sky'),
-  warn: tone('orange'),
+  success: tone('green'),
+  warn: tone('amber'),
   danger: tone('red'),
   secondary: { tone: tokenRef('text-muted') },
   contrast: { tone: tokenRef('text-primary') },

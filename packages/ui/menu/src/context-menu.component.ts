@@ -22,6 +22,7 @@ import { TxMenuItem, TxMenuItemEvent, TxMenuPart } from './menu.types';
   template: `
     <tx-tiered-menu
       popup
+      variant="context"
       placement="bottom-start"
       [offset]="0"
       [model]="model()"

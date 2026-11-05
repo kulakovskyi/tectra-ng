@@ -22,7 +22,8 @@ Items are `TxMenuItem`s (`label`, `icon`, `command`, `disabled`, `visible`, `sev
 | hideIcon | Own icon of the open button |
 | severity | Severity of the main button |
 | itemSeverity | Severity of the items (default `secondary`) |
-| size | `small`, `medium` (default), `large` |
+| size | Main button: `small`, `medium` (default), `large` |
+| itemSize | Action buttons: `small` (default), `medium`, `large` |
 | disabled | Disables the button |
 | ariaLabel | Name of the button and the menu |
 | dt | Design tokens (`speedDial`) — spacing, timing, mask |

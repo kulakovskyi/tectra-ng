@@ -17,7 +17,6 @@ export class TxConfirmService {
     const state = this.state(options);
     const ref = this.dialogs.open<TxConfirmDialog, TxConfirmState, boolean>(TxConfirmDialog, {
       data: state,
-      size: 'small',
       role: 'alertdialog',
       ariaDescribedBy: options.message ? state.messageId : undefined,
       autoFocus: `.tx-confirm__${options.defaultFocus ?? 'reject'}`,

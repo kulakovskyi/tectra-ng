@@ -4,7 +4,7 @@ Part of [ROADMAP.md](../ROADMAP.md). One section per item, in the order we build
 
 Sources: PrimeNG 22 component APIs and what the first consumer app needs (usage = bindings in its templates and call sites in its code, 2026-11-05).
 
-**Every item also needs** (not repeated below): tokens in `packages/themes/src/components/`, `dt` / `pt` / `ptOptions` / `unstyled`, README (Inputs / Outputs / Slots / Keyboard), docs page with an example per feature, unit tests, e2e page check (light + dark, axe), lint clean. Panels are built on `TxOverlay` / `@tectra/core/overlay` (placements with flip, enter / leave motion, layers, sticky insets) and `@tectra/core/a11y`.
+**Every item also needs** (not repeated below): tokens in `packages/themes/src/components/`, `dt` / `pt` / `ptOptions` / `unstyled`, README (Inputs / Outputs / Slots / Keyboard), docs page with an example per feature, unit tests, e2e page check (light + dark, axe), lint clean. Sizes, spacing, borders, radii, colours and motion copy the first consumer app: its PrimeNG preset (1rem = 14px) over the base theme and its own wrappers (toast pill, modal header / footer, drawer, actions and row menus). Panels are built on `TxOverlay` / `@tectra/core/overlay` (placements with flip, enter / leave motion, layers, sticky insets) and `@tectra/core/a11y`.
 
 ---
 
@@ -14,7 +14,7 @@ PrimeNG: Tooltip (`pTooltip` text or template, `tooltipPosition`, `tooltipEvent`
 
 - [x] `[txTooltip]` directive: text (multi-line with `\n`) or `TemplateRef` with `tooltipContext` (`$implicit`, `close`); 12 placements with flip (`tooltipPlacement`, default `top`), `tooltipOffset`, arrow pointing at the middle of the element (`tooltipArrow`)
 - [x] Triggers: `tooltipEvent` hover / focus / both (keyboard focus only) / manual (`show()` / `hide()` / `toggle()` through `#ref="txTooltip"`); `tooltipShowDelay` / `tooltipHideDelay` / `tooltipLife`; skips the delay while another tooltip was just open; hides on press until the pointer leaves; `(tooltipShown)` / `(tooltipHidden)`
-- [x] WCAG 1.4.13: dismissable with Escape, hoverable (`tooltipInteractive`, default on), persistent while hovered or focused
+- [x] WCAG 1.4.13: dismissable with Escape, hoverable on request (`tooltipInteractive`), persistent while hovered or focused
 - [x] Accessible: `role="tooltip"`; text tooltips describe the element (`aria-describedby` to a hidden text node, present before the tooltip shows) and name it when it has no name of its own (icon-only buttons); template tooltips are linked while open
 - [x] `tooltipDisabled`, `tooltipOverflowOnly` (only when the text is truncated), `tooltipClass`, `provideTxTooltip()` for app-wide defaults; `dt` / `pt` / `ptOptions` / `unstyled` as `tooltipDt` / `tooltipPt` / `tooltipPtOptions` / `tooltipUnstyled` (the host element has its own `dt`)
 - [x] Docs + tests: basic, placements, triggers, delays, template, interactive, disabled, overflow, on icon buttons, manual, design tokens; e2e: hover shows above the button with the arrow on its middle, keyboard focus shows and Escape hides, flip below a stuck tab bar, stays open on the tooltip, overflow only. Found on the way: `TxOverlay` measured component panels before they rendered and CDK compared top placements with the viewport edge instead of the sticky chrome — panels now render first and the first placement with room around the insets goes first (`orderByRoom`)
