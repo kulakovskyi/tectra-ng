@@ -171,6 +171,7 @@ export class TxCascadeSelect extends TxFormControlBase<unknown> {
     this.room.open(this.overlayInsets.measure());
     this.stopWatching = watchOrigin(this.box().nativeElement, this.overlayInsets, {
       insetsChange: (insets) => this.room.follow(insets, this.box().nativeElement, this.panel()?.nativeElement, this.connectedOverlay(), this.injector),
+      containerScroll: () => this.close(),
     });
     this.opened.emit();
   }

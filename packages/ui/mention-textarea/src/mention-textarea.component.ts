@@ -73,6 +73,7 @@ export class TxMentionTextarea extends TxOptionsBase<string> {
     onCleanup(
       watchOrigin(this.textarea().nativeElement, this.overlayInsets, {
         insetsChange: () => this.connectedOverlay()?.overlayRef?.updatePosition(),
+        containerScroll: () => this.close(),
       }),
     );
   });

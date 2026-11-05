@@ -2,7 +2,7 @@ import { ViewportMargin } from '@angular/cdk/overlay';
 import { Injectable, inject } from '@angular/core';
 import { TECTRA_CONFIG } from '@tectra/core/config';
 import { TxOverlayBounds, TxOverlayInsetValues } from './overlay.types';
-import { txFollowsScroll } from './overlay-anchor';
+import { txFollowsScroll } from './overlay-scroll';
 
 const STUCK_TOLERANCE = 1;
 
@@ -65,14 +65,40 @@ export function txOverlayBounds(insets: TxOverlayInsetValues, margin: number, do
 
 export interface TxOriginWatch {
   insetsChange: (insets: TxOverlayInsetValues) => void;
+  containerScroll: () => void;
+}
+
+const SCROLLABLE = /(auto|scroll)/;
+
+export function scrollContainers(origin: Element): Element[] {
+  const document = origin.ownerDocument;
+  const view = document.defaultView;
+  const containers: Element[] = [];
+  for (let node = origin.parentElement; node && view && node !== document.body && node !== document.documentElement; node = node.parentElement) {
+    const style = view.getComputedStyle(node);
+    if ([style.overflow, style.overflowX, style.overflowY].some((value) => SCROLLABLE.test(value))) {
+      containers.push(node);
+    }
+  }
+  return containers;
 }
 
 export function watchOrigin(origin: Element, overlayInsets: TxOverlayInsets, watch: TxOriginWatch): () => void {
   const document = origin.ownerDocument;
-  if (txFollowsScroll(document.defaultView)) {
-    return () => undefined;
+  const containers = scrollContainers(origin);
+  const onContainer = () => watch.containerScroll();
+  containers.forEach((container) => container.addEventListener('scroll', onContainer, { passive: true }));
+  const follows = txFollowsScroll(document.defaultView);
+  const onPage = (event: Event) => {
+    if (event.target === document || event.target === document.documentElement || event.target === document.body) {
+      watch.insetsChange(overlayInsets.measure());
+    }
+  };
+  if (!follows) {
+    document.addEventListener('scroll', onPage, { capture: true, passive: true });
   }
-  const listener = () => watch.insetsChange(overlayInsets.measure());
-  document.addEventListener('scroll', listener, { capture: true, passive: true });
-  return () => document.removeEventListener('scroll', listener, { capture: true });
+  return () => {
+    containers.forEach((container) => container.removeEventListener('scroll', onContainer));
+    document.removeEventListener('scroll', onPage, { capture: true });
+  };
 }

@@ -87,6 +87,7 @@ export abstract class TxSelectBase<T> extends TxOptionsBase<T> {
     this.room.open(this.overlayInsets.measure());
     this.stopWatchingTrigger = watchOrigin(this.box().nativeElement, this.overlayInsets, {
       insetsChange: (insets) => this.room.follow(insets, this.box().nativeElement, this.panel()?.nativeElement, this.connectedOverlay(), this.injector),
+      containerScroll: () => this.close(),
     });
     if (this.lazy() && !this.virtualScroll()) {
       this.requestLazy(0, this.rows().length);

@@ -65,6 +65,19 @@ describe('TxOverlay', () => {
     ref.close();
   });
 
+  it('closes when a scrolling container of the origin scrolls, but not when the page does', () => {
+    const { fixture, origin, overlay } = setup();
+    const container = fixture.nativeElement as HTMLElement;
+    container.style.overflowY = 'auto';
+    const reasons: TxOverlayCloseReason[] = [];
+    const ref = overlay.open(Panel, { origin });
+    ref.closed.subscribe((reason) => reasons.push(reason));
+    document.dispatchEvent(new Event('scroll'));
+    expect(reasons).toEqual([]);
+    container.dispatchEvent(new Event('scroll'));
+    expect(reasons).toEqual(['scroll']);
+  });
+
   it('needs a view container for templates', () => {
     const { fixture, origin, overlay } = setup();
     expect(() => overlay.open(fixture.componentInstance.panel(), { origin })).toThrow(/viewContainerRef/);

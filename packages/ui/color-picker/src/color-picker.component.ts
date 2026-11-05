@@ -88,6 +88,7 @@ export class TxColorPicker extends TxFormControlBase<TxColorValue> {
     onCleanup(
       watchOrigin(this.host.nativeElement, this.overlayInsets, {
         insetsChange: () => this.connectedOverlay()?.overlayRef?.updatePosition(),
+        containerScroll: () => this.close(false),
       }),
     );
   });

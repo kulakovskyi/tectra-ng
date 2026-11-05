@@ -9,7 +9,8 @@ import {
 } from '@angular/cdk/overlay';
 import { DOCUMENT, Injectable, Injector, TemplateRef, Type, inject, signal } from '@angular/core';
 import { Subject } from 'rxjs';
-import { txAnchorPane, txScrollStrategy } from './overlay-anchor';
+import { txAnchorPane } from './overlay-anchor';
+import { txScrollStrategy } from './overlay-scroll';
 import { txAnimateEnter, txAnimateLeave } from './overlay-motion';
 import { orderByRoom, placementFromPosition, txPositions } from './placements';
 import { TxOverlayCloseReason, TxOverlayOptions, TxOverlayRef, TxOverlayScroll } from './overlay.types';
@@ -104,6 +105,7 @@ export class TxOverlay {
               positionStrategy.withViewportMargin(txConnectedMargin(insets, margin));
               reposition();
             },
+            containerScroll: () => close('scroll'),
           })
         : () => undefined;
 
@@ -119,7 +121,7 @@ export class TxOverlay {
 
     const instance = this.attach(overlayRef, content, options);
     reposition();
-    txAnchorPane(overlayRef, origin);
+    txAnchorPane(overlayRef, origin, this.overlayInsets);
     if (animate) {
       txAnimateEnter(motionTarget(), currentPlacement(), motion, origin);
     }

@@ -1,22 +1,9 @@
-import { CdkConnectedOverlay, OverlayRef, ScrollStrategy, createNoopScrollStrategy, createRepositionScrollStrategy } from '@angular/cdk/overlay';
-import { DOCUMENT, DestroyRef, Directive, ElementRef, Injector, inject } from '@angular/core';
-
-type ScrollAxis = 'block' | 'inline';
-type ScrollTimelineConstructor = new (options: { source: Element; axis: ScrollAxis }) => AnimationTimeline;
+import { CdkConnectedOverlay, OverlayRef } from '@angular/cdk/overlay';
+import { DestroyRef, Directive, ElementRef, inject } from '@angular/core';
+import { TxOverlayInsets } from './overlay-insets.service';
+import { ScrollAxis, scrollTimeline } from './overlay-scroll';
 
 const SCROLLABLE = /^(auto|scroll|overlay)$/;
-
-function scrollTimeline(view: Window | null): ScrollTimelineConstructor | undefined {
-  return (view as unknown as { ScrollTimeline?: ScrollTimelineConstructor } | null)?.ScrollTimeline;
-}
-
-export function txFollowsScroll(view: Window | null): boolean {
-  return typeof scrollTimeline(view) === 'function';
-}
-
-export function txScrollStrategy(injector: Injector): ScrollStrategy {
-  return txFollowsScroll(injector.get(DOCUMENT).defaultView) ? createNoopScrollStrategy() : createRepositionScrollStrategy(injector);
-}
 
 export function scrollersOf(origin: Element): Element[] {
   const document = origin.ownerDocument;
@@ -58,7 +45,7 @@ function shift(track: ScrollTrack, by: number): string {
   return `${track.axis === 'block' ? 'translateY' : 'translateX'}(${by}px)`;
 }
 
-export function txAnchorPane(overlayRef: OverlayRef, origin: Element): () => void {
+export function txAnchorPane(overlayRef: OverlayRef, origin: Element, chrome?: TxOverlayInsets): () => void {
   const host = overlayRef.hostElement;
   const pane = overlayRef.overlayElement;
   const Timeline = scrollTimeline(origin.ownerDocument.defaultView);
@@ -73,14 +60,14 @@ export function txAnchorPane(overlayRef: OverlayRef, origin: Element): () => voi
     return () => undefined;
   }
 
-  const layers = [host, pane].slice(0, tracks.length);
+  const layers = [pane, host].slice(0, tracks.length);
   const animations = layers.map((layer, index) =>
     layer.animate([], { timeline: new Timeline(tracks[index]), fill: 'both' }),
   );
 
   const follow = () => {
     tracks.forEach((track, index) => {
-      const base = index === 0 ? '' : `${pane.style.transform} `;
+      const base = layers[index] === pane ? `${pane.style.transform} `.trimStart() : '';
       const from = offset(track);
       (animations[index].effect as KeyframeEffect).setKeyframes([
         { transform: `${base}${shift(track, from)}` },
@@ -93,6 +80,17 @@ export function txAnchorPane(overlayRef: OverlayRef, origin: Element): () => voi
   observer.observe(pane, { attributes: true, attributeFilter: ['style'] });
   follow();
 
+  const document = origin.ownerDocument;
+  const clip = () => {
+    const { top, bottom } = chrome?.measure() ?? { top: 0, bottom: 0 };
+    host.style.clipPath = top || bottom ? `inset(${top}px 0 ${bottom}px 0)` : '';
+  };
+  const clipsChrome = !!chrome && tracks.length === 1;
+  if (clipsChrome) {
+    clip();
+    document.addEventListener('scroll', clip, { capture: true, passive: true });
+  }
+
   let released = false;
   const release = () => {
     if (released) {
@@ -102,6 +100,10 @@ export function txAnchorPane(overlayRef: OverlayRef, origin: Element): () => voi
     observer.disconnect();
     subscription.unsubscribe();
     animations.forEach((animation) => animation.cancel());
+    if (clipsChrome) {
+      document.removeEventListener('scroll', clip, { capture: true });
+      host.style.removeProperty('clip-path');
+    }
   };
   const subscription = overlayRef.detachments().subscribe(release);
   return release;
@@ -110,6 +112,7 @@ export function txAnchorPane(overlayRef: OverlayRef, origin: Element): () => voi
 @Directive({ selector: '[cdkConnectedOverlay][txOverlayAnchor]' })
 export class TxOverlayAnchor {
   private connectedOverlay = inject(CdkConnectedOverlay);
+  private chrome = inject(TxOverlayInsets);
   private release: () => void = () => undefined;
 
   constructor() {
@@ -118,7 +121,7 @@ export class TxOverlayAnchor {
       const overlayRef = this.connectedOverlay.overlayRef;
       const origin = this.originElement();
       if (overlayRef && origin) {
-        this.release = txAnchorPane(overlayRef, origin);
+        this.release = txAnchorPane(overlayRef, origin, this.chrome);
       }
     });
     inject(DestroyRef).onDestroy(() => {

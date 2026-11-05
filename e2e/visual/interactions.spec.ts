@@ -110,7 +110,7 @@ test('locale switches built-in texts at runtime', async ({ page }) => {
   await expect(page.locator('.tx-select__empty')).toHaveText('Нічого не знайдено');
 });
 
-test('select panel opens clear of the sticky header and rides with its field while the page scrolls', async ({ page }) => {
+test('select panel opens clear of the sticky header, rides with its field and slides under the header', async ({ page }) => {
   await page.goto('/theming');
   const trigger = page.locator('tx-select .tx-select__trigger').first();
   const panel = page.locator('.tx-select__panel');
@@ -129,6 +129,8 @@ test('select panel opens clear of the sticky header and rides with its field whi
   await scrollTriggerTo(headerBottom - 60);
   await expect.poll(gap).toBeCloseTo(opened, 0);
   await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+  const clipTop = await panel.evaluate((element) => parseFloat(getComputedStyle(element.closest('.cdk-overlay-pane')?.parentElement as Element).clipPath.replace('inset(', '')));
+  expect(Math.abs(clipTop - headerBottom)).toBeLessThan(1);
 });
 
 test('select panel opens clear of the stuck tab bar', async ({ page }) => {
@@ -658,7 +660,7 @@ test.describe('with motion', () => {
     await page.getByRole('button', { name: 'bottom', exact: true }).click();
     const pane = page.locator('.tx-overlay-pane');
     const [nearEnd, final] = await pane.evaluate((element) => {
-      const [animation] = element.getAnimations({ subtree: true });
+      const [animation] = element.getAnimations({ subtree: true }).filter((running) => running.timeline === document.timeline);
       animation.pause();
       animation.currentTime = Number(animation.effect?.getComputedTiming().duration) - 1;
       const before = element.getBoundingClientRect().top;

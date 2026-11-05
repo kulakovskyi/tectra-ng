@@ -1,6 +1,7 @@
 import { OverlayRef } from '@angular/cdk/overlay';
 import { Subject } from 'rxjs';
 import { scrollersOf, txAnchorPane } from './overlay-anchor';
+import { TxOverlayInsets } from './overlay-insets.service';
 
 class FakeScrollTimeline {
   constructor(readonly options: { source: Element; axis: string }) {}
@@ -56,13 +57,23 @@ describe('txAnchorPane', () => {
 
   it('moves the panel with the scrolling container of its field, off the main thread', async () => {
     txAnchorPane(overlayRef, origin);
-    expect(timelines.get(host)?.options).toEqual({ source: body, axis: 'block' });
-    expect(keyframes.get(host)).toEqual([{ transform: 'translateY(120px)' }, { transform: 'translateY(-480px)' }]);
+    expect(timelines.get(pane)?.options).toEqual({ source: body, axis: 'block' });
+    expect(keyframes.get(pane)).toEqual([{ transform: 'translateY(120px)' }, { transform: 'translateY(-480px)' }]);
 
     scrollable(body, 200, 900, 300);
     pane.style.top = '40px';
     await Promise.resolve();
-    expect(keyframes.get(host)).toEqual([{ transform: 'translateY(200px)' }, { transform: 'translateY(-400px)' }]);
+    expect(keyframes.get(pane)).toEqual([{ transform: 'translateY(200px)' }, { transform: 'translateY(-400px)' }]);
+  });
+
+  it('keeps the CDK offset of the pane and slides the panel under pinned chrome', async () => {
+    const chrome = { measure: () => ({ top: 56, bottom: 0 }) } as unknown as TxOverlayInsets;
+    pane.style.transform = 'translateY(4px)';
+    const release = txAnchorPane(overlayRef, origin, chrome);
+    expect(keyframes.get(pane)?.[0]).toEqual({ transform: 'translateY(4px) translateY(120px)' });
+    expect(host.style.clipPath).toContain('56px');
+    release();
+    expect(host.style.clipPath).toBe('');
   });
 
   it('stops following once the overlay detaches', () => {
@@ -82,6 +93,6 @@ describe('txAnchorPane', () => {
   it('keeps the script positioning where scroll timelines are missing', () => {
     vi.unstubAllGlobals();
     txAnchorPane(overlayRef, origin);
-    expect(host.animate).not.toHaveBeenCalled();
+    expect(pane.animate).not.toHaveBeenCalled();
   });
 });
