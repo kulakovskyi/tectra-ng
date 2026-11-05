@@ -1,3 +1,5 @@
+import { TxIconName } from '@tectra/icons';
+
 export interface DocNavLink {
   label: string;
   path: string;
@@ -5,5 +7,11 @@ export interface DocNavLink {
 
 export interface DocNavGroup {
   title: string;
+  icon: TxIconName;
   links: DocNavLink[];
+}
+
+export interface DocNavSection {
+  title?: string;
+  groups: DocNavGroup[];
 }

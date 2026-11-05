@@ -624,6 +624,34 @@ test('amount and status icon read well in tables', async ({ page }) => {
   await expect(row.getByRole('img', { name: 'No certificate' })).toHaveAttribute('title', 'No certificate');
 });
 
+test('sidebar searches, collapses groups and keeps the current page in view', async ({ page }) => {
+  await page.goto('/components/panel');
+  const sidebar = page.getByRole('navigation', { name: 'Documentation' });
+  const current = sidebar.getByRole('link', { name: 'Panel' });
+  await expect(current).toHaveAttribute('aria-current', 'page');
+  await expect(current).toBeInViewport();
+  const form = sidebar.getByRole('button', { name: /Form/ });
+  await form.click();
+  await expect(form).toHaveAttribute('aria-expanded', 'false');
+  await expect(sidebar.getByRole('link', { name: 'Checkbox' })).toBeHidden();
+  await page.reload();
+  await expect(sidebar.getByRole('button', { name: /Form/ })).toHaveAttribute('aria-expanded', 'false');
+  await expect(sidebar.getByRole('link', { name: 'Panel' })).toBeInViewport();
+  await page.locator('main h1').first().click();
+  await page.keyboard.press('/');
+  const search = sidebar.getByRole('searchbox', { name: 'Search docs' });
+  await expect(search).toBeFocused();
+  await search.fill('progress');
+  await expect(sidebar.locator('.docs-nav__status')).toHaveText('2 results');
+  await expect(sidebar.getByRole('link')).toHaveText(['ProgressBar', 'ProgressSpinner']);
+  await search.press('Enter');
+  await expect(page).toHaveURL(/\/components\/progress-bar$/);
+  await search.press('Escape');
+  await expect(search).toHaveValue('');
+  await sidebar.getByRole('button', { name: /Form/ }).click();
+  await expect(sidebar.getByRole('link', { name: 'Checkbox' })).toBeVisible();
+});
+
 test.describe('with motion', () => {
   test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 

@@ -1,0 +1,61 @@
+<div class="docs-nav__search">
+  <tx-icon-field [fluid]="true">
+    <tx-input-icon icon="search" />
+    <input
+      #search
+      txInput
+      size="small"
+      type="search"
+      class="docs-nav__input"
+      placeholder="Search docs"
+      aria-label="Search docs"
+      aria-controls="docs-nav-results"
+      autocomplete="off"
+      (input)="onSearch($event)"
+      (keydown)="onSearchKeydown($event)"
+    />
+    @if (query()) {
+      <tx-input-clear />
+    } @else {
+      <tx-input-icon position="end"><kbd class="docs-nav__kbd" aria-hidden="true">/</kbd></tx-input-icon>
+    }
+  </tx-icon-field>
+</div>
+
+<div #results class="docs-nav__results" id="docs-nav-results">
+  <p class="docs-nav__status" aria-live="polite">{{ query().trim() ? (matchCount() ? matchCount() + ' results' : 'Nothing found') : '' }}</p>
+  @for (section of sections(); track section.title ?? 'guides') {
+    @if (section.title) {
+      <div class="docs-nav__section">
+        <span>{{ section.title }}</span>
+        <span class="docs-nav__section-count">{{ linkCount(section) }}</span>
+      </div>
+    }
+    @for (group of section.groups; track group.title) {
+      <section class="docs-nav__group" [class.docs-nav__group--open]="isOpen(group)" [class.docs-nav__group--current]="activeGroup() === group.title">
+        <button type="button" class="docs-nav__header" [attr.aria-expanded]="isOpen(group)" [attr.aria-controls]="groupId(group)" (click)="toggle(group)">
+          <span class="docs-nav__icon" aria-hidden="true"><tx-icon [name]="group.icon" /></span>
+          <span class="docs-nav__title">{{ group.title }}</span>
+          <span class="docs-nav__count" aria-hidden="true">{{ group.links.length }}</span>
+          <tx-icon class="docs-nav__chevron" name="chevron-down" aria-hidden="true" />
+        </button>
+        <div class="docs-nav__collapse" [id]="groupId(group)" [attr.inert]="isOpen(group) ? null : ''">
+          <ul class="docs-nav__links" [attr.aria-label]="group.title">
+            @for (link of group.links; track link.path) {
+              <li>
+                <a
+                  class="docs-nav__link"
+                  [class.docs-nav__link--active]="link.path === activePath()"
+                  [attr.aria-current]="link.path === activePath() ? 'page' : null"
+                  [routerLink]="link.path"
+                  (click)="navigate.emit()"
+                  ><tx-highlight-text [text]="link.label" [highlight]="query()"
+                /></a>
+              </li>
+            }
+          </ul>
+        </div>
+      </section>
+    }
+  }
+</div>
