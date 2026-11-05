@@ -1,7 +1,7 @@
 ---
 category: Overlay
 tokens: dialog
-examples: service, template, sizes, positions, scrolling, guard, maximizable, design-tokens
+examples: service, template, form, sizes, positions, scrolling, guard, maximizable, design-tokens
 ---
 # Dialog
 
