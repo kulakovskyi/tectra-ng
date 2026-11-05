@@ -676,12 +676,23 @@ test.describe('with motion', () => {
     await page.goto('/components/tooltip');
     const button = page.locator('tooltip-icon-buttons-example').getByRole('button', { name: 'Duplicate', exact: true });
     await expect(button).toBeVisible();
+    await page.evaluate(() => {
+      const animate = Element.prototype.animate;
+      Element.prototype.animate = function (this: Element, ...args: Parameters<Element['animate']>) {
+        const animation = animate.apply(this, args);
+        if (this.localName === 'tx-tooltip') {
+          animation.pause();
+          (window as unknown as { txPop: Animation }).txPop = animation;
+        }
+        return animation;
+      };
+    });
     await button.hover();
     const tooltip = page.locator('tx-tooltip');
-    await expect(tooltip).toBeVisible();
+    await expect(tooltip).toHaveCount(1);
+    await page.waitForFunction(() => !!(window as unknown as { txPop?: Animation }).txPop);
     const frames = await tooltip.evaluate((element, origin) => {
-      const [animation] = element.getAnimations();
-      animation.pause();
+      const animation = (window as unknown as { txPop: Animation }).txPop;
       const duration = Number(animation.effect?.getComputedTiming().duration);
       const center = (target: Element) => {
         const box = target.getBoundingClientRect();
@@ -778,10 +789,21 @@ test.describe('with motion', () => {
     const panel = page.locator('.tx-overlay-pane');
     await expect(panel).toHaveCount(1);
     await page.waitForTimeout(250);
+    await panel.evaluate((pane) => {
+      const animate = Element.prototype.animate;
+      const fades: number[] = [];
+      (window as unknown as { txFades: number[] }).txFades = fades;
+      Element.prototype.animate = function (this: Element, ...args: Parameters<Element['animate']>) {
+        const [keyframes] = args;
+        if (pane.contains(this) && Array.isArray(keyframes) && keyframes.length) {
+          fades.push(Number(keyframes[keyframes.length - 1].opacity ?? 1));
+        }
+        return animate.apply(this, args);
+      };
+    });
     await page.keyboard.press('Escape');
-    const leaving = await panel.evaluate((element) => element.getAnimations({ subtree: true }).some((animation) => animation.playState === 'running'));
-    expect(leaving).toBe(true);
     await expect(panel).toHaveCount(0);
+    expect(await page.evaluate(() => (window as unknown as { txFades: number[] }).txFades)).toContain(0);
   });
 
   test('select panel fades out before it is removed', async ({ page }) => {

@@ -1,64 +1,89 @@
 import { CdkConnectedOverlay, OverlayRef } from '@angular/cdk/overlay';
 import { DestroyRef, Directive, ElementRef, inject } from '@angular/core';
 
-type Side = 'top' | 'right' | 'bottom' | 'left';
+type ScrollAxis = 'block' | 'inline';
+type ScrollTimelineConstructor = new (options: { source: Element; axis: ScrollAxis }) => AnimationTimeline;
 
-const SIDES: Side[] = ['top', 'right', 'bottom', 'left'];
-let anchorCount = 0;
+const SCROLLABLE = /^(auto|scroll|overlay)$/;
 
-export function supportsAnchors(view: Window | null): boolean {
-  const css = (view as (Window & typeof globalThis) | null)?.CSS;
-  return typeof css?.supports === 'function' && css.supports('anchor-name', '--tx-anchor');
+function scrollTimeline(view: Window | null): ScrollTimelineConstructor | undefined {
+  return (view as unknown as { ScrollTimeline?: ScrollTimelineConstructor } | null)?.ScrollTimeline;
 }
 
-function anchorNames(element: HTMLElement): string[] {
-  return element.style
-    .getPropertyValue('anchor-name')
-    .split(',')
-    .map((name) => name.trim())
-    .filter((name) => name.startsWith('--'));
-}
-
-function distance(side: Side, origin: DOMRect, box: DOMRect): number {
-  switch (side) {
-    case 'top':
-      return origin.top - box.top;
-    case 'bottom':
-      return box.bottom - origin.bottom;
-    case 'left':
-      return origin.left - box.left;
-    case 'right':
-      return box.right - origin.right;
+export function scrollersOf(origin: Element): Element[] {
+  const document = origin.ownerDocument;
+  const view = document.defaultView;
+  const scrollers: Element[] = [];
+  for (let node = origin.parentElement; node && view; node = node.parentElement) {
+    if (node === document.body || node === document.documentElement) {
+      break;
+    }
+    const style = view.getComputedStyle(node);
+    if (style.position === 'fixed' || style.position === 'sticky') {
+      return scrollers;
+    }
+    if (SCROLLABLE.test(style.overflowY) || SCROLLABLE.test(style.overflowX)) {
+      scrollers.push(node);
+    }
   }
+  if (document.scrollingElement) {
+    scrollers.push(document.scrollingElement);
+  }
+  return scrollers;
+}
+
+interface ScrollTrack {
+  source: Element;
+  axis: ScrollAxis;
+}
+
+function range(track: ScrollTrack): number {
+  const { source, axis } = track;
+  return axis === 'block' ? source.scrollHeight - source.clientHeight : source.scrollWidth - source.clientWidth;
+}
+
+function offset(track: ScrollTrack): number {
+  return track.axis === 'block' ? track.source.scrollTop : track.source.scrollLeft;
+}
+
+function shift(track: ScrollTrack, by: number): string {
+  return `${track.axis === 'block' ? 'translateY' : 'translateX'}(${by}px)`;
 }
 
 export function txAnchorPane(overlayRef: OverlayRef, origin: Element): () => void {
+  const host = overlayRef.hostElement;
   const pane = overlayRef.overlayElement;
-  const host = origin as HTMLElement;
-  if (!supportsAnchors(origin.ownerDocument.defaultView) || !host.style) {
+  const Timeline = scrollTimeline(origin.ownerDocument.defaultView);
+  if (!Timeline || typeof host.animate !== 'function') {
     return () => undefined;
   }
-  const name = `--tx-anchor-${++anchorCount}`;
-  host.style.setProperty('anchor-name', [...anchorNames(host), name].join(', '));
-  pane.style.setProperty('position-anchor', name);
+  const tracks = scrollersOf(origin)
+    .flatMap((source) => (['block', 'inline'] as const).map((axis) => ({ source, axis })))
+    .filter((track) => range(track) > 0)
+    .slice(0, 2);
+  if (!tracks.length) {
+    return () => undefined;
+  }
 
-  const pin = () => {
-    const placed = SIDES.filter((side) => pane.style.getPropertyValue(side).endsWith('px'));
-    if (!placed.length) {
-      return;
-    }
-    const originBox = origin.getBoundingClientRect();
-    const box = overlayRef.hostElement.getBoundingClientRect();
-    for (const side of placed) {
-      const value = parseFloat(pane.style.getPropertyValue(side));
-      const edge = distance(side, originBox, box);
-      pane.style.setProperty(side, `calc(anchor(${side}, ${edge}px) + ${value - edge}px)`);
-    }
+  const layers = [host, pane].slice(0, tracks.length);
+  const animations = layers.map((layer, index) =>
+    layer.animate([], { timeline: new Timeline(tracks[index]), fill: 'both' }),
+  );
+
+  const follow = () => {
+    tracks.forEach((track, index) => {
+      const base = index === 0 ? '' : `${pane.style.transform} `;
+      const from = offset(track);
+      (animations[index].effect as KeyframeEffect).setKeyframes([
+        { transform: `${base}${shift(track, from)}` },
+        { transform: `${base}${shift(track, from - range(track))}` },
+      ]);
+    });
   };
 
-  const observer = new MutationObserver(pin);
+  const observer = new MutationObserver(follow);
   observer.observe(pane, { attributes: true, attributeFilter: ['style'] });
-  pin();
+  follow();
 
   let released = false;
   const release = () => {
@@ -68,13 +93,7 @@ export function txAnchorPane(overlayRef: OverlayRef, origin: Element): () => voi
     released = true;
     observer.disconnect();
     subscription.unsubscribe();
-    pane.style.removeProperty('position-anchor');
-    const rest = anchorNames(host).filter((other) => other !== name);
-    if (rest.length) {
-      host.style.setProperty('anchor-name', rest.join(', '));
-    } else {
-      host.style.removeProperty('anchor-name');
-    }
+    animations.forEach((animation) => animation.cancel());
   };
   const subscription = overlayRef.detachments().subscribe(release);
   return release;

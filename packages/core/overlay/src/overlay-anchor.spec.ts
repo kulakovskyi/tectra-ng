@@ -1,28 +1,51 @@
 import { OverlayRef } from '@angular/cdk/overlay';
 import { Subject } from 'rxjs';
-import { txAnchorPane } from './overlay-anchor';
+import { scrollersOf, txAnchorPane } from './overlay-anchor';
 
-function rect(top: number, left: number, width: number, height: number): DOMRect {
-  return { top, left, width, height, bottom: top + height, right: left + width, x: left, y: top, toJSON: () => ({}) } as DOMRect;
+class FakeScrollTimeline {
+  constructor(readonly options: { source: Element; axis: string }) {}
+}
+
+function scrollable(element: HTMLElement, top: number, height: number, client: number): void {
+  Object.defineProperty(element, 'scrollTop', { value: top, configurable: true });
+  Object.defineProperty(element, 'scrollHeight', { value: height, configurable: true });
+  Object.defineProperty(element, 'clientHeight', { value: client, configurable: true });
+  Object.defineProperty(element, 'scrollWidth', { value: 100, configurable: true });
+  Object.defineProperty(element, 'clientWidth', { value: 100, configurable: true });
 }
 
 describe('txAnchorPane', () => {
-  const supports = vi.fn(() => true);
   let detachments: Subject<void>;
+  let host: HTMLElement;
   let pane: HTMLElement;
+  let body: HTMLElement;
   let origin: HTMLElement;
   let overlayRef: OverlayRef;
+  const keyframes = new Map<HTMLElement, Keyframe[]>();
+  const timelines = new Map<HTMLElement, FakeScrollTimeline>();
+  const cancel = vi.fn();
 
   beforeEach(() => {
-    vi.stubGlobal('CSS', { supports });
+    vi.stubGlobal('ScrollTimeline', FakeScrollTimeline);
+    keyframes.clear();
+    timelines.clear();
     detachments = new Subject<void>();
-    const host = document.createElement('div');
-    host.getBoundingClientRect = () => rect(0, 0, 1000, 800);
+    host = document.createElement('div');
     pane = document.createElement('div');
     host.appendChild(pane);
+    for (const layer of [host, pane]) {
+      layer.animate = vi.fn((_frames: Keyframe[], options: { timeline: FakeScrollTimeline }) => {
+        timelines.set(layer, options.timeline);
+        return { cancel, effect: { setKeyframes: (frames: Keyframe[]) => keyframes.set(layer, frames) } } as unknown as Animation;
+      }) as unknown as HTMLElement['animate'];
+    }
+    body = document.createElement('div');
+    body.style.overflowY = 'auto';
     origin = document.createElement('button');
-    origin.getBoundingClientRect = () => rect(100, 40, 120, 36);
-    document.body.append(origin, host);
+    body.appendChild(origin);
+    document.body.append(body, host);
+    scrollable(body, 120, 900, 300);
+    scrollable(document.documentElement, 0, 600, 600);
     overlayRef = { overlayElement: pane, hostElement: host, detachments: () => detachments } as unknown as OverlayRef;
   });
 
@@ -31,41 +54,34 @@ describe('txAnchorPane', () => {
     document.body.replaceChildren();
   });
 
-  it('pins the pane to its origin so the browser moves it while scrolling', async () => {
-    const written = new Map<string, string>();
-    const setProperty = pane.style.setProperty.bind(pane.style);
-    vi.spyOn(pane.style, 'setProperty').mockImplementation((property, value, priority) => {
-      written.set(property, String(value));
-      setProperty(property, value, priority);
-    });
-    pane.style.top = '140px';
-    pane.style.left = '40px';
+  it('moves the panel with the scrolling container of its field, off the main thread', async () => {
     txAnchorPane(overlayRef, origin);
-    const name = written.get('position-anchor');
-    expect(name).toMatch(/^--tx-anchor-\d+$/);
-    expect(origin.style.getPropertyValue('anchor-name')).toBe(name);
-    expect(written.get('top')).toBe('calc(anchor(top, 100px) + 40px)');
-    expect(written.get('left')).toBe('calc(anchor(left, 40px) + 0px)');
+    expect(timelines.get(host)?.options).toEqual({ source: body, axis: 'block' });
+    expect(keyframes.get(host)).toEqual([{ transform: 'translateY(120px)' }, { transform: 'translateY(-480px)' }]);
 
-    pane.style.bottom = '600px';
+    scrollable(body, 200, 900, 300);
+    pane.style.top = '40px';
     await Promise.resolve();
-    expect(written.get('bottom')).toBe('calc(anchor(bottom, 664px) + -64px)');
+    expect(keyframes.get(host)).toEqual([{ transform: 'translateY(200px)' }, { transform: 'translateY(-400px)' }]);
   });
 
-  it('lets go of the origin when the overlay detaches', () => {
-    origin.style.setProperty('anchor-name', '--other');
+  it('stops following once the overlay detaches', () => {
     txAnchorPane(overlayRef, origin);
-    expect(origin.style.getPropertyValue('anchor-name')).toMatch(/^--other, --tx-anchor-\d+$/);
     detachments.next();
-    expect(origin.style.getPropertyValue('anchor-name')).toBe('--other');
-    expect(pane.style.getPropertyValue('position-anchor')).toBe('');
+    expect(cancel).toHaveBeenCalled();
   });
 
-  it('keeps plain positions where the browser has no anchors', () => {
-    supports.mockReturnValueOnce(false);
-    pane.style.top = '140px';
+  it('does not follow scrollers above a fixed layer', () => {
+    const dialog = document.createElement('div');
+    dialog.style.position = 'fixed';
+    dialog.appendChild(body);
+    document.body.appendChild(dialog);
+    expect(scrollersOf(origin)).toEqual([body]);
+  });
+
+  it('keeps the script positioning where scroll timelines are missing', () => {
+    vi.unstubAllGlobals();
     txAnchorPane(overlayRef, origin);
-    expect(pane.style.top).toBe('140px');
-    expect(origin.style.getPropertyValue('anchor-name')).toBe('');
+    expect(host.animate).not.toHaveBeenCalled();
   });
 });
