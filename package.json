@@ -1,0 +1,41 @@
+{
+  "name": "tectra-ng",
+  "private": true,
+  "scripts": {
+    "registry": "node tools/registry-builder/build-registry.mjs",
+    "docs": "npm run registry && nx serve docs",
+    "docs:build": "npm run registry && nx build docs",
+    "sandbox": "nx serve sandbox",
+    "build:packages": "nx run-many -t build -p tokens themes core icons ui blocks"
+  },
+  "dependencies": {
+    "@angular/cdk": "22.2.3",
+    "@angular/common": "22.2.3",
+    "@angular/compiler": "22.2.3",
+    "@angular/core": "22.2.3",
+    "@angular/forms": "22.2.3",
+    "@angular/platform-browser": "22.2.3",
+    "@angular/router": "22.2.3",
+    "rxjs": "~7.8.2",
+    "tslib": "^2.8.1"
+  },
+  "devDependencies": {
+    "@angular-devkit/core": "22.2.3",
+    "@angular-devkit/schematics": "22.2.3",
+    "@angular/build": "22.2.3",
+    "@angular/cli": "22.2.3",
+    "@angular/compiler-cli": "22.2.3",
+    "@angular/language-service": "22.2.3",
+    "@nx/angular": "23.2.1",
+    "@nx/devkit": "23.2.1",
+    "@nx/js": "23.2.1",
+    "@nx/workspace": "23.2.1",
+    "@schematics/angular": "22.2.3",
+    "highlight.js": "^11.11.1",
+    "marked": "^16.0.0",
+    "ng-packagr": "22.2.4",
+    "nx": "23.2.1",
+    "sass": "^1.89.0",
+    "typescript": "6.0.3"
+  }
+}

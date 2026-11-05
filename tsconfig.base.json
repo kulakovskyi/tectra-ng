@@ -1,0 +1,33 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "dom"],
+    "paths": {
+      "@tectra/tokens": ["./packages/tokens/src/index.ts"],
+      "@tectra/themes": ["./packages/themes/src/index.ts"],
+      "@tectra/icons": ["./packages/icons/src/index.ts"],
+      "@tectra/core/*": ["./packages/core/*/index.ts"],
+      "@tectra/ui/*": ["./packages/ui/*/index.ts"],
+      "@tectra/blocks/*": ["./packages/blocks/*/index.ts"]
+    }
+  },
+  "angularCompilerOptions": {
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
+  },
+  "exclude": ["node_modules", "tmp"]
+}

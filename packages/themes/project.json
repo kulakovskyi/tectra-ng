@@ -1,0 +1,17 @@
+{
+  "name": "themes",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "packages/themes",
+  "tags": ["pkg:themes"],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:package",
+      "outputs": ["{workspaceRoot}/dist/packages/themes"],
+      "options": {
+        "project": "packages/themes/ng-package.json",
+        "tsConfig": "packages/themes/tsconfig.lib.json"
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+<p class="eyebrow">Get started</p>
+<h1>Installation</h1>
+<p class="lead">Four steps. Every component is its own entry point, so only what you import lands in your bundle.</p>
+
+@for (step of steps; track step.title) {
+  <h2>{{ step.title }}</h2>
+  <pre class="code"><code>{{ step.code }}</code></pre>
+}

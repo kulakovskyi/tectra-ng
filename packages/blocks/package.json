@@ -1,0 +1,6 @@
+{
+  "name": "@tectra/blocks",
+  "version": "0.0.0",
+  "license": "MIT",
+  "peerDependencies": { "@tectra/ui": "0.0.0", "@tectra/core": "0.0.0" }
+}

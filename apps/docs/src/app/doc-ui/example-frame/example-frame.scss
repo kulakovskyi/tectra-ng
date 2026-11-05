@@ -1,0 +1,47 @@
+.example {
+  margin-bottom: var(--tx-space-10);
+  scroll-margin-top: 72px;
+}
+
+.example__title {
+  margin: 0 0 var(--tx-space-1);
+  font-size: var(--tx-font-size-xl);
+  font-weight: 600;
+}
+
+.example__description {
+  color: var(--tx-text-muted);
+
+  ::ng-deep p {
+    margin: 0 0 var(--tx-space-3);
+  }
+}
+
+.example__card {
+  overflow: hidden;
+  border: 1px solid var(--tx-surface-border);
+  border-radius: var(--tx-radius-lg);
+  background: var(--tx-surface-card);
+}
+
+.example__preview {
+  min-height: 96px;
+  padding: var(--tx-space-8) var(--tx-space-6);
+}
+
+.example__toolbar {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--tx-space-2) var(--tx-space-3);
+  border-top: 1px solid var(--tx-surface-border);
+}
+
+.example__code {
+  margin: 0;
+  padding: var(--tx-space-4) var(--tx-space-6);
+  overflow-x: auto;
+  border-top: 1px solid var(--tx-surface-border);
+  background: var(--tx-surface-ground);
+  font-size: 13px;
+  line-height: 1.6;
+}

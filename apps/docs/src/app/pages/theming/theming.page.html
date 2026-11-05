@@ -1,0 +1,25 @@
+<p class="eyebrow">Get started</p>
+<h1>Theming</h1>
+<p class="lead">
+  A preset is plain data: <code>createInkPreset(accent)</code> takes the ink surfaces and one accent palette. <code>provideTectra()</code> turns it into CSS variables on <code>:root</code>; every component reads only
+  those variables. Change the preset — everything repaints, no rebuild.
+</p>
+
+<div class="card picker">
+  <span>Accent</span>
+  <tx-select [options]="accents" [formControl]="accentControl" />
+</div>
+
+<h2>Variables of the {{ mode() }} mode</h2>
+<div class="vars">
+  @for (variable of variables(); track variable.name) {
+    <div class="vars__row">
+      <span class="vars__swatch" [style.background]="variable.value"></span>
+      <code>{{ variable.name }}</code>
+      <span class="vars__value">{{ variable.value }}</span>
+    </div>
+  }
+</div>
+
+<h2>Use an accent in your app</h2>
+<pre class="code"><code>{{ "import { createInkPreset } from '@tectra/themes';\n\nprovideTectra({ preset: createInkPreset('teal') });" }}</code></pre>

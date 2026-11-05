@@ -1,0 +1,94 @@
+:host {
+  --tx-button-background: var(--tx-primary-base);
+  --tx-button-hover-background: var(--tx-primary-hover);
+  --tx-button-active-background: var(--tx-primary-active);
+  --tx-button-color: var(--tx-primary-contrast);
+  --tx-button-soft-background: var(--tx-primary-soft);
+  --tx-button-radius: var(--tx-radius-md);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--tx-space-2);
+  height: 37px;
+  padding: 0 var(--tx-space-3);
+  border: 1px solid var(--tx-button-background);
+  border-radius: var(--tx-button-radius);
+  background: var(--tx-button-background);
+  color: var(--tx-button-color);
+  font: var(--tx-font-weight-semibold) var(--tx-font-size-md) / 1 var(--tx-font-family);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--tx-motion-duration),
+    border-color var(--tx-motion-duration),
+    color var(--tx-motion-duration);
+
+  &:hover:not(:disabled) {
+    background: var(--tx-button-hover-background);
+    border-color: var(--tx-button-hover-background);
+  }
+
+  &:active:not(:disabled) {
+    background: var(--tx-button-active-background);
+    border-color: var(--tx-button-active-background);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--tx-focus-ring-color);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+@each $severity in (success, info, warn, danger, help) {
+  :host([data-severity='#{$severity}']) {
+    --tx-button-background: var(--tx-#{$severity}-base);
+    --tx-button-hover-background: var(--tx-#{$severity}-hover);
+    --tx-button-active-background: var(--tx-#{$severity}-active);
+    --tx-button-color: var(--tx-#{$severity}-contrast);
+    --tx-button-soft-background: var(--tx-#{$severity}-soft);
+  }
+}
+
+:host([data-severity='secondary']) {
+  --tx-button-background: var(--tx-secondary-base);
+  --tx-button-hover-background: var(--tx-secondary-hover);
+  --tx-button-active-background: var(--tx-secondary-active);
+  --tx-button-color: var(--tx-secondary-contrast);
+  --tx-button-soft-background: var(--tx-secondary-base);
+
+  border-color: var(--tx-secondary-border);
+}
+
+:host(.tx-button--outlined) {
+  background: var(--tx-surface-card);
+  color: var(--tx-button-background);
+
+  &:hover:not(:disabled),
+  &:active:not(:disabled) {
+    border-color: var(--tx-button-background);
+    background: var(--tx-button-soft-background);
+  }
+}
+
+:host(.tx-button--outlined[data-severity='secondary']) {
+  border-color: var(--tx-field-border);
+  color: var(--tx-secondary-contrast);
+}
+
+:host([data-size='small']) {
+  height: 30px;
+  padding: 0 var(--tx-space-2);
+  font-size: var(--tx-font-size-sm);
+}
+
+:host([data-size='large']) {
+  height: 44px;
+  padding: 0 var(--tx-space-4);
+  font-size: var(--tx-font-size-lg);
+}

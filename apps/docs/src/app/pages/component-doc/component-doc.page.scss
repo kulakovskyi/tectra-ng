@@ -1,0 +1,35 @@
+.description {
+  color: var(--tx-text-muted);
+  font-size: var(--tx-font-size-lg);
+
+  ::ng-deep p {
+    margin: 0 0 var(--tx-space-4);
+  }
+}
+
+.tabs {
+  display: flex;
+  gap: var(--tx-space-1);
+  margin: var(--tx-space-6) 0 var(--tx-space-8);
+  border-bottom: 1px solid var(--tx-surface-border);
+}
+
+.tabs__tab {
+  margin-bottom: -1px;
+  padding: var(--tx-space-2) var(--tx-space-4);
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--tx-text-muted);
+  font: 500 var(--tx-font-size-md) var(--tx-font-family);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--tx-text-primary);
+  }
+}
+
+.tabs__tab--active {
+  border-bottom-color: var(--tx-primary-base);
+  color: var(--tx-primary-base);
+}

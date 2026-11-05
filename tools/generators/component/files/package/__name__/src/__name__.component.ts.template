@@ -1,0 +1,9 @@
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+
+@Component({
+  selector: 'tx-<%= name %>',
+  templateUrl: './<%= name %>.component.html',
+  styleUrl: './<%= name %>.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class Tx<%= className %> {}

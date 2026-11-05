@@ -1,0 +1,20 @@
+<section class="example" [id]="example().id">
+  <h3 class="example__title">{{ example().title }}</h3>
+  <div class="example__description" [innerHTML]="example().descriptionHtml"></div>
+
+  <div class="example__card">
+    <div class="example__preview">
+      @if (component(); as component) {
+        <ng-container [ngComponentOutlet]="component" />
+      }
+    </div>
+    <div class="example__toolbar">
+      <button txButton [size]="'small'" [severity]="'secondary'" [outlined]="true" (click)="toggleCode()">
+        {{ isCodeVisible() ? 'Hide code' : 'Show code' }}
+      </button>
+    </div>
+    @if (isCodeVisible()) {
+      <pre class="example__code"><code class="hljs" [innerHTML]="example().sourceHtml"></code></pre>
+    }
+  </div>
+</section>

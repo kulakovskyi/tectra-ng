@@ -1,0 +1,112 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  padding: 0 var(--tx-space-6);
+  border-bottom: 1px solid var(--tx-surface-border);
+  background: var(--tx-surface-card);
+}
+
+.header__logo {
+  display: flex;
+  align-items: center;
+  gap: var(--tx-space-2);
+  color: var(--tx-text-primary);
+  font-size: var(--tx-font-size-lg);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.header__mark {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--tx-radius-md);
+  background: var(--tx-primary-base);
+  color: var(--tx-primary-contrast);
+  font-size: var(--tx-font-size-sm);
+}
+
+.header__version {
+  padding: 1px 8px;
+  border-radius: var(--tx-radius-full);
+  background: var(--tx-surface-hover);
+  color: var(--tx-text-muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.body {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+}
+
+.sidebar {
+  position: sticky;
+  top: 56px;
+  height: calc(100vh - 56px);
+  padding: var(--tx-space-6) var(--tx-space-4);
+  overflow-y: auto;
+  border-right: 1px solid var(--tx-surface-border);
+}
+
+.sidebar__group {
+  margin-bottom: var(--tx-space-6);
+}
+
+.sidebar__title {
+  margin-bottom: var(--tx-space-2);
+  padding: 0 var(--tx-space-3);
+  color: var(--tx-text-primary);
+  font-size: var(--tx-font-size-sm);
+  font-weight: 600;
+}
+
+.sidebar__link {
+  display: block;
+  padding: 6px var(--tx-space-3);
+  border-radius: var(--tx-radius-md);
+  color: var(--tx-text-muted);
+  text-decoration: none;
+
+  &:hover {
+    background: var(--tx-surface-hover);
+    color: var(--tx-text-primary);
+  }
+}
+
+.sidebar__link--active {
+  background: var(--tx-primary-soft);
+  color: var(--tx-primary-base);
+  font-weight: 500;
+}
+
+.content {
+  min-width: 0;
+  max-width: 960px;
+  padding: var(--tx-space-8) var(--tx-space-10);
+}
+
+@media (width < 64rem) {
+  .body {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .content {
+    padding: var(--tx-space-6) var(--tx-space-4);
+  }
+}

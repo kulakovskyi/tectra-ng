@@ -1,0 +1,9 @@
+node_modules
+.angular
+dist
+.nx
+apps/docs/src/generated/*
+!apps/docs/src/generated/README.md
+test-results
+playwright-report
+.idea

@@ -1,0 +1,25 @@
+.demo {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: var(--tx-space-3);
+  margin-bottom: var(--tx-space-2);
+}
+
+.layers {
+  display: grid;
+  gap: var(--tx-space-3);
+}
+
+.layer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tx-space-1);
+  padding: var(--tx-space-4) var(--tx-space-6);
+  color: var(--tx-text-muted);
+}
+
+@media (width < 40rem) {
+  .demo {
+    grid-template-columns: 1fr;
+  }
+}

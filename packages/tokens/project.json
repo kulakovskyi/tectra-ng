@@ -1,0 +1,17 @@
+{
+  "name": "tokens",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "packages/tokens",
+  "tags": ["pkg:tokens"],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:package",
+      "outputs": ["{workspaceRoot}/dist/packages/tokens"],
+      "options": {
+        "project": "packages/tokens/ng-package.json",
+        "tsConfig": "packages/tokens/tsconfig.lib.json"
+      }
+    }
+  }
+}

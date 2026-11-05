@@ -1,0 +1,46 @@
+{
+  "name": "docs",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "docs",
+  "sourceRoot": "apps/docs/src",
+  "tags": ["type:app"],
+  "targets": {
+    "registry": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "options": { "command": "node tools/registry-builder/build-registry.mjs" }
+    },
+    "build": {
+      "executor": "@angular/build:application",
+      "outputs": ["{options.outputPath}"],
+      "dependsOn": ["registry"],
+      "options": {
+        "outputPath": "dist/apps/docs",
+        "index": "apps/docs/src/index.html",
+        "browser": "apps/docs/src/main.ts",
+        "tsConfig": "apps/docs/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "styles": ["node_modules/@angular/cdk/overlay-prebuilt.css", "apps/docs/src/styles.scss"]
+      },
+      "configurations": {
+        "production": {
+          "outputHashing": "all",
+          "budgets": [{ "type": "initial", "maximumWarning": "1mb", "maximumError": "2mb" }]
+        },
+        "development": { "optimization": false, "extractLicenses": false, "sourceMap": true }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular/build:dev-server",
+      "dependsOn": ["registry"],
+      "options": { "port": 4300 },
+      "configurations": {
+        "production": { "buildTarget": "docs:build:production" },
+        "development": { "buildTarget": "docs:build:development" }
+      },
+      "defaultConfiguration": "development"
+    }
+  }
+}

@@ -1,0 +1,83 @@
+<button
+  #trigger
+  #origin="cdkOverlayOrigin"
+  cdkOverlayOrigin
+  type="button"
+  role="combobox"
+  class="tx-select__trigger"
+  aria-haspopup="listbox"
+  [attr.aria-expanded]="isOpen()"
+  [attr.aria-controls]="listboxId"
+  [attr.aria-activedescendant]="filter() ? null : activeItemId()"
+  [disabled]="disabled()"
+  (click)="toggle()"
+  (keydown)="onKeydown($event)"
+>
+  @if (selectedItem(); as item) {
+    <span class="tx-select__value">
+      @if (optionTemplate(); as template) {
+        <ng-container [ngTemplateOutlet]="template.templateRef" [ngTemplateOutletContext]="{ $implicit: item.option }" />
+      } @else {
+        {{ item.label }}
+      }
+    </span>
+  } @else {
+    <span class="tx-select__value tx-select__value--placeholder">{{ placeholder() }}</span>
+  }
+  <tx-icon class="tx-select__chevron" [name]="'chevronDown'" />
+</button>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="origin"
+  [cdkConnectedOverlayOpen]="isOpen()"
+  [cdkConnectedOverlayPositions]="positions"
+  [cdkConnectedOverlayWidth]="panelWidth()"
+  (overlayOutsideClick)="onOutsideClick($event)"
+  (attach)="onPanelAttach()"
+  (detach)="close()"
+>
+  <div class="tx-select__panel">
+    @if (filter()) {
+      <div class="tx-select__filter">
+        <tx-icon class="tx-select__filter-icon" [name]="'search'" />
+        <input
+          #filterInput
+          class="tx-select__filter-input"
+          role="searchbox"
+          [attr.aria-controls]="listboxId"
+          [attr.aria-activedescendant]="activeItemId()"
+          [placeholder]="translations.searchPlaceholder"
+          [value]="query()"
+          (input)="onFilter($event)"
+          (keydown)="onKeydown($event)"
+        />
+      </div>
+    }
+    <div class="tx-select__list" role="listbox" [id]="listboxId">
+      @for (item of visibleItems(); track item.id; let index = $index) {
+        <div
+          role="option"
+          class="tx-select__option"
+          [id]="item.id"
+          [class.tx-select__option--active]="index === activeIndex()"
+          [class.tx-select__option--selected]="item.selected"
+          [attr.aria-selected]="item.selected"
+          (mouseenter)="activeIndex.set(index)"
+          (click)="choose(item)"
+        >
+          @if (optionTemplate(); as template) {
+            <ng-container [ngTemplateOutlet]="template.templateRef" [ngTemplateOutletContext]="{ $implicit: item.option }" />
+          } @else {
+            <span>{{ item.label }}</span>
+          }
+          @if (item.selected) {
+            <tx-icon class="tx-select__check" [name]="'check'" />
+          }
+        </div>
+      } @empty {
+        <div class="tx-select__empty">{{ translations.emptyMessage }}</div>
+      }
+    </div>
+  </div>
+</ng-template>

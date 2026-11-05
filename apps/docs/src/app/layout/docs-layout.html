@@ -1,0 +1,35 @@
+<header class="header">
+  <a class="header__logo" routerLink="/">
+    <span class="header__mark">tx</span>
+    tectra
+    <span class="header__version">v0.0.0</span>
+  </a>
+  <div class="header__actions">
+    <button txButton [outlined]="true" [severity]="'secondary'" [size]="'small'" (click)="toggleMode()" [attr.aria-label]="'Toggle theme'">
+      <tx-icon [name]="mode() === 'light' ? 'moon' : 'sun'" />
+      {{ mode() === 'light' ? 'Dark' : 'Light' }}
+    </button>
+  </div>
+</header>
+
+<div class="body">
+  <nav class="sidebar">
+    @for (group of navigation; track group.title) {
+      <div class="sidebar__group">
+        <div class="sidebar__title">{{ group.title }}</div>
+        @for (link of group.links; track link.path) {
+          <a
+            class="sidebar__link"
+            routerLinkActive="sidebar__link--active"
+            [routerLink]="link.path"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >{{ link.label }}</a>
+        }
+      </div>
+    }
+  </nav>
+
+  <main class="content">
+    <router-outlet />
+  </main>
+</div>

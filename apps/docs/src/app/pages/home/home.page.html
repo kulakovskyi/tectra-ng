@@ -1,0 +1,26 @@
+<p class="eyebrow">Open-source Angular UI kit</p>
+<h1>tectra</h1>
+<p class="lead">Signals, zoneless, standalone. Themes on CSS variables. Built for consoles and admin apps.</p>
+
+<div class="card demo">
+  <input txInput placeholder="Name" />
+  <tx-select [options]="roles" [formControl]="role" />
+  <button txButton>Invite</button>
+</div>
+<p class="hint">These three are real tectra components. Switch the theme in the header.</p>
+
+<h2>How it is built</h2>
+<div class="layers">
+  @for (layer of layers; track layer.name) {
+    <div class="card layer">
+      <code>{{ layer.name }}</code>
+      <span>{{ layer.text }}</span>
+    </div>
+  }
+</div>
+
+<h2>Next</h2>
+<div class="flex">
+  <a txButton routerLink="/getting-started">Installation</a>
+  <a txButton [outlined]="true" [severity]="'secondary'" routerLink="/components/select">See Select</a>
+</div>

@@ -1,0 +1,35 @@
+@if (rows().length) {
+  @if (title()) {
+    <h3 class="doc-table__title">{{ title() }}</h3>
+  }
+  <div class="doc-table">
+    <table>
+      <thead>
+        <tr>
+          @for (column of columns(); track column.key) {
+            <th>{{ column.label }}</th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track $index) {
+          <tr>
+            @for (column of columns(); track column.key) {
+              @switch (column.format) {
+                @case ('code') {
+                  <td><code>{{ $any(row)[column.key] }}</code></td>
+                }
+                @case ('html') {
+                  <td [innerHTML]="$any(row)[column.key]"></td>
+                }
+                @default {
+                  <td>{{ $any(row)[column.key] }}</td>
+                }
+              }
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}
