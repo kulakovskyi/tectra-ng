@@ -31,6 +31,7 @@ export * from './components/avatar.tokens';
 export * from './components/tooltip.tokens';
 export * from './components/popover.tokens';
 export * from './components/toast.tokens';
+export * from './components/dialog.tokens';
 export * from './components/icon.tokens';
 export * from './components/ripple.tokens';
 export * from './components/toggle-button.tokens';

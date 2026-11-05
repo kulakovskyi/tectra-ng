@@ -1,0 +1,254 @@
+:host {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+:host(.tx-dialog-container--modal) {
+  pointer-events: auto;
+}
+
+:host([data-position^='top']) {
+  align-items: flex-start;
+}
+
+:host([data-position^='bottom']) {
+  align-items: flex-end;
+}
+
+:host([data-position$='left']) {
+  justify-content: flex-start;
+}
+
+:host([data-position$='right']) {
+  justify-content: flex-end;
+}
+
+:host([data-drawer='left']) {
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+:host([data-drawer='right']) {
+  align-items: stretch;
+  justify-content: flex-end;
+}
+
+:host([data-drawer='top']) {
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+:host([data-drawer='bottom']) {
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-end;
+}
+
+.tx-dialog-mask {
+  position: absolute;
+  inset: 0;
+}
+
+.tx-dialog {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  max-width: 100%;
+  max-height: 100%;
+  min-height: 0;
+  outline: none;
+  pointer-events: auto;
+}
+
+:host([data-drawer='left']) .tx-dialog,
+:host([data-drawer='right']) .tx-dialog {
+  height: 100%;
+}
+
+:host([data-styled]) {
+  padding: var(--tx-dialog-inset);
+  font-family: var(--tx-font-family);
+
+  .tx-dialog-mask {
+    background: var(--tx-dialog-mask-background);
+    animation: tx-dialog-fade-in var(--tx-dialog-enter-duration) ease-out;
+  }
+
+  .tx-dialog {
+    --_width: var(--tx-dialog-md-width);
+
+    width: var(--_width);
+    overflow: hidden;
+    border: var(--tx-dialog-border-width) solid var(--tx-dialog-border-color);
+    border-radius: var(--tx-dialog-border-radius);
+    background: var(--tx-dialog-background);
+    color: var(--tx-dialog-color);
+    font-size: var(--tx-dialog-font-size);
+    box-shadow: var(--tx-dialog-shadow);
+    animation: tx-dialog-in var(--tx-dialog-enter-duration) cubic-bezier(0.2, 0, 0, 1);
+    transition:
+      width var(--tx-dialog-enter-duration) cubic-bezier(0.2, 0, 0, 1),
+      height var(--tx-dialog-enter-duration) cubic-bezier(0.2, 0, 0, 1);
+
+    &:focus-visible {
+      outline: var(--tx-dialog-focus-ring-width) solid var(--tx-dialog-focus-ring-color);
+      outline-offset: 2px;
+    }
+  }
+
+  .tx-dialog[data-size='small'] {
+    --_width: var(--tx-dialog-sm-width);
+  }
+
+  .tx-dialog[data-size='large'] {
+    --_width: var(--tx-dialog-lg-width);
+  }
+
+  .tx-dialog[data-size='xlarge'] {
+    --_width: var(--tx-dialog-xl-width);
+  }
+
+  .tx-dialog[data-size='fullscreen'] {
+    --_width: 100%;
+
+    height: 100%;
+  }
+
+  .tx-dialog--dragging {
+    transition: none;
+    user-select: none;
+  }
+}
+
+:host([data-styled].tx-dialog-container--maximized) {
+  padding: 0;
+
+  .tx-dialog {
+    border-radius: 0;
+  }
+}
+
+:host([data-styled][data-drawer]) {
+  padding: 0;
+
+  .tx-dialog {
+    border-radius: 0;
+    animation-name: tx-drawer-in;
+  }
+}
+
+:host([data-styled][data-drawer='left']),
+:host([data-styled][data-drawer='right']) {
+  .tx-dialog {
+    width: var(--_drawer-size);
+  }
+}
+
+:host([data-styled][data-drawer='top']),
+:host([data-styled][data-drawer='bottom']) {
+  .tx-dialog {
+    width: 100%;
+    height: var(--_drawer-size);
+  }
+}
+
+:host([data-styled][data-drawer='left']) .tx-dialog {
+  --_from: -100% 0;
+
+  border-width: 0 var(--tx-dialog-border-width) 0 0;
+}
+
+:host([data-styled][data-drawer='right']) .tx-dialog {
+  --_from: 100% 0;
+
+  border-width: 0 0 0 var(--tx-dialog-border-width);
+}
+
+:host([data-styled][data-drawer='top']) .tx-dialog {
+  --_from: 0 -100%;
+
+  border-width: 0 0 var(--tx-dialog-border-width);
+}
+
+:host([data-styled][data-drawer='bottom']) .tx-dialog {
+  --_from: 0 100%;
+
+  border-width: var(--tx-dialog-border-width) 0 0;
+}
+
+:host([data-styled].tx-dialog-container--leaving) {
+  .tx-dialog-mask {
+    animation: tx-dialog-fade-out var(--tx-dialog-leave-duration) ease-in forwards;
+  }
+
+  .tx-dialog {
+    animation: tx-dialog-out var(--tx-dialog-leave-duration) ease-in forwards;
+  }
+}
+
+:host([data-styled][data-drawer].tx-dialog-container--leaving) .tx-dialog {
+  animation-name: tx-drawer-out;
+}
+
+@keyframes tx-dialog-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes tx-dialog-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes tx-dialog-in {
+  from {
+    opacity: 0;
+    scale: 0.96;
+  }
+}
+
+@keyframes tx-dialog-out {
+  to {
+    opacity: 0;
+    scale: 0.97;
+  }
+}
+
+@keyframes tx-drawer-in {
+  from {
+    translate: var(--_from);
+  }
+}
+
+@keyframes tx-drawer-out {
+  to {
+    translate: var(--_from);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) {
+    .tx-dialog,
+    .tx-dialog-mask {
+      transition: none;
+      animation-duration: 1ms;
+    }
+  }
+
+  :host([data-styled][data-drawer]) .tx-dialog {
+    animation-name: tx-dialog-fade-in;
+  }
+
+  :host([data-styled][data-drawer].tx-dialog-container--leaving) .tx-dialog {
+    animation-name: tx-dialog-fade-out;
+  }
+}

@@ -1,0 +1,20 @@
+@if (modal) {
+  <div class="tx-dialog-mask" aria-hidden="true" [class]="passThrough().mask?.class" [style]="passThrough().mask?.style" (click)="onMaskClick()"></div>
+}
+<div
+  #panel
+  class="tx-dialog"
+  tabindex="-1"
+  [class]="rootClass()"
+  [style]="panelStyle()"
+  [class.tx-dialog--maximized]="ref.maximized()"
+  [class.tx-dialog--dragging]="dragging()"
+  [attr.role]="role"
+  [attr.aria-modal]="modal || null"
+  [attr.aria-label]="config.ariaLabel ?? null"
+  [attr.aria-labelledby]="labelledBy()"
+  [attr.aria-describedby]="config.ariaDescribedBy ?? null"
+  [attr.data-size]="drawer ? null : size"
+>
+  <ng-template cdkPortalOutlet />
+</div>

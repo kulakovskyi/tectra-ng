@@ -40,17 +40,19 @@ PrimeNG: Toast + MessageService (`add`, `addAll`, `clear(key)`, `severity`, `sum
 - [x] Accessible: `role="status"` (polite) / `role="alert"` for errors, close button with a translated label, keyboard reachable actions inside a translated "Notifications" region; focus never jumps into a toast, the outlet moves to the end of `body` (`inPlace` to keep it)
 - [x] Docs + tests: severities, positions, sticky, actions, loading → success, update, template, design tokens; e2e: auto close, hover pauses, stacking without layout shift
 
-## 5.4 Dialog — `ui/dialog` + `TxDialog` service
+## 5.4 Dialog — `ui/dialog` + `TxDialog` service ✅
 
 PrimeNG: Dialog (`visible`, `header`, `modal`, `closable`, `dismissableMask`, `closeOnEscape`, `draggable`, `resizable`, `maximizable`, `position`, `breakpoints`, `blockScroll`, `focusOnShow`, `focusTrap`, header / footer templates) and DynamicDialog (`DialogService.open(component, config)`, `DynamicDialogRef.close(result)`, `onClose`, `DynamicDialogConfig.data`). First app: ~356 `open` calls with a component, data and a width (~94 set it; default 700px, narrower below 960px / 640px), the result is read from an observable (`'success'` or nothing); ~389 modal components read data through injection and close through the ref; no shared header — every modal draws its own title and close button.
 
-- [ ] `TxDialog.open(component | template, { data, width, ... })` → `TxDialogRef<TResult>` (`close(result?)`, `closed` observable, `afterOpened`, `updateSize`), `TX_DIALOG_DATA` + `injectDialogData<T>()`, `injectDialogRef<R>()`; component inputs set from `inputs`
-- [ ] Declarative `<tx-dialog [(visible)]>` for template dialogs, same look
-- [ ] Layout parts: `<tx-dialog-header>` (title, subtitle, close button), `<tx-dialog-content>` (scrolls), `<tx-dialog-footer>` (actions, aligned end); `txDialogClose` directive (`[txDialogClose]="result"`)
-- [ ] Options: `width` / `minWidth` / `maxWidth` / `breakpoints`, `size` presets (`small` / `medium` / `large` / `fullscreen`), `position` (center / top / …), `closable`, `closeOnEscape`, `dismissableMask`, `modal`, `blockScroll`, `draggable`, `maximizable`, `autoFocus` (first field / first button / dialog / selector), `restoreFocus`, `panelClass`, `ariaLabel`
-- [ ] Stacking (dialog over dialog, Escape closes the top one), `closeAll()`, `canClose` guard (unsaved changes)
-- [ ] Accessible: `role="dialog"` / `alertdialog`, `aria-modal`, `aria-labelledby` from the header title, focus trap, focus back to the opener, inert background
-- [ ] Docs + tests: service with data and result, template dialog, sizes, positions, scrolling content, form in a dialog, nested, guard, maximizable, draggable, design tokens; e2e: focus trap, Escape, mask click, no layout shift of the page (scrollbar gutter)
+- [x] `TxDialog.open(component | template, { data, width, ... })` → `TxDialogRef<TResult>` (`close(result?)`, `closed` observable, `afterOpened`, `updateSize`), `TX_DIALOG_DATA` + `injectDialogData<T>()`, `injectDialogRef<R>()`; component inputs set from `inputs`
+- [x] Declarative `<tx-dialog [(visible)]>` for template dialogs, same look
+- [x] Layout parts: `<tx-dialog-header>` (title, subtitle, close button), `<tx-dialog-content>` (scrolls), `<tx-dialog-footer>` (actions, aligned end); `txDialogClose` directive (`[txDialogClose]="result"`)
+- [x] Options: `width` / `minWidth` / `maxWidth` / `breakpoints`, `size` presets (`small` / `medium` / `large` / `fullscreen`), `position` (center / top / …), `closable`, `closeOnEscape`, `dismissableMask`, `modal`, `blockScroll`, `draggable`, `maximizable`, `autoFocus` (first field / first button / dialog / selector), `restoreFocus`, `panelClass`, `ariaLabel`
+- [x] Stacking (dialog over dialog, Escape closes the top one), `closeAll()`, `canClose` guard (unsaved changes)
+- [x] Accessible: `role="dialog"` / `alertdialog`, `aria-modal`, `aria-labelledby` from the header title, focus trap, focus back to the opener, inert background
+- [x] Docs + tests: service with data and result, template dialog, sizes, positions, scrolling content, form in a dialog, nested, guard, maximizable, draggable, design tokens; e2e: focus trap, Escape, mask click, no layout shift of the page (scrollbar gutter)
+- Found on the way: docs leads use `max-width` in `ch`, so a long lead reflows when the web font arrives and shifts the page — keep page and example leads short
+
 
 ## 5.5 Drawer — `ui/drawer`
 

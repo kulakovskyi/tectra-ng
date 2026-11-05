@@ -28,6 +28,7 @@ import { toggleSwitchTokens } from './toggle-switch.tokens';
 import { tooltipTokens } from './tooltip.tokens';
 import { popoverTokens } from './popover.tokens';
 import { toastTokens } from './toast.tokens';
+import { dialogTokens } from './dialog.tokens';
 
 export const COMPONENT_TOKENS = {
   icon: iconTokens,
@@ -65,6 +66,7 @@ export const COMPONENT_TOKENS = {
   tooltip: tooltipTokens,
   popover: popoverTokens,
   toast: toastTokens,
+  dialog: dialogTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;
