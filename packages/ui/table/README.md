@@ -10,11 +10,11 @@ Data table for lists: sorting, pagination, server data, selection, row actions w
 </tx-table>
 ```
 
-Columns are `TxTableColumn` objects: `field` (a dot reads a nested value, `team.name`), `header`, `sortable` (on unless `false`), `sortField`, `reorderable`, `resizable`, `hideable`, `hidden`, `width` (fixed, no resize), `initialWidth`, `minWidth`, `maxWidth` (CSS lengths; columns are 100px until resized), `frozen` (`start` / `end`), `align` (`start` / `center` / `end`), `headerClass`, `cellClass`, `footer`, `cardTitle` (this column is the title of the card), `hideInCard`.
+Columns are `TxTableColumn` objects: `field` (a dot reads a nested value, `team.name`), `header`, `sortable` (on unless `false`), `sortField`, `reorderable`, `resizable`, `hideable`, `hidden`, `width` (fixed, no resize), `initialWidth`, `minWidth`, `maxWidth` (CSS lengths; columns are 100px until resized), `frozen` (`start` / `end`), `align` (`start` / `center` / `end`), `headerClass`, `cellClass`, `footer`, `cardTitle` (this column is the title of the card), `hideInCard`; filters: `filter`, `filterField`, `filterType` (`text`, `numeric`, `date`, `boolean`), `filterMatchModes`, `filterOptions` (`{ label, value }[]` — a multi select with the `in` match mode), `filterPlaceholder`; editing: `editable`, `editType` (`text`, `numeric`, `date`, `boolean`), `editOptions` (a select).
 
 A cell shows the value of its field as text; `<ng-template txTableCell="field">` replaces it. Text that does not fit is cut with an ellipsis.
 
-Sorting and pagination run on `value` unless `lazy` is on — then `lazyLoad` asks the server for `{ first, rows, sortField, sortOrder, multiSortMeta }` and `totalRecords` is the size of the whole list. A set `totalRecords` without `lazy` also means `value` is already the current page.
+Filtering, sorting and pagination run on `value` unless `lazy` is on — then `lazyLoad` asks the server for `{ first, rows, sortField, sortOrder, multiSortMeta, filters, globalFilter }` and `totalRecords` is the size of the whole list. A set `totalRecords` without `lazy` also means `value` is already the current page.
 
 ## Inputs
 | Name | Description |
@@ -38,6 +38,26 @@ Sorting and pagination run on `value` unless `lazy` is on — then `lazyLoad` as
 | multiSortMeta | Sort of `multiple` mode, `{ field, order }[]`. Two-way: `[(multiSortMeta)]` |
 | customSort | Rows are not sorted by the table — sort `value` yourself on `sortChange` |
 | lazy | Rows come from a server: no local sorting or slicing, `lazyLoad` asks for data |
+| filterDisplay | `menu` (default) — a filter button in the header opens rules with match modes, and / or, add / remove rule, Clear and Apply; `row` — a row of filter fields under the headers with a match mode menu |
+| filters | Column filters, `{ [field]: { operator, rules: { value, matchMode }[] } }`. Two-way: `[(filters)]` |
+| globalFilter | Text searched in every column (or `globalFilterFields`). Two-way: `[(globalFilter)]` — bind it to an own search field |
+| globalFilterFields | Fields the global search looks in; the visible columns by default |
+| filterDelay | Milliseconds to wait after typing in a text filter of the filter row (and before `lazyLoad` for the global search) |
+| editMode | `cell` — a click, Enter or F2 edits a cell, Enter / Tab saves, Escape cancels; `row` — an edit column with edit, save and cancel buttons |
+| editingRowKeys | `dataKey` values of the rows in edit (`row` mode). Two-way: `[(editingRowKeys)]` |
+| reorderableRows | A drag handle column; rows move by drag or Alt + Arrow Up / Down on the handle, `rowReorder` gets the new order |
+| frozenValue | Rows pinned above the body; they stay under the header while the table scrolls |
+| groupRowsBy | Field the rows are grouped by; rows are sorted by it first |
+| rowGroupMode | `subheader` (default) — a header row per group (and `txTableGroupFooter`); `rowspan` — the group cell spans its rows |
+| expandableRowGroups | Group headers get a toggle that collapses the group |
+| expandedRowGroups | Values of the open groups; `null` (default) — all open. Two-way: `[(expandedRowGroups)]` |
+| virtualScroll | Renders only the rows in view — for long lists; needs `scrollHeight` and rows of one height. With `lazy`, rows that are `null` / `undefined` show skeletons and `lazyLoad` asks for the visible range |
+| virtualScrollItemSize | Height of a row in px with `virtualScroll` |
+| virtualScrollTolerance | Rows rendered above and below the view |
+| cellTooltip | Text cut with an ellipsis shows a tooltip with the full text |
+| csvSeparator | Separator of `exportCSV()` |
+| exportFilename | File name of `exportCSV()` |
+| exportFunction | Function `(row, column)` that returns the value written to the CSV |
 | lazyLoadOnInit | `lazy`: asks for the first page right away (on by default) |
 | paginator | Shows `tx-paginator` |
 | paginatorPosition | `bottom` (default), `top` or `both` |
@@ -86,6 +106,15 @@ Sorting and pagination run on `value` unless `lazy` is on — then `lazyLoad` as
 | Name | Description |
 |---|---|
 | sortChange | Sort changed: `{ field, order, multiSortMeta }` |
+| filterChange | Filters or the global search changed: `{ filters, globalFilter, filteredValue }` |
+| cellEditInit | A cell went into edit: `{ row, index, field, value, previousValue }` |
+| cellEditComplete | A cell edit was saved — the table writes the value into the row |
+| cellEditCancel | A cell edit was cancelled |
+| rowEditInit | A row went into edit: `{ row, index, changes, previous }` |
+| rowEditSave | A row edit was saved — the table writes `changes` into the row; `previous` holds the old values |
+| rowEditCancel | A row edit was cancelled |
+| rowReorder | A row was moved: `{ from, to, value }` — `value` is the new order, set it as `value` |
+| rowGroupToggle | A group was collapsed or expanded: `{ value, expanded }` |
 | pageChange | Page or page size changed (`TxPageState`) |
 | lazyLoad | `lazy`: data is needed — `{ first, rows, sortField, sortOrder, multiSortMeta }` |
 | rowClick | A row was clicked: `{ row, index, originalEvent }` |
@@ -109,7 +138,17 @@ Sorting and pagination run on `value` unless `lazy` is on — then `lazyLoad` as
 | txTableExpansion | `<ng-template txTableExpansion let-row>` — content of an expanded row; adds the expand column |
 | txTableCard | `<ng-template txTableCard let-row let-index="index">` — own card for a row on narrow screens |
 | txTableEmpty | `<ng-template txTableEmpty>` — own content of an empty table |
+| txTableEditor | `<ng-template txTableEditor="field" let-value="value" let-set="set" let-commit="commit" let-cancel="cancel">` — own editor of a column |
+| txTableGroupHeader | `<ng-template txTableGroupHeader let-row let-value="value" let-count="count" let-toggle="toggle">` — content of a group header |
+| txTableGroupFooter | `<ng-template txTableGroupFooter let-value="value" let-count="count" let-rows="rows">` — row after a group, e.g. its total |
 | txTableToolbar | `<div txTableToolbar>` — content on the left of the toolbar row, next to the settings gear |
+
+## Methods
+| Name | Description |
+|---|---|
+| exportCSV(options?) | Downloads the visible columns of the filtered and sorted rows as CSV (UTF-8 with BOM, quoted, formulas guarded); `{ selectionOnly, filename }`; returns the text |
+| clearFilters() | Clears the column filters and the global search |
+| clearState() | Removes the saved state of `stateKey` |
 
 ## Inputs — tx-table-actions
 | Name | Description |
@@ -133,4 +172,7 @@ Sorting and pagination run on `value` unless `lazy` is on — then `lazyLoad` as
 | Ctrl / ⌘ + A | `multiple`: selects all rows of the page |
 | Alt + Arrow Left / Right | On a header with `reorderableColumns`: moves the column |
 | Arrow Left / Right | On a resize handle: narrower / wider by 10px |
-| Alt + Arrow Up / Down | In the settings list: moves the column or the action |
+| Alt + Arrow Up / Down | In the settings list: moves the column or the action; on a row handle: moves the row |
+| Enter / F2 | On an editable cell (`editMode="cell"`): starts editing |
+| Enter / Tab / Shift + Tab | In a cell editor: saves (Tab moves to the next editable cell) |
+| Escape | In an editor: cancels |

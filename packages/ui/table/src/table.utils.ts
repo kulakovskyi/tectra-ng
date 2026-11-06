@@ -5,6 +5,14 @@ export function resolveField(row: unknown, field: string | undefined): unknown {
   return field.split('.').reduce<unknown>((value, key) => (value === null || value === undefined ? undefined : (value as Record<string, unknown>)[key]), row);
 }
 
+export function writeField(row: unknown, field: string, value: unknown): void {
+  const keys = field.split('.');
+  const last = keys.pop();
+  if (!last) return;
+  const target = keys.reduce<unknown>((current, key) => (current === null || current === undefined ? undefined : (current as Record<string, unknown>)[key]), row);
+  if (target !== null && typeof target === 'object') (target as Record<string, unknown>)[last] = value;
+}
+
 export function compareValues(a: unknown, b: unknown, locale?: string): number {
   if (a === b) return 0;
   if (a === null || a === undefined || a === '') return 1;

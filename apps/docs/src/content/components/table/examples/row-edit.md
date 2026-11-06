@@ -1,0 +1,1 @@
+`editMode="row"` adds an edit column: the pencil opens every editable cell of the row, the check saves, the cross cancels. `[(editingRowKeys)]` holds the rows in edit; `rowEditSave` gets the changed fields and the old values.

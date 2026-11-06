@@ -88,6 +88,19 @@ export const tableTokens = {
     padding: '10.5px',
     color: tokenRef('text-primary'),
   },
+  filter: {
+    gap: '7px',
+    minWidth: '175px',
+    buttonInset: '7px',
+    cellPadding: '7px 12.25px',
+  },
+  group: {
+    background: lightDark(tokenRef('surface-50'), tokenRef('surface-950')),
+    fontWeight: tokenRef('font-weight-semibold'),
+  },
+  editor: {
+    paddingBlock: '0',
+  },
   expansion: {
     duration: `calc(${tokenRef('motion-duration')} * 1.6)`,
     easing: 'cubic-bezier(0.2, 0, 0, 1)',

@@ -1,0 +1,1 @@
+`virtualScroll` renders only the rows in view (plus `virtualScrollTolerance` around them) — 10 000 rows scroll like 20. It needs `scrollHeight` and rows of one height (`virtualScrollItemSize`, 50px by default). Arrow keys, Home and End still reach every row.

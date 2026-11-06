@@ -1,0 +1,1 @@
+`filterDisplay="row"` puts the filters in a row under the headers: text fields filter as you type (after `filterDelay`), the funnel picks the match mode. `[(globalFilter)]` is a search over every column — bind it to an own field in the toolbar.

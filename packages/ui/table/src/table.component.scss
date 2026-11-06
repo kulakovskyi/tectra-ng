@@ -88,6 +88,26 @@
   cursor: pointer;
 }
 
+.tx-table__header-content {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.tx-table__header-content > .tx-table__sort,
+.tx-table__header-content > .tx-table__column-title {
+  min-width: 0;
+}
+
+.tx-table__filter {
+  flex-shrink: 0;
+  margin-inline-start: auto;
+}
+
+.tx-table__filter-cell {
+  overflow: visible;
+}
+
 .tx-table__column-title {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -201,6 +221,76 @@
 .tx-table__select {
   display: inline-flex;
   vertical-align: middle;
+}
+
+.tx-table__editor {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.tx-table__editor-control {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+}
+
+.tx-table__row-editor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tx-table__td--editable {
+  cursor: text;
+}
+
+.tx-table__td--editing {
+  overflow: visible;
+  text-overflow: clip;
+}
+
+.tx-table__cell-text {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tx-table__spacer > td {
+  padding: 0;
+  border: 0;
+}
+
+.tx-table__frozen-tbody {
+  position: sticky;
+  z-index: 2;
+}
+
+.tx-table__row-handle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: grab;
+  touch-action: none;
+}
+
+.tx-table__tbody.cdk-drop-list-dragging .tx-table__row:not(.cdk-drag-placeholder) {
+  transition: transform 0.25s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.tx-table__row.cdk-drag-preview {
+  display: table-row;
+}
+
+.tx-table__group-content {
+  display: flex;
+  align-items: center;
 }
 
 .tx-table__loading {
@@ -333,6 +423,19 @@
     transition:
       background var(--tx-table-transition-duration),
       color var(--tx-table-transition-duration);
+  }
+
+  .tx-table__header-content {
+    gap: var(--tx-table-header-cell-gap);
+  }
+
+  .tx-table__filter {
+    margin-block: calc(var(--tx-table-filter-button-inset) * -1);
+  }
+
+  .tx-table__filter-cell {
+    padding: var(--tx-table-filter-cell-padding);
+    font-weight: var(--tx-font-weight-regular);
   }
 
   .tx-table__sort {
@@ -492,6 +595,62 @@
     outline-offset: var(--tx-table-row-focus-ring-offset);
   }
 
+  .tx-table__row-handle {
+    width: var(--tx-table-row-toggle-button-size);
+    height: var(--tx-table-row-toggle-button-size);
+    border-radius: var(--tx-radius-xs);
+    color: var(--tx-table-grip-color);
+  }
+
+  .tx-table__row-handle:focus-visible {
+    outline: 2px solid var(--tx-focus-ring-color);
+    outline-offset: 2px;
+  }
+
+  .tx-table__row.cdk-drag-preview {
+    box-shadow: var(--tx-table-drag-preview-shadow);
+    background: var(--tx-table-row-background);
+  }
+
+  .tx-table__row.cdk-drag-placeholder {
+    opacity: 0.4;
+  }
+
+  .tx-table__group-cell {
+    padding: var(--tx-table-body-cell-padding);
+    border-color: var(--tx-table-border-color);
+    border-style: solid;
+    border-width: 0 0 1px;
+    background: var(--tx-table-group-background);
+    font-weight: var(--tx-table-group-font-weight);
+  }
+
+  .tx-table__group-content {
+    gap: var(--tx-table-header-cell-gap);
+  }
+
+  .tx-table__group-count {
+    color: var(--tx-text-muted);
+    font-weight: var(--tx-font-weight-regular);
+  }
+
+  .tx-table__frozen-tbody .tx-table__td {
+    background: var(--tx-table-row-background);
+  }
+
+  .tx-table__td--editable:focus-visible {
+    outline: 2px solid var(--tx-focus-ring-color);
+    outline-offset: -2px;
+  }
+
+  .tx-table__td--editing {
+    padding-block: var(--tx-table-editor-padding-block);
+  }
+
+  .tx-table__row-editor {
+    gap: var(--tx-table-actions-gap);
+  }
+
   .tx-table__row-toggle {
     width: var(--tx-table-row-toggle-button-size);
     height: var(--tx-table-row-toggle-button-size);
@@ -609,7 +768,8 @@
     border-width: 0 1px 1px;
   }
 
-  .tx-table__expansion-cell {
+  .tx-table__expansion-cell,
+  .tx-table__group-cell {
     border-width: 0 1px 1px;
   }
 }
@@ -654,6 +814,7 @@
     .tx-table__row-toggle-icon,
     .tx-table__grip,
     .tx-table__expansion-body,
+    .tx-table__row,
     .tx-table__expansion-inner {
       transition: none;
     }

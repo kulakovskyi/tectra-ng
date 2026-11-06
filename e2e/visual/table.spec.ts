@@ -205,3 +205,122 @@ test('popovers in cells stay on their buttons while the page scrolls', async ({ 
     await expect(panel).toBeHidden();
   }
 });
+
+test('a tooltip inside a popover stays on its button while the page scrolls', async ({ page }) => {
+  const frame = example(page, 'Row actions');
+  const more = frame.getByRole('button', { name: 'More actions' }).nth(2);
+  await more.scrollIntoViewIfNeeded();
+  await more.click();
+  const remove = page.locator('.tx-popover').last().getByRole('button', { name: 'Delete' });
+  await page.mouse.move(0, 0);
+  await page.keyboard.press('Tab');
+  await expect(remove).toBeFocused();
+  await expect(page.locator('tx-tooltip')).toBeVisible();
+  const gaps = await remove.evaluate(async (button) => {
+    const result: number[] = [];
+    for (let step = 0; step < 4; step++) {
+      window.scrollBy(0, 40);
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      const tooltip = document.querySelector('tx-tooltip');
+      if (!tooltip) break;
+      result.push(Math.round(tooltip.getBoundingClientRect().bottom - button.getBoundingClientRect().top));
+    }
+    return result;
+  });
+  expect(gaps).toHaveLength(4);
+  expect(new Set(gaps).size).toBe(1);
+});
+
+test('row action buttons work from the keyboard', async ({ page }) => {
+  const frame = example(page, 'Row actions');
+  const open = frame.getByRole('button', { name: 'Open' }).first();
+  await open.focus();
+  await page.keyboard.press('Enter');
+  await expect(frame.getByText('Opened INV-1042')).toBeVisible();
+  await frame.getByRole('button', { name: 'Download' }).nth(1).focus();
+  await page.keyboard.press('Space');
+  await expect(frame.getByText('Downloaded INV-1043')).toBeVisible();
+});
+
+test('the filter menu applies rules typed from the keyboard', async ({ page }) => {
+  const frame = example(page, 'Filter menu');
+  const rows = frame.locator('tbody tr.tx-table__row');
+  await expect(rows).toHaveCount(5);
+  await frame.getByRole('button', { name: 'Filter Client' }).click();
+  const panel = page.getByRole('dialog', { name: 'Filter Client' });
+  await panel.getByRole('textbox', { name: 'Client: Value' }).fill('s');
+  await panel.getByRole('button', { name: 'Apply' }).click();
+  await expect(rows).toHaveCount(0);
+  await expect(frame.getByText('Active filters: amount, client')).toBeVisible();
+  await frame.getByRole('button', { name: 'Filter Amount' }).click();
+  await page.getByRole('dialog', { name: 'Filter Amount' }).getByRole('button', { name: 'Clear' }).click();
+  await expect(rows).toHaveCount(1);
+  await expect(rows.first()).toContainText('Silverleaf');
+  await expect(frame.getByText('Active filters: client')).toBeVisible();
+});
+
+test('the filter row and the global search filter while typing', async ({ page }) => {
+  const frame = example(page, 'Filter row');
+  const rows = frame.locator('tbody tr.tx-table__row');
+  await frame.getByRole('textbox', { name: 'City: Value' }).pressSequentially('ky');
+  await expect(rows).toHaveCount(2);
+  await frame.getByRole('textbox', { name: 'City: Value' }).fill('');
+  await frame.getByRole('searchbox', { name: 'Search invoices' }).pressSequentially('maple');
+  await expect(rows).toHaveCount(1);
+  await expect(rows.first()).toContainText('Maple & Co');
+});
+
+test('a cell is edited with the keyboard', async ({ page }) => {
+  const frame = example(page, 'Cell edit');
+  const cell = frame.locator('tbody tr').first().locator('td[data-field="client"]');
+  await cell.focus();
+  await page.keyboard.press('Enter');
+  const input = cell.getByRole('textbox');
+  await expect(input).toBeFocused();
+  await page.keyboard.press('ControlOrMeta+A');
+  await page.keyboard.type('North Studio');
+  await page.keyboard.press('Tab');
+  await expect(frame.locator('tbody tr').first().locator('td[data-field="amount"] input')).toBeFocused();
+  await expect(cell).toHaveText('North Studio');
+  await expect(frame.getByText('client: Northwind Studio → North Studio')).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(frame.locator('td[data-field="amount"] input')).toHaveCount(0);
+});
+
+test('rows drag along the column only and keep the new order', async ({ page }) => {
+  const frame = example(page, 'Row reorder');
+  const handles = frame.getByRole('button', { name: 'Move row' });
+  await handles.first().scrollIntoViewIfNeeded();
+  const from = await handles.first().boundingBox();
+  const target = await frame.locator('tbody tr').nth(2).boundingBox();
+  const body = await frame.locator('tbody').boundingBox();
+  if (!from || !target || !body) throw new Error('rows are not visible');
+  await page.mouse.move(from.x + from.width / 2, from.y + from.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(from.x + 200, from.y + 20, { steps: 4 });
+  await page.mouse.move(from.x + 300, target.y + target.height / 2 + 5, { steps: 8 });
+  const preview = await page.locator('.tx-table__row.cdk-drag-preview').boundingBox();
+  if (!preview) throw new Error('no drag preview');
+  expect(Math.abs(preview.x - body.x)).toBeLessThan(2);
+  await page.mouse.up();
+  await expect(frame.getByText('Order: 2, 3, 1, 4, 5')).toBeVisible();
+  await handles.first().focus();
+  await page.keyboard.press('Alt+ArrowDown');
+  await expect(frame.getByText('Order: 3, 2, 1, 4, 5')).toBeVisible();
+});
+
+test('virtual scroll renders a window of rows and reaches the last one with End', async ({ page }) => {
+  const frame = example(page, 'Virtual scroll');
+  const rows = frame.locator('tbody tr.tx-table__row');
+  expect(await rows.count()).toBeLessThan(40);
+  await rows.first().click();
+  await page.keyboard.press('End');
+  await expect(frame.locator('tbody tr.tx-table__row[data-key="10000"]')).toBeFocused();
+  expect(await rows.count()).toBeLessThan(40);
+});
+
+test('the export button downloads a csv file', async ({ page }) => {
+  const frame = example(page, 'Export');
+  const [download] = await Promise.all([page.waitForEvent('download'), frame.getByRole('button', { name: 'Export CSV' }).click()]);
+  expect(download.suggestedFilename()).toBe('contacts.csv');
+});

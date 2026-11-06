@@ -237,8 +237,8 @@ describe('TxTable', () => {
     el('th[data-field="age"] .tx-table__sort').click();
     await stable();
     expect(host.loads).toEqual([
-      { first: 2, rows: 2, sortField: null, sortOrder: null, multiSortMeta: [] },
-      { first: 2, rows: 2, sortField: 'age', sortOrder: 'asc', multiSortMeta: [{ field: 'age', order: 'asc' }] },
+      { first: 2, rows: 2, sortField: null, sortOrder: null, multiSortMeta: [], filters: {}, globalFilter: '' },
+      { first: 2, rows: 2, sortField: 'age', sortOrder: 'asc', multiSortMeta: [{ field: 'age', order: 'asc' }], filters: {}, globalFilter: '' },
     ]);
     expect(names()).toEqual(['Olena', 'Andrii']);
   });

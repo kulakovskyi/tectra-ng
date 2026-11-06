@@ -45,6 +45,7 @@
       [class]="passThrough().scroller?.class"
       [style]="passThrough().scroller?.style"
       [style.max-height]="scrollHeight()"
+      (scroll)="onScroll($event)"
     >
       <table
         class="tx-table__table"
@@ -113,42 +114,47 @@
                     <span class="tx-table__column-title">{{ item.column.header }}</span>
                   }
                   @default {
-                    @if (headerTemplatesByField().get(item.column.field); as template) {
-                      <ng-container [ngTemplateOutlet]="template.templateRef" [ngTemplateOutletContext]="{ $implicit: item.column }" />
-                    } @else if (isSortable(item.column)) {
-                      @if (reorderableColumns() && item.column.reorderable !== false) {
-                        <tx-icon class="tx-table__grip" aria-hidden="true" name="grip-vertical" />
-                      }
-                      <button
-                        type="button"
-                        class="tx-table__sort"
-                        [class]="passThrough().sortButton?.class"
-                        [style]="passThrough().sortButton?.style"
-                        (click)="sort(item.column, $event)"
-                        (keydown.alt.arrowleft)="moveColumnBy(item.column, -1, $event)"
-                        (keydown.alt.arrowright)="moveColumnBy(item.column, 1, $event)"
-                      >
-                        <span class="tx-table__column-title">{{ label(item.column) }}</span>
-                        @if (sortOrderOf(item.column); as order) {
-                          <tx-icon
-                            class="tx-table__sort-icon"
-                            aria-hidden="true"
-                            name="sort-amount-down"
-                            [class.tx-table__sort-icon--desc]="order === 'desc'"
-                            [class]="passThrough().sortIcon?.class"
-                            [style]="passThrough().sortIcon?.style"
-                          />
-                          @if (sortMode() === 'multiple' && sortMeta().length > 1) {
-                            <span class="tx-table__sort-badge" aria-hidden="true">{{ sortIndexOf(item.column) + 1 }}</span>
-                          }
+                    <div class="tx-table__header-content">
+                      @if (headerTemplatesByField().get(item.column.field); as template) {
+                        <ng-container [ngTemplateOutlet]="template.templateRef" [ngTemplateOutletContext]="{ $implicit: item.column }" />
+                      } @else if (isSortable(item.column)) {
+                        @if (reorderableColumns() && item.column.reorderable !== false) {
+                          <tx-icon class="tx-table__grip" aria-hidden="true" name="grip-vertical" />
                         }
-                      </button>
-                    } @else {
-                      @if (reorderableColumns() && item.column.reorderable !== false) {
-                        <tx-icon class="tx-table__grip" aria-hidden="true" name="grip-vertical" />
+                        <button
+                          type="button"
+                          class="tx-table__sort"
+                          [class]="passThrough().sortButton?.class"
+                          [style]="passThrough().sortButton?.style"
+                          (click)="sort(item.column, $event)"
+                          (keydown.alt.arrowleft)="moveColumnBy(item.column, -1, $event)"
+                          (keydown.alt.arrowright)="moveColumnBy(item.column, 1, $event)"
+                        >
+                          <span class="tx-table__column-title">{{ label(item.column) }}</span>
+                          @if (sortOrderOf(item.column); as order) {
+                            <tx-icon
+                              class="tx-table__sort-icon"
+                              aria-hidden="true"
+                              name="sort-amount-down"
+                              [class.tx-table__sort-icon--desc]="order === 'desc'"
+                              [class]="passThrough().sortIcon?.class"
+                              [style]="passThrough().sortIcon?.style"
+                            />
+                            @if (sortMode() === 'multiple' && sortMeta().length > 1) {
+                              <span class="tx-table__sort-badge" aria-hidden="true">{{ sortIndexOf(item.column) + 1 }}</span>
+                            }
+                          }
+                        </button>
+                      } @else {
+                        @if (reorderableColumns() && item.column.reorderable !== false) {
+                          <tx-icon class="tx-table__grip" aria-hidden="true" name="grip-vertical" />
+                        }
+                        <span class="tx-table__column-title">{{ label(item.column) }}</span>
                       }
-                      <span class="tx-table__column-title">{{ label(item.column) }}</span>
-                    }
+                      @if (item.column.filter && filterDisplay() === 'menu') {
+                        <tx-table-column-filter class="tx-table__filter" [column]="item.column" />
+                      }
+                    </div>
                   }
                 }
                 @if (resizableColumns() && item.kind === 'data' && item.column.resizable !== false && item.column.width === undefined && !last) {
@@ -173,116 +179,128 @@
               </th>
             }
           </tr>
-        </thead>
-        <tbody class="tx-table__tbody" [class]="passThrough().tbody?.class" [style]="passThrough().tbody?.style">
-          @for (item of renderRows(); track item.key; let position = $index; let odd = $odd) {
-            <tr
-              class="tx-table__row"
-              [class]="[rowClassOf(item) ?? '', passThrough().row?.class ?? '']"
-              [style]="passThrough().row?.style"
-              [class.tx-table__row--odd]="odd"
-              [class.tx-table__row--selected]="item.selected"
-              [class.tx-table__row--selectable]="rowSelection() && item.selectable"
-              [class.tx-table__row--menu]="menuRowKey() === item.key && menuRowKey() !== undefined"
-              [attr.aria-selected]="rowSelection() ? item.selected : null"
-              [attr.tabindex]="rowSelection() ? (position === focusedRow() ? 0 : -1) : null"
-              (click)="onRowClick(item, position, $event)"
-              (keydown)="rowSelection() && onRowKeydown(item, position, $event)"
-              (contextmenu)="onRowContextMenu(item, $event)"
-            >
-              @for (column of renderColumns(); track column.column.field) {
+          @if (filterRow()) {
+            <tr class="tx-table__filter-row">
+              @for (item of renderColumns(); track item.column.field) {
                 <td
-                  class="tx-table__td"
-                  [class]="[column.column.cellClass ?? '', passThrough().cell?.class ?? '']"
-                  [style]="passThrough().cell?.style"
-                  [style.inset-inline-start]="frozenStyle(column)['insetInlineStart']"
-                  [style.inset-inline-end]="frozenStyle(column)['insetInlineEnd']"
-                  [class.tx-table__cell--frozen]="!!column.frozen"
-                  [class.tx-table__cell--frozen-last]="column.lastFrozenStart"
-                  [class.tx-table__cell--frozen-first-end]="column.firstFrozenEnd"
-                  [class.tx-table__td--actions]="column.kind === 'actions'"
-                  [attr.data-field]="column.column.field"
-                  [attr.data-align]="column.column.align ?? null"
+                  class="tx-table__th tx-table__filter-cell"
+                  [style.inset-inline-start]="frozenStyle(item)['insetInlineStart']"
+                  [style.inset-inline-end]="frozenStyle(item)['insetInlineEnd']"
+                  [class.tx-table__cell--frozen]="!!item.frozen"
+                  [class.tx-table__cell--frozen-last]="item.lastFrozenStart"
+                  [class.tx-table__cell--frozen-first-end]="item.firstFrozenEnd"
                 >
-                  @switch (column.kind) {
-                    @case ('select') {
-                      @if (selectionMode() === 'checkbox') {
-                        <tx-checkbox
-                          binary
-                          class="tx-table__select"
-                          [ariaLabel]="translations().selectRow"
-                          [disabled]="!item.selectable"
-                          [unstyled]="isUnstyled()"
-                          [ngModel]="item.selected"
-                          (ngModelChange)="toggleRow(item)"
-                        />
-                      } @else {
-                        <tx-radio-button
-                          class="tx-table__select"
-                          [value]="item.key"
-                          [ariaLabel]="translations().selectRow"
-                          [disabled]="!item.selectable"
-                          [unstyled]="isUnstyled()"
-                          [ngModel]="radioValue()"
-                          (ngModelChange)="selectRadio(item)"
-                        />
-                      }
-                    }
-                    @case ('expand') {
-                      @if (canExpand(item)) {
-                        <button
-                          type="button"
-                          class="tx-table__row-toggle"
-                          [attr.aria-expanded]="item.expanded"
-                          [attr.aria-label]="item.expanded ? translations().collapseRow : translations().expandRow"
-                          (click)="toggleExpansion(item, $event)"
-                        >
-                          <tx-icon aria-hidden="true" name="chevron-right" class="tx-table__row-toggle-icon" [class.tx-table__row-toggle-icon--open]="item.expanded" />
-                        </button>
-                      }
-                    }
-                    @case ('actions') {
-                      @if (actionsTemplate(); as actions) {
-                        <ng-container [ngTemplateOutlet]="actions.templateRef" [ngTemplateOutletContext]="{ $implicit: item.row, index: item.index }" />
-                      }
-                    }
-                    @default {
-                      @if (templatesByField().get(column.column.field); as template) {
-                        <ng-container
-                          [ngTemplateOutlet]="template.templateRef"
-                          [ngTemplateOutletContext]="{
-                            $implicit: item.row,
-                            row: item.row,
-                            index: item.index,
-                            column: column.column,
-                            value: cellValue(item.row, column.column),
-                          }"
-                        />
-                      } @else {
-                        {{ displayValue(item.row, column.column) }}
-                      }
-                    }
+                  @if (item.kind === 'data' && item.column.filter) {
+                    <tx-table-column-filter display="row" [column]="item.column" />
                   }
                 </td>
               }
             </tr>
-            @if ((item.expanded || isClosing(item.key)) && expansionTemplate(); as expansion) {
-              <tr class="tx-table__expansion">
-                <td class="tx-table__expansion-cell" [attr.colspan]="dataColumnCount()">
-                  <div
-                    class="tx-table__expansion-body"
-                    [class.tx-table__expansion-body--open]="item.expanded"
-                    (transitionend)="finishClosing(item.key, $event)"
-                  >
-                    <div class="tx-table__expansion-inner">
-                      <div class="tx-table__expansion-content">
-                        <ng-container [ngTemplateOutlet]="expansion.templateRef" [ngTemplateOutletContext]="{ $implicit: item.row, index: item.index }" />
-                      </div>
-                    </div>
+          }
+        </thead>
+        @if (frozenRows().length) {
+          <tbody class="tx-table__frozen-tbody" [style.top.px]="headerHeight()">
+            @for (item of frozenRows(); track item.key; let position = $index) {
+              <tr class="tx-table__row tx-table__row--frozen">
+                <ng-container [ngTemplateOutlet]="rowCells" [ngTemplateOutletContext]="{ $implicit: item, position }" />
+              </tr>
+            }
+          </tbody>
+        }
+        <tbody
+          #tbody
+          cdkDropList
+          class="tx-table__tbody"
+          [class]="passThrough().tbody?.class"
+          [style]="passThrough().tbody?.style"
+          [cdkDropListDisabled]="!reorderableRows()"
+          (cdkDropListDropped)="dropRow($event)"
+        >
+          @if (spacerBefore()) {
+            <tr class="tx-table__spacer" aria-hidden="true">
+              <td [attr.colspan]="dataColumnCount()" [style.height.px]="spacerBefore()"></td>
+            </tr>
+          }
+          @for (item of visibleRows(); track item.key; let windowIndex = $index) {
+            @let position = windowRange().start + windowIndex;
+            @let odd = position % 2 === 1;
+            @if (item.group?.first && rowGroupMode() === 'subheader') {
+              <tr class="tx-table__group-header">
+                <td class="tx-table__group-cell" [attr.colspan]="dataColumnCount()">
+                  <div class="tx-table__group-content">
+                    @if (expandableRowGroups()) {
+                      <button
+                        type="button"
+                        class="tx-table__row-toggle"
+                        [attr.aria-expanded]="!item.group.collapsed"
+                        [attr.aria-label]="item.group.collapsed ? translations().expandRow : translations().collapseRow"
+                        (click)="toggleGroup(item)"
+                      >
+                        <tx-icon aria-hidden="true" name="chevron-right" class="tx-table__row-toggle-icon" [class.tx-table__row-toggle-icon--open]="!item.group.collapsed" />
+                      </button>
+                    }
+                    @if (groupHeaderTemplate(); as header) {
+                      <ng-container [ngTemplateOutlet]="header.templateRef" [ngTemplateOutletContext]="groupContext(item)" />
+                    } @else {
+                      <span class="tx-table__group-title">{{ item.group.value }}</span>
+                      <span class="tx-table__group-count">{{ translations().rowGroup.replace('{count}', '' + item.group.size) }}</span>
+                    }
                   </div>
                 </td>
               </tr>
             }
+            @if (!item.group?.collapsed) {
+              <tr
+                  cdkDrag
+                  cdkDragLockAxis="y"
+                  cdkDragPreviewContainer="parent"
+                  class="tx-table__row"
+                [class]="[rowClassOf(item) ?? '', passThrough().row?.class ?? '']"
+                [style]="passThrough().row?.style"
+                [class.tx-table__row--odd]="odd"
+                [class.tx-table__row--selected]="item.selected"
+                [class.tx-table__row--selectable]="rowSelection() && item.selectable"
+                [class.tx-table__row--menu]="menuRowKey() === item.key && menuRowKey() !== undefined"
+                [attr.aria-selected]="rowSelection() ? item.selected : null"
+                [attr.tabindex]="rowSelection() ? (position === focusedRow() ? 0 : -1) : null"
+                [attr.data-key]="item.key"
+                [class.tx-table__row--editing]="isRowEditing(item)"
+                (click)="onRowClick(item, position, $event)"
+                (keydown)="onRowKeydown(item, position, $event)"
+                (contextmenu)="onRowContextMenu(item, $event)"
+            >
+                <ng-container [ngTemplateOutlet]="rowCells" [ngTemplateOutletContext]="{ $implicit: item, position }" />
+              </tr>
+              @if ((item.expanded || isClosing(item.key)) && expansionTemplate(); as expansion) {
+                <tr class="tx-table__expansion">
+                  <td class="tx-table__expansion-cell" [attr.colspan]="dataColumnCount()">
+                    <div
+                      class="tx-table__expansion-body"
+                      [class.tx-table__expansion-body--open]="item.expanded"
+                      (transitionend)="finishClosing(item.key, $event)"
+                    >
+                      <div class="tx-table__expansion-inner">
+                        <div class="tx-table__expansion-content">
+                          <ng-container [ngTemplateOutlet]="expansion.templateRef" [ngTemplateOutletContext]="{ $implicit: item.row, index: item.index }" />
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              }
+              @if (item.group?.last && rowGroupMode() === 'subheader' && groupFooterTemplate(); as footer) {
+                <tr class="tx-table__group-footer">
+                  <td class="tx-table__group-cell" [attr.colspan]="dataColumnCount()">
+                    <ng-container [ngTemplateOutlet]="footer.templateRef" [ngTemplateOutletContext]="groupContext(item)" />
+                  </td>
+                </tr>
+              }
+            }
+          }
+          @if (spacerAfter()) {
+            <tr class="tx-table__spacer" aria-hidden="true">
+              <td [attr.colspan]="dataColumnCount()" [style.height.px]="spacerAfter()"></td>
+            </tr>
           }
         </tbody>
         @if (hasFooter()) {
@@ -442,4 +460,214 @@
     [unstyled]="isUnstyled()"
     (pageChange)="onPage($event)"
   />
+</ng-template>
+
+<ng-template #rowCells let-item let-position="position">
+  @for (column of renderColumns(); track column.column.field) {
+  @if (!isGroupedCellHidden(item, column)) {
+    <td
+      class="tx-table__td"
+      [class]="[column.column.cellClass ?? '', passThrough().cell?.class ?? '']"
+      [style]="passThrough().cell?.style"
+      [style.inset-inline-start]="frozenStyle(column)['insetInlineStart']"
+      [style.inset-inline-end]="frozenStyle(column)['insetInlineEnd']"
+      [class.tx-table__cell--frozen]="!!column.frozen"
+      [class.tx-table__cell--frozen-last]="column.lastFrozenStart"
+      [class.tx-table__cell--frozen-first-end]="column.firstFrozenEnd"
+      [class.tx-table__td--actions]="column.kind === 'actions'"
+      [class.tx-table__td--editable]="column.kind === 'data' && editMode() === 'cell' && !!column.column.editable"
+      [class.tx-table__td--editing]="column.kind === 'data' && isEditing(item, column.column)"
+      [attr.data-field]="column.column.field"
+      [attr.data-align]="column.column.align ?? null"
+      [attr.rowspan]="groupRowspan(item, column)"
+      [attr.tabindex]="column.kind === 'data' && editMode() === 'cell' && column.column.editable ? 0 : null"
+      (click)="onCellClick(item, column, $event)"
+      (keydown)="onCellKeydown(item, column, $event)"
+      (focusout)="onCellFocusOut(item, column, $event)"
+    >
+      @switch (column.kind) {
+        @case ('reorder') {
+          <button
+            type="button"
+            cdkDragHandle
+            class="tx-table__row-handle"
+            [attr.aria-label]="translations().moveRow"
+            (keydown.alt.arrowup)="moveRowBy(position, -1, $event)"
+            (keydown.alt.arrowdown)="moveRowBy(position, 1, $event)"
+          >
+            <tx-icon aria-hidden="true" name="bars" />
+          </button>
+        }
+        @case ('select') {
+          @if (selectionMode() === 'checkbox') {
+            <tx-checkbox
+              binary
+              class="tx-table__select"
+              [ariaLabel]="translations().selectRow"
+              [disabled]="!item.selectable"
+              [unstyled]="isUnstyled()"
+              [ngModel]="item.selected"
+              (ngModelChange)="toggleRow(item)"
+            />
+          } @else {
+            <tx-radio-button
+              class="tx-table__select"
+              [value]="item.key"
+              [ariaLabel]="translations().selectRow"
+              [disabled]="!item.selectable"
+              [unstyled]="isUnstyled()"
+              [ngModel]="radioValue()"
+              (ngModelChange)="selectRadio(item)"
+            />
+          }
+        }
+        @case ('expand') {
+          @if (canExpand(item)) {
+            <button
+              type="button"
+              class="tx-table__row-toggle"
+              [attr.aria-expanded]="item.expanded"
+              [attr.aria-label]="item.expanded ? translations().collapseRow : translations().expandRow"
+              (click)="toggleExpansion(item, $event)"
+            >
+              <tx-icon aria-hidden="true" name="chevron-right" class="tx-table__row-toggle-icon" [class.tx-table__row-toggle-icon--open]="item.expanded" />
+            </button>
+          }
+        }
+        @case ('actions') {
+          @if (actionsTemplate(); as actions) {
+            <ng-container [ngTemplateOutlet]="actions.templateRef" [ngTemplateOutletContext]="{ $implicit: item.row, index: item.index }" />
+          }
+        }
+        @case ('editor') {
+          <div class="tx-table__row-editor">
+            @if (isRowEditing(item)) {
+              <button
+                txButton
+                type="button"
+                text
+                rounded
+                size="small"
+                severity="success"
+                icon="check"
+                [unstyled]="isUnstyled()"
+                [attr.aria-label]="translations().saveRow"
+                (click)="saveRow(item)"
+              ></button>
+              <button
+                txButton
+                type="button"
+                text
+                rounded
+                size="small"
+                severity="danger"
+                icon="times"
+                [unstyled]="isUnstyled()"
+                [attr.aria-label]="translations().cancelEdit"
+                (click)="cancelRow(item)"
+              ></button>
+            } @else {
+              <button
+                txButton
+                type="button"
+                text
+                rounded
+                size="small"
+                severity="secondary"
+                icon="pencil"
+                [unstyled]="isUnstyled()"
+                [attr.aria-label]="translations().editRow"
+                (click)="startRowEdit(item)"
+              ></button>
+            }
+          </div>
+        }
+        @default {
+          @if (isEditing(item, column.column)) {
+            <div class="tx-table__editor">
+              @if (editorTemplatesByField().get(column.column.field); as editor) {
+                <ng-container [ngTemplateOutlet]="editor.templateRef" [ngTemplateOutletContext]="editorContext(item, column.column)" />
+              } @else if (column.column.editOptions?.length) {
+                <tx-select
+                  size="small"
+                  optionLabel="label"
+                  optionValue="value"
+                  class="tx-table__editor-control"
+                  [options]="column.column.editOptions"
+                  [ariaLabel]="label(column.column)"
+                  [unstyled]="isUnstyled()"
+                  [ngModel]="draftValue(item, column.column)"
+                  (ngModelChange)="setDraft(item, column.column, $event)"
+                />
+              } @else {
+                @switch (column.column.editType ?? 'text') {
+                  @case ('numeric') {
+                    <tx-input-number
+                      size="small"
+                      class="tx-table__editor-control"
+                      [ariaLabel]="label(column.column)"
+                      [unstyled]="isUnstyled()"
+                      [ngModel]="draftValue(item, column.column)"
+                      (ngModelChange)="setDraft(item, column.column, $event)"
+                    />
+                  }
+                  @case ('boolean') {
+                    <tx-checkbox
+                      binary
+                      [ariaLabel]="label(column.column)"
+                      [unstyled]="isUnstyled()"
+                      [ngModel]="draftValue(item, column.column)"
+                      (ngModelChange)="setDraft(item, column.column, $event)"
+                    />
+                  }
+                  @case ('date') {
+                    <input
+                      txInput
+                      type="date"
+                      size="small"
+                      class="tx-table__editor-control"
+                      [unstyled]="isUnstyled()"
+                      [attr.aria-label]="label(column.column)"
+                      [value]="dateInput(draftValue(item, column.column))"
+                      (change)="setDraft(item, column.column, parseDateInput($any($event.target).value))"
+                    />
+                  }
+                  @default {
+                    <input
+                      txInput
+                      type="text"
+                      size="small"
+                      class="tx-table__editor-control"
+                      [unstyled]="isUnstyled()"
+                      [attr.aria-label]="label(column.column)"
+                      [value]="draftValue(item, column.column) ?? ''"
+                      (input)="setDraft(item, column.column, $any($event.target).value)"
+                    />
+                  }
+                }
+              }
+            </div>
+          } @else if (templatesByField().get(column.column.field); as template) {
+            <ng-container
+              [ngTemplateOutlet]="template.templateRef"
+              [ngTemplateOutletContext]="{
+                $implicit: item.row,
+                row: item.row,
+                index: item.index,
+                column: column.column,
+                value: cellValue(item.row, column.column),
+              }"
+            />
+          } @else if (isLoadingRow(item)) {
+            <tx-skeleton class="tx-table__loading-cell" height="14px" />
+          } @else if (cellTooltip()) {
+            <span class="tx-table__cell-text" tooltipOverflowOnly [txTooltip]="displayValue(item.row, column.column)">{{ displayValue(item.row, column.column) }}</span>
+          } @else {
+            {{ displayValue(item.row, column.column) }}
+          }
+        }
+      }
+    </td>
+  }
+  }
 </ng-template>

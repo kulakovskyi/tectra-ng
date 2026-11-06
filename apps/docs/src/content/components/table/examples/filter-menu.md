@@ -1,0 +1,1 @@
+A column with `filter` gets a button in its header. The menu holds rules with a match mode for the column type (`text`, `numeric`, `date`), up to two rules joined by Match all / Match any, Clear and Apply; `filterOptions` gives a multi select and `filterType: 'boolean'` a yes / no choice. `[(filters)]` holds the result.

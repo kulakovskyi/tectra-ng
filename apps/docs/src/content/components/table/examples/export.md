@@ -1,0 +1,1 @@
+`exportCSV()` downloads the visible columns of the filtered and sorted rows (or `{ selectionOnly: true }`) as a CSV file that opens in spreadsheets: UTF-8 with a BOM, quoted cells, formulas written as text. `cellTooltip` shows the full text of cut cells.

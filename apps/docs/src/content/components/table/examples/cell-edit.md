@@ -1,0 +1,1 @@
+`editMode="cell"` with `editable` columns: click a cell or press Enter / F2 on it, Enter or Tab saves (Tab goes to the next editable cell), Escape cancels. `editType` picks the editor, `editOptions` a select, `<ng-template txTableEditor>` an own one. The table writes the value into the row and emits `cellEditComplete`.

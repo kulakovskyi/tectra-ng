@@ -1,0 +1,1 @@
+`groupRowsBy` groups the rows: `subheader` mode adds a header row per group (here collapsible with `expandableRowGroups`) and `txTableGroupFooter` a row after it; `rowGroupMode="rowspan"` spans the group cell over its rows instead.

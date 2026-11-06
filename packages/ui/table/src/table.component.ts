@@ -1,5 +1,5 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -31,7 +31,11 @@ import { TxLocaleService, injectTranslations } from '@tectra/core/i18n';
 import { optionalBoolean, optionalNumber } from '@tectra/core/utils';
 import { TxIcon } from '@tectra/icons';
 import { TectraDeepPartial, TectraTableTokens, toStyleObject } from '@tectra/themes';
+import { TxButton } from '@tectra/ui/button';
 import { TxCheckbox } from '@tectra/ui/checkbox';
+import { TxInput } from '@tectra/ui/input';
+import { TxInputNumber } from '@tectra/ui/input-number';
+import { TxSelect } from '@tectra/ui/select';
 import { TxMenu, TxMenuItem, TxMenuItemTemplate } from '@tectra/ui/menu';
 import { TxPageState, TxPaginator, TxRowsPerPageOption } from '@tectra/ui/paginator';
 import { TxProgressSpinner } from '@tectra/ui/progress-spinner';
@@ -39,6 +43,11 @@ import { TxRadioButton } from '@tectra/ui/radio-button';
 import { map, of, switchMap } from 'rxjs';
 import { TxTableActionsStore } from './table-actions.store';
 import { TxTableSettings } from './table-settings.component';
+import { TxTableColumnFilter } from './table-column-filter.component';
+import { filterRows, isFilterActive } from './table.filter';
+import { downloadCsv, toCsv } from './table.export';
+import { TxTooltip } from '@tectra/ui/tooltip';
+import { TxSkeleton } from '@tectra/ui/skeleton';
 import { TxTableStyles } from './table.styles';
 import { TxStyleLoader } from '@tectra/core/styles';
 import { TX_TABLE, TxTableContext, TxTableRowActionsSource } from './table.context';
@@ -47,18 +56,31 @@ import {
   TxTableActionsTemplate,
   TxTableCard,
   TxTableCell,
+  TxTableEditor,
   TxTableEmpty,
+  TxTableGroupFooter,
+  TxTableGroupHeader,
   TxTableExpansion,
   TxTableFooterCell,
   TxTableHeaderCell,
 } from './table.templates';
 import {
+  TxColumnFilter,
   TxSortMeta,
   TxSortOrder,
+  TxTableFilterDisplay,
+  TxTableFilterEvent,
+  TxTableFilters,
   TxTableColumn,
   TxTableColumnReorderEvent,
   TxTableColumnResizeEvent,
+  TxTableCellEditEvent,
   TxTableColumnResizeMode,
+  TxTableEditMode,
+  TxTableGroupContext,
+  TxTableRowGroupMode,
+  TxTableRowReorderEvent,
+  TxTableRowEditEvent,
   TxTableLazyLoadEvent,
   TxTablePaginatorPosition,
   TxTablePart,
@@ -70,21 +92,24 @@ import {
   TxTableState,
   TxTableStateStorage,
 } from './table.types';
-import { columnLabel, mergeColumnOrder, nextSortOrder, pxOf, resolveField, rowKeyOf, sortRows } from './table.utils';
+import { columnLabel, mergeColumnOrder, nextSortOrder, pxOf, resolveField, rowKeyOf, sortRows, writeField } from './table.utils';
 
 export const TX_TABLE_SELECT_FIELD = '__select';
 export const TX_TABLE_EXPAND_FIELD = '__expand';
 export const TX_TABLE_ACTIONS_FIELD = '__actions';
+export const TX_TABLE_EDITOR_FIELD = '__editor';
+export const TX_TABLE_REORDER_FIELD = '__reorder';
 
 const DEFAULT_COLUMN_WIDTH = 100;
 const MIN_COLUMN_WIDTH = 30;
 const SELECT_COLUMN_WIDTH = '56px';
 const EXPAND_COLUMN_WIDTH = '49px';
+const EDITOR_COLUMN_WIDTH = '92px';
 const EXPANSION_DURATION = 400;
 
 interface TxTableRenderColumn {
   column: TxTableColumn;
-  kind: 'data' | 'select' | 'expand' | 'actions';
+  kind: 'data' | 'select' | 'expand' | 'actions' | 'editor' | 'reorder';
   style: Record<string, string>;
   frozen: 'start' | 'end' | null;
   lastFrozenStart: boolean;
@@ -98,6 +123,16 @@ interface TxTableRenderRow<T> {
   selected: boolean;
   selectable: boolean;
   expanded: boolean;
+  group: TxTableRenderGroup | null;
+}
+
+interface TxTableRenderGroup {
+  value: unknown;
+  key: string;
+  first: boolean;
+  last: boolean;
+  size: number;
+  collapsed: boolean;
 }
 
 @Component({
@@ -107,14 +142,22 @@ interface TxTableRenderRow<T> {
     FormsModule,
     CdkDropList,
     CdkDrag,
+    CdkDragHandle,
     TxIcon,
+    TxTooltip,
+    TxSkeleton,
+    TxButton,
     TxCheckbox,
+    TxInput,
+    TxInputNumber,
+    TxSelect,
     TxRadioButton,
     TxPaginator,
     TxProgressSpinner,
     TxMenu,
     TxMenuItemTemplate,
     TxTableSettings,
+    TxTableColumnFilter,
   ],
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
@@ -163,6 +206,11 @@ export class TxTable<T = unknown> implements TxTableContext {
   readonly multiSortMeta = model<TxSortMeta[]>([]);
   readonly customSort = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly lazy = input<boolean, unknown>(false, { transform: booleanAttribute });
+  readonly filterDisplay = input<TxTableFilterDisplay>('menu');
+  readonly filters = model<TxTableFilters>({});
+  readonly globalFilter = model('');
+  readonly globalFilterFields = input<string[] | undefined>(undefined);
+  readonly filterDelay = input(300, { transform: numberAttribute });
   readonly lazyLoadOnInit = input<boolean, unknown>(true, { transform: booleanAttribute });
 
   readonly paginator = input<boolean, unknown>(false, { transform: booleanAttribute });
@@ -187,7 +235,22 @@ export class TxTable<T = unknown> implements TxTableContext {
   readonly rowSelectable = input<((row: T, index: number) => boolean) | undefined>(undefined);
   readonly selectAll = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
 
+  readonly editMode = input<TxTableEditMode | null | undefined>(undefined);
+  readonly editingRowKeys = model<unknown[]>([]);
   readonly expandedRowKeys = model<unknown[]>([]);
+  readonly virtualScroll = input<boolean, unknown>(false, { transform: booleanAttribute });
+  readonly virtualScrollItemSize = input(50, { transform: numberAttribute });
+  readonly virtualScrollTolerance = input(10, { transform: numberAttribute });
+  readonly cellTooltip = input<boolean, unknown>(false, { transform: booleanAttribute });
+  readonly csvSeparator = input(',');
+  readonly exportFilename = input('download');
+  readonly exportFunction = input<((row: T, column: TxTableColumn) => unknown) | undefined>(undefined);
+  readonly reorderableRows = input<boolean, unknown>(false, { transform: booleanAttribute });
+  readonly frozenValue = input<readonly T[] | null | undefined>(undefined);
+  readonly groupRowsBy = input<string | undefined>(undefined);
+  readonly rowGroupMode = input<TxTableRowGroupMode>('subheader');
+  readonly expandableRowGroups = input<boolean, unknown>(false, { transform: booleanAttribute });
+  readonly expandedRowGroups = model<unknown[] | null>(null);
   readonly expandableRows = input<((row: T, index: number) => boolean) | undefined>(undefined);
 
   readonly resizableColumns = input<boolean, unknown>(false, { transform: booleanAttribute });
@@ -215,6 +278,7 @@ export class TxTable<T = unknown> implements TxTableContext {
   readonly unstyled = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
 
   readonly sortChange = output<TxTableSortEvent>();
+  readonly filterChange = output<TxTableFilterEvent<T>>();
   readonly pageChange = output<TxPageState>();
   readonly lazyLoad = output<TxTableLazyLoadEvent>();
   readonly rowClick = output<TxTableRowEvent<T>>();
@@ -227,6 +291,14 @@ export class TxTable<T = unknown> implements TxTableContext {
   readonly columnReorder = output<TxTableColumnReorderEvent>();
   readonly columnVisibilityChange = output<string[]>();
   readonly contextMenuSelect = output<TxTableRowEvent<T>>();
+  readonly rowReorder = output<TxTableRowReorderEvent<T>>();
+  readonly rowGroupToggle = output<{ value: unknown; expanded: boolean }>();
+  readonly cellEditInit = output<TxTableCellEditEvent<T>>();
+  readonly cellEditComplete = output<TxTableCellEditEvent<T>>();
+  readonly cellEditCancel = output<TxTableCellEditEvent<T>>();
+  readonly rowEditInit = output<TxTableRowEditEvent<T>>();
+  readonly rowEditSave = output<TxTableRowEditEvent<T>>();
+  readonly rowEditCancel = output<TxTableRowEditEvent<T>>();
 
   readonly cellTemplates = contentChildren(TxTableCell);
   readonly headerTemplates = contentChildren(TxTableHeaderCell);
@@ -235,6 +307,9 @@ export class TxTable<T = unknown> implements TxTableContext {
   readonly expansionTemplate = contentChild(TxTableExpansion);
   readonly actionsTemplate = contentChild(TxTableActionsTemplate);
   readonly emptyTemplate = contentChild(TxTableEmpty);
+  readonly editorTemplates = contentChildren(TxTableEditor);
+  readonly groupHeaderTemplate = contentChild(TxTableGroupHeader);
+  readonly groupFooterTemplate = contentChild(TxTableGroupFooter);
 
   private readonly headerRow = viewChild<ElementRef<HTMLTableRowElement>>('headerRow');
   private readonly rowMenu = viewChild<TxMenu>('rowMenu');
@@ -252,6 +327,14 @@ export class TxTable<T = unknown> implements TxTableContext {
   readonly menuRowKey = signal<unknown>(undefined);
   readonly menuItems = signal<TxMenuItem[]>([]);
   readonly closingKeys = signal<unknown[]>([]);
+  readonly cellEdit = signal<{ key: unknown; field: string; value: unknown } | null>(null);
+  readonly rowDrafts = signal<ReadonlyMap<unknown, Record<string, unknown>>>(new Map());
+  readonly editVersion = signal(0);
+  readonly reordered = signal<{ source: readonly T[]; rows: T[] } | null>(null);
+  readonly headerHeight = signal(0);
+  readonly scrollTop = signal(0);
+  readonly viewportHeight = signal(0);
+  private lastRange = '';
   private readonly rowActionSources = new Map<Element, TxTableRowActionsSource>();
   private restored = false;
   private anchor: HTMLElement | null = null;
@@ -279,10 +362,25 @@ export class TxTable<T = unknown> implements TxTableContext {
     return field && order ? [{ field, order }] : [];
   });
 
-  readonly allRows = computed(() => this.value() ?? []);
-  readonly sortedRows = computed(() =>
-    this.lazy() || this.customSort() ? [...this.allRows()] : sortRows(this.allRows(), this.sortMeta(), this.localeService.locale().intl),
-  );
+  readonly allRows = computed<readonly T[]>(() => {
+    const value = this.value() ?? [];
+    const reordered = this.reordered();
+    return reordered && reordered.source === value ? reordered.rows : value;
+  });
+  readonly hasFilters = computed(() => this.columns().some((column) => column.filter));
+  readonly filterRow = computed(() => this.filterDisplay() === 'row' && this.hasFilters());
+  readonly filteredRows = computed(() => {
+    if (this.lazy()) return [...this.allRows()];
+    const fields = this.globalFilterFields() ?? this.visibleColumns().map((column) => column.filterField ?? column.field);
+    return filterRows(this.allRows(), this.filters(), this.columns(), this.globalFilter(), fields, this.localeService.locale().intl);
+  });
+  readonly sortedRows = computed(() => {
+    const group = this.groupRowsBy();
+    const meta = this.sortMeta();
+    if (this.lazy() || this.customSort()) return [...this.filteredRows()];
+    const groupMeta = group ? [{ field: group, order: meta.find((item) => item.field === group)?.order ?? ('asc' as const) }] : [];
+    return sortRows(this.filteredRows(), [...groupMeta, ...meta.filter((item) => item.field !== group)], this.localeService.locale().intl);
+  });
   readonly total = computed(() => this.totalRecords() ?? (this.lazy() ? this.allRows().length : this.sortedRows().length));
   readonly pageRows = computed(() => {
     const rows = this.sortedRows();
@@ -290,15 +388,26 @@ export class TxTable<T = unknown> implements TxTableContext {
     return rows.slice(this.first(), this.first() + this.rows());
   });
 
+  readonly editorTemplatesByField = computed(() => new Map(this.editorTemplates().map((template) => [template.txTableEditor(), template])));
+  readonly hasEditorColumn = computed(() => this.editMode() === 'row' && this.columns().some((column) => column.editable));
+
   readonly renderRows = computed<TxTableRenderRow<T>[]>(() => {
+    this.editVersion();
     const dataKey = this.dataKey();
     const selectable = this.rowSelectable();
     const expandable = this.expandableRows();
     const expanded = new Set(this.expandedRowKeys());
     const offset = this.paginator() && !this.lazy() && this.totalRecords() === undefined ? this.first() : 0;
-    return this.pageRows().map((row, position) => {
+    const groupBy = this.groupRowsBy();
+    const rows = this.pageRows();
+    const groupValues = groupBy ? rows.map((row) => resolveField(row, groupBy)) : [];
+    const collapsedGroups = this.collapsedGroupKeys();
+    const sizes = new Map<string, number>();
+    groupValues.forEach((value) => sizes.set(String(value), (sizes.get(String(value)) ?? 0) + 1));
+    return rows.map((row, position) => {
       const index = offset + position;
       const key = rowKeyOf(row, dataKey, index);
+      const groupKey = groupBy ? String(groupValues[position]) : '';
       return {
         row,
         index,
@@ -306,8 +415,57 @@ export class TxTable<T = unknown> implements TxTableContext {
         selected: this.isSelected(row),
         selectable: selectable ? selectable(row, index) : true,
         expanded: expanded.has(key) && (!expandable || expandable(row, index)),
+        group: groupBy
+          ? {
+              value: groupValues[position],
+              key: groupKey,
+              first: position === 0 || String(groupValues[position - 1]) !== groupKey,
+              last: position === rows.length - 1 || String(groupValues[position + 1]) !== groupKey,
+              size: sizes.get(groupKey) ?? 1,
+              collapsed: collapsedGroups.has(groupKey),
+            }
+          : null,
       };
     });
+  });
+
+  readonly windowRange = computed(() => {
+    const count = this.renderRows().length;
+    if (!this.virtualScroll()) return { start: 0, end: count };
+    const size = this.virtualScrollItemSize();
+    const tolerance = this.virtualScrollTolerance();
+    const viewport = this.viewportHeight() || size * 10;
+    const start = Math.max(0, Math.floor(this.scrollTop() / size) - tolerance);
+    const end = Math.min(count, Math.ceil((this.scrollTop() + viewport) / size) + tolerance);
+    return { start, end };
+  });
+  readonly visibleRows = computed(() => {
+    const { start, end } = this.windowRange();
+    return this.virtualScroll() ? this.renderRows().slice(start, end) : this.renderRows();
+  });
+  readonly spacerBefore = computed(() => (this.virtualScroll() ? this.windowRange().start * this.virtualScrollItemSize() : 0));
+  readonly spacerAfter = computed(() => (this.virtualScroll() ? (this.renderRows().length - this.windowRange().end) * this.virtualScrollItemSize() : 0));
+
+  readonly collapsedGroupKeys = computed<ReadonlySet<string>>(() => {
+    const groupBy = this.groupRowsBy();
+    const open = this.expandedRowGroups();
+    if (!groupBy || !this.expandableRowGroups() || open === null) return new Set();
+    const openKeys = new Set(open.map((value) => String(value)));
+    return new Set(this.pageRows().map((row) => String(resolveField(row, groupBy))).filter((key) => !openKeys.has(key)));
+  });
+
+  readonly frozenRows = computed<TxTableRenderRow<T>[]>(() => {
+    this.editVersion();
+    const dataKey = this.dataKey();
+    return (this.frozenValue() ?? []).map((row, index) => ({
+      row,
+      index: -1 - index,
+      key: `frozen-${String(rowKeyOf(row, dataKey, index))}`,
+      selected: false,
+      selectable: false,
+      expanded: false,
+      group: null,
+    }));
   });
 
   readonly hasSelectColumn = computed(() => this.selectionMode() === 'checkbox' || this.selectionMode() === 'radio');
@@ -326,9 +484,11 @@ export class TxTable<T = unknown> implements TxTableContext {
       lastFrozenStart: false,
       firstFrozenEnd: false,
     });
+    if (this.reorderableRows()) result.push(special(TX_TABLE_REORDER_FIELD, EXPAND_COLUMN_WIDTH, 'reorder', firstFrozen ? 'start' : null));
     if (this.hasSelectColumn()) result.push(special(TX_TABLE_SELECT_FIELD, SELECT_COLUMN_WIDTH, 'select', firstFrozen ? 'start' : null));
     if (this.hasExpandColumn()) result.push(special(TX_TABLE_EXPAND_FIELD, EXPAND_COLUMN_WIDTH, 'expand', firstFrozen ? 'start' : null));
     data.forEach((column) => result.push({ column, kind: 'data', style: this.columnStyle(column), frozen: column.frozen ?? null, lastFrozenStart: false, firstFrozenEnd: false }));
+    if (this.hasEditorColumn()) result.push(special(TX_TABLE_EDITOR_FIELD, EDITOR_COLUMN_WIDTH, 'editor', this.actionsFrozen() && !this.hasActionsColumn() ? 'end' : null));
     if (this.hasActionsColumn()) {
       const width = this.actionsStore.columnWidth();
       result.push(special(TX_TABLE_ACTIONS_FIELD, width, 'actions', this.actionsFrozen() ? 'end' : null, this.actionsHeader() ?? this.translations().tableActions));
@@ -391,12 +551,51 @@ export class TxTable<T = unknown> implements TxTableContext {
       }
     });
 
+    effect(() => {
+      const keys = this.editingRowKeys();
+      const rows = this.renderRows();
+      untracked(() => {
+        if (this.editMode() !== 'row') return;
+        const drafts = this.rowDrafts();
+        const missing = rows.filter((row) => keys.includes(row.key) && !drafts.has(row.key));
+        const stale = [...drafts.keys()].filter((key) => !keys.includes(key));
+        if (!missing.length && !stale.length) return;
+        const next = new Map(drafts);
+        stale.forEach((key) => next.delete(key));
+        missing.forEach((row) => {
+          const draft: Record<string, unknown> = {};
+          this.columns().filter((column) => column.editable).forEach((column) => (draft[column.field] = this.cellValue(row.row, column)));
+          next.set(row.key, draft);
+        });
+        this.rowDrafts.set(next);
+      });
+    });
+
+    let lastGlobal: string | null = null;
+    let globalTimer: ReturnType<typeof setTimeout> | undefined;
+    effect(() => {
+      const query = this.globalFilter();
+      if (lastGlobal === null) {
+        lastGlobal = query;
+        return;
+      }
+      if (query === lastGlobal) return;
+      lastGlobal = query;
+      clearTimeout(globalTimer);
+      globalTimer = setTimeout(() => untracked(() => this.afterFilter()), this.lazy() ? this.filterDelay() : 0);
+    });
+    inject(DestroyRef).onDestroy(() => clearTimeout(globalTimer));
+
     afterRenderEffect((onCleanup) => {
       this.renderColumns();
       this.cardView();
       const row = this.headerRow()?.nativeElement;
       if (!row) return;
-      const measure = () => this.measureFrozen(row);
+      const measure = () => {
+        this.measureFrozen(row);
+        const head = row.parentElement as HTMLElement | null;
+        if (head && head.offsetHeight !== this.headerHeight()) this.headerHeight.set(head.offsetHeight);
+      };
       measure();
       const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(measure);
       observer?.observe(row);
@@ -486,13 +685,45 @@ export class TxTable<T = unknown> implements TxTableContext {
 
   emitLazyLoad(): void {
     if (!this.lazy()) return;
-    this.lazyLoad.emit({
+    this.lastRange = '';
+    this.lazyLoad.emit(this.lazyEvent());
+  }
+
+  private lazyEvent(): TxTableLazyLoadEvent {
+    return {
       first: this.first(),
       rows: this.rows(),
       sortField: this.sortMode() === 'single' ? this.sortField() : (this.multiSortMeta()[0]?.field ?? null),
       sortOrder: this.sortMode() === 'single' ? this.sortOrder() : (this.multiSortMeta()[0]?.order ?? null),
       multiSortMeta: this.sortMeta(),
-    });
+      filters: this.filters(),
+      globalFilter: this.globalFilter(),
+    };
+  }
+
+  applyFilter(field: string, filter: TxColumnFilter | null): void {
+    const next = { ...this.filters() };
+    if (filter && isFilterActive(filter)) next[field] = filter;
+    else delete next[field];
+    this.filters.set(next);
+    this.afterFilter();
+  }
+
+  clearFilters(): void {
+    this.filters.set({});
+    this.globalFilter.set('');
+    this.afterFilter();
+  }
+
+  isFiltered(field: string): boolean {
+    return isFilterActive(this.filters()[field]);
+  }
+
+  private afterFilter(): void {
+    if (this.paginator()) this.first.set(0);
+    this.filterChange.emit({ filters: this.filters(), globalFilter: this.globalFilter(), filteredValue: this.sortedRows() });
+    this.emitLazyLoad();
+    this.saveState();
   }
 
   isSelected(row: T): boolean {
@@ -574,12 +805,11 @@ export class TxTable<T = unknown> implements TxTableContext {
   }
 
   onRowKeydown(item: TxTableRenderRow<T>, position: number, event: KeyboardEvent): void {
-    if (event.target !== event.currentTarget) return;
-    const rows = this.host.nativeElement.querySelectorAll<HTMLElement>('.tx-table__tbody > .tx-table__row');
+    if (!this.rowSelection() || event.target !== event.currentTarget) return;
+    const count = this.renderRows().length;
     const focus = (next: number) => {
-      const index = Math.max(0, Math.min(rows.length - 1, next));
-      this.focusedRow.set(index);
-      rows[index]?.focus();
+      const index = Math.max(0, Math.min(count - 1, next));
+      this.focusRowAt(index);
       if (event.shiftKey && this.selectionMode() === 'multiple') this.selectRange(this.selectionAnchor ?? position, index);
     };
     switch (event.key) {
@@ -597,7 +827,7 @@ export class TxTable<T = unknown> implements TxTableContext {
         break;
       case 'End':
         event.preventDefault();
-        focus(rows.length - 1);
+        focus(count - 1);
         break;
       case ' ':
       case 'Enter':
@@ -612,6 +842,24 @@ export class TxTable<T = unknown> implements TxTableContext {
         }
         break;
     }
+  }
+
+  private focusRowAt(index: number): void {
+    const target = this.renderRows()[index];
+    if (!target) return;
+    this.focusedRow.set(index);
+    const { start, end } = this.windowRange();
+    if (this.virtualScroll() && (index < start || index >= end)) {
+      const scroller = this.host.nativeElement.querySelector<HTMLElement>('.tx-table__scroller');
+      if (scroller) {
+        scroller.scrollTop = index * this.virtualScrollItemSize();
+        this.scrollTop.set(scroller.scrollTop);
+      }
+    }
+    afterNextRender(
+      () => [...this.host.nativeElement.querySelectorAll<HTMLElement>('.tx-table__tbody > .tx-table__row')].find((row) => row.dataset['key'] === String(target.key))?.focus(),
+      { injector: this.injector },
+    );
   }
 
   toggleExpansion(item: TxTableRenderRow<T>, event?: Event): void {
@@ -635,6 +883,313 @@ export class TxTable<T = unknown> implements TxTableContext {
   finishClosing(key: unknown, event?: TransitionEvent): void {
     if (event && (event.target !== event.currentTarget || event.propertyName !== 'grid-template-rows')) return;
     if (this.isClosing(key)) this.closingKeys.set(this.closingKeys().filter((other) => other !== key));
+  }
+
+  isEditable(column: TxTableColumn): boolean {
+    return !!this.editMode() && !!column.editable;
+  }
+
+  isEditing(item: TxTableRenderRow<T>, column: TxTableColumn): boolean {
+    if (!this.isEditable(column)) return false;
+    if (this.editMode() === 'row') return this.rowDrafts().has(item.key);
+    const edit = this.cellEdit();
+    return !!edit && edit.key === item.key && edit.field === column.field;
+  }
+
+  isRowEditing(item: TxTableRenderRow<T>): boolean {
+    return this.rowDrafts().has(item.key);
+  }
+
+  draftValue(item: TxTableRenderRow<T>, column: TxTableColumn): unknown {
+    if (this.editMode() === 'row') {
+      const draft = this.rowDrafts().get(item.key);
+      return draft && column.field in draft ? draft[column.field] : this.cellValue(item.row, column);
+    }
+    return this.cellEdit()?.value;
+  }
+
+  setDraft(item: TxTableRenderRow<T>, column: TxTableColumn, value: unknown): void {
+    if (this.editMode() === 'row') {
+      const drafts = new Map(this.rowDrafts());
+      drafts.set(item.key, { ...(drafts.get(item.key) ?? {}), [column.field]: value });
+      this.rowDrafts.set(drafts);
+      return;
+    }
+    const edit = this.cellEdit();
+    if (edit) this.cellEdit.set({ ...edit, value });
+  }
+
+  editorContext(item: TxTableRenderRow<T>, column: TxTableColumn) {
+    return {
+      $implicit: item.row,
+      row: item.row,
+      index: item.index,
+      column,
+      value: this.draftValue(item, column),
+      set: (value: unknown) => this.setDraft(item, column, value),
+      commit: () => (this.editMode() === 'row' ? this.saveRow(item) : this.commitCell()),
+      cancel: () => (this.editMode() === 'row' ? this.cancelRow(item) : this.cancelCell()),
+    };
+  }
+
+  startCellEdit(item: TxTableRenderRow<T>, column: TxTableColumn, event?: Event): void {
+    if (this.editMode() !== 'cell' || !column.editable || this.isEditing(item, column)) return;
+    if ((event?.target as Element | null)?.closest('a, button, input, select, textarea')) return;
+    this.commitCell();
+    const value = this.cellValue(item.row, column);
+    this.cellEdit.set({ key: item.key, field: column.field, value });
+    this.cellEditInit.emit({ row: item.row, index: item.index, field: column.field, value, previousValue: value });
+    this.focusEditor();
+  }
+
+  commitCell(): void {
+    const edit = this.cellEdit();
+    if (!edit) return;
+    this.cellEdit.set(null);
+    const item = this.renderRows().find((row) => row.key === edit.key);
+    if (!item) return;
+    const previousValue = resolveField(item.row, edit.field);
+    if (previousValue !== edit.value) {
+      writeField(item.row, edit.field, edit.value);
+      this.editVersion.update((version) => version + 1);
+    }
+    this.cellEditComplete.emit({ row: item.row, index: item.index, field: edit.field, value: edit.value, previousValue });
+  }
+
+  cancelCell(): void {
+    const edit = this.cellEdit();
+    if (!edit) return;
+    this.cellEdit.set(null);
+    const item = this.renderRows().find((row) => row.key === edit.key);
+    if (item) {
+      const value = resolveField(item.row, edit.field);
+      this.cellEditCancel.emit({ row: item.row, index: item.index, field: edit.field, value, previousValue: value });
+    }
+  }
+
+  onEditorKeydown(item: TxTableRenderRow<T>, column: TxTableColumn, event: KeyboardEvent): void {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      event.stopPropagation();
+      const cell = (event.currentTarget as HTMLElement).closest('td');
+      if (this.editMode() === 'row') this.cancelRow(item);
+      else this.cancelCell();
+      cell?.focus();
+    } else if (event.key === 'Enter' && !(event.target as Element).closest('textarea, tx-select, tx-multiselect')) {
+      event.preventDefault();
+      const cell = (event.currentTarget as HTMLElement).closest('td');
+      if (this.editMode() === 'row') this.saveRow(item);
+      else this.commitCell();
+      cell?.focus();
+    } else if (event.key === 'Tab' && this.editMode() === 'cell') {
+      event.preventDefault();
+      this.moveCellEdit(item, column, event.shiftKey ? -1 : 1);
+    }
+  }
+
+  onCellFocusOut(item: TxTableRenderRow<T>, column: TxTableRenderColumn, event: FocusEvent): void {
+    if (column.kind !== 'data' || this.editMode() !== 'cell' || !this.isEditing(item, column.column)) return;
+    const next = event.relatedTarget as Element | null;
+    const cell = event.currentTarget as HTMLElement;
+    if (next && (cell?.contains(next) || next.closest('.cdk-overlay-container'))) return;
+    this.commitCell();
+  }
+
+  onCellClick(item: TxTableRenderRow<T>, column: TxTableRenderColumn, event: MouseEvent): void {
+    if (column.kind === 'data') this.startCellEdit(item, column.column, event);
+  }
+
+  onCellKeydown(item: TxTableRenderRow<T>, column: TxTableRenderColumn, event: KeyboardEvent): void {
+    if (column.kind !== 'data') return;
+    if (this.isEditing(item, column.column) && (event.target as Element).closest('.tx-table__editor')) {
+      this.onEditorKeydown(item, column.column, event);
+      return;
+    }
+    if (event.target !== event.currentTarget || !this.isEditable(column.column) || this.editMode() !== 'cell') return;
+    if (event.key === 'Enter' || event.key === 'F2') {
+      event.preventDefault();
+      this.startCellEdit(item, column.column);
+    }
+  }
+
+  private moveCellEdit(item: TxTableRenderRow<T>, column: TxTableColumn, step: number): void {
+    const editable = this.visibleColumns().filter((candidate) => candidate.editable);
+    const rows = this.renderRows();
+    let rowIndex = rows.findIndex((row) => row.key === item.key);
+    let columnIndex = editable.indexOf(column) + step;
+    if (columnIndex >= editable.length) {
+      columnIndex = 0;
+      rowIndex += 1;
+    } else if (columnIndex < 0) {
+      columnIndex = editable.length - 1;
+      rowIndex -= 1;
+    }
+    this.commitCell();
+    const nextRow = rows[rowIndex];
+    if (nextRow && editable[columnIndex]) this.startCellEdit(nextRow, editable[columnIndex]);
+  }
+
+  startRowEdit(item: TxTableRenderRow<T>): void {
+    if (this.isRowEditing(item)) return;
+    const drafts = new Map(this.rowDrafts());
+    const draft: Record<string, unknown> = {};
+    this.columns()
+      .filter((column) => column.editable)
+      .forEach((column) => (draft[column.field] = this.cellValue(item.row, column)));
+    drafts.set(item.key, draft);
+    this.rowDrafts.set(drafts);
+    this.editingRowKeys.set([...this.editingRowKeys().filter((key) => key !== item.key), item.key]);
+    this.rowEditInit.emit({ row: item.row, index: item.index, changes: {}, previous: { ...draft } });
+    this.focusEditor(item.key);
+  }
+
+  saveRow(item: TxTableRenderRow<T>): void {
+    const draft = this.rowDrafts().get(item.key);
+    if (!draft) return;
+    const previous: Record<string, unknown> = {};
+    const changes: Record<string, unknown> = {};
+    Object.entries(draft).forEach(([field, value]) => {
+      const old = resolveField(item.row, field);
+      previous[field] = old;
+      if (old !== value) {
+        changes[field] = value;
+        writeField(item.row, field, value);
+      }
+    });
+    this.closeRowEdit(item.key);
+    this.editVersion.update((version) => version + 1);
+    this.rowEditSave.emit({ row: item.row, index: item.index, changes, previous });
+  }
+
+  cancelRow(item: TxTableRenderRow<T>): void {
+    const draft = this.rowDrafts().get(item.key);
+    if (!draft) return;
+    this.closeRowEdit(item.key);
+    const previous: Record<string, unknown> = {};
+    Object.keys(draft).forEach((field) => (previous[field] = resolveField(item.row, field)));
+    this.rowEditCancel.emit({ row: item.row, index: item.index, changes: {}, previous });
+  }
+
+  private closeRowEdit(key: unknown): void {
+    const drafts = new Map(this.rowDrafts());
+    drafts.delete(key);
+    this.rowDrafts.set(drafts);
+    this.editingRowKeys.set(this.editingRowKeys().filter((other) => other !== key));
+  }
+
+  private focusEditor(rowKey?: unknown): void {
+    afterNextRender(
+      () => {
+        const editors = [...this.host.nativeElement.querySelectorAll<HTMLElement>('.tx-table__editor')];
+        const editor = rowKey === undefined ? editors[0] : editors.find((element) => element.closest('tr')?.dataset['key'] === String(rowKey));
+        editor?.querySelector<HTMLElement>('input, textarea, button, [tabindex]:not([tabindex="-1"])')?.focus();
+      },
+      { injector: this.injector },
+    );
+  }
+
+  dateInput(value: unknown): string {
+    if (!(value instanceof Date) || Number.isNaN(value.getTime())) return typeof value === 'string' ? value.slice(0, 10) : '';
+    const pad = (part: number) => String(part).padStart(2, '0');
+    return `${value.getFullYear()}-${pad(value.getMonth() + 1)}-${pad(value.getDate())}`;
+  }
+
+  parseDateInput(value: string): Date | null {
+    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+    return match ? new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3])) : null;
+  }
+
+  groupContext(item: TxTableRenderRow<T>): TxTableGroupContext<T> {
+    const group = item.group as TxTableRenderGroup;
+    const rows = this.renderRows()
+      .filter((other) => other.group?.key === group.key)
+      .map((other) => other.row);
+    return { $implicit: item.row, value: group.value, count: group.size, rows, collapsed: group.collapsed, toggle: () => this.toggleGroup(item) };
+  }
+
+  toggleGroup(item: TxTableRenderRow<T>): void {
+    const group = item.group;
+    const groupBy = this.groupRowsBy();
+    if (!group || !groupBy) return;
+    const all = [...new Set(this.pageRows().map((row) => resolveField(row, groupBy)))];
+    const open = this.expandedRowGroups() ?? all;
+    const expanded = group.collapsed;
+    const next = expanded ? [...open, group.value] : open.filter((value) => String(value) !== group.key);
+    this.expandedRowGroups.set(next);
+    this.rowGroupToggle.emit({ value: group.value, expanded });
+  }
+
+  isGroupedCellHidden(item: TxTableRenderRow<T>, column: TxTableRenderColumn): boolean {
+    return this.rowGroupMode() === 'rowspan' && column.kind === 'data' && column.column.field === this.groupRowsBy() && !!item.group && !item.group.first;
+  }
+
+  groupRowspan(item: TxTableRenderRow<T>, column: TxTableRenderColumn): number | null {
+    return this.rowGroupMode() === 'rowspan' && column.kind === 'data' && column.column.field === this.groupRowsBy() && item.group?.first ? item.group.size : null;
+  }
+
+  dropRow(event: CdkDragDrop<unknown>): void {
+    this.moveRow(event.previousIndex, event.currentIndex);
+  }
+
+  moveRowBy(position: number, step: number, event: Event): void {
+    event.preventDefault();
+    const target = position + step;
+    if (target < 0 || target >= this.renderRows().length) return;
+    this.moveRow(position, target);
+    afterNextRender(
+      () => this.host.nativeElement.querySelectorAll<HTMLElement>('.tx-table__tbody > .tx-table__row .tx-table__row-handle')[target]?.focus(),
+      { injector: this.injector },
+    );
+  }
+
+  private moveRow(fromPosition: number, toPosition: number): void {
+    if (fromPosition === toPosition) return;
+    const rows = this.renderRows();
+    const moved = rows[fromPosition];
+    const target = rows[toPosition];
+    if (!moved || !target) return;
+    const source = this.value() ?? [];
+    const list = [...this.allRows()];
+    const from = list.indexOf(moved.row);
+    const to = list.indexOf(target.row);
+    if (from < 0 || to < 0) return;
+    moveItemInArray(list, from, to);
+    this.reordered.set({ source, rows: list });
+    this.rowReorder.emit({ from, to, value: list });
+  }
+
+  isLoadingRow(item: TxTableRenderRow<T>): boolean {
+    return item.row === null || item.row === undefined;
+  }
+
+  onScroll(event: Event): void {
+    if (!this.virtualScroll()) return;
+    const scroller = event.target as HTMLElement;
+    this.scrollTop.set(scroller.scrollTop);
+    this.viewportHeight.set(scroller.clientHeight);
+    this.requestVirtualRange();
+  }
+
+  private requestVirtualRange(): void {
+    if (!this.lazy() || !this.virtualScroll()) return;
+    const { start, end } = this.windowRange();
+    const missing = this.renderRows()
+      .slice(start, end)
+      .some((item) => this.isLoadingRow(item));
+    const range = `${start}:${end}`;
+    if (!missing || range === this.lastRange) return;
+    this.lastRange = range;
+    this.lazyLoad.emit({ ...this.lazyEvent(), first: start, rows: end - start });
+  }
+
+  exportCSV(options: { selectionOnly?: boolean; filename?: string } = {}): string {
+    const selection = this.selection();
+    const rows = options.selectionOnly ? (Array.isArray(selection) ? selection : selection ? [selection] : []) : this.sortedRows().filter((row) => row !== null && row !== undefined);
+    const columns = this.visibleColumns();
+    const own = this.exportFunction();
+    const csv = toCsv(rows, columns, { separator: this.csvSeparator(), value: own ? (row, column) => own(row, column) : undefined });
+    downloadCsv(this.document, csv, options.filename ?? this.exportFilename());
+    return csv;
   }
 
   canExpand(item: TxTableRenderRow<T>): boolean {
@@ -831,6 +1386,8 @@ export class TxTable<T = unknown> implements TxTableContext {
       multiSortMeta: this.multiSortMeta(),
       first: this.first(),
       rows: this.rows(),
+      filters: this.filters(),
+      globalFilter: this.globalFilter(),
       actionOrder: this.actionsStore.registeredActions().map((item) => item.id),
       pinnedActions: this.actionsStore.pinned() ? [...this.actionsStore.pinnedIds()] : undefined,
     };
@@ -889,6 +1446,8 @@ export class TxTable<T = unknown> implements TxTableContext {
     if (state.multiSortMeta) this.multiSortMeta.set(state.multiSortMeta);
     if (state.rows) this.rows.set(state.rows);
     if (state.first !== undefined) this.first.set(state.first);
+    if (state.filters) this.filters.set(state.filters);
+    if (state.globalFilter) this.globalFilter.set(state.globalFilter);
     this.actionsStore.restore(state.actionOrder, state.pinnedActions);
   }
 

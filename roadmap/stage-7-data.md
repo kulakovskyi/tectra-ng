@@ -20,7 +20,7 @@ PrimeNG: Paginator (`first`, `rows`, `totalRecords`, `pageLinkSize`, `rowsPerPag
 - [x] `TxPaginationParams` (the shared request / response shape: `page`, `limit`, `total`) and helpers `pageToFirst`, `firstToPage`
 - [x] Docs + tests; e2e: keyboard through the buttons, size change, compact layout at phone width
 
-## 7.2 Table — `ui/table`
+## 7.2 Table — `ui/table` ✅
 
 PrimeNG: Table (`value`, `columns`, `dataKey`, sort single / multiple + `sortField` / `sortOrder` / `multiSortMeta` / `customSort`, `paginator` + all paginator inputs, `lazy` + `(onLazyLoad)`, `loading`, selection `single` / `multiple` / checkbox / radio + `metaKeySelection` + `(selectionChange)`, `contextMenu` + `contextMenuSelection`, `resizableColumns` + `columnResizeMode` fit / expand, `reorderableColumns` / `reorderableRows`, frozen columns and rows, `scrollable` + `scrollHeight`, `virtualScroll`, row expansion (`expandedRowKeys`), row grouping, column filters + global filter, editing (cell / row), `stateStorage` local / session, `exportCSV`, `size`, `showGridlines`, `stripedRows`, templates caption / header / body / footer / summary / empty / loading / expansion). First app (356): projected rows with `[cell]` markers, columns with `field`, label, `withoutSort`, `withoutDrag`, `width` / `initialWidth` / `minWidth` / `maxWidth`, `order`, `hidden`; sort arrows asc → desc → none, resize handles, header drag, settings popover (visible columns, row action order and pinning), widths / order / hidden saved per table id, select-all checkbox column, blurred loading overlay with a spinner, paginator under the table, toolbar slot, row actions with an overflow `…` menu and the same actions as a right-click menu, sticky columns, rows at least 50px, cards below 64rem (labels from the headers, first cell as title, checkbox in the corner, actions as the footer, own card template), `responsive` off for wide tables, ellipsis cells with a tooltip.
 
@@ -31,14 +31,14 @@ PrimeNG: Table (`value`, `columns`, `dataKey`, sort single / multiple + `sortFie
 - [x] Selection: single / multiple rows, `metaKeySelection`, checkbox column + select all (tri-state, current page), radio column, `[(selection)]`, `rowSelectable`, keyboard (arrows between rows, Space / Enter)
 - [x] Columns: resize (`fit` / `expand`, min / max), reorder by dragging headers (keyboard too), frozen / sticky start and end columns, column settings popover (visibility, order), `stateKey` + `stateStorage` saving widths / order / hidden / sort / page
 - [x] Rows: row actions cell with inline count and an overflow menu, the same actions on right-click (or an own `contextMenu`), row expansion (`[(expandedRowKeys)]`, expansion template)
-- [ ] Rows: reorder by drag, row grouping (subheader / rowspan), frozen rows
+- [x] Rows: reorder by drag along the column (handle, Alt + arrows, `rowReorder` with the new order), row grouping (`subheader` with header / footer templates and collapsible groups, `rowspan`), frozen rows (`frozenValue`)
 - [x] Scroll: `scrollHeight` with a sticky header, minimum row height (50px) so sticky cells stay level, footer row
-- [ ] Scroll: virtual scroll for long lists
-- [ ] Filters: column filter menu (match modes per type, several rules, apply / clear), filter row, global filter; `filters` model
-- [ ] Editing: cell edit (`txEditableCell`, Enter / Escape / Tab), row edit (init / save / cancel)
+- [x] Scroll: virtual scroll for long lists (window + spacers, lazy ranges with skeleton rows, keys reach every row)
+- [x] Filters: column filter menu (PrimeNG match modes per type text / numeric / date / boolean, option lists, up to two rules with match all / any, apply / clear), filter row with a match mode menu, global search; `[(filters)]`, `[(globalFilter)]`, filters in `lazyLoad` and the saved state
+- [x] Editing: cell edit (click / Enter / F2, Enter / Tab / Escape, `txTableEditor`, text / numeric / date / boolean / select editors), row edit (edit column, `[(editingRowKeys)]`, init / save / cancel events)
 - [x] Responsive cards below a breakpoint (`responsive`, `breakpoint`): header labels, title cell, checkbox corner, actions footer, own card template
 - [x] Ellipsis for cut text in cells and headers
-- [ ] Tooltip for cut text; `exportCSV` from the visible columns
+- [x] Tooltip for cut text (`cellTooltip`); `exportCSV()` from the visible columns (selection only, own values, BOM, formula guard)
 - [x] Docs + tests; e2e: sort, resize, reorder, sticky columns while scrolling sideways, selection by keys, cards at tablet width, axe in light and dark
 
 ## 7.3 Tree and tree table — `ui/tree`, `ui/tree-table`

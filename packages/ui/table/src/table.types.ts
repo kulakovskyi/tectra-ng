@@ -10,6 +10,52 @@ export type TxTableFrozen = 'start' | 'end';
 export type TxTableAlign = 'start' | 'center' | 'end';
 export type TxTablePaginatorPosition = 'top' | 'bottom' | 'both';
 export type TxTableRowKey = string | number;
+export type TxTableFilterDisplay = 'menu' | 'row';
+export type TxTableEditMode = 'cell' | 'row';
+export type TxTableRowGroupMode = 'subheader' | 'rowspan';
+export type TxTableEditType = 'text' | 'numeric' | 'date' | 'boolean';
+export type TxTableFilterType = 'text' | 'numeric' | 'date' | 'boolean';
+export type TxFilterOperator = 'and' | 'or';
+export type TxFilterMatchMode =
+  | 'startsWith'
+  | 'contains'
+  | 'notContains'
+  | 'endsWith'
+  | 'equals'
+  | 'notEquals'
+  | 'in'
+  | 'lt'
+  | 'lte'
+  | 'gt'
+  | 'gte'
+  | 'between'
+  | 'dateIs'
+  | 'dateIsNot'
+  | 'dateBefore'
+  | 'dateAfter';
+
+export interface TxFilterRule {
+  value: unknown;
+  matchMode: TxFilterMatchMode;
+}
+
+export interface TxColumnFilter {
+  operator: TxFilterOperator;
+  rules: TxFilterRule[];
+}
+
+export type TxTableFilters = Record<string, TxColumnFilter>;
+
+export interface TxTableFilterOption {
+  label: string;
+  value: unknown;
+}
+
+export interface TxTableFilterEvent<T = unknown> {
+  filters: TxTableFilters;
+  globalFilter: string;
+  filteredValue: T[];
+}
 
 export type TxTablePart =
   | 'root'
@@ -53,6 +99,15 @@ export interface TxTableColumn {
   footer?: string;
   cardTitle?: boolean;
   hideInCard?: boolean;
+  filter?: boolean;
+  filterField?: string;
+  filterType?: TxTableFilterType;
+  filterMatchModes?: TxFilterMatchMode[];
+  filterOptions?: TxTableFilterOption[];
+  filterPlaceholder?: string;
+  editable?: boolean;
+  editType?: TxTableEditType;
+  editOptions?: TxTableFilterOption[];
 }
 
 export interface TxSortMeta {
@@ -72,6 +127,8 @@ export interface TxTableLazyLoadEvent {
   sortField: string | null;
   sortOrder: TxSortOrder;
   multiSortMeta: TxSortMeta[];
+  filters: TxTableFilters;
+  globalFilter: string;
 }
 
 export type TxTablePageEvent = TxPageState;
@@ -80,6 +137,21 @@ export interface TxTableRowEvent<T = unknown> {
   row: T;
   index: number;
   originalEvent?: Event;
+}
+
+export interface TxTableRowReorderEvent<T = unknown> {
+  from: number;
+  to: number;
+  value: T[];
+}
+
+export interface TxTableGroupContext<T = unknown> {
+  $implicit: T;
+  value: unknown;
+  count: number;
+  rows: T[];
+  collapsed: boolean;
+  toggle: () => void;
 }
 
 export interface TxTableColumnResizeEvent {
@@ -102,8 +174,36 @@ export interface TxTableState {
   multiSortMeta?: TxSortMeta[];
   first?: number;
   rows?: number;
+  filters?: TxTableFilters;
+  globalFilter?: string;
   actionOrder?: string[];
   pinnedActions?: string[];
+}
+
+export interface TxTableCellEditEvent<T = unknown> {
+  row: T;
+  index: number;
+  field: string;
+  value: unknown;
+  previousValue: unknown;
+}
+
+export interface TxTableRowEditEvent<T = unknown> {
+  row: T;
+  index: number;
+  changes: Record<string, unknown>;
+  previous: Record<string, unknown>;
+}
+
+export interface TxTableEditorContext<T = unknown> {
+  $implicit: T;
+  row: T;
+  index: number;
+  column: TxTableColumn;
+  value: unknown;
+  set: (value: unknown) => void;
+  commit: () => void;
+  cancel: () => void;
 }
 
 export interface TxTableCellContext<T = unknown> {

@@ -1,11 +1,17 @@
 import { Directive, TemplateRef, computed, inject, input } from '@angular/core';
-import { TxTableActionConfig, TxTableCellContext, TxTableEmptyContext, TxTableHeaderContext, TxTableRowContext } from './table.types';
+import { TxTableActionConfig, TxTableCellContext, TxTableEditorContext, TxTableGroupContext, TxTableEmptyContext, TxTableHeaderContext, TxTableRowContext } from './table.types';
 import { actionIdOf } from './table.utils';
 
 @Directive({ selector: 'ng-template[txTableCell]' })
 export class TxTableCell {
   readonly templateRef = inject<TemplateRef<TxTableCellContext>>(TemplateRef);
   readonly txTableCell = input.required<string>();
+}
+
+@Directive({ selector: 'ng-template[txTableEditor]' })
+export class TxTableEditor {
+  readonly templateRef = inject<TemplateRef<TxTableEditorContext>>(TemplateRef);
+  readonly txTableEditor = input.required<string>();
 }
 
 @Directive({ selector: 'ng-template[txTableHeaderCell]' })
@@ -33,6 +39,16 @@ export class TxTableExpansion {
 @Directive({ selector: 'ng-template[txTableActions]' })
 export class TxTableActionsTemplate {
   readonly templateRef = inject<TemplateRef<TxTableRowContext>>(TemplateRef);
+}
+
+@Directive({ selector: 'ng-template[txTableGroupHeader]' })
+export class TxTableGroupHeader {
+  readonly templateRef = inject<TemplateRef<TxTableGroupContext>>(TemplateRef);
+}
+
+@Directive({ selector: 'ng-template[txTableGroupFooter]' })
+export class TxTableGroupFooter {
+  readonly templateRef = inject<TemplateRef<TxTableGroupContext>>(TemplateRef);
 }
 
 @Directive({ selector: 'ng-template[txTableEmpty]' })
