@@ -135,6 +135,7 @@ test('select panel opens clear of the sticky header, rides with its field and sl
 
 test('select panel opens clear of the stuck tab bar', async ({ page }) => {
   await page.goto('/components/select');
+  await expect(page.locator('docs-example-frame').nth(1)).toBeVisible();
   await page.mouse.wheel(0, 700);
   const tabsBar = page.locator('.tabs-bar');
   await expect.poll(() => tabsBar.evaluate((bar) => Math.round(bar.getBoundingClientRect().top))).toBe(56);
@@ -717,17 +718,21 @@ test.describe('with motion', () => {
     await page.goto('/components/tooltip');
     const origin = page.locator('tooltip-placements-example').getByRole('button', { name: 'bottom', exact: true });
     await expect(origin).toBeVisible();
-    await origin.evaluate((element) =>
-      window.scrollTo({ top: element.getBoundingClientRect().bottom + window.scrollY - window.innerHeight + 12, behavior: 'instant' }),
-    );
-    await expect.poll(() => origin.evaluate((element) => window.innerHeight - element.getBoundingClientRect().bottom)).toBeLessThan(14);
+    await expect
+      .poll(() =>
+        origin.evaluate((element) => {
+          const height = document.documentElement.clientHeight;
+          window.scrollTo({ top: element.getBoundingClientRect().bottom + window.scrollY - height + 12, behavior: 'instant' });
+          return height - element.getBoundingClientRect().bottom;
+        }),
+      )
+      .toBeLessThan(14);
     const box = await origin.boundingBox();
     await page.mouse.move((box?.x ?? 0) + (box?.width ?? 0) / 2, (box?.y ?? 0) + (box?.height ?? 0) / 2);
     const tooltip = page.locator('tx-tooltip');
     await expect(tooltip).toHaveAttribute('data-side', 'top');
     await page.waitForTimeout(250);
-    await page.mouse.move(0, 0);
-    const sides = await tooltip.evaluate(
+    const watch = tooltip.evaluate(
       (element) =>
         new Promise<string[]>((resolve) => {
           const seen: string[] = [];
@@ -742,6 +747,9 @@ test.describe('with motion', () => {
           tick();
         }),
     );
+    await page.waitForTimeout(50);
+    await page.mouse.move(0, 0);
+    const sides = await watch;
     expect(sides.length).toBeGreaterThan(1);
     expect(new Set(sides)).toEqual(new Set(['top']));
   });
@@ -776,7 +784,7 @@ test.describe('with motion', () => {
       }
       const lefts = await watch;
       const moving = new Set(lefts.map(Math.round));
-      expect(moving.size).toBeGreaterThan(3);
+      expect(moving.size).toBeGreaterThan(2);
       await expect(panel).toHaveCount(0);
     });
   }

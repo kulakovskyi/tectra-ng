@@ -91,10 +91,15 @@ test.describe('with motion', () => {
     await page.goto('/components/popover');
     const button = page.locator('popover-arrow-example').getByRole('button', { name: 'bottom', exact: true });
     await expect(button).toBeVisible();
-    await button.evaluate((element) =>
-      window.scrollTo({ top: element.getBoundingClientRect().bottom + window.scrollY - window.innerHeight + 12, behavior: 'instant' }),
-    );
-    await expect.poll(() => button.evaluate((element) => window.innerHeight - element.getBoundingClientRect().bottom)).toBeLessThan(14);
+    await expect
+      .poll(() =>
+        button.evaluate((element) => {
+          const height = document.documentElement.clientHeight;
+          window.scrollTo({ top: element.getBoundingClientRect().bottom + window.scrollY - height + 12, behavior: 'instant' });
+          return height - element.getBoundingClientRect().bottom;
+        }),
+      )
+      .toBeLessThan(14);
     const box = await button.boundingBox();
     await page.mouse.click((box?.x ?? 0) + (box?.width ?? 0) / 2, (box?.y ?? 0) + (box?.height ?? 0) / 2);
     const popover = page.locator('.tx-popover');

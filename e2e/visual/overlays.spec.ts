@@ -72,6 +72,7 @@ test('tooltip shows only for cut-off text', async ({ page }) => {
 
 test('select opens downward while it fits below, even with a stuck tab bar', async ({ page }) => {
   await page.goto('/components/select');
+  await expect(page.locator('docs-example-frame').nth(1)).toBeVisible();
   await page.mouse.wheel(0, 700);
   const tabsBar = page.locator('.tabs-bar');
   await expect.poll(() => tabsBar.evaluate((bar) => Math.round(bar.getBoundingClientRect().top))).toBe(56);

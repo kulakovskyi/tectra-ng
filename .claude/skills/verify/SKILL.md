@@ -29,6 +29,9 @@ Report what ran and what passed; anything not checked is named as not checked.
 ## Gotchas
 
 - e2e uses the installed Chrome locally (`channel: 'chrome'`), Playwright Chromium in CI.
+- The scrollbar takes part of the window on Linux / Windows (~10px in CI, 0px on macOS where it overlays). A test that passes on the Mac can fail in CI by that gutter. Measure against `layoutViewport(page)` from `helpers.ts` (`documentElement.clientWidth / clientHeight`), never `page.viewportSize()` or `innerWidth` / `innerHeight` — ESLint blocks them in `e2e/`. Fixed panels end at the scrollbar, not at the window edge.
+- Wait for the page content (`await expect(page.locator('docs-example-frame').first()).toBeVisible()`) before `mouse.wheel` — right after `goto` there is nothing to scroll yet in CI.
+- Motion tests: start the frame watcher before the action that closes the panel, and assert one in-between frame, not a frame count — CI drops frames under load.
 - `expect.poll` for values that change during CSS transitions; `getAnimations()` to wait for the end of an animation.
 - Exact accessible names: `getByRole('button', { name: 'Copy', exact: true })`.
 - jsdom has no `PointerEvent`, `matchMedia`, `scrollIntoView`, `ResizeObserver` — stub or guard in unit tests.

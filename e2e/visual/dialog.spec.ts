@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { trackPage } from './helpers';
+import { layoutViewport, trackPage } from './helpers';
 
 test('dialog traps focus, closes with Escape and returns its result', async ({ page }) => {
   await page.goto('/components/dialog');
@@ -80,8 +80,8 @@ test('dialog moves by its header and maximizes to the viewport', async ({ page }
   expect(Math.round((moved?.x ?? 0) - (start?.x ?? 0))).toBe(100);
   expect(Math.round((moved?.y ?? 0) - (start?.y ?? 0))).toBe(60);
   await dialog.getByRole('button', { name: 'Maximize' }).click();
-  const viewport = page.viewportSize();
-  await expect.poll(async () => Math.round((await dialog.boundingBox())?.width ?? 0)).toBe(viewport?.width);
+  const viewport = await layoutViewport(page);
+  await expect.poll(async () => Math.round((await dialog.boundingBox())?.width ?? 0)).toBe(viewport.width);
   await expect(dialog.getByRole('button', { name: 'Restore' })).toBeVisible();
 });
 

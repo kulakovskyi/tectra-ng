@@ -52,6 +52,22 @@ export default [
     },
   },
   {
+    files: ['e2e/**/*.ts'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: "CallExpression[callee.property.name='viewportSize']",
+          message: 'The scrollbar can take part of the window (0px on macOS, ~10px on Linux / Windows). Measure against layoutViewport(page) from ./helpers.',
+        },
+        {
+          selector: "MemberExpression[property.name=/^inner(Width|Height)$/]",
+          message: 'innerWidth / innerHeight include the scrollbar. Use document.documentElement.clientWidth / clientHeight or layoutViewport(page) from ./helpers.',
+        },
+      ],
+    },
+  },
+  {
     files: ['**/*.html'],
     rules: {
       '@angular-eslint/template/prefer-control-flow': 'error',

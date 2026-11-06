@@ -18,6 +18,10 @@ export async function trackPage(page: Page): Promise<() => Promise<{ errors: str
   return async () => ({ errors, layoutShift: await page.evaluate(() => (window as unknown as { __layoutShift: number }).__layoutShift) });
 }
 
+export async function layoutViewport(page: Page): Promise<{ width: number; height: number }> {
+  return page.evaluate(() => ({ width: document.documentElement.clientWidth, height: document.documentElement.clientHeight }));
+}
+
 export async function setDarkMode(page: Page): Promise<void> {
   await page.evaluate(() => document.documentElement.setAttribute('data-tx-theme', 'dark'));
 }

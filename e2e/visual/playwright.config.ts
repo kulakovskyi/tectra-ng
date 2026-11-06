@@ -12,6 +12,7 @@ export default defineConfig({
   use: {
     baseURL,
     channel: process.env['CI'] ? undefined : 'chrome',
+    launchOptions: { ignoreDefaultArgs: ['--hide-scrollbars'] },
     viewport: { width: 1440, height: 900 },
     contextOptions: { reducedMotion: 'reduce' },
     trace: 'retain-on-failure',

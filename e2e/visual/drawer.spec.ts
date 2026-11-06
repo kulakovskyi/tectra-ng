@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { layoutViewport } from './helpers';
 
 test('drawer slides in at the right edge, traps focus and gives it back', async ({ page }) => {
   await page.goto('/components/drawer');
@@ -7,9 +8,9 @@ test('drawer slides in at the right edge, traps focus and gives it back', async 
   const drawer = page.getByRole('dialog', { name: 'Filters' });
   await expect(drawer).toBeVisible();
   const box = await drawer.boundingBox();
-  const viewport = page.viewportSize();
-  expect(Math.round((box?.x ?? 0) + (box?.width ?? 0))).toBe(viewport?.width);
-  expect(Math.round(box?.height ?? 0)).toBe(viewport?.height);
+  const viewport = await layoutViewport(page);
+  expect(Math.round((box?.x ?? 0) + (box?.width ?? 0))).toBe(viewport.width);
+  expect(Math.round(box?.height ?? 0)).toBe(viewport.height);
   await expect(drawer.getByRole('checkbox', { name: 'Draft' })).toBeFocused();
   for (let step = 0; step < 8; step++) {
     await page.keyboard.press('Tab');
