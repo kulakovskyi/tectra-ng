@@ -5,6 +5,7 @@
     "registry": "node tools/registry-builder/build-registry.mjs",
     "docs": "npm run registry && nx serve docs",
     "docs:build": "npm run registry && nx build docs",
+    "docs:build:pages": "npm run registry && nx build docs -c github-pages && cp dist/apps/docs/browser/index.html dist/apps/docs/browser/404.html",
     "sandbox": "nx serve sandbox",
     "build:packages": "nx run-many -t build -p tokens themes core icons brand-icons ui blocks",
     "icons": "node tools/icons/build-icons.mjs && node tools/icons/build-brand-icons.mjs",

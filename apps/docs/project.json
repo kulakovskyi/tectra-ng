@@ -29,7 +29,12 @@
           "outputHashing": "all",
           "budgets": [{ "type": "initial", "maximumWarning": "1mb", "maximumError": "2mb" }]
         },
-        "development": { "optimization": false, "extractLicenses": false, "sourceMap": true }
+        "development": { "optimization": false, "extractLicenses": false, "sourceMap": true },
+        "github-pages": {
+          "baseHref": "/tectra-ng/",
+          "outputHashing": "all",
+          "budgets": [{ "type": "initial", "maximumWarning": "1mb", "maximumError": "2mb" }]
+        }
       },
       "defaultConfiguration": "production"
     },
