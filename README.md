@@ -23,7 +23,7 @@ npm run test               # unit tests (Vitest)
 npm run e2e                # Playwright checks of the docs site
 ```
 
-Working now: tokens, themes (light / dark, 5 accents), core (config with unstyled + pass-through, overlay, forms, a11y, i18n, styles, ripple, fluid), icons + brand icons, ui (button, button-group, toggle-button, badge, input, icon-field, input-group, key-filter, select), the docs site, unit tests, Playwright checks and CI.
+Working now: tokens, themes (light / dark, 17 primaries, 13 surfaces, 4 styles), core (config with unstyled + pass-through, overlay, forms, a11y, i18n, styles, ripple, fluid), icons, brand icons and flags, 75 ui entry points (forms, actions, data, overlays, display, feedback, layout, date and time — list in [packages/ui/README.md](packages/ui/README.md)), the docs site, unit tests, Playwright checks and CI.
 
 Plan of what moves in next and in which order: [ROADMAP.md](ROADMAP.md).
 

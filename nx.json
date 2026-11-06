@@ -42,7 +42,8 @@
     },
     "version": {
       "conventionalCommits": true,
-      "versionPrefix": "^"
+      "versionPrefix": "^",
+      "preserveMatchingDependencyRanges": false
     },
     "changelog": {
       "workspaceChangelog": {

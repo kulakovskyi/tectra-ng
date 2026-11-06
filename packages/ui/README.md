@@ -1,27 +1,44 @@
 # @tectra-ng/ui
 
-ONE npm package, one entry point per component: `import { TxSelect } from '@tectra-ng/ui/select'` — only the select lands in the bundle.
+Angular components of tectra — standalone, signals, OnPush, accessible, themable with design tokens. One npm package, one entry point per component: `import { TxSelect } from '@tectra-ng/ui/select'` puts only the select into the bundle.
 
-Every component folder looks the same (see `select/`):
-
-```
-select/
-  src/
-    select.component.ts|html|scss   the component (styles use only --tx-* variables)
-    select.component.spec.ts        unit tests
-    select-option.directive.ts      template slots (#option, #empty, …)
-    select.tokens.ts                component tokens → docs "Theming" tab
-    select.types.ts                 public types
-  index.ts                          public API of the entry point
-  ng-package.json                   makes it @tectra-ng/ui/select
-  README.md                         descriptions → docs "API" tab
+```bash
+npm i @tectra-ng/ui
 ```
 
-Planned (~70): button, input, textarea, checkbox, radio, switch, input-number, input-mask, input-otp, password, slider, rating,
-tooltip, popover, dialog, drawer, toast, menu, context-menu, confirm-popup,
-select, multiselect, autocomplete, listbox, tree-select, chips, color-picker,
-paginator, table, tree, tree-table, data-view, virtual-scroller, timeline,
-datepicker, tabs, accordion, stepper, breadcrumb, menubar, splitter, card, toolbar, divider,
-file-upload, image, carousel, avatar, badge, tag, progress, skeleton, spinner, editor …
+`@tectra-ng/core`, `@tectra-ng/themes`, `@tectra-ng/tokens` and `@tectra-ng/icons` come with it as peer dependencies; `@angular/cdk`, `@angular/forms` and `@angular/common` are needed too, `@angular/router` only for router links.
 
-Depends on: `@tectra-ng/core`, `@tectra-ng/icons`.
+```ts
+// app.config.ts
+import { provideTectra } from '@tectra-ng/core/config';
+import { Tectra } from '@tectra-ng/themes';
+
+export const appConfig = { providers: [provideTectra({ preset: Tectra })] };
+```
+
+```ts
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxDatePicker } from '@tectra-ng/ui/datepicker';
+```
+
+Every component takes `dt` (design tokens of this instance), `pt` / `ptOptions` (classes and styles of its parts) and `unstyled`; form fields work with reactive forms, `ngModel` and signal forms. Docs, examples and the API of each entry point: [tectra-ng.com](https://tectra-ng.com).
+
+## Entry points
+
+| Group | `@tectra-ng/ui/…` |
+|---|---|
+| Form | `autocomplete`, `cascade-select`, `checkbox`, `chips-input`, `color-picker`, `country-select`, `datepicker`, `email-suggestion`, `field`, `icon-field`, `input`, `input-group`, `input-mask`, `input-number`, `input-otp`, `key-filter`, `knob`, `label`, `listbox`, `mention-textarea`, `multiselect`, `password`, `password-generator`, `radio-button`, `rating`, `select`, `slider`, `textarea`, `toggle-button`, `toggle-switch`, `tree-select` |
+| Actions | `button`, `button-group`, `speed-dial`, `split-button` |
+| Data | `data-view`, `export`, `month-calendar`, `paginator`, `sparkline`, `stat-tiles`, `table`, `timeline`, `tree`, `tree-table`, `virtual-scroller` |
+| Overlay | `confirm`, `dialog`, `drawer`, `menu`, `popover`, `toast`, `tooltip` |
+| Display | `amount`, `avatar`, `badge`, `chip`, `country`, `highlight-text`, `link`, `overlay-badge`, `pill`, `status-icon`, `tag` |
+| Feedback | `message`, `progress-bar`, `progress-spinner`, `skeleton` |
+| Layout | `card`, `divider`, `fieldset`, `panel` |
+| Misc | `analog-clock`, `countdown` |
+| Assets | `export-font` — Onest (SIL Open Font License, see `export-font/OFL.txt`) for PDF export, loaded by `@tectra-ng/ui/export` on the first PDF export |
+
+Each entry point has its own `README.md` with the inputs, outputs, slots and keyboard map.
+
+## License
+
+MIT. The Onest font in `export-font` is © The Onest Project Authors, SIL Open Font License 1.1.
