@@ -21,7 +21,7 @@ import { ratingTokens } from './rating.tokens';
 import { selectTokens } from './select.tokens';
 import { cascadeSelectTokens, chipsInputTokens, colorPickerTokens, countryTokens, emailSuggestionTokens, listboxTokens, mentionTokens } from './selection.tokens';
 import { treeTableTokens, treeTokens } from './tree.tokens';
-import { dataViewTokens, timelineTokens, virtualScrollerTokens } from './data.tokens';
+import { dataViewTokens, statTileTokens, statTilesTokens, timelineTokens, virtualScrollerTokens } from './data.tokens';
 import { skeletonTokens } from './skeleton.tokens';
 import { sliderTokens } from './slider.tokens';
 import { chipTokens, tagTokens } from './tag.tokens';
@@ -105,6 +105,8 @@ export const COMPONENT_TOKENS = {
   dataView: dataViewTokens,
   virtualScroller: virtualScrollerTokens,
   timeline: timelineTokens,
+  statTiles: statTilesTokens,
+  statTile: statTileTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

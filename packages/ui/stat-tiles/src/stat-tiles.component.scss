@@ -1,0 +1,17 @@
+:host {
+  display: block;
+}
+
+:host([data-styled]) {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(100%, max(var(--tx-stat-tiles-min-width), var(--tx-stat-tiles-floor-width))), 1fr)
+  );
+  gap: var(--tx-stat-tiles-gap);
+}
+
+:host([data-styled].tx-stat-tiles--compact) {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--tx-stat-tiles-min-width)), 1fr));
+  gap: var(--tx-stat-tiles-compact-gap);
+}

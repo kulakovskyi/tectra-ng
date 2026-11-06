@@ -1,0 +1,80 @@
+@if (link(); as commands) {
+  <a
+    class="tx-stat-tile__body"
+    [class]="passThrough().body?.class"
+    [style]="passThrough().body?.style"
+    [routerLink]="commands"
+    [queryParams]="queryParams()"
+    [attr.target]="target() || null"
+    [attr.rel]="rel()"
+  >
+    <ng-container [ngTemplateOutlet]="body" />
+  </a>
+} @else if (href(); as url) {
+  <a
+    class="tx-stat-tile__body"
+    [class]="passThrough().body?.class"
+    [style]="passThrough().body?.style"
+    [attr.href]="url"
+    [attr.target]="target() || null"
+    [attr.rel]="rel()"
+  >
+    <ng-container [ngTemplateOutlet]="body" />
+  </a>
+} @else {
+  <div class="tx-stat-tile__body" [class]="passThrough().body?.class" [style]="passThrough().body?.style">
+    <ng-container [ngTemplateOutlet]="body" />
+  </div>
+}
+
+<ng-template #body>
+  <span class="tx-stat-tile__head" [class]="passThrough().head?.class" [style]="passThrough().head?.style">
+    @if (icon(); as name) {
+      <span class="tx-stat-tile__icon" aria-hidden="true" [class]="passThrough().icon?.class" [style]="passThrough().icon?.style">
+        <tx-icon [name]="name" />
+      </span>
+    }
+    <span class="tx-stat-tile__main" [class]="passThrough().main?.class" [style]="passThrough().main?.style">
+      <span class="tx-stat-tile__label" [class]="passThrough().label?.class" [style]="passThrough().label?.style">{{ label() }}</span>
+      <span
+        class="tx-stat-tile__value"
+        [class.tx-stat-tile__value--text]="textValue()"
+        [class.tx-stat-tile__value--accent]="accentValue()"
+        [class]="passThrough().value?.class"
+        [style]="passThrough().value?.style"
+        [attr.title]="valueTitle()"
+        >{{ displayValue() }}
+        @if (unit()) {
+          <span class="tx-stat-tile__unit" [class]="passThrough().unit?.class" [style]="passThrough().unit?.style">{{ unit() }}</span>
+        }
+      </span>
+      @if (meta()) {
+        <span class="tx-stat-tile__meta" [class]="passThrough().meta?.class" [style]="passThrough().meta?.style">{{ meta() }}</span>
+      }
+    </span>
+    <span class="tx-stat-tile__aside" [class]="passThrough().aside?.class" [style]="passThrough().aside?.style">
+      <ng-content select="[txStatTileAside]" />
+    </span>
+  </span>
+  @if (sharePercent() !== null) {
+    <span
+      class="tx-stat-tile__bar"
+      role="meter"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      [attr.aria-valuenow]="sharePercent()"
+      [attr.aria-label]="label()"
+      [class]="passThrough().bar?.class"
+      [style]="passThrough().bar?.style"
+    >
+      <span
+        class="tx-stat-tile__bar-fill"
+        [class]="passThrough().barFill?.class"
+        [style]="passThrough().barFill?.style"
+        [style.width.%]="sharePercent()"
+      ></span>
+    </span>
+  }
+  <ng-content />
+</ng-template>
+

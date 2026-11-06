@@ -64,12 +64,12 @@ PrimeNG: Timeline (`value`, `align` left / right / alternate / top / bottom, `la
 - [x] `<tx-timeline>`: vertical / horizontal, alignments (left / right / alternate, top / bottom / alternate), content / opposite / marker / connector templates with `index` / `first` / `last`, ordered list semantics (`ariaLabel` / `ariaLabelledBy`, decorative marker and connector)
 - [x] Docs + tests; e2e: markers on one line joined by connectors, alternate sides, horizontal row with the line above or below
 
-## 7.6 Stat tiles — `ui/stat-tiles`
+## 7.6 Stat tiles — `ui/stat-tiles` ✅
 
-Not in PrimeNG. First app (48): a responsive grid (`minWidth`, never below 15rem, `compact` 9rem) of tiles with a tinted icon square, label, big value (`null` → "-"), unit, meta line, tone (neutral / primary / success / info / warn / danger), share bar 0–100, text value (truncated with a title), fit value (scales with the tile), accent value, highlighted (tinted background and ring), link with a hover ring, aside slot (a change pill), default slot (a sparkline).
+Not in PrimeNG. First app (48): a responsive grid (`minWidth`, never below 15rem, `compact` 9rem) of tiles with a tinted icon square, label, big value (`null` → "-"), unit, meta line, tone (neutral / primary / success / info / warn / danger), share bar 0–100, text value (truncated with a title), fit value (scales with the tile), accent value, highlighted (tinted background and ring), link with a hover ring, aside slot (a change pill), default slot (a sparkline). The look is the first app's own tile (rem × 14px): 1px ring in the content border colour, `lg` radius, padding `17.5px` × `14px`, `38.5px` icon square with the `md` radius tinted 12% with the tone, label `11.375px` medium muted, value `24.5px` semibold with `-0.03em` tracking, meta `10.5px`, share bar `3.5px` on the ground colour; compact tiles `12.25px` × `8.75px`, `28px` icon, `17.5px` value, `7px` gap. Tones: primary, muted text, green / sky / amber / red 600 (400 in dark). Its grid uses `max(minWidth, 15rem)` and, when compact, `minWidth` itself (12rem unless set).
 
-- [ ] `<tx-stat-tiles>` + `<tx-stat-tile>` with every option above; link tiles are anchors / router links
-- [ ] Docs + tests
+- [x] `<tx-stat-tiles>` + `<tx-stat-tile>` with every option above (same input names as the first app's tiles); link tiles are router links (`link` + `queryParams`) or anchors (`href` + `target`), hover ring in primary and a 2px focus ring; share bar is a `meter` that slides to a new width
+- [x] Docs + tests; e2e: column floor and compact columns, keyboard focus ring and navigation of a link tile, share bar update, fit and text values
 
 ## 7.7 Sparkline — `ui/sparkline`
 

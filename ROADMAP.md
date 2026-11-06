@@ -140,7 +140,7 @@ Detailed checklist per component: [roadmap/stage-7-data.md](roadmap/stage-7-data
 | `ui/tree`, `ui/tree-table` | Tree, TreeTable | — (parity) | ✅ |
 | `ui/data-view`, `ui/virtual-scroller` | DataView, VirtualScroller | — (parity) | ✅ |
 | `ui/timeline` | Timeline | — (parity) | ✅ |
-| `ui/stat-tiles` | — | 48 | ⬜ |
+| `ui/stat-tiles` | — | 48 | ✅ |
 | `ui/sparkline` | — | 4 | ⬜ |
 | `ui/export` (CSV / Excel buttons) | — | 0, 2 | ⬜ |
 

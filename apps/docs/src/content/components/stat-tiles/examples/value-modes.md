@@ -1,0 +1,1 @@
+`textValue` shows a smaller one-line text cut with an ellipsis (the full text is in the title). `fitValue` shrinks a long number with the tile instead of wrapping. `accentValue` paints the value in the tone.
