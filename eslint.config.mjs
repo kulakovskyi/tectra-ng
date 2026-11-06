@@ -14,7 +14,7 @@ const DEPENDENCY_RULES = [
 
 export default [
   {
-    ignores: ['**/dist', '**/node_modules', '**/.nx', '**/.angular', 'apps/docs/src/generated', 'test-results', 'playwright-report'],
+    ignores: ['**/dist', '**/node_modules', '**/.nx', '**/.angular', 'apps/docs/src/generated', 'test-results', 'playwright-report', '.wrangler'],
   },
   ...nx.configs['flat/base'],
   ...nx.configs['flat/typescript'],
