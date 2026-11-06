@@ -23,12 +23,13 @@ packages/
   brand-icons/  @tectra-ng/brand-icons   brand logos (Simple Icons, CC0)
   flags/        @tectra-ng/flags         country flags (generated from flag-icons, MIT), lazy chunks; `npm run flags`
   ui/<name>     @tectra-ng/ui/<name>     components, one flat entry point per component
+  ui/export-font @tectra-ng/ui/export-font Onest (OFL) for PDF export, loaded on the first PDF export; `npm run export-font`
   ui/styles/    shared SCSS mixins (_form-field.scss)
   blocks/<name> @tectra-ng/blocks/<name> composed blocks
 apps/docs       docs site (port 4300), content in apps/docs/src/content/components/<name>
 apps/sandbox    playground (port 4301)
 e2e/visual      Playwright checks of the built docs (port 4310)
-tools/          registry-builder (docs registry), icons, serve-docs
+tools/          registry-builder (docs registry), icons, flags, export-font, serve-docs
 ```
 
 Aliases are wildcards in `tsconfig.base.json` (`@tectra-ng/ui/*` → `./packages/ui/*/index.ts`) — a new entry point needs no alias. Module boundaries (`eslint.config.mjs`, tags `pkg:*`): tokens → nothing; themes → tokens; core → themes, tokens; ui → core, icons, themes, tokens; blocks → ui + below. A ui entry point may import another ui entry point through its alias.
@@ -48,6 +49,7 @@ Prefix Nx commands with `NX_DAEMON=false NX_NO_CLOUD=true`.
 | Format docs examples | `npm run format:examples` |
 | Rebuild icons | `npm run icons` |
 | Rebuild flags | `npm run flags` |
+| Rebuild the PDF export font | `npm run export-font -- <folder of an Onest release>` |
 | Release (npm) | GitHub Actions → `release` → Run workflow; dry run locally: `node tools/release.mjs patch latest --dry-run` |
 
 Install packages with `npm i … --legacy-peer-deps` (npm arborist bug otherwise). Do not start or stop the user's dev servers; start your own `node tools/serve-docs.mjs dist/apps/docs/browser 4310` for checks and stop it afterwards.
