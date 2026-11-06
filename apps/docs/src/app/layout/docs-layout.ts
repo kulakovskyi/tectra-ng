@@ -9,8 +9,10 @@ import { TxButton } from '@tectra-ng/ui/button';
 import { TxPopover, TxPopoverTrigger } from '@tectra-ng/ui/popover';
 import { TxToast } from '@tectra-ng/ui/toast';
 import { HEADER_LINKS } from '../data/header-links.data';
+import { TECTRA_VERSION } from '../../generated/version';
 import { DocsSidebar } from './sidebar/docs-sidebar';
 import { DocsThemeConfigurator } from './theme-configurator/theme-configurator';
+import { DocsThemeSettings } from './theme-settings';
 
 @Component({
   selector: 'docs-layout',
@@ -21,10 +23,12 @@ import { DocsThemeConfigurator } from './theme-configurator/theme-configurator';
 })
 export class DocsLayout {
   private txThemeService = inject(TxThemeService);
+  private settings = inject(DocsThemeSettings);
   private document = inject(DOCUMENT);
   private router = inject(Router);
 
   readonly headerLinks = HEADER_LINKS;
+  readonly version = TECTRA_VERSION;
   readonly mode = this.txThemeService.mode;
 
   readonly currentUrl = toSignal(
@@ -40,14 +44,14 @@ export class DocsLayout {
     const root = this.document.documentElement;
     const reduceMotion = this.document.defaultView?.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (!this.document.startViewTransition || reduceMotion) {
-      this.txThemeService.toggleMode();
+      this.settings.toggleMode();
       return;
     }
     const x = event.clientX || innerWidth - 40;
     const y = event.clientY || 28;
     const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
     root.classList.add('docs-theme-switch');
-    const transition = this.document.startViewTransition(() => this.txThemeService.toggleMode());
+    const transition = this.document.startViewTransition(() => this.settings.toggleMode());
     transition.ready.then(() =>
       root.animate(
         { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },

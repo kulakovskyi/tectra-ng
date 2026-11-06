@@ -1,5 +1,5 @@
-import { Injectable, inject, signal } from '@angular/core';
-import { TxThemeService } from '@tectra-ng/core/config';
+import { DOCUMENT, Injectable, inject, signal } from '@angular/core';
+import { TxThemeMode, TxThemeService } from '@tectra-ng/core/config';
 import { TECTRA_STYLES, TectraStyleName, createTectraPreset } from '@tectra-ng/themes';
 import { PRIMARY_ORDER, SURFACE_PALETTES, TectraPrimary, TectraSurface } from '@tectra-ng/tokens';
 
@@ -8,6 +8,7 @@ export interface DocsThemeChoice {
   primary: TectraPrimary;
   surface: TectraSurface;
   ripple: boolean;
+  mode: TxThemeMode;
 }
 
 const STORAGE_KEY = 'tx-docs-theme';
@@ -15,16 +16,22 @@ const STORAGE_KEY = 'tx-docs-theme';
 @Injectable({ providedIn: 'root' })
 export class DocsThemeSettings {
   private txThemeService = inject(TxThemeService);
+  private document = inject(DOCUMENT);
 
   readonly style = signal<TectraStyleName>('tectra');
   readonly primary = signal<TectraPrimary>('blue');
   readonly surface = signal<TectraSurface>('ink');
   readonly ripple = this.txThemeService.ripple;
+  readonly mode = this.txThemeService.mode;
 
   restore(): void {
+    this.document.documentElement.style.removeProperty('color-scheme');
     const saved = this.read();
     if (!saved) {
       return;
+    }
+    if (saved.mode === 'light' || saved.mode === 'dark') {
+      this.txThemeService.setMode(saved.mode);
     }
     if (saved.style && saved.style in TECTRA_STYLES) {
       this.style.set(saved.style);
@@ -60,6 +67,11 @@ export class DocsThemeSettings {
     this.save();
   }
 
+  toggleMode(): void {
+    this.txThemeService.toggleMode();
+    this.save();
+  }
+
   private apply(): void {
     this.txThemeService.applyPreset(createTectraPreset({ style: this.style(), primary: this.primary(), surface: this.surface() }));
   }
@@ -74,7 +86,13 @@ export class DocsThemeSettings {
   }
 
   private save(): void {
-    const choice: DocsThemeChoice = { style: this.style(), primary: this.primary(), surface: this.surface(), ripple: this.ripple() };
+    const choice: DocsThemeChoice = {
+      style: this.style(),
+      primary: this.primary(),
+      surface: this.surface(),
+      ripple: this.ripple(),
+      mode: this.mode(),
+    };
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(choice));
     } catch {

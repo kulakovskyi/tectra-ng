@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { expect, test } from '@playwright/test';
 
 test('select panel is opaque and selects with the keyboard', async ({ page }) => {
@@ -1003,4 +1005,45 @@ test('theme picker in the header swaps primary, surface and theme, remembers the
   await expect(page.getByRole('radio', { name: 'Edge' })).toHaveAttribute('aria-checked', 'true');
   await expect(page.getByRole('switch')).not.toBeChecked();
   await page.evaluate(() => localStorage.removeItem('tx-docs-theme'));
+});
+
+test.describe('dark mode switch with motion', () => {
+  test.use({ reducedMotion: 'no-preference' });
+
+  test('reveals the whole page in one circle, without colour transitions, and is remembered', async ({ page }) => {
+    await page.goto('/components/select');
+    await expect(page.locator('docs-example-frame').first()).toBeVisible();
+    await page.getByRole('button', { name: 'Dark theme' }).click();
+    const during = await page.evaluate(() => ({
+      names: ['.header', '.sidebar', '.content'].map((selector) => getComputedStyle(document.querySelector(selector) as Element).viewTransitionName),
+      transition: getComputedStyle(document.querySelector('.docs-nav__link') as Element).transitionDuration,
+    }));
+    expect(during.names).toEqual(['none', 'none', 'none']);
+    expect(during.transition).toBe('0s');
+    await expect(page.locator('html')).not.toHaveClass(/docs-theme-switch/);
+    await expect(page.locator('html')).toHaveAttribute('data-tx-theme', 'dark');
+
+    await page.reload();
+    await expect(page.locator('html')).toHaveAttribute('data-tx-theme', 'dark');
+    await expect(page.getByRole('button', { name: 'Light theme' })).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.style.colorScheme)).toBe('');
+
+    await page.getByRole('button', { name: 'Light theme' }).click();
+    await page.reload();
+    await expect(page.locator('html')).toHaveAttribute('data-tx-theme', 'light');
+  });
+});
+
+test('icons stroke slider changes the stroke and the header shows the package version', async ({ page }) => {
+  await page.goto('/icons');
+  const slider = page.getByRole('slider', { name: /Stroke/ });
+  const stroke = () => page.locator('.grid').first().evaluate((element) => getComputedStyle(element).getPropertyValue('--tx-icon-stroke-width').trim());
+  expect(await stroke()).toBe('1.75');
+  await slider.focus();
+  await slider.press('ArrowRight');
+  await expect.poll(stroke).toBe('2');
+  await expect(page.getByText('Stroke 2', { exact: true })).toBeVisible();
+
+  const { version } = JSON.parse(readFileSync(join(__dirname, '../../packages/tectra-ng/package.json'), 'utf8')) as { version: string };
+  await expect(page.locator('.logo__version')).toHaveText(`v${version}`);
 });

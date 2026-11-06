@@ -1,11 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { TX_BRAND_ICONS, TxBrandIconName } from '@tectra-ng/brand-icons';
 import { TX_ICONS, TxIcon, TxIconName } from '@tectra-ng/icons';
+import { FormsModule } from '@angular/forms';
 import { TxInput } from '@tectra-ng/ui/input';
+import { TxSlider } from '@tectra-ng/ui/slider';
 
 @Component({
   selector: 'docs-icons-page',
-  imports: [TxIcon, TxInput],
+  imports: [FormsModule, TxIcon, TxInput, TxSlider],
   templateUrl: './icons.page.html',
   styleUrls: ['../page.scss', './icons.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,10 +25,6 @@ export default class IconsPage {
 
   onSearch(event: Event): void {
     this.query.set((event.target as HTMLInputElement).value);
-  }
-
-  onStrokeWidth(event: Event): void {
-    this.strokeWidth.set(Number((event.target as HTMLInputElement).value));
   }
 
   copyName(name: string): void {

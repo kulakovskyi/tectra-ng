@@ -285,4 +285,6 @@ writeFileSync(
   join(outDir, 'registry.ts'),
   `import { DocComponentEntry } from '../app/types/doc-component.interface';\n\nexport const DOC_COMPONENTS: DocComponentEntry[] = [\n${index}\n];\n`,
 );
+const { version } = JSON.parse(readFileSync(join(root, 'packages/tectra-ng/package.json'), 'utf8'));
+writeFileSync(join(outDir, 'version.ts'), `export const TECTRA_VERSION = ${JSON.stringify(version)};\n`);
 console.log(`registry: ${components.length} components, ${components.reduce((sum, c) => sum + c.examples.length, 0)} examples`);

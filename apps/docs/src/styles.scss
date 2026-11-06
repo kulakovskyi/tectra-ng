@@ -194,6 +194,12 @@ html.docs-theme-switch::view-transition-new(root) {
   mix-blend-mode: normal;
 }
 
+html.docs-theme-switch *,
+html.docs-theme-switch *::before,
+html.docs-theme-switch *::after {
+  transition: none !important;
+}
+
 .hljs-keyword,
 .hljs-built_in {
   color: #8250df;

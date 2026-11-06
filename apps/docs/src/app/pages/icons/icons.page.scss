@@ -9,10 +9,19 @@
 .toolbar__stroke {
   display: flex;
   align-items: center;
-  gap: var(--tx-space-3);
+  gap: var(--tx-space-4);
   color: var(--tx-text-muted);
   font-size: var(--tx-font-size-sm);
   white-space: nowrap;
+}
+
+.toolbar__stroke span {
+  min-width: 7.5ch;
+  font-variant-numeric: tabular-nums;
+}
+
+.toolbar__slider {
+  width: 160px;
 }
 
 .grid {

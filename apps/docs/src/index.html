@@ -11,6 +11,15 @@
     <link rel="preload" href="fonts/onest-cyrillic-ext-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="fonts/jetbrains-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="fonts/fonts.css" />
+    <script>
+      try {
+        var saved = JSON.parse(localStorage.getItem('tx-docs-theme') || 'null');
+        if (saved && saved.mode === 'dark') {
+          document.documentElement.setAttribute('data-tx-theme', 'dark');
+          document.documentElement.style.colorScheme = 'dark';
+        }
+      } catch (error) {}
+    </script>
   </head>
   <body>
     <docs-root></docs-root>

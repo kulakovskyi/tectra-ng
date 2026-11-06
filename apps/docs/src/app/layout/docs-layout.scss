@@ -207,3 +207,11 @@
     transition: none;
   }
 }
+
+:host-context(.docs-theme-switch) {
+  .header,
+  .sidebar,
+  .content {
+    view-transition-name: none;
+  }
+}
