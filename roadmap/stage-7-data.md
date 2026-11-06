@@ -71,12 +71,12 @@ Not in PrimeNG. First app (48): a responsive grid (`minWidth`, never below 15rem
 - [x] `<tx-stat-tiles>` + `<tx-stat-tile>` with every option above (same input names as the first app's tiles); link tiles are router links (`link` + `queryParams`) or anchors (`href` + `target`), hover ring in primary and a 2px focus ring; share bar is a `meter` that slides to a new width
 - [x] Docs + tests; e2e: column floor and compact columns, keyboard focus ring and navigation of a link tile, share bar update, fit and text values
 
-## 7.7 Sparkline — `ui/sparkline`
+## 7.7 Sparkline — `ui/sparkline` ✅
 
-Not in PrimeNG. First app (4): SVG line with a soft filled area scaled between min and max, fewer than two values draw nothing, `aria-hidden`, full-width 2.25rem host, tones primary / info / success / warn / danger.
+Not in PrimeNG. First app (4): SVG line with a soft filled area scaled between min and max, fewer than two values draw nothing, `aria-hidden`, full-width 2.25rem host, tones primary / info / success / warn / danger. The look is the first app's own sparkline: a 120 × 36 view box with 3px padding stretched to the host (`31.5px` high at 14px root), a `1.75` round line that keeps its width (`non-scaling-stroke`), the area at 10% opacity, tones primary and sky / green / amber / red 600 (400 in dark).
 
-- [ ] `<tx-sparkline>` with all tones in their own colours, optional accessible label
-- [ ] Docs + tests
+- [x] `<tx-sparkline>` with all tones in their own colours, optional accessible label (`ariaLabel` makes it `role="img"`, otherwise `aria-hidden`), non-finite values skipped, `sparklinePoints` helper
+- [x] Docs + tests; e2e: stretches to the container and keeps the line width, redraws with new values, image only with a label
 
 ## 7.8 Export — `ui/export`
 

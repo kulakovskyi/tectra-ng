@@ -1,0 +1,1 @@
+Without `ariaLabel` a sparkline is decorative and hidden from screen readers — the number next to it tells the story. With `ariaLabel` it becomes an image with that text; describe the trend, not the points.

@@ -141,7 +141,7 @@ Detailed checklist per component: [roadmap/stage-7-data.md](roadmap/stage-7-data
 | `ui/data-view`, `ui/virtual-scroller` | DataView, VirtualScroller | — (parity) | ✅ |
 | `ui/timeline` | Timeline | — (parity) | ✅ |
 | `ui/stat-tiles` | — | 48 | ✅ |
-| `ui/sparkline` | — | 4 | ⬜ |
+| `ui/sparkline` | — | 4 | ✅ |
 | `ui/export` (CSV / Excel buttons) | — | 0, 2 | ⬜ |
 
 ## Stage 8 — date & time

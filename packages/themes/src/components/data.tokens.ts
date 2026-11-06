@@ -177,3 +177,20 @@ export const statTileTokens = {
 };
 
 export type TectraStatTileTokens = typeof statTileTokens;
+
+export const sparklineTokens = {
+  root: {
+    height: '31.5px',
+    strokeWidth: '1.75',
+    areaOpacity: '0.1',
+  },
+  tone: {
+    primary: tokenRef('primary-base'),
+    info: lightDark(tokenRef('sky-600'), tokenRef('sky-400')),
+    success: lightDark(tokenRef('green-600'), tokenRef('green-400')),
+    warn: lightDark(tokenRef('amber-600'), tokenRef('amber-400')),
+    danger: lightDark(tokenRef('red-600'), tokenRef('red-400')),
+  },
+};
+
+export type TectraSparklineTokens = typeof sparklineTokens;
