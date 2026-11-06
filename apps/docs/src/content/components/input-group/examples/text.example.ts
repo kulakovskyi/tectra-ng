@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxInput } from '@tectra/ui/input';
-import { TxInputGroup, TxInputGroupAddon } from '@tectra/ui/input-group';
+import { TxInput } from '@tectra-ng/ui/input';
+import { TxInputGroup, TxInputGroupAddon } from '@tectra-ng/ui/input-group';
 
 @Component({
   selector: 'input-group-text-example',

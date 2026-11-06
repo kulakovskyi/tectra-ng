@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TxCascadeSelect } from '@tectra/ui/cascade-select';
+import { TxCascadeSelect } from '@tectra-ng/ui/cascade-select';
 
 @Component({
   selector: 'cascade-select-states-example',

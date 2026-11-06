@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxIcon } from '@tectra/icons';
-import { TxButton } from '@tectra/ui/button';
-import { TxDialogContent, TxDialogFooter, TxDialogHeader, injectDialogData, injectDialogRef } from '@tectra/ui/dialog';
+import { TxIcon } from '@tectra-ng/icons';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxDialogContent, TxDialogFooter, TxDialogHeader, injectDialogData, injectDialogRef } from '@tectra-ng/ui/dialog';
 import { confirmView } from './confirm-content';
 import { TxConfirmState } from './confirm.types';
 

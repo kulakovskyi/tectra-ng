@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxInput } from '@tectra/ui/input';
-import { TxIconField, TxInputIcon } from '@tectra/ui/icon-field';
-import { TxTable, TxTableColumn } from '@tectra/ui/table';
+import { TxInput } from '@tectra-ng/ui/input';
+import { TxIconField, TxInputIcon } from '@tectra-ng/ui/icon-field';
+import { TxTable, TxTableColumn } from '@tectra-ng/ui/table';
 
 interface Invoice {
   id: number;

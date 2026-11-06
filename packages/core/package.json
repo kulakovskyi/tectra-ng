@@ -1,10 +1,30 @@
 {
-  "name": "@tectra/core",
-  "version": "0.0.0",
+  "name": "@tectra-ng/core",
+  "version": "0.1.0",
+  "description": "tectra core for Angular: provideTectra, overlay, accessibility helpers, forms, locale and styles.",
   "license": "MIT",
+  "homepage": "https://tectra-ng.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kulakovskyi/tectra-ng.git",
+    "directory": "packages/core"
+  },
+  "bugs": "https://github.com/kulakovskyi/tectra-ng/issues",
+  "keywords": [
+    "tectra",
+    "angular",
+    "overlay",
+    "a11y",
+    "i18n"
+  ],
   "peerDependencies": {
-    "@angular/core": "^22.0.0",
     "@angular/cdk": "^22.0.0",
-    "@tectra/themes": "0.0.0"
+    "@angular/core": "^22.0.0",
+    "@angular/forms": "^22.0.0",
+    "rxjs": "^7.8.0",
+    "@tectra-ng/themes": "^0.1.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

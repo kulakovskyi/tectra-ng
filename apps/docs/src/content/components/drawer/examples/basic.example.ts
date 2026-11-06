@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TxButton } from '@tectra/ui/button';
-import { TxCheckbox } from '@tectra/ui/checkbox';
-import { TxDialogClose } from '@tectra/ui/dialog';
-import { TxDrawer, TxDrawerFooter } from '@tectra/ui/drawer';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxCheckbox } from '@tectra-ng/ui/checkbox';
+import { TxDialogClose } from '@tectra-ng/ui/dialog';
+import { TxDrawer, TxDrawerFooter } from '@tectra-ng/ui/drawer';
 
 @Component({
   selector: 'drawer-basic-example',

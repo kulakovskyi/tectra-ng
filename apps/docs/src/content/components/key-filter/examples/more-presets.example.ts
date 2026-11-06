@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxFluid } from '@tectra/core/fluid';
-import { TxInput } from '@tectra/ui/input';
-import { TxKeyFilter } from '@tectra/ui/key-filter';
+import { TxFluid } from '@tectra-ng/core/fluid';
+import { TxInput } from '@tectra-ng/ui/input';
+import { TxKeyFilter } from '@tectra-ng/ui/key-filter';
 
 @Component({
   selector: 'key-filter-more-presets-example',

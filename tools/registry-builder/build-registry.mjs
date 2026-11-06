@@ -149,7 +149,7 @@ function readSource(packageDir) {
   const selector = source.match(/selector:\s*'([^']+)'/)?.[1] ?? '';
 
   const imported = Object.fromEntries(
-    [...source.matchAll(/import \{([^}]+)\} from '@tectra\/ui\/([\w-]+)'/g)].flatMap((m) => m[1].split(',').map((name) => [name.trim(), m[2]])),
+    [...source.matchAll(/import \{([^}]+)\} from '@tectra-ng\/ui\/([\w-]+)'/g)].flatMap((m) => m[1].split(',').map((name) => [name.trim(), m[2]])),
   );
   for (const m of source.matchAll(/directive:\s*(\w+),\s*inputs:\s*\[([^\]]*)\]/g)) {
     const hostPackage = imported[m[1]];
@@ -175,7 +175,7 @@ function readSource(packageDir) {
 }
 
 const themesBundle = buildSync({
-  stdin: { contents: "export { InkPreset, toCssVariables } from '@tectra/themes';", resolveDir: root, loader: 'ts' },
+  stdin: { contents: "export { InkPreset, toCssVariables } from '@tectra-ng/themes';", resolveDir: root, loader: 'ts' },
   bundle: true,
   platform: 'node',
   format: 'esm',
@@ -224,7 +224,7 @@ async function buildComponent(name) {
     title,
     category: meta.category ?? 'Other',
     selector,
-    importPath: `@tectra/ui/${name}`,
+    importPath: `@tectra-ng/ui/${name}`,
     importName: meta.import ?? `Tx${title.replace(/\s+/g, '')}`,
     descriptionHtml: marked.parse(body.replace(/^#\s+.+\n/m, '')),
     api: {

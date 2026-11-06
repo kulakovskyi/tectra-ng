@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxFloatLabel } from '@tectra/ui/label';
-import { TxPassword } from '@tectra/ui/password';
+import { TxFloatLabel } from '@tectra-ng/ui/label';
+import { TxPassword } from '@tectra-ng/ui/password';
 
 @Component({
   selector: 'password-float-label-example',

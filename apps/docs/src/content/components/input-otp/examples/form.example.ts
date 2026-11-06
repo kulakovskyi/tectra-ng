@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TxButton } from '@tectra/ui/button';
-import { TxField } from '@tectra/ui/field';
-import { TxInputOtp } from '@tectra/ui/input-otp';
-import { TxMessage } from '@tectra/ui/message';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxField } from '@tectra-ng/ui/field';
+import { TxInputOtp } from '@tectra-ng/ui/input-otp';
+import { TxMessage } from '@tectra-ng/ui/message';
 
 @Component({
   selector: 'input-otp-form-example',

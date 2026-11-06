@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TxThemeService } from '@tectra/core/config';
-import { InkPreset, createInkPreset, toCssVariables } from '@tectra/themes';
-import { TectraAccent } from '@tectra/tokens';
-import { TxSelect } from '@tectra/ui/select';
+import { TxThemeService } from '@tectra-ng/core/config';
+import { InkPreset, createInkPreset, toCssVariables } from '@tectra-ng/themes';
+import { TectraAccent } from '@tectra-ng/tokens';
+import { TxSelect } from '@tectra-ng/ui/select';
 import { CodeBlock } from '../../doc-ui/code-block/code-block';
 import { ACCENT_PRESET_EXAMPLE } from '../../data/code-examples.data';
 import { THEME_ACCENTS } from '../../data/theme-accents.data';

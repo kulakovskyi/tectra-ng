@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxTable, TxTableColumn, TxTableRowReorderEvent } from '@tectra/ui/table';
+import { TxTable, TxTableColumn, TxTableRowReorderEvent } from '@tectra-ng/ui/table';
 
 interface Task {
   id: number;

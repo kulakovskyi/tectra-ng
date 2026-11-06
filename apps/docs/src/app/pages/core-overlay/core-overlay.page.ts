@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, TemplateRef, ViewContainerRef, inject, signal, viewChild } from '@angular/core';
-import { TxOverlay, TxOverlayRef, TxPlacement } from '@tectra/core/overlay';
-import { TxButton } from '@tectra/ui/button';
+import { TxOverlay, TxOverlayRef, TxPlacement } from '@tectra-ng/core/overlay';
+import { TxButton } from '@tectra-ng/ui/button';
 import { CodeBlock } from '../../doc-ui/code-block/code-block';
 import { OVERLAY_INSETS_EXAMPLE, OVERLAY_USAGE_EXAMPLE } from '../../data/code-examples.data';
 import { OVERLAY_DEMO_ROWS } from '../../data/overlay-demo.data';

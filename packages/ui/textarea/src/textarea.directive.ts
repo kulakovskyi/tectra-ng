@@ -1,4 +1,4 @@
-import { optionalNumber } from '@tectra/core/utils';
+import { optionalNumber } from '@tectra-ng/core/utils';
 import {
   DOCUMENT,
   DestroyRef,
@@ -14,9 +14,9 @@ import {
   signal,
 } from '@angular/core';
 import { NgControl } from '@angular/forms';
-import { TxStyleLoader } from '@tectra/core/styles';
-import { TectraDeepPartial, TectraTextareaTokens, toStyleObject } from '@tectra/themes';
-import { TxInput } from '@tectra/ui/input';
+import { TxStyleLoader } from '@tectra-ng/core/styles';
+import { TectraDeepPartial, TectraTextareaTokens, toStyleObject } from '@tectra-ng/themes';
+import { TxInput } from '@tectra-ng/ui/input';
 import { TxTextareaStyles } from './textarea.styles';
 import { TxTextareaResize } from './textarea.types';
 

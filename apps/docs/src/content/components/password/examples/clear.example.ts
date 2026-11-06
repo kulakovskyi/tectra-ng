@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TxPassword } from '@tectra/ui/password';
+import { TxPassword } from '@tectra-ng/ui/password';
 
 @Component({
   selector: 'password-clear-example',

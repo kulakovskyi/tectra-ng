@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TxButton } from '@tectra/ui/button';
-import { TxField } from '@tectra/ui/field';
-import { TxInput } from '@tectra/ui/input';
-import { TxMessage } from '@tectra/ui/message';
-import { TxSelect } from '@tectra/ui/select';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxField } from '@tectra-ng/ui/field';
+import { TxInput } from '@tectra-ng/ui/input';
+import { TxMessage } from '@tectra-ng/ui/message';
+import { TxSelect } from '@tectra-ng/ui/select';
 
 @Component({
   selector: 'field-validation-example',

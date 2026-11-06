@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, afterEveryRender, booleanAttribute, computed, inject, input } from '@angular/core';
-import { linkDescribedBy, uniqueId } from '@tectra/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { optionalBoolean, optionalNumber } from '@tectra/core/utils';
-import { TectraDeepPartial, TectraOverlayBadgeTokens, toStyleObject } from '@tectra/themes';
-import { TxBadge, TxBadgeSeverity, TxBadgeSize } from '@tectra/ui/badge';
+import { linkDescribedBy, uniqueId } from '@tectra-ng/core/a11y';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
+import { TectraDeepPartial, TectraOverlayBadgeTokens, toStyleObject } from '@tectra-ng/themes';
+import { TxBadge, TxBadgeSeverity, TxBadgeSize } from '@tectra-ng/ui/badge';
 import { TxOverlayBadgePart, TxOverlayBadgeShape } from './overlay-badge.types';
 
 const FOCUSABLE = 'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])';

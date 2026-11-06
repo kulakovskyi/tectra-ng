@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TxTable, TxTableColumn, TxTableEmpty } from '@tectra/ui/table';
-import { TxToggleSwitch } from '@tectra/ui/toggle-switch';
+import { TxTable, TxTableColumn, TxTableEmpty } from '@tectra-ng/ui/table';
+import { TxToggleSwitch } from '@tectra-ng/ui/toggle-switch';
 
 interface Invoice {
   id: number;

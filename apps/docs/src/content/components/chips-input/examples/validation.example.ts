@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxChipsInput } from '@tectra/ui/chips-input';
+import { TxChipsInput } from '@tectra-ng/ui/chips-input';
 
 @Component({
   selector: 'chips-input-validation-example',

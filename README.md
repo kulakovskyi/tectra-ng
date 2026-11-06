@@ -2,6 +2,15 @@
 
 Open-source Angular UI kit: tokens, themes, ~70 components and ready blocks for consoles and admin apps.
 
+## Install
+
+```bash
+npm install tectra-ng          # everything at one version
+npm install @tectra-ng/ui      # or only the components: core, themes, tokens and icons come with them
+```
+
+Docs and examples: [tectra-ng.com](https://tectra-ng.com).
+
 ## Run
 
 ```bash
@@ -22,13 +31,13 @@ Plan of what moves in next and in which order: [ROADMAP.md](ROADMAP.md).
 
 | Folder | What lives there | Published |
 |---|---|---|
-| `packages/tokens` | palettes (ink surfaces, 5 accents, severities), radius, typography, shadows — plain data | npm `@tectra/tokens` |
-| `packages/themes` | semantic light / dark, component design tokens, `createInkPreset(accent)`, `definePreset` (deep merge) | npm `@tectra/themes` |
-| `packages/core` | behaviour without looks: config (theme, unstyled, pt), overlay, a11y, forms, i18n, styles, ripple, fluid, utils | npm `@tectra/core/*` |
-| `packages/icons` | 334 own outline icons (PrimeIcons names) + `<tx-icon>` + icon registry (`provideTxIcons`) | npm `@tectra/icons` |
-| `packages/brand-icons` | optional brand logos from Simple Icons (CC0) under PrimeIcons names | npm `@tectra/brand-icons` |
-| `packages/ui` | components, one entry point each | npm `@tectra/ui/<component>` |
-| `packages/blocks` | console-layout, filters-panel, stat-tiles … | npm `@tectra/blocks/<block>` |
+| `packages/tokens` | palettes (ink surfaces, 5 accents, severities), radius, typography, shadows — plain data | npm `@tectra-ng/tokens` |
+| `packages/themes` | semantic light / dark, component design tokens, `createInkPreset(accent)`, `definePreset` (deep merge) | npm `@tectra-ng/themes` |
+| `packages/core` | behaviour without looks: config (theme, unstyled, pt), overlay, a11y, forms, i18n, styles, ripple, fluid, utils | npm `@tectra-ng/core/*` |
+| `packages/icons` | 334 own outline icons (PrimeIcons names) + `<tx-icon>` + icon registry (`provideTxIcons`) | npm `@tectra-ng/icons` |
+| `packages/brand-icons` | optional brand logos from Simple Icons (CC0) under PrimeIcons names | npm `@tectra-ng/brand-icons` |
+| `packages/ui` | components, one entry point each | npm `@tectra-ng/ui/<component>` |
+| `packages/blocks` | console-layout, filters-panel, stat-tiles … | npm `@tectra-ng/blocks/<block>` |
 | `apps/docs` | the documentation site | Cloudflare Pages |
 | `apps/sandbox` | local playground | — |
 | `e2e/visual` | Playwright screenshots + axe | — |

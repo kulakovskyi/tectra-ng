@@ -28,13 +28,13 @@ Shared tokens and behaviour so every field looks and behaves the same.
 PrimeNG: InputText (`pInputText`), IconField + InputIcon, InputGroup + InputGroupAddon, KeyFilter (`pKeyFilter`). First app usage: **239**.
 
 - [x] Common inputs: `variant`, `fluid` (+ `<tx-fluid>`; default width is the browser's, like PrimeNG), `disabled` / `readonly` look, `dt` (`formField` tokens) / `pt` / `ptOptions` / `unstyled`
-- [x] `<tx-icon-field>` (`@tectra/ui/icon-field`) — items before the input go left, `position="end"` right; the padding grows by the measured width of the icons
+- [x] `<tx-icon-field>` (`@tectra-ng/ui/icon-field`) — items before the input go left, `position="end"` right; the padding grows by the measured width of the icons
 - [x] `<tx-input-icon>` — tectra icon, registered icon or icon class; text / markup inside
-- [x] `<tx-input-group>` + `<tx-input-group-addon>` (`@tectra/ui/input-group`) — text / icon / button / select addons on both sides, joined borders, `inputGroup` tokens
+- [x] `<tx-input-group>` + `<tx-input-group-addon>` (`@tectra-ng/ui/input-group`) — text / icon / button / select addons on both sides, joined borders, `inputGroup` tokens
 - [x] Prefix / suffix text — `tx-input-icon` with text or a group addon
 - [x] Clear button `<tx-input-clear>` with `(cleared)`, only when there is an editable value; works with forms
 - [x] Copy button `<tx-input-copy>` with `(copied)`, check icon after copying, translated label (us / ua) — `title` until the stage 5 tooltip
-- [x] `txKeyFilter` (`@tectra/ui/key-filter`): presets `pint`, `int`, `pnum`, `num`, `money`, `hex`, `email`, `alpha`, `alphanum` + own RegExp; blocks typing, cleans paste and drop; `validateOnly` reports a `keyFilter` error to the form (like PrimeNG `pValidateOnly`)
+- [x] `txKeyFilter` (`@tectra-ng/ui/key-filter`): presets `pint`, `int`, `pnum`, `num`, `money`, `hex`, `email`, `alpha`, `alphanum` + own RegExp; blocks typing, cleans paste and drop; `validateOnly` reports a `keyFilter` error to the form (like PrimeNG `pValidateOnly`)
 - [x] More presets: `positive` (one decimal separator), `nospace`, `latin` + `keyFilterExtra`
 - [x] `inputmode` passes through (native attribute)
 - [x] Docs: Input (basic, variants, states, invalid, sizes, fluid, design tokens), IconField (icons, text, clear, copy, sizes, filled), InputGroup (text, icons, buttons, select, fluid), KeyFilter (presets, more presets, RegExp, validate only)
@@ -62,7 +62,7 @@ PrimeNG: Message (`severity`, `variant`, `size`, `icon`, `closable`, `life`). Fi
 - [x] `<tx-field-hint>`: help text under a field (`secondary` / `success`, icon), `for` adds it to the field's `aria-describedby`
 - [x] `<tx-field-error [control]>`: first validation error after touch or change (or `showImmediately`); built-in texts for `required`, `email`, `minlength`, `maxlength`, `min`, `max`, `pattern` + fallback in us / ua via the locale; own texts per error key (`messages`, string with `{param}` or function), app-wide `provideTectra({ validationMessages })`, `error.message` of custom validators
 - [x] Success text (`successText` on the error, `severity="success"` on the hint)
-- [x] `aria-live="polite"` for errors; `for` wires `aria-describedby` (`linkDescribedBy` / `injectDescribedBy` in `@tectra/core/a11y`)
+- [x] `aria-live="polite"` for errors; `for` wires `aria-describedby` (`linkDescribedBy` / `injectDescribedBy` in `@tectra-ng/core/a11y`)
 - [x] Docs: severities, variants, sizes, icons, content, closable, life, field hint, field error with a reactive form, custom messages, success, design tokens, pass-through
 - [x] Tests: error appears after touch, next errors, success, custom / function / global messages, `error.message`, locale switch, describedby, close after animation, life, dt / pt / unstyled; e2e: close, errors on submit linked to the field
 
@@ -72,7 +72,7 @@ Icons: `TxIconRegistry` also accepts PrimeIcons names with the `pi-` prefix (`pi
 
 Not in PrimeNG. Replaces the label + control + hint + error combination every form repeats. The first app's input bundles `label`, `description`, `control`, `errorText`, `successText` — the same set.
 
-- [x] `<tx-field>`: label (required, colon, tooltip, subtle), control slot, hint, error from the projected `formControl` / `formControlName` / `ngModel` (or `control`), `errorText` from outside the form (marks the control invalid through `TX_FIELD_STATE` in `@tectra/core/forms`), success text, own messages; vertical and horizontal layout (stacks below 40rem); `field` tokens, `dt` / `pt` / `unstyled`
+- [x] `<tx-field>`: label (required, colon, tooltip, subtle), control slot, hint, error from the projected `formControl` / `formControlName` / `ngModel` (or `control`), `errorText` from outside the form (marks the control invalid through `TX_FIELD_STATE` in `@tectra-ng/core/forms`), success text, own messages; vertical and horizontal layout (stacks below 40rem); `field` tokens, `dt` / `pt` / `unstyled`
 - [x] Finds the control inside (input, textarea, select, `tx-select` trigger, roles combobox / switch / checkbox / radiogroup / slider / spinbutton), gives it an id when it has none, points `for` at it, adds hint and error to `aria-describedby`; `aria-invalid` comes from the control
 - [x] Docs: basic, horizontal, every control type, validation, server error, success, design tokens
 - [x] Tests: id / `for` / describedby wiring, own id kept, `tx-select` trigger, error from the projected control, `errorText` invalid, layout, dt / pt; e2e: label click focuses, horizontal columns, select error linked
@@ -177,7 +177,7 @@ PrimeNG: Knob (`min`, `max`, `step`, `size`, `strokeWidth`, `valueColor`, `range
 - [x] `<tx-knob>`: drag on the ring (pointer capture, snaps to `step`), keyboard (arrows, Page, Home / End), `role="slider"` with value text, value template (`valueTemplate` string or `txKnobValue`), colours from tokens (`dt`), `size`, `strokeWidth`, text scales with the size
 - [x] `arc`: `dial` (270°, gap at the bottom) or `ring` (full circle from the top, handle, no jump over the top)
 - [x] `limit` (max allowed below `max`, unreachable part of the ring marked, End stops there)
-- [x] Readonly, disabled / invalid from the form; `knob` tokens; `optionalNumber` in `@tectra/core/utils` for optional number inputs (an explicit `undefined` no longer becomes `NaN` in any component)
+- [x] Readonly, disabled / invalid from the form; `knob` tokens; `optionalNumber` in `@tectra-ng/core/utils` for optional number inputs (an explicit `undefined` no longer becomes `NaN` in any component)
 - [x] Docs + tests: drag, keys, limit, readonly, ring, step, value template, template, sizes, form, design tokens; e2e: drag along the dial, keys, limit
 
 ## 3.15 Slider — `ui/slider` ✅

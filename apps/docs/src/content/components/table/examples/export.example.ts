@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxButton } from '@tectra/ui/button';
-import { TxTable, TxTableColumn } from '@tectra/ui/table';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxTable, TxTableColumn } from '@tectra-ng/ui/table';
 
 interface Contact {
   id: number;

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TxKnob, TxKnobValueTemplate } from '@tectra/ui/knob';
+import { TxKnob, TxKnobValueTemplate } from '@tectra-ng/ui/knob';
 
 @Component({
   selector: 'knob-template-example',

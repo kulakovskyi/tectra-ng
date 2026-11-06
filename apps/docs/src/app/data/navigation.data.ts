@@ -1,4 +1,4 @@
-import { TxIconName } from '@tectra/icons';
+import { TxIconName } from '@tectra-ng/icons';
 import { DOC_COMPONENTS } from '../../generated/registry';
 import { DocNavSection } from '../types/navigation.interface';
 

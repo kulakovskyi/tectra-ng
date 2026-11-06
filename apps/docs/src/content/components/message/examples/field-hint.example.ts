@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxInput } from '@tectra/ui/input';
-import { TxLabel } from '@tectra/ui/label';
-import { TxFieldHint } from '@tectra/ui/message';
+import { TxInput } from '@tectra-ng/ui/input';
+import { TxLabel } from '@tectra-ng/ui/label';
+import { TxFieldHint } from '@tectra-ng/ui/message';
 
 @Component({
   selector: 'message-field-hint-example',

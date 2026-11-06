@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxIcon } from '@tectra/icons';
-import { TxPassword, TxPasswordContentTemplate } from '@tectra/ui/password';
+import { TxIcon } from '@tectra-ng/icons';
+import { TxPassword, TxPasswordContentTemplate } from '@tectra-ng/ui/password';
 
 @Component({
   selector: 'password-requirements-example',

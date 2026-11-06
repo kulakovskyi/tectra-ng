@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxOverlayBadge } from '@tectra/ui/overlay-badge';
+import { TxOverlayBadge } from '@tectra-ng/ui/overlay-badge';
 
 @Component({
   selector: 'overlay-badge-avatar-example',

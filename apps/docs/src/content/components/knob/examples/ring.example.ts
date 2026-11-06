@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TxKnob } from '@tectra/ui/knob';
+import { TxKnob } from '@tectra-ng/ui/knob';
 
 @Component({
   selector: 'knob-ring-example',

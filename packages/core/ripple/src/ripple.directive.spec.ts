@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideTectra } from '@tectra/core/config';
-import { InkPreset } from '@tectra/themes';
+import { provideTectra } from '@tectra-ng/core/config';
+import { InkPreset } from '@tectra-ng/themes';
 import { TxRipple } from './ripple.directive';
 
 @Component({

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxButton } from '@tectra/ui/button';
-import { TxSelect } from '@tectra/ui/select';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxSelect } from '@tectra-ng/ui/select';
 
 @Component({
   selector: 'select-loading-example',

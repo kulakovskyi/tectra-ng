@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TxCheckbox, TxCheckboxGroup } from '@tectra/ui/checkbox';
+import { TxCheckbox, TxCheckboxGroup } from '@tectra-ng/ui/checkbox';
 
 @Component({
   selector: 'checkbox-tiles-example',

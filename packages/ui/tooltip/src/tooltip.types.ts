@@ -1,5 +1,5 @@
 import { TemplateRef } from '@angular/core';
-import { TxPlacement } from '@tectra/core/overlay';
+import { TxPlacement } from '@tectra-ng/core/overlay';
 
 export type TxTooltipEvent = 'hover' | 'focus' | 'both' | 'manual';
 export type TxTooltipPart = 'root' | 'content' | 'arrow';

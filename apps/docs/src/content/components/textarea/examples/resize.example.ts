@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxTextarea } from '@tectra/ui/textarea';
+import { TxTextarea } from '@tectra-ng/ui/textarea';
 
 @Component({
   selector: 'textarea-resize-example',

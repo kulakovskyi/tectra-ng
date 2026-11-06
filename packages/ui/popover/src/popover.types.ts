@@ -1,4 +1,4 @@
-import { TxOverlayCloseReason } from '@tectra/core/overlay';
+import { TxOverlayCloseReason } from '@tectra-ng/core/overlay';
 
 export type TxPopoverPart = 'root' | 'header' | 'title' | 'content' | 'footer' | 'closeButton' | 'arrow';
 export type TxPopoverAutoFocus = 'first' | 'panel' | 'none';

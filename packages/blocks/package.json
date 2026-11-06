@@ -1,6 +1,10 @@
 {
-  "name": "@tectra/blocks",
+  "name": "@tectra-ng/blocks",
   "version": "0.0.0",
+  "private": true,
   "license": "MIT",
-  "peerDependencies": { "@tectra/ui": "0.0.0", "@tectra/core": "0.0.0" }
+  "peerDependencies": {
+    "@tectra-ng/ui": "0.0.0",
+    "@tectra-ng/core": "0.0.0"
+  }
 }

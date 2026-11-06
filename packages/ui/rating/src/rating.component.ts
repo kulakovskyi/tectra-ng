@@ -1,12 +1,12 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, contentChild, forwardRef, inject, input, numberAttribute, output, signal } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { TxFormControlBase, injectFieldInvalid } from '@tectra/core/forms';
-import { TxLocaleService, injectTranslations } from '@tectra/core/i18n';
-import { optionalBoolean, optionalNumber } from '@tectra/core/utils';
-import { TxIcon, TxIconName, TxIconRegistry } from '@tectra/icons';
-import { TectraDeepPartial, TectraRatingTokens, toStyleObject } from '@tectra/themes';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
+import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
+import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
+import { TxIcon, TxIconName, TxIconRegistry } from '@tectra-ng/icons';
+import { TectraDeepPartial, TectraRatingTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxRatingOffIconTemplate, TxRatingOnIconTemplate } from './rating-templates.directive';
 import { TxRatingChangeEvent, TxRatingPart, TxRatingSize } from './rating.types';
 

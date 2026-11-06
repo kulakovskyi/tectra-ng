@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { injectFluid } from '@tectra/core/fluid';
-import { optionalBoolean } from '@tectra/core/utils';
+import { injectFluid } from '@tectra-ng/core/fluid';
+import { optionalBoolean } from '@tectra-ng/core/utils';
 
 @Component({
   selector: 'tx-input-group',

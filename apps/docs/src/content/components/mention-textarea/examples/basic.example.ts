@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TxMentionTextarea } from '@tectra/ui/mention-textarea';
+import { TxMentionTextarea } from '@tectra-ng/ui/mention-textarea';
 
 @Component({
   selector: 'mention-textarea-basic-example',

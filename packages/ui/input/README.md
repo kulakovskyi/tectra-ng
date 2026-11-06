@@ -19,4 +19,4 @@ Styles a native `input` or `textarea` with the shared `formField` tokens (also u
 |---|---|
 | Tab | Moves focus to the field (native behaviour) |
 
-Icons, prefix / suffix, clear and copy buttons: `@tectra/ui/icon-field`. Addons: `@tectra/ui/input-group`. Allowed characters: `@tectra/ui/key-filter`.
+Icons, prefix / suffix, clear and copy buttons: `@tectra-ng/ui/icon-field`. Addons: `@tectra-ng/ui/input-group`. Allowed characters: `@tectra-ng/ui/key-filter`.

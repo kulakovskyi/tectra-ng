@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxInputOtp } from '@tectra/ui/input-otp';
+import { TxInputOtp } from '@tectra-ng/ui/input-otp';
 
 @Component({
   selector: 'input-otp-integer-only-example',

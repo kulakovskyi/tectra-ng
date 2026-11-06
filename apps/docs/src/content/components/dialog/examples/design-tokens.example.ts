@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxButton } from '@tectra/ui/button';
-import { TxDialog, TxDialogClose, TxDialogFooter } from '@tectra/ui/dialog';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxDialog, TxDialogClose, TxDialogFooter } from '@tectra-ng/ui/dialog';
 
 @Component({
   selector: 'dialog-design-tokens-example',

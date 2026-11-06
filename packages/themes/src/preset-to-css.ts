@@ -1,4 +1,4 @@
-import { SEVERITY_PALETTES, layers, motion, radius, spacing, typography } from '@tectra/tokens';
+import { SEVERITY_PALETTES, layers, motion, radius, spacing, typography } from '@tectra-ng/tokens';
 import { TectraCssVariable, TectraPreset } from './types/preset.interface';
 
 function kebab(key: string): string {

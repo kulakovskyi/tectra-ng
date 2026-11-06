@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxFieldset } from '@tectra/ui/fieldset';
-import { TxInput } from '@tectra/ui/input';
+import { TxFieldset } from '@tectra-ng/ui/fieldset';
+import { TxInput } from '@tectra-ng/ui/input';
 
 @Component({
   selector: 'fieldset-toggleable-example',

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TxCheckbox } from '@tectra/ui/checkbox';
+import { TxCheckbox } from '@tectra-ng/ui/checkbox';
 
 @Component({
   selector: 'checkbox-true-false-values-example',

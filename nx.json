@@ -27,6 +27,32 @@
         "default",
         "^production"
       ]
+    },
+    "nx-release-publish": {
+      "options": {
+        "packageRoot": "dist/packages/{projectName}"
+      }
+    }
+  },
+  "release": {
+    "projects": ["tokens", "themes", "core", "icons", "brand-icons", "ui", "tectra-ng"],
+    "projectsRelationship": "fixed",
+    "releaseTag": {
+      "pattern": "v{version}"
+    },
+    "version": {
+      "conventionalCommits": true,
+      "versionPrefix": "^"
+    },
+    "changelog": {
+      "workspaceChangelog": {
+        "file": "CHANGELOG.md",
+        "createRelease": "github"
+      },
+      "projectChangelogs": false
+    },
+    "git": {
+      "commitMessage": "chore(release): {version}"
     }
   },
   "analytics": false

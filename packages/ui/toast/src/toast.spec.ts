@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TxAnnouncer } from '@tectra/core/a11y';
+import { TxAnnouncer } from '@tectra-ng/core/a11y';
 import { TxToastTemplate } from './toast-template.directive';
 import { TxToast } from './toast.component';
 import { TxToastService } from './toast.service';

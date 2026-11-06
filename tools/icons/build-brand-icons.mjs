@@ -44,7 +44,7 @@ const titles = entries.map(({ name, icon }) => `  ${JSON.stringify(name)}: ${JSO
 
 writeFileSync(
   join(root, 'packages/brand-icons/src/brand-icons.ts'),
-  `import { TxIconPath } from '@tectra/icons';
+  `import { TxIconPath } from '@tectra-ng/icons';
 
 export type TxBrandIconName =
 ${names};

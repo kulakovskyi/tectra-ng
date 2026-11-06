@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxPanel } from '@tectra/ui/panel';
+import { TxPanel } from '@tectra-ng/ui/panel';
 
 @Component({
   selector: 'panel-variants-example',

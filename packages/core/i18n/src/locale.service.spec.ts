@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { provideTectra } from '@tectra/core/config';
-import { InkPreset } from '@tectra/themes';
+import { provideTectra } from '@tectra-ng/core/config';
+import { InkPreset } from '@tectra-ng/themes';
 import { TX_LOCALE_UA } from './locales';
 import { TxLocaleService } from './locale.service';
 import { injectTranslations } from './translations';

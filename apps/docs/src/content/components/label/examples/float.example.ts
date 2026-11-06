@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxInput } from '@tectra/ui/input';
-import { TxFloatLabel } from '@tectra/ui/label';
+import { TxInput } from '@tectra-ng/ui/input';
+import { TxFloatLabel } from '@tectra-ng/ui/label';
 
 @Component({
   selector: 'label-float-example',

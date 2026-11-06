@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxTag, TxTagSeverity } from '@tectra/ui/tag';
+import { TxTag, TxTagSeverity } from '@tectra-ng/ui/tag';
 
 @Component({
   selector: 'tag-severities-example',

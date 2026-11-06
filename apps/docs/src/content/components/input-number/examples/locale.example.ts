@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TxLocaleService } from '@tectra/core/i18n';
-import { TxButton } from '@tectra/ui/button';
-import { TxInputNumber } from '@tectra/ui/input-number';
+import { TxLocaleService } from '@tectra-ng/core/i18n';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxInputNumber } from '@tectra-ng/ui/input-number';
 
 @Component({
   selector: 'input-number-locale-example',

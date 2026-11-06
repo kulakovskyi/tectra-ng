@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxTag } from '@tectra/ui/tag';
+import { TxTag } from '@tectra-ng/ui/tag';
 
 @Component({
   selector: 'tag-sizes-example',

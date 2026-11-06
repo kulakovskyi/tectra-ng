@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { InkPreset, createInkPreset } from '@tectra/themes';
+import { InkPreset, createInkPreset } from '@tectra-ng/themes';
 import { provideTectra } from './provide-tectra';
 import { TxThemeService } from './theme.service';
 

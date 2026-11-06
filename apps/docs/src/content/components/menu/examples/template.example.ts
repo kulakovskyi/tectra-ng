@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxAvatar } from '@tectra/ui/avatar';
-import { TxButton } from '@tectra/ui/button';
-import { TxMenu, TxMenuItem, TxMenuItemTemplate, TxMenuTrigger } from '@tectra/ui/menu';
+import { TxAvatar } from '@tectra-ng/ui/avatar';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxMenu, TxMenuItem, TxMenuItemTemplate, TxMenuTrigger } from '@tectra-ng/ui/menu';
 
 @Component({
   selector: 'menu-template-example',

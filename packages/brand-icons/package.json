@@ -1,9 +1,27 @@
 {
-  "name": "@tectra/brand-icons",
-  "version": "0.0.0",
+  "name": "@tectra-ng/brand-icons",
+  "version": "0.1.0",
+  "description": "Brand logos for the tectra TxIcon component.",
   "license": "CC0-1.0",
+  "homepage": "https://tectra-ng.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kulakovskyi/tectra-ng.git",
+    "directory": "packages/brand-icons"
+  },
+  "bugs": "https://github.com/kulakovskyi/tectra-ng/issues",
+  "keywords": [
+    "tectra",
+    "angular",
+    "icons",
+    "brands",
+    "logos"
+  ],
   "peerDependencies": {
     "@angular/core": "^22.0.0",
-    "@tectra/icons": "0.0.0"
+    "@tectra-ng/icons": "^0.1.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

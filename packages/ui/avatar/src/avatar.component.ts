@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output, signal } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { optionalBoolean } from '@tectra/core/utils';
-import { TxIcon, TxIconName, TxIconRegistry } from '@tectra/icons';
-import { TectraAvatarTokens, TectraDeepPartial, toStyleObject } from '@tectra/themes';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TxIcon, TxIconName, TxIconRegistry } from '@tectra-ng/icons';
+import { TectraAvatarTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TX_AVATAR_GROUP } from './avatar-group.token';
 import { TxAvatarPart, TxAvatarShape, TxAvatarSize, TxAvatarTone } from './avatar.types';
 

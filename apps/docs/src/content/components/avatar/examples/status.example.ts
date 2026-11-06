@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxAvatar } from '@tectra/ui/avatar';
-import { TxOverlayBadge } from '@tectra/ui/overlay-badge';
+import { TxAvatar } from '@tectra-ng/ui/avatar';
+import { TxOverlayBadge } from '@tectra-ng/ui/overlay-badge';
 
 @Component({
   selector: 'avatar-status-example',

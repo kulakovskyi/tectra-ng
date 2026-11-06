@@ -1,6 +1,6 @@
 import { ViewportMargin } from '@angular/cdk/overlay';
 import { Injectable, inject } from '@angular/core';
-import { TECTRA_CONFIG } from '@tectra/core/config';
+import { TECTRA_CONFIG } from '@tectra-ng/core/config';
 import { TxOverlayBounds, TxOverlayInsetValues } from './overlay.types';
 import { txFollowsScroll } from './overlay-scroll';
 

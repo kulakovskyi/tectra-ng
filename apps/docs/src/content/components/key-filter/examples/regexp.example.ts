@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxInput } from '@tectra/ui/input';
-import { TxKeyFilter } from '@tectra/ui/key-filter';
+import { TxInput } from '@tectra-ng/ui/input';
+import { TxKeyFilter } from '@tectra-ng/ui/key-filter';
 
 @Component({
   selector: 'key-filter-regexp-example',

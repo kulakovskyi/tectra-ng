@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxButton } from '@tectra/ui/button';
-import { TxMenu, TxMenuItem, TxMenuTrigger } from '@tectra/ui/menu';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxMenu, TxMenuItem, TxMenuTrigger } from '@tectra-ng/ui/menu';
 
 @Component({
   selector: 'menu-tiered-example',

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxButton, TxButtonIconTemplate } from '@tectra/ui/button';
+import { TxButton, TxButtonIconTemplate } from '@tectra-ng/ui/button';
 
 @Component({
   selector: 'button-template-example',

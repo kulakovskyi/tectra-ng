@@ -10,11 +10,11 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { TxFormControlBase, injectFieldInvalid } from '@tectra/core/forms';
-import { injectTranslations } from '@tectra/core/i18n';
-import { optionalBoolean } from '@tectra/core/utils';
-import { TectraCheckboxTokens, TectraDeepPartial, toStyleObject } from '@tectra/themes';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
+import { injectTranslations } from '@tectra-ng/core/i18n';
+import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TectraCheckboxTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TX_CHECKBOX_GROUP, TxCheckboxGroupContext } from './checkbox-group.token';
 import { TxCheckbox } from './checkbox.component';
 import { TxCheckboxGroupOrientation, TxCheckboxGroupPart, TxCheckboxSize, TxCheckboxVariant } from './checkbox.types';

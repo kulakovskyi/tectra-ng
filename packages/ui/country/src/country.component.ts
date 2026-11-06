@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, inject, input } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { TxLocaleService } from '@tectra/core/i18n';
-import { optionalBoolean } from '@tectra/core/utils';
-import { TectraCountryTokens, TectraDeepPartial, toStyleObject } from '@tectra/themes';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { TxLocaleService } from '@tectra-ng/core/i18n';
+import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TectraCountryTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { countryEmoji, countryName, isCountryCode } from './countries';
 import { TxCountryPart, TxCountrySize, TxFlagShape } from './country.types';
 import { TX_FLAG_RESOLVER } from './flags';

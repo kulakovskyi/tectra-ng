@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TxRadioButton } from '@tectra/ui/radio-button';
+import { TxRadioButton } from '@tectra-ng/ui/radio-button';
 
 @Component({
   selector: 'radio-button-standalone-example',

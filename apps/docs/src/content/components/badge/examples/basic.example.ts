@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxBadge } from '@tectra/ui/badge';
+import { TxBadge } from '@tectra-ng/ui/badge';
 
 @Component({
   selector: 'badge-basic-example',

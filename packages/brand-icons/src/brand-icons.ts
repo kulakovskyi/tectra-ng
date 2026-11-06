@@ -1,4 +1,4 @@
-import { TxIconPath } from '@tectra/icons';
+import { TxIconPath } from '@tectra-ng/icons';
 
 export type TxBrandIconName =
   | 'android'

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
-import { TxButton } from '@tectra/ui/button';
-import { TxProgressBar } from '@tectra/ui/progress-bar';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxProgressBar } from '@tectra-ng/ui/progress-bar';
 
 @Component({
   selector: 'progress-bar-live-example',

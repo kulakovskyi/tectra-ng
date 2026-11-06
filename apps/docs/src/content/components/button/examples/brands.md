@@ -1,1 +1,1 @@
-Brand logos from `@tectra/brand-icons`.
+Brand logos from `@tectra-ng/brand-icons`.

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxButton } from '@tectra/ui/button';
-import { TxButtonGroup } from '@tectra/ui/button-group';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxButtonGroup } from '@tectra-ng/ui/button-group';
 
 @Component({
   selector: 'button-group-basic-example',

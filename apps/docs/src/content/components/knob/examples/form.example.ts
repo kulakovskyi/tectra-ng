@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TxButton } from '@tectra/ui/button';
-import { TxField } from '@tectra/ui/field';
-import { TxKnob } from '@tectra/ui/knob';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxField } from '@tectra-ng/ui/field';
+import { TxKnob } from '@tectra-ng/ui/knob';
 
 @Component({
   selector: 'knob-form-example',

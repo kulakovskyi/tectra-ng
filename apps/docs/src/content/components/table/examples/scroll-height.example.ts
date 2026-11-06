@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxTable, TxTableColumn } from '@tectra/ui/table';
+import { TxTable, TxTableColumn } from '@tectra-ng/ui/table';
 
 interface Log {
   id: number;

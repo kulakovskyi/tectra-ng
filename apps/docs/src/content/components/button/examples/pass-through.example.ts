@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxPassThroughContext } from '@tectra/core/config';
-import { TxButton } from '@tectra/ui/button';
+import { TxPassThroughContext } from '@tectra-ng/core/config';
+import { TxButton } from '@tectra-ng/ui/button';
 
 @Component({
   selector: 'button-pass-through-example',

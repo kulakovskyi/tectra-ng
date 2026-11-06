@@ -1,4 +1,4 @@
-import { ACCENT_PALETTES } from '@tectra/tokens';
+import { ACCENT_PALETTES } from '@tectra-ng/tokens';
 import { deepMerge, definePreset } from './define-preset';
 import { InkPreset, createInkPreset } from './presets/ink/ink.preset';
 

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TxChipsInput, TxChipsInputItemTemplate } from '@tectra/ui/chips-input';
+import { TxChipsInput, TxChipsInputItemTemplate } from '@tectra-ng/ui/chips-input';
 
 @Component({
   selector: 'chips-input-template-example',

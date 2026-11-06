@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, TemplateRef, inject, viewChild } from '@angular/core';
-import { TxAvatar } from '@tectra/ui/avatar';
-import { TxButton } from '@tectra/ui/button';
-import { TxToastContext, TxToastService } from '@tectra/ui/toast';
+import { TxAvatar } from '@tectra-ng/ui/avatar';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxToastContext, TxToastService } from '@tectra-ng/ui/toast';
 
 interface Mention {
   author: string;

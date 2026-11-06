@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxButton } from '@tectra/ui/button';
-import { TxInput } from '@tectra/ui/input';
-import { TxSelect } from '@tectra/ui/select';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxInput } from '@tectra-ng/ui/input';
+import { TxSelect } from '@tectra-ng/ui/select';
 
 @Component({
   selector: 'sandbox-root',

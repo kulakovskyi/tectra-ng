@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxMenu, TxMenuItem } from '@tectra/ui/menu';
+import { TxMenu, TxMenuItem } from '@tectra-ng/ui/menu';
 
 @Component({
   selector: 'menu-links-example',

@@ -1,7 +1,11 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TxButton } from '@tectra/ui/button';
-import { TxSelect, TxSelectEmptyFilterTemplate, TxSelectFooterTemplate } from '@tectra/ui/select';
+import { TxButton } from '@tectra-ng/ui/button';
+import {
+  TxSelect,
+  TxSelectEmptyFilterTemplate,
+  TxSelectFooterTemplate,
+} from '@tectra-ng/ui/select';
 
 @Component({
   selector: 'select-create-option-example',

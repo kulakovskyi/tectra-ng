@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxButton } from '@tectra/ui/button';
-import { TxDrawer } from '@tectra/ui/drawer';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxDrawer } from '@tectra-ng/ui/drawer';
 
 @Component({
   selector: 'drawer-design-tokens-example',

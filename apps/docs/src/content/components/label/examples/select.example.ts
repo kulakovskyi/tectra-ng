@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TxFloatLabel, TxIftaLabel } from '@tectra/ui/label';
-import { TxSelect } from '@tectra/ui/select';
+import { TxFloatLabel, TxIftaLabel } from '@tectra-ng/ui/label';
+import { TxSelect } from '@tectra-ng/ui/select';
 
 @Component({
   selector: 'label-select-example',

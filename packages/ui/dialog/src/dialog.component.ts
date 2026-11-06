@@ -15,8 +15,8 @@ import {
   untracked,
   viewChild,
 } from '@angular/core';
-import { TectraDeepPartial, TectraDialogTokens } from '@tectra/themes';
-import { optionalBoolean } from '@tectra/core/utils';
+import { TectraDeepPartial, TectraDialogTokens } from '@tectra-ng/themes';
+import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TX_DIALOG_CURRENT, TxDialogRef } from './dialog-ref';
 import { TxDialogContent, TxDialogHeader } from './dialog-parts.component';
 import { TxDialogService } from './dialog.service';

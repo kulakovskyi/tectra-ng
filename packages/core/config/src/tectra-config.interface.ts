@@ -1,4 +1,4 @@
-import { TectraPreset } from '@tectra/themes';
+import { TectraPreset } from '@tectra-ng/themes';
 import { TxGlobalPassThrough, TxPassThroughOptions } from './pass-through.interface';
 
 export type TxThemeMode = 'light' | 'dark';

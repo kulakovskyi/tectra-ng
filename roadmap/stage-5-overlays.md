@@ -4,7 +4,7 @@ Part of [ROADMAP.md](../ROADMAP.md). One section per item, in the order we build
 
 Sources: PrimeNG 22 component APIs and what the first consumer app needs (usage = bindings in its templates and call sites in its code, 2026-11-05).
 
-**Every item also needs** (not repeated below): tokens in `packages/themes/src/components/`, `dt` / `pt` / `ptOptions` / `unstyled`, README (Inputs / Outputs / Slots / Keyboard), docs page with an example per feature, unit tests, e2e page check (light + dark, axe), lint clean. Sizes, spacing, borders, radii, colours and motion copy the first consumer app: its PrimeNG preset (1rem = 14px) over the base theme and its own wrappers (toast pill, modal header / footer, drawer, actions and row menus). Panels are built on `TxOverlay` / `@tectra/core/overlay` (placements with flip, enter / leave motion, layers, sticky insets) and `@tectra/core/a11y`.
+**Every item also needs** (not repeated below): tokens in `packages/themes/src/components/`, `dt` / `pt` / `ptOptions` / `unstyled`, README (Inputs / Outputs / Slots / Keyboard), docs page with an example per feature, unit tests, e2e page check (light + dark, axe), lint clean. Sizes, spacing, borders, radii, colours and motion copy the first consumer app: its PrimeNG preset (1rem = 14px) over the base theme and its own wrappers (toast pill, modal header / footer, drawer, actions and row menus). Panels are built on `TxOverlay` / `@tectra-ng/core/overlay` (placements with flip, enter / leave motion, layers, sticky insets) and `@tectra-ng/core/a11y`.
 
 ---
 
@@ -27,7 +27,7 @@ PrimeNG: Popover (`toggle(event, target?)`, `show`, `hide`, `dismissable`, `appe
 - [x] Closes on outside click (`dismissable`), Escape and scroll-out; focus moves into the panel and back to the trigger; `aria-haspopup="dialog"` / `aria-expanded` / `aria-controls`
 - [x] Header / footer slots, `closeButton`, width from content with `minWidth` / `maxWidth` tokens
 - [x] Docs + tests: basic, placements, form inside, header / footer, programmatic target, nested (popover in popover), design tokens; e2e: focus in and back, outside click, Escape
-- Found on the way: tabbable lookups skip `inert` areas (`tabbableElements`, `nextTabbable` in `@tectra/core/a11y`); the arrow offset is shared (`txArrowOffset`)
+- Found on the way: tabbable lookups skip `inert` areas (`tabbableElements`, `nextTabbable` in `@tectra-ng/core/a11y`); the arrow offset is shared (`txArrowOffset`)
 
 
 ## 5.3 Toast — `ui/toast` + `TxToastService` ✅
@@ -83,7 +83,7 @@ PrimeNG: Menu, TieredMenu, ContextMenu (`model: MenuItem[]` — `label`, `icon`,
 - [x] `<tx-tiered-menu>` with sub-menus (hover intent, arrow keys), `<tx-context-menu>` on `(contextmenu)` of a target or globally
 - [x] Keyboard (WAI-ARIA menu / menubar): arrows, Home / End, type-ahead, Enter / Space, Escape / Left closes a level, Tab closes; `role="menu"` / `menuitem`, `aria-haspopup`, `aria-expanded`
 - [x] Docs + tests: inline, popup, groups, icons and shortcuts, danger item, router links, nested, context menu on a table row, template, design tokens; e2e: keyboard path, sub-menu flip at the viewport edge
-- Found on the way: a context menu closes on `pointerdown` outside — the `auxclick` after a right-click counted as an outside click; `@angular/router` is an optional peer of `@tectra/ui` for menu links
+- Found on the way: a context menu closes on `pointerdown` outside — the `auxclick` after a right-click counted as an outside click; `@angular/router` is an optional peer of `@tectra-ng/ui` for menu links
 
 
 ## 5.8 Split button + speed dial — `ui/split-button`, `ui/speed-dial` ✅

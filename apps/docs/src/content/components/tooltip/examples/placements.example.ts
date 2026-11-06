@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxPlacement } from '@tectra/core/overlay';
-import { TxButton } from '@tectra/ui/button';
-import { TxTooltip } from '@tectra/ui/tooltip';
+import { TxPlacement } from '@tectra-ng/core/overlay';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxTooltip } from '@tectra-ng/ui/tooltip';
 
 @Component({
   selector: 'tooltip-placements-example',

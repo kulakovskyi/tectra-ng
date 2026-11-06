@@ -1,6 +1,6 @@
 import { Injector, ViewContainerRef } from '@angular/core';
 import { Observable } from 'rxjs';
-import { TectraDeepPartial, TectraDialogTokens } from '@tectra/themes';
+import { TectraDeepPartial, TectraDialogTokens } from '@tectra-ng/themes';
 
 export type TxDialogSize = 'small' | 'medium' | 'large' | 'xlarge' | 'fullscreen';
 export type TxDialogPosition = 'center' | 'top' | 'bottom' | 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';

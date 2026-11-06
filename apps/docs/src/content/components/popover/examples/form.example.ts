@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TxButton } from '@tectra/ui/button';
-import { TxField } from '@tectra/ui/field';
-import { TxInput } from '@tectra/ui/input';
-import { TxPopover, TxPopoverFooter, TxPopoverTrigger } from '@tectra/ui/popover';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxField } from '@tectra-ng/ui/field';
+import { TxInput } from '@tectra-ng/ui/input';
+import { TxPopover, TxPopoverFooter, TxPopoverTrigger } from '@tectra-ng/ui/popover';
 
 @Component({
   selector: 'popover-form-example',

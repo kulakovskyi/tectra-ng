@@ -13,13 +13,13 @@ import {
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { TxFormControlBase, injectFieldInvalid } from '@tectra/core/forms';
-import { injectTranslations } from '@tectra/core/i18n';
-import { optionalBoolean } from '@tectra/core/utils';
-import { TxIcon } from '@tectra/icons';
-import { TectraChipsInputTokens, TectraDeepPartial, toStyleObject } from '@tectra/themes';
-import { TxChip } from '@tectra/ui/chip';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
+import { injectTranslations } from '@tectra-ng/core/i18n';
+import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TxIcon } from '@tectra-ng/icons';
+import { TectraChipsInputTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
+import { TxChip } from '@tectra-ng/ui/chip';
 import { TxChipsInputItemTemplate } from './chips-input-item.directive';
 import { TxChipsInputEvent, TxChipsInputPart, TxChipsInputSize, TxChipsInputVariant } from './chips-input.types';
 

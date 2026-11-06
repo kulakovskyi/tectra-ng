@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxIcon } from '@tectra/icons';
-import { TxListbox } from '@tectra/ui/listbox';
-import { TxSelectOptionTemplate } from '@tectra/ui/select';
+import { TxIcon } from '@tectra-ng/icons';
+import { TxListbox } from '@tectra-ng/ui/listbox';
+import { TxSelectOptionTemplate } from '@tectra-ng/ui/select';
 
 @Component({
   selector: 'listbox-template-example',

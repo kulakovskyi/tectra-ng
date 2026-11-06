@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { optionalBoolean } from '@tectra/core/utils';
-import { TectraDeepPartial, TectraHighlightTextTokens, toStyleObject } from '@tectra/themes';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TectraDeepPartial, TectraHighlightTextTokens, toStyleObject } from '@tectra-ng/themes';
 import { highlightParts } from './highlight-parts';
 import { TxHighlightTerms, TxHighlightTextPart } from './highlight-text.types';
 

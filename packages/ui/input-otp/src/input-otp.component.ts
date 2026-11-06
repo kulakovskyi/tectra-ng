@@ -13,13 +13,13 @@ import {
   viewChildren,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { uniqueId } from '@tectra/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { TxFormControlBase, injectFieldInvalid } from '@tectra/core/forms';
-import { injectTranslations } from '@tectra/core/i18n';
-import { optionalBoolean, optionalNumber } from '@tectra/core/utils';
-import { TectraDeepPartial, TectraInputOtpTokens, toStyleObject } from '@tectra/themes';
-import { TxInput } from '@tectra/ui/input';
+import { uniqueId } from '@tectra-ng/core/a11y';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
+import { injectTranslations } from '@tectra-ng/core/i18n';
+import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
+import { TectraDeepPartial, TectraInputOtpTokens, toStyleObject } from '@tectra-ng/themes';
+import { TxInput } from '@tectra-ng/ui/input';
 import { TxInputOtpPart, TxInputOtpSize, TxInputOtpVariant } from './input-otp.types';
 
 @Component({

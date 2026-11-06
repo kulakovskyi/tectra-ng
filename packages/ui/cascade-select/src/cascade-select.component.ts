@@ -16,10 +16,10 @@ import {
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { TxTypeahead, uniqueId } from '@tectra/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { TxFormControlBase, injectFieldInvalid } from '@tectra/core/forms';
-import { injectTranslations } from '@tectra/core/i18n';
+import { TxTypeahead, uniqueId } from '@tectra-ng/core/a11y';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
+import { injectTranslations } from '@tectra-ng/core/i18n';
 import {
   TxOverlayInsets,
   TxPlacement,
@@ -31,11 +31,11 @@ import {
   watchOrigin,
   TxOverlayAnchor,
   txScrollStrategy,
-} from '@tectra/core/overlay';
-import { optionalBoolean } from '@tectra/core/utils';
-import { TxIcon } from '@tectra/icons';
-import { TectraCascadeSelectTokens, TectraDeepPartial, toStyleObject } from '@tectra/themes';
-import { TxFieldVariant, TxSelectSize, readOptionField, sameOptionValue } from '@tectra/ui/select';
+} from '@tectra-ng/core/overlay';
+import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TxIcon } from '@tectra-ng/icons';
+import { TectraCascadeSelectTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
+import { TxFieldVariant, TxSelectSize, readOptionField, sameOptionValue } from '@tectra-ng/ui/select';
 import { TxCascadeItem, TxCascadeSelectChangeEvent, TxCascadeSelectPart } from './cascade-select.types';
 
 @Component({

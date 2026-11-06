@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxPaginator } from '@tectra/ui/paginator';
+import { TxPaginator } from '@tectra-ng/ui/paginator';
 
 @Component({
   selector: 'paginator-icons-example',

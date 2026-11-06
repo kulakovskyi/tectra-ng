@@ -12,13 +12,13 @@ import {
   signal,
 } from '@angular/core';
 import { AbstractControl, NgControl } from '@angular/forms';
-import { linkDescribedBy, uniqueId } from '@tectra/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, TxValidationMessages, injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { TX_FIELD_STATE } from '@tectra/core/forms';
-import { optionalBoolean } from '@tectra/core/utils';
-import { TectraDeepPartial, TectraFieldTokens, toStyleObject } from '@tectra/themes';
-import { TxLabel } from '@tectra/ui/label';
-import { TxFieldError, TxFieldHint } from '@tectra/ui/message';
+import { linkDescribedBy, uniqueId } from '@tectra-ng/core/a11y';
+import { TxPassThrough, TxPassThroughOptions, TxValidationMessages, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { TX_FIELD_STATE } from '@tectra-ng/core/forms';
+import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TectraDeepPartial, TectraFieldTokens, toStyleObject } from '@tectra-ng/themes';
+import { TxLabel } from '@tectra-ng/ui/label';
+import { TxFieldError, TxFieldHint } from '@tectra-ng/ui/message';
 import { TxFieldLayout, TxFieldPart } from './field.types';
 
 const CONTROL_SELECTOR = [

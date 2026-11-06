@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TxButton } from '@tectra/ui/button';
-import { TxField } from '@tectra/ui/field';
-import { TxInputNumber } from '@tectra/ui/input-number';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxField } from '@tectra-ng/ui/field';
+import { TxInputNumber } from '@tectra-ng/ui/input-number';
 
 @Component({
   selector: 'input-number-form-example',

@@ -16,14 +16,14 @@ import {
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { uniqueId } from '@tectra/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { TxFormControlBase, injectFieldInvalid } from '@tectra/core/forms';
-import { injectTranslations } from '@tectra/core/i18n';
-import { TxOverlayInsets, TxPlacement, placementFromPosition, txAnimateEnter, txAnimateLeave, txPositions, watchOrigin, TxOverlayAnchor, txScrollStrategy } from '@tectra/core/overlay';
-import { optionalBoolean } from '@tectra/core/utils';
-import { TxIcon } from '@tectra/icons';
-import { TectraColorPickerTokens, TectraDeepPartial, toStyleObject } from '@tectra/themes';
+import { uniqueId } from '@tectra-ng/core/a11y';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
+import { injectTranslations } from '@tectra-ng/core/i18n';
+import { TxOverlayInsets, TxPlacement, placementFromPosition, txAnimateEnter, txAnimateLeave, txPositions, watchOrigin, TxOverlayAnchor, txScrollStrategy } from '@tectra-ng/core/overlay';
+import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TxIcon } from '@tectra-ng/icons';
+import { TectraColorPickerTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { hsbToRgb, parseHex, rgbToHex, rgbToHsb, toHsb } from './color';
 import { TxColorFormat, TxColorPickerPart, TxColorPickerSize, TxColorValue, TxHsb } from './color-picker.types';
 

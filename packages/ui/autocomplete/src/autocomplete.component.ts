@@ -1,5 +1,5 @@
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
-import { TxOverlayAnchor } from '@tectra/core/overlay';
+import { TxOverlayAnchor } from '@tectra-ng/core/overlay';
 import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -14,11 +14,11 @@ import {
   signal,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { optionalBoolean } from '@tectra/core/utils';
-import { TxIcon, TxIconName } from '@tectra/icons';
-import { TectraDeepPartial, TectraSelectTokens, toStyleObject } from '@tectra/themes';
-import { TxOptionList, TxSelectBase, TxSelectItem, foldText, isSelectableRow, readOptionField } from '@tectra/ui/select';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TxIcon, TxIconName } from '@tectra-ng/icons';
+import { TectraDeepPartial, TectraSelectTokens, toStyleObject } from '@tectra-ng/themes';
+import { TxOptionList, TxSelectBase, TxSelectItem, foldText, isSelectableRow, readOptionField } from '@tectra-ng/ui/select';
 import { TxAutocompleteChangeEvent, TxAutocompleteCompleteEvent, TxAutocompleteDropdownMode, TxAutocompletePart } from './autocomplete.types';
 
 @Component({

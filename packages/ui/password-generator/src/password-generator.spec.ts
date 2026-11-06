@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TxPassword } from '@tectra/ui/password';
+import { TxPassword } from '@tectra-ng/ui/password';
 import { TxPasswordGenerate } from './password-generate.directive';
 import { TxPasswordGenerator } from './password-generator.service';
 

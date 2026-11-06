@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxIcon } from '@tectra/icons';
-import { TxTooltip } from '@tectra/ui/tooltip';
+import { TxIcon } from '@tectra-ng/icons';
+import { TxTooltip } from '@tectra-ng/ui/tooltip';
 
 interface Member {
   name: string;

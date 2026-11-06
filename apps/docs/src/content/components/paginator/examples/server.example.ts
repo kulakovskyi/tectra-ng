@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxPageState, TxPaginationParams, TxPaginator, firstToPage } from '@tectra/ui/paginator';
+import { TxPageState, TxPaginationParams, TxPaginator, firstToPage } from '@tectra-ng/ui/paginator';
 
 interface Invoice {
   id: number;

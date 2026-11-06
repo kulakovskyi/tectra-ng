@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, inject, input, model } from '@angular/core';
-import { uniqueId } from '@tectra/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { optionalBoolean } from '@tectra/core/utils';
-import { TxIcon, TxIconName, TxIconRegistry } from '@tectra/icons';
-import { TectraDeepPartial, TectraPanelTokens, toStyleObject } from '@tectra/themes';
+import { uniqueId } from '@tectra-ng/core/a11y';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TxIcon, TxIconName, TxIconRegistry } from '@tectra-ng/icons';
+import { TectraDeepPartial, TectraPanelTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxPanelAlign, TxPanelPart, TxPanelVariant } from './panel.types';
 
 @Component({

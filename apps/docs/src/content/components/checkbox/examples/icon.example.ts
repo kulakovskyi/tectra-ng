@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxCheckbox, TxCheckboxIconTemplate } from '@tectra/ui/checkbox';
-import { TxIcon } from '@tectra/icons';
+import { TxCheckbox, TxCheckboxIconTemplate } from '@tectra-ng/ui/checkbox';
+import { TxIcon } from '@tectra-ng/icons';
 
 @Component({
   selector: 'checkbox-icon-example',

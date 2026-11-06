@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxAvatar, TxAvatarGroup } from '@tectra/ui/avatar';
-import { TxMultiselect } from '@tectra/ui/multiselect';
-import { TxSelectOptionTemplate, TxSelectValueTemplate } from '@tectra/ui/select';
+import { TxAvatar, TxAvatarGroup } from '@tectra-ng/ui/avatar';
+import { TxMultiselect } from '@tectra-ng/ui/multiselect';
+import { TxSelectOptionTemplate, TxSelectValueTemplate } from '@tectra-ng/ui/select';
 
 @Component({
   selector: 'multiselect-template-example',

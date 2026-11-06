@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxSkeleton } from '@tectra/ui/skeleton';
+import { TxSkeleton } from '@tectra-ng/ui/skeleton';
 
 @Component({
   selector: 'skeleton-list-example',

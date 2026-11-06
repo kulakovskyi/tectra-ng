@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxCheckbox } from '@tectra/ui/checkbox';
+import { TxCheckbox } from '@tectra-ng/ui/checkbox';
 
 @Component({
   selector: 'checkbox-design-tokens-example',

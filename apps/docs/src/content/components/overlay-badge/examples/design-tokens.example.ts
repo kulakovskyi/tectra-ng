@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxIcon } from '@tectra/icons';
-import { TxOverlayBadge } from '@tectra/ui/overlay-badge';
+import { TxIcon } from '@tectra-ng/icons';
+import { TxOverlayBadge } from '@tectra-ng/ui/overlay-badge';
 
 @Component({
   selector: 'overlay-badge-design-tokens-example',

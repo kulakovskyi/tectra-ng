@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TxAutocomplete, TxAutocompleteCompleteEvent } from '@tectra/ui/autocomplete';
+import { TxAutocomplete, TxAutocompleteCompleteEvent } from '@tectra-ng/ui/autocomplete';
 
 const PEOPLE = [
   'olena@example.com',

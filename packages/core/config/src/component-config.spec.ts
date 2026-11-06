@@ -1,6 +1,6 @@
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { InkPreset } from '@tectra/themes';
+import { InkPreset } from '@tectra-ng/themes';
 import { injectPassThrough, injectUnstyled } from './component-config';
 import { TxPassThrough, TxPassThroughOptions } from './pass-through.interface';
 import { provideTectra } from './provide-tectra';

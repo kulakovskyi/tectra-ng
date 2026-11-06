@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { TxButton } from '@tectra/ui/button';
+import { TxButton } from '@tectra-ng/ui/button';
 import {
   TxDialogClose,
   TxDialogContent,
@@ -8,7 +8,7 @@ import {
   TxDialogService,
   TxDialogSize,
   injectDialogData,
-} from '@tectra/ui/dialog';
+} from '@tectra-ng/ui/dialog';
 
 @Component({
   selector: 'dialog-size-preview',

@@ -1,4 +1,4 @@
-import { TxPlacement } from '@tectra/core/overlay';
+import { TxPlacement } from '@tectra-ng/core/overlay';
 
 export const OVERLAY_DEMO_ROWS: (TxPlacement | null)[][] = [
   [null, 'top-start', 'top', 'top-end', null],

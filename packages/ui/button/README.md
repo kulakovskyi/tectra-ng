@@ -18,11 +18,11 @@ Triggers an action. The text goes into `label` or inside the button. An attribut
 | fluid | Takes the full width of its container; without the input it follows a parent `<tx-fluid>` |
 | disabled | Blocks the button: the native `disabled` on a `button`, `aria-disabled` + no tab stop on an `a` |
 | tabindex | Tab order; an `a` that is disabled always gets `-1` |
-| icon | A `@tectra/icons` name (`'plus'`), an icon registered with `provideTxIcons` (brand logos from `@tectra/brand-icons`: `'github'`), or any icon class (`'pi pi-check'`) |
+| icon | A `@tectra-ng/icons` name (`'plus'`), an icon registered with `provideTxIcons` (brand logos from `@tectra-ng/brand-icons`: `'github'`), or any icon class (`'pi pi-check'`) |
 | iconPos | Where the icon sits: `left`, `right`, `top`, `bottom` |
 | iconOnly | Square button with only the icon. Not needed in most cases: a button with an icon and no text becomes square by itself. Give it an `aria-label` |
 | loading | Shows a spinning icon, disables the button and sets `aria-busy` |
-| loadingIcon | Icon shown while loading — a `@tectra/icons` name or any icon class |
+| loadingIcon | Icon shown while loading — a `@tectra-ng/icons` name or any icon class |
 | badge | Counter after the text, rendered with `<tx-badge>` |
 | badgeSeverity | Colour of the badge |
 | ripple | Click wave for this button; without it the global `provideTectra({ ripple })` decides |

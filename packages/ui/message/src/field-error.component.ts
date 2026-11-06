@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, effect, inject, input, signal } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
-import { injectDescribedBy, uniqueId } from '@tectra/core/a11y';
+import { injectDescribedBy, uniqueId } from '@tectra-ng/core/a11y';
 import {
   TECTRA_CONFIG,
   TxPassThrough,
@@ -9,11 +9,11 @@ import {
   TxValidationMessages,
   injectPassThrough,
   injectUnstyled,
-} from '@tectra/core/config';
-import { injectTranslations } from '@tectra/core/i18n';
-import { optionalBoolean } from '@tectra/core/utils';
-import { TxIcon } from '@tectra/icons';
-import { TectraDeepPartial, TectraFieldMessageTokens, toStyleObject } from '@tectra/themes';
+} from '@tectra-ng/core/config';
+import { injectTranslations } from '@tectra-ng/core/i18n';
+import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TxIcon } from '@tectra-ng/icons';
+import { TectraDeepPartial, TectraFieldMessageTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxFieldMessagePart } from './message.types';
 
 const BUILT_IN_MESSAGES: Record<string, keyof TxTranslations> = {

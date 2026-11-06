@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
-import { TxIcon, TxIconName, TxIconRegistry } from '@tectra/icons';
+import { TxIcon, TxIconName, TxIconRegistry } from '@tectra-ng/icons';
 import { TxInputIconPosition } from './icon-field.types';
 
 @Component({

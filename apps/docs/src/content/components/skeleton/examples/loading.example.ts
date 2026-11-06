@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxButton } from '@tectra/ui/button';
-import { TxSkeleton } from '@tectra/ui/skeleton';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxSkeleton } from '@tectra-ng/ui/skeleton';
 
 @Component({
   selector: 'skeleton-loading-example',

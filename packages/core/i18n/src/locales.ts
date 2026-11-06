@@ -1,4 +1,4 @@
-import { TxLocaleDefinition } from '@tectra/core/config';
+import { TxLocaleDefinition } from '@tectra-ng/core/config';
 
 export const TX_LOCALE_US: TxLocaleDefinition = {
   code: 'us',

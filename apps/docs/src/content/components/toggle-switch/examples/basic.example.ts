@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TxToggleSwitch } from '@tectra/ui/toggle-switch';
+import { TxToggleSwitch } from '@tectra-ng/ui/toggle-switch';
 
 @Component({
   selector: 'toggle-switch-basic-example',

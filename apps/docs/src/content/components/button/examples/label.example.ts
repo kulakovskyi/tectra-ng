@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxButton } from '@tectra/ui/button';
+import { TxButton } from '@tectra-ng/ui/button';
 
 @Component({
   selector: 'button-label-example',

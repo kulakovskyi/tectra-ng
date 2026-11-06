@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TxSlider } from '@tectra/ui/slider';
+import { TxSlider } from '@tectra-ng/ui/slider';
 
 @Component({
   selector: 'slider-animate-example',

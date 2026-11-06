@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { TxAvatar } from '@tectra/ui/avatar';
-import { TxButton } from '@tectra/ui/button';
-import { TxConfirmService } from '@tectra/ui/confirm';
+import { TxAvatar } from '@tectra-ng/ui/avatar';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxConfirmService } from '@tectra-ng/ui/confirm';
 
 @Component({
   selector: 'confirm-popup-example',

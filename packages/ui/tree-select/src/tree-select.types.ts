@@ -1,4 +1,4 @@
-import { TxIconName } from '@tectra/icons';
+import { TxIconName } from '@tectra-ng/icons';
 
 export interface TxTreeNode<T = unknown> {
   key: string;

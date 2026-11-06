@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { JsonPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TxColorPicker, TxHsb, TxRgb } from '@tectra/ui/color-picker';
+import { TxColorPicker, TxHsb, TxRgb } from '@tectra-ng/ui/color-picker';
 
 @Component({
   selector: 'color-picker-formats-example',

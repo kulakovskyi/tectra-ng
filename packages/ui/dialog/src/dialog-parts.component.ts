@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, Directive, ElementRef, computed, effect, inject, input, signal } from '@angular/core';
-import { uniqueId } from '@tectra/core/a11y';
-import { injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { injectTranslations } from '@tectra/core/i18n';
-import { optionalBoolean } from '@tectra/core/utils';
-import { TxButton } from '@tectra/ui/button';
+import { uniqueId } from '@tectra-ng/core/a11y';
+import { injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectTranslations } from '@tectra-ng/core/i18n';
+import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TxButton } from '@tectra-ng/ui/button';
 import { injectCurrentDialog } from './dialog-ref';
 import { TxDialogPart } from './dialog.types';
 

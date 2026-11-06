@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxField } from '@tectra/ui/field';
-import { TxTextarea, TxTextareaCounter } from '@tectra/ui/textarea';
+import { TxField } from '@tectra-ng/ui/field';
+import { TxTextarea, TxTextareaCounter } from '@tectra-ng/ui/textarea';
 
 @Component({
   selector: 'textarea-counter-example',

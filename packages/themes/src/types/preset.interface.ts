@@ -1,4 +1,4 @@
-import { TectraColorScale, TectraSurfaceScale } from '@tectra/tokens';
+import { TectraColorScale, TectraSurfaceScale } from '@tectra-ng/tokens';
 import { TectraComponentTokens } from '../components/component-tokens';
 import { TectraSemanticTokens } from './semantic-tokens.interface';
 

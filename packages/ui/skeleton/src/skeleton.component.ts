@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input, numberAttribute } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { optionalBoolean } from '@tectra/core/utils';
-import { TectraDeepPartial, TectraSkeletonTokens, toStyleObject } from '@tectra/themes';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TectraDeepPartial, TectraSkeletonTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxSkeletonAnimation, TxSkeletonPart, TxSkeletonShape } from './skeleton.types';
 
 @Component({

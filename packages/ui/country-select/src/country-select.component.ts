@@ -1,13 +1,13 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, forwardRef, inject, input, output } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { TxFormControlBase } from '@tectra/core/forms';
-import { TxLocaleService } from '@tectra/core/i18n';
-import { optionalBoolean } from '@tectra/core/utils';
-import { TectraDeepPartial, TectraSelectTokens } from '@tectra/themes';
-import { TX_COUNTRY_CODES, TxCountry, TxFlagShape, countryName } from '@tectra/ui/country';
-import { TxMultiselect } from '@tectra/ui/multiselect';
-import { TxFieldVariant, TxSelect, TxSelectItem, TxSelectOptionTemplate, TxSelectSize, TxSelectValueTemplate } from '@tectra/ui/select';
+import { TxFormControlBase } from '@tectra-ng/core/forms';
+import { TxLocaleService } from '@tectra-ng/core/i18n';
+import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TectraDeepPartial, TectraSelectTokens } from '@tectra-ng/themes';
+import { TX_COUNTRY_CODES, TxCountry, TxFlagShape, countryName } from '@tectra-ng/ui/country';
+import { TxMultiselect } from '@tectra-ng/ui/multiselect';
+import { TxFieldVariant, TxSelect, TxSelectItem, TxSelectOptionTemplate, TxSelectSize, TxSelectValueTemplate } from '@tectra-ng/ui/select';
 import { TxCountryItem, TxCountryOption, TxCountrySort } from './country-select.types';
 
 @Component({

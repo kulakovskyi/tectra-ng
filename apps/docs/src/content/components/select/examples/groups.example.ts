@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxSelect, TxSelectGroupTemplate } from '@tectra/ui/select';
+import { TxSelect, TxSelectGroupTemplate } from '@tectra-ng/ui/select';
 
 @Component({
   selector: 'select-groups-example',

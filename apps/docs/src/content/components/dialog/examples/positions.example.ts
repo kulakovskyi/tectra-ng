@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxButton } from '@tectra/ui/button';
-import { TxDialog, TxDialogPosition } from '@tectra/ui/dialog';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxDialog, TxDialogPosition } from '@tectra-ng/ui/dialog';
 
 @Component({
   selector: 'dialog-positions-example',

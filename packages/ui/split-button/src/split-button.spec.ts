@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TxMenuItem } from '@tectra/ui/menu';
+import { TxMenuItem } from '@tectra-ng/ui/menu';
 import { TxSplitButton } from './split-button.component';
 
 @Component({

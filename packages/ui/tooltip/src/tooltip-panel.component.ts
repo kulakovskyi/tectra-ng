@@ -1,7 +1,7 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, InjectionToken, Signal, TemplateRef, afterRenderEffect, computed, inject, signal } from '@angular/core';
-import { TxResolvedPassThrough } from '@tectra/core/config';
-import { TxPlacement, parsePlacement, txArrowOffset } from '@tectra/core/overlay';
+import { TxResolvedPassThrough } from '@tectra-ng/core/config';
+import { TxPlacement, parsePlacement, txArrowOffset } from '@tectra-ng/core/overlay';
 import { TxTooltipContent, TxTooltipContext, TxTooltipPart } from './tooltip.types';
 
 export interface TxTooltipPanelState {

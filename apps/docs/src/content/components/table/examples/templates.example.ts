@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxPill } from '@tectra/ui/pill';
-import { TxButton } from '@tectra/ui/button';
-import { TxPopover, TxPopoverTrigger } from '@tectra/ui/popover';
-import { TxTable, TxTableCell, TxTableColumn, TxTableHeaderCell } from '@tectra/ui/table';
-import { TxAmount } from '@tectra/ui/amount';
+import { TxPill } from '@tectra-ng/ui/pill';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxPopover, TxPopoverTrigger } from '@tectra-ng/ui/popover';
+import { TxTable, TxTableCell, TxTableColumn, TxTableHeaderCell } from '@tectra-ng/ui/table';
+import { TxAmount } from '@tectra-ng/ui/amount';
 
 interface Invoice {
   id: number;

@@ -1,4 +1,4 @@
-import { TxIconName } from '@tectra/icons';
+import { TxIconName } from '@tectra-ng/icons';
 
 export const HOME_FEATURES: { icon: TxIconName; title: string; text: string }[] = [
   { icon: 'bolt', title: 'Signals, zoneless', text: 'Standalone, OnPush, signal inputs. No legacy.' },
@@ -20,4 +20,4 @@ export const HOME_MARQUEE_ICONS: TxIconName[] = [
   'send', 'gift', 'globe', 'camera', 'map-marker', 'filter', 'download', 'link', 'bookmark', 'sparkles', 'database', 'code',
 ];
 
-export const INSTALL_COMMAND = 'npm i @tectra/ui @tectra/core @tectra/themes';
+export const INSTALL_COMMAND = 'npm i tectra-ng';

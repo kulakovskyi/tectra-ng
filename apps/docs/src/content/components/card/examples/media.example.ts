@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxCard } from '@tectra/ui/card';
+import { TxCard } from '@tectra-ng/ui/card';
 
 @Component({
   selector: 'card-media-example',

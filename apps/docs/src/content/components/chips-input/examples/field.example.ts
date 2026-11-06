@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TxField } from '@tectra/ui/field';
-import { TxChipsInput } from '@tectra/ui/chips-input';
-import { TxFloatLabel } from '@tectra/ui/label';
+import { TxField } from '@tectra-ng/ui/field';
+import { TxChipsInput } from '@tectra-ng/ui/chips-input';
+import { TxFloatLabel } from '@tectra-ng/ui/label';
 
 @Component({
   selector: 'chips-input-field-example',

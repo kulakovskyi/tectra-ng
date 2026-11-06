@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxChipsInput, TxChipsInputEvent } from '@tectra/ui/chips-input';
+import { TxChipsInput, TxChipsInputEvent } from '@tectra-ng/ui/chips-input';
 
 @Component({
   selector: 'chips-input-limits-example',

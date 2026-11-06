@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxPaginator, TxRowsPerPageOption } from '@tectra/ui/paginator';
+import { TxPaginator, TxRowsPerPageOption } from '@tectra-ng/ui/paginator';
 
 @Component({
   selector: 'paginator-rows-per-page-example',

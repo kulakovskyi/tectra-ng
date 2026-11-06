@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxFieldset } from '@tectra/ui/fieldset';
-import { TxIcon } from '@tectra/icons';
-import { TxInput } from '@tectra/ui/input';
+import { TxFieldset } from '@tectra-ng/ui/fieldset';
+import { TxIcon } from '@tectra-ng/icons';
+import { TxInput } from '@tectra-ng/ui/input';
 
 @Component({
   selector: 'fieldset-legend-template-example',

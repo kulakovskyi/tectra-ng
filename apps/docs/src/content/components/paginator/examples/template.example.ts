@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxButton } from '@tectra/ui/button';
-import { TxPaginator, TxPaginatorEnd, TxPaginatorStart } from '@tectra/ui/paginator';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxPaginator, TxPaginatorEnd, TxPaginatorStart } from '@tectra-ng/ui/paginator';
 
 @Component({
   selector: 'paginator-template-example',

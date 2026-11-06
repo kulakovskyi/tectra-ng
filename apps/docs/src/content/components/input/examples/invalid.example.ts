@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TxFluid } from '@tectra/core/fluid';
-import { TxInput } from '@tectra/ui/input';
+import { TxFluid } from '@tectra-ng/core/fluid';
+import { TxInput } from '@tectra-ng/ui/input';
 
 @Component({
   selector: 'input-invalid-example',

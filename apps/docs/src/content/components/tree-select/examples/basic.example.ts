@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TxTreeNode, TxTreeSelect } from '@tectra/ui/tree-select';
+import { TxTreeNode, TxTreeSelect } from '@tectra-ng/ui/tree-select';
 
 @Component({
   selector: 'tree-select-basic-example',

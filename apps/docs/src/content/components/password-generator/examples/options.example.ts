@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TxButton } from '@tectra/ui/button';
-import { TxCheckbox } from '@tectra/ui/checkbox';
-import { TxPasswordGenerate } from '@tectra/ui/password-generator';
-import { TxSlider } from '@tectra/ui/slider';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxCheckbox } from '@tectra-ng/ui/checkbox';
+import { TxPasswordGenerate } from '@tectra-ng/ui/password-generator';
+import { TxSlider } from '@tectra-ng/ui/slider';
 
 @Component({
   selector: 'password-generator-options-example',

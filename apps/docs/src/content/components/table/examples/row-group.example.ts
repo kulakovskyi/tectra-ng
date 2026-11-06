@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxTable, TxTableColumn, TxTableGroupFooter } from '@tectra/ui/table';
+import { TxTable, TxTableColumn, TxTableGroupFooter } from '@tectra-ng/ui/table';
 
 interface Task {
   id: number;

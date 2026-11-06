@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TxField } from '@tectra/ui/field';
-import { TxListbox } from '@tectra/ui/listbox';
+import { TxField } from '@tectra-ng/ui/field';
+import { TxListbox } from '@tectra-ng/ui/listbox';
 
 @Component({
   selector: 'listbox-field-example',

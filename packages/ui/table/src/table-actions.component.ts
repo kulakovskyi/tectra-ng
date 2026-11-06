@@ -11,11 +11,11 @@ import {
   inject,
   input,
 } from '@angular/core';
-import { optionalNumber } from '@tectra/core/utils';
-import { injectTranslations } from '@tectra/core/i18n';
-import { TxButton } from '@tectra/ui/button';
-import { TxPopover, TxPopoverTrigger } from '@tectra/ui/popover';
-import { TxTooltip } from '@tectra/ui/tooltip';
+import { optionalNumber } from '@tectra-ng/core/utils';
+import { injectTranslations } from '@tectra-ng/core/i18n';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxPopover, TxPopoverTrigger } from '@tectra-ng/ui/popover';
+import { TxTooltip } from '@tectra-ng/ui/tooltip';
 import { TX_TABLE, TxTableRowActionsSource } from './table.context';
 import { TxTableAction } from './table.templates';
 

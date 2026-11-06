@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxCountry } from '@tectra/ui/country';
+import { TxCountry } from '@tectra-ng/ui/country';
 
 @Component({
   selector: 'country-design-tokens-example',

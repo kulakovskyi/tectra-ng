@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TxInput } from '@tectra/ui/input';
+import { TxInput } from '@tectra-ng/ui/input';
 import { TxIconField } from './icon-field.component';
 import { TxInputClear } from './input-clear.component';
 import { TxInputCopy } from './input-copy.component';

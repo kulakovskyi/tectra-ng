@@ -11,9 +11,9 @@ import {
   viewChild,
 } from '@angular/core';
 import { NgControl } from '@angular/forms';
-import { injectFluid } from '@tectra/core/fluid';
-import { optionalBoolean } from '@tectra/core/utils';
-import { TxInput } from '@tectra/ui/input';
+import { injectFluid } from '@tectra-ng/core/fluid';
+import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TxInput } from '@tectra-ng/ui/input';
 
 @Component({
   selector: 'tx-icon-field',

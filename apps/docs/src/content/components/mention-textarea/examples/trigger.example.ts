@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxMentionTextarea } from '@tectra/ui/mention-textarea';
-import { TxSelectOptionTemplate } from '@tectra/ui/select';
+import { TxMentionTextarea } from '@tectra-ng/ui/mention-textarea';
+import { TxSelectOptionTemplate } from '@tectra-ng/ui/select';
 
 @Component({
   selector: 'mention-textarea-trigger-example',

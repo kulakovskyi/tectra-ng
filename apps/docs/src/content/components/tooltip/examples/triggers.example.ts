@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxButton } from '@tectra/ui/button';
-import { TxInput } from '@tectra/ui/input';
-import { TxTooltip } from '@tectra/ui/tooltip';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxInput } from '@tectra-ng/ui/input';
+import { TxTooltip } from '@tectra-ng/ui/tooltip';
 
 @Component({
   selector: 'tooltip-triggers-example',

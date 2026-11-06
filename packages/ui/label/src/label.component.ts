@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, input } from '@angular/core';
-import { TxIcon } from '@tectra/icons';
+import { TxIcon } from '@tectra-ng/icons';
 
 @Component({
   selector: 'tx-label',

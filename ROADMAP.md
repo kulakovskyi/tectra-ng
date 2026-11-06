@@ -21,10 +21,10 @@ Everything tectra covers, ordered by dependencies and by how much the first cons
 
 | Item | Package | Status |
 |---|---|---|
-| Tokens: ink surface, 5 accents, severity palettes, radius, typography, shadows | `@tectra/tokens` | ✅ |
-| Themes: light / dark semantic, `createInkPreset(accent)`, component tokens, deep `definePreset` | `@tectra/themes` | ✅ |
-| `provideTectra` (preset, mode, `darkSelector`, ripple, unstyled, pt, ptOptions), forms base, i18n, style loader, ripple, fluid | `@tectra/core` | ✅ |
-| 334 icons with PrimeIcons names + registry, brand logos | `@tectra/icons`, `@tectra/brand-icons` | ✅ |
+| Tokens: ink surface, 5 accents, severity palettes, radius, typography, shadows | `@tectra-ng/tokens` | ✅ |
+| Themes: light / dark semantic, `createInkPreset(accent)`, component tokens, deep `definePreset` | `@tectra-ng/themes` | ✅ |
+| `provideTectra` (preset, mode, `darkSelector`, ripple, unstyled, pt, ptOptions), forms base, i18n, style loader, ripple, fluid | `@tectra-ng/core` | ✅ |
+| 334 icons with PrimeIcons names + registry, brand logos | `@tectra-ng/icons`, `@tectra-ng/brand-icons` | ✅ |
 | Docs site, registry builder, sandbox | `apps/docs` | ✅ |
 
 ## Stage 1 — infrastructure before the next components
@@ -35,7 +35,7 @@ Everything tectra covers, ordered by dependencies and by how much the first cons
 | Playwright checks in `e2e/visual` (`npm run e2e`): every page light + dark, console errors, layout shift, axe serious / critical; select, code panel, navigation, square buttons, theme toggle | the check we ran by hand is permanent | ✅ |
 | CI (`.github/workflows/ci.yml`): test → package build → e2e, report on failure | | ✅ |
 | ESLint (`npm run lint`): angular-eslint (OnPush, signals readonly, control flow, template a11y), typescript-eslint, Nx module boundaries by package tags; first step in CI | keeps the conventions and the package graph honest | ✅ |
-| Release flow: changesets, versions, npm publish | needed before apps can install from npm | ⬜ |
+| Release flow: `nx release` (one version for all packages, changelog from conventional commits), `tools/release.mjs` (version → build → publish → tag), `release` workflow with npm trusted publishing; `tectra-ng` installs everything | needed before apps can install from npm | 🟡 first publish pending |
 
 Found and fixed while setting it up: a disabled `a[txButton]` still let the parent `(click)` run; `tx-select` had no accessible name (`ariaLabel`, `ariaLabelledBy`, falls back to the placeholder); light muted text and the white-on-green success colour were below WCAG AA (muted → surface 600, success → green 700); toggle-button text contrast.
 
@@ -43,10 +43,10 @@ Found and fixed while setting it up: a disabled `a[txButton]` still let the pare
 
 | Item | Package | Notes | Status |
 |---|---|---|---|
-| Overlay: `TxOverlay.open(template \| component, options)` → `TxOverlayRef` (`placement`, `closed`, `close`, `updatePosition`); 12 placements with flip (`txPositions`), enter / leave motion from the origin side (`txAnimateEnter`, `txAnimateLeave`, off with reduced motion), viewport margin, scroll strategies, `matchWidth`, Escape / outside click, focus back to the origin; z-index layers (`--tx-layer-dropdown … toast`); sticky chrome insets (`txOverlayInset`, measured while pinned, or `provideTectra({ overlay: { viewportInsets } })`) — panels fit around a sticky header / bar and close once the origin scrolls under it, also in `tx-select`; CDK loads its structural CSS itself — no `overlay-prebuilt.css` needed | `@tectra/core/overlay` | docs page Core → Overlay | ✅ |
-| `txFocusTrap` (auto focus, restore focus), `nextListIndex` (arrows, Home / End, Page, disabled, loop), `TxTypeahead`, `TxAnnouncer` | `@tectra/core/a11y` | | ✅ |
-| Locale: `us` / `ua` definitions, `provideTectra({ locale })`, `TxLocaleService` (runtime `setLocale`, `translate` with params, Intl numbers / dates, month and weekday names from the first day of week), `injectTranslations()` is a signal | `@tectra/core/i18n` | docs page Core → Locale | ✅ |
-| Select on the new core: placements with flip, reposition on scroll, Home / End / Page keys, type-to-find, translated texts | `@tectra/ui/select` | | ✅ |
+| Overlay: `TxOverlay.open(template \| component, options)` → `TxOverlayRef` (`placement`, `closed`, `close`, `updatePosition`); 12 placements with flip (`txPositions`), enter / leave motion from the origin side (`txAnimateEnter`, `txAnimateLeave`, off with reduced motion), viewport margin, scroll strategies, `matchWidth`, Escape / outside click, focus back to the origin; z-index layers (`--tx-layer-dropdown … toast`); sticky chrome insets (`txOverlayInset`, measured while pinned, or `provideTectra({ overlay: { viewportInsets } })`) — panels fit around a sticky header / bar and close once the origin scrolls under it, also in `tx-select`; CDK loads its structural CSS itself — no `overlay-prebuilt.css` needed | `@tectra-ng/core/overlay` | docs page Core → Overlay | ✅ |
+| `txFocusTrap` (auto focus, restore focus), `nextListIndex` (arrows, Home / End, Page, disabled, loop), `TxTypeahead`, `TxAnnouncer` | `@tectra-ng/core/a11y` | | ✅ |
+| Locale: `us` / `ua` definitions, `provideTectra({ locale })`, `TxLocaleService` (runtime `setLocale`, `translate` with params, Intl numbers / dates, month and weekday names from the first day of week), `injectTranslations()` is a signal | `@tectra-ng/core/i18n` | docs page Core → Locale | ✅ |
+| Select on the new core: placements with flip, reposition on scroll, Home / End / Page keys, type-to-find, translated texts | `@tectra-ng/ui/select` | | ✅ |
 
 ## Stage 3 — form primitives (high usage, low complexity) ✅
 
@@ -163,10 +163,10 @@ Detailed checklist per component: [roadmap/stage-7-data.md](roadmap/stage-7-data
 | `ui/menubar`, `ui/panel-menu` | Menubar, PanelMenu | sidebar menu | ⬜ |
 | `ui/splitter`, `ui/scroll-panel`, `ui/toolbar` | Splitter, ScrollPanel, Toolbar | — (parity) | ⬜ |
 | `ui/file-upload` | FileUpload | 8 | ⬜ |
-| `ui/editor` (rich text, Tiptap / ProseMirror instead of Quill) — own package `@tectra/editor` | Editor | 6, 16 | ⬜ |
+| `ui/editor` (rich text, Tiptap / ProseMirror instead of Quill) — own package `@tectra-ng/editor` | Editor | 6, 16 | ⬜ |
 | `ui/image` (preview, zoom), `ui/galleria`, `ui/carousel` | Image, Galleria, Carousel | 2 | ⬜ |
 
-## Stage 10 — blocks (`@tectra/blocks`, what PrimeNG does not have)
+## Stage 10 — blocks (`@tectra-ng/blocks`, what PrimeNG does not have)
 
 | Block | Usage | Status |
 |---|---|---|
@@ -187,7 +187,7 @@ Detailed checklist per component: [roadmap/stage-7-data.md](roadmap/stage-7-data
 | `qr-code` | 1 | ⬜ |
 | `confetti`, `hover-effect` | 7, 0 | ⬜ |
 
-## Stage 11 — charts (`@tectra/charts`, own package because of the chart engine)
+## Stage 11 — charts (`@tectra-ng/charts`, own package because of the chart engine)
 
 Decide first: keep ApexCharts as a peer dependency or draw own SVG charts.
 
@@ -198,7 +198,7 @@ Decide first: keep ApexCharts as a peer dependency or draw own SVG charts.
 | bar-list, segmented-bar | 17, 11 | ⬜ |
 | heatmap, treemap, org-chart | 10, 2, 3 | ⬜ |
 
-## Stage 12 — utils (`@tectra/utils`)
+## Stage 12 — utils (`@tectra-ng/utils`)
 
 | Group | Items | Status |
 |---|---|---|

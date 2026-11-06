@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxListbox } from '@tectra/ui/listbox';
+import { TxListbox } from '@tectra-ng/ui/listbox';
 
 @Component({
   selector: 'listbox-design-tokens-example',

@@ -1,12 +1,12 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, forwardRef, input, output, signal } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { injectFieldInvalid } from '@tectra/core/forms';
-import { optionalBoolean } from '@tectra/core/utils';
-import { TxIcon } from '@tectra/icons';
-import { TectraDeepPartial, TectraListboxTokens, toStyleObject } from '@tectra/themes';
-import { TxOptionList, TxOptionsBase, TxSelectItem, isSelectableRow } from '@tectra/ui/select';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectFieldInvalid } from '@tectra-ng/core/forms';
+import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TxIcon } from '@tectra-ng/icons';
+import { TectraDeepPartial, TectraListboxTokens, toStyleObject } from '@tectra-ng/themes';
+import { TxOptionList, TxOptionsBase, TxSelectItem, isSelectableRow } from '@tectra-ng/ui/select';
 import { TxListboxChangeEvent, TxListboxPart } from './listbox.types';
 
 @Component({

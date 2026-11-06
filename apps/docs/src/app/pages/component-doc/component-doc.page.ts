@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input, linkedSignal, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { TxOverlayInset } from '@tectra/core/overlay';
-import { TxIcon } from '@tectra/icons';
+import { TxOverlayInset } from '@tectra-ng/core/overlay';
+import { TxIcon } from '@tectra-ng/icons';
 import { DOC_TABS } from '../../data/doc-tabs.data';
 import { DocComponent, DocTab } from '../../types/doc-component.interface';
 import { A11yTab } from './tabs/a11y-tab/a11y-tab';

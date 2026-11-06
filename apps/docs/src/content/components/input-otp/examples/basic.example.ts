@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TxInputOtp } from '@tectra/ui/input-otp';
+import { TxInputOtp } from '@tectra-ng/ui/input-otp';
 
 @Component({
   selector: 'input-otp-basic-example',

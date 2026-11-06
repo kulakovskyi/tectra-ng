@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxAvatar } from '@tectra/ui/avatar';
+import { TxAvatar } from '@tectra-ng/ui/avatar';
 
 @Component({
   selector: 'avatar-fallback-example',

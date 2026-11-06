@@ -1,9 +1,9 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, contentChild, inject, input, numberAttribute } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { TxLocaleService, injectTranslations } from '@tectra/core/i18n';
-import { optionalBoolean } from '@tectra/core/utils';
-import { TectraDeepPartial, TectraProgressBarTokens, toStyleObject } from '@tectra/themes';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
+import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TectraDeepPartial, TectraProgressBarTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxProgressBarValueTemplate } from './progress-bar-templates.directive';
 import { TxProgressBarMode, TxProgressBarPart, TxProgressBarSeverity, TxProgressBarSize } from './progress-bar.types';
 

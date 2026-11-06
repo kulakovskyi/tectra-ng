@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, ElementRef, booleanAttribute, computed, forwardRef, inject, input, numberAttribute, output, signal, viewChild } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { TxFormControlBase, injectFieldInvalid } from '@tectra/core/forms';
-import { TxLocaleService, injectTranslations } from '@tectra/core/i18n';
-import { optionalBoolean, optionalNumber } from '@tectra/core/utils';
-import { TectraDeepPartial, TectraSliderTokens, toStyleObject } from '@tectra/themes';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
+import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
+import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
+import { TectraDeepPartial, TectraSliderTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxSliderChangeEvent, TxSliderMark, TxSliderOrientation, TxSliderPart, TxSliderValue } from './slider.types';
 
 const MAX_STEP_MARKS = 100;

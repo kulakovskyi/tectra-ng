@@ -18,7 +18,7 @@ actions: TxMenuItem[] = [
 
 `TxMenuItem`: `id`, `label`, `icon`, `iconSeverity` (in `tx-context-menu` the icon sits in a small filled button of this severity, `primary` by default — the look of a row action), `command({ item, originalEvent })`, `routerLink` (+ `queryParams`, `fragment`), `url` + `target`, `disabled`, `visible`, `separator`, `severity: 'danger'`, `badge`, `shortcut` (shown only — bind the keys yourself), `title`, `items` (a group in `tx-menu`, a sub-menu in `tx-tiered-menu` and `tx-context-menu`), `data`.
 
-A popup menu opens from `[txMenuTrigger]` (click, Arrow Down / Up), or from code: `menu.toggle($event)`, `menu.show(element, 'first' | 'last')`, `menu.hide()`. All three are in `@tectra/ui/menu`.
+A popup menu opens from `[txMenuTrigger]` (click, Arrow Down / Up), or from code: `menu.toggle($event)`, `menu.show(element, 'first' | 'last')`, `menu.hide()`. All three are in `@tectra-ng/ui/menu`.
 
 ## Inputs
 | Name | Description |

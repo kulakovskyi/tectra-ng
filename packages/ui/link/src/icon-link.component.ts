@@ -1,11 +1,11 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, inject, input } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { injectTranslations } from '@tectra/core/i18n';
-import { optionalBoolean } from '@tectra/core/utils';
-import { TxIcon, TxIconName, TxIconRegistry } from '@tectra/icons';
-import { TectraDeepPartial, TectraIconLinkTokens, toStyleObject } from '@tectra/themes';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectTranslations } from '@tectra-ng/core/i18n';
+import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TxIcon, TxIconName, TxIconRegistry } from '@tectra-ng/icons';
+import { TectraDeepPartial, TectraIconLinkTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxIconLinkPart, TxLinkCommands } from './link.types';
 
 @Component({

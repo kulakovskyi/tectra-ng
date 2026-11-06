@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TxMultiselect } from '@tectra/ui/multiselect';
+import { TxMultiselect } from '@tectra-ng/ui/multiselect';
 
 @Component({
   selector: 'multiselect-basic-example',

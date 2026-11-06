@@ -1,4 +1,4 @@
-import { ACCENT_PALETTES, INK_SURFACE, TectraAccent } from '@tectra/tokens';
+import { ACCENT_PALETTES, INK_SURFACE, TectraAccent } from '@tectra-ng/tokens';
 import { COMPONENT_TOKENS } from '../../components/component-tokens';
 import { createDarkSemantic } from '../../semantic/dark.semantic';
 import { createLightSemantic } from '../../semantic/light.semantic';

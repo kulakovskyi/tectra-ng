@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { TxFluid } from '@tectra/core/fluid';
+import { TxFluid } from '@tectra-ng/core/fluid';
 import { TxInputGroup } from './input-group.component';
 import { TxInputGroupAddon } from './input-group-addon.component';
 

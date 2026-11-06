@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxMenuItem } from '@tectra/ui/menu';
-import { TxSpeedDial, TxSpeedDialDirection } from '@tectra/ui/speed-dial';
+import { TxMenuItem } from '@tectra-ng/ui/menu';
+import { TxSpeedDial, TxSpeedDialDirection } from '@tectra-ng/ui/speed-dial';
 
 @Component({
   selector: 'speed-dial-directions-example',

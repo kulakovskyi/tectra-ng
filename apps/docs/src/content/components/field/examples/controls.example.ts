@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxField } from '@tectra/ui/field';
-import { TxIconField, TxInputIcon } from '@tectra/ui/icon-field';
-import { TxInput } from '@tectra/ui/input';
-import { TxInputGroup, TxInputGroupAddon } from '@tectra/ui/input-group';
-import { TxSelect } from '@tectra/ui/select';
+import { TxField } from '@tectra-ng/ui/field';
+import { TxIconField, TxInputIcon } from '@tectra-ng/ui/icon-field';
+import { TxInput } from '@tectra-ng/ui/input';
+import { TxInputGroup, TxInputGroupAddon } from '@tectra-ng/ui/input-group';
+import { TxSelect } from '@tectra-ng/ui/select';
 
 @Component({
   selector: 'field-controls-example',

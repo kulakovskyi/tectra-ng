@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TxInput } from '@tectra/ui/input';
+import { TxInput } from '@tectra-ng/ui/input';
 import { TxFloatLabel } from './float-label.component';
 import { TxIftaLabel } from './ifta-label.component';
 import { TxLabel } from './label.component';

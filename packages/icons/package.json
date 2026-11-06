@@ -1,1 +1,25 @@
-{ "name": "@tectra/icons", "version": "0.0.0", "license": "MIT" }
+{
+  "name": "@tectra-ng/icons",
+  "version": "0.1.0",
+  "description": "Icon set for tectra with the TxIcon Angular component.",
+  "license": "MIT",
+  "homepage": "https://tectra-ng.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kulakovskyi/tectra-ng.git",
+    "directory": "packages/icons"
+  },
+  "bugs": "https://github.com/kulakovskyi/tectra-ng/issues",
+  "keywords": [
+    "tectra",
+    "angular",
+    "icons",
+    "svg"
+  ],
+  "peerDependencies": {
+    "@angular/core": "^22.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

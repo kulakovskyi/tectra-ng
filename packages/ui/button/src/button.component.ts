@@ -13,13 +13,13 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { injectFluid } from '@tectra/core/fluid';
-import { TxRipple } from '@tectra/core/ripple';
-import { optionalBoolean, optionalNumber } from '@tectra/core/utils';
-import { TxIcon, TxIconName, TxIconRegistry } from '@tectra/icons';
-import { TectraButtonTokens, TectraDeepPartial, toStyleObject } from '@tectra/themes';
-import { TxBadge, TxBadgeSeverity } from '@tectra/ui/badge';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectFluid } from '@tectra-ng/core/fluid';
+import { TxRipple } from '@tectra-ng/core/ripple';
+import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
+import { TxIcon, TxIconName, TxIconRegistry } from '@tectra-ng/icons';
+import { TectraButtonTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
+import { TxBadge, TxBadgeSeverity } from '@tectra-ng/ui/badge';
 import { TxButtonIconTemplate, TxButtonLoadingIconTemplate } from './button-templates.directive';
 import { TxButtonIconPosition, TxButtonPart, TxButtonSeverity, TxButtonSize, TxButtonVariant } from './button.types';
 

@@ -1,4 +1,4 @@
-import { TxSelectPart } from '@tectra/ui/select';
+import { TxSelectPart } from '@tectra-ng/ui/select';
 
 export type TxListboxPart = Exclude<TxSelectPart, 'box' | 'trigger' | 'value' | 'clear' | 'dropdown' | 'panel'>;
 

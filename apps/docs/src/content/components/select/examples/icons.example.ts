@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxIcon } from '@tectra/icons';
-import { TxSelect, TxSelectOptionTemplate, TxSelectValueTemplate } from '@tectra/ui/select';
+import { TxIcon } from '@tectra-ng/icons';
+import { TxSelect, TxSelectOptionTemplate, TxSelectValueTemplate } from '@tectra-ng/ui/select';
 
 @Component({
   selector: 'select-icons-example',

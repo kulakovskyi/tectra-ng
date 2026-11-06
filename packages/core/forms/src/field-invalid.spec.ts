@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Directive, input } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { optionalBoolean } from '@tectra/core/utils';
+import { optionalBoolean } from '@tectra-ng/core/utils';
 import { injectFieldInvalid } from './field-invalid';
 
 @Directive({ selector: '[testField]', host: { '[attr.data-invalid]': 'isInvalid()' } })

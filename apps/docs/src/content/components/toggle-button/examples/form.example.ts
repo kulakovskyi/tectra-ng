@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TxToggleButton } from '@tectra/ui/toggle-button';
+import { TxToggleButton } from '@tectra-ng/ui/toggle-button';
 
 @Component({
   selector: 'toggle-button-form-example',

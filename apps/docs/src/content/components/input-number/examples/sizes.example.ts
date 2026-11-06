@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxInputNumber } from '@tectra/ui/input-number';
+import { TxInputNumber } from '@tectra-ng/ui/input-number';
 
 @Component({
   selector: 'input-number-sizes-example',

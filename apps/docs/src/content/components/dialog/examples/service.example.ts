@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TxButton } from '@tectra/ui/button';
+import { TxButton } from '@tectra-ng/ui/button';
 import {
   TxDialogClose,
   TxDialogContent,
@@ -8,9 +8,9 @@ import {
   TxDialogHeader,
   TxDialogService,
   injectDialogData,
-} from '@tectra/ui/dialog';
-import { TxField } from '@tectra/ui/field';
-import { TxInput } from '@tectra/ui/input';
+} from '@tectra-ng/ui/dialog';
+import { TxField } from '@tectra-ng/ui/field';
+import { TxInput } from '@tectra-ng/ui/input';
 
 @Component({
   selector: 'dialog-rename-project',

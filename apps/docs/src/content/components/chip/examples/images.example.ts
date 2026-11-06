@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxChip } from '@tectra/ui/chip';
+import { TxChip } from '@tectra-ng/ui/chip';
 
 @Component({
   selector: 'chip-images-example',

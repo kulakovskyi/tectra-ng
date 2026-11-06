@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TxIconField, TxInputClear, TxInputIcon } from '@tectra/ui/icon-field';
-import { TxInput } from '@tectra/ui/input';
+import { TxIconField, TxInputClear, TxInputIcon } from '@tectra-ng/ui/icon-field';
+import { TxInput } from '@tectra-ng/ui/input';
 
 @Component({
   selector: 'icon-field-clear-example',

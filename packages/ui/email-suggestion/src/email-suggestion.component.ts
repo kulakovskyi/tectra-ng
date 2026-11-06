@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { injectTranslations } from '@tectra/core/i18n';
-import { optionalBoolean } from '@tectra/core/utils';
-import { TxIconName } from '@tectra/icons';
-import { TectraDeepPartial, TectraEmailSuggestionTokens, toStyleObject } from '@tectra/themes';
-import { TxButton } from '@tectra/ui/button';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectTranslations } from '@tectra-ng/core/i18n';
+import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TxIconName } from '@tectra-ng/icons';
+import { TectraDeepPartial, TectraEmailSuggestionTokens, toStyleObject } from '@tectra-ng/themes';
+import { TxButton } from '@tectra-ng/ui/button';
 import { TxEmailSuggestionPart, TxEmailSuggestionResult } from './email-suggestion.types';
 import { TX_COMMON_EMAIL_DOMAINS, suggestEmail } from './suggest-email';
 

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TxCountrySelect } from '@tectra/ui/country-select';
-import { TxField } from '@tectra/ui/field';
+import { TxCountrySelect } from '@tectra-ng/ui/country-select';
+import { TxField } from '@tectra-ng/ui/field';
 
 @Component({
   selector: 'country-select-field-example',

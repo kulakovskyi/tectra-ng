@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxContextMenu, TxMenuItem, TxMenuItemEvent } from '@tectra/ui/menu';
+import { TxContextMenu, TxMenuItem, TxMenuItemEvent } from '@tectra-ng/ui/menu';
 
 interface StoredFile {
   name: string;

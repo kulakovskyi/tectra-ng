@@ -1,4 +1,4 @@
-import { SEVERITY_PALETTES, TectraColorScale, TectraColorStep, TectraSurfaceScale, shadows } from '@tectra/tokens';
+import { SEVERITY_PALETTES, TectraColorScale, TectraColorStep, TectraSurfaceScale, shadows } from '@tectra-ng/tokens';
 import { TectraPalettes } from '../types/preset.interface';
 import { TectraSemanticTokens, TectraSeverityTokens } from '../types/semantic-tokens.interface';
 

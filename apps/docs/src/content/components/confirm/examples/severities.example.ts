@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { TxButton } from '@tectra/ui/button';
-import { TxConfirmService, TxConfirmSeverity } from '@tectra/ui/confirm';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxConfirmService, TxConfirmSeverity } from '@tectra-ng/ui/confirm';
 
 @Component({
   selector: 'confirm-severities-example',

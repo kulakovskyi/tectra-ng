@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TxLocaleService } from '@tectra/core/i18n';
-import { TxSelect } from '@tectra/ui/select';
+import { TxLocaleService } from '@tectra-ng/core/i18n';
+import { TxSelect } from '@tectra-ng/ui/select';
 
 @Component({
   selector: 'docs-core-locale-page',

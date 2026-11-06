@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { TxButton } from '@tectra/ui/button';
-import { TxConfirmService } from '@tectra/ui/confirm';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxConfirmService } from '@tectra-ng/ui/confirm';
 
 @Component({
   selector: 'confirm-design-tokens-example',

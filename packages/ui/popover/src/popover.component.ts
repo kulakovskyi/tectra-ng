@@ -20,13 +20,13 @@ import {
   untracked,
   viewChild,
 } from '@angular/core';
-import { nextTabbable, tabbableElements, uniqueId } from '@tectra/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { injectTranslations } from '@tectra/core/i18n';
-import { TxOverlay, TxOverlayRef, TxOverlayScroll, TxPlacement, parsePlacement, txArrowOffset } from '@tectra/core/overlay';
-import { optionalBoolean } from '@tectra/core/utils';
-import { TxIcon } from '@tectra/icons';
-import { TectraDeepPartial, TectraPopoverTokens, toStyleObject } from '@tectra/themes';
+import { nextTabbable, tabbableElements, uniqueId } from '@tectra-ng/core/a11y';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectTranslations } from '@tectra-ng/core/i18n';
+import { TxOverlay, TxOverlayRef, TxOverlayScroll, TxPlacement, parsePlacement, txArrowOffset } from '@tectra-ng/core/overlay';
+import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TxIcon } from '@tectra-ng/icons';
+import { TectraDeepPartial, TectraPopoverTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxPopoverContent, TxPopoverFooter, TxPopoverHeader } from './popover-slots.directive';
 import { TxPopoverAutoFocus, TxPopoverCloseReason, TxPopoverContentContext, TxPopoverPart, TxPopoverTarget } from './popover.types';
 

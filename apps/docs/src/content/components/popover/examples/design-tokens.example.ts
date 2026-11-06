@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxButton } from '@tectra/ui/button';
-import { TxPopover, TxPopoverTrigger } from '@tectra/ui/popover';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxPopover, TxPopoverTrigger } from '@tectra-ng/ui/popover';
 
 @Component({
   selector: 'popover-design-tokens-example',

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TxDialogClose } from '@tectra/ui/dialog';
+import { TxDialogClose } from '@tectra-ng/ui/dialog';
 import { TxDrawer, TxDrawerFooter } from './drawer.component';
 
 @Component({

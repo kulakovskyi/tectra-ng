@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxPanel } from '@tectra/ui/panel';
-import { TxButton } from '@tectra/ui/button';
-import { TxPill } from '@tectra/ui/pill';
-import { TxInput } from '@tectra/ui/input';
+import { TxPanel } from '@tectra-ng/ui/panel';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxPill } from '@tectra-ng/ui/pill';
+import { TxInput } from '@tectra-ng/ui/input';
 
 @Component({
   selector: 'panel-header-and-footer-example',

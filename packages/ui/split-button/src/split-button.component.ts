@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, ElementRef, booleanAttribute, computed, input, output, viewChild } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { injectTranslations } from '@tectra/core/i18n';
-import { optionalBoolean } from '@tectra/core/utils';
-import { TectraDeepPartial, TectraSplitButtonTokens, toStyleObject } from '@tectra/themes';
-import { TxButton, TxButtonSeverity, TxButtonSize } from '@tectra/ui/button';
-import { TxButtonGroup } from '@tectra/ui/button-group';
-import { TxMenu, TxMenuFocus, TxMenuItem, TxMenuItemEvent } from '@tectra/ui/menu';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectTranslations } from '@tectra-ng/core/i18n';
+import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TectraDeepPartial, TectraSplitButtonTokens, toStyleObject } from '@tectra-ng/themes';
+import { TxButton, TxButtonSeverity, TxButtonSize } from '@tectra-ng/ui/button';
+import { TxButtonGroup } from '@tectra-ng/ui/button-group';
+import { TxMenu, TxMenuFocus, TxMenuItem, TxMenuItemEvent } from '@tectra-ng/ui/menu';
 import { TxSplitButtonPart } from './split-button.types';
 
 @Component({

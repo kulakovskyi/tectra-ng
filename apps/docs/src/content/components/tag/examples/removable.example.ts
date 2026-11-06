@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxTag } from '@tectra/ui/tag';
+import { TxTag } from '@tectra-ng/ui/tag';
 
 @Component({
   selector: 'tag-removable-example',

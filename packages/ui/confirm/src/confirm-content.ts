@@ -1,6 +1,6 @@
 import { Signal, WritableSignal, computed, signal } from '@angular/core';
-import { injectTranslations } from '@tectra/core/i18n';
-import { toStyleObject } from '@tectra/themes';
+import { injectTranslations } from '@tectra-ng/core/i18n';
+import { toStyleObject } from '@tectra-ng/themes';
 import { TxConfirmSeverity, TxConfirmState } from './confirm.types';
 
 const ICONS: Record<TxConfirmSeverity, string> = {

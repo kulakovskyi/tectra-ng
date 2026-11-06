@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxButton } from '@tectra/ui/button';
-import { TxMessage } from '@tectra/ui/message';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxMessage } from '@tectra-ng/ui/message';
 
 @Component({
   selector: 'message-closable-example',

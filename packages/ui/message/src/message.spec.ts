@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TECTRA_CONFIG } from '@tectra/core/config';
-import { TxLocaleService } from '@tectra/core/i18n';
-import { InkPreset } from '@tectra/themes';
-import { TxInput } from '@tectra/ui/input';
+import { TECTRA_CONFIG } from '@tectra-ng/core/config';
+import { TxLocaleService } from '@tectra-ng/core/i18n';
+import { InkPreset } from '@tectra-ng/themes';
+import { TxInput } from '@tectra-ng/ui/input';
 import { TxFieldError } from './field-error.component';
 import { TxFieldHint } from './field-hint.component';
 import { TxMessageCloseIconTemplate, TxMessageIconTemplate } from './message-templates.directive';

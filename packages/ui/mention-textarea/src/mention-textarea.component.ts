@@ -16,14 +16,14 @@ import {
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { injectFieldInvalid } from '@tectra/core/forms';
-import { TxOverlayInsets, txPositions, watchOrigin, TxOverlayAnchor, txScrollStrategy } from '@tectra/core/overlay';
-import { optionalBoolean } from '@tectra/core/utils';
-import { TectraDeepPartial, TectraMentionTokens, toStyleObject } from '@tectra/themes';
-import { TxAvatar } from '@tectra/ui/avatar';
-import { TxOptionList, TxOptionsBase, TxSelectItem, isSelectableRow } from '@tectra/ui/select';
-import { TxTextarea } from '@tectra/ui/textarea';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectFieldInvalid } from '@tectra-ng/core/forms';
+import { TxOverlayInsets, txPositions, watchOrigin, TxOverlayAnchor, txScrollStrategy } from '@tectra-ng/core/overlay';
+import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TectraDeepPartial, TectraMentionTokens, toStyleObject } from '@tectra-ng/themes';
+import { TxAvatar } from '@tectra-ng/ui/avatar';
+import { TxOptionList, TxOptionsBase, TxSelectItem, isSelectableRow } from '@tectra-ng/ui/select';
+import { TxTextarea } from '@tectra-ng/ui/textarea';
 import { caretPoint } from './caret';
 import { TxMentionItem, TxMentionTextareaPart } from './mention-textarea.types';
 

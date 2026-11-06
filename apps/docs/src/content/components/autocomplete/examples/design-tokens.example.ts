@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxAutocomplete } from '@tectra/ui/autocomplete';
+import { TxAutocomplete } from '@tectra-ng/ui/autocomplete';
 
 @Component({
   selector: 'autocomplete-design-tokens-example',

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { TxButton } from '@tectra/ui/button';
-import { TxToast, TxToastService } from '@tectra/ui/toast';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxToast, TxToastService } from '@tectra-ng/ui/toast';
 
 @Component({
   selector: 'toast-design-tokens-example',

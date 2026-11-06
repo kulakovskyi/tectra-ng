@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxTable, TxTableColumn, TxTableFooterCell } from '@tectra/ui/table';
+import { TxTable, TxTableColumn, TxTableFooterCell } from '@tectra-ng/ui/table';
 
 interface Invoice {
   id: number;

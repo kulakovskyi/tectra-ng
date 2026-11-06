@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, contentChildren, inject, input } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { injectTranslations } from '@tectra/core/i18n';
-import { optionalBoolean, optionalNumber } from '@tectra/core/utils';
-import { TectraAvatarTokens, TectraDeepPartial, toStyleObject } from '@tectra/themes';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectTranslations } from '@tectra-ng/core/i18n';
+import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
+import { TectraAvatarTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TX_AVATAR_GROUP, TxAvatarGroupContext } from './avatar-group.token';
 import { TxAvatar } from './avatar.component';
 import { TxAvatarGroupPart, TxAvatarShape, TxAvatarSize } from './avatar.types';

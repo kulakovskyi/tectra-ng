@@ -1,6 +1,6 @@
-# @tectra/tokens
+# @tectra-ng/tokens
 
-Primitive design tokens — plain data, no Angular, no meaning yet. `@tectra/themes` gives them meaning (what is "primary", "surface", "danger" in light and dark).
+Primitive design tokens — plain data, no Angular, no meaning yet. `@tectra-ng/themes` gives them meaning (what is "primary", "surface", "danger" in light and dark).
 
 | File | What it holds |
 |---|---|

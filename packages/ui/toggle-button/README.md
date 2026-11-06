@@ -7,7 +7,7 @@ A button that stays pressed: on / off with its own label and icon for each state
 |---|---|
 | onLabel | Text while on |
 | offLabel | Text while off |
-| onIcon | Icon while on — a `@tectra/icons` name or any icon class (`pi pi-check`) |
+| onIcon | Icon while on — a `@tectra-ng/icons` name or any icon class (`pi pi-check`) |
 | offIcon | Icon while off |
 | iconPos | Icon on the `left` or `right` of the text |
 | size | `small`, `medium`, `large` |

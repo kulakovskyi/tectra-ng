@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TxEmailSuggestion } from '@tectra/ui/email-suggestion';
-import { TxField } from '@tectra/ui/field';
-import { TxInput } from '@tectra/ui/input';
+import { TxEmailSuggestion } from '@tectra-ng/ui/email-suggestion';
+import { TxField } from '@tectra-ng/ui/field';
+import { TxInput } from '@tectra-ng/ui/input';
 
 @Component({
   selector: 'email-suggestion-basic-example',

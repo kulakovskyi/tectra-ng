@@ -17,11 +17,11 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { uniqueId } from '@tectra/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { TxOverlay, TxOverlayRef, TxPlacement } from '@tectra/core/overlay';
-import { optionalBoolean } from '@tectra/core/utils';
-import { TectraDeepPartial, TectraMenuTokens, toStyleObject } from '@tectra/themes';
+import { uniqueId } from '@tectra-ng/core/a11y';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { TxOverlay, TxOverlayRef, TxPlacement } from '@tectra-ng/core/overlay';
+import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TectraDeepPartial, TectraMenuTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxMenuFocus, TxMenuList, TxMenuVariant } from './menu-list.component';
 import { TxMenuItem, TxMenuItemContext, TxMenuItemEvent, TxMenuPart } from './menu.types';
 

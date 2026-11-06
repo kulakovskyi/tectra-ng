@@ -1,4 +1,4 @@
-# @tectra/themes
+# @tectra-ng/themes
 
 Gives the primitive tokens a meaning. A preset = semantic tokens for light + dark, built from an accent palette and the surface palette.
 
@@ -12,4 +12,4 @@ Gives the primitive tokens a meaning. A preset = semantic tokens for light + dar
 
 Semantic groups (each becomes `--tx-<group>-<key>`): `primary`, `secondary`, `success`, `info`, `warn`, `danger`, `help`, `contrast`, `surface`, `text`, `field`, `highlight`, `list`, `mask`, `focus-ring`, `shadow`. Shared: `radius`, `space`, `font`, `motion`.
 
-Depends on: `@tectra/tokens`.
+Depends on: `@tectra-ng/tokens`.

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxAutocomplete, TxAutocompleteCompleteEvent } from '@tectra/ui/autocomplete';
+import { TxAutocomplete, TxAutocompleteCompleteEvent } from '@tectra-ng/ui/autocomplete';
 
 interface Repository {
   name: string;

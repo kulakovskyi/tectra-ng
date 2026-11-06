@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxButton } from '@tectra/ui/button';
+import { TxButton } from '@tectra-ng/ui/button';
 import {
   TxTable,
   TxTableAction,
   TxTableActions,
   TxTableActionsTemplate,
   TxTableColumn,
-} from '@tectra/ui/table';
+} from '@tectra-ng/ui/table';
 
 interface Invoice {
   id: number;

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxMenuItem } from '@tectra/ui/menu';
-import { TxSplitButton } from '@tectra/ui/split-button';
+import { TxMenuItem } from '@tectra-ng/ui/menu';
+import { TxSplitButton } from '@tectra-ng/ui/split-button';
 
 @Component({
   selector: 'split-button-nested-example',

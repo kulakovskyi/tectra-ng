@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, forwardRef, inject, input, output } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { uniqueId } from '@tectra/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { TxFormControlBase, injectFieldInvalid } from '@tectra/core/forms';
-import { optionalBoolean } from '@tectra/core/utils';
-import { TectraDeepPartial, TectraRadioButtonTokens, toStyleObject } from '@tectra/themes';
+import { uniqueId } from '@tectra-ng/core/a11y';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
+import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TectraDeepPartial, TectraRadioButtonTokens, toStyleObject } from '@tectra-ng/themes';
 import { TX_RADIO_GROUP, TxRadioGroupContext } from './radio-group.token';
 import { TxRadioButtonSize, TxRadioButtonVariant, TxRadioGroupOrientation, TxRadioGroupPart } from './radio-button.types';
 

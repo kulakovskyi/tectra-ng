@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TxLocaleService } from '@tectra/core/i18n';
+import { TxLocaleService } from '@tectra-ng/core/i18n';
 import { TxAmount } from './amount.component';
 import { formatAmount, parseDigitsInfo } from './format-amount';
 

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TxField } from '@tectra/ui/field';
-import { TxInput } from '@tectra/ui/input';
+import { TxField } from '@tectra-ng/ui/field';
+import { TxInput } from '@tectra-ng/ui/input';
 
 @Component({
   selector: 'field-success-example',

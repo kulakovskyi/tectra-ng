@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxFluid } from '@tectra/core/fluid';
-import { TxButton } from '@tectra/ui/button';
+import { TxFluid } from '@tectra-ng/core/fluid';
+import { TxButton } from '@tectra-ng/ui/button';
 
 @Component({
   selector: 'button-fluid-example',

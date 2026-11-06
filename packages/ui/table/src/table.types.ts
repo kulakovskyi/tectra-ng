@@ -1,4 +1,4 @@
-import { TxPageState } from '@tectra/ui/paginator';
+import { TxPageState } from '@tectra-ng/ui/paginator';
 
 export type TxTableSize = 'small' | 'medium' | 'large';
 export type TxSortOrder = 'asc' | 'desc' | null;

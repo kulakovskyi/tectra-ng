@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxProgressBar, TxProgressBarValueTemplate } from '@tectra/ui/progress-bar';
+import { TxProgressBar, TxProgressBarValueTemplate } from '@tectra-ng/ui/progress-bar';
 
 @Component({
   selector: 'progress-bar-template-example',

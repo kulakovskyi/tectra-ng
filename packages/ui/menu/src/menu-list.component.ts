@@ -18,11 +18,11 @@ import {
   viewChild,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { TxTypeahead, nextListIndex, uniqueId } from '@tectra/core/a11y';
-import { TxResolvedPassThrough } from '@tectra/core/config';
-import { TxOverlay, TxOverlayRef } from '@tectra/core/overlay';
-import { TxIcon } from '@tectra/icons';
-import { TxBadge } from '@tectra/ui/badge';
+import { TxTypeahead, nextListIndex, uniqueId } from '@tectra-ng/core/a11y';
+import { TxResolvedPassThrough } from '@tectra-ng/core/config';
+import { TxOverlay, TxOverlayRef } from '@tectra-ng/core/overlay';
+import { TxIcon } from '@tectra-ng/icons';
+import { TxBadge } from '@tectra-ng/ui/badge';
 import { TxMenuItem, TxMenuItemContext, TxMenuItemEvent, TxMenuPart } from './menu.types';
 
 const HOVER_DELAY = 120;

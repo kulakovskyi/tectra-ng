@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxPassword } from '@tectra/ui/password';
+import { TxPassword } from '@tectra-ng/ui/password';
 
 @Component({
   selector: 'password-sizes-example',

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxPassThroughContext } from '@tectra/core/config';
-import { TxSelect } from '@tectra/ui/select';
+import { TxPassThroughContext } from '@tectra-ng/core/config';
+import { TxSelect } from '@tectra-ng/ui/select';
 
 @Component({
   selector: 'select-pass-through-example',

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxInput } from '@tectra/ui/input';
+import { TxInput } from '@tectra-ng/ui/input';
 
 @Component({
   selector: 'input-fluid-example',

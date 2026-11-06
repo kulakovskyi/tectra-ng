@@ -7,9 +7,9 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { TxButton } from '@tectra/ui/button';
-import { TxField } from '@tectra/ui/field';
-import { TxPassword } from '@tectra/ui/password';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxField } from '@tectra-ng/ui/field';
+import { TxPassword } from '@tectra-ng/ui/password';
 
 @Component({
   selector: 'password-form-example',

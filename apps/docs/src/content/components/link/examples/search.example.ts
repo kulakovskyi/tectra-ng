@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxLink } from '@tectra/ui/link';
-import { TxInput } from '@tectra/ui/input';
+import { TxLink } from '@tectra-ng/ui/link';
+import { TxInput } from '@tectra-ng/ui/input';
 
 @Component({
   selector: 'link-search-example',

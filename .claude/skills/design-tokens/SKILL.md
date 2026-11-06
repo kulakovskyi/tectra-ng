@@ -1,6 +1,6 @@
 ---
 name: design-tokens
-description: Use when adding or changing tectra design tokens — primitives in @tectra/tokens, semantic light/dark tokens, component tokens in @tectra/themes, presets (createInkPreset, definePreset), CSS variable names, dt on a component, dark mode.
+description: Use when adding or changing tectra design tokens — primitives in @tectra-ng/tokens, semantic light/dark tokens, component tokens in @tectra-ng/themes, presets (createInkPreset, definePreset), CSS variable names, dt on a component, dark mode.
 ---
 
 # Design tokens in tectra

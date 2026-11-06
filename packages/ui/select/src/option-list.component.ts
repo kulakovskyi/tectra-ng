@@ -14,9 +14,9 @@ import {
   output,
   viewChild,
 } from '@angular/core';
-import { TxResolvedPassThrough } from '@tectra/core/config';
-import { TxIcon } from '@tectra/icons';
-import { TxSkeleton } from '@tectra/ui/skeleton';
+import { TxResolvedPassThrough } from '@tectra-ng/core/config';
+import { TxIcon } from '@tectra-ng/icons';
+import { TxSkeleton } from '@tectra-ng/ui/skeleton';
 import { TxSelectGroupRow, TxSelectItem, TxSelectOptionContext, TxSelectPart, TxSelectRow } from './select.types';
 
 interface TxOptionSection {

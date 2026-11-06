@@ -3,12 +3,12 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs';
-import { TxThemeService } from '@tectra/core/config';
-import { TxOverlayInset } from '@tectra/core/overlay';
-import { createInkPreset } from '@tectra/themes';
-import { TectraAccent } from '@tectra/tokens';
-import { TxButton } from '@tectra/ui/button';
-import { TxToast } from '@tectra/ui/toast';
+import { TxThemeService } from '@tectra-ng/core/config';
+import { TxOverlayInset } from '@tectra-ng/core/overlay';
+import { createInkPreset } from '@tectra-ng/themes';
+import { TectraAccent } from '@tectra-ng/tokens';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxToast } from '@tectra-ng/ui/toast';
 import { HEADER_LINKS } from '../data/header-links.data';
 import { THEME_ACCENTS } from '../data/theme-accents.data';
 import { DocsSidebar } from './sidebar/docs-sidebar';

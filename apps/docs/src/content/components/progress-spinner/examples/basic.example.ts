@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxProgressSpinner } from '@tectra/ui/progress-spinner';
+import { TxProgressSpinner } from '@tectra-ng/ui/progress-spinner';
 
 @Component({
   selector: 'progress-spinner-basic-example',

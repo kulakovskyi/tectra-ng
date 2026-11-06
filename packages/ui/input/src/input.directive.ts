@@ -1,10 +1,10 @@
 import { Directive, computed, inject, input } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { injectFluid } from '@tectra/core/fluid';
-import { injectFieldFilled, injectFieldInvalid } from '@tectra/core/forms';
-import { TxStyleLoader } from '@tectra/core/styles';
-import { optionalBoolean } from '@tectra/core/utils';
-import { TectraDeepPartial, TectraFormFieldTokens, toStyleObject } from '@tectra/themes';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectFluid } from '@tectra-ng/core/fluid';
+import { injectFieldFilled, injectFieldInvalid } from '@tectra-ng/core/forms';
+import { TxStyleLoader } from '@tectra-ng/core/styles';
+import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TectraDeepPartial, TectraFormFieldTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxInputStyles } from './input.styles';
 import { TxFieldVariant, TxInputPart, TxInputSize } from './input.types';
 

@@ -1,4 +1,4 @@
-import { ACCENT_PALETTES, TectraAccent } from '@tectra/tokens';
+import { ACCENT_PALETTES, TectraAccent } from '@tectra-ng/tokens';
 
 export const THEME_ACCENTS: { label: string; value: TectraAccent; color: string }[] = (
   ['blue', 'green', 'purple', 'cyan', 'teal'] as TectraAccent[]

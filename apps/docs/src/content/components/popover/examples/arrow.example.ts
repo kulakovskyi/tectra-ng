@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxPlacement } from '@tectra/core/overlay';
-import { TxButton } from '@tectra/ui/button';
-import { TxPopover, TxPopoverTrigger } from '@tectra/ui/popover';
+import { TxPlacement } from '@tectra-ng/core/overlay';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxPopover, TxPopoverTrigger } from '@tectra-ng/ui/popover';
 
 @Component({
   selector: 'popover-arrow-example',

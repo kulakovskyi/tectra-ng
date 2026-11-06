@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { TECTRA_CONFIG } from '@tectra/core/config';
-import { InkPreset } from '@tectra/themes';
+import { TECTRA_CONFIG } from '@tectra-ng/core/config';
+import { InkPreset } from '@tectra-ng/themes';
 import { TxOverlayInsets, txViewportMargin } from './overlay-insets.service';
 
 function element(style: Partial<CSSStyleDeclaration>, top: number, height: number): HTMLElement {

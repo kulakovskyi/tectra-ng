@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TxButton } from '@tectra/ui/button';
-import { TxInput } from '@tectra/ui/input';
-import { TxLabel } from '@tectra/ui/label';
-import { TxFieldError, TxMessage } from '@tectra/ui/message';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxInput } from '@tectra-ng/ui/input';
+import { TxLabel } from '@tectra-ng/ui/label';
+import { TxFieldError, TxMessage } from '@tectra-ng/ui/message';
 
 @Component({
   selector: 'message-field-error-example',

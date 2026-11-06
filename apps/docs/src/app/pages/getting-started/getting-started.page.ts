@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxButton } from '@tectra/ui/button';
+import { TxButton } from '@tectra-ng/ui/button';
 import { CodeBlock } from '../../doc-ui/code-block/code-block';
 import { INSTALL_STEPS } from '../../data/install.data';
 

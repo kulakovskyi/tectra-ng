@@ -14,7 +14,7 @@ Icons, text, a clear button or a copy button inside a field. Items before the in
 | Name | Description |
 |---|---|
 | fluid | Takes the full width of its container; inherits `<tx-fluid>` |
-| icon | `tx-input-icon`: a `@tectra/icons` name, a registered icon or any icon class; or put text / markup inside (prefix, suffix, unit) |
+| icon | `tx-input-icon`: a `@tectra-ng/icons` name, a registered icon or any icon class; or put text / markup inside (prefix, suffix, unit) |
 | position | `tx-input-icon`: `start` (default) or `end` — a static attribute, `position="end"` |
 
 ## Outputs

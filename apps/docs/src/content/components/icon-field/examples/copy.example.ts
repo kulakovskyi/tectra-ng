@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxIconField, TxInputCopy, TxInputIcon } from '@tectra/ui/icon-field';
-import { TxInput } from '@tectra/ui/input';
+import { TxIconField, TxInputCopy, TxInputIcon } from '@tectra-ng/ui/icon-field';
+import { TxInput } from '@tectra-ng/ui/input';
 
 @Component({
   selector: 'icon-field-copy-example',

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxIcon } from '@tectra/icons';
-import { TxToggleSwitch, TxToggleSwitchHandleTemplate } from '@tectra/ui/toggle-switch';
+import { TxIcon } from '@tectra-ng/icons';
+import { TxToggleSwitch, TxToggleSwitchHandleTemplate } from '@tectra-ng/ui/toggle-switch';
 
 @Component({
   selector: 'toggle-switch-handle-template-example',

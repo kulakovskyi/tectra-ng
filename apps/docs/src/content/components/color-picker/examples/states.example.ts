@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TxColorPicker } from '@tectra/ui/color-picker';
+import { TxColorPicker } from '@tectra-ng/ui/color-picker';
 
 @Component({
   selector: 'color-picker-states-example',

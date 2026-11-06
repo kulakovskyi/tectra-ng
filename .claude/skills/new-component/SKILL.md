@@ -22,7 +22,7 @@ packages/ui/<name>/
     <name>.spec.ts         Vitest
 ```
 
-No alias to register (`@tectra/ui/*` is a wildcard). Several related pieces share one entry point (`ui/label` = label + float label + ifta label). Reference implementations: `ui/button` (component, severities, loading, badge, ripple), `ui/input` (directive on a native element + global styles), `ui/select` (form control + overlay + keyboard), `ui/label` (content projection, state read from projected fields).
+No alias to register (`@tectra-ng/ui/*` is a wildcard). Several related pieces share one entry point (`ui/label` = label + float label + ifta label). Reference implementations: `ui/button` (component, severities, loading, badge, ripple), `ui/input` (directive on a native element + global styles), `ui/select` (form control + overlay + keyboard), `ui/label` (content projection, state read from projected fields).
 
 ## 2. Component class
 
@@ -54,14 +54,14 @@ export class Tx<Name> {
 }
 ```
 
-- `dt` — design tokens of THIS instance: `toStyleObject(dt, '--tx-<kebab-token-key>')` writes them as CSS variables on the host. Type = the component's token type from `@tectra/themes` (skill `design-tokens`).
+- `dt` — design tokens of THIS instance: `toStyleObject(dt, '--tx-<kebab-token-key>')` writes them as CSS variables on the host. Type = the component's token type from `@tectra-ng/themes` (skill `design-tokens`).
 - `pt` — extra `class` / `style` (object, or a function `({ instance }) => …`) per named part. `Tx<Name>Part` lists the parts (`'root' | 'label' | 'icon' …`); bind `passThrough().<part>?.class/style` on each part element. The global value comes from `provideTectra({ pt: { <name>: … } })` (the string passed to `injectPassThrough`).
 - `ptOptions` — `mergeSections` (default true), `mergeProps` (default false).
 - `unstyled` — global or local; styles are scoped to `[data-styled]`, so an unstyled component keeps only behaviour and ARIA.
 - Inputs that inherit (form state, `<tx-fluid>`, config) are `boolean | undefined` + `optionalBoolean`; resolve with `injectFieldInvalid(this.invalid)`, `injectFluid(this.fluid)`, `injectUnstyled(this.unstyled)`.
 - Outputs are verbs in past tense or plain events (`opened`, `closed`, `valueChange`). Two-way values use `model()`.
-- Texts the component renders itself (aria labels, "No results", "Copy") come from `injectTranslations()` (`@tectra/core/i18n`); add the key to every locale in `packages/core/i18n/src/locales.ts` and the type in `@tectra/core/config`.
-- Ids for ARIA wiring: `uniqueId('tx-<name>')` from `@tectra/core/a11y`.
+- Texts the component renders itself (aria labels, "No results", "Copy") come from `injectTranslations()` (`@tectra-ng/core/i18n`); add the key to every locale in `packages/core/i18n/src/locales.ts` and the type in `@tectra-ng/core/config`.
+- Ids for ARIA wiring: `uniqueId('tx-<name>')` from `@tectra-ng/core/a11y`.
 
 ## 3. Directive on a native element
 
@@ -78,11 +78,11 @@ export class Tx<Name> {
 
 ## 5. Forms
 
-Value controls extend `TxFormControlBase<T>` (`@tectra/core/forms`) and provide `NG_VALUE_ACCESSOR` — they work with `formControl`, `ngModel` and signal forms. Read invalid / filled state with `injectFieldInvalid`, `injectFieldFilled`. Expose `inputId`, `ariaLabel`, `ariaLabelledBy` so `<tx-label>` / `<tx-float-label>` can name the field; add `tx-<name>--filled` / `--open` / `--invalid` host classes when float labels must react.
+Value controls extend `TxFormControlBase<T>` (`@tectra-ng/core/forms`) and provide `NG_VALUE_ACCESSOR` — they work with `formControl`, `ngModel` and signal forms. Read invalid / filled state with `injectFieldInvalid`, `injectFieldFilled`. Expose `inputId`, `ariaLabel`, `ariaLabelledBy` so `<tx-label>` / `<tx-float-label>` can name the field; add `tx-<name>--filled` / `--open` / `--invalid` host classes when float labels must react.
 
 ## 6. Overlays
 
-Panels use CDK connected overlay with `txPositions` / `placementFromPosition` and `txAnimateEnter` / `txAnimateLeave` (`@tectra/core/overlay`); keep the panel mounted until the leave animation ends; set `cdkConnectedOverlayDisableClose` and close yourself so the leave animation runs. Panel CSS variables live on the panel element (the overlay is outside the host). Focus trap / list navigation / typeahead / announcer: `@tectra/core/a11y`.
+Panels use CDK connected overlay with `txPositions` / `placementFromPosition` and `txAnimateEnter` / `txAnimateLeave` (`@tectra-ng/core/overlay`); keep the panel mounted until the leave animation ends; set `cdkConnectedOverlayDisableClose` and close yourself so the leave animation runs. Panel CSS variables live on the panel element (the overlay is outside the host). Focus trap / list navigation / typeahead / announcer: `@tectra-ng/core/a11y`.
 
 ## 7. Accessibility
 

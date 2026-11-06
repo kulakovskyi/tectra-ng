@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { optionalBoolean } from '@tectra/core/utils';
-import { TectraBadgeTokens, TectraDeepPartial, toStyleObject } from '@tectra/themes';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TectraBadgeTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TxBadgePart, TxBadgeSeverity, TxBadgeSize } from './badge.types';
 
 @Component({

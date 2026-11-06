@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxSelect, TxSelectFilterEvent, TxSelectLazyLoadEvent } from '@tectra/ui/select';
+import { TxSelect, TxSelectFilterEvent, TxSelectLazyLoadEvent } from '@tectra-ng/ui/select';
 
 interface Customer {
   label: string;

@@ -1,7 +1,7 @@
 import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TxCheckbox } from '@tectra/ui/checkbox';
+import { TxCheckbox } from '@tectra-ng/ui/checkbox';
 
 @Component({
   selector: 'checkbox-array-example',

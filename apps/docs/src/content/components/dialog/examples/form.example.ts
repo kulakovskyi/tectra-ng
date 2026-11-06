@@ -1,17 +1,17 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { TxAutocomplete, TxAutocompleteCompleteEvent } from '@tectra/ui/autocomplete';
-import { TxButton } from '@tectra/ui/button';
-import { TxCascadeSelect } from '@tectra/ui/cascade-select';
-import { TxChipsInput } from '@tectra/ui/chips-input';
-import { TxCountrySelect } from '@tectra/ui/country-select';
-import { TxDialog, TxDialogFooter } from '@tectra/ui/dialog';
-import { TxInput } from '@tectra/ui/input';
-import { TxLabel } from '@tectra/ui/label';
-import { TxMultiselect } from '@tectra/ui/multiselect';
-import { TxSelect } from '@tectra/ui/select';
-import { TxTextarea } from '@tectra/ui/textarea';
-import { TxTreeNode, TxTreeSelect } from '@tectra/ui/tree-select';
+import { TxAutocomplete, TxAutocompleteCompleteEvent } from '@tectra-ng/ui/autocomplete';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxCascadeSelect } from '@tectra-ng/ui/cascade-select';
+import { TxChipsInput } from '@tectra-ng/ui/chips-input';
+import { TxCountrySelect } from '@tectra-ng/ui/country-select';
+import { TxDialog, TxDialogFooter } from '@tectra-ng/ui/dialog';
+import { TxInput } from '@tectra-ng/ui/input';
+import { TxLabel } from '@tectra-ng/ui/label';
+import { TxMultiselect } from '@tectra-ng/ui/multiselect';
+import { TxSelect } from '@tectra-ng/ui/select';
+import { TxTextarea } from '@tectra-ng/ui/textarea';
+import { TxTreeNode, TxTreeSelect } from '@tectra-ng/ui/tree-select';
 
 const CITIES = [
   'Amsterdam',

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxPill, TxPillTone } from '@tectra/ui/pill';
+import { TxPill, TxPillTone } from '@tectra-ng/ui/pill';
 
 @Component({
   selector: 'pill-tones-example',

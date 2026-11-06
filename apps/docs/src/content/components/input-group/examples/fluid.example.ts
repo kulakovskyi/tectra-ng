@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxButton } from '@tectra/ui/button';
-import { TxInput } from '@tectra/ui/input';
-import { TxInputGroup, TxInputGroupAddon } from '@tectra/ui/input-group';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxInput } from '@tectra-ng/ui/input';
+import { TxInputGroup, TxInputGroupAddon } from '@tectra-ng/ui/input-group';
 
 @Component({
   selector: 'input-group-fluid-example',

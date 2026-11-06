@@ -1,7 +1,7 @@
 import { Directive, DestroyRef, Signal, booleanAttribute, computed, contentChild, effect, inject, input, output, signal, untracked, viewChild } from '@angular/core';
-import { TxTypeahead, nextListIndex, uniqueId } from '@tectra/core/a11y';
-import { TxFormControlBase } from '@tectra/core/forms';
-import { injectTranslations } from '@tectra/core/i18n';
+import { TxTypeahead, nextListIndex, uniqueId } from '@tectra-ng/core/a11y';
+import { TxFormControlBase } from '@tectra-ng/core/forms';
+import { injectTranslations } from '@tectra-ng/core/i18n';
 import { TxOptionList, TxOptionRange } from './option-list.component';
 import {
   TxSelectEmptyFilterTemplate,

@@ -1,13 +1,13 @@
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
-import { TxOverlayAnchor } from '@tectra/core/overlay';
+import { TxOverlayAnchor } from '@tectra-ng/core/overlay';
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, contentChild, forwardRef, input, output, signal } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { optionalBoolean } from '@tectra/core/utils';
-import { TxIcon, TxIconName } from '@tectra/icons';
-import { TectraDeepPartial, TectraSelectTokens, toStyleObject } from '@tectra/themes';
-import { TxOptionList, TxSelectBase, TxSelectItem, TxSelectValueTemplate, isSelectableRow } from '@tectra/ui/select';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TxIcon, TxIconName } from '@tectra-ng/icons';
+import { TectraDeepPartial, TectraSelectTokens, toStyleObject } from '@tectra-ng/themes';
+import { TxOptionList, TxSelectBase, TxSelectItem, TxSelectValueTemplate, isSelectableRow } from '@tectra-ng/ui/select';
 import { TxMultiselectChangeEvent, TxMultiselectDisplay, TxMultiselectPart } from './multiselect.types';
 
 @Component({

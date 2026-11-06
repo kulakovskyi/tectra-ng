@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxPaginator } from '@tectra/ui/paginator';
-import { TxToggleSwitch } from '@tectra/ui/toggle-switch';
+import { TxPaginator } from '@tectra-ng/ui/paginator';
+import { TxToggleSwitch } from '@tectra-ng/ui/toggle-switch';
 import { FormsModule } from '@angular/forms';
 
 @Component({

@@ -1,5 +1,5 @@
-import { TxPlacement } from '@tectra/core/overlay';
-import { TectraConfirmTokens, TectraDeepPartial } from '@tectra/themes';
+import { TxPlacement } from '@tectra-ng/core/overlay';
+import { TectraConfirmTokens, TectraDeepPartial } from '@tectra-ng/themes';
 
 export type TxConfirmSeverity = 'primary' | 'info' | 'success' | 'warn' | 'danger';
 export type TxConfirmFocus = 'accept' | 'reject';

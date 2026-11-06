@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, output, signal } from '@angular/core';
-import { injectTranslations } from '@tectra/core/i18n';
-import { TxIcon } from '@tectra/icons';
+import { injectTranslations } from '@tectra-ng/core/i18n';
+import { TxIcon } from '@tectra-ng/icons';
 import { TxIconField } from './icon-field.component';
 
 @Component({

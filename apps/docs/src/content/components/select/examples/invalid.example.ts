@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TxSelect } from '@tectra/ui/select';
+import { TxSelect } from '@tectra-ng/ui/select';
 
 @Component({
   selector: 'select-invalid-example',

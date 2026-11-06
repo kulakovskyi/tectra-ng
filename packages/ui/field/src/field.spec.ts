@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TxInput } from '@tectra/ui/input';
-import { TxRadioButton, TxRadioGroup } from '@tectra/ui/radio-button';
-import { TxSelect } from '@tectra/ui/select';
+import { TxInput } from '@tectra-ng/ui/input';
+import { TxRadioButton, TxRadioGroup } from '@tectra-ng/ui/radio-button';
+import { TxSelect } from '@tectra-ng/ui/select';
 import { TxField } from './field.component';
 import { TxFieldLayout } from './field.types';
 

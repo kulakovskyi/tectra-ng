@@ -17,8 +17,8 @@ import {
   untracked,
   viewChild,
 } from '@angular/core';
-import { optionalBoolean } from '@tectra/core/utils';
-import { TectraDeepPartial, TectraDialogTokens } from '@tectra/themes';
+import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TectraDeepPartial, TectraDialogTokens } from '@tectra-ng/themes';
 import {
   TX_DIALOG_CURRENT,
   TxDialogAutoFocus,
@@ -30,7 +30,7 @@ import {
   TxDialogTemplateContext,
   TxDrawerPosition,
   TxDrawerSize,
-} from '@tectra/ui/dialog';
+} from '@tectra-ng/ui/dialog';
 
 @Directive({ selector: '[txDrawerHeader]' })
 export class TxDrawerHeader {}

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TxMenuItem } from '@tectra/ui/menu';
+import { TxMenuItem } from '@tectra-ng/ui/menu';
 import { TxSpeedDial } from './speed-dial.component';
 import { TxSpeedDialDirection, TxSpeedDialType } from './speed-dial.types';
 

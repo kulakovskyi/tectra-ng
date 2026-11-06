@@ -1,8 +1,8 @@
 import { FocusTrapFactory } from '@angular/cdk/a11y';
 import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, InjectionToken, Signal, computed, inject } from '@angular/core';
-import { TxOverlayRef, TxPlacement, parsePlacement, txArrowOffset } from '@tectra/core/overlay';
-import { TxIcon } from '@tectra/icons';
-import { TxButton } from '@tectra/ui/button';
+import { TxOverlayRef, TxPlacement, parsePlacement, txArrowOffset } from '@tectra-ng/core/overlay';
+import { TxIcon } from '@tectra-ng/icons';
+import { TxButton } from '@tectra-ng/ui/button';
 import { confirmView } from './confirm-content';
 import { TxConfirmState } from './confirm.types';
 

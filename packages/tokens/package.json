@@ -1,6 +1,25 @@
 {
-  "name": "@tectra/tokens",
-  "version": "0.0.0",
+  "name": "@tectra-ng/tokens",
+  "version": "0.1.0",
+  "description": "Design tokens for tectra: palettes, radius, typography, shadows, spacing and motion as plain data.",
   "license": "MIT",
-  "sideEffects": ["*.css"]
+  "homepage": "https://tectra-ng.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kulakovskyi/tectra-ng.git",
+    "directory": "packages/tokens"
+  },
+  "bugs": "https://github.com/kulakovskyi/tectra-ng/issues",
+  "keywords": [
+    "tectra",
+    "design-tokens",
+    "design-system",
+    "css-variables"
+  ],
+  "sideEffects": [
+    "*.css"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxDivider } from '@tectra/ui/divider';
-import { TxIcon } from '@tectra/icons';
+import { TxDivider } from '@tectra-ng/ui/divider';
+import { TxIcon } from '@tectra-ng/icons';
 
 @Component({
   selector: 'divider-content-example',

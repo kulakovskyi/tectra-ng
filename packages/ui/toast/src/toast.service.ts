@@ -1,5 +1,5 @@
 import { Injectable, InjectionToken, Provider, inject, signal } from '@angular/core';
-import { TxAnnouncer } from '@tectra/core/a11y';
+import { TxAnnouncer } from '@tectra-ng/core/a11y';
 import { Subject } from 'rxjs';
 import { TxToastAction, TxToastCloseReason, TxToastMessage, TxToastOptions, TxToastRef } from './toast.types';
 

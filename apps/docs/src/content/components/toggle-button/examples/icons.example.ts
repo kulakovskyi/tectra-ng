@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxToggleButton } from '@tectra/ui/toggle-button';
+import { TxToggleButton } from '@tectra-ng/ui/toggle-button';
 
 @Component({
   selector: 'toggle-button-icons-example',

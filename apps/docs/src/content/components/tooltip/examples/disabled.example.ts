@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TxButton } from '@tectra/ui/button';
-import { TxToggleSwitch } from '@tectra/ui/toggle-switch';
-import { TxTooltip } from '@tectra/ui/tooltip';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxToggleSwitch } from '@tectra-ng/ui/toggle-switch';
+import { TxTooltip } from '@tectra-ng/ui/tooltip';
 
 @Component({
   selector: 'tooltip-disabled-example',

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxAvatar, TxAvatarGroup } from '@tectra/ui/avatar';
-import { TxButton } from '@tectra/ui/button';
+import { TxAvatar, TxAvatarGroup } from '@tectra-ng/ui/avatar';
+import { TxButton } from '@tectra-ng/ui/button';
 
 @Component({
   selector: 'avatar-group-example',

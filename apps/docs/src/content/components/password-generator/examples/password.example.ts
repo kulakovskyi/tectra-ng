@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TxButton } from '@tectra/ui/button';
-import { TxPassword } from '@tectra/ui/password';
-import { TxPasswordGenerate } from '@tectra/ui/password-generator';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxPassword } from '@tectra-ng/ui/password';
+import { TxPasswordGenerate } from '@tectra-ng/ui/password-generator';
 
 @Component({
   selector: 'password-generator-password-example',

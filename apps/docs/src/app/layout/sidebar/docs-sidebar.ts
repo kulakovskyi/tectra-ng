@@ -1,10 +1,10 @@
 import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, afterRenderEffect, computed, effect, inject, input, output, signal, untracked, viewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { TxIcon } from '@tectra/icons';
-import { TxHighlightText } from '@tectra/ui/highlight-text';
-import { TxIconField, TxInputClear, TxInputIcon } from '@tectra/ui/icon-field';
-import { TxInput } from '@tectra/ui/input';
+import { TxIcon } from '@tectra-ng/icons';
+import { TxHighlightText } from '@tectra-ng/ui/highlight-text';
+import { TxIconField, TxInputClear, TxInputIcon } from '@tectra-ng/ui/icon-field';
+import { TxInput } from '@tectra-ng/ui/input';
 import { DOC_NAVIGATION } from '../../data/navigation.data';
 import { DocNavGroup, DocNavSection } from '../../types/navigation.interface';
 

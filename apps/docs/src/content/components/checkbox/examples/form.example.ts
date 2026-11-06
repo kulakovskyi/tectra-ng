@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TxButton } from '@tectra/ui/button';
-import { TxCheckbox } from '@tectra/ui/checkbox';
-import { TxField } from '@tectra/ui/field';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxCheckbox } from '@tectra-ng/ui/checkbox';
+import { TxField } from '@tectra-ng/ui/field';
 
 @Component({
   selector: 'checkbox-form-example',

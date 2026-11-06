@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxIcon } from '@tectra/icons';
-import { TxAutocomplete } from '@tectra/ui/autocomplete';
-import { TxSelectOptionTemplate } from '@tectra/ui/select';
+import { TxIcon } from '@tectra-ng/icons';
+import { TxAutocomplete } from '@tectra-ng/ui/autocomplete';
+import { TxSelectOptionTemplate } from '@tectra-ng/ui/select';
 
 @Component({
   selector: 'autocomplete-template-example',

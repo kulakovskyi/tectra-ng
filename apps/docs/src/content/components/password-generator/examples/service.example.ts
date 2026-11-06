@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { TxButton } from '@tectra/ui/button';
-import { TxPasswordGenerator } from '@tectra/ui/password-generator';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxPasswordGenerator } from '@tectra-ng/ui/password-generator';
 
 @Component({
   selector: 'password-generator-service-example',

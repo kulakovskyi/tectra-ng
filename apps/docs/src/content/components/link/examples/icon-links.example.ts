@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxIconLink } from '@tectra/ui/link';
+import { TxIconLink } from '@tectra-ng/ui/link';
 
 @Component({
   selector: 'link-icon-links-example',

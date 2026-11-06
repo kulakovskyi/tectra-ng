@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxMessage, TxMessageIconTemplate } from '@tectra/ui/message';
+import { TxMessage, TxMessageIconTemplate } from '@tectra-ng/ui/message';
 
 @Component({
   selector: 'message-icons-example',

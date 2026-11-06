@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxDivider } from '@tectra/ui/divider';
+import { TxDivider } from '@tectra-ng/ui/divider';
 
 @Component({
   selector: 'divider-basic-example',

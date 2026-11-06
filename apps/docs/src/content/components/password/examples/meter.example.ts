@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxPassword, TxPasswordStrength } from '@tectra/ui/password';
+import { TxPassword, TxPasswordStrength } from '@tectra-ng/ui/password';
 
 @Component({
   selector: 'password-meter-example',

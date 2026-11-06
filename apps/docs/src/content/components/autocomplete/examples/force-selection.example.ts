@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TxAutocomplete } from '@tectra/ui/autocomplete';
+import { TxAutocomplete } from '@tectra-ng/ui/autocomplete';
 
 @Component({
   selector: 'autocomplete-force-selection-example',

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideTectra } from '@tectra/core/config';
-import { InkPreset } from '@tectra/themes';
+import { provideTectra } from '@tectra-ng/core/config';
+import { InkPreset } from '@tectra-ng/themes';
 import { TxButton } from './button.component';
 import { TxButtonIconTemplate } from './button-templates.directive';
 

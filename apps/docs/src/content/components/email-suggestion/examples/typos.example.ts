@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxEmailSuggestion } from '@tectra/ui/email-suggestion';
+import { TxEmailSuggestion } from '@tectra-ng/ui/email-suggestion';
 
 @Component({
   selector: 'email-suggestion-typos-example',

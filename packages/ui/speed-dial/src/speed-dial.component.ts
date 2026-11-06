@@ -14,14 +14,14 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { uniqueId } from '@tectra/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { TxPlacement } from '@tectra/core/overlay';
-import { optionalBoolean } from '@tectra/core/utils';
-import { TectraDeepPartial, TectraSpeedDialTokens, toStyleObject } from '@tectra/themes';
-import { TxButton, TxButtonSeverity, TxButtonSize } from '@tectra/ui/button';
-import { TxMenuItem, TxMenuItemEvent } from '@tectra/ui/menu';
-import { TxTooltip } from '@tectra/ui/tooltip';
+import { uniqueId } from '@tectra-ng/core/a11y';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { TxPlacement } from '@tectra-ng/core/overlay';
+import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TectraDeepPartial, TectraSpeedDialTokens, toStyleObject } from '@tectra-ng/themes';
+import { TxButton, TxButtonSeverity, TxButtonSize } from '@tectra-ng/ui/button';
+import { TxMenuItem, TxMenuItemEvent } from '@tectra-ng/ui/menu';
+import { TxTooltip } from '@tectra-ng/ui/tooltip';
 import { TxSpeedDialDirection, TxSpeedDialPart, TxSpeedDialType } from './speed-dial.types';
 
 const ARCS: Record<string, [number, number]> = {

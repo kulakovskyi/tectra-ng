@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxMentionTextarea } from '@tectra/ui/mention-textarea';
+import { TxMentionTextarea } from '@tectra-ng/ui/mention-textarea';
 
 @Component({
   selector: 'mention-textarea-design-tokens-example',

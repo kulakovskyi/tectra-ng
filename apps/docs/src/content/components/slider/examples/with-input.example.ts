@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TxInputNumber } from '@tectra/ui/input-number';
-import { TxSlider } from '@tectra/ui/slider';
+import { TxInputNumber } from '@tectra-ng/ui/input-number';
+import { TxSlider } from '@tectra-ng/ui/slider';
 
 @Component({
   selector: 'slider-with-input-example',

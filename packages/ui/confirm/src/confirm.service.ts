@@ -1,8 +1,8 @@
 import { Injectable, Injector, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { uniqueId } from '@tectra/core/a11y';
-import { TxOverlay, TxOverlayRef } from '@tectra/core/overlay';
-import { TxDialogService } from '@tectra/ui/dialog';
+import { uniqueId } from '@tectra-ng/core/a11y';
+import { TxOverlay, TxOverlayRef } from '@tectra-ng/core/overlay';
+import { TxDialogService } from '@tectra-ng/ui/dialog';
 import { TX_CONFIRM_POPUP, TxConfirmPopup, TxConfirmPopupData } from './confirm-popup.component';
 import { TxConfirmDialog } from './confirm-dialog.component';
 import { TxConfirmOptions, TxConfirmState } from './confirm.types';

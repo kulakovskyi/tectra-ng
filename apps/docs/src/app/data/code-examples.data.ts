@@ -1,4 +1,4 @@
-export const ACCENT_PRESET_EXAMPLE = `import { createInkPreset } from '@tectra/themes';
+export const ACCENT_PRESET_EXAMPLE = `import { createInkPreset } from '@tectra-ng/themes';
 
 provideTectra({ preset: createInkPreset('teal') });`;
 

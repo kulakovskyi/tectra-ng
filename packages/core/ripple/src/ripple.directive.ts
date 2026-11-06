@@ -1,7 +1,7 @@
 import { DOCUMENT, Directive, ElementRef, booleanAttribute, computed, inject, input } from '@angular/core';
-import { TECTRA_CONFIG } from '@tectra/core/config';
-import { TxStyleLoader } from '@tectra/core/styles';
-import { optionalBoolean } from '@tectra/core/utils';
+import { TECTRA_CONFIG } from '@tectra-ng/core/config';
+import { TxStyleLoader } from '@tectra-ng/core/styles';
+import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TxRippleStyles } from './ripple.styles';
 import { TxRippleRef } from './ripple.types';
 

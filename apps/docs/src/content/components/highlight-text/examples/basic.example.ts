@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxHighlightText } from '@tectra/ui/highlight-text';
-import { TxInput } from '@tectra/ui/input';
+import { TxHighlightText } from '@tectra-ng/ui/highlight-text';
+import { TxInput } from '@tectra-ng/ui/input';
 
 @Component({
   selector: 'highlight-text-basic-example',

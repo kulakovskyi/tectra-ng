@@ -1,6 +1,6 @@
 import { NgComponentOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Type, computed, input, signal } from '@angular/core';
-import { TxButton } from '@tectra/ui/button';
+import { TxButton } from '@tectra-ng/ui/button';
 import { DocExample } from '../../types/doc-component.interface';
 
 @Component({

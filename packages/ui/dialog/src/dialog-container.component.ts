@@ -16,9 +16,9 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { tabbableElements } from '@tectra/core/a11y';
-import { injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { toStyleObject } from '@tectra/themes';
+import { tabbableElements } from '@tectra-ng/core/a11y';
+import { injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { toStyleObject } from '@tectra-ng/themes';
 import { TxDialogRef } from './dialog-ref';
 import { TxDialogPart, TxDialogTemplateContext } from './dialog.types';
 

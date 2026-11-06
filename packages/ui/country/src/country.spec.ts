@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TxLocaleService } from '@tectra/core/i18n';
+import { TxLocaleService } from '@tectra-ng/core/i18n';
 import { countryEmoji, countryName, isCountryCode } from './countries';
 import { TxCountry } from './country.component';
 import { TxFlagShape } from './country.types';

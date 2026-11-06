@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxButtonSeverity } from '@tectra/ui/button';
-import { TxMenuItem } from '@tectra/ui/menu';
-import { TxSplitButton } from '@tectra/ui/split-button';
+import { TxButtonSeverity } from '@tectra-ng/ui/button';
+import { TxMenuItem } from '@tectra-ng/ui/menu';
+import { TxSplitButton } from '@tectra-ng/ui/split-button';
 
 @Component({
   selector: 'split-button-severities-example',

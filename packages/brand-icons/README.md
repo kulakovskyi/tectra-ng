@@ -1,4 +1,4 @@
-# @tectra/brand-icons
+# @tectra-ng/brand-icons
 
 Optional brand logos for `<tx-icon>` and every `[icon]` input, under the same names as PrimeIcons: `android`, `apple`, `discord`, `ethereum`, `facebook`, `github`, `google`, `instagram`, `paypal`, `pinterest`, `reddit`, `telegram`, `tiktok`, `twitch`, `twitter` (the current X logo), `x`, `vimeo`, `whatsapp`, `youtube`.
 

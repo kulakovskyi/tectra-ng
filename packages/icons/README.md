@@ -1,4 +1,4 @@
-# @tectra/icons
+# @tectra-ng/icons
 
 334 outline icons drawn for tectra on a 24 × 24 grid: round caps and joins, one stroke width, filled variants where the name says `-fill`. Names follow the PrimeIcons naming (`check`, `times`, `pencil`, `chevron-down`, `sort-amount-up-alt`…) so `pi pi-<name>` moves over by dropping the prefix. The drawings are original — no PrimeIcons artwork is used. Brand logos are not part of the set.
 
@@ -14,7 +14,7 @@
 | name | Icon name — one of the 334 tectra icons or any icon registered with `provideTxIcons` |
 
 ## More icons
-`provideTxIcons(set)` in `app.config` adds icons to the registry, so `<tx-icon>` and every `[icon]` input (button, toggle-button) can use them by name. A set is `{ name: paths[] }` on the 24 × 24 grid; a path is a `d` string (stroked) or `{ d, fill: true, stroke: false, transform }`. Brand logos ship this way in `@tectra/brand-icons`; your own logo goes the same way:
+`provideTxIcons(set)` in `app.config` adds icons to the registry, so `<tx-icon>` and every `[icon]` input (button, toggle-button) can use them by name. A set is `{ name: paths[] }` on the 24 × 24 grid; a path is a `d` string (stroked) or `{ d, fill: true, stroke: false, transform }`. Brand logos ship this way in `@tectra-ng/brand-icons`; your own logo goes the same way:
 
 ```ts
 provideTxIcons({ 'my-logo': [{ d: 'M…', fill: true, stroke: false }] })

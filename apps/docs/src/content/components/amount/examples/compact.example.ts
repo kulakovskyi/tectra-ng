@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxAmount } from '@tectra/ui/amount';
+import { TxAmount } from '@tectra-ng/ui/amount';
 
 @Component({
   selector: 'amount-compact-example',

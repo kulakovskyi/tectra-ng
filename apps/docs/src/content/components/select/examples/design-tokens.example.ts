@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxSelect } from '@tectra/ui/select';
+import { TxSelect } from '@tectra-ng/ui/select';
 
 @Component({
   selector: 'select-design-tokens-example',

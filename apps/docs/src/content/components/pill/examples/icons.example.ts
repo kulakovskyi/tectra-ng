@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxPill } from '@tectra/ui/pill';
+import { TxPill } from '@tectra-ng/ui/pill';
 
 @Component({
   selector: 'pill-icons-example',

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxMultiselect } from '@tectra/ui/multiselect';
+import { TxMultiselect } from '@tectra-ng/ui/multiselect';
 
 @Component({
   selector: 'multiselect-virtual-scroll-example',

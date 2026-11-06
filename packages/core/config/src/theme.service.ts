@@ -1,5 +1,5 @@
 import { DOCUMENT, Injectable, inject, signal } from '@angular/core';
-import { TectraPreset, presetToCss } from '@tectra/themes';
+import { TectraPreset, presetToCss } from '@tectra-ng/themes';
 import { TxThemeMode } from './tectra-config.interface';
 import { TECTRA_CONFIG } from './tectra-config.token';
 

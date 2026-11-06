@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TxIconField, TxInputClear, TxInputIcon } from '@tectra/ui/icon-field';
-import { TxInput } from '@tectra/ui/input';
-import { TxInputMask } from '@tectra/ui/input-mask';
+import { TxIconField, TxInputClear, TxInputIcon } from '@tectra-ng/ui/icon-field';
+import { TxInput } from '@tectra-ng/ui/input';
+import { TxInputMask } from '@tectra-ng/ui/input-mask';
 
 @Component({
   selector: 'input-mask-clear-example',

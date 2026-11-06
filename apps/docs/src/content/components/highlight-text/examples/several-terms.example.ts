@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxHighlightText } from '@tectra/ui/highlight-text';
+import { TxHighlightText } from '@tectra-ng/ui/highlight-text';
 
 @Component({
   selector: 'highlight-text-several-terms-example',

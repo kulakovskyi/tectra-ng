@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxMentionItem, TxMentionTextarea } from '@tectra/ui/mention-textarea';
-import { TxSelectFilterEvent } from '@tectra/ui/select';
+import { TxMentionItem, TxMentionTextarea } from '@tectra-ng/ui/mention-textarea';
+import { TxSelectFilterEvent } from '@tectra-ng/ui/select';
 
 const DIRECTORY: TxMentionItem[] = Array.from({ length: 200 }, (_, index) => ({
   label: `Teammate ${index + 1}`,

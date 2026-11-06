@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TxInput } from '@tectra/ui/input';
-import { TxInputGroup } from '@tectra/ui/input-group';
-import { TxSelect } from '@tectra/ui/select';
+import { TxInput } from '@tectra-ng/ui/input';
+import { TxInputGroup } from '@tectra-ng/ui/input-group';
+import { TxSelect } from '@tectra-ng/ui/select';
 
 @Component({
   selector: 'input-group-select-example',

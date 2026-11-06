@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxIcon } from '@tectra/icons';
-import { TxInput } from '@tectra/ui/input';
-import { TxInputGroup, TxInputGroupAddon } from '@tectra/ui/input-group';
+import { TxIcon } from '@tectra-ng/icons';
+import { TxInput } from '@tectra-ng/ui/input';
+import { TxInputGroup, TxInputGroupAddon } from '@tectra-ng/ui/input-group';
 
 @Component({
   selector: 'input-group-icons-example',

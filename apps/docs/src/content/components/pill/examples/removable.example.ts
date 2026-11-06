@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxButton } from '@tectra/ui/button';
-import { TxPill } from '@tectra/ui/pill';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxPill } from '@tectra-ng/ui/pill';
 
 @Component({
   selector: 'pill-removable-example',

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxTooltip } from '@tectra/ui/tooltip';
+import { TxTooltip } from '@tectra-ng/ui/tooltip';
 
 @Component({
   selector: 'tooltip-overflow-example',

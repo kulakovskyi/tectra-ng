@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxPanel } from '@tectra/ui/panel';
-import { TxButton } from '@tectra/ui/button';
+import { TxPanel } from '@tectra-ng/ui/panel';
+import { TxButton } from '@tectra-ng/ui/button';
 
 @Component({
   selector: 'panel-align-example',

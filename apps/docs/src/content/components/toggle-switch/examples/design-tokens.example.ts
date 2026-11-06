@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxToggleSwitch } from '@tectra/ui/toggle-switch';
+import { TxToggleSwitch } from '@tectra-ng/ui/toggle-switch';
 
 @Component({
   selector: 'toggle-switch-design-tokens-example',

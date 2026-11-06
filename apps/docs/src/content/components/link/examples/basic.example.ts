@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxLink } from '@tectra/ui/link';
+import { TxLink } from '@tectra-ng/ui/link';
 
 @Component({
   selector: 'link-basic-example',

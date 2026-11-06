@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TxSelect, TxSelectChangeEvent } from '@tectra/ui/select';
+import { TxSelect, TxSelectChangeEvent } from '@tectra-ng/ui/select';
 
 @Component({
   selector: 'select-clear-example',

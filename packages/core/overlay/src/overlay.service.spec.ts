@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, TemplateRef, ViewContainerRef, inject, viewChild } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { InkPreset } from '@tectra/themes';
-import { TECTRA_CONFIG } from '@tectra/core/config';
+import { InkPreset } from '@tectra-ng/themes';
+import { TECTRA_CONFIG } from '@tectra-ng/core/config';
 import { TxOverlay } from './overlay.service';
 import { TxOverlayCloseReason } from './overlay.types';
 

@@ -1,6 +1,6 @@
-# @tectra/ui
+# @tectra-ng/ui
 
-ONE npm package, one entry point per component: `import { TxSelect } from '@tectra/ui/select'` — only the select lands in the bundle.
+ONE npm package, one entry point per component: `import { TxSelect } from '@tectra-ng/ui/select'` — only the select lands in the bundle.
 
 Every component folder looks the same (see `select/`):
 
@@ -13,7 +13,7 @@ select/
     select.tokens.ts                component tokens → docs "Theming" tab
     select.types.ts                 public types
   index.ts                          public API of the entry point
-  ng-package.json                   makes it @tectra/ui/select
+  ng-package.json                   makes it @tectra-ng/ui/select
   README.md                         descriptions → docs "API" tab
 ```
 
@@ -24,4 +24,4 @@ paginator, table, tree, tree-table, data-view, virtual-scroller, timeline,
 datepicker, tabs, accordion, stepper, breadcrumb, menubar, splitter, card, toolbar, divider,
 file-upload, image, carousel, avatar, badge, tag, progress, skeleton, spinner, editor …
 
-Depends on: `@tectra/core`, `@tectra/icons`.
+Depends on: `@tectra-ng/core`, `@tectra-ng/icons`.

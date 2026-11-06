@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TxButton } from '@tectra/ui/button';
-import { TxInput } from '@tectra/ui/input';
-import { TxInputGroup } from '@tectra/ui/input-group';
-import { TxKeyFilter } from '@tectra/ui/key-filter';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxInput } from '@tectra-ng/ui/input';
+import { TxInputGroup } from '@tectra-ng/ui/input-group';
+import { TxKeyFilter } from '@tectra-ng/ui/key-filter';
 
 @Component({
   selector: 'input-group-buttons-example',

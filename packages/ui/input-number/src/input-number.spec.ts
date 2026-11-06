@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TxLocaleService } from '@tectra/core/i18n';
+import { TxLocaleService } from '@tectra-ng/core/i18n';
 import { TxInputNumber } from './input-number.component';
 import { TxInputNumberButtonLayout } from './input-number.types';
 

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxCard } from '@tectra/ui/card';
-import { TxPill } from '@tectra/ui/pill';
+import { TxCard } from '@tectra-ng/ui/card';
+import { TxPill } from '@tectra-ng/ui/pill';
 
 @Component({
   selector: 'card-custom-title-example',

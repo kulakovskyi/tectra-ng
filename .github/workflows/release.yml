@@ -1,0 +1,53 @@
+name: release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'auto (from feat / fix commits), patch, minor, major, or an exact version like 0.3.0'
+        default: auto
+        required: true
+      dist-tag:
+        description: npm dist-tag
+        type: choice
+        options: [latest, next]
+        default: latest
+
+permissions:
+  contents: write
+  id-token: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: npm
+      url: https://www.npmjs.com/package/tectra-ng
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          registry-url: https://registry.npmjs.org
+      - run: npm ci --legacy-peer-deps
+      - run: npm run lint
+      - run: npm run test
+        env:
+          NX_DAEMON: 'false'
+          NX_NO_CLOUD: 'true'
+      - run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+      - run: node tools/release.mjs "${{ inputs.version }}" "${{ inputs.dist-tag }}"
+        env:
+          NX_DAEMON: 'false'
+          NX_NO_CLOUD: 'true'
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

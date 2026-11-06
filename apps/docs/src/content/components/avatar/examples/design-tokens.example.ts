@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxAvatar, TxAvatarGroup } from '@tectra/ui/avatar';
+import { TxAvatar, TxAvatarGroup } from '@tectra-ng/ui/avatar';
 
 @Component({
   selector: 'avatar-design-tokens-example',

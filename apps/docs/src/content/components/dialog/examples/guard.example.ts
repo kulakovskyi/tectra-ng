@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { map } from 'rxjs';
-import { TxButton } from '@tectra/ui/button';
+import { TxButton } from '@tectra-ng/ui/button';
 import {
   TxDialogClose,
   TxDialogContent,
@@ -10,9 +10,9 @@ import {
   TxDialogRef,
   TxDialogService,
   injectDialogRef,
-} from '@tectra/ui/dialog';
-import { TxField } from '@tectra/ui/field';
-import { TxTextarea } from '@tectra/ui/textarea';
+} from '@tectra-ng/ui/dialog';
+import { TxField } from '@tectra-ng/ui/field';
+import { TxTextarea } from '@tectra-ng/ui/textarea';
 
 @Component({
   selector: 'dialog-discard-changes',

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TxListbox } from '@tectra/ui/listbox';
+import { TxListbox } from '@tectra-ng/ui/listbox';
 
 @Component({
   selector: 'listbox-checkbox-example',

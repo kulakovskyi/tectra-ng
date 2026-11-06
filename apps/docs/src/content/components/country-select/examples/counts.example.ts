@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxCountryOption, TxCountrySelect } from '@tectra/ui/country-select';
+import { TxCountryOption, TxCountrySelect } from '@tectra-ng/ui/country-select';
 
 @Component({
   selector: 'country-select-counts-example',

@@ -1,12 +1,12 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, booleanAttribute, computed, inject, input, output, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { injectTranslations } from '@tectra/core/i18n';
-import { optionalBoolean, optionalNumber } from '@tectra/core/utils';
-import { TxIcon } from '@tectra/icons';
-import { TectraDeepPartial, TectraLinkTokens, toStyleObject } from '@tectra/themes';
-import { TxHighlightTerms, TxHighlightText } from '@tectra/ui/highlight-text';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectTranslations } from '@tectra-ng/core/i18n';
+import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
+import { TxIcon } from '@tectra-ng/icons';
+import { TectraDeepPartial, TectraLinkTokens, toStyleObject } from '@tectra-ng/themes';
+import { TxHighlightTerms, TxHighlightText } from '@tectra-ng/ui/highlight-text';
 import { TxLinkCommands, TxLinkPart, TxLinkType } from './link.types';
 
 const COPIED_FOR = 1600;

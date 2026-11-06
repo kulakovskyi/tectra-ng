@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TxInput } from '@tectra/ui/input';
-import { TxInputMask } from '@tectra/ui/input-mask';
+import { TxInput } from '@tectra-ng/ui/input';
+import { TxInputMask } from '@tectra-ng/ui/input-mask';
 
 @Component({
   selector: 'input-mask-optional-example',

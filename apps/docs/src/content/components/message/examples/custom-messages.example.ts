@@ -6,9 +6,9 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { TxInput } from '@tectra/ui/input';
-import { TxLabel } from '@tectra/ui/label';
-import { TxFieldError } from '@tectra/ui/message';
+import { TxInput } from '@tectra-ng/ui/input';
+import { TxLabel } from '@tectra-ng/ui/label';
+import { TxFieldError } from '@tectra-ng/ui/message';
 
 const TAKEN = ['admin', 'support'];
 

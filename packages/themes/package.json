@@ -1,6 +1,26 @@
 {
-  "name": "@tectra/themes",
-  "version": "0.0.0",
+  "name": "@tectra-ng/themes",
+  "version": "0.1.0",
+  "description": "Light and dark themes for tectra: semantic and component tokens, presets and CSS variables.",
   "license": "MIT",
-  "peerDependencies": { "@tectra/tokens": "0.0.0" }
+  "homepage": "https://tectra-ng.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kulakovskyi/tectra-ng.git",
+    "directory": "packages/themes"
+  },
+  "bugs": "https://github.com/kulakovskyi/tectra-ng/issues",
+  "keywords": [
+    "tectra",
+    "theme",
+    "dark-mode",
+    "design-tokens",
+    "css-variables"
+  ],
+  "peerDependencies": {
+    "@tectra-ng/tokens": "^0.1.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }

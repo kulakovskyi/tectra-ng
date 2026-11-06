@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxStatusIcon } from '@tectra/ui/status-icon';
+import { TxStatusIcon } from '@tectra-ng/ui/status-icon';
 
 @Component({
   selector: 'status-icon-design-tokens-example',

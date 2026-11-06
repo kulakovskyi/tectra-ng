@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxIcon } from '@tectra/icons';
-import { TxBadgeSeverity } from '@tectra/ui/badge';
-import { TxOverlayBadge } from '@tectra/ui/overlay-badge';
+import { TxIcon } from '@tectra-ng/icons';
+import { TxBadgeSeverity } from '@tectra-ng/ui/badge';
+import { TxOverlayBadge } from '@tectra-ng/ui/overlay-badge';
 
 @Component({
   selector: 'overlay-badge-severities-example',

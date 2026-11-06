@@ -1,7 +1,7 @@
 import { ComponentPortal } from '@angular/cdk/portal';
 import { createBlockScrollStrategy, createGlobalPositionStrategy, createNoopScrollStrategy, createOverlayRef } from '@angular/cdk/overlay';
 import { DOCUMENT, Injectable, Injector, TemplateRef, Type, inject, signal } from '@angular/core';
-import { uniqueId } from '@tectra/core/a11y';
+import { uniqueId } from '@tectra-ng/core/a11y';
 import { TX_DIALOG_CURRENT, TX_DIALOG_DATA, TxDialogRef } from './dialog-ref';
 import { TxDialogContainer } from './dialog-container.component';
 import { TxDialogConfig, TxDialogTemplateContext } from './dialog.types';

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TxRating } from '@tectra/ui/rating';
+import { TxRating } from '@tectra-ng/ui/rating';
 
 @Component({
   selector: 'rating-sizes-example',

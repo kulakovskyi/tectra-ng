@@ -1,7 +1,7 @@
 import { CdkConnectedOverlay, ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
 import { DestroyRef, Directive, ElementRef, Injector, booleanAttribute, computed, inject, input, output, signal, viewChild } from '@angular/core';
-import { injectFieldInvalid } from '@tectra/core/forms';
+import { injectFieldInvalid } from '@tectra-ng/core/forms';
 import {
   TxOverlayInsets,
   TxPlacement,
@@ -12,8 +12,8 @@ import {
   TxOverlayRoom,
   watchOrigin,
   txScrollStrategy,
-} from '@tectra/core/overlay';
-import { optionalBoolean } from '@tectra/core/utils';
+} from '@tectra-ng/core/overlay';
+import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TxOptionsBase } from './options-base';
 import { isSelectableRow } from './select-options';
 import { TxFieldVariant, TxSelectItem, TxSelectSize } from './select.types';

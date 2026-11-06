@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxButton } from '@tectra/ui/button';
-import { TxDrawer } from '@tectra/ui/drawer';
-import { TxDrawerPosition } from '@tectra/ui/dialog';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxDrawer } from '@tectra-ng/ui/drawer';
+import { TxDrawerPosition } from '@tectra-ng/ui/dialog';
 
 @Component({
   selector: 'drawer-positions-example',

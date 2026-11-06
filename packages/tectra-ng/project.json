@@ -1,0 +1,16 @@
+{
+  "name": "tectra-ng",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "packages/tectra-ng",
+  "tags": ["pkg:umbrella"],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/packages/tectra-ng"],
+      "options": {
+        "command": "mkdir -p dist/packages/tectra-ng && cp packages/tectra-ng/package.json packages/tectra-ng/README.md LICENSE dist/packages/tectra-ng/"
+      }
+    }
+  }
+}

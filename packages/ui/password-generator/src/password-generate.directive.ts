@@ -1,7 +1,7 @@
 import { Directive, booleanAttribute, inject, input, output } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
-import { optionalNumber } from '@tectra/core/utils';
-import { TxPassword } from '@tectra/ui/password';
+import { optionalNumber } from '@tectra-ng/core/utils';
+import { TxPassword } from '@tectra-ng/ui/password';
 import { TxPasswordGenerator } from './password-generator.service';
 
 @Directive({

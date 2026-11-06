@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { TxIcon } from '@tectra/icons';
-import { InkPreset, toCssVariables } from '@tectra/themes';
-import { TxBadge } from '@tectra/ui/badge';
-import { TxButton } from '@tectra/ui/button';
-import { TxInput } from '@tectra/ui/input';
-import { TxSelect } from '@tectra/ui/select';
-import { TxToggleButton } from '@tectra/ui/toggle-button';
+import { TxIcon } from '@tectra-ng/icons';
+import { InkPreset, toCssVariables } from '@tectra-ng/themes';
+import { TxBadge } from '@tectra-ng/ui/badge';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxInput } from '@tectra-ng/ui/input';
+import { TxSelect } from '@tectra-ng/ui/select';
+import { TxToggleButton } from '@tectra-ng/ui/toggle-button';
 import { DOC_COMPONENTS } from '../../../generated/registry';
 import { HOME_FEATURES, HOME_MARQUEE_ICONS, HOME_ROLES, INSTALL_COMMAND } from '../../data/home.data';
 

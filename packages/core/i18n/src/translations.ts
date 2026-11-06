@@ -1,5 +1,5 @@
 import { Signal, inject } from '@angular/core';
-import { TxTranslations } from '@tectra/core/config';
+import { TxTranslations } from '@tectra-ng/core/config';
 import { TxLocaleService } from './locale.service';
 
 export function injectTranslations(): Signal<TxTranslations> {

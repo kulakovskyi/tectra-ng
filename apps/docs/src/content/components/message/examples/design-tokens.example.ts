@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxMessage } from '@tectra/ui/message';
+import { TxMessage } from '@tectra-ng/ui/message';
 
 @Component({
   selector: 'message-design-tokens-example',

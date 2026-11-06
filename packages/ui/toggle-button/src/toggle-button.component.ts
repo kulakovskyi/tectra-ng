@@ -9,13 +9,13 @@ import {
   output,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { injectFluid } from '@tectra/core/fluid';
-import { TxRipple } from '@tectra/core/ripple';
-import { TxFormControlBase } from '@tectra/core/forms';
-import { optionalBoolean, optionalNumber } from '@tectra/core/utils';
-import { TxIcon, TxIconName, TxIconRegistry } from '@tectra/icons';
-import { TectraDeepPartial, TectraToggleButtonTokens, toStyleObject } from '@tectra/themes';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectFluid } from '@tectra-ng/core/fluid';
+import { TxRipple } from '@tectra-ng/core/ripple';
+import { TxFormControlBase } from '@tectra-ng/core/forms';
+import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
+import { TxIcon, TxIconName, TxIconRegistry } from '@tectra-ng/icons';
+import { TectraDeepPartial, TectraToggleButtonTokens, toStyleObject } from '@tectra-ng/themes';
 import {
   TxToggleButtonChangeEvent,
   TxToggleButtonIconPosition,

@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TxButton } from '@tectra/ui/button';
-import { TxConfirmService } from '@tectra/ui/confirm';
-import { TxToggleSwitch } from '@tectra/ui/toggle-switch';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxConfirmService } from '@tectra-ng/ui/confirm';
+import { TxToggleSwitch } from '@tectra-ng/ui/toggle-switch';
 
 @Component({
   selector: 'confirm-async-example',

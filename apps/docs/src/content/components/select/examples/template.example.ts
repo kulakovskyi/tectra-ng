@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxSelect, TxSelectOptionTemplate } from '@tectra/ui/select';
+import { TxSelect, TxSelectOptionTemplate } from '@tectra-ng/ui/select';
 
 @Component({
   selector: 'select-template-example',

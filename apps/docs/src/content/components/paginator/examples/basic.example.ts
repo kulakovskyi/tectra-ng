@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxPageState, TxPaginator } from '@tectra/ui/paginator';
+import { TxPageState, TxPaginator } from '@tectra-ng/ui/paginator';
 
 @Component({
   selector: 'paginator-basic-example',

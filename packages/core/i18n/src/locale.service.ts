@@ -1,5 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { TECTRA_CONFIG, TxLocaleCode, TxLocaleDefinition, TxTranslations } from '@tectra/core/config';
+import { TECTRA_CONFIG, TxLocaleCode, TxLocaleDefinition, TxTranslations } from '@tectra-ng/core/config';
 import { TX_LOCALES, TX_LOCALE_US } from './locales';
 
 @Injectable({ providedIn: 'root' })

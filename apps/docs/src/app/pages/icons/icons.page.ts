@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
-import { TX_BRAND_ICONS, TxBrandIconName } from '@tectra/brand-icons';
-import { TX_ICONS, TxIcon, TxIconName } from '@tectra/icons';
-import { TxInput } from '@tectra/ui/input';
+import { TX_BRAND_ICONS, TxBrandIconName } from '@tectra-ng/brand-icons';
+import { TX_ICONS, TxIcon, TxIconName } from '@tectra-ng/icons';
+import { TxInput } from '@tectra-ng/ui/input';
 
 @Component({
   selector: 'docs-icons-page',

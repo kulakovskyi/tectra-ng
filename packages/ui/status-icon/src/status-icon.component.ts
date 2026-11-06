@@ -1,10 +1,10 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra/core/config';
-import { injectTranslations } from '@tectra/core/i18n';
-import { optionalBoolean } from '@tectra/core/utils';
-import { TxIcon, TxIconName, TxIconRegistry } from '@tectra/icons';
-import { TectraDeepPartial, TectraStatusIconTokens, toStyleObject } from '@tectra/themes';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectTranslations } from '@tectra-ng/core/i18n';
+import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TxIcon, TxIconName, TxIconRegistry } from '@tectra-ng/icons';
+import { TectraDeepPartial, TectraStatusIconTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxStatusIconPart, TxStatusIconSeverity, TxStatusIconSize } from './status-icon.types';
 
 const SEVERITY_ICONS: Record<TxStatusIconSeverity, TxIconName> = {

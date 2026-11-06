@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxButton } from '@tectra/ui/button';
-import { TxPopover, TxPopoverContent } from '@tectra/ui/popover';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxPopover, TxPopoverContent } from '@tectra-ng/ui/popover';
 
 interface StoredFile {
   name: string;

@@ -10,9 +10,9 @@ import {
   output,
   viewChild,
 } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions } from '@tectra/core/config';
-import { optionalBoolean } from '@tectra/core/utils';
-import { TectraDeepPartial, TectraMenuTokens } from '@tectra/themes';
+import { TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
+import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TectraDeepPartial, TectraMenuTokens } from '@tectra-ng/themes';
 import { TxMenu } from './menu.component';
 import { TxMenuItem, TxMenuItemEvent, TxMenuPart } from './menu.types';
 
