@@ -115,6 +115,7 @@ export class TxOverlay {
       positionStrategy.withPositions(orderByRoom(positions, origin.getBoundingClientRect(), size, txOverlayBounds(insets, margin, this.document)));
     };
     const reposition = () => {
+      if (!overlayRef.hasAttached()) return;
       preferRoom();
       overlayRef.updatePosition();
     };
