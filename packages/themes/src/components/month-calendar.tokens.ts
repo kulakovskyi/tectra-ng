@@ -1,0 +1,90 @@
+import { lightDark, tokenRef } from './token-helpers';
+
+export const monthCalendarTokens = {
+  root: {
+    background: tokenRef('surface-card'),
+    borderColor: tokenRef('surface-border'),
+    borderRadius: tokenRef('radius-lg'),
+    transitionDuration: tokenRef('motion-duration'),
+  },
+  head: {
+    background: tokenRef('surface-ground'),
+  },
+  weekday: {
+    padding: '7px',
+    widePaddingX: '10.5px',
+    color: tokenRef('text-muted'),
+    fontSize: '10.5px',
+    fontWeight: tokenRef('font-weight-semibold'),
+    weekendColor: tokenRef('text-muted'),
+  },
+  week: {
+    height: '49px',
+    headHeight: '31.5px',
+    laneHeight: '21px',
+    moreHeight: '21px',
+  },
+  cell: {
+    borderColor: tokenRef('surface-border'),
+    weekendBackground: `color-mix(in srgb, ${tokenRef('surface-ground')} 70%, transparent)`,
+    selectedBackground: `color-mix(in srgb, ${tokenRef('primary-base')} 9%, transparent)`,
+  },
+  day: {
+    padding: '3.5px',
+    widePaddingX: '5.25px',
+    color: tokenRef('text-primary'),
+    hoverBackground: `color-mix(in srgb, ${tokenRef('primary-base')} 5%, transparent)`,
+    gap: '3.5px',
+    focusRingWidth: '2px',
+    focusRingColor: tokenRef('primary-base'),
+  },
+  number: {
+    size: '24.5px',
+    fontSize: '11.375px',
+    fontWeight: tokenRef('font-weight-medium'),
+    selectedColor: tokenRef('primary-base'),
+    selectedFontWeight: tokenRef('font-weight-semibold'),
+    todayBackground: tokenRef('primary-base'),
+    todayColor: tokenRef('primary-contrast'),
+    outsideColor: tokenRef('text-muted'),
+  },
+  dot: {
+    size: '5.25px',
+    gap: '3.5px',
+    bottom: '5.25px',
+  },
+  event: {
+    height: '17.5px',
+    paddingX: '7px',
+    gap: '5.25px',
+    inset: '3.5px',
+    borderRadius: '5.25px',
+    fontSize: '10.5px',
+    fontWeight: tokenRef('font-weight-medium'),
+    backgroundMix: '14%',
+    hoverBackgroundMix: '24%',
+    textMix: '65%',
+    textBase: tokenRef('text-primary'),
+    avatarSize: '14px',
+  },
+  more: {
+    margin: '3.5px',
+    padding: '1.75px 5.25px',
+    borderRadius: '5.25px',
+    color: tokenRef('text-muted'),
+    hoverColor: tokenRef('primary-base'),
+    hoverBackground: `color-mix(in srgb, ${tokenRef('primary-base')} 10%, transparent)`,
+    fontSize: '10.5px',
+    fontWeight: tokenRef('font-weight-semibold'),
+  },
+  tone: {
+    primary: tokenRef('primary-base'),
+    info: lightDark(tokenRef('sky-600'), tokenRef('sky-400')),
+    success: lightDark(tokenRef('green-600'), tokenRef('green-400')),
+    warn: lightDark(tokenRef('amber-600'), tokenRef('amber-400')),
+    danger: lightDark(tokenRef('red-600'), tokenRef('red-400')),
+    neutral: tokenRef('text-muted'),
+  },
+};
+
+export type TectraMonthCalendarTokens = typeof monthCalendarTokens;

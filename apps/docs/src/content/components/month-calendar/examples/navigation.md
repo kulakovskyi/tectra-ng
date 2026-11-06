@@ -1,0 +1,1 @@
+The page owns the month: move it with own buttons. `dayClick` gives the day (also from `+N`), `eventClick` the event; `selectedDate` highlights a day and takes the keyboard focus — try the arrow keys.

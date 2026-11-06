@@ -151,7 +151,7 @@ Detailed checklist per component: [roadmap/stage-8-date.md](roadmap/stage-8-date
 | tectra | PrimeNG equivalent | Usage | Status |
 |---|---|---|---|
 | `ui/datepicker` — single / range / multiple, time, month / year views, inline, touch, min / max, locale | DatePicker | 58 | ✅ |
-| `ui/month-calendar` (events grid) | — | 23 | ⬜ |
+| `ui/month-calendar` (events grid) | — | 23 | ✅ |
 | `ui/countdown` (on `ClockService`) | — | 1 | ⬜ |
 | `ui/analog-clock` | — | 1 | ⬜ |
 

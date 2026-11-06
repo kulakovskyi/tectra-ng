@@ -1,0 +1,131 @@
+<div
+  class="tx-month-calendar__grid"
+  role="grid"
+  [attr.aria-label]="text().region"
+  [style.--tx-month-calendar-lanes]="maxLanes()"
+  [class]="passThrough().grid?.class"
+  [style]="passThrough().grid?.style"
+>
+  <div class="tx-month-calendar__head" role="row" [class]="passThrough().head?.class" [style]="passThrough().head?.style">
+    @for (weekday of weekdays(); track weekday.key) {
+      <div
+        class="tx-month-calendar__weekday"
+        role="columnheader"
+        [class.tx-month-calendar__weekday--weekend]="weekday.weekend"
+        [attr.aria-label]="weekday.short"
+        [class]="passThrough().weekday?.class"
+        [style]="passThrough().weekday?.style"
+      >
+        <span class="tx-month-calendar__weekday-short" aria-hidden="true">{{ weekday.short }}</span>
+        <span class="tx-month-calendar__weekday-narrow" aria-hidden="true">{{ weekday.narrow }}</span>
+      </div>
+    }
+  </div>
+
+  @for (week of weeks(); track week.key) {
+    <div class="tx-month-calendar__week" role="row" [class]="passThrough().week?.class" [style]="passThrough().week?.style">
+      @for (day of week.days; track day.key) {
+        <div
+          class="tx-month-calendar__cell"
+          role="gridcell"
+          [style.grid-column]="day.column"
+          [class.tx-month-calendar__cell--first]="day.column === 1"
+          [class.tx-month-calendar__cell--weekend]="day.weekend"
+          [class.tx-month-calendar__cell--outside]="!day.inMonth"
+          [class.tx-month-calendar__cell--selected]="day.selected"
+          [attr.aria-selected]="day.selected"
+          [class]="passThrough().cell?.class"
+          [style]="passThrough().cell?.style"
+        >
+          <button
+            type="button"
+            class="tx-month-calendar__day"
+            [attr.data-day-key]="day.key"
+            [attr.tabindex]="day.key === focusKey() ? 0 : -1"
+            [attr.aria-current]="day.today ? 'date' : null"
+            [class]="passThrough().day?.class"
+            [style]="passThrough().day?.style"
+            (click)="onDayClick(day)"
+            (keydown)="onDayKeydown($event, day)"
+          >
+            <span class="tx-month-calendar__label">{{ dayLabel(day) }}</span>
+            <span class="tx-month-calendar__day-head" aria-hidden="true">
+              <span
+                class="tx-month-calendar__number"
+                [class.tx-month-calendar__number--today]="day.today"
+                [class]="passThrough().number?.class"
+                [style]="passThrough().number?.style"
+                >{{ day.day }}</span
+              >
+              @for (marker of day.markers; track $index) {
+                <span class="tx-month-calendar__marker" [class]="passThrough().marker?.class" [style]="passThrough().marker?.style">
+                  <tx-pill size="small" [tone]="marker.tone" [icon]="marker.icon || undefined" [unstyled]="isUnstyled()">{{ marker.label }}</tx-pill>
+                </span>
+                <span class="tx-month-calendar__marker-dot" [attr.data-tone]="marker.tone"></span>
+              }
+            </span>
+            @if (day.dots.length) {
+              <span class="tx-month-calendar__dots" aria-hidden="true">
+                @for (tone of day.dots; track $index) {
+                  <span class="tx-month-calendar__dot" [attr.data-tone]="tone"></span>
+                }
+              </span>
+            }
+          </button>
+        </div>
+      }
+
+      @for (segment of week.segments; track segment.key) {
+        <button
+          type="button"
+          tabindex="-1"
+          aria-hidden="true"
+          class="tx-month-calendar__event"
+          [attr.data-tone]="segment.event.tone"
+          [class.tx-month-calendar__event--start]="segment.startsHere"
+          [class.tx-month-calendar__event--end]="segment.endsHere"
+          [style.grid-row]="segment.lane + 2"
+          [style.grid-column]="segment.column + ' / span ' + segment.span"
+          [attr.title]="segment.event.title"
+          [class]="passThrough().event?.class"
+          [style]="passThrough().event?.style"
+          (click)="onEventClick(segment.event)"
+        >
+          @if (eventTemplate(); as template) {
+            <ng-container [ngTemplateOutlet]="template.templateRef" [ngTemplateOutletContext]="{ $implicit: segment.event, event: segment.event, segment: segment }" />
+          } @else {
+            @if (segment.event.avatar && segment.startsHere) {
+              <tx-avatar
+                class="tx-month-calendar__avatar"
+                aria-hidden="true"
+                [size]="14"
+                [image]="segment.event.avatar.src"
+                [name]="segment.event.avatar.name"
+                [unstyled]="isUnstyled()"
+              />
+            }
+            <span class="tx-month-calendar__event-title">{{ segment.event.title }}</span>
+          }
+        </button>
+      }
+
+      @for (day of week.days; track day.key) {
+        @if (day.hidden) {
+          <button
+            type="button"
+            tabindex="-1"
+            aria-hidden="true"
+            class="tx-month-calendar__more"
+            [style.grid-row]="maxLanes() + 2"
+            [style.grid-column]="day.column"
+            [class]="passThrough().more?.class"
+            [style]="passThrough().more?.style"
+            (click)="onDayClick(day)"
+          >
+            {{ moreLabel(day.hidden) }}
+          </button>
+        }
+      }
+    </div>
+  }
+</div>

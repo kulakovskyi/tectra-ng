@@ -20,12 +20,12 @@ PrimeNG: DatePicker (`selectionMode` single / multiple / range, `dateFormat` wit
 - [x] Accessibility: `combobox` input with `aria-haspopup="dialog"`, panel `dialog` with a focus trap, days as a `grid` with roving focus — arrows, Home / End, PageUp / PageDown (Shift for years), Enter / Space, Escape back to the input; month / year grids by arrows, translated labels
 - [x] Docs + tests; e2e: open under the field and pick, typed dates in three formats, keyboard through the grid, range highlight, clear button beside the icon button, touch dialog centred over the mask; `tx-float-label` / `tx-ifta-label` know the field
 
-## 8.2 Month calendar — `ui/month-calendar`
+## 8.2 Month calendar — `ui/month-calendar` ✅
 
-Not in PrimeNG. First app (5): a month grid that draws events as continuous bars across days (lanes, `+N` overflow per day, `maxLanes`), day markers, a selected day, `weekStartsOn`, `locale`, labels (`more`, `today`, region), `today` override, `dayClick` / `eventClick`, own event template with the segment (`lane`, `column`, `span`, `startsHere`, `endsHere`), keyboard navigation.
+Not in PrimeNG. First app (5): a month grid that draws events as continuous bars across days (lanes, `+N` overflow per day, `maxLanes`), day markers, a selected day, `weekStartsOn`, `locale`, labels (`more`, `today`, region), `today` override, `dayClick` / `eventClick`, own event template with the segment (`lane`, `column`, `span`, `startsHere`, `endsHere`), keyboard navigation. The look is the first app's own grid (rem × 14px): content-border ring with the `lg` radius on the card background, weekday row on the ground colour (`10.5px` semibold muted, centred narrow names, left-aligned short names from 560px), weeks `49px` narrow or `31.5px` + `21px` per lane + `21px` for `+N` wide, weekend cells tinted with the ground colour, selected day 9% primary, today a `24.5px` primary circle, bars `17.5px` with `5.25px` radius tinted 14% with the tone (24% on hover), `5.25px` dots in the compact grid below 560px of its own width.
 
-- [ ] `<tx-month-calendar>` with every option above
-- [ ] Docs + tests
+- [x] `<tx-month-calendar>` with every option above (same names as the first app's grid; `weekStartsOn` and `locale` follow the kit locale when not set; `info` tone added); event bars and `+N` are mouse shortcuts hidden from screen readers while each day is named with its date, today, markers and events; days of other months and weekend names use the muted text colour and bar text mixes the tone with the text colour, so contrast is AA (the original used opacity)
+- [x] Docs + tests; e2e: a bar spans its days and continues next week, arrow keys and Enter, compact dots below 560px, `+N` follows `maxLanes`
 
 ## 8.3 Countdown — `ui/countdown`
 

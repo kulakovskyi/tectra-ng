@@ -91,6 +91,9 @@ export interface TxTranslations {
   previousSecond: string;
   toggleAmPm: string;
   dateSelected: string;
+  calendar: string;
+  moreEvents: string;
+  events: string;
   copyEmail: string;
   copyPhone: string;
   opensInNewTab: string;

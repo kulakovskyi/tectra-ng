@@ -41,6 +41,7 @@ import { speedDialTokens } from './speed-dial.tokens';
 import { paginatorTokens } from './paginator.tokens';
 import { tableTokens } from './table.tokens';
 import { datePickerTokens } from './datepicker.tokens';
+import { monthCalendarTokens } from './month-calendar.tokens';
 
 export const COMPONENT_TOKENS = {
   icon: iconTokens,
@@ -110,6 +111,7 @@ export const COMPONENT_TOKENS = {
   statTile: statTileTokens,
   sparkline: sparklineTokens,
   datePicker: datePickerTokens,
+  monthCalendar: monthCalendarTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;
