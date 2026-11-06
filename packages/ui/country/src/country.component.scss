@@ -30,6 +30,11 @@
     background-size: cover;
     box-shadow: var(--tx-country-ring);
     object-fit: cover;
+    margin-inline-start: var(--tx-country-ring-gutter);
+  }
+
+  .tx-country__flag--loading {
+    background: var(--tx-country-loading-background);
   }
 
   .tx-country__flag--emoji {

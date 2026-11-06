@@ -21,6 +21,7 @@ packages/
   core/<entry>  @tectra-ng/core/<entry>  config (provideTectra, dt/pt/unstyled), overlay, a11y, forms, i18n, styles, ripple, fluid, utils
   icons/        @tectra-ng/icons         own SVG icon set (PrimeIcons names) + TxIcon, provideTxIcons
   brand-icons/  @tectra-ng/brand-icons   brand logos (Simple Icons, CC0)
+  flags/        @tectra-ng/flags         country flags (generated from flag-icons, MIT), lazy chunks; `npm run flags`
   ui/<name>     @tectra-ng/ui/<name>     components, one flat entry point per component
   ui/styles/    shared SCSS mixins (_form-field.scss)
   blocks/<name> @tectra-ng/blocks/<name> composed blocks
@@ -46,6 +47,7 @@ Prefix Nx commands with `NX_DAEMON=false NX_NO_CLOUD=true`.
 | Regenerate docs registry | `npm run registry` |
 | Format docs examples | `npm run format:examples` |
 | Rebuild icons | `npm run icons` |
+| Rebuild flags | `npm run flags` |
 | Release (npm) | GitHub Actions → `release` → Run workflow; dry run locally: `node tools/release.mjs patch latest --dry-run` |
 
 Install packages with `npm i … --legacy-peer-deps` (npm arborist bug otherwise). Do not start or stop the user's dev servers; start your own `node tools/serve-docs.mjs dist/apps/docs/browser 4310` for checks and stop it afterwards.

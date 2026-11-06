@@ -178,8 +178,9 @@ test.describe('with motion', () => {
     await expect.poll(() => body.evaluate((element) => element.getAnimations().length)).toBe(0);
     const open = await body.evaluate((element) => element.getBoundingClientRect().height);
     expect(open).toBeGreaterThan(60);
+    const opened = await body.elementHandle();
     await frame.getByRole('button', { name: 'Collapse row' }).first().click();
-    await expect.poll(() => body.evaluate((element) => element.getBoundingClientRect().height)).toBeLessThan(open);
+    await expect.poll(() => opened?.evaluate((element) => (element.isConnected ? element.getBoundingClientRect().height : 0))).toBeLessThan(open);
     await expect(frame.locator('.tx-table__expansion')).toHaveCount(1);
   });
 });

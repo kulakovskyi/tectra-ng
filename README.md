@@ -36,6 +36,7 @@ Plan of what moves in next and in which order: [ROADMAP.md](ROADMAP.md).
 | `packages/core` | behaviour without looks: config (theme, unstyled, pt), overlay, a11y, forms, i18n, styles, ripple, fluid, utils | npm `@tectra-ng/core/*` |
 | `packages/icons` | 334 own outline icons (PrimeIcons names) + `<tx-icon>` + icon registry (`provideTxIcons`) | npm `@tectra-ng/icons` |
 | `packages/brand-icons` | optional brand logos from Simple Icons (CC0) under PrimeIcons names | npm `@tectra-ng/brand-icons` |
+| `packages/flags` | optional country flags as SVG, rectangle and circle, loaded one by one | npm `@tectra-ng/flags` |
 | `packages/ui` | components, one entry point each | npm `@tectra-ng/ui/<component>` |
 | `packages/blocks` | console-layout, filters-panel, stat-tiles … | npm `@tectra-ng/blocks/<block>` |
 | `apps/docs` | the documentation site | Cloudflare Pages |

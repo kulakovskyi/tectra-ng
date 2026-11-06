@@ -66,6 +66,7 @@ Not in PrimeNG. First app: flag display 56 (`code`, `showName`, `round`, `size`)
 - [x] `<tx-country>`: name from `Intl.DisplayNames` in the tectra locale (follows `setLocale`), own `name`, unknown values as text, sizes, rectangle / circle, flag-only mode as a named image; emoji flags by default, `provideTxFlags` with `txFlagIcons` (flag-icons CSS classes) or `txFlagImages(url)`; ISO code list and helpers; `country` tokens
 - [x] `<tx-country-select>` on `tx-select` / `tx-multiselect`: all countries or own options (`code`, `value`, `label`, `count`, `hint`, `disabled`), locale-aware sort, search by name or code, virtual list above `virtualScrollThreshold`, flags + "+N" for several values, clear, loading, sizes, states, form control
 - [x] Docs + tests; e2e: search by code, flags + counter, flag-only image name
+- [x] `@tectra-ng/flags`: every flag of the first app's flag set (271, rectangle + circle) generated into the package with `npm run flags`, one lazy chunk per flag, no runtime dependency; async resolvers in `tx-country` keep the flag box while loading (no layout shift), fall back to emoji; flag sizes and radius match the first app (1em / 17.5px / 28px, 3px); docs (flag set, emoji), unit tests, e2e
 
 ## 6.7 The rest — color picker, mention textarea, email suggestion, tree select, cascade select ✅
 

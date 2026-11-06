@@ -1,0 +1,30 @@
+{
+  "name": "flags",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "packages/flags",
+  "tags": [
+    "pkg:flags"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:package",
+      "outputs": [
+        "{workspaceRoot}/dist/packages/flags"
+      ],
+      "options": {
+        "project": "packages/flags/ng-package.json",
+        "tsConfig": "packages/flags/tsconfig.lib.json"
+      }
+    },
+    "test": {
+      "executor": "@angular/build:unit-test",
+      "options": {
+        "buildTarget": "sandbox:build",
+        "tsConfig": "packages/flags/tsconfig.spec.json",
+        "runner": "vitest",
+        "watch": false
+      }
+    }
+  }
+}

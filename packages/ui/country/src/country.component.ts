@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, booleanAttribute, computed, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, booleanAttribute, computed, effect, inject, input, signal } from '@angular/core';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
 import { TxLocaleService } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraCountryTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { countryEmoji, countryName, isCountryCode } from './countries';
-import { TxCountryPart, TxCountrySize, TxFlagShape } from './country.types';
+import { TxCountryPart, TxCountrySize, TxFlag, TxFlagShape } from './country.types';
 import { TX_FLAG_RESOLVER } from './flags';
 
 @Component({
@@ -17,6 +17,8 @@ import { TX_FLAG_RESOLVER } from './flags';
         } @else {
           <span class="tx-country__flag" aria-hidden="true" [class]="flagClass(image.class)" [style]="passThrough().flag?.style"></span>
         }
+      } @else if (isLoading()) {
+        <span class="tx-country__flag tx-country__flag--loading" aria-hidden="true" [class]="passThrough().flag?.class" [style]="passThrough().flag?.style"></span>
       } @else {
         <span class="tx-country__flag tx-country__flag--emoji" aria-hidden="true" [class]="passThrough().flag?.class" [style]="passThrough().flag?.style">{{
           emoji()
@@ -62,14 +64,47 @@ export class TxCountry {
     return isCountryCode(value) ? value : null;
   });
   readonly label = computed(() => this.name() ?? (this.code() ? countryName(this.code() ?? '', this.locale.locale().intl) : (this.country() ?? '').trim()));
-  readonly flag = computed(() => {
+  private readonly loaded = signal<{ key: string; flag: TxFlag | null } | null>(null);
+  private readonly resolution = computed(() => {
     const code = this.code();
-    return code && this.resolver ? this.resolver(code, this.shape()) : null;
+    return code && this.resolver ? { key: `${this.shape()}:${code}`, value: this.resolver(code, this.shape()) } : null;
+  });
+  readonly isLoading = computed(() => {
+    const resolution = this.resolution();
+    return !!resolution && isPromise(resolution.value) && this.loaded()?.key !== resolution.key;
+  });
+  readonly flag = computed(() => {
+    const resolution = this.resolution();
+    if (!resolution) {
+      return null;
+    }
+    if (!isPromise(resolution.value)) {
+      return resolution.value;
+    }
+    const loaded = this.loaded();
+    return loaded?.key === resolution.key ? loaded.flag : null;
   });
   readonly emoji = computed(() => countryEmoji(this.code() ?? ''));
   readonly hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-country'), ...this.passThrough().root?.style }));
 
+  constructor() {
+    effect(() => {
+      const resolution = this.resolution();
+      if (resolution && isPromise(resolution.value)) {
+        const { key, value } = resolution;
+        value.then(
+          (flag) => this.loaded.set({ key, flag }),
+          () => this.loaded.set({ key, flag: null }),
+        );
+      }
+    });
+  }
+
   flagClass(own: string | undefined): string {
     return [own, this.passThrough().flag?.class].filter(Boolean).join(' ');
   }
+}
+
+function isPromise<T>(value: T | Promise<T>): value is Promise<T> {
+  return typeof (value as Promise<T> | null)?.then === 'function';
 }

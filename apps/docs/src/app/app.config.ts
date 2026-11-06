@@ -1,6 +1,8 @@
 import { ApplicationConfig, DOCUMENT, inject, provideAppInitializer, provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter, Router, withComponentInputBinding, withInMemoryScrolling, withViewTransitions } from '@angular/router';
 import { provideTxBrandIcons } from '@tectra-ng/brand-icons';
+import { loadTxFlag } from '@tectra-ng/flags';
+import { provideTxFlags, txFlagImages } from '@tectra-ng/ui/country';
 import { provideTectra } from '@tectra-ng/core/config';
 import { Tectra } from '@tectra-ng/themes';
 import { routes } from './app.routes';
@@ -30,5 +32,6 @@ export const appConfig: ApplicationConfig = {
     ),
     provideTectra({ preset: Tectra, ripple: true }),
     provideTxBrandIcons(),
+    provideTxFlags(txFlagImages(loadTxFlag)),
   ],
 };

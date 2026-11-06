@@ -1,0 +1,1 @@
+`@tectra-ng/flags` draws every ISO country as an SVG, rectangle 4:3 or circle. Each flag is its own chunk, loaded only when it is shown and cached after that; until it arrives the flag keeps its box, so nothing moves. Provide it once in `app.config.ts`: `provideTxFlags(txFlagImages(loadTxFlag))`.

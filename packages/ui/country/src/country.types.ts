@@ -7,4 +7,4 @@ export interface TxFlag {
   src?: string;
 }
 
-export type TxFlagResolver = (code: string, shape: TxFlagShape) => TxFlag | null;
+export type TxFlagResolver = (code: string, shape: TxFlagShape) => TxFlag | Promise<TxFlag | null> | null;

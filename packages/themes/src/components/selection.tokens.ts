@@ -31,12 +31,14 @@ export type TectraChipsInputTokens = typeof chipsInputTokens;
 
 export const countryTokens = {
   root: {
-    gap: '8px',
-    smallSize: '16px',
-    mediumSize: '20px',
-    largeSize: '24px',
-    borderRadius: '2px',
+    gap: '7px',
+    smallSize: '1em',
+    mediumSize: '17.5px',
+    largeSize: '28px',
+    borderRadius: tokenRef('radius-xs'),
     ring: `0 0 0 1px ${tokenRef('surface-border')}`,
+    ringGutter: '1px',
+    loadingBackground: tokenRef('surface-hover'),
     nameColor: 'inherit',
     hintColor: tokenRef('text-muted'),
     countColor: tokenRef('text-muted'),

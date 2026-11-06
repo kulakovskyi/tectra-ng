@@ -23,6 +23,11 @@ describe('TxCountry', () => {
     fixture.detectChanges();
     return fixture;
   };
+  const settle = async (fixture: ComponentFixture<Host>) => {
+    TestBed.tick();
+    await new Promise((done) => setTimeout(done));
+    fixture.detectChanges();
+  };
   const root = (fixture: ComponentFixture<Host>) => fixture.nativeElement.querySelector('tx-country') as HTMLElement;
 
   it('shows an emoji flag and the localized name', () => {
@@ -58,6 +63,30 @@ describe('TxCountry', () => {
     fixture.detectChanges();
     expect(root(fixture).querySelector('.tx-country__flag')?.className).toContain('fi fi-ua fis');
     expect(txFlagImages((code) => `/flags/${code}.svg`)('PL', 'rectangle')).toEqual({ src: '/flags/pl.svg' });
+  });
+
+  it('keeps a same-size box while an async flag loads, then shows the image', async () => {
+    let resolve: (src: string | null) => void = () => undefined;
+    const pending = new Promise<string | null>((done) => (resolve = done));
+    TestBed.configureTestingModule({ providers: [provideTxFlags(txFlagImages((code, shape) => (code === 'ua' ? pending : Promise.resolve(`${shape}-${code}`))))] });
+    const fixture = create();
+    expect(root(fixture).querySelector('.tx-country__flag--loading')).not.toBeNull();
+    expect(root(fixture).querySelector('.tx-country__flag--emoji')).toBeNull();
+    resolve('data:image/svg+xml,ua');
+    await settle(fixture);
+    expect(root(fixture).querySelector('img')?.getAttribute('src')).toBe('data:image/svg+xml,ua');
+    fixture.componentInstance.code.set('pl');
+    fixture.componentInstance.shape.set('circle');
+    fixture.detectChanges();
+    await settle(fixture);
+    expect(root(fixture).querySelector('img')?.getAttribute('src')).toBe('circle-pl');
+  });
+
+  it('falls back to the emoji when an async flag is missing', async () => {
+    TestBed.configureTestingModule({ providers: [provideTxFlags(txFlagImages(() => Promise.resolve(null)))] });
+    const fixture = create();
+    await settle(fixture);
+    expect(root(fixture).querySelector('.tx-country__flag--emoji')?.textContent?.trim()).toBe('🇺🇦');
   });
 
   it('has helpers for codes', () => {

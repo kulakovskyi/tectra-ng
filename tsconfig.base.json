@@ -20,6 +20,7 @@
       "@tectra-ng/themes": ["./packages/themes/src/index.ts"],
       "@tectra-ng/icons": ["./packages/icons/src/index.ts"],
       "@tectra-ng/brand-icons": ["./packages/brand-icons/src/index.ts"],
+      "@tectra-ng/flags": ["./packages/flags/src/index.ts"],
       "@tectra-ng/core/*": ["./packages/core/*/index.ts"],
       "@tectra-ng/ui/*": ["./packages/ui/*/index.ts"],
       "@tectra-ng/blocks/*": ["./packages/blocks/*/index.ts"]

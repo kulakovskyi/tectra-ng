@@ -5,6 +5,7 @@ const DEPENDENCY_RULES = [
   { sourceTag: 'pkg:themes', onlyDependOnLibsWithTags: ['pkg:tokens'] },
   { sourceTag: 'pkg:icons', onlyDependOnLibsWithTags: [] },
   { sourceTag: 'pkg:brand-icons', onlyDependOnLibsWithTags: ['pkg:icons'] },
+  { sourceTag: 'pkg:flags', onlyDependOnLibsWithTags: [] },
   { sourceTag: 'pkg:core', onlyDependOnLibsWithTags: ['pkg:themes', 'pkg:tokens'] },
   { sourceTag: 'pkg:ui', onlyDependOnLibsWithTags: ['pkg:core', 'pkg:icons', 'pkg:themes', 'pkg:tokens'] },
   { sourceTag: 'pkg:blocks', onlyDependOnLibsWithTags: ['pkg:ui', 'pkg:core', 'pkg:icons', 'pkg:themes', 'pkg:tokens'] },

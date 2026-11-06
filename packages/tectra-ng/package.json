@@ -1,7 +1,7 @@
 {
   "name": "tectra-ng",
   "version": "0.1.1",
-  "description": "tectra — Angular UI kit in one install: components, design tokens, themes, icons and brand logos.",
+  "description": "tectra — Angular UI kit in one install: components, design tokens, themes, icons, brand logos and flags.",
   "license": "MIT",
   "homepage": "https://tectra-ng.com",
   "repository": {
@@ -17,6 +17,7 @@
     "@tectra-ng/core": "^0.1.0",
     "@tectra-ng/icons": "^0.1.0",
     "@tectra-ng/brand-icons": "^0.1.0",
+    "@tectra-ng/flags": "^0.1.0",
     "@tectra-ng/ui": "^0.1.0"
   },
   "publishConfig": {

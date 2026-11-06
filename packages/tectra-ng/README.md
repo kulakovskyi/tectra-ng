@@ -22,6 +22,7 @@ import { Tectra } from '@tectra-ng/themes';
 | `@tectra-ng/tokens` | Design tokens: palettes, radius, typography, shadows, motion |
 | `@tectra-ng/icons` | Icon set and `TxIcon` |
 | `@tectra-ng/brand-icons` | Brand logos for `TxIcon` |
+| `@tectra-ng/flags` | Country flags for `TxCountry` and `TxCountrySelect` |
 
 Need only part of it? Install a package on its own — `npm i @tectra-ng/ui` brings `core`, `themes`, `tokens` and `icons` with it.
 

@@ -1,0 +1,24 @@
+{
+  "name": "@tectra-ng/flags",
+  "version": "0.1.1",
+  "description": "Country flags for the tectra country components, loaded one by one on demand.",
+  "license": "MIT",
+  "homepage": "https://tectra-ng.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kulakovskyi/tectra-ng.git",
+    "directory": "packages/flags"
+  },
+  "bugs": "https://github.com/kulakovskyi/tectra-ng/issues",
+  "keywords": [
+    "tectra",
+    "angular",
+    "flags",
+    "countries",
+    "svg"
+  ],
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  }
+}
