@@ -5,7 +5,10 @@
   padding-inline: calc(var(--tx-form-field-padding-x) + var(--tx-field-inset-start, 0px))
     calc(var(--tx-form-field-padding-x) + var(--tx-field-inset-end, 0px));
   border: 1px solid var(--tx-form-field-border-color);
-  border-radius: var(--tx-form-field-border-radius);
+  border-start-start-radius: var(--tx-field-radius-start, var(--tx-form-field-border-radius));
+  border-end-start-radius: var(--tx-field-radius-start, var(--tx-form-field-border-radius));
+  border-start-end-radius: var(--tx-field-radius-end, var(--tx-form-field-border-radius));
+  border-end-end-radius: var(--tx-field-radius-end, var(--tx-form-field-border-radius));
   outline: none;
   background-color: var(--tx-form-field-background);
   box-shadow: var(--tx-form-field-shadow);
