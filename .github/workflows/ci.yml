@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
 
 jobs:
   check:
@@ -26,7 +27,7 @@ jobs:
           name: playwright-report
           path: test-results
       - uses: actions/upload-artifact@v4
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         with:
           name: docs-site
           path: dist/apps/docs/browser
@@ -34,7 +35,7 @@ jobs:
 
   deploy-docs:
     needs: check
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
       name: docs
