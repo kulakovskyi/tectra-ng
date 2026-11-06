@@ -85,7 +85,7 @@ test.describe('export', () => {
       status: 'Paid',
       total: 120,
     });
-    await expect(frame.getByText('Saved orders.json.')).toBeVisible();
+    await expect(page.locator('body > tx-toast')).toContainText('Saved orders.json');
   });
 
   test('spins while rows load and can be cancelled', async ({ page }) => {
@@ -94,7 +94,7 @@ test.describe('export', () => {
     await frame.getByRole('checkbox', { name: 'Cancel the next export' }).click();
     await main.click();
     await expect(main).toBeDisabled();
-    await expect(frame.getByText('Cancelled — nothing was exported.')).toBeVisible();
+    await expect(page.locator('body > tx-toast')).toContainText('Cancelled — nothing was exported');
     await expect(main).toBeEnabled();
     await frame.getByRole('checkbox', { name: 'Cancel the next export' }).click();
     const xlsx = await save(page, main);

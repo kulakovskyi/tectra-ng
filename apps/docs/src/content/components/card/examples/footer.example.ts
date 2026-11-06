@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TxCard } from '@tectra-ng/ui/card';
 import { TxButton } from '@tectra-ng/ui/button';
+import { TxToastService } from '@tectra-ng/ui/toast';
 
 @Component({
   selector: 'card-footer-example',
@@ -9,13 +10,17 @@ import { TxButton } from '@tectra-ng/ui/button';
     <tx-card title="Upgrade to Team" subtitle="$12 per member a month" class="card">
       Shared projects, roles and an audit log for everyone in your workspace.
       <div txCardFooter class="actions">
-        <button txButton severity="secondary" variant="text" (click)="status.set('Maybe later')">
+        <button
+          txButton
+          severity="secondary"
+          variant="text"
+          (click)="toast.info('We will remind you next month')"
+        >
           Not now
         </button>
-        <button txButton (click)="status.set('Upgrade started')">Upgrade</button>
+        <button txButton (click)="toast.success('Upgraded to Team')">Upgrade</button>
       </div>
     </tx-card>
-    <p class="status" aria-live="polite">{{ status() }}</p>
   `,
   styles: `
     .card {
@@ -26,14 +31,9 @@ import { TxButton } from '@tectra-ng/ui/button';
       justify-content: flex-end;
       gap: 8px;
     }
-    .status {
-      min-height: 20px;
-      margin: 12px 0 0;
-      font-size: 13px;
-    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class CardFooterExample {
-  readonly status = signal('');
+  readonly toast = inject(TxToastService);
 }

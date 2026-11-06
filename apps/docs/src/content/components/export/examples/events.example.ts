@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TxExportCsv, TxExportField, TxExportedEvent } from '@tectra-ng/ui/export';
+import { TxToastService } from '@tectra-ng/ui/toast';
 
 interface Row {
   sku: string;
@@ -23,10 +24,9 @@ interface Row {
         severity="danger"
         [fields]="fields"
         [fetchData]="broken"
-        (failed)="log.set('The server did not answer — try again.')"
+        (failed)="toast.error('The server did not answer — try again')"
       />
     </div>
-    <p class="hint" aria-live="polite">{{ log() }}</p>
   `,
   styles: `
     .row {
@@ -34,16 +34,11 @@ interface Row {
       flex-wrap: wrap;
       gap: 8px;
     }
-    .hint {
-      margin: 12px 0 0;
-      color: var(--tx-text-muted);
-      font-size: 13px;
-    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class ExportEventsExample {
-  readonly log = signal('Nothing exported yet.');
+  readonly toast = inject(TxToastService);
   readonly fields: TxExportField<Row>[] = [
     { field: 'sku', title: 'SKU' },
     { field: 'stock', title: 'Stock' },
@@ -56,6 +51,6 @@ export default class ExportEventsExample {
     new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 600));
 
   onExported(event: TxExportedEvent<Row>): void {
-    this.log.set(`Saved ${event.rows} rows to ${event.filename}.`);
+    this.toast.success(`Saved ${event.rows} rows to ${event.filename}`);
   }
 }

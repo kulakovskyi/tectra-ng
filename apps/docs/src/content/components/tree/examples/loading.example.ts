@@ -9,10 +9,8 @@ import { TxTree, TxTreeNode } from '@tectra-ng/ui/tree';
   template: `
     <div class="grid">
       <div class="stack">
-        <label class="row" for="tree-loading-mask">
-          <tx-toggle-switch inputId="tree-loading-mask" [(ngModel)]="loading" />
-          <strong>Mask</strong>
-        </label>
+        <strong>Mask</strong>
+        <tx-toggle-switch label="Loading" [(ngModel)]="loading" />
         <tx-tree ariaLabel="Files loading" [loading]="loading" [value]="files" />
       </div>
       <div class="stack">
@@ -31,11 +29,6 @@ import { TxTree, TxTreeNode } from '@tectra-ng/ui/tree';
       display: grid;
       gap: 8px;
       align-content: start;
-    }
-    .row {
-      display: flex;
-      gap: 8px;
-      align-items: center;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

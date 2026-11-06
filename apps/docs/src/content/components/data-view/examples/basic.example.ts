@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TxIcon } from '@tectra-ng/icons';
+import { TxAmount } from '@tectra-ng/ui/amount';
 import { TxDataView, TxDataViewList } from '@tectra-ng/ui/data-view';
 
 interface Product {
@@ -24,7 +25,7 @@ const PRODUCTS: Product[] = [
 
 @Component({
   selector: 'data-view-basic-example',
-  imports: [TxDataView, TxDataViewList, TxIcon],
+  imports: [TxDataView, TxDataViewList, TxIcon, TxAmount],
   template: `
     <tx-data-view ariaLabel="Products" [value]="products">
       <ng-template txDataViewList let-items>
@@ -36,7 +37,7 @@ const PRODUCTS: Product[] = [
                 <strong>{{ product.name }}</strong>
                 <span class="muted">{{ product.category }}</span>
               </span>
-              <span class="price">{{ product.price }} €</span>
+              <tx-amount class="price" currency="EUR" [amount]="product.price" />
             </li>
           }
         </ul>

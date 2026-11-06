@@ -41,7 +41,7 @@ test('tiered menu opens sub-menus on hover and with the keyboard', async ({ page
   await submenu.getByRole('menuitem', { name: 'Projects' }).hover();
   await expect(submenu).toHaveCount(2);
   await submenu.last().getByRole('menuitem', { name: 'Atlas' }).click();
-  await expect(example).toContainText('Last action: Atlas');
+  await expect(page.locator('body > tx-toast')).toContainText('Selected: Atlas');
   await expect(submenu).toHaveCount(0);
 
   await moveTo.focus();

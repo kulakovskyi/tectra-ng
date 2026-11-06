@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { TxAmount } from '@tectra-ng/ui/amount';
 import { TxTable, TxTableColumn, TxTableExpansion } from '@tectra-ng/ui/table';
 
 interface Invoice {
@@ -49,7 +50,7 @@ const INVOICES: Invoice[] = [
 
 @Component({
   selector: 'table-expansion-example',
-  imports: [TxTable, TxTableExpansion],
+  imports: [TxTable, TxTableExpansion, TxAmount],
   template: `
     <tx-table
       ariaLabel="Invoices"
@@ -62,7 +63,7 @@ const INVOICES: Invoice[] = [
         <div class="details">
           <strong>{{ invoice.client }}</strong>
           <span>{{ invoice.city }} · {{ invoice.status }}</span>
-          <span>Amount due: {{ invoice.amount }} USD</span>
+          <span>Amount due: <tx-amount currency="USD" [amount]="invoice.amount" /></span>
         </div>
       </ng-template>
     </tx-table>

@@ -1,22 +1,28 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxPanel } from '@tectra-ng/ui/panel';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { TxButton } from '@tectra-ng/ui/button';
-import { TxPill } from '@tectra-ng/ui/pill';
+import { TxField } from '@tectra-ng/ui/field';
 import { TxInput } from '@tectra-ng/ui/input';
+import { TxPanel } from '@tectra-ng/ui/panel';
+import { TxPill } from '@tectra-ng/ui/pill';
+import { TxToastService } from '@tectra-ng/ui/toast';
 
 @Component({
   selector: 'panel-header-and-footer-example',
-  imports: [TxPanel, TxButton, TxPill, TxInput],
+  imports: [TxPanel, TxButton, TxPill, TxField, TxInput],
   template: `
     <tx-panel title="Domain" icon="globe">
       <div txPanelHeader class="pills">
         <tx-pill tone="success" size="small" icon="check">Verified</tx-pill>
         <tx-pill size="small">HTTPS</tx-pill>
       </div>
-      <label class="field">
-        <span>Address</span>
-        <input txInput [value]="domain()" (input)="domain.set($any($event.target).value)" />
-      </label>
+      <tx-field label="Address">
+        <input
+          txInput
+          [fluid]="true"
+          [value]="domain()"
+          (input)="domain.set($any($event.target).value)"
+        />
+      </tx-field>
       <div txPanelFooter class="actions">
         <button
           txButton
@@ -26,10 +32,9 @@ import { TxInput } from '@tectra-ng/ui/input';
         >
           Reset
         </button>
-        <button txButton (click)="saved.set(domain())">Save</button>
+        <button txButton (click)="save()">Save</button>
       </div>
     </tx-panel>
-    <p class="status" aria-live="polite">{{ saved() ? 'Saved ' + saved() : '' }}</p>
   `,
   styles: `
     .pills {
@@ -37,26 +42,19 @@ import { TxInput } from '@tectra-ng/ui/input';
       gap: 6px;
       margin-top: 8px;
     }
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      font-size: 14px;
-    }
     .actions {
       display: flex;
       justify-content: flex-end;
       gap: 8px;
     }
-    .status {
-      min-height: 20px;
-      margin: 12px 0 0;
-      font-size: 13px;
-    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class PanelHeaderAndFooterExample {
+  private readonly toast = inject(TxToastService);
   readonly domain = signal('docs.example.com');
-  readonly saved = signal('');
+
+  save(): void {
+    this.toast.success(`Saved ${this.domain()}`);
+  }
 }

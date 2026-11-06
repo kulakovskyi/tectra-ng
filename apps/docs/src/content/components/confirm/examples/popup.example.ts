@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { TxAvatar } from '@tectra-ng/ui/avatar';
 import { TxButton } from '@tectra-ng/ui/button';
 import { TxConfirmService } from '@tectra-ng/ui/confirm';
+import { TxToastService } from '@tectra-ng/ui/toast';
 
 @Component({
   selector: 'confirm-popup-example',
@@ -48,6 +49,7 @@ import { TxConfirmService } from '@tectra-ng/ui/confirm';
 })
 export default class ConfirmPopupExample {
   private confirm = inject(TxConfirmService);
+  private readonly toast = inject(TxToastService);
   readonly members = signal(['Olena Koval', 'Marek Nowak', 'Sara Lind']);
 
   async remove(event: Event, member: string): Promise<void> {
@@ -58,7 +60,22 @@ export default class ConfirmPopupExample {
       placement: 'left',
     });
     if (ok) {
+      const index = this.members().indexOf(member);
       this.members.update((members) => members.filter((other) => other !== member));
+      this.toast.success(`${member} removed from the team`, {
+        life: 8000,
+        actions: [
+          {
+            label: 'Undo',
+            run: () =>
+              this.members.update((members) => [
+                ...members.slice(0, index),
+                member,
+                ...members.slice(index),
+              ]),
+          },
+        ],
+      });
     }
   }
 }

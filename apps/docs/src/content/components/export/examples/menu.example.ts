@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TxExport, TxExportField, TxExportedEvent } from '@tectra-ng/ui/export';
+import { TxToastService } from '@tectra-ng/ui/toast';
 
 interface Order {
   id: number;
@@ -29,7 +30,6 @@ interface Order {
         (exported)="onExported($event)"
       />
     </div>
-    <p class="hint" aria-live="polite">{{ last() }}</p>
   `,
   styles: `
     .row {
@@ -37,16 +37,11 @@ interface Order {
       flex-wrap: wrap;
       gap: 8px;
     }
-    .hint {
-      margin: 12px 0 0;
-      color: var(--tx-text-muted);
-      font-size: 13px;
-    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class ExportMenuExample {
-  readonly last = signal('The main button saves Excel; the arrow opens every format.');
+  private readonly toast = inject(TxToastService);
   readonly fields: TxExportField<Order>[] = [
     { field: 'id', title: 'Order' },
     { field: 'status', title: 'Status' },
@@ -59,6 +54,8 @@ export default class ExportMenuExample {
   ];
 
   onExported(event: TxExportedEvent<Order>): void {
-    this.last.set(event.filename ? `Saved ${event.filename}.` : `Done: ${event.format}.`);
+    if (event.filename) this.toast.success(`Saved ${event.filename}`);
+    else if (event.format === 'copy') this.toast.success('Orders copied');
+    else this.toast.info('Sent to the printer');
   }
 }

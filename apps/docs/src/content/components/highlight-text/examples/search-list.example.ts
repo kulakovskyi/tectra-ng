@@ -1,18 +1,23 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { TxHighlightText } from '@tectra-ng/ui/highlight-text';
+import { TxIconField, TxInputClear, TxInputIcon } from '@tectra-ng/ui/icon-field';
 import { TxInput } from '@tectra-ng/ui/input';
 
 @Component({
   selector: 'highlight-text-search-list-example',
-  imports: [TxHighlightText, TxInput],
+  imports: [TxHighlightText, TxInput, TxIconField, TxInputIcon, TxInputClear],
   template: `
-    <input
-      txInput
-      aria-label="Search cities"
-      placeholder="Search cities"
-      [value]="search()"
-      (input)="search.set($any($event.target).value)"
-    />
+    <tx-icon-field>
+      <tx-input-icon icon="search" />
+      <input
+        txInput
+        aria-label="Search cities"
+        placeholder="Search cities"
+        [value]="search()"
+        (input)="search.set($any($event.target).value)"
+      />
+      <tx-input-clear />
+    </tx-icon-field>
     <ul class="list">
       @for (city of visible(); track city) {
         <li><tx-highlight-text [text]="city" [highlight]="search()" /></li>

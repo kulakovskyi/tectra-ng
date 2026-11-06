@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TxInput } from '@tectra-ng/ui/input';
-import { TxIconField, TxInputIcon } from '@tectra-ng/ui/icon-field';
+import { TxIconField, TxInputClear, TxInputIcon } from '@tectra-ng/ui/icon-field';
 import { TxTable, TxTableColumn } from '@tectra-ng/ui/table';
 
 interface Invoice {
@@ -79,7 +79,7 @@ const INVOICES: Invoice[] = [
 
 @Component({
   selector: 'table-filter-row-example',
-  imports: [TxTable, TxInput, TxIconField, TxInputIcon],
+  imports: [TxTable, TxInput, TxIconField, TxInputIcon, TxInputClear],
   template: `
     <tx-table
       ariaLabel="Invoices"
@@ -100,6 +100,7 @@ const INVOICES: Invoice[] = [
           [value]="search()"
           (input)="search.set($any($event.target).value)"
         />
+        <tx-input-clear />
       </tx-icon-field>
     </tx-table>
   `,

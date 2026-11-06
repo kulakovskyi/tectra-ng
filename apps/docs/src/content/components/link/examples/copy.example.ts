@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TxLink } from '@tectra-ng/ui/link';
+import { TxToastService } from '@tectra-ng/ui/toast';
 
 @Component({
   selector: 'link-copy-example',
@@ -9,16 +10,15 @@ import { TxLink } from '@tectra-ng/ui/link';
       <tx-link
         link="docs.example.com/getting-started"
         [copyable]="true"
-        (copied)="last.set($event)"
+        (copied)="toast.success('Copied ' + $event)"
       />
       <tx-link
         link="billing@example.com"
         type="email"
         [copyable]="true"
-        (copied)="last.set($event)"
+        (copied)="toast.success('Copied ' + $event)"
       />
     </div>
-    <p class="status" aria-live="polite">{{ last() ? 'Copied ' + last() : '' }}</p>
   `,
   styles: `
     .column {
@@ -27,14 +27,9 @@ import { TxLink } from '@tectra-ng/ui/link';
       align-items: flex-start;
       gap: 8px;
     }
-    .status {
-      min-height: 20px;
-      margin: 12px 0 0;
-      font-size: 13px;
-    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class LinkCopyExample {
-  readonly last = signal('');
+  readonly toast = inject(TxToastService);
 }

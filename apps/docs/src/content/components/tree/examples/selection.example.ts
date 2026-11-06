@@ -19,10 +19,8 @@ import { TxTree, TxTreeNode, TxTreeSelection } from '@tectra-ng/ui/tree';
         <span class="hint">Selected: {{ single()?.label ?? '—' }}</span>
       </div>
       <div class="stack">
-        <label class="row" for="tree-selection-meta">
-          <tx-toggle-switch inputId="tree-selection-meta" [(ngModel)]="meta" />
-          <strong>Multiple, meta key</strong>
-        </label>
+        <strong>Multiple</strong>
+        <tx-toggle-switch label="Meta key" [(ngModel)]="meta" />
         <tx-tree
           ariaLabel="Files, multiple selection"
           selectionMode="multiple"
@@ -44,11 +42,6 @@ import { TxTree, TxTreeNode, TxTreeSelection } from '@tectra-ng/ui/tree';
       display: grid;
       gap: 8px;
       align-content: start;
-    }
-    .row {
-      display: flex;
-      gap: 8px;
-      align-items: center;
     }
     .hint {
       color: var(--tx-text-muted);

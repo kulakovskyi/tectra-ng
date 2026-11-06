@@ -91,7 +91,7 @@ test('right-click opens the row actions as a menu that runs them', async ({ page
   await expect(menu.getByRole('menuitem')).toHaveCount(4);
   await expect(frame.locator('tbody tr').nth(2)).toHaveClass(/tx-table__row--menu/);
   await menu.getByRole('menuitem', { name: /Send reminder/ }).click();
-  await expect(frame.getByText('Reminder for INV-1044')).toBeVisible();
+  await expect(page.locator('body > tx-toast')).toContainText('Reminder sent for INV-1044');
   await expect(menu).toBeHidden();
 });
 
@@ -248,10 +248,10 @@ test('row action buttons work from the keyboard', async ({ page }) => {
   const open = frame.getByRole('button', { name: 'Open' }).first();
   await open.focus();
   await page.keyboard.press('Enter');
-  await expect(frame.getByText('Opened INV-1042')).toBeVisible();
+  await expect(page.locator('body > tx-toast')).toContainText('Opened INV-1042');
   await frame.getByRole('button', { name: 'Download' }).nth(1).focus();
   await page.keyboard.press('Space');
-  await expect(frame.getByText('Downloaded INV-1043')).toBeVisible();
+  await expect(page.locator('body > tx-toast')).toContainText('Downloaded INV-1043');
 });
 
 test('the filter menu applies rules typed from the keyboard', async ({ page }) => {

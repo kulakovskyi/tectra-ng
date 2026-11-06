@@ -24,6 +24,7 @@ test('dialog traps focus, closes with Escape and returns its result', async ({ p
   await dialog.getByRole('button', { name: 'Rename' }).click();
   await expect(dialog).toHaveCount(0);
   await expect(example).toContainText('Project: Borealis');
+  await expect(page.locator('body > tx-toast')).toContainText('Project renamed to Borealis');
 });
 
 test('dialog closes on the mask, keeps the page still and does not shift it', async ({ page }) => {

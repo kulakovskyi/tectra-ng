@@ -1,1 +1,1 @@
-A long form in a dialog. Select panels open over the dialog, flip up when the field sits near the footer, follow the field while the body scrolls and close with the first `Escape` — the second one closes the dialog.
+A long form in a dialog. Select, date picker and other panels open over the dialog, flip up when the field sits near the footer, follow the field while the body scrolls and close with the first `Escape` — the second one closes the dialog.

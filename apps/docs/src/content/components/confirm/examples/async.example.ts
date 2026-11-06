@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { FormsModule } from '@angular/forms';
 import { TxButton } from '@tectra-ng/ui/button';
 import { TxConfirmService } from '@tectra-ng/ui/confirm';
+import { TxToastService } from '@tectra-ng/ui/toast';
 import { TxToggleSwitch } from '@tectra-ng/ui/toggle-switch';
 
 @Component({
@@ -39,6 +40,7 @@ import { TxToggleSwitch } from '@tectra-ng/ui/toggle-switch';
 })
 export default class ConfirmAsyncExample {
   private confirm = inject(TxConfirmService);
+  private readonly toast = inject(TxToastService);
   readonly revoked = signal(false);
   failing = false;
 
@@ -51,8 +53,12 @@ export default class ConfirmAsyncExample {
       accept: () =>
         new Promise<void>((resolve, reject) =>
           setTimeout(() => (this.failing ? reject(new Error('offline')) : resolve()), 1500),
-        ),
+        ).catch((error: unknown) => {
+          this.toast.error('Could not revoke the key — check the connection and try again');
+          throw error;
+        }),
     });
     this.revoked.set(ok);
+    if (ok) this.toast.success('Key revoked');
   }
 }

@@ -1,16 +1,20 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TxAutocomplete, TxAutocompleteCompleteEvent } from '@tectra-ng/ui/autocomplete';
 import { TxButton } from '@tectra-ng/ui/button';
 import { TxCascadeSelect } from '@tectra-ng/ui/cascade-select';
 import { TxChipsInput } from '@tectra-ng/ui/chips-input';
 import { TxCountrySelect } from '@tectra-ng/ui/country-select';
+import { TxDatePicker } from '@tectra-ng/ui/datepicker';
 import { TxDialog, TxDialogFooter } from '@tectra-ng/ui/dialog';
 import { TxInput } from '@tectra-ng/ui/input';
+import { TxInputNumber } from '@tectra-ng/ui/input-number';
 import { TxLabel } from '@tectra-ng/ui/label';
 import { TxMultiselect } from '@tectra-ng/ui/multiselect';
 import { TxSelect } from '@tectra-ng/ui/select';
 import { TxTextarea } from '@tectra-ng/ui/textarea';
+import { TxToastService } from '@tectra-ng/ui/toast';
+import { TxToggleSwitch } from '@tectra-ng/ui/toggle-switch';
 import { TxTreeNode, TxTreeSelect } from '@tectra-ng/ui/tree-select';
 
 const CITIES = [
@@ -79,6 +83,9 @@ const ROOMS = ['Main hall', 'Workshop room A', 'Workshop room B', 'Library', 'Ro
 
 interface EventForm {
   title: FormControl<string>;
+  starts: FormControl<Date | null>;
+  seats: FormControl<number | null>;
+  online: FormControl<boolean>;
   format: FormControl<string | null>;
   city: FormControl<string | null>;
   topics: FormControl<string[]>;
@@ -109,6 +116,9 @@ interface EventForm {
     TxSelect,
     TxTextarea,
     TxTreeSelect,
+    TxDatePicker,
+    TxInputNumber,
+    TxToggleSwitch,
   ],
   template: `
     <div class="row">
@@ -117,7 +127,7 @@ interface EventForm {
     </div>
     <tx-dialog
       header="New event"
-      subtitle="Every kind of select, from the top of the form to the footer"
+      subtitle="Every kind of select and picker, from the top of the form to the footer"
       [(visible)]="visible"
     >
       <form class="form" id="dialog-form-event" [formGroup]="form" (ngSubmit)="create()">
@@ -147,6 +157,35 @@ interface EventForm {
               [filter]="true"
             />
           </div>
+        </fieldset>
+
+        <fieldset class="group">
+          <legend>Schedule</legend>
+          <div class="field">
+            <tx-label for="dialog-form-starts">Starts</tx-label>
+            <tx-datepicker
+              inputId="dialog-form-starts"
+              formControlName="starts"
+              placeholder="Date and time"
+              [showTime]="true"
+              [showIcon]="true"
+            />
+          </div>
+          <div class="field">
+            <tx-label for="dialog-form-seats">Seats</tx-label>
+            <tx-input-number
+              inputId="dialog-form-seats"
+              formControlName="seats"
+              [showButtons]="true"
+              [min]="1"
+              [max]="500"
+            />
+          </div>
+          <tx-toggle-switch
+            formControlName="online"
+            label="Online"
+            description="Guests get a stream link"
+          />
         </fieldset>
 
         <fieldset class="group">
@@ -294,6 +333,7 @@ interface EventForm {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class DialogFormExample {
+  private readonly toast = inject(TxToastService);
   readonly visible = signal(false);
   readonly summary = signal('No event yet');
   readonly rooms = signal<string[]>([]);
@@ -382,6 +422,9 @@ export default class DialogFormExample {
 
   readonly form = new FormGroup<EventForm>({
     title: new FormControl('Frontend meetup', { nonNullable: true }),
+    starts: new FormControl<Date | null>(null),
+    seats: new FormControl<number | null>(40),
+    online: new FormControl(false, { nonNullable: true }),
     format: new FormControl<string | null>(null),
     city: new FormControl<string | null>(null),
     topics: new FormControl<string[]>([], { nonNullable: true }),
@@ -407,5 +450,6 @@ export default class DialogFormExample {
       .join(', ');
     this.summary.set(details ? `${title}: ${details}` : title);
     this.visible.set(false);
+    this.toast.success(`${title} is on the calendar`);
   }
 }

@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { TX_BRAND_ICONS, TxBrandIconName } from '@tectra-ng/brand-icons';
 import { TX_ICONS, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { FormsModule } from '@angular/forms';
 import { TxInput } from '@tectra-ng/ui/input';
 import { TxSlider } from '@tectra-ng/ui/slider';
+import { TxToastService } from '@tectra-ng/ui/toast';
 
 @Component({
   selector: 'docs-icons-page',
@@ -13,6 +14,7 @@ import { TxSlider } from '@tectra-ng/ui/slider';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class IconsPage {
+  private readonly toast = inject(TxToastService);
   readonly names = Object.keys(TX_ICONS) as TxIconName[];
   readonly brandNames = Object.keys(TX_BRAND_ICONS) as TxBrandIconName[];
 
@@ -30,6 +32,7 @@ export default class IconsPage {
   copyName(name: string): void {
     navigator.clipboard?.writeText(name);
     this.copied.set(name);
+    this.toast.success(`Copied “${name}”`);
   }
 
   private filterNames<T extends string>(names: T[]): T[] {

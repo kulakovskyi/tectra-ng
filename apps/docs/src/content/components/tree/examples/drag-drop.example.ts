@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { TxToastService } from '@tectra-ng/ui/toast';
 import { TxTree, TxTreeNode, TxTreeNodeDropEvent } from '@tectra-ng/ui/tree';
 
 @Component({
@@ -16,15 +17,7 @@ import { TxTree, TxTreeNode, TxTreeNodeDropEvent } from '@tectra-ng/ui/tree';
           droppableScope="mail"
           [(value)]="inbox"
           [expandedKeys]="['today']"
-          (nodeDrop)="
-            last.set(
-              $event.dragNode.label +
-                ' → ' +
-                $event.position +
-                ' ' +
-                ($event.dropNode?.label ?? 'root')
-            )
-          "
+          (nodeDrop)="moved($event)"
         />
       </div>
       <div class="stack">
@@ -41,7 +34,6 @@ import { TxTree, TxTreeNode, TxTreeNodeDropEvent } from '@tectra-ng/ui/tree';
         />
       </div>
     </div>
-    <p class="hint">Last move: {{ last() }}</p>
   `,
   styles: `
     .grid {
@@ -54,15 +46,11 @@ import { TxTree, TxTreeNode, TxTreeNodeDropEvent } from '@tectra-ng/ui/tree';
       gap: 8px;
       align-content: start;
     }
-    .hint {
-      color: var(--tx-text-muted);
-      margin: 12px 0 0;
-    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class TreeDragDropExample {
-  readonly last = signal('—');
+  private readonly toast = inject(TxToastService);
   readonly inbox = signal<TxTreeNode[]>([
     {
       key: 'today',
@@ -80,8 +68,15 @@ export default class TreeDragDropExample {
     { key: 'old', label: 'Old threads', icon: 'folder', children: [] },
   ]);
 
+  moved(event: TxTreeNodeDropEvent): void {
+    const place = event.position === 'inside' ? 'into' : event.position;
+    this.toast.info(
+      `${event.dragNode.label} moved ${place} ${event.dropNode?.label ?? 'the list'}`,
+    );
+  }
+
   confirmDrop(event: TxTreeNodeDropEvent): void {
-    this.last.set(`${event.dragNode.label} archived`);
     event.accept();
+    this.toast.success(`${event.dragNode.label} archived`);
   }
 }

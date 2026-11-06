@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { TxToastService } from '@tectra-ng/ui/toast';
 import { TxToggleSwitch, TxToggleSwitchChangeEvent } from '@tectra-ng/ui/toggle-switch';
 
 @Component({
@@ -12,12 +13,11 @@ import { TxToggleSwitch, TxToggleSwitchChangeEvent } from '@tectra-ng/ui/toggle-
             [label]="setting.label"
             [description]="setting.description"
             labelPosition="start"
-            (changed)="log($event, setting.label)"
+            (changed)="saved($event, setting.label)"
           />
         </div>
       }
     </div>
-    <p class="hint">{{ last() }}</p>
   `,
   styles: `
     .list {
@@ -43,9 +43,9 @@ export default class ToggleSwitchSettingsExample {
     { id: 'mentions', label: 'Mentions', description: 'When someone tags you' },
     { id: 'billing', label: 'Billing', description: 'Invoices and payment issues' },
   ];
-  readonly last = signal('Nothing changed yet');
+  private readonly toast = inject(TxToastService);
 
-  log(event: TxToggleSwitchChangeEvent, label: string): void {
-    this.last.set(`${label}: ${event.checked ? 'on' : 'off'}`);
+  saved(event: TxToggleSwitchChangeEvent, label: string): void {
+    this.toast.success(`${label} ${event.checked ? 'on' : 'off'}`);
   }
 }

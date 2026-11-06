@@ -4,7 +4,7 @@ test('split button runs its action and opens its menu under the whole button', a
   await page.goto('/components/split-button');
   const example = page.locator('split-button-basic-example');
   await example.getByRole('button', { name: 'Save', exact: true }).click();
-  await expect(example).toContainText('Saved');
+  await expect(page.locator('body > tx-toast')).toContainText('Changes saved');
   const toggle = example.getByRole('button', { name: 'More actions' });
   await toggle.focus();
   await page.keyboard.press('ArrowDown');
@@ -18,7 +18,7 @@ test('split button runs its action and opens its menu under the whole button', a
   await page.keyboard.press('ArrowDown');
   await page.keyboard.press('Enter');
   await expect(menu).toHaveCount(0);
-  await expect(example).toContainText('Save as template');
+  await expect(page.locator('body > tx-toast')).toContainText('Template saved');
 });
 
 test('speed dial fans out, follows the arrows and runs an action', async ({ page }) => {
@@ -36,7 +36,7 @@ test('speed dial fans out, follows the arrows and runs an action', async ({ page
   await page.keyboard.press('ArrowUp');
   await expect(example.getByRole('menuitem', { name: 'Event' })).toBeFocused();
   await page.keyboard.press('Enter');
-  await expect(example).toContainText('Created: Event');
+  await expect(page.locator('body > tx-toast')).toContainText('Event created');
   await expect(button).toHaveAttribute('aria-expanded', 'false');
   await expect(button).toBeFocused();
   await expect(example.getByRole('menuitem', { name: 'Note' })).toBeHidden();

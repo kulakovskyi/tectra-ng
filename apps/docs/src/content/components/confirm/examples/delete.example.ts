@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { TxButton } from '@tectra-ng/ui/button';
 import { TxConfirmService } from '@tectra-ng/ui/confirm';
+import { TxToastService } from '@tectra-ng/ui/toast';
 
 @Component({
   selector: 'confirm-delete-example',
@@ -47,6 +48,7 @@ import { TxConfirmService } from '@tectra-ng/ui/confirm';
 })
 export default class ConfirmDeleteExample {
   private confirm = inject(TxConfirmService);
+  private readonly toast = inject(TxToastService);
   readonly files = signal(['Q3 report.pdf', 'Roadmap.xlsx', 'Logo.svg']);
 
   async remove(file: string): Promise<void> {
@@ -56,7 +58,18 @@ export default class ConfirmDeleteExample {
       severity: 'danger',
     });
     if (ok) {
+      const index = this.files().indexOf(file);
       this.files.update((files) => files.filter((other) => other !== file));
+      this.toast.success(`“${file}” deleted`, {
+        life: 8000,
+        actions: [
+          {
+            label: 'Undo',
+            run: () =>
+              this.files.update((files) => [...files.slice(0, index), file, ...files.slice(index)]),
+          },
+        ],
+      });
     }
   }
 }

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxIcon } from '@tectra-ng/icons';
+import { TxButton } from '@tectra-ng/ui/button';
 import { TxTooltip } from '@tectra-ng/ui/tooltip';
 
 interface Member {
@@ -9,20 +9,22 @@ interface Member {
 
 @Component({
   selector: 'tooltip-template-example',
-  imports: [TxTooltip, TxIcon],
+  imports: [TxTooltip, TxButton],
   template: `
     <ul class="members">
       @for (member of members; track member.name) {
         <li>
           <span>{{ member.name }}</span>
           <button
-            type="button"
-            class="roles"
+            txButton
+            variant="text"
+            severity="secondary"
+            size="small"
+            icon="users"
             [txTooltip]="roles"
             [tooltipContext]="member.roles"
             tooltipPlacement="right"
           >
-            <tx-icon name="users" />
             {{ member.roles[0] }}
             @if (member.roles.length > 1) {
               +{{ member.roles.length - 1 }}
@@ -55,18 +57,6 @@ interface Member {
     }
     .members li > span {
       min-width: 120px;
-    }
-    .roles {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 2px 6px;
-      border: 0;
-      border-radius: var(--tx-radius-sm);
-      background: none;
-      color: var(--tx-text-muted);
-      font: inherit;
-      cursor: default;
     }
     .role-list {
       margin: 4px 0 0;

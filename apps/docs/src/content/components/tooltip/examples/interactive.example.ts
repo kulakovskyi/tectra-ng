@@ -1,16 +1,18 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { TxButton } from '@tectra-ng/ui/button';
 import { TxTooltip } from '@tectra-ng/ui/tooltip';
 
 @Component({
   selector: 'tooltip-interactive-example',
-  imports: [TxTooltip],
+  imports: [TxTooltip, TxButton],
   template: `
     <dl class="details">
       <dt>Order</dt>
       <dd>
         <button
-          type="button"
-          class="value"
+          txButton
+          variant="link"
+          size="small"
           txTooltip="ord_8F2KQ1-7731-4c0e-9d1a-58b2a4c0f6e3"
           [tooltipInteractive]="true"
         >
@@ -19,7 +21,9 @@ import { TxTooltip } from '@tectra-ng/ui/tooltip';
       </dd>
       <dt>Status</dt>
       <dd>
-        <button type="button" class="value" txTooltip="Paid on 4 November, 14:32">Paid</button>
+        <button txButton variant="link" size="small" txTooltip="Paid on 4 November, 14:32">
+          Paid
+        </button>
       </dd>
     </dl>
   `,
@@ -27,6 +31,7 @@ import { TxTooltip } from '@tectra-ng/ui/tooltip';
     .details {
       display: grid;
       grid-template-columns: max-content max-content;
+      align-items: center;
       gap: 8px 24px;
       margin: 0;
     }
@@ -35,14 +40,6 @@ import { TxTooltip } from '@tectra-ng/ui/tooltip';
     }
     dd {
       margin: 0;
-    }
-    .value {
-      padding: 0;
-      border: 0;
-      background: none;
-      color: inherit;
-      font: inherit;
-      cursor: default;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,17 +1,14 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TxButton } from '@tectra-ng/ui/button';
-import { TxMenu, TxMenuItem, TxMenuTrigger } from '@tectra-ng/ui/menu';
+import { TxMenu, TxMenuItem, TxMenuItemEvent, TxMenuTrigger } from '@tectra-ng/ui/menu';
+import { TxToastService } from '@tectra-ng/ui/toast';
 
 @Component({
   selector: 'menu-tiered-example',
   imports: [TxMenu, TxMenuTrigger, TxButton],
   template: `
     <div class="layout">
-      <tx-tiered-menu
-        ariaLabel="Message"
-        [model]="items"
-        (itemSelected)="last.set($event.item.label ?? '')"
-      />
+      <tx-tiered-menu ariaLabel="Message" [model]="items" (itemSelected)="run($event)" />
       <div>
         <button
           txButton
@@ -22,14 +19,7 @@ import { TxMenu, TxMenuItem, TxMenuTrigger } from '@tectra-ng/ui/menu';
         >
           More
         </button>
-        <tx-tiered-menu
-          #more
-          popup
-          ariaLabel="More"
-          [model]="items"
-          (itemSelected)="last.set($event.item.label ?? '')"
-        />
-        <p class="last">Last action: {{ last() }}</p>
+        <tx-tiered-menu #more popup ariaLabel="More" [model]="items" (itemSelected)="run($event)" />
       </div>
     </div>
   `,
@@ -39,15 +29,11 @@ import { TxMenu, TxMenuItem, TxMenuTrigger } from '@tectra-ng/ui/menu';
       align-items: flex-start;
       gap: 32px;
     }
-    .last {
-      margin: 12px 0 0;
-      color: var(--tx-text-muted);
-    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class MenuTieredExample {
-  readonly last = signal('—');
+  private readonly toast = inject(TxToastService);
   readonly items: TxMenuItem[] = [
     { label: 'Reply', icon: 'reply' },
     { label: 'Forward', icon: 'send' },
@@ -68,4 +54,8 @@ export default class MenuTieredExample {
     { separator: true },
     { label: 'Delete', icon: 'trash', severity: 'danger' },
   ];
+
+  run(event: TxMenuItemEvent): void {
+    this.toast.info(`Selected: ${event.item.label}`);
+  }
 }

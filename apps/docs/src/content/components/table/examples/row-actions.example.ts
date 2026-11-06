@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { TxButton } from '@tectra-ng/ui/button';
+import { TxToastService } from '@tectra-ng/ui/toast';
 import { TxTooltip } from '@tectra-ng/ui/tooltip';
 import {
   TxTable,
@@ -63,7 +64,7 @@ const INVOICES: Invoice[] = [
       ariaLabel="Invoices"
       dataKey="id"
       actionsSettings
-      [value]="invoices"
+      [value]="invoices()"
       [columns]="columns"
       [actionsInlineCount]="2"
     >
@@ -76,7 +77,7 @@ const INVOICES: Invoice[] = [
             icon="eye"
             txTooltip="Open"
             aria-label="Open"
-            (click)="log.set('Opened ' + invoice.number)"
+            (click)="toast.info('Opened ' + invoice.number)"
           ></button>
           <button
             *txTableAction="{ label: 'Download' }"
@@ -86,7 +87,7 @@ const INVOICES: Invoice[] = [
             icon="download"
             txTooltip="Download"
             aria-label="Download"
-            (click)="log.set('Downloaded ' + invoice.number)"
+            (click)="toast.success('Downloaded ' + invoice.number)"
           ></button>
           <button
             *txTableAction="{ label: 'Send reminder' }"
@@ -96,7 +97,7 @@ const INVOICES: Invoice[] = [
             icon="send"
             txTooltip="Send reminder"
             aria-label="Send reminder"
-            (click)="log.set('Reminder for ' + invoice.number)"
+            (click)="toast.success('Reminder sent for ' + invoice.number)"
           ></button>
           <button
             *txTableAction="{ label: 'Delete' }"
@@ -106,24 +107,17 @@ const INVOICES: Invoice[] = [
             icon="trash"
             txTooltip="Delete"
             aria-label="Delete"
-            (click)="log.set('Deleted ' + invoice.number)"
+            (click)="remove(invoice)"
           ></button>
         </tx-table-actions>
       </ng-template>
     </tx-table>
-    <p class="status">{{ log() }}</p>
-  `,
-  styles: `
-    .status {
-      margin: 12px 0 0;
-      color: var(--tx-text-muted);
-    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class TableRowActionsExample {
-  readonly invoices = INVOICES;
-  readonly log = signal('Right-click a row to see every action');
+  readonly toast = inject(TxToastService);
+  readonly invoices = signal(INVOICES);
   readonly columns: TxTableColumn[] = [
     { field: 'number', header: 'Invoice' },
     { field: 'client', header: 'Client', initialWidth: '180px' },
@@ -131,4 +125,23 @@ export default class TableRowActionsExample {
     { field: 'amount', header: 'Amount', align: 'end' },
     { field: 'status', header: 'Status' },
   ];
+
+  remove(invoice: Invoice): void {
+    const index = this.invoices().indexOf(invoice);
+    this.invoices.update((invoices) => invoices.filter((other) => other !== invoice));
+    this.toast.success(`Deleted ${invoice.number}`, {
+      life: 8000,
+      actions: [
+        {
+          label: 'Undo',
+          run: () =>
+            this.invoices.update((invoices) => [
+              ...invoices.slice(0, index),
+              invoice,
+              ...invoices.slice(index),
+            ]),
+        },
+      ],
+    });
+  }
 }

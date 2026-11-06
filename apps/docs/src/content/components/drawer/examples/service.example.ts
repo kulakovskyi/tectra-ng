@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { TxAmount } from '@tectra-ng/ui/amount';
 import { TxButton } from '@tectra-ng/ui/button';
 import {
   TxDialogClose,
@@ -12,13 +13,13 @@ import {
 interface Order {
   id: string;
   customer: string;
-  total: string;
+  total: number;
   items: string[];
 }
 
 @Component({
   selector: 'drawer-order-details',
-  imports: [TxDialogHeader, TxDialogContent, TxDialogFooter, TxDialogClose, TxButton],
+  imports: [TxDialogHeader, TxDialogContent, TxDialogFooter, TxDialogClose, TxButton, TxAmount],
   template: `
     <tx-dialog-header [title]="'Order ' + order.id" [subtitle]="order.customer" />
     <tx-dialog-content>
@@ -27,9 +28,7 @@ interface Order {
           <li>{{ item }}</li>
         }
       </ul>
-      <p>
-        Total: <strong>{{ order.total }}</strong>
-      </p>
+      <p>Total: <tx-amount currency="USD" [amount]="order.total" [strong]="true" /></p>
     </tx-dialog-content>
     <tx-dialog-footer>
       <button txButton severity="secondary" txDialogClose>Close</button>
@@ -77,10 +76,10 @@ export default class DrawerServiceExample {
     {
       id: '#1042',
       customer: 'Olena Koval',
-      total: '128 USD',
+      total: 128,
       items: ['Desk lamp', 'Notebook × 2'],
     },
-    { id: '#1043', customer: 'Marek Nowak', total: '54 USD', items: ['Mug', 'Coffee beans'] },
+    { id: '#1043', customer: 'Marek Nowak', total: 54, items: ['Mug', 'Coffee beans'] },
   ];
 
   open(order: Order): void {

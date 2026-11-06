@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { TxTable, TxTableCell, TxTableColumn, TxTableRowEditEvent } from '@tectra-ng/ui/table';
+import { TxToastService } from '@tectra-ng/ui/toast';
 
 interface Invoice {
   id: number;
@@ -94,20 +95,13 @@ const INVOICES: Invoice[] = [
       }}</ng-template>
       <ng-template txTableCell="paid" let-value="value">{{ value ? 'Yes' : 'No' }}</ng-template>
     </tx-table>
-    <p class="status">{{ log() }}</p>
-  `,
-  styles: `
-    .status {
-      margin: 12px 0 0;
-      color: var(--tx-text-muted);
-    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class TableRowEditExample {
   readonly invoices = INVOICES.slice(0, 4).map((invoice) => ({ ...invoice }));
   readonly editing = signal<unknown[]>([]);
-  readonly log = signal('Use the pencil to edit a row');
+  private readonly toast = inject(TxToastService);
   readonly columns: TxTableColumn[] = [
     { field: 'number', header: 'Invoice' },
     { field: 'client', header: 'Client', initialWidth: '200px', editable: true },
@@ -116,6 +110,8 @@ export default class TableRowEditExample {
   ];
 
   saved(event: TxTableRowEditEvent): void {
-    this.log.set(`Saved: ${Object.keys(event.changes).join(', ') || 'no changes'}`);
+    const fields = Object.keys(event.changes);
+    if (fields.length) this.toast.success(`Saved: ${fields.join(', ')}`);
+    else this.toast.info('No changes to save');
   }
 }

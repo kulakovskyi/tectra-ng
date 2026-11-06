@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TxCheckbox } from '@tectra-ng/ui/checkbox';
 import { TxExport, TxExportField } from '@tectra-ng/ui/export';
+import { TxToastService } from '@tectra-ng/ui/toast';
 
 interface Order {
   id: number;
@@ -22,7 +23,6 @@ interface Order {
         (ngModelChange)="cancel.set($event)"
       />
     </div>
-    <p class="hint" aria-live="polite">{{ status() }}</p>
   `,
   styles: `
     .row {
@@ -31,17 +31,12 @@ interface Order {
       align-items: center;
       gap: 16px;
     }
-    .hint {
-      margin: 12px 0 0;
-      color: var(--tx-text-muted);
-      font-size: 13px;
-    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class ExportServerExample {
   readonly cancel = signal(false);
-  readonly status = signal('Every page of 240 orders is loaded on click.');
+  private readonly toast = inject(TxToastService);
   readonly fields: TxExportField<Order>[] = [
     { field: 'id', title: 'Order' },
     { field: 'status', title: 'Status' },
@@ -49,13 +44,13 @@ export default class ExportServerExample {
   ];
 
   readonly loadAll = async (): Promise<Order[] | null> => {
-    this.status.set('Loading 240 orders…');
+    const progress = this.toast.loading('Loading 240 orders…');
     await new Promise((resolve) => setTimeout(resolve, 1200));
     if (this.cancel()) {
-      this.status.set('Cancelled — nothing was exported.');
+      progress.update({ severity: 'info', text: 'Cancelled — nothing was exported' });
       return null;
     }
-    this.status.set('Exported 240 orders.');
+    progress.update({ severity: 'success', text: 'Exported 240 orders' });
     return Array.from({ length: 240 }, (_, index) => ({
       id: 5000 + index,
       status: ['Paid', 'Shipped', 'Refunded'][index % 3],

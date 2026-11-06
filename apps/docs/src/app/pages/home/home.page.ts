@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TxIcon } from '@tectra-ng/icons';
@@ -7,6 +7,7 @@ import { TxBadge } from '@tectra-ng/ui/badge';
 import { TxButton } from '@tectra-ng/ui/button';
 import { TxInput } from '@tectra-ng/ui/input';
 import { TxSelect } from '@tectra-ng/ui/select';
+import { TxToastService } from '@tectra-ng/ui/toast';
 import { TxToggleButton } from '@tectra-ng/ui/toggle-button';
 import { DOC_COMPONENTS } from '../../../generated/registry';
 import { HOME_FEATURES, HOME_MARQUEE_ICONS, HOME_ROLES, INSTALL_COMMAND } from '../../data/home.data';
@@ -19,6 +20,7 @@ import { HOME_FEATURES, HOME_MARQUEE_ICONS, HOME_ROLES, INSTALL_COMMAND } from '
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class HomePage {
+  private readonly toast = inject(TxToastService);
   readonly features = HOME_FEATURES;
   readonly roles = HOME_ROLES;
   readonly marqueeIcons = [...HOME_MARQUEE_ICONS, ...HOME_MARQUEE_ICONS];
@@ -37,6 +39,7 @@ export default class HomePage {
   copyInstall(): void {
     navigator.clipboard?.writeText(this.installCommand);
     this.isCopied.set(true);
+    this.toast.success('Install command copied');
     setTimeout(() => this.isCopied.set(false), 1600);
   }
 

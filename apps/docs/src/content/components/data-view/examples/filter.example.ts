@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TxIcon } from '@tectra-ng/icons';
 import { FormsModule } from '@angular/forms';
+import { TxIconField, TxInputClear, TxInputIcon } from '@tectra-ng/ui/icon-field';
 import { TxInput } from '@tectra-ng/ui/input';
 import { TxDataView, TxDataViewHeader, TxDataViewList } from '@tectra-ng/ui/data-view';
 
@@ -26,7 +27,17 @@ const PRODUCTS: Product[] = [
 
 @Component({
   selector: 'data-view-filter-example',
-  imports: [TxDataView, TxDataViewHeader, TxDataViewList, TxIcon, TxInput, FormsModule],
+  imports: [
+    TxDataView,
+    TxDataViewHeader,
+    TxDataViewList,
+    TxIcon,
+    TxInput,
+    FormsModule,
+    TxIconField,
+    TxInputIcon,
+    TxInputClear,
+  ],
   template: `
     <tx-data-view
       ariaLabel="Products"
@@ -35,13 +46,17 @@ const PRODUCTS: Product[] = [
       [(filterValue)]="query"
     >
       <ng-template txDataViewHeader>
-        <input
-          txInput
-          type="search"
-          aria-label="Search products"
-          placeholder="Search products"
-          [(ngModel)]="query"
-        />
+        <tx-icon-field>
+          <tx-input-icon icon="search" />
+          <input
+            txInput
+            type="search"
+            aria-label="Search products"
+            placeholder="Search products"
+            [(ngModel)]="query"
+          />
+          <tx-input-clear />
+        </tx-icon-field>
       </ng-template>
       <ng-template txDataViewList let-items>
         <ul class="list">

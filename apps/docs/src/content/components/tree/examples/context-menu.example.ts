@@ -1,53 +1,47 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { TxMenuItem } from '@tectra-ng/ui/menu';
+import { TxToastService } from '@tectra-ng/ui/toast';
 import { TxTree, TxTreeNode } from '@tectra-ng/ui/tree';
 
 @Component({
   selector: 'tree-context-menu-example',
   imports: [TxTree],
   template: `
-    <div class="stack">
-      <tx-tree
-        ariaLabel="Files with a menu"
-        selectionMode="single"
-        [value]="files"
-        [contextMenu]="items"
-        [(contextMenuSelection)]="target"
-      />
-      <span class="hint">{{ action() }}</span>
-    </div>
+    <tx-tree
+      class="tree"
+      ariaLabel="Files with a menu"
+      selectionMode="single"
+      [value]="files"
+      [contextMenu]="items"
+      [(contextMenuSelection)]="target"
+    />
   `,
   styles: `
-    .stack {
-      display: grid;
-      gap: 8px;
+    .tree {
       max-width: 360px;
-    }
-    .hint {
-      color: var(--tx-text-muted);
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class TreeContextMenuExample {
+  private readonly toast = inject(TxToastService);
   readonly target = signal<TxTreeNode | null>(null);
-  readonly action = signal('Right-click a node');
   readonly items: TxMenuItem[] = [
     {
       label: 'Open',
       icon: 'external-link',
-      command: () => this.action.set(`Opened ${this.target()?.label}`),
+      command: () => this.toast.info(`Opened ${this.target()?.label}`),
     },
     {
       label: 'Rename',
       icon: 'pencil',
-      command: () => this.action.set(`Renaming ${this.target()?.label}`),
+      command: () => this.toast.info(`Renaming ${this.target()?.label}`),
     },
     { separator: true },
     {
       label: 'Delete',
       icon: 'trash',
-      command: () => this.action.set(`Deleted ${this.target()?.label}`),
+      command: () => this.toast.success(`Deleted ${this.target()?.label}`),
     },
   ];
   readonly files: TxTreeNode[] = [

@@ -8,6 +8,7 @@ import {
   TxDataViewLayoutSwitch,
   TxDataViewList,
 } from '@tectra-ng/ui/data-view';
+import { TxAmount } from '@tectra-ng/ui/amount';
 
 interface Product {
   id: number;
@@ -38,6 +39,7 @@ const PRODUCTS: Product[] = [
     TxDataViewList,
     TxDataViewGrid,
     TxIcon,
+    TxAmount,
   ],
   template: `
     <tx-data-view ariaLabel="Products" [value]="products" [(layout)]="layout">
@@ -56,7 +58,7 @@ const PRODUCTS: Product[] = [
                 <strong>{{ product.name }}</strong>
                 <span class="muted">{{ product.category }}</span>
               </span>
-              <span class="price">{{ product.price }} €</span>
+              <tx-amount class="price" currency="EUR" [amount]="product.price" />
             </li>
           }
         </ul>
@@ -68,7 +70,7 @@ const PRODUCTS: Product[] = [
               <span class="thumb" aria-hidden="true"><tx-icon name="box" /></span>
               <strong>{{ product.name }}</strong>
               <span class="muted">{{ product.category }}</span>
-              <span class="price">{{ product.price }} €</span>
+              <tx-amount class="price" currency="EUR" [amount]="product.price" />
             </li>
           }
         </ul>

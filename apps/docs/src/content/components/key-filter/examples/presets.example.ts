@@ -1,17 +1,25 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TxInput } from '@tectra-ng/ui/input';
 import { TxKeyFilter, TxKeyFilterPreset } from '@tectra-ng/ui/key-filter';
+import { TxLabel } from '@tectra-ng/ui/label';
 
 @Component({
   selector: 'key-filter-presets-example',
-  imports: [TxInput, TxKeyFilter],
+  imports: [TxInput, TxKeyFilter, TxLabel],
   template: `
     <div class="grid">
       @for (preset of presets; track preset) {
-        <label class="grid__item">
-          <code>{{ preset }}</code>
-          <input txInput [fluid]="true" [txKeyFilter]="preset" [attr.aria-label]="preset" />
-        </label>
+        <div class="grid__item">
+          <tx-label [for]="'key-filter-preset-' + preset"
+            ><code>{{ preset }}</code></tx-label
+          >
+          <input
+            txInput
+            [id]="'key-filter-preset-' + preset"
+            [fluid]="true"
+            [txKeyFilter]="preset"
+          />
+        </div>
       }
     </div>
   `,

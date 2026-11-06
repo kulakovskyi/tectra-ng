@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TxIconField, TxInputClear, TxInputIcon } from '@tectra-ng/ui/icon-field';
 import { TxInput } from '@tectra-ng/ui/input';
 import { TxToggleSwitch } from '@tectra-ng/ui/toggle-switch';
 import { TxTableColumn } from '@tectra-ng/ui/table';
@@ -64,20 +65,29 @@ const COLUMNS: TxTableColumn[] = [
 
 @Component({
   selector: 'tree-table-filter-example',
-  imports: [TxTreeTable, TxInput, TxToggleSwitch, FormsModule],
+  imports: [
+    TxTreeTable,
+    TxInput,
+    TxToggleSwitch,
+    FormsModule,
+    TxIconField,
+    TxInputIcon,
+    TxInputClear,
+  ],
   template: `
     <div class="row">
-      <input
-        txInput
-        type="search"
-        aria-label="Search files"
-        placeholder="Search files"
-        [(ngModel)]="query"
-      />
-      <label class="switch" for="tree-table-filter-strict">
-        <tx-toggle-switch inputId="tree-table-filter-strict" [(ngModel)]="strict" />
-        Strict
-      </label>
+      <tx-icon-field>
+        <tx-input-icon icon="search" />
+        <input
+          txInput
+          type="search"
+          aria-label="Search files"
+          placeholder="Search files"
+          [(ngModel)]="query"
+        />
+        <tx-input-clear />
+      </tx-icon-field>
+      <tx-toggle-switch label="Strict" [(ngModel)]="strict" />
     </div>
     <tx-tree-table
       ariaLabel="Files"
@@ -94,11 +104,6 @@ const COLUMNS: TxTableColumn[] = [
       gap: 16px;
       align-items: center;
       margin-bottom: 12px;
-    }
-    .switch {
-      display: inline-flex;
-      gap: 8px;
-      align-items: center;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

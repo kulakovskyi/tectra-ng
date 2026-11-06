@@ -1,34 +1,15 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxMenu, TxMenuItem } from '@tectra-ng/ui/menu';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { TxMenu, TxMenuItem, TxMenuItemEvent } from '@tectra-ng/ui/menu';
+import { TxToastService } from '@tectra-ng/ui/toast';
 
 @Component({
   selector: 'menu-basic-example',
   imports: [TxMenu],
-  template: `
-    <div class="layout">
-      <tx-menu
-        ariaLabel="Document"
-        [model]="items"
-        (itemSelected)="last.set($event.item.label ?? '')"
-      />
-      <p class="last">Last action: {{ last() }}</p>
-    </div>
-  `,
-  styles: `
-    .layout {
-      display: flex;
-      align-items: flex-start;
-      gap: 24px;
-    }
-    .last {
-      margin: 0;
-      color: var(--tx-text-muted);
-    }
-  `,
+  template: `<tx-menu ariaLabel="Document" [model]="items" (itemSelected)="run($event)" />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class MenuBasicExample {
-  readonly last = signal('—');
+  private readonly toast = inject(TxToastService);
   readonly items: TxMenuItem[] = [
     {
       label: 'Document',
@@ -48,4 +29,8 @@ export default class MenuBasicExample {
     { separator: true },
     { label: 'Delete', icon: 'trash', severity: 'danger' },
   ];
+
+  run(event: TxMenuItemEvent): void {
+    this.toast.info(`Selected: ${event.item.label}`);
+  }
 }

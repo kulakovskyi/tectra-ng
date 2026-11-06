@@ -11,6 +11,7 @@ import {
 } from '@tectra-ng/ui/dialog';
 import { TxField } from '@tectra-ng/ui/field';
 import { TxInput } from '@tectra-ng/ui/input';
+import { TxToastService } from '@tectra-ng/ui/toast';
 
 @Component({
   selector: 'dialog-rename-project',
@@ -69,6 +70,7 @@ export class RenameProjectDialog {
 })
 export default class DialogServiceExample {
   private dialogs = inject(TxDialogService);
+  private readonly toast = inject(TxToastService);
   readonly project = signal('Atlas');
 
   rename(): void {
@@ -78,8 +80,9 @@ export default class DialogServiceExample {
         size: 'small',
       })
       .closed.subscribe((name) => {
-        if (name) {
+        if (name && name !== this.project()) {
           this.project.set(name);
+          this.toast.success(`Project renamed to ${name}`);
         }
       });
   }

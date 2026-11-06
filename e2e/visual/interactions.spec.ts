@@ -496,7 +496,7 @@ test('tag copies its text and chip is removed with the keyboard', async ({ page,
   const tags = page.locator('tag-copyable-example');
   await tags.getByRole('button', { name: 'Copy' }).first().click();
   await expect(tags.getByRole('button', { name: 'Copied' })).toBeVisible();
-  await expect(tags.locator('.hint')).toHaveText('Copied ord_8F2KQ1');
+  await expect(page.locator('body > tx-toast')).toContainText('Copied ord_8F2KQ1');
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe('ord_8F2KQ1');
 
   await page.goto('/components/chip');
@@ -609,7 +609,7 @@ test('link copies itself, opens web links in a new tab and router links in the a
   await expect(basic).toHaveAccessibleName('docs.example.com (opens in a new tab)');
   const copy = page.locator('link-copy-example');
   await copy.getByRole('button', { name: 'Copy email' }).click();
-  await expect(copy.locator('.status')).toHaveText('Copied billing@example.com');
+  await expect(page.locator('body > tx-toast')).toContainText('Copied billing@example.com');
   await expect(copy.getByRole('button', { name: 'Copied' })).toBeVisible();
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe('billing@example.com');
   const nav = page.locator('link-icon-links-example').getByRole('navigation', { name: 'Account' });
@@ -911,6 +911,19 @@ test('input group joins borders', async ({ page }) => {
     return [style.borderTopLeftRadius, style.borderTopRightRadius];
   });
   expect(radii).toEqual(['0px', '0px']);
+});
+
+test('input group squares the joined corners of a select and a number field', async ({ page }) => {
+  await page.goto('/components/input-group');
+  const corners = (locator: ReturnType<typeof page.locator>) =>
+    locator.evaluate((element) => {
+      const style = getComputedStyle(element);
+      return [style.borderTopLeftRadius !== '0px', style.borderTopRightRadius !== '0px'];
+    });
+  const example = page.locator('input-group-select-example');
+  expect(await corners(example.locator('.tx-select__box'))).toEqual([true, false]);
+  expect(await corners(example.getByRole('textbox', { name: 'Domain' }))).toEqual([false, true]);
+  expect(await corners(page.locator('input-group-text-example tx-input-number input'))).toEqual([false, false]);
 });
 
 test('input group quantity stepper changes the value', async ({ page }) => {

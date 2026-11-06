@@ -4,10 +4,11 @@ import { TxButton } from '@tectra-ng/ui/button';
 import { TxInput } from '@tectra-ng/ui/input';
 import { TxLabel } from '@tectra-ng/ui/label';
 import { TxFieldError, TxMessage } from '@tectra-ng/ui/message';
+import { TxPassword } from '@tectra-ng/ui/password';
 
 @Component({
   selector: 'message-field-error-example',
-  imports: [ReactiveFormsModule, TxLabel, TxInput, TxFieldError, TxButton, TxMessage],
+  imports: [ReactiveFormsModule, TxLabel, TxInput, TxPassword, TxFieldError, TxButton, TxMessage],
   template: `
     <form class="form" [formGroup]="form" (ngSubmit)="submit()">
       <div>
@@ -17,11 +18,11 @@ import { TxFieldError, TxMessage } from '@tectra-ng/ui/message';
       </div>
       <div>
         <tx-label for="error-password" [required]="true">Password</tx-label>
-        <input
-          txInput
-          id="error-password"
-          type="password"
+        <tx-password
+          inputId="error-password"
+          autocomplete="new-password"
           formControlName="password"
+          [toggleMask]="true"
           [fluid]="true"
         />
         <tx-field-error for="error-password" [control]="form.controls.password" />

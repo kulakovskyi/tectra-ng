@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TxAmount } from '@tectra-ng/ui/amount';
 import { TxSlider } from '@tectra-ng/ui/slider';
 
 @Component({
   selector: 'slider-range-example',
-  imports: [FormsModule, TxSlider],
+  imports: [FormsModule, TxSlider, TxAmount],
   template: `
     <tx-slider
       ariaLabel="Price"
@@ -14,7 +15,10 @@ import { TxSlider } from '@tectra-ng/ui/slider';
       [minStepsBetweenHandles]="5"
       [(ngModel)]="price"
     />
-    <p class="hint">\${{ price[0] }} – \${{ price[1] }}</p>
+    <p class="hint">
+      <tx-amount currency="USD" format="1.0-0" [amount]="price[0]" /> –
+      <tx-amount currency="USD" format="1.0-0" [amount]="price[1]" />
+    </p>
   `,
   styles: `
     :host {
