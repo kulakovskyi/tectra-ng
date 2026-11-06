@@ -57,12 +57,12 @@ PrimeNG: DataView (`layout` list / grid, `paginator`, `sortField` / `sortOrder`,
 - [x] `<tx-data-view>`: list / grid templates with a layout switch (`<tx-data-view-layout>`, `aria-pressed`, content fades in on a switch), paginator top / bottom / both with every paginator option and start / end templates, local sort, search on `filterBy`, lazy pages / sort / search, loading overlay, empty state, header / footer
 - [x] Docs + tests; e2e: window stays small while scrolling to the end by keyboard, lazy ranges, layout switch by keyboard, server pages with the overlay
 
-## 7.5 Timeline — `ui/timeline`
+## 7.5 Timeline — `ui/timeline` ✅
 
-PrimeNG: Timeline (`value`, `align` left / right / alternate / top / bottom, `layout` vertical / horizontal, templates content / opposite / marker / connector). First app: 0 (parity).
+PrimeNG: Timeline (`value`, `align` left / right / alternate / top / bottom, `layout` vertical / horizontal, templates content / opposite / marker / connector). First app: 0 (parity). The look is the Aura `timeline` tokens on the first app's semantic values (its preset does not override them): events at least `4.5rem` high, content padded `0 0.875rem` (vertical) or `0.875rem 0` (horizontal), a `1rem` marker with a `2px` content-border ring around a `6px` primary dot (Aura's value at its own 16px root; `0.375rem` at 14px is 5.25px, which the browser snaps into an oval), a `2px` connector in the content border colour.
 
-- [ ] `<tx-timeline>`: vertical / horizontal, alignments, marker / content / opposite templates, ordered list semantics
-- [ ] Docs + tests
+- [x] `<tx-timeline>`: vertical / horizontal, alignments (left / right / alternate, top / bottom / alternate), content / opposite / marker / connector templates with `index` / `first` / `last`, ordered list semantics (`ariaLabel` / `ariaLabelledBy`, decorative marker and connector)
+- [x] Docs + tests; e2e: markers on one line joined by connectors, alternate sides, horizontal row with the line above or below
 
 ## 7.6 Stat tiles — `ui/stat-tiles`
 

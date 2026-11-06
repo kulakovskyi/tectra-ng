@@ -52,3 +52,32 @@ export const virtualScrollerTokens = {
 };
 
 export type TectraVirtualScrollerTokens = typeof virtualScrollerTokens;
+
+export const timelineTokens = {
+  event: {
+    minHeight: '63px',
+  },
+  horizontal: {
+    eventContentPadding: '12.25px 0',
+  },
+  vertical: {
+    eventContentPadding: '0 12.25px',
+  },
+  eventMarker: {
+    size: '14px',
+    borderRadius: '50%',
+    borderWidth: '2px',
+    background: tokenRef('surface-card'),
+    borderColor: tokenRef('surface-border'),
+    contentBorderRadius: '50%',
+    contentSize: '6px',
+    contentBackground: tokenRef('primary-base'),
+    contentInsetShadow: '0px 0.5px 0px 0px rgba(0, 0, 0, 0.06), 0px 1px 1px 0px rgba(0, 0, 0, 0.12)',
+  },
+  eventConnector: {
+    color: tokenRef('surface-border'),
+    size: '2px',
+  },
+};
+
+export type TectraTimelineTokens = typeof timelineTokens;
