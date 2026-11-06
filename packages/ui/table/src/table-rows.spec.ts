@@ -107,7 +107,11 @@ describe('TxTable rows', () => {
     expect([...root().querySelectorAll('.footer')].map((footer) => footer.textContent)).toEqual(['Core: 2', 'Web: 2']);
     (headers[0].querySelector('.tx-table__row-toggle') as HTMLElement).click();
     await stable();
-    expect(titles()).toEqual(['Build', 'Ship']);
+    const collapsed = [...root().querySelectorAll('.tx-table__tbody > .tx-table__row--collapsed')];
+    expect(collapsed.map((row) => row.querySelector('[data-field="title"]')?.textContent?.trim())).toEqual(['Plan', 'Test']);
+    expect(collapsed.every((row) => row.hasAttribute('inert') && row.getAttribute('aria-hidden') === 'true')).toBe(true);
+    expect(root().querySelectorAll('.tx-table__tbody > .tx-table__row:not(.tx-table__row--collapsed)')).toHaveLength(2);
+    expect(root().querySelector('.tx-table__cell-body')).toBeTruthy();
     expect(host.openGroups()).toEqual(['Web']);
   });
 

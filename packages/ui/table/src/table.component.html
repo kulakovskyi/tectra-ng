@@ -249,7 +249,7 @@
                 </td>
               </tr>
             }
-            @if (!item.group?.collapsed) {
+            @if (!item.group?.collapsed || animatedGroups()) {
               <tr
                   cdkDrag
                   cdkDragLockAxis="y"
@@ -265,13 +265,16 @@
                 [attr.tabindex]="rowSelection() ? (position === focusedRow() ? 0 : -1) : null"
                 [attr.data-key]="item.key"
                 [class.tx-table__row--editing]="isRowEditing(item)"
+                [class.tx-table__row--collapsed]="!!item.group?.collapsed"
+                [attr.inert]="item.group?.collapsed ? '' : null"
+                [attr.aria-hidden]="item.group?.collapsed ? true : null"
                 (click)="onRowClick(item, position, $event)"
                 (keydown)="onRowKeydown(item, position, $event)"
                 (contextmenu)="onRowContextMenu(item, $event)"
             >
                 <ng-container [ngTemplateOutlet]="rowCells" [ngTemplateOutletContext]="{ $implicit: item, position }" />
               </tr>
-              @if ((item.expanded || isClosing(item.key)) && expansionTemplate(); as expansion) {
+              @if ((item.expanded || isClosing(item.key)) && !item.group?.collapsed && expansionTemplate(); as expansion) {
                 <tr class="tx-table__expansion">
                   <td class="tx-table__expansion-cell" [attr.colspan]="dataColumnCount()">
                     <div
@@ -485,189 +488,201 @@
       (keydown)="onCellKeydown(item, column, $event)"
       (focusout)="onCellFocusOut(item, column, $event)"
     >
-      @switch (column.kind) {
-        @case ('reorder') {
+      @if (animatedGroups()) {
+        <div class="tx-table__cell-body">
+          <div class="tx-table__cell-inner">
+            <ng-container [ngTemplateOutlet]="cellBody" [ngTemplateOutletContext]="{ $implicit: item, column, position }" />
+          </div>
+        </div>
+      } @else {
+        <ng-container [ngTemplateOutlet]="cellBody" [ngTemplateOutletContext]="{ $implicit: item, column, position }" />
+      }
+    </td>
+  }
+  }
+</ng-template>
+
+<ng-template #cellBody let-item let-column="column" let-position="position">
+  @switch (column.kind) {
+    @case ('reorder') {
+      <button
+        type="button"
+        cdkDragHandle
+        class="tx-table__row-handle"
+        [attr.aria-label]="translations().moveRow"
+        (keydown.alt.arrowup)="moveRowBy(position, -1, $event)"
+        (keydown.alt.arrowdown)="moveRowBy(position, 1, $event)"
+      >
+        <tx-icon aria-hidden="true" name="bars" />
+      </button>
+    }
+    @case ('select') {
+      @if (selectionMode() === 'checkbox') {
+        <tx-checkbox
+          binary
+          class="tx-table__select"
+          [ariaLabel]="translations().selectRow"
+          [disabled]="!item.selectable"
+          [unstyled]="isUnstyled()"
+          [ngModel]="item.selected"
+          (ngModelChange)="toggleRow(item)"
+        />
+      } @else {
+        <tx-radio-button
+          class="tx-table__select"
+          [value]="item.key"
+          [ariaLabel]="translations().selectRow"
+          [disabled]="!item.selectable"
+          [unstyled]="isUnstyled()"
+          [ngModel]="radioValue()"
+          (ngModelChange)="selectRadio(item)"
+        />
+      }
+    }
+    @case ('expand') {
+      @if (canExpand(item)) {
+        <button
+          type="button"
+          class="tx-table__row-toggle"
+          [attr.aria-expanded]="item.expanded"
+          [attr.aria-label]="item.expanded ? translations().collapseRow : translations().expandRow"
+          (click)="toggleExpansion(item, $event)"
+        >
+          <tx-icon aria-hidden="true" name="chevron-right" class="tx-table__row-toggle-icon" [class.tx-table__row-toggle-icon--open]="item.expanded" />
+        </button>
+      }
+    }
+    @case ('actions') {
+      @if (actionsTemplate(); as actions) {
+        <ng-container [ngTemplateOutlet]="actions.templateRef" [ngTemplateOutletContext]="{ $implicit: item.row, index: item.index }" />
+      }
+    }
+    @case ('editor') {
+      <div class="tx-table__row-editor">
+        @if (isRowEditing(item)) {
           <button
+            txButton
             type="button"
-            cdkDragHandle
-            class="tx-table__row-handle"
-            [attr.aria-label]="translations().moveRow"
-            (keydown.alt.arrowup)="moveRowBy(position, -1, $event)"
-            (keydown.alt.arrowdown)="moveRowBy(position, 1, $event)"
-          >
-            <tx-icon aria-hidden="true" name="bars" />
-          </button>
+            text
+            rounded
+            size="small"
+            severity="success"
+            icon="check"
+            [unstyled]="isUnstyled()"
+            [attr.aria-label]="translations().saveRow"
+            (click)="saveRow(item)"
+          ></button>
+          <button
+            txButton
+            type="button"
+            text
+            rounded
+            size="small"
+            severity="danger"
+            icon="times"
+            [unstyled]="isUnstyled()"
+            [attr.aria-label]="translations().cancelEdit"
+            (click)="cancelRow(item)"
+          ></button>
+        } @else {
+          <button
+            txButton
+            type="button"
+            text
+            rounded
+            size="small"
+            severity="secondary"
+            icon="pencil"
+            [unstyled]="isUnstyled()"
+            [attr.aria-label]="translations().editRow"
+            (click)="startRowEdit(item)"
+          ></button>
         }
-        @case ('select') {
-          @if (selectionMode() === 'checkbox') {
-            <tx-checkbox
-              binary
-              class="tx-table__select"
-              [ariaLabel]="translations().selectRow"
-              [disabled]="!item.selectable"
+      </div>
+    }
+    @default {
+      @if (isEditing(item, column.column)) {
+        <div class="tx-table__editor">
+          @if (editorTemplatesByField().get(column.column.field); as editor) {
+            <ng-container [ngTemplateOutlet]="editor.templateRef" [ngTemplateOutletContext]="editorContext(item, column.column)" />
+          } @else if (column.column.editOptions?.length) {
+            <tx-select
+              size="small"
+              optionLabel="label"
+              optionValue="value"
+              class="tx-table__editor-control"
+              [options]="column.column.editOptions"
+              [ariaLabel]="label(column.column)"
               [unstyled]="isUnstyled()"
-              [ngModel]="item.selected"
-              (ngModelChange)="toggleRow(item)"
+              [ngModel]="draftValue(item, column.column)"
+              (ngModelChange)="setDraft(item, column.column, $event)"
             />
           } @else {
-            <tx-radio-button
-              class="tx-table__select"
-              [value]="item.key"
-              [ariaLabel]="translations().selectRow"
-              [disabled]="!item.selectable"
-              [unstyled]="isUnstyled()"
-              [ngModel]="radioValue()"
-              (ngModelChange)="selectRadio(item)"
-            />
-          }
-        }
-        @case ('expand') {
-          @if (canExpand(item)) {
-            <button
-              type="button"
-              class="tx-table__row-toggle"
-              [attr.aria-expanded]="item.expanded"
-              [attr.aria-label]="item.expanded ? translations().collapseRow : translations().expandRow"
-              (click)="toggleExpansion(item, $event)"
-            >
-              <tx-icon aria-hidden="true" name="chevron-right" class="tx-table__row-toggle-icon" [class.tx-table__row-toggle-icon--open]="item.expanded" />
-            </button>
-          }
-        }
-        @case ('actions') {
-          @if (actionsTemplate(); as actions) {
-            <ng-container [ngTemplateOutlet]="actions.templateRef" [ngTemplateOutletContext]="{ $implicit: item.row, index: item.index }" />
-          }
-        }
-        @case ('editor') {
-          <div class="tx-table__row-editor">
-            @if (isRowEditing(item)) {
-              <button
-                txButton
-                type="button"
-                text
-                rounded
-                size="small"
-                severity="success"
-                icon="check"
-                [unstyled]="isUnstyled()"
-                [attr.aria-label]="translations().saveRow"
-                (click)="saveRow(item)"
-              ></button>
-              <button
-                txButton
-                type="button"
-                text
-                rounded
-                size="small"
-                severity="danger"
-                icon="times"
-                [unstyled]="isUnstyled()"
-                [attr.aria-label]="translations().cancelEdit"
-                (click)="cancelRow(item)"
-              ></button>
-            } @else {
-              <button
-                txButton
-                type="button"
-                text
-                rounded
-                size="small"
-                severity="secondary"
-                icon="pencil"
-                [unstyled]="isUnstyled()"
-                [attr.aria-label]="translations().editRow"
-                (click)="startRowEdit(item)"
-              ></button>
-            }
-          </div>
-        }
-        @default {
-          @if (isEditing(item, column.column)) {
-            <div class="tx-table__editor">
-              @if (editorTemplatesByField().get(column.column.field); as editor) {
-                <ng-container [ngTemplateOutlet]="editor.templateRef" [ngTemplateOutletContext]="editorContext(item, column.column)" />
-              } @else if (column.column.editOptions?.length) {
-                <tx-select
+            @switch (column.column.editType ?? 'text') {
+              @case ('numeric') {
+                <tx-input-number
                   size="small"
-                  optionLabel="label"
-                  optionValue="value"
                   class="tx-table__editor-control"
-                  [options]="column.column.editOptions"
                   [ariaLabel]="label(column.column)"
                   [unstyled]="isUnstyled()"
                   [ngModel]="draftValue(item, column.column)"
                   (ngModelChange)="setDraft(item, column.column, $event)"
                 />
-              } @else {
-                @switch (column.column.editType ?? 'text') {
-                  @case ('numeric') {
-                    <tx-input-number
-                      size="small"
-                      class="tx-table__editor-control"
-                      [ariaLabel]="label(column.column)"
-                      [unstyled]="isUnstyled()"
-                      [ngModel]="draftValue(item, column.column)"
-                      (ngModelChange)="setDraft(item, column.column, $event)"
-                    />
-                  }
-                  @case ('boolean') {
-                    <tx-checkbox
-                      binary
-                      [ariaLabel]="label(column.column)"
-                      [unstyled]="isUnstyled()"
-                      [ngModel]="draftValue(item, column.column)"
-                      (ngModelChange)="setDraft(item, column.column, $event)"
-                    />
-                  }
-                  @case ('date') {
-                    <input
-                      txInput
-                      type="date"
-                      size="small"
-                      class="tx-table__editor-control"
-                      [unstyled]="isUnstyled()"
-                      [attr.aria-label]="label(column.column)"
-                      [value]="dateInput(draftValue(item, column.column))"
-                      (change)="setDraft(item, column.column, parseDateInput($any($event.target).value))"
-                    />
-                  }
-                  @default {
-                    <input
-                      txInput
-                      type="text"
-                      size="small"
-                      class="tx-table__editor-control"
-                      [unstyled]="isUnstyled()"
-                      [attr.aria-label]="label(column.column)"
-                      [value]="draftValue(item, column.column) ?? ''"
-                      (input)="setDraft(item, column.column, $any($event.target).value)"
-                    />
-                  }
-                }
               }
-            </div>
-          } @else if (templatesByField().get(column.column.field); as template) {
-            <ng-container
-              [ngTemplateOutlet]="template.templateRef"
-              [ngTemplateOutletContext]="{
-                $implicit: item.row,
-                row: item.row,
-                index: item.index,
-                column: column.column,
-                value: cellValue(item.row, column.column),
-              }"
-            />
-          } @else if (isLoadingRow(item)) {
-            <tx-skeleton class="tx-table__loading-cell" height="14px" />
-          } @else if (cellTooltip()) {
-            <span class="tx-table__cell-text" tooltipOverflowOnly [txTooltip]="displayValue(item.row, column.column)">{{ displayValue(item.row, column.column) }}</span>
-          } @else {
-            {{ displayValue(item.row, column.column) }}
+              @case ('boolean') {
+                <tx-checkbox
+                  binary
+                  [ariaLabel]="label(column.column)"
+                  [unstyled]="isUnstyled()"
+                  [ngModel]="draftValue(item, column.column)"
+                  (ngModelChange)="setDraft(item, column.column, $event)"
+                />
+              }
+              @case ('date') {
+                <input
+                  txInput
+                  type="date"
+                  size="small"
+                  class="tx-table__editor-control"
+                  [unstyled]="isUnstyled()"
+                  [attr.aria-label]="label(column.column)"
+                  [value]="dateInput(draftValue(item, column.column))"
+                  (change)="setDraft(item, column.column, parseDateInput($any($event.target).value))"
+                />
+              }
+              @default {
+                <input
+                  txInput
+                  type="text"
+                  size="small"
+                  class="tx-table__editor-control"
+                  [unstyled]="isUnstyled()"
+                  [attr.aria-label]="label(column.column)"
+                  [value]="draftValue(item, column.column) ?? ''"
+                  (input)="setDraft(item, column.column, $any($event.target).value)"
+                />
+              }
+            }
           }
-        }
+        </div>
+      } @else if (templatesByField().get(column.column.field); as template) {
+        <ng-container
+          [ngTemplateOutlet]="template.templateRef"
+          [ngTemplateOutletContext]="{
+            $implicit: item.row,
+            row: item.row,
+            index: item.index,
+            column: column.column,
+            value: cellValue(item.row, column.column),
+          }"
+        />
+      } @else if (isLoadingRow(item)) {
+        <tx-skeleton class="tx-table__loading-cell" height="14px" />
+      } @else if (cellTooltip()) {
+        <span class="tx-table__cell-text" tooltipOverflowOnly [txTooltip]="displayValue(item.row, column.column)">{{ displayValue(item.row, column.column) }}</span>
+      } @else {
+        {{ displayValue(item.row, column.column) }}
       }
-    </td>
-  }
+    }
   }
 </ng-template>

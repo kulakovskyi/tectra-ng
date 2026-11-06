@@ -324,3 +324,37 @@ test('the export button downloads a csv file', async ({ page }) => {
   const [download] = await Promise.all([page.waitForEvent('download'), frame.getByRole('button', { name: 'Export CSV' }).click()]);
   expect(download.suggestedFilename()).toBe('contacts.csv');
 });
+
+test('the filter row sits under the header with a single border', async ({ page }) => {
+  const frame = example(page, 'Filter row');
+  const widths = await frame.evaluate((root) => {
+    const header = root.querySelector('thead tr:first-child th') as Element;
+    const cell = root.querySelector('.tx-table__filter-cell') as Element;
+    return [getComputedStyle(header).borderBottomWidth, getComputedStyle(cell).borderTopWidth];
+  });
+  expect(widths).toEqual(['1px', '0px']);
+});
+
+test.describe('group motion', () => {
+  test.use({ reducedMotion: 'no-preference' });
+
+  test('a row group collapses and opens like an accordion', async ({ page }) => {
+    const frame = example(page, 'Row group');
+    const toggle = frame.locator('.tx-table__group-header .tx-table__row-toggle').first();
+    await toggle.scrollIntoViewIfNeeded();
+    const heights = await toggle.evaluate(async (button) => {
+      const row = () => (button.closest('tx-table') as Element).querySelectorAll('.tx-table__tbody > .tx-table__row')[0];
+      const seen: number[] = [];
+      (button as HTMLElement).click();
+      for (let frame = 0; frame < 8; frame++) {
+        await new Promise((resolve) => requestAnimationFrame(resolve));
+        seen.push(Math.round(row().getBoundingClientRect().height));
+      }
+      return seen;
+    });
+    expect(heights.some((height) => height > 5 && height < 45)).toBe(true);
+    await expect.poll(() => frame.locator('.tx-table__row--collapsed').first().evaluate((row) => row.getBoundingClientRect().height)).toBe(0);
+    await toggle.click();
+    await expect.poll(() => frame.locator('.tx-table__tbody > .tx-table__row').first().evaluate((row) => Math.round(row.getBoundingClientRect().height))).toBe(50);
+  });
+});

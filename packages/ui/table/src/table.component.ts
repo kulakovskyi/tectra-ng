@@ -468,6 +468,7 @@ export class TxTable<T = unknown> implements TxTableContext {
     }));
   });
 
+  readonly animatedGroups = computed(() => !!this.groupRowsBy() && this.expandableRowGroups() && this.rowGroupMode() === 'subheader');
   readonly hasSelectColumn = computed(() => this.selectionMode() === 'checkbox' || this.selectionMode() === 'radio');
   readonly hasExpandColumn = computed(() => !!this.expansionTemplate());
   readonly hasActionsColumn = computed(() => !!this.actionsTemplate());

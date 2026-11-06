@@ -262,6 +262,25 @@
   border: 0;
 }
 
+.tx-table__cell-body {
+  display: grid;
+  grid-template-rows: 1fr;
+}
+
+.tx-table__cell-inner {
+  min-height: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tx-table__row--collapsed .tx-table__cell-body {
+  grid-template-rows: 0fr;
+}
+
+.tx-table__row--collapsed .tx-table__cell-inner {
+  visibility: hidden;
+}
+
 .tx-table__frozen-tbody {
   position: sticky;
   z-index: 2;
@@ -540,6 +559,40 @@
     transition: transform var(--tx-table-expansion-duration) var(--tx-table-expansion-easing);
   }
 
+  .tx-table__row--collapsed > .tx-table__td {
+    height: 0;
+    padding-block: 0;
+    border-bottom-width: 0;
+  }
+
+  .tx-table__tbody:has(.tx-table__cell-body) > .tx-table__row {
+    transition: visibility 0s linear;
+  }
+
+  .tx-table__tbody:has(.tx-table__cell-body) > .tx-table__row--collapsed {
+    visibility: collapse;
+    transition-delay: var(--tx-table-expansion-duration);
+  }
+
+  .tx-table__cell-body {
+    transition: grid-template-rows var(--tx-table-expansion-duration) var(--tx-table-expansion-easing);
+  }
+
+  .tx-table__cell-inner {
+    transition: visibility 0s linear;
+  }
+
+  .tx-table__row--collapsed .tx-table__cell-inner {
+    transition-delay: var(--tx-table-expansion-duration);
+  }
+
+  .tx-table__tbody:has(.tx-table__cell-body) > .tx-table__row > .tx-table__td {
+    transition:
+      height var(--tx-table-expansion-duration) var(--tx-table-expansion-easing),
+      padding-block var(--tx-table-expansion-duration) var(--tx-table-expansion-easing),
+      border-bottom-width var(--tx-table-expansion-duration) var(--tx-table-expansion-easing);
+  }
+
   .tx-table__grip {
     --tx-icon-size: var(--tx-table-grip-size);
     color: var(--tx-table-grip-color);
@@ -758,6 +811,10 @@
     border-width: 1px;
   }
 
+  .tx-table__thead > tr:not(:first-child) > .tx-table__th {
+    border-top-width: 0;
+  }
+
   .tx-table__td,
   .tx-table__footer-cell {
     border-width: 0 0 1px 1px;
@@ -815,6 +872,9 @@
     .tx-table__grip,
     .tx-table__expansion-body,
     .tx-table__row,
+    .tx-table__cell-body,
+    .tx-table__cell-inner,
+    .tx-table__tbody:has(.tx-table__cell-body) > .tx-table__row > .tx-table__td,
     .tx-table__expansion-inner {
       transition: none;
     }
