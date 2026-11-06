@@ -152,7 +152,7 @@ Detailed checklist per component: [roadmap/stage-8-date.md](roadmap/stage-8-date
 |---|---|---|---|
 | `ui/datepicker` — single / range / multiple, time, month / year views, inline, touch, min / max, locale | DatePicker | 58 | ✅ |
 | `ui/month-calendar` (events grid) | — | 23 | ✅ |
-| `ui/countdown` (on `ClockService`) | — | 1 | ⬜ |
+| `ui/countdown` (value / unit or target date, remaining-time pipe) | — | 1 | ✅ |
 | `ui/analog-clock` | — | 1 | ⬜ |
 
 ## Stage 9 — navigation & structure

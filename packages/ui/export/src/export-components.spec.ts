@@ -71,7 +71,7 @@ describe('export components', () => {
       return 'blob:test';
     };
     url.revokeObjectURL = () => undefined;
-    Object.defineProperty(window.navigator, 'clipboard', { configurable: true, value: { writeText: (text: string) => Promise.resolve(void clipboard.push(text)) } });
+    Object.defineProperty(window.navigator, 'clipboard', { configurable: true, writable: true, value: { writeText: (text: string) => Promise.resolve(void clipboard.push(text)) } });
     vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function (this: HTMLAnchorElement) {
       names.push(this.download);
     });
@@ -81,7 +81,10 @@ describe('export components', () => {
     await fixture.whenStable();
   });
 
-  afterEach(() => vi.restoreAllMocks());
+  afterEach(() => {
+    vi.restoreAllMocks();
+    Reflect.deleteProperty(window.navigator, 'clipboard');
+  });
 
   it('names icon buttons by the translated tooltip of the format', async () => {
     expect(button('csv').getAttribute('aria-label')).toBe('Export to CSV');

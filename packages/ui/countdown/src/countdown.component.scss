@@ -1,0 +1,24 @@
+:host {
+  display: inline;
+  font-variant-numeric: tabular-nums;
+}
+
+:host([data-styled]) {
+  color: var(--tx-countdown-color);
+  font-weight: var(--tx-countdown-font-weight);
+  transition: color var(--tx-countdown-transition-duration);
+}
+
+:host([data-styled].tx-countdown--ending) {
+  color: var(--tx-countdown-ending-color);
+}
+
+:host([data-styled].tx-countdown--expired) {
+  color: var(--tx-countdown-expired-color);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) {
+    transition: none;
+  }
+}

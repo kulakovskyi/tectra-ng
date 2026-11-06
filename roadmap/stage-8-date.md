@@ -27,12 +27,12 @@ Not in PrimeNG. First app (5): a month grid that draws events as continuous bars
 - [x] `<tx-month-calendar>` with every option above (same names as the first app's grid; `weekStartsOn` and `locale` follow the kit locale when not set; `info` tone added); event bars and `+N` are mouse shortcuts hidden from screen readers while each day is named with its date, today, markers and events; days of other months and weekend names use the muted text colour and bar text mixes the tone with the text colour, so contrast is AA (the original used opacity)
 - [x] Docs + tests; e2e: a bar spans its days and continues next week, arrow keys and Enter, compact dots below 560px, `+N` follows `maxLanes`
 
-## 8.3 Countdown — `ui/countdown`
+## 8.3 Countdown — `ui/countdown` ✅
 
 Not in PrimeNG. First app (1): counts a number down in days / hours / minutes / seconds, shows the value with a suffix, emits `completed` once at zero; a countdown to a timestamp through the clock service.
 
-- [ ] `<tx-countdown>` (value + unit, or a target date), `completed`, live region, reduced motion
-- [ ] Docs + tests
+- [x] `<tx-countdown>`: `value` + `unit` + `suffix` like the first app's countdown (a new value starts again instead of being ignored), `target` date as a clock (`mm:ss` / `h:mm:ss`, like its remaining-time pipe), `format`, `endingSoon` colour, `paused`, `tick` / `completed` (once), value template with days / hours / minutes / seconds, `role="timer"` with `aria-live` off by default, ticks follow the clock (no drift, updates only when the shown value changes), colour transition off with reduced motion; `txRemainingTime` pipe, `formatRemaining`, `splitRemaining`
+- [x] Docs + tests; e2e on a fake clock: count down and start again, ending colour and completion, pause, target clock
 
 ## 8.4 Analog clock — `ui/analog-clock`
 

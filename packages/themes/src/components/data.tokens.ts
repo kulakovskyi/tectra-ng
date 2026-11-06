@@ -194,3 +194,15 @@ export const sparklineTokens = {
 };
 
 export type TectraSparklineTokens = typeof sparklineTokens;
+
+export const countdownTokens = {
+  root: {
+    color: 'inherit',
+    fontWeight: 'inherit',
+    endingColor: lightDark(tokenRef('red-600'), tokenRef('red-400')),
+    expiredColor: 'inherit',
+    transitionDuration: tokenRef('motion-duration'),
+  },
+};
+
+export type TectraCountdownTokens = typeof countdownTokens;
