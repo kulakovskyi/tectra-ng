@@ -206,3 +206,46 @@ export const countdownTokens = {
 };
 
 export type TectraCountdownTokens = typeof countdownTokens;
+
+export const analogClockTokens = {
+  root: {
+    size: '210px',
+    background: tokenRef('surface-card'),
+    borderColor: tokenRef('surface-border'),
+    shadow: '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)',
+    transitionDuration: '700ms',
+    transitionEasing: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+  },
+  tick: {
+    width: '3.5px',
+    height: '4%',
+    offset: '-1125%',
+    color: tokenRef('surface-border'),
+    majorHeight: '7%',
+    majorOffset: '-600%',
+    majorColor: tokenRef('text-muted'),
+  },
+  hourHand: {
+    width: '5.25px',
+    length: '27%',
+    color: tokenRef('text-primary'),
+  },
+  minuteHand: {
+    width: '3.5px',
+    length: '40%',
+    color: tokenRef('primary-base'),
+  },
+  secondHand: {
+    width: '1.75px',
+    length: '42%',
+    color: lightDark(tokenRef('red-600'), tokenRef('red-400')),
+  },
+  pin: {
+    size: '14px',
+    color: tokenRef('primary-base'),
+    ringWidth: '4px',
+    ringColor: tokenRef('surface-card'),
+  },
+};
+
+export type TectraAnalogClockTokens = typeof analogClockTokens;

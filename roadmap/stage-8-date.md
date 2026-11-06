@@ -34,9 +34,9 @@ Not in PrimeNG. First app (1): counts a number down in days / hours / minutes / 
 - [x] `<tx-countdown>`: `value` + `unit` + `suffix` like the first app's countdown (a new value starts again instead of being ignored), `target` date as a clock (`mm:ss` / `h:mm:ss`, like its remaining-time pipe), `format`, `endingSoon` colour, `paused`, `tick` / `completed` (once), value template with days / hours / minutes / seconds, `role="timer"` with `aria-live` off by default, ticks follow the clock (no drift, updates only when the shown value changes), colour transition off with reduced motion; `txRemainingTime` pipe, `formatRemaining`, `splitRemaining`
 - [x] Docs + tests; e2e on a fake clock: count down and start again, ending colour and completion, pause, target clock
 
-## 8.4 Analog clock — `ui/analog-clock`
+## 8.4 Analog clock — `ui/analog-clock` ✅
 
 Not in PrimeNG. First app (1): an analog face showing the time of an IANA time zone (local when empty or unknown) and a pipe for a digital `HH:mm` read-out with the hand angles.
 
-- [ ] `<tx-analog-clock>` + `txAnalogClockHands` pipe
-- [ ] Docs + tests
+- [x] `<tx-analog-clock>` + `txAnalogClockHands` pipe: the first app's face (15rem = `210px`, content-border ring with a large shadow, 12 ticks with every third longer and darker, hour hand in the text colour, minute hand and pin in primary, `700ms` spring turn, no motion with reduced motion); added `time` (fixed time), `showSeconds`, `ariaLabel` before the time; hands always turn forward (the original spun back from :59 to :00); updates at the start of each minute / second
+- [x] Docs + tests; e2e on a fake clock: local time and the forward turn past the hour, time zones, fixed time from a slider

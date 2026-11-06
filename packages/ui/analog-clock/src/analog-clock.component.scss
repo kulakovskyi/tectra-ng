@@ -1,0 +1,91 @@
+:host {
+  display: block;
+}
+
+.tx-analog-clock__face {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.tx-analog-clock__tick,
+.tx-analog-clock__hand,
+.tx-analog-clock__pin {
+  position: absolute;
+  left: 50%;
+  border-radius: 9999px;
+}
+
+:host([data-styled]) {
+  width: var(--tx-analog-clock-size);
+  height: var(--tx-analog-clock-size);
+
+  .tx-analog-clock__face {
+    background: var(--tx-analog-clock-background);
+    box-shadow:
+      0 0 0 1px var(--tx-analog-clock-border-color),
+      var(--tx-analog-clock-shadow);
+  }
+
+  .tx-analog-clock__tick {
+    top: 50%;
+    width: var(--tx-analog-clock-tick-width);
+    height: var(--tx-analog-clock-tick-height);
+    margin-top: calc(var(--tx-analog-clock-tick-height) / -2);
+    margin-left: calc(var(--tx-analog-clock-tick-width) / -2);
+    background: var(--tx-analog-clock-tick-color);
+    transform: rotate(var(--tx-analog-clock-angle)) translateY(var(--tx-analog-clock-tick-offset));
+  }
+
+  .tx-analog-clock__tick--major {
+    height: var(--tx-analog-clock-tick-major-height);
+    margin-top: calc(var(--tx-analog-clock-tick-major-height) / -2);
+    background: var(--tx-analog-clock-tick-major-color);
+    transform: rotate(var(--tx-analog-clock-angle)) translateY(var(--tx-analog-clock-tick-major-offset));
+  }
+
+  .tx-analog-clock__hand {
+    bottom: 50%;
+    transform-origin: bottom;
+    rotate: var(--tx-analog-clock-angle);
+    transition: rotate var(--tx-analog-clock-transition-duration) var(--tx-analog-clock-transition-easing);
+  }
+
+  .tx-analog-clock__hand--hour {
+    width: var(--tx-analog-clock-hour-hand-width);
+    height: var(--tx-analog-clock-hour-hand-length);
+    margin-left: calc(var(--tx-analog-clock-hour-hand-width) / -2);
+    background: var(--tx-analog-clock-hour-hand-color);
+  }
+
+  .tx-analog-clock__hand--minute {
+    width: var(--tx-analog-clock-minute-hand-width);
+    height: var(--tx-analog-clock-minute-hand-length);
+    margin-left: calc(var(--tx-analog-clock-minute-hand-width) / -2);
+    background: var(--tx-analog-clock-minute-hand-color);
+  }
+
+  .tx-analog-clock__hand--second {
+    width: var(--tx-analog-clock-second-hand-width);
+    height: var(--tx-analog-clock-second-hand-length);
+    margin-left: calc(var(--tx-analog-clock-second-hand-width) / -2);
+    background: var(--tx-analog-clock-second-hand-color);
+  }
+
+  .tx-analog-clock__pin {
+    top: 50%;
+    width: var(--tx-analog-clock-pin-size);
+    height: var(--tx-analog-clock-pin-size);
+    background: var(--tx-analog-clock-pin-color);
+    box-shadow: 0 0 0 var(--tx-analog-clock-pin-ring-width) var(--tx-analog-clock-pin-ring-color);
+    transform: translate(-50%, -50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) .tx-analog-clock__hand {
+    transition: none;
+  }
+}

@@ -144,7 +144,7 @@ Detailed checklist per component: [roadmap/stage-7-data.md](roadmap/stage-7-data
 | `ui/sparkline` | — | 4 | ✅ |
 | `ui/export` — CSV, Excel, Word, PDF, JSON, HTML, Markdown, copy, print, no third-party libraries (`ui/export-font` for PDF) | — | 0, 2 | ✅ |
 
-## Stage 8 — date & time
+## Stage 8 — date & time ✅
 
 Detailed checklist per component: [roadmap/stage-8-date.md](roadmap/stage-8-date.md).
 
@@ -153,7 +153,7 @@ Detailed checklist per component: [roadmap/stage-8-date.md](roadmap/stage-8-date
 | `ui/datepicker` — single / range / multiple, time, month / year views, inline, touch, min / max, locale | DatePicker | 58 | ✅ |
 | `ui/month-calendar` (events grid) | — | 23 | ✅ |
 | `ui/countdown` (value / unit or target date, remaining-time pipe) | — | 1 | ✅ |
-| `ui/analog-clock` | — | 1 | ⬜ |
+| `ui/analog-clock` | — | 1 | ✅ |
 
 ## Stage 9 — navigation & structure
 
