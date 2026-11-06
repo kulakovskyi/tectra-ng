@@ -1,3 +1,13 @@
+## 0.1.1 (2026-11-06)
+
+### 🩹 Fixes
+
+- **release:** the changelog step reads its git options from release.changelog.git
+
+### ❤️ Thank You
+
+- tears
+
 ## 0.1.0 (2026-11-06)
 
 First public release.
