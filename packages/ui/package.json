@@ -1,6 +1,6 @@
 {
   "name": "@tectra-ng/ui",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Angular UI components for tectra: signals, OnPush, accessible and themable, one entry point per component.",
   "license": "MIT",
   "homepage": "https://tectra-ng.com",
@@ -25,9 +25,9 @@
     "@angular/forms": "^22.0.0",
     "@angular/router": "^22.0.0",
     "rxjs": "^7.8.0",
-    "@tectra-ng/core": "^0.1.0",
-    "@tectra-ng/icons": "^0.1.0",
-    "@tectra-ng/themes": "^0.1.0"
+    "@tectra-ng/core": "^0.1.3",
+    "@tectra-ng/icons": "^0.1.3",
+    "@tectra-ng/themes": "^0.1.3"
   },
   "peerDependenciesMeta": {
     "@angular/router": {

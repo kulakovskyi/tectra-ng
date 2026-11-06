@@ -1,3 +1,21 @@
+## 0.1.3 (2026-11-06)
+
+### 🚀 Features
+
+- **ui:** stage 7.5 — timeline ([c4cdfdd](https://github.com/kulakovskyi/tectra-ng/commit/c4cdfdd))
+- **ui:** stage 7.6 — stat tiles ([fea9b0a](https://github.com/kulakovskyi/tectra-ng/commit/fea9b0a))
+- **ui:** stage 7.7 — sparkline ([2d95b55](https://github.com/kulakovskyi/tectra-ng/commit/2d95b55))
+- **ui:** stage 7.8 — export without third-party libraries ([6af37a1](https://github.com/kulakovskyi/tectra-ng/commit/6af37a1))
+- **ui:** stage 8.1 — date picker ([93c9f25](https://github.com/kulakovskyi/tectra-ng/commit/93c9f25))
+- **ui:** stage 8.2 — month calendar ([152fdd7](https://github.com/kulakovskyi/tectra-ng/commit/152fdd7))
+- **ui:** date picker range preview and pickable days of other months ([f86aa19](https://github.com/kulakovskyi/tectra-ng/commit/f86aa19))
+- **ui:** stage 8.3 — countdown ([58876d5](https://github.com/kulakovskyi/tectra-ng/commit/58876d5))
+- **ui:** stage 8.4 — analog clock ([3f3a4a6](https://github.com/kulakovskyi/tectra-ng/commit/3f3a4a6))
+
+### ❤️ Thank You
+
+- tears @kulakovskyi
+
 ## 0.1.2 (2026-11-06)
 
 ### 🚀 Features
