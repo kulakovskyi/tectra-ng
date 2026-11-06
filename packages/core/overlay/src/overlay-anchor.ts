@@ -18,14 +18,21 @@ function stickyAxes(style: CSSStyleDeclaration): ScrollAxis[] {
   return axes;
 }
 
+const anchoredPanes = new WeakMap<Element, Element>();
+
 export function scrollTracksOf(origin: Element): ScrollTrack[] {
   const document = origin.ownerDocument;
   const view = document.defaultView;
   const tracks: ScrollTrack[] = [];
   const stuck = new Set<ScrollAxis>();
-  for (let node = origin.parentElement; node && view; node = node.parentElement) {
+  for (let node: Element | null = origin.parentElement; node && view; node = node.parentElement) {
     if (node === document.body || node === document.documentElement) {
       break;
+    }
+    const anchor = anchoredPanes.get(node);
+    if (anchor) {
+      node = anchor;
+      continue;
     }
     const style = view.getComputedStyle(node);
     if (style.position === 'fixed') {
@@ -112,6 +119,7 @@ export function txAnchorPane(overlayRef: OverlayRef, origin: Element, chrome?: T
     });
   };
 
+  anchoredPanes.set(pane, origin);
   const observer = new MutationObserver(() => follow());
   observer.observe(pane, { attributes: true, attributeFilter: ['style'] });
   follow(true);
@@ -140,6 +148,7 @@ export function txAnchorPane(overlayRef: OverlayRef, origin: Element, chrome?: T
       return;
     }
     released = true;
+    anchoredPanes.delete(pane);
     observer.disconnect();
     resizes?.disconnect();
     subscription.unsubscribe();

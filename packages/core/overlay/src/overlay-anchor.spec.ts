@@ -148,6 +148,19 @@ describe('txAnchorPane', () => {
     expect(tracks).toEqual(['table:block', 'page:block', 'page:inline']);
   });
 
+  it('lets a panel opened from another panel follow the same scroll', () => {
+    txAnchorPane(overlayRef, origin);
+    const layer = document.createElement('div');
+    layer.style.position = 'fixed';
+    layer.appendChild(host);
+    document.body.appendChild(layer);
+    const nested = document.createElement('button');
+    pane.appendChild(nested);
+    expect(scrollersOf(nested)).toEqual([body]);
+    detachments.next();
+    expect(scrollersOf(nested)).toEqual([]);
+  });
+
   it('keeps the script positioning where scroll timelines are missing', () => {
     vi.unstubAllGlobals();
     txAnchorPane(overlayRef, origin);
