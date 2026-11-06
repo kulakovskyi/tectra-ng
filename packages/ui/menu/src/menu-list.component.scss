@@ -85,7 +85,7 @@
   }
 
   .tx-menu__item--expanded {
-    background: var(--tx-menu-item-focus-background);
+    background: var(--tx-menu-item-active-background);
   }
 
   .tx-menu__item[aria-disabled='true'] {

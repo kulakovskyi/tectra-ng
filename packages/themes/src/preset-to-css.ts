@@ -35,5 +35,6 @@ export function presetToCss(preset: TectraPreset): string {
   return [
     `:root { ${block(shared)} ${block(toCssVariables(preset.light))} ${block(components)} color-scheme: light; }`,
     `:root[data-tx-theme="dark"] { ${block(toCssVariables(preset.dark))} color-scheme: dark; }`,
+    ...(preset.css ? [preset.css] : []),
   ].join('\n');
 }

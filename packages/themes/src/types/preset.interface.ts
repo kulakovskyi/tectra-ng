@@ -13,6 +13,7 @@ export interface TectraPreset {
   light: TectraSemanticTokens;
   dark: TectraSemanticTokens;
   components: TectraComponentTokens;
+  css?: string;
 }
 
 export interface TectraCssVariable {

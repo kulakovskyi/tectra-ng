@@ -74,7 +74,7 @@
 
 .tx-select__panel[data-styled] {
   .tx-multiselect__header--plain {
-    padding: var(--tx-select-list-padding);
+    padding: var(--tx-select-list-padding-block) var(--tx-select-list-padding-inline);
     border-bottom: 1px solid var(--tx-select-overlay-border-color);
   }
 

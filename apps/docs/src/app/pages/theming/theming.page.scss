@@ -1,9 +1,7 @@
 .picker {
-  display: flex;
-  align-items: center;
-  gap: var(--tx-space-4);
-  max-width: 360px;
-  padding: var(--tx-space-4);
+  width: fit-content;
+  max-width: 100%;
+  padding: var(--tx-space-5);
 }
 
 .vars {

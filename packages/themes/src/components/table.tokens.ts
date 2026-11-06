@@ -27,6 +27,7 @@ export const tableTokens = {
     fontSize: '11.375px',
     fontWeight: tokenRef('font-weight-semibold'),
     gap: '7px',
+    focusRing: { width: '2px', style: 'solid', color: tokenRef('focus-ring-color'), offset: '2px', shadow: 'none' },
     sm: { padding: '1.75px 5.25px' },
     lg: { padding: '10.5px 15.75px' },
   },
@@ -46,7 +47,7 @@ export const tableTokens = {
     selectedBackground: tokenRef('highlight-background'),
     selectedColor: tokenRef('highlight-color'),
     menuBackground: mix(tokenRef('primary-base'), '8%', tokenRef('surface-card')),
-    focusRing: { width: '2px', style: 'solid', color: tokenRef('focus-ring-color'), offset: '-2px' },
+    focusRing: { width: '2px', style: 'solid', color: tokenRef('focus-ring-color'), offset: '-2px', shadow: 'none' },
   },
   bodyCell: {
     padding: '8.75px 12.25px',
@@ -115,6 +116,7 @@ export const tableTokens = {
     color: tokenRef('text-muted'),
     hoverColor: tokenRef('text-primary'),
     hoverBackground: tokenRef('surface-hover'),
+    focusRing: { width: '2px', style: 'solid', color: tokenRef('focus-ring-color'), offset: '2px', shadow: 'none' },
   },
   paginator: {
     marginTop: '14px',

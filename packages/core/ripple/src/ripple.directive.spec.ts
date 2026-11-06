@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideTectra } from '@tectra-ng/core/config';
-import { InkPreset } from '@tectra-ng/themes';
+import { TxThemeService, provideTectra } from '@tectra-ng/core/config';
+import { Tectra } from '@tectra-ng/themes';
 import { TxRipple } from './ripple.directive';
 
 @Component({
@@ -22,7 +22,7 @@ describe('TxRipple', () => {
       const finished = new Promise<void>((resolve) => (resolveEnter = resolve));
       return { finished } as unknown as Animation;
     });
-    TestBed.configureTestingModule({ providers: [provideTectra({ preset: InkPreset, ripple: true })] });
+    TestBed.configureTestingModule({ providers: [provideTectra({ preset: Tectra, ripple: true })] });
   });
 
   function press(button: HTMLElement): void {
@@ -51,6 +51,17 @@ describe('TxRipple', () => {
     press(button);
     expect(button.querySelector('.tx-ripple')).toBeNull();
     expect(button.classList).not.toContain('tx-ripple-host');
+  });
+
+  it('follows the global switch at runtime', async () => {
+    const fixture = TestBed.createComponent(Host);
+    fixture.detectChanges();
+    const button = fixture.nativeElement.querySelector('button') as HTMLElement;
+    TestBed.inject(TxThemeService).setRipple(false);
+    await fixture.whenStable();
+    expect(button.classList).not.toContain('tx-ripple-host');
+    press(button);
+    expect(button.querySelector('.tx-ripple')).toBeNull();
   });
 
   it('spreads the wave over the border so the whole button tints', () => {

@@ -156,14 +156,25 @@ test.describe('with motion', () => {
     const frame = example(page, 'Expansion');
     const toggle = frame.getByRole('button', { name: 'Expand row' }).first();
     await toggle.scrollIntoViewIfNeeded();
+    const watching = page.evaluate(
+      () =>
+        new Promise<number[]>((resolve) => {
+          const heights: number[] = [];
+          const start = performance.now();
+          const tick = () => {
+            const element = document.querySelector('.tx-table__expansion-body');
+            heights.push(element ? element.getBoundingClientRect().height : 0);
+            if (performance.now() - start < 700) requestAnimationFrame(tick);
+            else resolve(heights);
+          };
+          requestAnimationFrame(tick);
+        }),
+    );
     await toggle.click();
     const body = frame.locator('.tx-table__expansion-body').first();
-    const heights: number[] = [];
-    for (let step = 0; step < 6; step++) {
-      heights.push(await body.evaluate((element) => element.getBoundingClientRect().height));
-      await page.waitForTimeout(40);
-    }
-    expect(heights[0]).toBeLessThan(heights.at(-1) ?? 0);
+    const heights = await watching;
+    const final = Math.max(...heights);
+    expect(heights.some((height) => height > 0 && height < final)).toBe(true);
     await expect.poll(() => body.evaluate((element) => element.getAnimations().length)).toBe(0);
     const open = await body.evaluate((element) => element.getBoundingClientRect().height);
     expect(open).toBeGreaterThan(60);

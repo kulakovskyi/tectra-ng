@@ -1,5 +1,6 @@
 import { SEVERITY_PALETTES, TectraColorScale, TectraColorStep, TectraSurfaceScale, shadows } from '@tectra-ng/tokens';
 import { TectraPalettes } from '../types/preset.interface';
+import { primaryBaseStep } from './contrast';
 import { TectraSemanticTokens, TectraSeverityTokens } from '../types/semantic-tokens.interface';
 
 function lightSeverity(scale: TectraColorScale, base: 600 | 700, surface: TectraSurfaceScale): TectraSeverityTokens {
@@ -14,7 +15,7 @@ function lightSeverity(scale: TectraColorScale, base: 600 | 700, surface: Tectra
 
 export function createLightSemantic({ accent, surface }: TectraPalettes): TectraSemanticTokens {
   return {
-    primary: { ...lightSeverity(accent, 600, surface), softText: accent[700] },
+    primary: { ...lightSeverity(accent, primaryBaseStep(accent), surface), softText: accent[700] },
     secondary: { base: surface[100], hover: surface[200], active: surface[300], border: surface[200], contrast: surface[800] },
     success: lightSeverity(SEVERITY_PALETTES.green, 700, surface),
     info: lightSeverity(SEVERITY_PALETTES.sky, 700, surface),

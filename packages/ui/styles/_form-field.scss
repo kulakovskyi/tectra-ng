@@ -7,7 +7,7 @@
   border: 1px solid var(--tx-form-field-border-color);
   border-radius: var(--tx-form-field-border-radius);
   outline: none;
-  background: var(--tx-form-field-background);
+  background-color: var(--tx-form-field-background);
   box-shadow: var(--tx-form-field-shadow);
   color: var(--tx-form-field-color);
   font-family: var(--tx-font-family);
@@ -25,19 +25,21 @@
 
 @mixin focus {
   border-color: var(--tx-form-field-focus-border-color);
+  outline: var(--tx-form-field-focus-ring-width) var(--tx-form-field-focus-ring-style) var(--tx-form-field-focus-ring-color);
+  outline-offset: var(--tx-form-field-focus-ring-offset);
   box-shadow: var(--tx-form-field-focus-ring-shadow);
 }
 
 @mixin filled {
-  background: var(--tx-form-field-filled-background);
+  background-color: var(--tx-form-field-filled-background);
 }
 
 @mixin filled-hover {
-  background: var(--tx-form-field-filled-hover-background);
+  background-color: var(--tx-form-field-filled-hover-background);
 }
 
 @mixin filled-focus {
-  background: var(--tx-form-field-filled-focus-background);
+  background-color: var(--tx-form-field-filled-focus-background);
 }
 
 @mixin invalid {
@@ -50,12 +52,12 @@
 }
 
 @mixin readonly {
-  background: var(--tx-form-field-readonly-background);
+  background-color: var(--tx-form-field-readonly-background);
   cursor: default;
 }
 
 @mixin disabled {
-  background: var(--tx-form-field-disabled-background);
+  background-color: var(--tx-form-field-disabled-background);
   box-shadow: none;
   color: var(--tx-form-field-disabled-color);
   cursor: not-allowed;

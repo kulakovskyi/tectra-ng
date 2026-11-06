@@ -1,6 +1,6 @@
 ---
 name: design-tokens
-description: Use when adding or changing tectra design tokens — primitives in @tectra-ng/tokens, semantic light/dark tokens, component tokens in @tectra-ng/themes, presets (createInkPreset, definePreset), CSS variable names, dt on a component, dark mode.
+description: Use when adding or changing tectra design tokens — primitives in @tectra-ng/tokens, semantic light/dark tokens, component tokens in @tectra-ng/themes, presets and themes (createTectraPreset, styles, definePreset), CSS variable names, dt on a component, dark mode.
 ---
 
 # Design tokens in tectra
@@ -10,7 +10,7 @@ description: Use when adding or changing tectra design tokens — primitives in 
 1. **Primitives** — `packages/tokens/src/` (`primitives/`, `palettes/`): colour scales (ink surface + accents + severity palettes), radius, typography, shadows, motion, layers. Raw values, no meaning.
 2. **Semantic** — `packages/themes/src/semantic/{light,dark}.semantic.ts`, typed by `types/semantic-tokens.interface.ts`: `primary-*`, `surface-*`, `text-primary` / `text-muted`, `danger-base`, `focus-ring`, `form-field-*`… Meaning, per colour scheme.
 3. **Component** — `packages/themes/src/components/<name>.tokens.ts`: what one component uses, built from semantic tokens.
-4. **Preset** — `packages/themes/src/presets/ink/ink.preset.ts`: `createInkPreset(accent)` bundles everything; `definePreset(base, overrides)` deep-merges; `presetToCss(preset)` writes the CSS; `provideTectra({ preset })` applies it.
+4. **Preset** — `packages/themes/src/presets/tectra.preset.ts`: `createTectraPreset({ style, primary, surface })` bundles everything (`Tectra` = default). A style (`packages/themes/src/styles/<name>/`) = component token overrides per group + semantic overrides + optional CSS on top of the default look; the default `tectra` style must never change when a style is added — new geometry tokens get the current hard-coded value as default; `definePreset(base, overrides)` deep-merges; `presetToCss(preset)` writes the CSS; `provideTectra({ preset })` applies it.
 
 ## CSS variable names
 

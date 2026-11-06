@@ -22,21 +22,20 @@
   </div>
 
   <div class="header__end">
-    <div class="accents" role="radiogroup" aria-label="Accent colour">
-      @for (accent of accents; track accent.value) {
-        <button
-          type="button"
-          role="radio"
-          class="accents__dot"
-          [class.accents__dot--active]="currentAccent() === accent.value"
-          [style.--dot]="accent.color"
-          [attr.aria-checked]="currentAccent() === accent.value"
-          [attr.aria-label]="accent.label"
-          [title]="accent.label"
-          (click)="setAccent(accent.value)"
-        ></button>
-      }
-    </div>
+    <button
+      txButton
+      [text]="true"
+      [severity]="'secondary'"
+      [rounded]="true"
+      [rippleCentered]="true"
+      [icon]="'palette'"
+      [attr.aria-label]="'Theme settings'"
+      [title]="'Theme settings'"
+      [txPopoverTrigger]="themePanel"
+    ></button>
+    <tx-popover #themePanel [placement]="'bottom-end'" [arrow]="false" [ariaLabel]="'Theme settings'">
+      <docs-theme-configurator />
+    </tx-popover>
     <button
       txButton
       [text]="true"

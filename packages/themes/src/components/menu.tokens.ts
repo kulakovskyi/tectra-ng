@@ -22,6 +22,7 @@ export const menuTokens = {
     fontWeight: tokenRef('font-weight-regular'),
     focusBackground: lightDark(tokenRef('surface-100'), tokenRef('surface-800')),
     focusColor: tokenRef('text-hover'),
+    activeBackground: tokenRef('menu-item-focus-background'),
     disabledOpacity: '0.6',
     dangerColor: lightDark(tokenRef('red-600'), tokenRef('red-400')),
     dangerFocusBackground: lightDark(tokenRef('red-50'), `color-mix(in srgb, ${tokenRef('red-400')}, transparent 96%)`),

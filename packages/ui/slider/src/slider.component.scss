@@ -77,9 +77,12 @@
   box-shadow: var(--tx-slider-handle-shadow);
   outline: none;
   cursor: grab;
-  transition: box-shadow var(--tx-slider-transition-duration);
+  transition:
+    background-color var(--tx-slider-transition-duration),
+    box-shadow var(--tx-slider-transition-duration);
 
   &:hover {
+    background: var(--tx-slider-handle-hover-background);
     box-shadow: var(--tx-slider-handle-shadow), var(--tx-slider-handle-hover-ring);
   }
 
@@ -166,7 +169,7 @@
 
   .tx-slider__handle {
     transition-duration: var(--tx-slider-transition-duration);
-    transition-property: left, bottom, box-shadow;
+    transition-property: left, bottom, background-color, box-shadow;
   }
 }
 

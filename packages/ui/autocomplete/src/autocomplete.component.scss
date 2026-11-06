@@ -23,7 +23,7 @@
   flex: none;
   place-items: center;
   align-self: stretch;
-  width: var(--tx-select-dropdown-width);
+  width: var(--tx-select-dropdown-button-width);
   margin-block: calc(-1 * var(--_py));
   padding: 0;
   border: none;
@@ -41,6 +41,10 @@
   &:enabled:hover {
     background: var(--tx-select-dropdown-button-hover-background);
     color: var(--tx-select-dropdown-button-hover-color);
+  }
+
+  &:enabled:active {
+    background: var(--tx-select-dropdown-button-active-background);
   }
 
   &:focus-visible {

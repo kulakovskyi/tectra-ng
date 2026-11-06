@@ -4,7 +4,7 @@ Primitive design tokens — plain data, no Angular, no meaning yet. `@tectra-ng/
 
 | File | What it holds |
 |---|---|
-| `palettes/surface.palette.ts` | `INK_SURFACE` — the neutral scale 0…950 for backgrounds, borders and text |
+| `palettes/surface.palette.ts` | `SURFACE_PALETTES` — neutral scales 0…950 for backgrounds, borders and text: `ink` (default, also `INK_SURFACE`), `slate`, `gray`, `zinc`, `neutral`, `stone`, `soho`, `viva`, `ocean`, `mauve`, `olive`, `mist`, `taupe` |
 | `palettes/accent.palette.ts` | `ACCENT_PALETTES` — `blue`, `green`, `purple`, `cyan`, `teal`: one per product accent |
 | `palettes/severity.palette.ts` | `SEVERITY_PALETTES` — `red`, `green`, `orange`, `sky`, `purple` for danger / success / warn / info / help |
 | `primitives/radius.ts` | `none`, `xs` 3px, `sm` 5px, `md` 7px, `lg` 10px, `xl` 14px, `full` |

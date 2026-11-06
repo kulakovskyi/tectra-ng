@@ -34,7 +34,7 @@
     box-sizing: border-box;
     width: var(--tx-cascade-select-column-width);
     max-height: var(--tx-select-list-max-height);
-    padding: var(--tx-select-list-padding);
+    padding: var(--tx-select-list-padding-block) var(--tx-select-list-padding-inline);
 
     & + & {
       border-inline-start: 1px solid var(--tx-cascade-select-column-border-color);
@@ -64,6 +64,7 @@
 
   .tx-cascade-select__option--active {
     background: var(--tx-select-option-focus-background);
+    color: var(--tx-select-option-focus-color);
     box-shadow: inset 2px 0 0 var(--tx-select-option-check-color);
   }
 

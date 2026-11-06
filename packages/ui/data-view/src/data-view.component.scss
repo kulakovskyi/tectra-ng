@@ -18,12 +18,15 @@
 }
 
 :host([data-styled]) {
+  border: var(--tx-data-view-border-width) solid var(--tx-data-view-border-color);
+  border-radius: var(--tx-data-view-border-radius);
   background: var(--tx-data-view-background);
   color: var(--tx-data-view-color);
   font-family: var(--tx-font-family);
 
   .tx-data-view__header {
     padding: var(--tx-data-view-header-padding);
+    border-radius: var(--tx-data-view-header-border-radius);
     border-bottom: 1px solid var(--tx-data-view-border-color);
     background: var(--tx-data-view-header-background);
     color: var(--tx-data-view-header-color);
@@ -31,6 +34,7 @@
 
   .tx-data-view__footer {
     padding: var(--tx-data-view-footer-padding);
+    border-radius: var(--tx-data-view-footer-border-radius);
     border-top: 1px solid var(--tx-data-view-border-color);
     background: var(--tx-data-view-footer-background);
     color: var(--tx-data-view-footer-color);

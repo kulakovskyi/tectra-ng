@@ -23,7 +23,7 @@ export const paginatorTokens = {
     fontSize: tokenRef('font-size-md'),
     iconSize: '14px',
     disabledOpacity: '0.6',
-    focusRing: { width: '2px', style: 'solid', color: tokenRef('focus-ring-color'), offset: '2px' },
+    focusRing: { width: '2px', style: 'solid', color: tokenRef('focus-ring-color'), offset: '2px', shadow: 'none' },
   },
   currentPageReport: {
     color: tokenRef('text-muted'),

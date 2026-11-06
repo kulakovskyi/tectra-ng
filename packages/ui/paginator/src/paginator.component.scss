@@ -98,13 +98,15 @@
     transition:
       background var(--tx-paginator-transition-duration),
       color var(--tx-paginator-transition-duration),
-      outline-color var(--tx-paginator-transition-duration);
+      outline-color var(--tx-paginator-transition-duration),
+      box-shadow var(--tx-paginator-transition-duration);
   }
 
   .tx-paginator__nav:focus-visible {
     outline: var(--tx-paginator-nav-button-focus-ring-width) var(--tx-paginator-nav-button-focus-ring-style)
       var(--tx-paginator-nav-button-focus-ring-color);
     outline-offset: var(--tx-paginator-nav-button-focus-ring-offset);
+    box-shadow: var(--tx-paginator-nav-button-focus-ring-shadow);
   }
 
   .tx-paginator__nav:not(:disabled):not(.tx-paginator__page--selected):hover {

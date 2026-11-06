@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TECTRA_CONFIG } from '@tectra-ng/core/config';
 import { TxLocaleService } from '@tectra-ng/core/i18n';
-import { InkPreset } from '@tectra-ng/themes';
+import { Tectra } from '@tectra-ng/themes';
 import { TxInput } from '@tectra-ng/ui/input';
 import { TxFieldError } from './field-error.component';
 import { TxFieldHint } from './field-hint.component';
@@ -195,7 +195,7 @@ describe('TxFieldHint and TxFieldError', () => {
   });
 
   it('takes global messages and the current locale', async () => {
-    TestBed.configureTestingModule({ providers: [{ provide: TECTRA_CONFIG, useValue: { preset: InkPreset, validationMessages: { format: 'Wrong code' } } }] });
+    TestBed.configureTestingModule({ providers: [{ provide: TECTRA_CONFIG, useValue: { preset: Tectra, validationMessages: { format: 'Wrong code' } } }] });
     await setup();
     expect(errorText('#code-error')).toBe('Wrong code');
     TestBed.inject(TxLocaleService).setLocale('ua');

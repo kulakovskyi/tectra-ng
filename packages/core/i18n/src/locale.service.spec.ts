@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideTectra } from '@tectra-ng/core/config';
-import { InkPreset } from '@tectra-ng/themes';
+import { Tectra } from '@tectra-ng/themes';
 import { TX_LOCALE_UA } from './locales';
 import { TxLocaleService } from './locale.service';
 import { injectTranslations } from './translations';
@@ -16,7 +16,7 @@ describe('TxLocaleService', () => {
   });
 
   it('applies the configured locale and overrides', () => {
-    TestBed.configureTestingModule({ providers: [provideTectra({ preset: InkPreset, locale: 'ua', translations: { clear: 'Скинути' } })] });
+    TestBed.configureTestingModule({ providers: [provideTectra({ preset: Tectra, locale: 'ua', translations: { clear: 'Скинути' } })] });
     const service = TestBed.inject(TxLocaleService);
     expect(service.locale().code).toBe('ua');
     expect(service.translations().clear).toBe('Скинути');

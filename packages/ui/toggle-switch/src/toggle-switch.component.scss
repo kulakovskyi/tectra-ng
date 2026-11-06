@@ -53,10 +53,14 @@
 :host([data-styled]) .tx-toggle-switch__track {
   width: var(--_width);
   height: var(--_height);
+  box-sizing: border-box;
   margin-top: max(0px, calc((var(--_label-font-size) * 1.5 - var(--_height)) / 2));
+  border: var(--tx-toggle-switch-border-width) solid var(--tx-toggle-switch-border-color);
   border-radius: var(--tx-toggle-switch-border-radius);
   background: var(--tx-toggle-switch-background);
-  transition: background-color var(--tx-toggle-switch-transition-duration);
+  transition:
+    background-color var(--tx-toggle-switch-transition-duration),
+    border-color var(--tx-toggle-switch-transition-duration);
 }
 
 :host([data-styled]) .tx-toggle-switch__handle {
@@ -82,6 +86,7 @@
 
 :host([data-styled].tx-toggle-switch--checked) {
   .tx-toggle-switch__track {
+    border-color: var(--tx-toggle-switch-checked-border-color);
     background: var(--tx-toggle-switch-checked-background);
   }
 
@@ -93,10 +98,12 @@
 }
 
 :host([data-styled]:not(.tx-toggle-switch--disabled):not(.tx-toggle-switch--readonly)) .tx-toggle-switch__track:hover {
+  border-color: var(--tx-toggle-switch-hover-border-color);
   background: var(--tx-toggle-switch-hover-background);
 }
 
 :host([data-styled].tx-toggle-switch--checked:not(.tx-toggle-switch--disabled):not(.tx-toggle-switch--readonly)) .tx-toggle-switch__track:hover {
+  border-color: var(--tx-toggle-switch-checked-hover-border-color);
   background: var(--tx-toggle-switch-checked-hover-background);
 }
 

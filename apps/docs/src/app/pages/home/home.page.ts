@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TxIcon } from '@tectra-ng/icons';
-import { InkPreset, toCssVariables } from '@tectra-ng/themes';
+import { Tectra, toCssVariables } from '@tectra-ng/themes';
 import { TxBadge } from '@tectra-ng/ui/badge';
 import { TxButton } from '@tectra-ng/ui/button';
 import { TxInput } from '@tectra-ng/ui/input';
@@ -26,7 +26,7 @@ export default class HomePage {
   readonly stats = [
     { value: DOC_COMPONENTS.length, label: 'components' },
     { value: 334, label: 'icons' },
-    { value: toCssVariables(InkPreset.light).length + toCssVariables(InkPreset.components).length, label: 'design tokens' },
+    { value: toCssVariables(Tectra.light).length + toCssVariables(Tectra.components).length, label: 'design tokens' },
     { value: 5, label: 'accents' },
   ];
 

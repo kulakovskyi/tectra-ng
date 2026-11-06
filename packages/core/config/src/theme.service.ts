@@ -10,6 +10,7 @@ export class TxThemeService {
 
   readonly preset = signal<TectraPreset | null>(null);
   readonly mode = signal<TxThemeMode>('light');
+  readonly ripple = signal(this.config?.ripple ?? false);
 
   applyPreset(preset: TectraPreset): void {
     const id = 'tectra-theme';
@@ -19,6 +20,10 @@ export class TxThemeService {
     const darkSelector = this.config?.darkSelector;
     style.textContent = darkSelector ? css.replace(':root[data-tx-theme="dark"]', `:root[data-tx-theme="dark"], ${darkSelector}`) : css;
     this.preset.set(preset);
+  }
+
+  setRipple(enabled: boolean): void {
+    this.ripple.set(enabled);
   }
 
   setMode(mode: TxThemeMode): void {

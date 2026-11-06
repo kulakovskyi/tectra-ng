@@ -2,9 +2,10 @@
 <h1 >Theming</h1>
 <p class="lead">A preset is data. <code>provideTectra()</code> turns it into CSS variables — change it and everything repaints.</p>
 
+<p>A preset has three parts: a <strong>primary</strong> palette for actions and selection, a <strong>surface</strong> palette for backgrounds, borders and text, and a <strong>theme</strong> — the shape of every component (radius, spacing, focus ring, density). The same picker sits behind the palette button in the header.</p>
+
 <div class="card picker">
-  <span>Accent</span>
-  <tx-select [options]="accents" [formControl]="accentControl" [ariaLabel]="'Accent'" />
+  <docs-theme-configurator />
 </div>
 
 <h2>Variables of the {{ mode() }} mode</h2>
@@ -18,5 +19,5 @@
   }
 </div>
 
-<h2>Use an accent in your app</h2>
+<h2>Use a preset in your app</h2>
 <docs-code-block [code]="presetExample" [label]="'Accent preset example'" />

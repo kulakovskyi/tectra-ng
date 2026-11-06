@@ -18,7 +18,7 @@ export const treeTokens = {
     hoverColor: tokenRef('text-hover'),
     selectedColor: tokenRef('highlight-color'),
     gap: '5.25px',
-    focusRing: { width: '2px', style: 'solid', color: tokenRef('focus-ring-color'), offset: '-1px' },
+    focusRing: { width: '2px', style: 'solid', color: tokenRef('focus-ring-color'), offset: '-1px', shadow: 'none' },
   },
   nodeIcon: {
     color: tokenRef('text-muted'),

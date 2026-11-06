@@ -26,7 +26,7 @@ export const formFieldTokens = {
     lineHeight: '21px',
     sm: { paddingX: '8.75px', paddingY: '5.25px', fontSize: '12.25px', lineHeight: '18.375px' },
     lg: { paddingX: '12.25px', paddingY: '8.75px', fontSize: '15.75px', lineHeight: '23.625px' },
-    focusRing: { shadow: 'none' },
+    focusRing: { shadow: 'none', width: '0px', style: 'none', color: 'transparent', offset: '0px' },
     invalidFocusRing: { shadow: 'none' },
     transitionDuration: tokenRef('motion-duration'),
   },

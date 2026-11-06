@@ -1,21 +1,20 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs';
 import { TxThemeService } from '@tectra-ng/core/config';
 import { TxOverlayInset } from '@tectra-ng/core/overlay';
-import { createInkPreset } from '@tectra-ng/themes';
-import { TectraAccent } from '@tectra-ng/tokens';
 import { TxButton } from '@tectra-ng/ui/button';
+import { TxPopover, TxPopoverTrigger } from '@tectra-ng/ui/popover';
 import { TxToast } from '@tectra-ng/ui/toast';
 import { HEADER_LINKS } from '../data/header-links.data';
-import { THEME_ACCENTS } from '../data/theme-accents.data';
 import { DocsSidebar } from './sidebar/docs-sidebar';
+import { DocsThemeConfigurator } from './theme-configurator/theme-configurator';
 
 @Component({
   selector: 'docs-layout',
-  imports: [RouterOutlet, RouterLink, TxButton, TxOverlayInset, DocsSidebar, TxToast],
+  imports: [RouterOutlet, RouterLink, TxButton, TxPopover, TxPopoverTrigger, TxOverlayInset, DocsSidebar, DocsThemeConfigurator, TxToast],
   templateUrl: './docs-layout.html',
   styleUrl: './docs-layout.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,7 +25,6 @@ export class DocsLayout {
   private router = inject(Router);
 
   readonly headerLinks = HEADER_LINKS;
-  readonly accents = THEME_ACCENTS;
   readonly mode = this.txThemeService.mode;
 
   readonly currentUrl = toSignal(
@@ -38,12 +36,6 @@ export class DocsLayout {
   );
 
   isMenuOpen = signal(false);
-  currentAccent = computed(() => this.txThemeService.preset()?.name.replace('ink-', '') ?? 'blue');
-
-  setAccent(accent: TectraAccent): void {
-    this.txThemeService.applyPreset(createInkPreset(accent));
-  }
-
   toggleMode(event: MouseEvent): void {
     const root = this.document.documentElement;
     const reduceMotion = this.document.defaultView?.matchMedia('(prefers-reduced-motion: reduce)').matches;

@@ -7,17 +7,21 @@ export const dataViewTokens = {
     background: tokenRef('surface-card'),
     color: tokenRef('text-primary'),
     borderColor,
+    borderWidth: '0',
+    borderRadius: '0',
     transitionDuration: tokenRef('motion-duration'),
   },
   header: {
     background: tokenRef('surface-card'),
     color: tokenRef('text-primary'),
     padding: '8.75px 12.25px',
+    borderRadius: '0',
   },
   footer: {
     background: tokenRef('surface-card'),
     color: tokenRef('text-primary'),
     padding: '8.75px 12.25px',
+    borderRadius: '0',
   },
   empty: {
     padding: '10.5px 12.25px',

@@ -11,7 +11,7 @@ It installs every tectra package at the same version. Import from the packages t
 ```ts
 import { provideTectra } from '@tectra-ng/core/config';
 import { TxButton } from '@tectra-ng/ui/button';
-import { InkPreset } from '@tectra-ng/themes';
+import { Tectra } from '@tectra-ng/themes';
 ```
 
 | Package | What it holds |

@@ -1,12 +1,17 @@
-export const ACCENT_PRESET_EXAMPLE = `import { createInkPreset } from '@tectra-ng/themes';
+export const ACCENT_PRESET_EXAMPLE = `import { Tectra, createTectraPreset } from '@tectra-ng/themes';
 
-provideTectra({ preset: createInkPreset('teal') });`;
+provideTectra({ preset: Tectra, ripple: true });
+
+provideTectra({ preset: createTectraPreset({ style: 'edge', primary: 'violet', surface: 'zinc' }) });
+
+inject(TxThemeService).applyPreset(createTectraPreset({ style: 'soft', primary: 'noir', surface: 'slate' }));
+inject(TxThemeService).setRipple(false);`;
 
 export const OVERLAY_INSETS_EXAMPLE = `<header class="app-header" txOverlayInset>…</header>
 <nav class="sticky-tabs" txOverlayInset>…</nav>
 
 // chrome outside Angular: a fixed amount
-provideTectra({ preset: InkPreset, overlay: { viewportInsets: { top: 56 } } });`;
+provideTectra({ preset: Tectra, overlay: { viewportInsets: { top: 56 } } });`;
 
 export const OVERLAY_USAGE_EXAMPLE = `const ref = inject(TxOverlay).open(template, {
   origin: button,

@@ -1,7 +1,8 @@
 import { lightDark, tokenRef } from './token-helpers';
 
 function tone(palette: string) {
-  return { color: lightDark(tokenRef(`${palette}-800`), tokenRef(`${palette}-300`)) };
+  const color = lightDark(tokenRef(`${palette}-800`), tokenRef(`${palette}-300`));
+  return { color, background: color };
 }
 
 export const tagTokens = {
@@ -22,13 +23,13 @@ export const tagTokens = {
   sm: { fontSize: '11px', paddingX: '5px', paddingY: '1px' },
   lg: { fontSize: '14px', paddingX: '9px', paddingY: '3px', gap: '6px' },
   primary: tone('primary'),
-  secondary: { color: tokenRef('text-muted') },
+  secondary: { color: tokenRef('text-muted'), background: tokenRef('text-muted') },
   success: tone('green'),
   info: tone('sky'),
   warn: tone('orange'),
   danger: tone('red'),
   help: tone('purple'),
-  contrast: { color: tokenRef('text-primary') },
+  contrast: { color: tokenRef('text-primary'), background: tokenRef('text-primary') },
 };
 
 export const chipTokens = {
@@ -47,6 +48,9 @@ export const chipTokens = {
     removeHoverColor: tokenRef('text-primary'),
     removeHoverBackground: lightDark(tokenRef('surface-200'), tokenRef('surface-700')),
     focusRingColor: tokenRef('focus-ring-color'),
+    focusRingWidth: '2px',
+    focusRingOffset: '1px',
+    focusRingShadow: 'none',
   },
 };
 

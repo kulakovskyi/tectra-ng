@@ -2,14 +2,16 @@ import { ApplicationConfig, DOCUMENT, inject, provideAppInitializer, provideZone
 import { provideRouter, Router, withComponentInputBinding, withInMemoryScrolling, withViewTransitions } from '@angular/router';
 import { provideTxBrandIcons } from '@tectra-ng/brand-icons';
 import { provideTectra } from '@tectra-ng/core/config';
-import { InkPreset } from '@tectra-ng/themes';
+import { Tectra } from '@tectra-ng/themes';
 import { routes } from './app.routes';
 import { skipViewTransitionsWhileHidden } from './hidden-view-transitions';
+import { DocsThemeSettings } from './layout/theme-settings';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZonelessChangeDetection(),
     provideAppInitializer(skipViewTransitionsWhileHidden),
+    provideAppInitializer(() => inject(DocsThemeSettings).restore()),
     provideRouter(
       routes,
       withComponentInputBinding(),
@@ -26,7 +28,7 @@ export const appConfig: ApplicationConfig = {
         },
       }),
     ),
-    provideTectra({ preset: InkPreset, ripple: true }),
+    provideTectra({ preset: Tectra, ripple: true }),
     provideTxBrandIcons(),
   ],
 };

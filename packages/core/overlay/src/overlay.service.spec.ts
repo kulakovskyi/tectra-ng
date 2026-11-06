@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, TemplateRef, ViewContainerRef, inject, viewChild } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { InkPreset } from '@tectra-ng/themes';
+import { Tectra } from '@tectra-ng/themes';
 import { TECTRA_CONFIG } from '@tectra-ng/core/config';
 import { TxOverlay } from './overlay.service';
 import { TxOverlayCloseReason } from './overlay.types';
@@ -89,7 +89,7 @@ describe('TxOverlay', () => {
     }
 
     beforeEach(() => {
-      TestBed.configureTestingModule({ providers: [{ provide: TECTRA_CONFIG, useValue: { preset: InkPreset, overlay: { viewportInsets: { top: 56 } } } }] });
+      TestBed.configureTestingModule({ providers: [{ provide: TECTRA_CONFIG, useValue: { preset: Tectra, overlay: { viewportInsets: { top: 56 } } } }] });
     });
 
     it('keeps the panel open while the origin scrolls under the header', () => {

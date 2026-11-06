@@ -1,5 +1,5 @@
 import { DOCUMENT, Directive, ElementRef, booleanAttribute, computed, inject, input } from '@angular/core';
-import { TECTRA_CONFIG } from '@tectra-ng/core/config';
+import { TxThemeService } from '@tectra-ng/core/config';
 import { TxStyleLoader } from '@tectra-ng/core/styles';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TxRippleStyles } from './ripple.styles';
@@ -22,7 +22,7 @@ import { TxRippleRef } from './ripple.types';
 export class TxRipple {
   private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private document = inject(DOCUMENT);
-  private config = inject(TECTRA_CONFIG, { optional: true });
+  private txThemeService = inject(TxThemeService);
   private txStyleLoader = inject(TxStyleLoader);
   private ripples = new Set<TxRippleRef>();
   private container: HTMLElement | null = null;
@@ -32,7 +32,7 @@ export class TxRipple {
   readonly rippleCentered = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly rippleColor = input<string | undefined>(undefined);
 
-  readonly isEnabled = computed(() => !this.rippleDisabled() && (this.ripple() ?? !!this.config?.ripple));
+  readonly isEnabled = computed(() => !this.rippleDisabled() && (this.ripple() ?? this.txThemeService.ripple()));
 
   onPointerDown(event: PointerEvent): void {
     if (event.button === 0 && !event.defaultPrevented) {

@@ -69,6 +69,7 @@
 
   &:active:enabled {
     background: var(--tx-input-number-button-active-background);
+    color: var(--tx-input-number-button-active-color);
   }
 
   &:disabled {

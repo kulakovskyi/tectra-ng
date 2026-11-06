@@ -15,10 +15,10 @@ export const INSTALL_STEPS: { title: string; code: string; language: CodeLanguag
     title: 'Provide a theme in app.config.ts',
     language: 'typescript',
     code: `import { provideTectra } from '@tectra-ng/core/config';
-import { createInkPreset } from '@tectra-ng/themes';
+import { createTectraPreset } from '@tectra-ng/themes';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideTectra({ preset: createInkPreset('blue'), ripple: true })],
+  providers: [provideTectra({ preset: createTectraPreset({ primary: 'blue' }), ripple: true })],
 };`,
   },
   {

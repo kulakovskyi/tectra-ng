@@ -111,7 +111,7 @@ test('locale switches built-in texts at runtime', async ({ page }) => {
 });
 
 test('select panel opens clear of the sticky header, rides with its field and slides under the header', async ({ page }) => {
-  await page.goto('/theming');
+  await page.goto('/core/locale');
   const trigger = page.locator('tx-select .tx-select__trigger').first();
   const panel = page.locator('.tx-select__panel');
   const headerBottom = await page.locator('.header').evaluate((header) => header.getBoundingClientRect().bottom);
@@ -968,4 +968,39 @@ test('labels name their fields', async ({ page }) => {
   await page.getByText('Full name', { exact: true }).click();
   await expect(page.locator('#label-basic-name')).toBeFocused();
   await expect(page.getByRole('combobox', { name: 'City' })).toBeVisible();
+});
+
+test('theme picker in the header swaps primary, surface and theme, remembers them and switches the ripple', async ({ page }) => {
+  await page.goto('/getting-started');
+  const variable = (name: string) => page.evaluate((key) => getComputedStyle(document.documentElement).getPropertyValue(key).trim(), name);
+  const primaryBefore = await variable('--tx-primary-base');
+
+  await page.getByRole('button', { name: 'Theme settings' }).click();
+  const panel = page.getByRole('dialog', { name: 'Theme settings' });
+  await expect(panel).toBeVisible();
+
+  await panel.getByRole('radio', { name: 'Violet' }).click();
+  await expect(panel.getByRole('radio', { name: 'Violet' })).toHaveAttribute('aria-checked', 'true');
+  expect(await variable('--tx-primary-base')).not.toBe(primaryBefore);
+
+  await panel.getByRole('radio', { name: 'Zinc' }).click();
+  expect(await variable('--tx-surface-500')).toBe('#71717a');
+
+  await panel.getByRole('radio', { name: 'Violet' }).press('ArrowRight');
+  await expect(panel.getByRole('radio', { name: 'Purple' })).toBeFocused();
+  await expect(panel.getByRole('radio', { name: 'Purple' })).toHaveAttribute('aria-checked', 'true');
+
+  const radiusBefore = await variable('--tx-form-field-border-radius');
+  await panel.getByRole('radio', { name: 'Edge' }).click();
+  expect(await variable('--tx-form-field-border-radius')).not.toBe(radiusBefore);
+
+  await panel.getByRole('switch').click();
+  await expect(panel.getByRole('switch')).not.toBeChecked();
+
+  await page.reload();
+  expect(await variable('--tx-surface-500')).toBe('#71717a');
+  await page.getByRole('button', { name: 'Theme settings' }).click();
+  await expect(page.getByRole('radio', { name: 'Edge' })).toHaveAttribute('aria-checked', 'true');
+  await expect(page.getByRole('switch')).not.toBeChecked();
+  await page.evaluate(() => localStorage.removeItem('tx-docs-theme'));
 });

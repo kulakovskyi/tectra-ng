@@ -112,7 +112,8 @@
     transition:
       background-color var(--tx-tree-transition-duration),
       color var(--tx-tree-transition-duration),
-      outline-color var(--tx-tree-transition-duration);
+      outline-color var(--tx-tree-transition-duration),
+      box-shadow var(--tx-tree-transition-duration);
   }
 
   .tx-tree__content--flat {
@@ -168,6 +169,7 @@
   .tx-tree__content:focus-visible,
   .tx-tree__content--context {
     outline-color: var(--tx-tree-node-focus-ring-color);
+    box-shadow: var(--tx-tree-node-focus-ring-shadow);
   }
 
   .tx-tree__drop-point {

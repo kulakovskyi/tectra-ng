@@ -237,7 +237,7 @@
 .docs-nav__link--active:hover {
   background: var(--docs-nav-active-bg);
   box-shadow: var(--docs-nav-active-shadow);
-  color: var(--tx-highlight-color);
+  color: var(--docs-nav-active-color);
   font-weight: 550;
 
   &::before {

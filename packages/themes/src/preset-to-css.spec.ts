@@ -1,4 +1,4 @@
-import { InkPreset } from './presets/ink/ink.preset';
+import { Tectra } from './presets/tectra.preset';
 import { presetToCss, toCssVariables, toStyleObject } from './preset-to-css';
 
 describe('toCssVariables', () => {
@@ -22,16 +22,16 @@ describe('toStyleObject', () => {
 });
 
 describe('presetToCss', () => {
-  const css = presetToCss(InkPreset);
+  const css = presetToCss(Tectra);
 
   it('writes light variables on :root', () => {
     expect(css).toContain(`:root { `);
-    expect(css).toContain(`--tx-primary-base: ${InkPreset.light.primary.base};`);
+    expect(css).toContain(`--tx-primary-base: ${Tectra.light.primary.base};`);
   });
 
   it('writes dark variables under the dark attribute', () => {
     expect(css).toContain(`:root[data-tx-theme="dark"] { `);
-    expect(css).toContain(`--tx-primary-base: ${InkPreset.dark.primary.base};`);
+    expect(css).toContain(`--tx-primary-base: ${Tectra.dark.primary.base};`);
   });
 
   it('writes palettes and component tokens', () => {

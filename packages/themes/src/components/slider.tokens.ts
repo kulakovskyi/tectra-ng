@@ -14,6 +14,7 @@ export const sliderTokens = {
   handle: {
     size: '18px',
     background: tokenRef('surface-0'),
+    hoverBackground: tokenRef('slider-handle-background'),
     borderColor: tokenRef('primary-base'),
     borderWidth: '2px',
     shadow: `0 1px 2px ${fade(tokenRef('surface-950'), '80%')}`,

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideTectra } from '@tectra-ng/core/config';
-import { InkPreset } from '@tectra-ng/themes';
+import { Tectra } from '@tectra-ng/themes';
 import { TxButton } from './button.component';
 import { TxButtonIconTemplate } from './button-templates.directive';
 
@@ -52,7 +52,7 @@ describe('TxButton', () => {
   }
 
   beforeEach(() => {
-    TestBed.configureTestingModule({ providers: [provideTectra({ preset: InkPreset, pt: { button: { root: { class: 'global-root' } } } })] });
+    TestBed.configureTestingModule({ providers: [provideTectra({ preset: Tectra, pt: { button: { root: { class: 'global-root' } } } })] });
   });
 
   it('renders the label, severity, tokens and pass-through classes', async () => {

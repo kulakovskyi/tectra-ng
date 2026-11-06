@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { TECTRA_CONFIG } from '@tectra-ng/core/config';
-import { InkPreset } from '@tectra-ng/themes';
+import { Tectra } from '@tectra-ng/themes';
 import { TxOverlayInsets, txViewportMargin } from './overlay-insets.service';
 
 function element(style: Partial<CSSStyleDeclaration>, top: number, height: number): HTMLElement {
@@ -36,7 +36,7 @@ describe('TxOverlayInsets', () => {
   });
 
   it('starts from the configured insets', () => {
-    TestBed.configureTestingModule({ providers: [{ provide: TECTRA_CONFIG, useValue: { preset: InkPreset, overlay: { viewportInsets: { top: 64 } } } }] });
+    TestBed.configureTestingModule({ providers: [{ provide: TECTRA_CONFIG, useValue: { preset: Tectra, overlay: { viewportInsets: { top: 64 } } } }] });
     expect(TestBed.inject(TxOverlayInsets).measure()).toEqual({ top: 64, bottom: 0 });
   });
 

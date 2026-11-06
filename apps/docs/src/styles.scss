@@ -14,6 +14,7 @@
   --docs-sidebar: color-mix(in srgb, var(--tx-surface-50) 80%, var(--tx-surface-0));
   --docs-aura: color-mix(in srgb, var(--tx-primary-base) 10%, transparent);
   --docs-nav-active-bg: var(--tx-surface-0);
+  --docs-nav-active-color: var(--tx-primary-soft-text);
   --docs-nav-active-shadow: 0 0 0 0.5px var(--docs-hairline-strong), 0 1px 3px color-mix(in srgb, var(--docs-ink) 9%, transparent);
   --docs-chrome: color-mix(in srgb, var(--tx-surface-0) 78%, transparent);
   --docs-ink: var(--tx-surface-950);
@@ -39,6 +40,7 @@
   --docs-sidebar: var(--tx-surface-950);
   --docs-aura: color-mix(in srgb, var(--tx-primary-base) 9%, transparent);
   --docs-nav-active-bg: var(--tx-highlight-background);
+  --docs-nav-active-color: var(--tx-highlight-color);
   --docs-nav-active-shadow: none;
   --docs-bg-subtle: color-mix(in srgb, var(--tx-surface-900) 55%, var(--tx-surface-950));
   --docs-panel: color-mix(in srgb, var(--tx-surface-900) 70%, var(--tx-surface-950));

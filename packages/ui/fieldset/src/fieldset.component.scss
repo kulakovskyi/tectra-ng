@@ -41,6 +41,9 @@
 
 :host([data-styled]) .tx-fieldset__legend {
   padding: var(--tx-fieldset-legend-padding);
+  border-radius: var(--tx-fieldset-legend-border-radius);
+  background: var(--tx-fieldset-legend-background);
+  box-shadow: inset 0 0 0 1px var(--tx-fieldset-legend-border-color);
   color: var(--tx-fieldset-legend-color);
   font-size: var(--tx-fieldset-legend-font-size);
   font-weight: var(--tx-fieldset-legend-font-weight);
@@ -54,9 +57,9 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 8px;
+  padding: var(--tx-fieldset-toggle-padding);
   border: none;
-  border-radius: var(--tx-radius-md);
+  border-radius: var(--tx-fieldset-legend-border-radius);
   background: transparent;
   color: inherit;
   font: inherit;
@@ -70,13 +73,15 @@
     transition: transform var(--tx-fieldset-transition-duration) cubic-bezier(0.2, 0, 0, 1);
   }
 
-  &:hover {
-    background: var(--tx-fieldset-legend-hover-background);
+  &:focus-visible {
+    outline: var(--tx-fieldset-focus-ring-width) solid var(--tx-focus-ring-color);
+    outline-offset: var(--tx-fieldset-focus-ring-offset);
+    background: var(--tx-fieldset-legend-focus-background);
+    box-shadow: var(--tx-fieldset-focus-ring-shadow);
   }
 
-  &:focus-visible {
-    outline: 2px solid var(--tx-focus-ring-color);
-    outline-offset: 1px;
+  &:hover {
+    background: var(--tx-fieldset-legend-hover-background);
   }
 }
 

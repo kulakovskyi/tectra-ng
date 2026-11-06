@@ -496,8 +496,10 @@
   }
 
   .tx-table__sort:focus-visible {
-    outline: 2px solid var(--tx-focus-ring-color);
-    outline-offset: 2px;
+    outline: var(--tx-table-header-cell-focus-ring-width) var(--tx-table-header-cell-focus-ring-style)
+      var(--tx-table-header-cell-focus-ring-color);
+    outline-offset: var(--tx-table-header-cell-focus-ring-offset);
+    box-shadow: var(--tx-table-header-cell-focus-ring-shadow);
   }
 
   .tx-table__sort-icon {
@@ -679,6 +681,7 @@
   .tx-table__row:focus-visible {
     outline: var(--tx-table-row-focus-ring-width) var(--tx-table-row-focus-ring-style) var(--tx-table-row-focus-ring-color);
     outline-offset: var(--tx-table-row-focus-ring-offset);
+    box-shadow: var(--tx-table-row-focus-ring-shadow);
   }
 
   .tx-table__row-handle {
@@ -753,8 +756,10 @@
   }
 
   .tx-table__row-toggle:focus-visible {
-    outline: 2px solid var(--tx-focus-ring-color);
-    outline-offset: 2px;
+    outline: var(--tx-table-row-toggle-button-focus-ring-width) var(--tx-table-row-toggle-button-focus-ring-style)
+      var(--tx-table-row-toggle-button-focus-ring-color);
+    outline-offset: var(--tx-table-row-toggle-button-focus-ring-offset);
+    box-shadow: var(--tx-table-row-toggle-button-focus-ring-shadow);
   }
 
   .tx-table__tree-cell {

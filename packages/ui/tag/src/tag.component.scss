@@ -18,13 +18,14 @@
 
 :host([data-styled]) {
   --_tone: var(--tx-tag-primary-color);
+  --_background: var(--tx-tag-primary-background);
 
   flex-shrink: 0;
   gap: var(--tx-tag-gap);
   box-sizing: border-box;
   padding: var(--tx-tag-padding-y) var(--tx-tag-padding-x);
   border-radius: var(--tx-tag-border-radius);
-  background: color-mix(in srgb, var(--_tone) var(--tx-tag-tint), transparent);
+  background: color-mix(in srgb, var(--_background) var(--tx-tag-tint), transparent);
   color: var(--_tone);
   font-family: var(--tx-font-family);
   font-size: var(--tx-tag-font-size);
@@ -35,6 +36,7 @@
 @each $severity in (secondary, success, info, warn, danger, help, contrast) {
   :host([data-styled][data-severity='#{$severity}']) {
     --_tone: var(--tx-tag-#{$severity}-color);
+    --_background: var(--tx-tag-#{$severity}-background);
   }
 }
 

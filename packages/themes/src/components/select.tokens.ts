@@ -15,6 +15,8 @@ export const selectTokens = {
   },
   list: {
     padding: '3.5px',
+    paddingBlock: tokenRef('select-list-padding'),
+    paddingInline: tokenRef('select-list-padding'),
     gap: '2px',
     maxHeight: '200px',
   },
@@ -23,6 +25,7 @@ export const selectTokens = {
     gap: '7px',
     borderRadius: tokenRef('radius-sm'),
     color: tokenRef('text-primary'),
+    focusColor: tokenRef('select-option-color'),
     focusBackground: tokenRef('list-focus-background'),
     selectedBackground: tokenRef('highlight-background'),
     selectedColor: tokenRef('highlight-color'),
@@ -31,6 +34,12 @@ export const selectTokens = {
     selectedFontWeight: tokenRef('font-weight-regular'),
     disabledColor: tokenRef('form-field-disabled-color'),
     checkColor: tokenRef('primary-base'),
+    multiple: {
+      selectedBackground: 'transparent',
+      selectedFocusBackground: tokenRef('select-option-focus-background'),
+      selectedColor: tokenRef('select-option-color'),
+      selectedFocusColor: tokenRef('select-option-focus-color'),
+    },
   },
   checkbox: {
     size: '15.75px',
@@ -68,8 +77,10 @@ export const selectTokens = {
     minHeight: '37px',
   },
   dropdownButton: {
+    width: tokenRef('select-dropdown-width'),
     background: lightDark(tokenRef('surface-100'), tokenRef('surface-800')),
     hoverBackground: lightDark(tokenRef('surface-200'), tokenRef('surface-700')),
+    activeBackground: tokenRef('select-dropdown-button-hover-background'),
     color: lightDark(tokenRef('surface-600'), tokenRef('surface-300')),
     hoverColor: lightDark(tokenRef('surface-700'), tokenRef('surface-200')),
   },

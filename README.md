@@ -31,8 +31,8 @@ Plan of what moves in next and in which order: [ROADMAP.md](ROADMAP.md).
 
 | Folder | What lives there | Published |
 |---|---|---|
-| `packages/tokens` | palettes (ink surfaces, 5 accents, severities), radius, typography, shadows — plain data | npm `@tectra-ng/tokens` |
-| `packages/themes` | semantic light / dark, component design tokens, `createInkPreset(accent)`, `definePreset` (deep merge) | npm `@tectra-ng/themes` |
+| `packages/tokens` | palettes (13 surfaces, 16 accents, severities), radius, typography, shadows — plain data | npm `@tectra-ng/tokens` |
+| `packages/themes` | semantic light / dark, component design tokens, `createTectraPreset({ style, primary, surface })` with 4 themes, `definePreset` (deep merge) | npm `@tectra-ng/themes` |
 | `packages/core` | behaviour without looks: config (theme, unstyled, pt), overlay, a11y, forms, i18n, styles, ripple, fluid, utils | npm `@tectra-ng/core/*` |
 | `packages/icons` | 334 own outline icons (PrimeIcons names) + `<tx-icon>` + icon registry (`provideTxIcons`) | npm `@tectra-ng/icons` |
 | `packages/brand-icons` | optional brand logos from Simple Icons (CC0) under PrimeIcons names | npm `@tectra-ng/brand-icons` |

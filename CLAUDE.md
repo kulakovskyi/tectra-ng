@@ -17,7 +17,7 @@ Nx 23 + Angular 22 (zoneless, standalone, signals, OnPush), TypeScript 6, ng-pac
 ```
 packages/
   tokens/       @tectra-ng/tokens        primitives + palettes (ink, accents, severities), radius, type, shadows, motion, layers
-  themes/       @tectra-ng/themes        semantic light/dark tokens, component tokens, presets (createInkPreset), definePreset, presetToCss, toStyleObject
+  themes/       @tectra-ng/themes        semantic light/dark tokens, component tokens, presets (createTectraPreset: style + primary + surface; styles in src/styles/<name>), definePreset, presetToCss, toStyleObject
   core/<entry>  @tectra-ng/core/<entry>  config (provideTectra, dt/pt/unstyled), overlay, a11y, forms, i18n, styles, ripple, fluid, utils
   icons/        @tectra-ng/icons         own SVG icon set (PrimeIcons names) + TxIcon, provideTxIcons
   brand-icons/  @tectra-ng/brand-icons   brand logos (Simple Icons, CC0)

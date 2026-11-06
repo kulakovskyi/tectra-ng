@@ -9,6 +9,7 @@ export const inputNumberTokens = {
     activeBackground: lightDark(tokenRef('surface-200'), tokenRef('surface-600')),
     color: tokenRef('text-muted'),
     hoverColor: tokenRef('text-primary'),
+    activeColor: tokenRef('input-number-button-hover-color'),
     borderColor: tokenRef('form-field-border-color'),
     iconSize: '12px',
   },
