@@ -5,26 +5,49 @@ import { ScrollAxis, scrollTimeline } from './overlay-scroll';
 
 const SCROLLABLE = /^(auto|scroll|overlay)$/;
 
-export function scrollersOf(origin: Element): Element[] {
+const AXES: readonly ScrollAxis[] = ['block', 'inline'];
+
+function isSet(value: string): boolean {
+  return value !== '' && value !== 'auto';
+}
+
+function stickyAxes(style: CSSStyleDeclaration): ScrollAxis[] {
+  const axes: ScrollAxis[] = [];
+  if (isSet(style.top) || isSet(style.bottom)) axes.push('block');
+  if (isSet(style.left) || isSet(style.right)) axes.push('inline');
+  return axes;
+}
+
+export function scrollTracksOf(origin: Element): ScrollTrack[] {
   const document = origin.ownerDocument;
   const view = document.defaultView;
-  const scrollers: Element[] = [];
+  const tracks: ScrollTrack[] = [];
+  const stuck = new Set<ScrollAxis>();
   for (let node = origin.parentElement; node && view; node = node.parentElement) {
     if (node === document.body || node === document.documentElement) {
       break;
     }
     const style = view.getComputedStyle(node);
-    if (style.position === 'fixed' || style.position === 'sticky') {
-      return scrollers;
+    if (style.position === 'fixed') {
+      return tracks;
     }
     if (SCROLLABLE.test(style.overflowY) || SCROLLABLE.test(style.overflowX)) {
-      scrollers.push(node);
+      AXES.filter((axis) => !stuck.has(axis)).forEach((axis) => tracks.push({ source: node as Element, axis }));
+      stuck.clear();
+    }
+    if (style.position === 'sticky') {
+      stickyAxes(style).forEach((axis) => stuck.add(axis));
     }
   }
   if (document.scrollingElement) {
-    scrollers.push(document.scrollingElement);
+    const page = document.scrollingElement;
+    AXES.filter((axis) => !stuck.has(axis)).forEach((axis) => tracks.push({ source: page, axis }));
   }
-  return scrollers;
+  return tracks;
+}
+
+export function scrollersOf(origin: Element): Element[] {
+  return [...new Set(scrollTracksOf(origin).map((track) => track.source))];
 }
 
 interface ScrollTrack {
@@ -52,8 +75,7 @@ export function txAnchorPane(overlayRef: OverlayRef, origin: Element, chrome?: T
   if (!Timeline || typeof host.animate !== 'function') {
     return () => undefined;
   }
-  const tracks = scrollersOf(origin)
-    .flatMap((source) => (['block', 'inline'] as const).map((axis) => ({ source, axis })))
+  const tracks = scrollTracksOf(origin)
     .filter((track) => range(track) > 0)
     .slice(0, 2);
   if (!tracks.length) {
@@ -66,16 +88,23 @@ export function txAnchorPane(overlayRef: OverlayRef, origin: Element, chrome?: T
   );
 
   let placed = '';
-  const follow = () => {
+  let ranges = '';
+  let origins: number[] = [];
+  const follow = (force = false) => {
     const { top, right, bottom, left, transform } = pane.style;
     const placement = [top, right, bottom, left, transform].join('|');
-    if (placement === placed) {
+    const measured = tracks.map(range).join('|');
+    if (!force && placement === placed && measured === ranges) {
       return;
     }
+    if (force || placement !== placed) {
+      origins = tracks.map(offset);
+    }
     placed = placement;
+    ranges = measured;
     tracks.forEach((track, index) => {
       const base = layers[index] === pane ? `${pane.style.transform} `.trimStart() : '';
-      const from = offset(track);
+      const from = origins[index];
       (animations[index].effect as KeyframeEffect).setKeyframes([
         { transform: `${base}${shift(track, from)}` },
         { transform: `${base}${shift(track, from - range(track))}` },
@@ -83,9 +112,16 @@ export function txAnchorPane(overlayRef: OverlayRef, origin: Element, chrome?: T
     });
   };
 
-  const observer = new MutationObserver(follow);
+  const observer = new MutationObserver(() => follow());
   observer.observe(pane, { attributes: true, attributeFilter: ['style'] });
-  follow();
+  follow(true);
+
+  const view = origin.ownerDocument.defaultView;
+  const resizes = view && 'ResizeObserver' in view ? new view.ResizeObserver(() => follow()) : null;
+  tracks.forEach(({ source }) => {
+    const content = source === source.ownerDocument.scrollingElement ? [source, source.ownerDocument.body] : [source, ...Array.from(source.children)];
+    content.forEach((element) => resizes?.observe(element));
+  });
 
   const document = origin.ownerDocument;
   const clip = () => {
@@ -105,6 +141,7 @@ export function txAnchorPane(overlayRef: OverlayRef, origin: Element, chrome?: T
     }
     released = true;
     observer.disconnect();
+    resizes?.disconnect();
     subscription.unsubscribe();
     animations.forEach((animation) => animation.cancel());
     if (clipsChrome) {

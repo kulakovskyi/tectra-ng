@@ -1,6 +1,6 @@
 import { OverlayRef } from '@angular/cdk/overlay';
 import { Subject } from 'rxjs';
-import { scrollersOf, txAnchorPane } from './overlay-anchor';
+import { scrollTracksOf, scrollersOf, txAnchorPane } from './overlay-anchor';
 import { TxOverlayInsets } from './overlay-insets.service';
 
 class FakeScrollTimeline {
@@ -51,6 +51,7 @@ describe('txAnchorPane', () => {
   });
 
   afterEach(() => {
+    Object.defineProperty(document, 'scrollingElement', { value: null, configurable: true });
     vi.unstubAllGlobals();
     document.body.replaceChildren();
   });
@@ -84,6 +85,29 @@ describe('txAnchorPane', () => {
     expect(keyframes.get(pane)).toEqual([{ transform: 'translateY(120px)' }, { transform: 'translateY(-480px)' }]);
   });
 
+  it('rebuilds the scroll keyframes when the scroll range changes', () => {
+    const callbacks: ResizeObserverCallback[] = [];
+    vi.stubGlobal(
+      'ResizeObserver',
+      class {
+        constructor(callback: ResizeObserverCallback) {
+          callbacks.push(callback);
+        }
+        observe(): void {
+          return;
+        }
+        disconnect(): void {
+          return;
+        }
+      },
+    );
+    txAnchorPane(overlayRef, origin);
+    expect(keyframes.get(pane)?.[1]).toEqual({ transform: 'translateY(-480px)' });
+    scrollable(body, 200, 2900, 300);
+    callbacks.forEach((callback) => callback([], {} as ResizeObserver));
+    expect(keyframes.get(pane)).toEqual([{ transform: 'translateY(120px)' }, { transform: 'translateY(-2480px)' }]);
+  });
+
   it('stops following once the overlay detaches', () => {
     txAnchorPane(overlayRef, origin);
     detachments.next();
@@ -96,6 +120,32 @@ describe('txAnchorPane', () => {
     dialog.appendChild(body);
     document.body.appendChild(dialog);
     expect(scrollersOf(origin)).toEqual([body]);
+  });
+
+  const withPage = () => Object.defineProperty(document, 'scrollingElement', { value: document.documentElement, configurable: true });
+
+  it('stops following the page above sticky chrome', () => {
+    withPage();
+    const header = document.createElement('div');
+    header.style.position = 'sticky';
+    header.style.top = '0px';
+    header.appendChild(origin);
+    document.body.appendChild(header);
+    expect(scrollTracksOf(origin).map((track) => `${track.source === document.documentElement ? 'page' : 'other'}:${track.axis}`)).toEqual(['page:inline']);
+  });
+
+  it('follows the page from a cell that sticks only inside its own scroller', () => {
+    withPage();
+    const scroller = document.createElement('div');
+    scroller.style.overflowX = 'auto';
+    const cell = document.createElement('div');
+    cell.style.position = 'sticky';
+    cell.style.right = '0px';
+    cell.appendChild(origin);
+    scroller.appendChild(cell);
+    document.body.appendChild(scroller);
+    const tracks = scrollTracksOf(origin).map((track) => `${track.source === scroller ? 'table' : track.source === document.documentElement ? 'page' : 'other'}:${track.axis}`);
+    expect(tracks).toEqual(['table:block', 'page:block', 'page:inline']);
   });
 
   it('keeps the script positioning where scroll timelines are missing', () => {
