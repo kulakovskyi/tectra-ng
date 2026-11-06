@@ -1,6 +1,6 @@
 {
   "name": "@tectra-ng/ui",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Angular UI components for tectra: signals, OnPush, accessible and themable, one entry point per component.",
   "license": "MIT",
   "homepage": "https://tectra-ng.com",

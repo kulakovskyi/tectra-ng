@@ -1,6 +1,6 @@
 {
   "name": "@tectra-ng/core",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "tectra core for Angular: provideTectra, overlay, accessibility helpers, forms, locale and styles.",
   "license": "MIT",
   "homepage": "https://tectra-ng.com",

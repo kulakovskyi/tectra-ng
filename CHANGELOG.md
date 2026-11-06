@@ -1,3 +1,21 @@
+## 0.1.2 (2026-11-06)
+
+### 🚀 Features
+
+- **docs:** blocks logo that waves, wordmark and favicon ([db8c849](https://github.com/kulakovskyi/tectra-ng/commit/db8c849))
+- **flags:** @tectra-ng/flags — country flags as lazy SVG chunks ([8bb0f09](https://github.com/kulakovskyi/tectra-ng/commit/8bb0f09))
+- **themes:** theme picker with primaries, surfaces and four themes ([8fd6066](https://github.com/kulakovskyi/tectra-ng/commit/8fd6066))
+- **ui:** stage 7.3 — tree and tree table ([d618122](https://github.com/kulakovskyi/tectra-ng/commit/d618122))
+- **ui:** stage 7.4 — data view and virtual scroller ([8aa6549](https://github.com/kulakovskyi/tectra-ng/commit/8aa6549))
+
+### 🩹 Fixes
+
+- **docs:** smooth dark mode reveal, remembered mode, real version badge ([d4b612c](https://github.com/kulakovskyi/tectra-ng/commit/d4b612c))
+
+### ❤️ Thank You
+
+- tears @kulakovskyi
+
 ## 0.1.1 (2026-11-06)
 
 ### 🩹 Fixes
