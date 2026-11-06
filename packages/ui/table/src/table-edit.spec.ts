@@ -9,6 +9,7 @@ interface Product {
   name: string;
   stock: number;
   note: string;
+  received: Date;
 }
 
 @Component({
@@ -36,13 +37,14 @@ interface Product {
 })
 class Host {
   readonly products: Product[] = [
-    { id: 1, name: 'Desk', stock: 4, note: 'oak' },
-    { id: 2, name: 'Stool', stock: 12, note: 'pine' },
+    { id: 1, name: 'Desk', stock: 4, note: 'oak', received: new Date(2026, 0, 5) },
+    { id: 2, name: 'Stool', stock: 12, note: 'pine', received: new Date(2026, 1, 9) },
   ];
   readonly columns: TxTableColumn[] = [
     { field: 'name', header: 'Name', editable: true },
     { field: 'stock', header: 'Stock', editable: true, editType: 'numeric' },
     { field: 'note', header: 'Note', editable: true },
+    { field: 'received', header: 'Received', editable: true, editType: 'date' },
   ];
   readonly mode = signal<TxTableEditMode>('cell');
   readonly editing = signal<unknown[]>([]);
@@ -121,6 +123,20 @@ describe('TxTable editing', () => {
     expect(host.products[0].note).toBe('walnut');
   });
 
+  it('edits a date cell with the date picker and saves with Enter', async () => {
+    cell(0, 'received').click();
+    await stable();
+    expect(cell(0, 'received').querySelector('tx-datepicker')).toBeTruthy();
+    const input = cell(0, 'received').querySelector('input') as HTMLInputElement;
+    expect(input.value).toBe('01/05/2026');
+    input.value = '03/15/2026';
+    input.dispatchEvent(new Event('input'));
+    key(input, 'Enter');
+    await stable();
+    expect(host.products[0].received).toEqual(new Date(2026, 2, 15));
+    expect(host.completes[0]).toMatchObject({ field: 'received', previousValue: new Date(2026, 0, 5) });
+  });
+
   it('edits a whole row with the row editor buttons', async () => {
     host.mode.set('row');
     await stable();
@@ -128,7 +144,7 @@ describe('TxTable editing', () => {
     editButton.click();
     await stable();
     expect(host.editing()).toEqual([1]);
-    expect(root().querySelectorAll('tbody .tx-table__row')[0].querySelectorAll('.tx-table__editor')).toHaveLength(3);
+    expect(root().querySelectorAll('tbody .tx-table__row')[0].querySelectorAll('.tx-table__editor')).toHaveLength(4);
     const name = cell(0, 'name').querySelector('input') as HTMLInputElement;
     name.value = 'Desk XL';
     name.dispatchEvent(new Event('input'));

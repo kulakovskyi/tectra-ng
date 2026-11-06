@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { TxIcon } from '@tectra-ng/icons';
 import { TxButton } from '@tectra-ng/ui/button';
 import { TxCheckbox } from '@tectra-ng/ui/checkbox';
+import { TxDatePicker } from '@tectra-ng/ui/datepicker';
 import { TxInput } from '@tectra-ng/ui/input';
 import { TxInputNumber } from '@tectra-ng/ui/input-number';
 import { TxMenu, TxMenuItemTemplate } from '@tectra-ng/ui/menu';
@@ -27,6 +28,7 @@ export const TX_TABLE_IMPORTS = [
   TxSkeleton,
   TxButton,
   TxCheckbox,
+  TxDatePicker,
   TxInput,
   TxInputNumber,
   TxSelect,

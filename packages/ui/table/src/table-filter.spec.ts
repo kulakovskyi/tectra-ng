@@ -80,6 +80,7 @@ class Host {
     { field: 'price', header: 'Price', filter: true, filterType: 'numeric' },
     { field: 'tag', header: 'Tag', filter: true, filterOptions: [{ label: 'Wood', value: 'wood' }, { label: 'Glass', value: 'glass' }] },
     { field: 'active', header: 'Active', filter: true, filterType: 'boolean' },
+    { field: 'added', header: 'Added', filter: true, filterType: 'date' },
   ];
   readonly display = signal<TxTableFilterDisplay>('menu');
   readonly lazy = signal(false);
@@ -114,7 +115,7 @@ describe('TxTable filters', () => {
 
   it('shows a filter button per filterable column and applies a menu filter', async () => {
     const buttons = [...root().querySelectorAll<HTMLElement>('.tx-table-filter__button')];
-    expect(buttons.map((button) => button.getAttribute('aria-label'))).toEqual(['Filter Name', 'Filter Price', 'Filter Tag', 'Filter Active']);
+    expect(buttons.map((button) => button.getAttribute('aria-label'))).toEqual(['Filter Name', 'Filter Price', 'Filter Tag', 'Filter Active', 'Filter Added']);
     buttons[1].click();
     await stable();
     const panel = document.querySelector('.tx-table-filter') as HTMLElement;
@@ -155,6 +156,19 @@ describe('TxTable filters', () => {
     table.clearFilters();
     await stable();
     expect(ids()).toHaveLength(4);
+  });
+
+  it('filters dates with the date picker in the filter row', async () => {
+    host.display.set('row');
+    await stable();
+    const picker = root().querySelector('.tx-table__filter-row [data-field="added"] tx-datepicker, .tx-table__filter-row tx-datepicker') as HTMLElement;
+    expect(picker).toBeTruthy();
+    const input = picker.querySelector('input') as HTMLInputElement;
+    input.value = '03/15/2026';
+    input.dispatchEvent(new Event('input'));
+    await stable();
+    expect(ids()).toEqual(['Lamp']);
+    expect(host.filters()['added'].rules[0]).toEqual({ value: new Date(2026, 2, 15), matchMode: 'dateIs' });
   });
 
   it('sends filters to the server in lazy mode', async () => {

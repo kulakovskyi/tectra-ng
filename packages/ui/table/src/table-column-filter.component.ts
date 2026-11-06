@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { TxTranslations } from '@tectra-ng/core/config';
 import { TxButton } from '@tectra-ng/ui/button';
+import { TxDatePicker } from '@tectra-ng/ui/datepicker';
 import { TxInput } from '@tectra-ng/ui/input';
 import { TxInputNumber } from '@tectra-ng/ui/input-number';
 import { TxMenu, TxMenuItem, TxMenuTrigger } from '@tectra-ng/ui/menu';
@@ -17,20 +18,13 @@ import { columnLabel } from './table.utils';
 
 const MAX_RULES = 2;
 
-function toDateInput(value: unknown): string {
-  if (!(value instanceof Date) || Number.isNaN(value.getTime())) return '';
-  const pad = (part: number) => String(part).padStart(2, '0');
-  return `${value.getFullYear()}-${pad(value.getMonth() + 1)}-${pad(value.getDate())}`;
-}
-
-function fromDateInput(value: string): Date | null {
-  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
-  return match ? new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3])) : null;
+function toDate(value: unknown): Date | null {
+  return value instanceof Date && !Number.isNaN(value.getTime()) ? value : null;
 }
 
 @Component({
   selector: 'tx-table-column-filter',
-  imports: [NgTemplateOutlet, FormsModule, TxButton, TxInput, TxInputNumber, TxSelect, TxMultiselect, TxPopover, TxPopoverTrigger, TxMenu, TxMenuTrigger],
+  imports: [NgTemplateOutlet, FormsModule, TxButton, TxDatePicker, TxInput, TxInputNumber, TxSelect, TxMultiselect, TxPopover, TxPopoverTrigger, TxMenu, TxMenuTrigger],
   template: `
     <ng-template #editor let-rule let-index="index" let-live="live">
       @switch (type()) {
@@ -45,14 +39,14 @@ function fromDateInput(value: string): Date | null {
           />
         }
         @case ('date') {
-          <input
-            txInput
-            type="date"
+          <tx-datepicker
             size="small"
             class="tx-table-filter__value"
-            [attr.aria-label]="valueLabel()"
-            [value]="dateValue(rule.value)"
-            (change)="setValue(index, parseDate($any($event.target).value), live)"
+            [ariaLabel]="valueLabel()"
+            [placeholder]="column().filterPlaceholder"
+            [showClear]="true"
+            [ngModel]="dateValue(rule.value)"
+            (ngModelChange)="setValue(index, $event, live)"
           />
         }
         @case ('boolean') {
@@ -88,7 +82,7 @@ function fromDateInput(value: string): Date | null {
             size="small"
             class="tx-table-filter__value"
             [attr.aria-label]="valueLabel()"
-            [placeholder]="column().filterPlaceholder ?? ''"
+            [placeholder]="column().filterPlaceholder"
             [value]="rule.value ?? ''"
             (input)="setValue(index, $any($event.target).value, live)"
             (keydown.enter)="apply()"
@@ -308,12 +302,8 @@ export class TxTableColumnFilter {
     this.draft.set(current ? { operator: current.operator, rules: current.rules.map((rule) => ({ ...rule })) } : this.empty());
   }
 
-  dateValue(value: unknown): string {
-    return toDateInput(value);
-  }
-
-  parseDate(value: string): Date | null {
-    return fromDateInput(value);
+  dateValue(value: unknown): Date | null {
+    return toDate(value);
   }
 
   setValue(index: number, value: unknown, live: boolean): void {

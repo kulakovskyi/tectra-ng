@@ -699,15 +699,13 @@
             />
           }
           @case ('date') {
-            <input
-              txInput
-              type="date"
+            <tx-datepicker
               size="small"
               class="tx-table__editor-control"
+              [ariaLabel]="label(column.column)"
               [unstyled]="isUnstyled()"
-              [attr.aria-label]="label(column.column)"
-              [value]="dateInput(draftValue(item, column.column))"
-              (change)="setDraft(item, column.column, parseDateInput($any($event.target).value))"
+              [ngModel]="dateDraft(draftValue(item, column.column))"
+              (ngModelChange)="setDraft(item, column.column, $event)"
             />
           }
           @default {

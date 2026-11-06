@@ -1096,14 +1096,10 @@ export class TxTable<T = unknown> implements TxTableContext {
     );
   }
 
-  dateInput(value: unknown): string {
-    if (!(value instanceof Date) || Number.isNaN(value.getTime())) return typeof value === 'string' ? value.slice(0, 10) : '';
-    const pad = (part: number) => String(part).padStart(2, '0');
-    return `${value.getFullYear()}-${pad(value.getMonth() + 1)}-${pad(value.getDate())}`;
-  }
-
-  parseDateInput(value: string): Date | null {
-    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  dateDraft(value: unknown): Date | null {
+    if (value instanceof Date) return Number.isNaN(value.getTime()) ? null : value;
+    if (typeof value !== 'string') return null;
+    const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(value);
     return match ? new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3])) : null;
   }
 
