@@ -1,0 +1,15 @@
+<svg class="logo-mark" [attr.viewBox]="'0 0 ' + size + ' ' + size" focusable="false">
+  <rect class="logo-mark__tile" [attr.width]="size" [attr.height]="size" [attr.rx]="radius" />
+  @for (block of blocks; track $index) {
+    <rect
+      [class]="'logo-mark__block logo-mark__block--' + block.tone"
+      [attr.data-part]="block.part"
+      [style.--i]="$index"
+      [attr.x]="block.x"
+      [attr.y]="block.y"
+      [attr.width]="blockSize"
+      [attr.height]="blockSize"
+      [attr.rx]="blockRadius"
+    />
+  }
+</svg>

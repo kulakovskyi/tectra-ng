@@ -1047,3 +1047,18 @@ test('icons stroke slider changes the stroke and the header shows the package ve
   const { version } = JSON.parse(readFileSync(join(__dirname, '../../packages/tectra-ng/package.json'), 'utf8')) as { version: string };
   await expect(page.locator('.logo__version')).toHaveText(`v${version}`);
 });
+
+test('logo mark follows the primary and the favicon follows the picker', async ({ page }) => {
+  await page.goto('/getting-started');
+  const tile = page.locator('.logo-mark__tile');
+  await expect(page.locator('.logo-mark__block')).toHaveCount(5);
+  const tileFill = () => tile.evaluate((element) => getComputedStyle(element).fill);
+  const before = await tileFill();
+  expect(await page.locator('link[rel="icon"]').getAttribute('href')).toBe('favicon.svg');
+
+  await page.getByRole('button', { name: 'Theme settings' }).click();
+  await page.getByRole('dialog', { name: 'Theme settings' }).getByRole('radio', { name: 'Rose' }).click();
+  await expect.poll(tileFill).not.toBe(before);
+  expect(await page.locator('link[rel="icon"]').getAttribute('href')).toMatch(/^data:image\/svg\+xml,/);
+  await page.evaluate(() => localStorage.removeItem('tx-docs-theme'));
+});

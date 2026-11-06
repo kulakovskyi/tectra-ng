@@ -1,12 +1,15 @@
 <header class="header" txOverlayInset>
   <div class="header__start">
     <button txButton class="header__menu" [text]="true" [severity]="'secondary'" [icon]="isMenuOpen() ? 'times' : 'bars'" aria-label="Menu" (click)="toggleMenu()"></button>
-    <a class="logo" routerLink="/" (click)="closeMenu()">
-      <span class="logo__mark">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M12 7v12" /></svg>
+    <a class="logo" routerLink="/" [attr.aria-label]="'tectra home, version ' + version" (click)="closeMenu()">
+      <docs-logo-mark class="logo__mark" />
+      <span class="logo__text" aria-hidden="true">
+        @for (letter of wordmark; track $index) {
+          <span class="logo__letter" [style.--i]="$index">{{ letter }}</span>
+        }
+        <span class="logo__dot" [style.--i]="wordmark.length"></span>
       </span>
-      <span class="logo__text">tectra</span>
-      <span class="logo__version">v{{ version }}</span>
+      <span class="logo__version" aria-hidden="true">v{{ version }}</span>
     </a>
     <nav class="header__nav">
       @for (link of headerLinks; track link.path) {

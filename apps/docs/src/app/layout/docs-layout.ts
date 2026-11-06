@@ -10,13 +10,14 @@ import { TxPopover, TxPopoverTrigger } from '@tectra-ng/ui/popover';
 import { TxToast } from '@tectra-ng/ui/toast';
 import { HEADER_LINKS } from '../data/header-links.data';
 import { TECTRA_VERSION } from '../../generated/version';
+import { DocsLogoMark } from './logo-mark/logo-mark';
 import { DocsSidebar } from './sidebar/docs-sidebar';
 import { DocsThemeConfigurator } from './theme-configurator/theme-configurator';
 import { DocsThemeSettings } from './theme-settings';
 
 @Component({
   selector: 'docs-layout',
-  imports: [RouterOutlet, RouterLink, TxButton, TxPopover, TxPopoverTrigger, TxOverlayInset, DocsSidebar, DocsThemeConfigurator, TxToast],
+  imports: [RouterOutlet, RouterLink, TxButton, TxPopover, TxPopoverTrigger, TxOverlayInset, DocsLogoMark, DocsSidebar, DocsThemeConfigurator, TxToast],
   templateUrl: './docs-layout.html',
   styleUrl: './docs-layout.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,6 +30,7 @@ export class DocsLayout {
 
   readonly headerLinks = HEADER_LINKS;
   readonly version = TECTRA_VERSION;
+  readonly wordmark = ['t', 'e', 'c', 't', 'r', 'a'];
   readonly mode = this.txThemeService.mode;
 
   readonly currentUrl = toSignal(

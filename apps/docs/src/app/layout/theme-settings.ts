@@ -1,7 +1,8 @@
 import { DOCUMENT, Injectable, inject, signal } from '@angular/core';
 import { TxThemeMode, TxThemeService } from '@tectra-ng/core/config';
 import { TECTRA_STYLES, TectraStyleName, createTectraPreset } from '@tectra-ng/themes';
-import { PRIMARY_ORDER, SURFACE_PALETTES, TectraPrimary, TectraSurface } from '@tectra-ng/tokens';
+import { PRIMARY_ORDER, SEVERITY_PALETTES, SURFACE_PALETTES, TectraPrimary, TectraSurface } from '@tectra-ng/tokens';
+import { logoSvg } from './logo-mark/logo-blocks.data';
 
 export interface DocsThemeChoice {
   style: TectraStyleName;
@@ -12,6 +13,13 @@ export interface DocsThemeChoice {
 }
 
 const STORAGE_KEY = 'tx-docs-theme';
+
+function mixHex(first: string, second: string, weight: number): string {
+  const channel = (hex: string, index: number) => parseInt(hex.slice(1 + index * 2, 3 + index * 2), 16);
+  return `#${[0, 1, 2]
+    .map((index) => Math.round(channel(first, index) * weight + channel(second, index) * (1 - weight)).toString(16).padStart(2, '0'))
+    .join('')}`;
+}
 
 @Injectable({ providedIn: 'root' })
 export class DocsThemeSettings {
@@ -73,7 +81,11 @@ export class DocsThemeSettings {
   }
 
   private apply(): void {
-    this.txThemeService.applyPreset(createTectraPreset({ style: this.style(), primary: this.primary(), surface: this.surface() }));
+    const preset = createTectraPreset({ style: this.style(), primary: this.primary(), surface: this.surface() });
+    this.txThemeService.applyPreset(preset);
+    const { base, contrast } = preset.light.primary;
+    const svg = logoSvg({ tile: base, contrast, soft: mixHex(contrast, base, 0.72), accent: SEVERITY_PALETTES.orange[300] });
+    this.document.querySelector('link[rel="icon"]')?.setAttribute('href', `data:image/svg+xml,${encodeURIComponent(svg)}`);
   }
 
   private read(): Partial<DocsThemeChoice> | null {
