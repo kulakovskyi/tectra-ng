@@ -718,6 +718,8 @@ test.describe('with motion', () => {
 
   test('flipped tooltip keeps its arrow side while it fades out', async ({ page }) => {
     await page.goto('/components/tooltip');
+    await page.locator('main h1').first().waitFor();
+    await page.waitForLoadState('networkidle');
     const origin = page.locator('tooltip-placements-example').getByRole('button', { name: 'bottom', exact: true });
     await expect(origin).toBeVisible();
     await origin.evaluate((element) =>

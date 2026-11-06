@@ -121,6 +121,8 @@ test.describe('with motion', () => {
 
   test('popover opened before the page scrolled fades out where it is, without a jump', async ({ page }) => {
     await page.goto('/components/popover');
+    await page.locator('main h1').first().waitFor();
+    await page.waitForLoadState('networkidle');
     const button = page.locator('popover-arrow-example').getByRole('button', { name: 'bottom', exact: true });
     await button.evaluate((element) => element.scrollIntoView({ block: 'center' }));
     await button.click();
