@@ -76,6 +76,16 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     currentPageReport: '{currentPage} of {totalPages}',
     totalCount: 'Total: {count}',
     pagination: 'Pagination',
+    tableSettings: 'Table settings',
+    tableColumns: 'Columns',
+    tableColumnsHint: 'Show or hide table columns',
+    tableActions: 'Actions',
+    tableActionsHint: 'Choose which row actions are shown inline',
+    rowActions: 'Row actions',
+    selectRow: 'Select row',
+    expandRow: 'Expand row',
+    collapseRow: 'Collapse row',
+    resizeColumn: 'Resize {column}',
   },
 };
 
@@ -155,6 +165,16 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     currentPageReport: '{currentPage} з {totalPages}',
     totalCount: 'Усього: {count}',
     pagination: 'Пагінація',
+    tableSettings: 'Налаштування таблиці',
+    tableColumns: 'Колонки',
+    tableColumnsHint: 'Показати або сховати колонки таблиці',
+    tableActions: 'Дії',
+    tableActionsHint: 'Оберіть, які дії рядка показувати одразу',
+    rowActions: 'Дії рядка',
+    selectRow: 'Обрати рядок',
+    expandRow: 'Розгорнути рядок',
+    collapseRow: 'Згорнути рядок',
+    resizeColumn: 'Змінити ширину «{column}»',
   },
 };
 

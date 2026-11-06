@@ -24,19 +24,22 @@ PrimeNG: Paginator (`first`, `rows`, `totalRecords`, `pageLinkSize`, `rowsPerPag
 
 PrimeNG: Table (`value`, `columns`, `dataKey`, sort single / multiple + `sortField` / `sortOrder` / `multiSortMeta` / `customSort`, `paginator` + all paginator inputs, `lazy` + `(onLazyLoad)`, `loading`, selection `single` / `multiple` / checkbox / radio + `metaKeySelection` + `(selectionChange)`, `contextMenu` + `contextMenuSelection`, `resizableColumns` + `columnResizeMode` fit / expand, `reorderableColumns` / `reorderableRows`, frozen columns and rows, `scrollable` + `scrollHeight`, `virtualScroll`, row expansion (`expandedRowKeys`), row grouping, column filters + global filter, editing (cell / row), `stateStorage` local / session, `exportCSV`, `size`, `showGridlines`, `stripedRows`, templates caption / header / body / footer / summary / empty / loading / expansion). First app (356): projected rows with `[cell]` markers, columns with `field`, label, `withoutSort`, `withoutDrag`, `width` / `initialWidth` / `minWidth` / `maxWidth`, `order`, `hidden`; sort arrows asc → desc → none, resize handles, header drag, settings popover (visible columns, row action order and pinning), widths / order / hidden saved per table id, select-all checkbox column, blurred loading overlay with a spinner, paginator under the table, toolbar slot, row actions with an overflow `…` menu and the same actions as a right-click menu, sticky columns, rows at least 50px, cards below 64rem (labels from the headers, first cell as title, checkbox in the corner, actions as the footer, own card template), `responsive` off for wide tables, ellipsis cells with a tooltip.
 
-- [ ] Structure: `<tx-table>` with `value` + `columns` (`TxTableColumn`), body by row template or projected rows with `txCell`, header / footer / caption / summary / empty / loading templates, `size`, `showGridlines`, `stripedRows`, `rowHover`, `dataKey`, `trackBy`
-- [ ] Sort: single (asc → desc → none) and multiple (Ctrl / ⌘), `[(sortField)]` / `[(sortOrder)]` / `[(multiSortMeta)]`, local sort or `customSort` / server sort, `aria-sort`, sortable header buttons
-- [ ] Pagination: built-in `tx-paginator` (all its inputs), local slicing or server pages
-- [ ] Lazy: `lazy` + `lazyLoad` with `{ first, rows, sortField, sortOrder, multiSortMeta, filters, globalFilter }`, loading overlay (blur + spinner, `aria-busy`)
-- [ ] Selection: single / multiple rows, `metaKeySelection`, checkbox column + select all (tri-state, current page), radio column, `[(selection)]`, `rowSelectable`, keyboard (arrows between rows, Space / Enter)
-- [ ] Columns: resize (`fit` / `expand`, min / max), reorder by dragging headers (keyboard too), frozen / sticky start and end columns, column settings popover (visibility, order), `stateKey` + `stateStorage` saving widths / order / hidden / sort / page
-- [ ] Rows: row actions cell with inline count and an overflow menu, the same actions on right-click (`contextMenu`), row expansion (`[(expandedRowKeys)]`, expansion template), row reorder by drag, row grouping (subheader / rowspan), frozen rows
-- [ ] Scroll: `scrollable` + `scrollHeight` with a sticky header, virtual scroll for long lists, minimum row height so sticky cells stay level
+- [x] Structure: `<tx-table>` with `value` + `columns` (`TxTableColumn`), cells from the field or `txTableCell` templates, header / footer / empty / card templates, toolbar slot, `size`, `showGridlines`, `stripedRows`, `rowHover`, `dataKey`, `rowClass`
+- [x] Sort: single (asc → desc → none) and multiple (Ctrl / ⌘), `[(sortField)]` / `[(sortOrder)]` / `[(multiSortMeta)]`, local sort or `customSort` / server sort, `aria-sort`, sortable header buttons
+- [x] Pagination: built-in `tx-paginator` (all its inputs), local slicing or server pages
+- [x] Lazy: `lazy` + `lazyLoad` with `{ first, rows, sortField, sortOrder, multiSortMeta }` (also on init), loading overlay (blur + spinner, `aria-busy`); filters join the event with the filters item
+- [x] Selection: single / multiple rows, `metaKeySelection`, checkbox column + select all (tri-state, current page), radio column, `[(selection)]`, `rowSelectable`, keyboard (arrows between rows, Space / Enter)
+- [x] Columns: resize (`fit` / `expand`, min / max), reorder by dragging headers (keyboard too), frozen / sticky start and end columns, column settings popover (visibility, order), `stateKey` + `stateStorage` saving widths / order / hidden / sort / page
+- [x] Rows: row actions cell with inline count and an overflow menu, the same actions on right-click (or an own `contextMenu`), row expansion (`[(expandedRowKeys)]`, expansion template)
+- [ ] Rows: reorder by drag, row grouping (subheader / rowspan), frozen rows
+- [x] Scroll: `scrollHeight` with a sticky header, minimum row height (50px) so sticky cells stay level, footer row
+- [ ] Scroll: virtual scroll for long lists
 - [ ] Filters: column filter menu (match modes per type, several rules, apply / clear), filter row, global filter; `filters` model
 - [ ] Editing: cell edit (`txEditableCell`, Enter / Escape / Tab), row edit (init / save / cancel)
-- [ ] Responsive cards below a breakpoint (`responsive`, `breakpoint`): header labels, title cell, checkbox corner, actions footer, own card template
-- [ ] Ellipsis cells with a tooltip when the text is cut; `exportCSV` from the visible columns
-- [ ] Docs + tests; e2e: sort, resize, reorder, sticky columns while scrolling sideways, selection by keys, cards at tablet width, axe in light and dark
+- [x] Responsive cards below a breakpoint (`responsive`, `breakpoint`): header labels, title cell, checkbox corner, actions footer, own card template
+- [x] Ellipsis for cut text in cells and headers
+- [ ] Tooltip for cut text; `exportCSV` from the visible columns
+- [x] Docs + tests; e2e: sort, resize, reorder, sticky columns while scrolling sideways, selection by keys, cards at tablet width, axe in light and dark
 
 ## 7.3 Tree and tree table — `ui/tree`, `ui/tree-table`
 

@@ -1,0 +1,1 @@
+`<ng-template txTableCell="field">` replaces the content of a column; the template gets the row, `value`, `index` and `column`. Cells take any content — pills, amounts, buttons with popovers (the info button next to the client). `txTableHeaderCell` replaces a header.

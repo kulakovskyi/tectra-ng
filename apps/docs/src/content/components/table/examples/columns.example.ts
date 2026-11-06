@@ -1,0 +1,84 @@
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { TxTable, TxTableColumn } from '@tectra/ui/table';
+
+interface Invoice {
+  id: number;
+  number: string;
+  client: string;
+  city: string;
+  amount: number;
+  status: string;
+}
+
+const INVOICES: Invoice[] = [
+  {
+    id: 1,
+    number: 'INV-1042',
+    client: 'Northwind Studio',
+    city: 'Lviv',
+    amount: 1280,
+    status: 'Paid',
+  },
+  {
+    id: 2,
+    number: 'INV-1043',
+    client: 'Blue Harbor',
+    city: 'Kyiv',
+    amount: 640,
+    status: 'Pending',
+  },
+  {
+    id: 3,
+    number: 'INV-1044',
+    client: 'Oakline Partners',
+    city: 'Odesa',
+    amount: 3920,
+    status: 'Overdue',
+  },
+  { id: 4, number: 'INV-1045', client: 'Silverleaf', city: 'Kharkiv', amount: 215, status: 'Paid' },
+  {
+    id: 5,
+    number: 'INV-1046',
+    client: 'Maple & Co',
+    city: 'Dnipro',
+    amount: 1870,
+    status: 'Pending',
+  },
+  { id: 6, number: 'INV-1047', client: 'Granite Works', city: 'Kyiv', amount: 760, status: 'Paid' },
+];
+
+@Component({
+  selector: 'table-columns-example',
+  imports: [TxTable],
+  template: `
+    <tx-table
+      ariaLabel="Invoices"
+      dataKey="id"
+      stateKey="docs-table-columns"
+      resizableColumns
+      reorderableColumns
+      columnSettings
+      toolbar
+      [value]="invoices"
+      [(columns)]="columns"
+    >
+      <span txTableToolbar class="hint">Drag headers, edges and use the gear</span>
+    </tx-table>
+  `,
+  styles: `
+    .hint {
+      color: var(--tx-text-muted);
+    }
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export default class TableColumnsExample {
+  readonly invoices = INVOICES;
+  columns: TxTableColumn[] = [
+    { field: 'number', header: 'Invoice', hideable: false },
+    { field: 'client', header: 'Client', initialWidth: '180px', minWidth: '120px' },
+    { field: 'city', header: 'City' },
+    { field: 'amount', header: 'Amount', align: 'end', maxWidth: '200px' },
+    { field: 'status', header: 'Status', hidden: true },
+  ];
+}

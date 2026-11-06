@@ -75,6 +75,16 @@ export interface TxTranslations {
   currentPageReport: string;
   totalCount: string;
   pagination: string;
+  tableSettings: string;
+  tableColumns: string;
+  tableColumnsHint: string;
+  tableActions: string;
+  tableActionsHint: string;
+  rowActions: string;
+  selectRow: string;
+  expandRow: string;
+  collapseRow: string;
+  resizeColumn: string;
 }
 
 export type TxValidationMessage = string | ((error: unknown) => string);

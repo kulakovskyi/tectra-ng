@@ -1,0 +1,1 @@
+`selectionMode="single"` or `multiple` selects rows by a click. Arrow keys move between rows, Space / Enter selects; in `multiple` Ctrl / ⌘ + click adds a row and Shift + click or Shift + arrows select a range.

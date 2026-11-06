@@ -1,0 +1,1 @@
+Below `breakpoint` (64rem) every row becomes a card: header labels on the left, the first column (or `cardTitle`) as the title, the checkbox in the corner and the actions at the bottom. This example uses `breakpoint="200rem"` so the cards show on any screen; `<ng-template txTableCard>` draws an own card instead.

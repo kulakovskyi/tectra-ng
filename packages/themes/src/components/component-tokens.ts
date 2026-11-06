@@ -37,6 +37,7 @@ import { menuTokens } from './menu.tokens';
 import { splitButtonTokens } from './split-button.tokens';
 import { speedDialTokens } from './speed-dial.tokens';
 import { paginatorTokens } from './paginator.tokens';
+import { tableTokens } from './table.tokens';
 
 export const COMPONENT_TOKENS = {
   icon: iconTokens,
@@ -97,6 +98,7 @@ export const COMPONENT_TOKENS = {
   splitButton: splitButtonTokens,
   speedDial: speedDialTokens,
   paginator: paginatorTokens,
+  table: tableTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

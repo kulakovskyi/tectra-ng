@@ -1,0 +1,445 @@
+@if (showToolbar()) {
+  <div class="tx-table__toolbar" [class]="passThrough().toolbar?.class" [style]="passThrough().toolbar?.style">
+    <div class="tx-table__toolbar-slot"><ng-content select="[txTableToolbar]" /></div>
+    @if (showSettings()) {
+      <tx-table-settings
+        [columns]="columns()"
+        [hidden]="hidden()"
+        [showColumns]="columnSettings()"
+        [showActions]="actionsSettings()"
+        [unstyled]="isUnstyled()"
+        (columnToggled)="toggleColumn($event.field, $event.visible)"
+      />
+    }
+  </div>
+}
+
+@if (showPaginatorTop()) {
+  <ng-container [ngTemplateOutlet]="pager" [ngTemplateOutletContext]="{ $implicit: 'top' }" />
+}
+
+<div class="tx-table__frame" [class]="passThrough().frame?.class" [style]="passThrough().frame?.style" [attr.aria-busy]="loading() || null">
+  @if (cardView() && selectionMode() === 'checkbox' && !empty()) {
+    <div class="tx-table__select-all">
+      <tx-checkbox
+        binary
+        [label]="translations().selectAll"
+        [unstyled]="isUnstyled()"
+        [ngModel]="allSelected()"
+        [indeterminate]="someSelected()"
+        (ngModelChange)="toggleAll($event)"
+      />
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="tx-table__loading" [class]="passThrough().loading?.class" [style]="passThrough().loading?.style">
+      <tx-progress-spinner [ariaLabel]="translations().loading" [unstyled]="isUnstyled()" />
+    </div>
+  }
+
+  @if (!cardView()) {
+    <div
+      class="tx-table__scroller"
+      [class.tx-table__scroller--empty]="empty()"
+      [class]="passThrough().scroller?.class"
+      [style]="passThrough().scroller?.style"
+      [style.max-height]="scrollHeight()"
+    >
+      <table
+        class="tx-table__table"
+        [class]="passThrough().table?.class"
+        [style]="passThrough().table?.style"
+        [attr.aria-label]="ariaLabel() ?? null"
+        [attr.aria-labelledby]="ariaLabelledBy() ?? null"
+        [attr.aria-multiselectable]="rowSelection() ? selectionMode() === 'multiple' : null"
+        [attr.role]="rowSelection() ? 'grid' : null"
+      >
+        <thead class="tx-table__thead" [class]="passThrough().thead?.class" [style]="passThrough().thead?.style">
+          <tr
+            #headerRow
+            cdkDropList
+            cdkDropListOrientation="horizontal"
+            class="tx-table__header-row"
+            [class]="passThrough().headerRow?.class"
+            [style]="passThrough().headerRow?.style"
+            [cdkDropListDisabled]="!reorderableColumns()"
+            (cdkDropListDropped)="dropColumn($event)"
+          >
+            @for (item of renderColumns(); track item.column.field; let last = $last) {
+              <th
+                cdkDrag
+                cdkDragLockAxis="x"
+                cdkDragPreviewClass="tx-table__drag-preview"
+                [cdkDragBoundary]="headerRow"
+                scope="col"
+                class="tx-table__th"
+                [class]="[item.column.headerClass ?? '', passThrough().headerCell?.class ?? '']"
+                [style]="passThrough().headerCell?.style"
+                [style.width]="item.style['width']"
+                [style.min-width]="item.style['minWidth']"
+                [style.max-width]="item.style['maxWidth']"
+                [style.inset-inline-start]="frozenStyle(item)['insetInlineStart']"
+                [style.inset-inline-end]="frozenStyle(item)['insetInlineEnd']"
+                [class.tx-table__cell--frozen]="!!item.frozen"
+                [class.tx-table__cell--frozen-last]="item.lastFrozenStart"
+                [class.tx-table__cell--frozen-first-end]="item.firstFrozenEnd"
+                [class.tx-table__th--draggable]="reorderableColumns() && item.kind === 'data' && item.column.reorderable !== false"
+                [attr.data-field]="item.column.field"
+                [attr.data-align]="item.column.align ?? null"
+                [attr.aria-sort]="item.kind === 'data' ? ariaSort(item.column) : null"
+                [cdkDragDisabled]="!reorderableColumns() || item.kind !== 'data' || item.column.reorderable === false"
+              >
+                @switch (item.kind) {
+                  @case ('select') {
+                    @if (selectionMode() === 'checkbox') {
+                      <tx-checkbox
+                        binary
+                        class="tx-table__select"
+                        [ariaLabel]="translations().selectAll"
+                        [unstyled]="isUnstyled()"
+                        [ngModel]="allSelected()"
+                        [indeterminate]="someSelected()"
+                        (ngModelChange)="toggleAll($event)"
+                      />
+                    } @else {
+                      <span class="tx-table__sr-only">{{ translations().selectRow }}</span>
+                    }
+                  }
+                  @case ('expand') {
+                    <span class="tx-table__sr-only">{{ translations().expandRow }}</span>
+                  }
+                  @case ('actions') {
+                    <span class="tx-table__column-title">{{ item.column.header }}</span>
+                  }
+                  @default {
+                    @if (headerTemplatesByField().get(item.column.field); as template) {
+                      <ng-container [ngTemplateOutlet]="template.templateRef" [ngTemplateOutletContext]="{ $implicit: item.column }" />
+                    } @else if (isSortable(item.column)) {
+                      @if (reorderableColumns() && item.column.reorderable !== false) {
+                        <tx-icon class="tx-table__grip" aria-hidden="true" name="grip-vertical" />
+                      }
+                      <button
+                        type="button"
+                        class="tx-table__sort"
+                        [class]="passThrough().sortButton?.class"
+                        [style]="passThrough().sortButton?.style"
+                        (click)="sort(item.column, $event)"
+                        (keydown.alt.arrowleft)="moveColumnBy(item.column, -1, $event)"
+                        (keydown.alt.arrowright)="moveColumnBy(item.column, 1, $event)"
+                      >
+                        <span class="tx-table__column-title">{{ label(item.column) }}</span>
+                        @if (sortOrderOf(item.column); as order) {
+                          <tx-icon
+                            class="tx-table__sort-icon"
+                            aria-hidden="true"
+                            name="sort-amount-down"
+                            [class.tx-table__sort-icon--desc]="order === 'desc'"
+                            [class]="passThrough().sortIcon?.class"
+                            [style]="passThrough().sortIcon?.style"
+                          />
+                          @if (sortMode() === 'multiple' && sortMeta().length > 1) {
+                            <span class="tx-table__sort-badge" aria-hidden="true">{{ sortIndexOf(item.column) + 1 }}</span>
+                          }
+                        }
+                      </button>
+                    } @else {
+                      @if (reorderableColumns() && item.column.reorderable !== false) {
+                        <tx-icon class="tx-table__grip" aria-hidden="true" name="grip-vertical" />
+                      }
+                      <span class="tx-table__column-title">{{ label(item.column) }}</span>
+                    }
+                  }
+                }
+                @if (resizableColumns() && item.kind === 'data' && item.column.resizable !== false && item.column.width === undefined && !last) {
+                  <span
+                    class="tx-table__resizer"
+                    role="separator"
+                    tabindex="0"
+                    aria-orientation="vertical"
+                    [class.tx-table__resizer--active]="resizing() === item.column.field"
+                    [attr.aria-label]="translations().resizeColumn.replace('{column}', label(item.column))"
+                    [attr.aria-valuenow]="resizeValue(item.column)"
+                    [attr.aria-valuemin]="resizeMin(item.column)"
+                    [attr.aria-valuemax]="resizeMax(item.column)"
+                    (pointerdown)="startResize(item, $event)"
+                    (click)="$event.stopPropagation()"
+                    (keydown.arrowleft)="resizeByKey(item, -10, $event)"
+                    (keydown.arrowright)="resizeByKey(item, 10, $event)"
+                  >
+                    <span class="tx-table__resizer-line"></span>
+                  </span>
+                }
+              </th>
+            }
+          </tr>
+        </thead>
+        <tbody class="tx-table__tbody" [class]="passThrough().tbody?.class" [style]="passThrough().tbody?.style">
+          @for (item of renderRows(); track item.key; let position = $index; let odd = $odd) {
+            <tr
+              class="tx-table__row"
+              [class]="[rowClassOf(item) ?? '', passThrough().row?.class ?? '']"
+              [style]="passThrough().row?.style"
+              [class.tx-table__row--odd]="odd"
+              [class.tx-table__row--selected]="item.selected"
+              [class.tx-table__row--selectable]="rowSelection() && item.selectable"
+              [class.tx-table__row--menu]="menuRowKey() === item.key && menuRowKey() !== undefined"
+              [attr.aria-selected]="rowSelection() ? item.selected : null"
+              [attr.tabindex]="rowSelection() ? (position === focusedRow() ? 0 : -1) : null"
+              (click)="onRowClick(item, position, $event)"
+              (keydown)="rowSelection() && onRowKeydown(item, position, $event)"
+              (contextmenu)="onRowContextMenu(item, $event)"
+            >
+              @for (column of renderColumns(); track column.column.field) {
+                <td
+                  class="tx-table__td"
+                  [class]="[column.column.cellClass ?? '', passThrough().cell?.class ?? '']"
+                  [style]="passThrough().cell?.style"
+                  [style.inset-inline-start]="frozenStyle(column)['insetInlineStart']"
+                  [style.inset-inline-end]="frozenStyle(column)['insetInlineEnd']"
+                  [class.tx-table__cell--frozen]="!!column.frozen"
+                  [class.tx-table__cell--frozen-last]="column.lastFrozenStart"
+                  [class.tx-table__cell--frozen-first-end]="column.firstFrozenEnd"
+                  [class.tx-table__td--actions]="column.kind === 'actions'"
+                  [attr.data-field]="column.column.field"
+                  [attr.data-align]="column.column.align ?? null"
+                >
+                  @switch (column.kind) {
+                    @case ('select') {
+                      @if (selectionMode() === 'checkbox') {
+                        <tx-checkbox
+                          binary
+                          class="tx-table__select"
+                          [ariaLabel]="translations().selectRow"
+                          [disabled]="!item.selectable"
+                          [unstyled]="isUnstyled()"
+                          [ngModel]="item.selected"
+                          (ngModelChange)="toggleRow(item)"
+                        />
+                      } @else {
+                        <tx-radio-button
+                          class="tx-table__select"
+                          [value]="item.key"
+                          [ariaLabel]="translations().selectRow"
+                          [disabled]="!item.selectable"
+                          [unstyled]="isUnstyled()"
+                          [ngModel]="radioValue()"
+                          (ngModelChange)="selectRadio(item)"
+                        />
+                      }
+                    }
+                    @case ('expand') {
+                      @if (canExpand(item)) {
+                        <button
+                          type="button"
+                          class="tx-table__row-toggle"
+                          [attr.aria-expanded]="item.expanded"
+                          [attr.aria-label]="item.expanded ? translations().collapseRow : translations().expandRow"
+                          (click)="toggleExpansion(item, $event)"
+                        >
+                          <tx-icon aria-hidden="true" name="chevron-right" class="tx-table__row-toggle-icon" [class.tx-table__row-toggle-icon--open]="item.expanded" />
+                        </button>
+                      }
+                    }
+                    @case ('actions') {
+                      @if (actionsTemplate(); as actions) {
+                        <ng-container [ngTemplateOutlet]="actions.templateRef" [ngTemplateOutletContext]="{ $implicit: item.row, index: item.index }" />
+                      }
+                    }
+                    @default {
+                      @if (templatesByField().get(column.column.field); as template) {
+                        <ng-container
+                          [ngTemplateOutlet]="template.templateRef"
+                          [ngTemplateOutletContext]="{
+                            $implicit: item.row,
+                            row: item.row,
+                            index: item.index,
+                            column: column.column,
+                            value: cellValue(item.row, column.column),
+                          }"
+                        />
+                      } @else {
+                        {{ displayValue(item.row, column.column) }}
+                      }
+                    }
+                  }
+                </td>
+              }
+            </tr>
+            @if ((item.expanded || isClosing(item.key)) && expansionTemplate(); as expansion) {
+              <tr class="tx-table__expansion">
+                <td class="tx-table__expansion-cell" [attr.colspan]="dataColumnCount()">
+                  <div
+                    class="tx-table__expansion-body"
+                    [class.tx-table__expansion-body--open]="item.expanded"
+                    (transitionend)="finishClosing(item.key, $event)"
+                  >
+                    <div class="tx-table__expansion-inner">
+                      <div class="tx-table__expansion-content">
+                        <ng-container [ngTemplateOutlet]="expansion.templateRef" [ngTemplateOutletContext]="{ $implicit: item.row, index: item.index }" />
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+        @if (hasFooter()) {
+          <tfoot class="tx-table__tfoot" [class]="passThrough().tfoot?.class" [style]="passThrough().tfoot?.style">
+            <tr>
+              @for (item of renderColumns(); track item.column.field) {
+                <td
+                  class="tx-table__footer-cell"
+                  [class]="passThrough().footerCell?.class"
+                  [style]="passThrough().footerCell?.style"
+                  [style.inset-inline-start]="frozenStyle(item)['insetInlineStart']"
+                  [style.inset-inline-end]="frozenStyle(item)['insetInlineEnd']"
+                  [class.tx-table__cell--frozen]="!!item.frozen"
+                  [attr.data-align]="item.column.align ?? null"
+                >
+                  @if (footerTemplatesByField().get(item.column.field); as template) {
+                    <ng-container [ngTemplateOutlet]="template.templateRef" [ngTemplateOutletContext]="{ $implicit: item.column }" />
+                  } @else {
+                    {{ item.column.footer }}
+                  }
+                </td>
+              }
+            </tr>
+          </tfoot>
+        }
+      </table>
+    </div>
+  } @else if (!empty()) {
+    <div class="tx-table__cards" role="list" [class]="passThrough().cards?.class" [style]="passThrough().cards?.style" [attr.aria-label]="ariaLabel() ?? null">
+      @for (item of renderRows(); track item.key) {
+        <div
+          role="listitem"
+          class="tx-table__card"
+          [class]="passThrough().card?.class"
+          [style]="passThrough().card?.style"
+          [class.tx-table__card--selected]="item.selected"
+          [class.tx-table__card--custom]="!!cardTemplate()"
+        >
+          @if (cardTemplate(); as card) {
+            <ng-container [ngTemplateOutlet]="card.templateRef" [ngTemplateOutletContext]="{ $implicit: item.row, index: item.index }" />
+          } @else {
+            @if (hasSelectColumn()) {
+              <div class="tx-table__card-select">
+                @if (selectionMode() === 'checkbox') {
+                  <tx-checkbox
+                    binary
+                    [ariaLabel]="translations().selectRow"
+                    [disabled]="!item.selectable"
+                    [unstyled]="isUnstyled()"
+                    [ngModel]="item.selected"
+                    (ngModelChange)="toggleRow(item)"
+                  />
+                } @else {
+                  <tx-radio-button
+                    [value]="item.key"
+                    [ariaLabel]="translations().selectRow"
+                    [disabled]="!item.selectable"
+                    [unstyled]="isUnstyled()"
+                    [ngModel]="radioValue()"
+                    (ngModelChange)="selectRadio(item)"
+                  />
+                }
+              </div>
+            }
+            @if (cardTitleColumn(); as title) {
+              <div class="tx-table__card-title" [class.tx-table__card-title--select]="hasSelectColumn()">
+                <ng-container [ngTemplateOutlet]="cellContent" [ngTemplateOutletContext]="{ $implicit: item, column: title }" />
+              </div>
+            }
+            @for (column of cardFields(); track column.field) {
+              <div class="tx-table__card-field">
+                <span class="tx-table__card-label">{{ label(column) }}</span>
+                <span class="tx-table__card-value"><ng-container [ngTemplateOutlet]="cellContent" [ngTemplateOutletContext]="{ $implicit: item, column }" /></span>
+              </div>
+            }
+            @if (actionsTemplate(); as actions) {
+              <div class="tx-table__card-actions">
+                <ng-container [ngTemplateOutlet]="actions.templateRef" [ngTemplateOutletContext]="{ $implicit: item.row, index: item.index }" />
+              </div>
+            }
+          }
+        </div>
+      }
+    </div>
+  }
+
+  @if (empty()) {
+    <div class="tx-table__empty" [class]="passThrough().empty?.class" [style]="passThrough().empty?.style">
+      @if (emptyTemplate(); as template) {
+        <ng-container [ngTemplateOutlet]="template.templateRef" [ngTemplateOutletContext]="{ $implicit: dataColumnCount() }" />
+      } @else {
+        {{ emptyMessage() ?? translations().emptyMessage }}
+      }
+    </div>
+  }
+</div>
+
+@if (showPaginatorBottom()) {
+  <ng-container [ngTemplateOutlet]="pager" [ngTemplateOutletContext]="{ $implicit: 'bottom' }" />
+}
+
+<ng-content />
+
+<tx-tiered-menu
+  #rowMenu
+  popup
+  variant="context"
+  placement="bottom-start"
+  [offset]="0"
+  [model]="menuItems()"
+  [ariaLabel]="translations().rowActions"
+  [unstyled]="isUnstyled()"
+  (closed)="onMenuClosed()"
+>
+  <ng-template txMenuItem let-menuItem>
+    @if (actionTemplate(menuItem); as action) {
+      <span class="tx-table__menu-action" aria-hidden="true" [attr.data-action-id]="action.id()">
+        <ng-container [ngTemplateOutlet]="action.templateRef" />
+      </span>
+    } @else if (menuItem.icon) {
+      <tx-icon class="tx-table__menu-icon" aria-hidden="true" [name]="menuItem.icon" />
+    }
+    <span class="tx-table__menu-label">{{ menuItem.label }}</span>
+  </ng-template>
+</tx-tiered-menu>
+
+<ng-template #cellContent let-item let-column="column">
+  @if (templatesByField().get(column.field); as template) {
+    <ng-container
+      [ngTemplateOutlet]="template.templateRef"
+      [ngTemplateOutletContext]="{ $implicit: item.row, row: item.row, index: item.index, column, value: cellValue(item.row, column) }"
+    />
+  } @else {
+    {{ displayValue(item.row, column) }}
+  }
+</ng-template>
+
+<ng-template #pager let-position>
+  <tx-paginator
+    class="tx-table__paginator"
+    [class.tx-table__paginator--top]="position === 'top'"
+    [class]="passThrough().paginator?.class"
+    [style]="passThrough().paginator?.style"
+    [first]="first()"
+    [rows]="rows()"
+    [totalRecords]="total()"
+    [rowsPerPageOptions]="rowsPerPageOptions()"
+    [showTotal]="showTotal()"
+    [showCurrentPageReport]="showCurrentPageReport()"
+    [currentPageReportTemplate]="currentPageReportTemplate()"
+    [showFirstLastIcon]="showFirstLastIcon()"
+    [showPageLinks]="showPageLinks()"
+    [showJumpToPageDropdown]="showJumpToPageDropdown()"
+    [showJumpToPageInput]="showJumpToPageInput()"
+    [alwaysShow]="alwaysShowPaginator()"
+    [pageLinkSize]="pageLinks()"
+    [unstyled]="isUnstyled()"
+    (pageChange)="onPage($event)"
+  />
+</ng-template>

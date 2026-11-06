@@ -1,0 +1,1 @@
+Row actions go into `<ng-template txTableActions>` as `tx-table-actions` with buttons marked `*txTableAction="{ label }"`. `actionsInlineCount` actions stay in the row, the rest open from `…`; a right-click on a row shows all of them as a menu. With `actionsSettings` the gear lets the user reorder and pin actions.

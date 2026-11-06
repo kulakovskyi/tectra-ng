@@ -1,0 +1,1 @@
+Server data: `lazy` turns local sorting and paging off and `lazyLoad` asks for `{ first, rows, sortField, sortOrder }`; `totalRecords` is the size of the whole list. `loading` blurs the table while the request runs.

@@ -1,0 +1,1 @@
+`selectionMode="checkbox"` adds a checkbox column with "select all" for the page (mixed when some rows are chosen); `selectionMode="radio"` picks one row. `rowSelectable` disables rows — here the paid ones.

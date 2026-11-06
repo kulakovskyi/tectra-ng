@@ -135,7 +135,7 @@ Detailed checklist per component: [roadmap/stage-7-data.md](roadmap/stage-7-data
 | tectra | PrimeNG equivalent | Usage | Status |
 |---|---|---|---|
 | `ui/paginator` — compact mode below 40rem, page size options, `PaginationInterface` | Paginator | 170 | ✅ |
-| `ui/table` — sort, selection, resize, reorder, sticky columns, row actions, context menu, settings (visible / order / width persistence), cards below 1024px, loading overlay, virtual scroll, row expansion | Table | **356** | ⬜ |
+| `ui/table` — sort, selection, resize, reorder, sticky columns, row actions, context menu, settings (visible / order / width persistence), cards below 1024px, loading overlay, virtual scroll, row expansion | Table | **356** | 🟡 |
 | `ui/tree`, `ui/tree-table` | Tree, TreeTable | — (parity) | ⬜ |
 | `ui/data-view`, `ui/virtual-scroller` | DataView, VirtualScroller | — (parity) | ⬜ |
 | `ui/timeline` | Timeline | — (parity) | ⬜ |
