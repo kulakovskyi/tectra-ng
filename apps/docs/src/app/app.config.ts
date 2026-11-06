@@ -1,4 +1,4 @@
-import { ApplicationConfig, inject, provideZonelessChangeDetection } from '@angular/core';
+import { ApplicationConfig, DOCUMENT, inject, provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter, Router, withComponentInputBinding, withInMemoryScrolling, withViewTransitions } from '@angular/router';
 import { provideTxBrandIcons } from '@tectra/brand-icons';
 import { provideTectra } from '@tectra/core/config';
@@ -14,9 +14,13 @@ export const appConfig: ApplicationConfig = {
       withInMemoryScrolling({ scrollPositionRestoration: 'top', anchorScrolling: 'enabled' }),
       withViewTransitions({
         onViewTransitionCreated: ({ transition }) => {
-          if (!inject(Router).navigated) {
-            transition.skipTransition();
+          if (inject(Router).navigated) {
+            return;
           }
+          const root = inject(DOCUMENT).documentElement;
+          const done = () => root.classList.remove('docs-first-paint');
+          root.classList.add('docs-first-paint');
+          transition.finished.then(done, done);
         },
       }),
     ),
