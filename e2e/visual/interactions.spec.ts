@@ -418,6 +418,8 @@ test('knob follows a drag along the dial, steps with keys and stops at its limit
 
 test('slider follows a drag, jumps to a track click and keeps a range in order', async ({ page }) => {
   await page.goto('/components/slider');
+  await page.locator('main h1').first().waitFor();
+  await page.waitForLoadState('networkidle');
   const basic = page.locator('slider-basic-example');
   const track = basic.locator('.tx-slider__track');
   const box = await track.evaluate((element) => element.getBoundingClientRect().toJSON());
