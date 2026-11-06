@@ -1,0 +1,90 @@
+@if (headerTemplate(); as header) {
+  <div class="tx-data-view__header" [class]="passThrough().header?.class" [style]="passThrough().header?.style">
+    <ng-container [ngTemplateOutlet]="header.templateRef" />
+  </div>
+}
+
+@if (showPaginatorTop()) {
+  <ng-container [ngTemplateOutlet]="pager" [ngTemplateOutletContext]="{ $implicit: 'top' }" />
+}
+
+<div class="tx-data-view__body">
+  @if (loading()) {
+    <div class="tx-data-view__loading" [class]="passThrough().loading?.class" [style]="passThrough().loading?.style">
+      @if (loadingTemplate(); as loadingTemplate) {
+        <ng-container [ngTemplateOutlet]="loadingTemplate.templateRef" />
+      } @else {
+        <tx-progress-spinner [ariaLabel]="translations().loading" [unstyled]="isUnstyled()" />
+      }
+    </div>
+  }
+
+  @if (empty()) {
+    <div class="tx-data-view__empty" role="status" [class]="passThrough().empty?.class" [style]="passThrough().empty?.style">
+      @if (emptyTemplate(); as emptyTemplate) {
+        <ng-container [ngTemplateOutlet]="emptyTemplate.templateRef" />
+      } @else {
+        {{ emptyMessage() ?? translations().emptyMessage }}
+      }
+    </div>
+  } @else {
+    @for (mode of layoutKey(); track mode) {
+      <div
+        class="tx-data-view__content"
+        [attr.aria-label]="ariaLabel() ?? null"
+        [attr.role]="ariaLabel() ? 'region' : null"
+        [class]="passThrough().content?.class"
+        [style]="passThrough().content?.style"
+      >
+        @if (activeTemplate(); as template) {
+          <ng-container [ngTemplateOutlet]="template.templateRef" [ngTemplateOutletContext]="itemsContext()" />
+        }
+      </div>
+    }
+  }
+</div>
+
+@if (showPaginatorBottom()) {
+  <ng-container [ngTemplateOutlet]="pager" [ngTemplateOutletContext]="{ $implicit: 'bottom' }" />
+}
+
+@if (footerTemplate(); as footer) {
+  <div class="tx-data-view__footer" [class]="passThrough().footer?.class" [style]="passThrough().footer?.style">
+    <ng-container [ngTemplateOutlet]="footer.templateRef" />
+  </div>
+}
+
+<ng-template #pager let-position>
+  <tx-paginator
+    class="tx-data-view__paginator"
+    [class.tx-data-view__paginator--top]="position === 'top'"
+    [class]="passThrough().paginator?.class"
+    [style]="passThrough().paginator?.style"
+    [first]="first()"
+    [rows]="rows()"
+    [totalRecords]="total()"
+    [rowsPerPageOptions]="rowsPerPageOptions()"
+    [showTotal]="showTotal()"
+    [showCurrentPageReport]="showCurrentPageReport()"
+    [currentPageReportTemplate]="currentPageReportTemplate()"
+    [showFirstLastIcon]="showFirstLastIcon()"
+    [showPageLinks]="showPageLinks()"
+    [showJumpToPageDropdown]="showJumpToPageDropdown()"
+    [showJumpToPageInput]="showJumpToPageInput()"
+    [alwaysShow]="alwaysShowPaginator()"
+    [pageLinkSize]="pageLinks()"
+    [unstyled]="isUnstyled()"
+    (pageChange)="onPage($event)"
+  >
+    @if (paginatorStartTemplate(); as start) {
+      <ng-template txPaginatorStart let-state>
+        <ng-container [ngTemplateOutlet]="start.templateRef" [ngTemplateOutletContext]="{ $implicit: state }" />
+      </ng-template>
+    }
+    @if (paginatorEndTemplate(); as end) {
+      <ng-template txPaginatorEnd let-state>
+        <ng-container [ngTemplateOutlet]="end.templateRef" [ngTemplateOutletContext]="{ $implicit: state }" />
+      </ng-template>
+    }
+  </tx-paginator>
+</ng-template>

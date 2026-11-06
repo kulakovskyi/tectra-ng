@@ -49,13 +49,13 @@ PrimeNG: Tree (`value`, `selectionMode` single / multiple / checkbox, `[(selecti
 - [x] `<tx-tree-table>`: built on `tx-table`, looks like the main table — tree rows inside the table that open like an accordion (toggler and indent in the first column, `role="treegrid"`, `aria-level` / `aria-expanded` / `aria-setsize` / `aria-posinset`, ArrowRight / ArrowLeft), sort of siblings on every level, pagination of root nodes, single / multiple / checkbox selection with propagation and select all, filters lenient / strict that keep and open parents, lazy pages and lazy children, and everything else of the table (resize, reorder, settings, frozen columns, scroll height, virtual scroll, editing, context menu, CSV export of every node)
 - [x] Docs + tests; e2e: keyboard tree navigation, checkbox propagation (tree and tree table), keyboard move, child indent
 
-## 7.4 Data view and virtual scroller — `ui/data-view`, `ui/virtual-scroller`
+## 7.4 Data view and virtual scroller — `ui/data-view`, `ui/virtual-scroller` ✅
 
-PrimeNG: DataView (`layout` list / grid, `paginator`, `sortField` / `sortOrder`, `lazy`, `loading`, `emptyMessage`, list / grid / header / footer templates), VirtualScroller / Scroller (`items`, `itemSize`, `orientation` vertical / horizontal / both, `lazy`, `loaderDisabled`, `showLoader`, `numToleratedItems`, `scrollHeight`, templates item / loader). First app: 0 (parity).
+PrimeNG: DataView (`layout` list / grid, `paginator`, `sortField` / `sortOrder`, `lazy`, `loading`, `emptyMessage`, list / grid / header / footer templates), VirtualScroller / Scroller (`items`, `itemSize`, `orientation` vertical / horizontal / both, `lazy`, `loaderDisabled`, `showLoader`, `numToleratedItems`, `scrollHeight`, templates item / loader). First app: 0 (parity). The look is the Aura `dataview` / `virtualscroller` tokens on the first app's semantic values (its preset does not override them): header and footer padded `0.625rem 0.875rem` with content border lines, paginator separated by a line, loader mask on the content background with a `1.75rem` spinner; the loading overlay is the table's (blur + spinner) so both look the same.
 
-- [ ] `<tx-virtual-scroller>` on CDK virtual scroll: vertical / horizontal, item size, lazy with loader rows, `scrollToIndex`
-- [ ] `<tx-data-view>`: list / grid layouts with a layout switch, paginator, sort, lazy, loading, empty state
-- [ ] Docs + tests
+- [x] `<tx-virtual-scroller>`: own windowing (CDK only scrolls one way) — vertical, horizontal and both (rows × columns), fixed item size, tolerated items, `delay`, lazy ranges with `step` and loader items, loading mask, `appendOnly`, `disabled`, content template for own markup, `scrollToIndex` / `scrollInView` / `scrollTo` / `getRenderedRange` / `refresh`, `scrollIndexChange`, keyboard scrolling of a named region
+- [x] `<tx-data-view>`: list / grid templates with a layout switch (`<tx-data-view-layout>`, `aria-pressed`, content fades in on a switch), paginator top / bottom / both with every paginator option and start / end templates, local sort, search on `filterBy`, lazy pages / sort / search, loading overlay, empty state, header / footer
+- [x] Docs + tests; e2e: window stays small while scrolling to the end by keyboard, lazy ranges, layout switch by keyboard, server pages with the overlay
 
 ## 7.5 Timeline — `ui/timeline`
 

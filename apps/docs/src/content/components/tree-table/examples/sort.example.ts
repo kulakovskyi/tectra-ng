@@ -63,7 +63,7 @@ const COLUMNS: TxTableColumn[] = [
   selector: 'tree-table-sort-example',
   imports: [TxTreeTable],
   template: `
-    <div class="stack">
+    <div class="tables">
       <tx-tree-table
         ariaLabel="Files, single sort"
         sortField="size"
@@ -82,7 +82,7 @@ const COLUMNS: TxTableColumn[] = [
     </div>
   `,
   styles: `
-    .stack {
+    .tables {
       display: grid;
       grid-template-columns: minmax(0, 1fr);
       gap: 24px;

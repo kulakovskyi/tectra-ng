@@ -1,0 +1,69 @@
+@if (showSpacer()) {
+  <div
+    class="tx-virtual-scroller__spacer"
+    aria-hidden="true"
+    [style.height.px]="totalHeight()"
+    [style.width.px]="totalWidth()"
+    [class]="passThrough().spacer?.class"
+    [style]="passThrough().spacer?.style"
+  ></div>
+}
+
+<div
+  class="tx-virtual-scroller__content"
+  [class.tx-virtual-scroller__content--horizontal]="horizontal()"
+  [style.transform]="contentTransform()"
+  [class]="passThrough().content?.class"
+  [style]="passThrough().content?.style"
+>
+  @if (contentTemplate(); as content) {
+    <ng-container [ngTemplateOutlet]="content.templateRef" [ngTemplateOutletContext]="contentContext()" />
+  } @else if (both()) {
+    @for (row of renderedRows(); track row.index) {
+      <div class="tx-virtual-scroller__row" [style.height.px]="rowSize()" [class]="passThrough().row?.class" [style]="passThrough().row?.style">
+        @for (cell of row.cells; track trackOf(cell.index, cell.item)) {
+          <div class="tx-virtual-scroller__item" [style.width.px]="columnSize()" [class]="passThrough().item?.class" [style]="passThrough().item?.style">
+            <ng-container [ngTemplateOutlet]="cellContent" [ngTemplateOutletContext]="{ $implicit: cell, count: columnCount() }" />
+          </div>
+        }
+      </div>
+    }
+  } @else {
+    @for (cell of renderedItems(); track trackOf(cell.index, cell.item)) {
+      <div
+        class="tx-virtual-scroller__item"
+        [style.height.px]="horizontal() ? null : rowSize()"
+        [style.width.px]="horizontal() ? columnSize() : null"
+        [class]="passThrough().item?.class"
+        [style]="passThrough().item?.style"
+      >
+        <ng-container [ngTemplateOutlet]="cellContent" [ngTemplateOutletContext]="{ $implicit: cell, count: horizontal() ? columnCount() : rowCount() }" />
+      </div>
+    }
+  }
+</div>
+
+@if (showLoaderMask()) {
+  <div class="tx-virtual-scroller__loader" [class]="passThrough().loader?.class" [style]="passThrough().loader?.style">
+    @if (loadingIconTemplate(); as icon) {
+      <ng-container [ngTemplateOutlet]="icon.templateRef" />
+    } @else {
+      <tx-icon
+        class="tx-virtual-scroller__loading-icon"
+        role="img"
+        [name]="loadingIcon()"
+        [attr.aria-label]="translations().loading"
+        [class]="passThrough().loadingIcon?.class"
+        [style]="passThrough().loadingIcon?.style"
+      />
+    }
+  </div>
+}
+
+<ng-template #cellContent let-cell let-count="count">
+  @if (showLoaderItems() || (cell.item === undefined && loaderTemplate())) {
+    <ng-container [ngTemplateOutlet]="loaderTemplate()?.templateRef ?? null" [ngTemplateOutletContext]="{ $implicit: cell.index, index: cell.index, count }" />
+  } @else if (itemTemplate(); as item) {
+    <ng-container [ngTemplateOutlet]="item.templateRef" [ngTemplateOutletContext]="itemContext(cell, count)" />
+  }
+</ng-template>

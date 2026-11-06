@@ -1,5 +1,15 @@
 @use '../../styles/form-field' as field;
 
+.tx-input[data-styled][type='search'] {
+  appearance: none;
+
+  &::-webkit-search-cancel-button,
+  &::-webkit-search-decoration {
+    appearance: none;
+    display: none;
+  }
+}
+
 .tx-input[data-styled] {
   @include field.box;
 

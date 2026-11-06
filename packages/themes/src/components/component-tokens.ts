@@ -21,6 +21,7 @@ import { ratingTokens } from './rating.tokens';
 import { selectTokens } from './select.tokens';
 import { cascadeSelectTokens, chipsInputTokens, colorPickerTokens, countryTokens, emailSuggestionTokens, listboxTokens, mentionTokens } from './selection.tokens';
 import { treeTableTokens, treeTokens } from './tree.tokens';
+import { dataViewTokens, virtualScrollerTokens } from './data.tokens';
 import { skeletonTokens } from './skeleton.tokens';
 import { sliderTokens } from './slider.tokens';
 import { chipTokens, tagTokens } from './tag.tokens';
@@ -101,6 +102,8 @@ export const COMPONENT_TOKENS = {
   paginator: paginatorTokens,
   table: tableTokens,
   treeTable: treeTableTokens,
+  dataView: dataViewTokens,
+  virtualScroller: virtualScrollerTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

@@ -82,6 +82,9 @@ export interface TxTranslations {
   tableActionsHint: string;
   rowActions: string;
   nodeActions: string;
+  listView: string;
+  gridView: string;
+  layout: string;
   selectRow: string;
   expandRow: string;
   collapseRow: string;

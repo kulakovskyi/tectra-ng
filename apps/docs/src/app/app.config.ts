@@ -1,13 +1,15 @@
-import { ApplicationConfig, DOCUMENT, inject, provideZonelessChangeDetection } from '@angular/core';
+import { ApplicationConfig, DOCUMENT, inject, provideAppInitializer, provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter, Router, withComponentInputBinding, withInMemoryScrolling, withViewTransitions } from '@angular/router';
 import { provideTxBrandIcons } from '@tectra-ng/brand-icons';
 import { provideTectra } from '@tectra-ng/core/config';
 import { InkPreset } from '@tectra-ng/themes';
 import { routes } from './app.routes';
+import { skipViewTransitionsWhileHidden } from './hidden-view-transitions';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZonelessChangeDetection(),
+    provideAppInitializer(skipViewTransitionsWhileHidden),
     provideRouter(
       routes,
       withComponentInputBinding(),
