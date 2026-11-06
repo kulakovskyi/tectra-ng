@@ -59,6 +59,7 @@ Install packages with `npm i … --legacy-peer-deps` (npm arborist bug otherwise
 - Types in `<name>.types.ts`, one public barrel per entry point: `packages/ui/<name>/index.ts`.
 - Styles: tokens through `var(--tx-…)` only — no hard-coded colours, sizes come from tokens. Motion respects `prefers-reduced-motion`.
 - Accessibility is part of done: keyboard map in the README, ARIA roles/states, axe clean in light and dark.
+- e2e geometry: the scrollbar takes ~10px of the window in CI (Linux) and on Windows, 0px on macOS. Compare positions with `layoutViewport(page)` from `e2e/visual/helpers.ts`, not `page.viewportSize()` / `innerWidth` (ESLint blocks them). Details in the `verify` skill.
 
 ## Skills (load before the matching task)
 

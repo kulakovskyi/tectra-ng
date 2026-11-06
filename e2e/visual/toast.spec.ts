@@ -13,7 +13,7 @@ test('toast shows as a pill at the bottom centre, is announced and closes after 
   await expect(page.locator('.cdk-live-announcer-element')).toHaveText('Changes saved');
   await page.clock.fastForward(400);
   const box = await pill.boundingBox();
-  const size = await page.evaluate(() => ({ width: document.documentElement.clientWidth, height: window.innerHeight }));
+  const size = await page.evaluate(() => ({ width: document.documentElement.clientWidth, height: document.documentElement.clientHeight }));
   expect(Math.abs((box?.x ?? 0) + (box?.width ?? 0) / 2 - size.width / 2)).toBeLessThan(1);
   expect(Math.round(size.height - (box?.y ?? 0) - (box?.height ?? 0))).toBe(28);
   await page.clock.fastForward(3000);
