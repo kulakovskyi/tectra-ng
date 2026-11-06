@@ -35,7 +35,7 @@ Everything tectra covers, ordered by dependencies and by how much the first cons
 | Playwright checks in `e2e/visual` (`npm run e2e`): every page light + dark, console errors, layout shift, axe serious / critical; select, code panel, navigation, square buttons, theme toggle | the check we ran by hand is permanent | ✅ |
 | CI (`.github/workflows/ci.yml`): test → package build → e2e, report on failure | | ✅ |
 | ESLint (`npm run lint`): angular-eslint (OnPush, signals readonly, control flow, template a11y), typescript-eslint, Nx module boundaries by package tags; first step in CI | keeps the conventions and the package graph honest | ✅ |
-| Release flow: `nx release` (one version for all packages, changelog from conventional commits), `tools/release.mjs` (version → build → publish → tag), `release` workflow with npm trusted publishing; `tectra-ng` installs everything | needed before apps can install from npm | 🟡 first publish pending |
+| Release flow: `nx release` (one version for all packages, changelog from conventional commits), `tools/release.mjs` (version → build → publish → tag), `release` workflow with npm trusted publishing; `tectra-ng` installs everything | needed before apps can install from npm | ✅ 0.1.0 on npm |
 
 Found and fixed while setting it up: a disabled `a[txButton]` still let the parent `(click)` run; `tx-select` had no accessible name (`ariaLabel`, `ariaLabelledBy`, falls back to the placeholder); light muted text and the white-on-green success colour were below WCAG AA (muted → surface 600, success → green 700); toggle-button text contrast.
 
