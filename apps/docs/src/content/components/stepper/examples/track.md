@@ -1,0 +1,1 @@
+`variant="track"` is a compact row of markers with a label and a description: done steps get a check, the current one is filled, and an `icon` replaces the number. Narrower than 560px it stacks in a column. Setting `activeIndex` to `items.length` marks every step done.

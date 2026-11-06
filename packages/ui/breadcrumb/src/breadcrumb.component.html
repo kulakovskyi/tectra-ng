@@ -1,0 +1,98 @@
+<nav class="tx-breadcrumb__nav" [attr.aria-label]="label()">
+  <ol class="tx-breadcrumb__list" [class]="passThrough().list?.class" [style]="passThrough().list?.style">
+    @for (entry of entries(); track $index; let index = $index, first = $first) {
+      <li
+        class="tx-breadcrumb__item"
+        [class.tx-breadcrumb__item--current]="entry.current"
+        [class.tx-breadcrumb__item--disabled]="entry.item.disabled"
+        [attr.id]="entry.item.id ?? null"
+        [class]="passThrough().item?.class"
+        [style]="passThrough().item?.style"
+      >
+        @if (!first) {
+          <span class="tx-breadcrumb__separator" aria-hidden="true" [class]="passThrough().separator?.class" [style]="passThrough().separator?.style">
+            @if (separatorTemplate(); as template) {
+              <ng-container [ngTemplateOutlet]="template.templateRef" />
+            } @else if (separator() === 'slash') {
+              /
+            } @else {
+              <tx-icon name="chevron-right" />
+            }
+          </span>
+        }
+        @switch (entry.kind) {
+          @case ('router') {
+            <a
+              class="tx-breadcrumb__link"
+              [routerLink]="$any(entry.item.routerLink)"
+              [queryParams]="entry.item.queryParams"
+              [fragment]="entry.item.fragment"
+              [attr.target]="entry.item.target ?? null"
+              [attr.title]="entry.item.title ?? null"
+              [attr.aria-label]="entry.item.ariaLabel ?? null"
+              [class]="passThrough().link?.class"
+              [style]="passThrough().link?.style"
+              (click)="select($event, entry.item)"
+              ><ng-container [ngTemplateOutlet]="content" [ngTemplateOutletContext]="{ $implicit: entry, index }"
+            /></a>
+          }
+          @case ('url') {
+            <a
+              class="tx-breadcrumb__link"
+              [href]="href(entry.item)"
+              [attr.target]="entry.item.target ?? null"
+              [attr.rel]="entry.item.target === '_blank' ? 'noopener noreferrer' : null"
+              [attr.title]="entry.item.title ?? null"
+              [attr.aria-label]="entry.item.ariaLabel ?? null"
+              [class]="passThrough().link?.class"
+              [style]="passThrough().link?.style"
+              (click)="select($event, entry.item)"
+              ><ng-container [ngTemplateOutlet]="content" [ngTemplateOutletContext]="{ $implicit: entry, index }"
+            /></a>
+          }
+          @case ('command') {
+            <button
+              type="button"
+              class="tx-breadcrumb__link"
+              [attr.title]="entry.item.title ?? null"
+              [attr.aria-label]="entry.item.ariaLabel ?? null"
+              [class]="passThrough().link?.class"
+              [style]="passThrough().link?.style"
+              (click)="select($event, entry.item)"
+            >
+              <ng-container [ngTemplateOutlet]="content" [ngTemplateOutletContext]="{ $implicit: entry, index }" />
+            </button>
+          }
+          @default {
+            <span
+              class="tx-breadcrumb__link"
+              [attr.aria-current]="entry.current ? 'page' : null"
+              [attr.aria-disabled]="entry.item.disabled ? 'true' : null"
+              [attr.title]="entry.item.title ?? null"
+              [attr.aria-label]="entry.item.ariaLabel ?? null"
+              [class]="passThrough().link?.class"
+              [style]="passThrough().link?.style"
+            >
+              <ng-container [ngTemplateOutlet]="content" [ngTemplateOutletContext]="{ $implicit: entry, index }" />
+            </span>
+          }
+        }
+      </li>
+    }
+  </ol>
+</nav>
+
+<ng-template #content let-entry let-index="index">
+  @if (itemTemplate(); as template) {
+    <ng-container [ngTemplateOutlet]="template.templateRef" [ngTemplateOutletContext]="{ $implicit: entry.item, current: entry.current, index }" />
+  } @else {
+    @if (entry.icon) {
+      <tx-icon class="tx-breadcrumb__icon" aria-hidden="true" [name]="entry.icon" [class]="passThrough().icon?.class" [style]="passThrough().icon?.style" />
+    } @else if (entry.iconClass) {
+      <span class="tx-breadcrumb__icon" aria-hidden="true" [class]="entry.iconClass + ' ' + (passThrough().icon?.class ?? '')" [style]="passThrough().icon?.style"></span>
+    }
+    @if (entry.item.label) {
+      <span class="tx-breadcrumb__label" [class]="passThrough().label?.class" [style]="passThrough().label?.style">{{ entry.item.label }}</span>
+    }
+  }
+</ng-template>

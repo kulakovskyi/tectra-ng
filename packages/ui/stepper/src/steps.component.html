@@ -1,0 +1,74 @@
+<ol
+  class="tx-steps__list"
+  [class]="passThrough().list?.class"
+  [style]="passThrough().list?.style"
+  [attr.aria-label]="ariaLabel() ?? null"
+  [attr.aria-labelledby]="ariaLabelledBy() ?? null"
+>
+  @for (entry of entries(); track $index; let last = $last) {
+    <li
+      class="tx-steps__item"
+      [class]="passThrough().item?.class"
+      [style]="passThrough().item?.style"
+      [class.tx-steps__item--active]="entry.active"
+      [class.tx-steps__item--done]="entry.done"
+      [class.tx-steps__item--disabled]="entry.item.disabled"
+    >
+      @if (entry.clickable) {
+        <button
+          type="button"
+          class="tx-steps__link tx-steps__link--clickable"
+          [class]="passThrough().link?.class"
+          [style]="passThrough().link?.style"
+          [attr.aria-current]="entry.active ? 'step' : null"
+          (click)="select($event, entry)"
+          (keydown)="onKeydown($event)"
+        >
+          <ng-container *ngTemplateOutlet="inner; context: { $implicit: entry }" />
+        </button>
+      } @else {
+        <span
+          class="tx-steps__link"
+          [class]="passThrough().link?.class"
+          [style]="passThrough().link?.style"
+          [attr.aria-current]="entry.active ? 'step' : null"
+          [attr.aria-disabled]="entry.item.disabled ? 'true' : null"
+        >
+          <ng-container *ngTemplateOutlet="inner; context: { $implicit: entry }" />
+        </span>
+      }
+      @if (variant() === 'track' && !last) {
+        <span class="tx-steps__line" aria-hidden="true" [class]="passThrough().line?.class" [style]="passThrough().line?.style"></span>
+      }
+    </li>
+  }
+</ol>
+
+<ng-template #inner let-entry>
+  @if (itemTemplate(); as template) {
+    <ng-container *ngTemplateOutlet="template.templateRef; context: entry.context" />
+  } @else {
+    <span class="tx-steps__number" aria-hidden="true" [class]="passThrough().number?.class" [style]="passThrough().number?.style">
+      @if (variant() === 'track' && entry.done) {
+        <tx-icon [name]="'check'" />
+      } @else if (variant() === 'track' && entry.icon) {
+        <tx-icon [name]="entry.icon" />
+      } @else if (variant() === 'track' && entry.iconClass) {
+        <span [class]="entry.iconClass"></span>
+      } @else {
+        {{ entry.index + 1 }}
+      }
+    </span>
+    <span class="tx-steps__text">
+      <span class="tx-steps__label" [class]="passThrough().label?.class" [style]="passThrough().label?.style">{{ entry.item.label }}</span>
+      @if (variant() === 'track' && entry.item.description) {
+        <span class="tx-steps__description" [class]="passThrough().description?.class" [style]="passThrough().description?.style">{{
+          entry.item.description
+        }}</span>
+      }
+    </span>
+  }
+  @if (entry.done) {
+    <span class="tx-steps__sr-only">, {{ t().stepCompleted }}</span>
+  }
+</ng-template>

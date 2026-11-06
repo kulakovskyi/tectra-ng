@@ -1,0 +1,1 @@
+`ng-template txStepContent` replaces the step header with your own; it gets the step `value`, `index`, `active`, `completed`, `disabled` and `activate(value)`. The separators stay. Inside a `tx-step-list` give the own button `role="tab"` and `aria-selected`.

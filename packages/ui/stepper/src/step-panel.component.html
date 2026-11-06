@@ -1,0 +1,20 @@
+@if (inItem) {
+  <div class="tx-step-panel__collapse">
+    <div class="tx-step-panel__wrapper">
+      <span class="tx-stepper__separator tx-step-panel__separator" aria-hidden="true" [class]="stepper.passThrough().separator?.class" [style]="stepper.passThrough().separator?.style"></span>
+      <div class="tx-step-panel__content">
+        <ng-container *ngTemplateOutlet="body" />
+      </div>
+    </div>
+  </div>
+} @else {
+  <ng-container *ngTemplateOutlet="body" />
+}
+<ng-template #body>
+  @if (contentTemplate(); as template) {
+    @if (visited()) {
+      <ng-container *ngTemplateOutlet="template.templateRef; context: context()" />
+    }
+  }
+  <ng-content />
+</ng-template>

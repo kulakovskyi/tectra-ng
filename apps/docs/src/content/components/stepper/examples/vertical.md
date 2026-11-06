@@ -1,0 +1,1 @@
+`tx-step-item` puts a step and its panel together; the step and the panel take the item's `value`. Panels open under their step with an animation, and a line joins the steps — coloured up to the active one.

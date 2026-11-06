@@ -157,12 +157,14 @@ Detailed checklist per component: [roadmap/stage-8-date.md](roadmap/stage-8-date
 
 ## Stage 9 — navigation & structure
 
+Detailed checklist per component: [roadmap/stage-9-navigation.md](roadmap/stage-9-navigation.md).
+
 | tectra | PrimeNG equivalent | Usage | Status |
 |---|---|---|---|
-| `ui/tabs` — scrollable, icons, counters, lazy panels | Tabs | 182 | ⬜ |
-| `ui/accordion` | Accordion | 8 | ⬜ |
-| `ui/stepper` | Stepper / Steps | 12 | ⬜ |
-| `ui/breadcrumb` | Breadcrumb | console crumbs | ⬜ |
+| `ui/tabs` — segmented / pills / line, scrollable, icons, counters, descriptions, lazy panels, router links (also the docs page tabs) | Tabs | 182 | ✅ |
+| `ui/accordion` — panels or items, tones, lazy content | Accordion | 8 | ✅ |
+| `ui/stepper` — stepper (linear, vertical) + steps (default / track) | Stepper / Steps | 12 | ✅ |
+| `ui/breadcrumb` — chevron / slash, router links, commands | Breadcrumb | console crumbs | ✅ |
 | `ui/menubar`, `ui/panel-menu` | Menubar, PanelMenu | sidebar menu | ⬜ |
 | `ui/splitter`, `ui/scroll-panel`, `ui/toolbar` | Splitter, ScrollPanel, Toolbar | — (parity) | ⬜ |
 | `ui/file-upload` | FileUpload | 8 | ⬜ |

@@ -1,0 +1,27 @@
+@if (items(); as items) {
+  @for (item of items; track $index; let index = $index) {
+    <tx-accordion-panel [value]="itemValue(item, index)" [disabled]="item.disabled ?? false" [tone]="item.tone" [item]="item">
+      <tx-accordion-header>
+        @if (headerTemplate(); as header) {
+          <ng-container
+            *ngTemplateOutlet="header.template; context: { $implicit: item, item: item, index: index, active: isActive(itemValue(item, index)) }"
+          />
+        } @else {
+          {{ item.header }}
+        }
+      </tx-accordion-header>
+      <tx-accordion-content>
+        @if (contentTemplate(); as content) {
+          <ng-template txAccordionContent>
+            <ng-container
+              *ngTemplateOutlet="content.template; context: { $implicit: item, item: item, index: index, active: isActive(itemValue(item, index)) }"
+            />
+          </ng-template>
+        } @else {
+          {{ item.content }}
+        }
+      </tx-accordion-content>
+    </tx-accordion-panel>
+  }
+}
+<ng-content />

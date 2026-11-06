@@ -21,23 +21,7 @@
   </header>
 
   <div class="tabs-bar" txOverlayInset>
-  <div class="tabs" role="tablist" [attr.aria-label]="doc.title + ' documentation'">
-    @for (tab of tabs; track tab.id) {
-      <button
-        type="button"
-        role="tab"
-        class="tabs__tab"
-        [class.tabs__tab--active]="activeTab() === tab.id"
-        [attr.aria-selected]="activeTab() === tab.id"
-        (click)="activeTab.set(tab.id)"
-      >
-        {{ tab.label }}
-        @if (tab.id === 'features') {
-          <span class="tabs__count">{{ doc.examples.length }}</span>
-        }
-      </button>
-    }
-  </div>
+    <tx-tabs variant="pills" [ariaLabel]="doc.title + ' documentation'" [tabs]="docTabs()" [value]="activeTab()" (tabChange)="selectTab($event)" />
   </div>
 
   <div class="tab-panel">

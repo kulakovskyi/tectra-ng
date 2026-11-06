@@ -97,6 +97,8 @@ export interface TxTranslations {
   copyEmail: string;
   copyPhone: string;
   opensInNewTab: string;
+  breadcrumb: string;
+  stepCompleted: string;
   notifications: string;
   confirm: string;
   cancel: string;

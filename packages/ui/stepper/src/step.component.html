@@ -1,0 +1,27 @@
+@if (contentTemplate(); as template) {
+  <ng-container *ngTemplateOutlet="template.templateRef; context: context()" />
+} @else {
+  <button
+    #header
+    type="button"
+    class="tx-step__header"
+    [class]="stepper.passThrough().header?.class"
+    [style]="stepper.passThrough().header?.style"
+    [id]="stepId()"
+    [attr.role]="inItem ? null : 'tab'"
+    [attr.aria-selected]="inItem ? null : active()"
+    [attr.aria-expanded]="inItem && panelId() ? active() : null"
+    [attr.aria-controls]="panelId()"
+    [attr.aria-current]="active() ? 'step' : null"
+    [attr.tabindex]="tabIndex()"
+    [disabled]="isDisabled()"
+    (click)="select()"
+    (keydown)="onKeydown($event)"
+  >
+    <span class="tx-step__number" [class]="stepper.passThrough().number?.class" [style]="stepper.passThrough().number?.style">{{ index() + 1 }}</span>
+    <span class="tx-step__title" [class]="stepper.passThrough().title?.class" [style]="stepper.passThrough().title?.style"><ng-content /></span>
+  </button>
+}
+@if (showSeparator()) {
+  <span class="tx-stepper__separator" aria-hidden="true" [class]="stepper.passThrough().separator?.class" [style]="stepper.passThrough().separator?.style"></span>
+}

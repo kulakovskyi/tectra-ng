@@ -1,0 +1,195 @@
+:host {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+}
+
+:host([data-orientation='vertical']) {
+  justify-content: flex-start;
+  text-align: start;
+}
+
+:host(.tx-tab--disabled) {
+  cursor: default;
+}
+
+.tx-tab__icon {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.tx-tab__label {
+  min-width: 0;
+}
+
+.tx-tab__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:host([data-styled]) {
+  --_padding: var(--tx-tabs-segmented-tab-padding);
+  --_gap: var(--tx-tabs-segmented-tab-gap);
+  --_radius: var(--tx-tabs-segmented-tab-border-radius);
+  --_font-size: var(--tx-tabs-segmented-tab-font-size);
+  --_font-weight: var(--tx-tabs-segmented-tab-font-weight);
+  --_line-height: var(--tx-tabs-segmented-tab-line-height);
+  --_color: var(--tx-tabs-segmented-tab-color);
+  --_hover-color: var(--tx-tabs-segmented-tab-hover-color);
+  --_active-background: var(--tx-tabs-segmented-tab-active-background);
+  --_active-color: var(--tx-tabs-segmented-tab-active-color);
+  --_active-shadow: var(--tx-tabs-segmented-tab-active-shadow);
+  --_focus-offset: var(--tx-tabs-segmented-focus-ring-offset);
+  --_duration: var(--tx-tabs-transition-duration);
+  --_badge-active-background: var(--tx-tabs-badge-solid-active-background);
+  --_badge-active-color: var(--tx-tabs-badge-solid-active-color);
+
+  flex: 1 1 0%;
+  gap: var(--_gap);
+  margin: 0;
+  padding: var(--_padding);
+  border: none;
+  border-radius: var(--_radius);
+  outline: none;
+  background: transparent;
+  color: var(--_color);
+  font-family: inherit;
+  font-size: var(--_font-size);
+  font-weight: var(--_font-weight);
+  line-height: var(--_line-height);
+  transition:
+    color var(--_duration) ease-out,
+    background-color var(--_duration) ease-out,
+    box-shadow var(--_duration) ease-out,
+    opacity var(--_duration) ease-out;
+}
+
+:host([data-styled][data-variant='segmented'][data-size='small']) {
+  --_padding: var(--tx-tabs-segmented-sm-tab-padding);
+  --_gap: var(--tx-tabs-segmented-sm-tab-gap);
+  --_radius: var(--tx-tabs-segmented-sm-tab-border-radius);
+  --_font-size: var(--tx-tabs-segmented-sm-tab-font-size);
+}
+
+:host([data-styled][data-variant='pills']) {
+  --_padding: var(--tx-tabs-pills-tab-padding);
+  --_gap: var(--tx-tabs-pills-tab-gap);
+  --_radius: var(--tx-tabs-pills-tab-border-radius);
+  --_font-size: var(--tx-tabs-pills-tab-font-size);
+  --_font-weight: var(--tx-tabs-pills-tab-font-weight);
+  --_line-height: var(--tx-tabs-pills-tab-line-height);
+  --_color: var(--tx-tabs-pills-tab-color);
+  --_hover-color: var(--tx-tabs-pills-tab-hover-color);
+  --_active-background: var(--tx-tabs-pills-tab-active-background);
+  --_active-color: var(--tx-tabs-pills-tab-active-color);
+  --_active-shadow: var(--tx-tabs-pills-tab-active-shadow);
+  --_focus-offset: var(--tx-tabs-pills-focus-ring-offset);
+  --_duration: var(--tx-tabs-pills-transition-duration);
+  --_badge-active-background: var(--tx-tabs-badge-active-background);
+  --_badge-active-color: var(--tx-tabs-badge-active-color);
+
+  flex: none;
+}
+
+:host([data-styled][data-variant='pills'].tx-tab--raised) {
+  --_active-background: var(--tx-tabs-raised-pills-active-background);
+  --_active-color: var(--tx-tabs-raised-pills-active-color);
+  --_active-shadow: var(--tx-tabs-raised-pills-active-shadow);
+}
+
+:host([data-styled][data-variant='line']) {
+  --_padding: var(--tx-tabs-line-tab-padding);
+  --_gap: var(--tx-tabs-line-tab-gap);
+  --_radius: var(--tx-tabs-line-tab-border-radius);
+  --_font-size: var(--tx-tabs-line-tab-font-size);
+  --_font-weight: var(--tx-tabs-line-tab-font-weight);
+  --_line-height: var(--tx-tabs-line-tab-line-height);
+  --_color: var(--tx-tabs-line-tab-color);
+  --_hover-color: var(--tx-tabs-line-tab-hover-color);
+  --_active-background: var(--tx-tabs-line-tab-active-background);
+  --_active-color: var(--tx-tabs-line-tab-active-color);
+  --_active-shadow: var(--tx-tabs-line-tab-active-shadow);
+  --_focus-offset: var(--tx-tabs-line-focus-ring-offset);
+  --_duration: var(--tx-tabs-line-transition-duration);
+  --_badge-active-background: var(--tx-tabs-badge-active-background);
+  --_badge-active-color: var(--tx-tabs-badge-active-color);
+
+  flex: none;
+}
+
+:host([data-styled][data-orientation='vertical']) {
+  flex: none;
+}
+
+:host([data-styled]:not(.tx-tab--active):not(.tx-tab--disabled):hover) {
+  color: var(--_hover-color);
+}
+
+:host([data-styled].tx-tab--active) {
+  background: var(--_active-background);
+  box-shadow: var(--_active-shadow);
+  color: var(--_active-color);
+}
+
+:host([data-styled][data-variant='segmented'].tx-tab--active),
+:host([data-styled][data-variant='pills'].tx-tab--active) {
+  animation: tx-tab-activate var(--tx-tabs-activate-duration) var(--tx-tabs-activate-easing);
+}
+
+:host([data-styled]:focus-visible) {
+  z-index: 1;
+  outline: var(--tx-tabs-focus-ring-width) solid var(--tx-tabs-focus-ring-color);
+  outline-offset: var(--_focus-offset);
+}
+
+:host([data-styled].tx-tab--disabled) {
+  opacity: var(--tx-tabs-disabled-opacity);
+}
+
+:host([data-styled]) .tx-tab__badge {
+  min-width: var(--tx-tabs-badge-size);
+  height: var(--tx-tabs-badge-size);
+  box-sizing: border-box;
+  padding: var(--tx-tabs-badge-padding);
+  border-radius: var(--tx-radius-full);
+  background: var(--tx-tabs-badge-background);
+  color: var(--tx-tabs-badge-color);
+  font-size: var(--tx-tabs-badge-font-size);
+  font-weight: var(--tx-tabs-badge-font-weight);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  transition:
+    color var(--_duration) ease-out,
+    background-color var(--_duration) ease-out;
+}
+
+:host([data-styled].tx-tab--active) .tx-tab__badge {
+  background: var(--_badge-active-background);
+  color: var(--_badge-active-color);
+}
+
+@keyframes tx-tab-activate {
+  from {
+    transform: scale(var(--tx-tabs-activate-scale));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]),
+  :host([data-styled]) .tx-tab__badge {
+    transition: none;
+  }
+
+  :host([data-styled][data-variant='segmented'].tx-tab--active),
+  :host([data-styled][data-variant='pills'].tx-tab--active) {
+    animation: none;
+  }
+}

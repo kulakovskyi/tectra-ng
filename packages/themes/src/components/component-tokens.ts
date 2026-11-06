@@ -42,6 +42,10 @@ import { paginatorTokens } from './paginator.tokens';
 import { tableTokens } from './table.tokens';
 import { datePickerTokens } from './datepicker.tokens';
 import { monthCalendarTokens } from './month-calendar.tokens';
+import { tabsTokens } from './tabs.tokens';
+import { accordionTokens } from './accordion.tokens';
+import { stepperTokens, stepsTokens } from './stepper.tokens';
+import { breadcrumbTokens } from './breadcrumb.tokens';
 
 export const COMPONENT_TOKENS = {
   icon: iconTokens,
@@ -114,6 +118,11 @@ export const COMPONENT_TOKENS = {
   monthCalendar: monthCalendarTokens,
   countdown: countdownTokens,
   analogClock: analogClockTokens,
+  tabs: tabsTokens,
+  accordion: accordionTokens,
+  stepper: stepperTokens,
+  steps: stepsTokens,
+  breadcrumb: breadcrumbTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

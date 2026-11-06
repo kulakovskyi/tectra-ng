@@ -1,0 +1,1 @@
+With `[readonly]="false"` every enabled step with a `command` is a button: a click makes it current and runs the `command` with `{ originalEvent, item, index }`. Steps without a command stay plain. Arrow keys, Home and End move between the clickable steps; disabled ones are skipped.

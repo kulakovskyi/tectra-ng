@@ -1,0 +1,1 @@
+`tx-step-list` holds the numbered steps and `tx-step-panels` their content; a step and a panel with the same `value` belong together. `[(value)]` is the active step. Panel content in an `ng-template txStepPanelContent` is rendered when the step is first opened and gets `activate(value)` for the panel's own buttons.

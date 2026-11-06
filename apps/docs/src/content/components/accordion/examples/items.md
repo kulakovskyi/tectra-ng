@@ -1,0 +1,1 @@
+`items` renders a panel per item: `header`, `content`, `tone`, `disabled` and any fields of your own. The value of an item is its `value` or its index. `opened` / `closed` report the panel the user toggled.

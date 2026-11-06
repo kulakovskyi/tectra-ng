@@ -1,0 +1,58 @@
+<div class="tx-tab-list__track" [class]="tabs.passThrough().track?.class" [style]="tabs.passThrough().track?.style">
+  @if (navigators()) {
+    <button
+      type="button"
+      class="tx-tab-list__nav tx-tab-list__nav--previous"
+      tabindex="-1"
+      aria-hidden="true"
+      [class.tx-tab-list__nav--hidden]="!canScrollPrevious()"
+      [class]="tabs.passThrough().previousButton?.class"
+      [style]="tabs.passThrough().previousButton?.style"
+      (click)="scrollPrevious()"
+    >
+      <tx-icon name="chevron-left" />
+    </button>
+  }
+  <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -- the tabs inside the list take focus; the list handles their arrow keys -->
+  <div
+    #content
+    class="tx-tab-list__content"
+    role="tablist"
+    [attr.aria-orientation]="tabs.orientation()"
+    [attr.aria-label]="ariaLabel() ?? null"
+    [attr.aria-labelledby]="ariaLabelledBy() ?? null"
+    [class]="tabs.passThrough().content?.class"
+    [style]="tabs.passThrough().content?.style"
+    (keydown)="onKeydown($event)"
+    (scroll)="updateNavigators()"
+  >
+    <ng-content />
+    @if (bar(); as bar) {
+      <span
+        class="tx-tab-list__active-bar"
+        aria-hidden="true"
+        [style.--_bar-start.px]="bar.start"
+        [style.--_bar-size.px]="bar.size"
+        [class]="tabs.passThrough().activeBar?.class"
+        [style]="tabs.passThrough().activeBar?.style"
+      ></span>
+    }
+  </div>
+  @if (navigators()) {
+    <button
+      type="button"
+      class="tx-tab-list__nav tx-tab-list__nav--next"
+      tabindex="-1"
+      aria-hidden="true"
+      [class.tx-tab-list__nav--hidden]="!canScrollNext()"
+      [class]="tabs.passThrough().nextButton?.class"
+      [style]="tabs.passThrough().nextButton?.style"
+      (click)="scrollNext()"
+    >
+      <tx-icon name="chevron-right" />
+    </button>
+  }
+</div>
+@if (tabs.activeDescription(); as description) {
+  <span class="tx-tab-list__description" [class]="tabs.passThrough().description?.class" [style]="tabs.passThrough().description?.style">{{ description }}</span>
+}

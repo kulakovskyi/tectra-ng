@@ -1,0 +1,1 @@
+`home` is the first item; give an icon-only item an `ariaLabel`. `routerLink` navigates with the Angular router (`queryParams` and `fragment` are passed along) — these links open other pages of this site; `url` + `target` make a plain link. The last item of `model` is the current page.
