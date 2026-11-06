@@ -49,10 +49,10 @@
         "file": "CHANGELOG.md",
         "createRelease": "github"
       },
-      "projectChangelogs": false
-    },
-    "git": {
-      "commitMessage": "chore(release): {version}"
+      "projectChangelogs": false,
+      "git": {
+        "commitMessage": "chore(release): {version}"
+      }
     }
   },
   "analytics": false
