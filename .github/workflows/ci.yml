@@ -51,7 +51,13 @@ jobs:
         with:
           name: docs-site
           path: dist/apps/docs/browser
-      - run: npx --yes wrangler@4.151.2 deploy
+      - run: |
+          for attempt in 1 2 3; do
+            npx --yes wrangler@4.151.2 deploy && exit 0
+            echo "::warning::Cloudflare deploy failed (attempt $attempt of 3), retrying"
+            sleep $((attempt * 30))
+          done
+          exit 1
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
