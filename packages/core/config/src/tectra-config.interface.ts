@@ -56,6 +56,18 @@ export interface TxTranslations {
   yes: string;
   no: string;
   copyLink: string;
+  export: string;
+  exportFormats: string;
+  exportCsv: string;
+  exportExcel: string;
+  exportWord: string;
+  exportPdf: string;
+  exportJson: string;
+  exportHtml: string;
+  exportMarkdown: string;
+  exportCopy: string;
+  exportCopied: string;
+  exportPrint: string;
   copyEmail: string;
   copyPhone: string;
   opensInNewTab: string;

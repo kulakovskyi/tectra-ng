@@ -1,0 +1,1 @@
+Each field can set `width` (characters, in every format), `align`, `type` and an Excel `format`; `field` can be a path (`author.name`), `aggregator` converts the value, `place` numbers the rows, and `formats` keeps a column only in some formats — the internal note is in Excel, CSV and JSON, not in the documents.

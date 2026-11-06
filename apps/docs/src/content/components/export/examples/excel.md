@@ -1,0 +1,1 @@
+Excel options: sheet name, number and date formats (a field `format` wins over them), header colour and weight, frozen header, filter buttons and column widths from the content (or from `width`, between `minWidth` and `maxWidth`).

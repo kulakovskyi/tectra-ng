@@ -129,7 +129,7 @@ Detailed checklist per component: [roadmap/stage-6-selection.md](roadmap/stage-6
 | `ui/email-suggestion` — own domain completion, typo fixes | — | 4 | ✅ |
 | `ui/tree-select`, `ui/cascade-select` | TreeSelect, CascadeSelect | — (parity) | ✅ |
 
-## Stage 7 — data
+## Stage 7 — data ✅
 
 Detailed checklist per component: [roadmap/stage-7-data.md](roadmap/stage-7-data.md).
 
@@ -142,7 +142,7 @@ Detailed checklist per component: [roadmap/stage-7-data.md](roadmap/stage-7-data
 | `ui/timeline` | Timeline | — (parity) | ✅ |
 | `ui/stat-tiles` | — | 48 | ✅ |
 | `ui/sparkline` | — | 4 | ✅ |
-| `ui/export` (CSV / Excel buttons) | — | 0, 2 | ⬜ |
+| `ui/export` — CSV, Excel, Word, PDF, JSON, HTML, Markdown, copy, print, no third-party libraries (`ui/export-font` for PDF) | — | 0, 2 | ✅ |
 
 ## Stage 8 — date & time
 

@@ -1,5 +1,10 @@
 {
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../dist/packages/ui",
-  "lib": { "entryFile": "index.ts" }
+  "lib": {
+    "entryFile": "index.ts"
+  },
+  "assets": [
+    "export-font/OFL.txt"
+  ]
 }

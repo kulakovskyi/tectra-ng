@@ -1,0 +1,1 @@
+`provideTxExport()` sets defaults for the whole app (in `app.config.ts`) or for one component and its children, as here: semicolon CSV, Excel formats and colours, Letter pages. `options` on a button still wins.

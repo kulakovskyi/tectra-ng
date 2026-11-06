@@ -1,0 +1,1 @@
+Every format from the same setup: Excel keeps numbers, dates and booleans typed; Word and PDF are paged documents with the title, the date and page numbers (the PDF embeds only the glyphs it uses, Cyrillic included); JSON, HTML and Markdown are text files; **Copy table** puts it on the clipboard so it pastes into a spreadsheet by columns; **Print** opens the browser print dialog.

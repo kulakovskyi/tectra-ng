@@ -1,0 +1,1 @@
+PDF, Word and print share the page setup: size, orientation (`auto` turns landscape above five columns), font size, title, subtitle and date, page numbers, stripes and lines. The header row repeats on every page.
