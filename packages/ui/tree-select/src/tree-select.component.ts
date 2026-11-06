@@ -37,8 +37,8 @@ import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TxIcon } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraSelectTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxFieldVariant, TxSelectSize, foldText } from '@tectra-ng/ui/select';
-import { descendantKeys, findNode, normalizeChecked, parentMap } from './tree';
-import { TxTreeBranch, TxTreeNode, TxTreeRow, TxTreeSelectChangeEvent, TxTreeSelectDisplay, TxTreeSelectPart, TxTreeSelectionMode } from './tree-select.types';
+import { TxTreeNode, TxTreeSelectionMode, descendantKeys, findNode, normalizeChecked, parentMap } from '@tectra-ng/ui/tree';
+import { TxTreeBranch, TxTreeRow, TxTreeSelectChangeEvent, TxTreeSelectDisplay, TxTreeSelectPart } from './tree-select.types';
 
 @Component({
   selector: 'tx-tree-select',

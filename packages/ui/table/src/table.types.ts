@@ -77,7 +77,8 @@ export type TxTablePart =
   | 'empty'
   | 'paginator'
   | 'cards'
-  | 'card';
+  | 'card'
+  | 'treeToggle';
 
 export interface TxTableColumn {
   field: string;
@@ -209,6 +210,7 @@ export interface TxTableEditorContext<T = unknown> {
 export interface TxTableCellContext<T = unknown> {
   $implicit: T;
   row: T;
+  node: unknown;
   index: number;
   column: TxTableColumn;
   value: unknown;
@@ -220,6 +222,7 @@ export interface TxTableHeaderContext {
 
 export interface TxTableRowContext<T = unknown> {
   $implicit: T;
+  node: unknown;
   index: number;
 }
 

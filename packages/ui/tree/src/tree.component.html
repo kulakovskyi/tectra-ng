@@ -1,0 +1,244 @@
+@if (showMask()) {
+  <div class="tx-tree__mask" [class]="passThrough().mask?.class" [style]="passThrough().mask?.style">
+    @if (loadingTemplate(); as loadingTemplate) {
+      <ng-container [ngTemplateOutlet]="loadingTemplate.templateRef" />
+    } @else {
+      <tx-icon class="tx-tree__loading-icon" role="img" [name]="loadingIcon()" [attr.aria-label]="translations().loading" />
+    }
+  </div>
+}
+
+@if (headerTemplate(); as headerTemplate) {
+  <div class="tx-tree__header" [class]="passThrough().header?.class" [style]="passThrough().header?.style">
+    <ng-container [ngTemplateOutlet]="headerTemplate.templateRef" />
+  </div>
+}
+
+@if (filterTemplate(); as filterTemplate) {
+  <div class="tx-tree__filter" [class]="passThrough().filter?.class" [style]="passThrough().filter?.style">
+    <ng-container [ngTemplateOutlet]="filterTemplate.templateRef" [ngTemplateOutletContext]="filterContext()" />
+  </div>
+} @else if (filter()) {
+  <tx-icon-field class="tx-tree__filter" fluid [class]="passThrough().filter?.class" [style]="passThrough().filter?.style">
+    <input
+      #filterInput
+      txInput
+      type="search"
+      autocomplete="off"
+      class="tx-tree__filter-input"
+      [class]="passThrough().filterInput?.class"
+      [style]="passThrough().filterInput?.style"
+      [attr.aria-label]="filterPlaceholder() ?? translations().searchPlaceholder"
+      [attr.aria-controls]="treeId"
+      [placeholder]="filterPlaceholder() ?? translations().searchPlaceholder"
+      [unstyled]="isUnstyled()"
+      [value]="query()"
+      (input)="onFilterInput($event)"
+      (keydown)="onFilterKeydown($event)"
+    />
+    <tx-input-icon icon="search" position="end" />
+  </tx-icon-field>
+}
+
+<div
+  #wrapper
+  class="tx-tree__wrapper"
+  [class.tx-tree__wrapper--drop]="rootDrop()"
+  [style.max-height]="scrollHeight() && scrollHeight() !== 'flex' ? scrollHeight() : null"
+  [class]="passThrough().wrapper?.class"
+  [style]="passThrough().wrapper?.style"
+  (scroll)="onScroll($event)"
+  (dragover)="onRootDragOver($event)"
+  (dragleave)="onRootDragLeave($event)"
+  (drop)="onDrop($event)"
+>
+  @if (rows().length) {
+    <ul
+      class="tx-tree__list"
+      role="tree"
+      [id]="treeId"
+      [class.tx-tree__list--virtual]="virtualScroll()"
+      [attr.aria-multiselectable]="multiselectable() || null"
+      [attr.aria-label]="ariaLabel() ?? null"
+      [attr.aria-labelledby]="ariaLabelledBy() ?? null"
+      [attr.aria-busy]="loading() || null"
+      [class]="passThrough().list?.class"
+      [style]="passThrough().list?.style"
+    >
+      @if (virtualScroll()) {
+        @if (spacerBefore()) {
+          <li class="tx-tree__spacer" role="none" aria-hidden="true" [style.height.px]="spacerBefore()"></li>
+        }
+        @for (row of visibleRows(); track row.node.key) {
+          <ng-container [ngTemplateOutlet]="nodeItem" [ngTemplateOutletContext]="{ $implicit: row, flat: true }" />
+        }
+        @if (spacerAfter()) {
+          <li class="tx-tree__spacer" role="none" aria-hidden="true" [style.height.px]="spacerAfter()"></li>
+        }
+      } @else {
+        <ng-container [ngTemplateOutlet]="branch" [ngTemplateOutletContext]="{ $implicit: tree() }" />
+      }
+    </ul>
+  } @else {
+    <div class="tx-tree__empty" role="status" [class]="passThrough().empty?.class" [style]="passThrough().empty?.style">
+      @if (emptyTemplate(); as emptyTemplate) {
+        <ng-container [ngTemplateOutlet]="emptyTemplate.templateRef" />
+      } @else {
+        {{ emptyText() }}
+      }
+    </div>
+  }
+</div>
+
+@if (footerTemplate(); as footerTemplate) {
+  <div class="tx-tree__footer" [class]="passThrough().footer?.class" [style]="passThrough().footer?.style">
+    <ng-container [ngTemplateOutlet]="footerTemplate.templateRef" />
+  </div>
+}
+
+<tx-tiered-menu
+  #nodeMenu
+  popup
+  variant="context"
+  placement="bottom-start"
+  [offset]="0"
+  [model]="menuItems()"
+  [ariaLabel]="translations().nodeActions"
+  [unstyled]="isUnstyled()"
+  (closed)="onMenuClosed()"
+/>
+
+<ng-template #branch let-rows>
+  @for (row of rows; track row.node.key) {
+    <ng-container [ngTemplateOutlet]="nodeItem" [ngTemplateOutletContext]="{ $implicit: row, flat: false }" />
+  }
+</ng-template>
+
+<ng-template #nodeItem let-row let-flat="flat">
+  <li
+    class="tx-tree__node"
+    role="none"
+    [class.tx-tree__node--leaf]="row.leaf"
+    [style.height.px]="flat ? virtualScrollItemSize() : null"
+    [style.--tx-tree-level]="row.level - 1"
+    [class]="nodeClass(row)"
+    [style]="passThrough().node?.style"
+  >
+    <div
+      class="tx-tree__content"
+      role="treeitem"
+      [id]="row.id"
+      [attr.data-tree-key]="row.node.key"
+      [attr.tabindex]="row.node.key === tabKey() ? 0 : -1"
+      [attr.aria-label]="row.node.label"
+      [attr.aria-level]="row.level"
+      [attr.aria-setsize]="row.setSize"
+      [attr.aria-posinset]="row.posInSet"
+      [attr.aria-expanded]="row.leaf ? null : row.expanded"
+      [attr.aria-selected]="selectionMode() && !checkboxMode() ? row.selected : null"
+      [attr.aria-checked]="checkboxMode() ? checkState(row) : null"
+      [attr.aria-disabled]="row.node.disabled || null"
+      [attr.aria-busy]="row.loading || null"
+      [attr.aria-owns]="!flat && row.expanded && row.children.length ? row.id + '-group' : null"
+      [class.tx-tree__content--selectable]="row.selectable"
+      [class.tx-tree__content--selected]="highlighted(row)"
+      [class.tx-tree__content--disabled]="row.node.disabled"
+      [class.tx-tree__content--dragging]="draggingKey() === row.node.key"
+      [class.tx-tree__content--drop-inside]="dropTarget()?.key === row.node.key && dropTarget()?.position === 'inside'"
+      [class.tx-tree__content--context]="menuOpen() && contextMenuSelection()?.key === row.node.key"
+      [class.tx-tree__content--flat]="flat"
+      [attr.draggable]="row.draggable || null"
+      [class]="passThrough().content?.class"
+      [style]="passThrough().content?.style"
+      (click)="onNodeClick(row, $event)"
+      (keydown)="onTreeKeydown($event)"
+      (focus)="onTreeFocusIn($event)"
+      (dblclick)="onNodeDoubleClick(row, $event)"
+      (contextmenu)="onNodeContextMenu(row, $event)"
+      (dragstart)="onDragStart(row, $event)"
+      (dragover)="onDragOver(row, $event)"
+      (dragleave)="onDragLeave(row, $event)"
+      (drop)="onDrop($event)"
+      (dragend)="onDragEnd()"
+    >
+      @if (dropTarget()?.key === row.node.key && dropTarget()?.position !== 'inside') {
+        <span
+          class="tx-tree__drop-point"
+          aria-hidden="true"
+          [class.tx-tree__drop-point--after]="dropTarget()?.position === 'after'"
+          [class]="passThrough().dropPoint?.class"
+          [style]="passThrough().dropPoint?.style"
+        ></span>
+      }
+      <button
+        type="button"
+        class="tx-tree__toggler"
+        tabindex="-1"
+        aria-hidden="true"
+        [class.tx-tree__toggler--hidden]="row.leaf"
+        [class]="passThrough().toggler?.class"
+        [style]="passThrough().toggler?.style"
+        (click)="toggle(row, $event)"
+      >
+        @if (toggleIconTemplate(); as toggleIconTemplate) {
+          <ng-container
+            [ngTemplateOutlet]="toggleIconTemplate.templateRef"
+            [ngTemplateOutletContext]="{ $implicit: row.expanded, expanded: row.expanded, loading: row.loading }"
+          />
+        } @else if (row.loading) {
+          <tx-icon class="tx-tree__toggler-icon tx-tree__toggler-icon--loading" [name]="'spinner'" />
+        } @else {
+          <tx-icon class="tx-tree__toggler-icon" [class.tx-tree__toggler-icon--open]="row.expanded" [name]="'chevron-right'" />
+        }
+      </button>
+      @if (checkboxMode()) {
+        <span
+          class="tx-tree__checkbox"
+          aria-hidden="true"
+          [class.tx-tree__checkbox--checked]="row.checked"
+          [class.tx-tree__checkbox--partial]="row.partial"
+          [class.tx-tree__checkbox--disabled]="!row.selectable"
+          [class]="passThrough().checkbox?.class"
+          [style]="passThrough().checkbox?.style"
+        >
+          @if (checkboxIconTemplate(); as checkboxIconTemplate) {
+            <ng-container
+              [ngTemplateOutlet]="checkboxIconTemplate.templateRef"
+              [ngTemplateOutletContext]="{ $implicit: row.checked, checked: row.checked, partial: row.partial }"
+            />
+          } @else if (row.checked) {
+            <tx-icon [name]="'check'" />
+          } @else if (row.partial) {
+            <tx-icon [name]="'minus'" />
+          }
+        </span>
+      }
+      @if (row.icon) {
+        <tx-icon class="tx-tree__icon" aria-hidden="true" [name]="row.icon" [class]="passThrough().icon?.class" [style]="passThrough().icon?.style" />
+      }
+      <span class="tx-tree__label" [class]="passThrough().label?.class" [style]="passThrough().label?.style">
+        @if (templateFor(row.node); as template) {
+          <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="nodeContext(row)" />
+        } @else {
+          {{ row.node.label }}
+        }
+      </span>
+    </div>
+    @if (!flat && row.node.children?.length) {
+      <div
+        class="tx-tree__collapse"
+        [class.tx-tree__collapse--open]="row.expanded"
+        [attr.inert]="row.expanded ? null : ''"
+        (transitionend)="onCollapseEnd(row, $event)"
+      >
+        <div class="tx-tree__collapse-inner">
+          @if (row.children.length) {
+            <ul class="tx-tree__children" role="group" [id]="row.id + '-group'" [class]="passThrough().children?.class" [style]="passThrough().children?.style">
+              <ng-container [ngTemplateOutlet]="branch" [ngTemplateOutletContext]="{ $implicit: row.children }" />
+            </ul>
+          }
+        </div>
+      </div>
+    }
+  </li>
+</ng-template>

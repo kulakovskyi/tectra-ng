@@ -1,0 +1,1 @@
+`selectionMode="checkbox"`: a parent checks its branch and shows a dash while partly checked. Turn off `propagateSelectionUp` / `propagateSelectionDown` to check nodes on their own; `highlightOnSelect` tints checked rows.

@@ -5,3 +5,6 @@ export * from './src/table.context';
 export * from './src/table.templates';
 export * from './src/table.types';
 export * from './src/table.utils';
+export * from './src/table.filter';
+export { TxTableSettings } from './src/table-settings.component';
+export { TxTableColumnFilter } from './src/table-column-filter.component';

@@ -19,7 +19,8 @@ import { progressBarTokens, progressSpinnerTokens } from './progress.tokens';
 import { radioButtonTokens } from './radio-button.tokens';
 import { ratingTokens } from './rating.tokens';
 import { selectTokens } from './select.tokens';
-import { cascadeSelectTokens, chipsInputTokens, colorPickerTokens, countryTokens, emailSuggestionTokens, listboxTokens, mentionTokens, treeTokens } from './selection.tokens';
+import { cascadeSelectTokens, chipsInputTokens, colorPickerTokens, countryTokens, emailSuggestionTokens, listboxTokens, mentionTokens } from './selection.tokens';
+import { treeTableTokens, treeTokens } from './tree.tokens';
 import { skeletonTokens } from './skeleton.tokens';
 import { sliderTokens } from './slider.tokens';
 import { chipTokens, tagTokens } from './tag.tokens';
@@ -99,6 +100,7 @@ export const COMPONENT_TOKENS = {
   speedDial: speedDialTokens,
   paginator: paginatorTokens,
   table: tableTokens,
+  treeTable: treeTableTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

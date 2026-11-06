@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { normalizeChecked } from './tree';
+import { TxTreeNode, TxTreeSelectionMode, normalizeChecked } from '@tectra-ng/ui/tree';
 import { TxTreeSelect } from './tree-select.component';
-import { TxTreeNode, TxTreeSelectionMode } from './tree-select.types';
 
 const TREE: TxTreeNode[] = [
   {

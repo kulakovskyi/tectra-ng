@@ -41,6 +41,7 @@ export * from './components/split-button.tokens';
 export * from './components/speed-dial.tokens';
 export * from './components/paginator.tokens';
 export * from './components/table.tokens';
+export * from './components/tree.tokens';
 export * from './components/icon.tokens';
 export * from './components/ripple.tokens';
 export * from './components/toggle-button.tokens';

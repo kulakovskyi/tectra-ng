@@ -1,0 +1,1 @@
+`draggableNodes` and `droppableNodes` move nodes before, after or into another node, also between trees with matching scopes. Alt + arrows move the focused node by keyboard. With `validateDrop` the move waits for `accept()`.
