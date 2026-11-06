@@ -1,1 +1,1 @@
-`showWeek` adds ISO week numbers; `showOtherMonths` hides the days of the neighbour months and `selectOtherMonths` lets them be picked.
+`showWeek` adds ISO week numbers. Days of the neighbour months can be picked; `selectOtherMonths="false"` only shows them and `showOtherMonths="false"` hides them.

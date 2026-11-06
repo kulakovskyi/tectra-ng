@@ -1,1 +1,1 @@
-`selectionMode="range"`: the first click sets the start, the second the end; a click before the start starts again. The value is `[start, end]`, and the days between are highlighted.
+`selectionMode="range"`: the first click sets the start, the second the end; a click before the start starts again. While the end is not picked, the days up to the hovered (or keyboard-focused) day are highlighted, also across months. The value is `[start, end]`.

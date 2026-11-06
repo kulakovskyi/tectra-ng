@@ -109,7 +109,7 @@ export class TxDatePicker extends TxFormControlBase<TxDatePickerValue> {
   readonly showClear = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly showButtonBar = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly showOtherMonths = input<boolean, unknown>(true, { transform: booleanAttribute });
-  readonly selectOtherMonths = input<boolean, unknown>(false, { transform: booleanAttribute });
+  readonly selectOtherMonths = input<boolean, unknown>(true, { transform: booleanAttribute });
   readonly showWeek = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly startWeekFromFirstDayOfYear = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly showTime = input<boolean, unknown>(false, { transform: booleanAttribute });
@@ -212,6 +212,7 @@ export class TxDatePicker extends TxFormControlBase<TxDatePickerValue> {
   readonly focusedMonth = signal(0);
   readonly focusedYear = signal(new Date().getFullYear());
   readonly pendingTime = signal<Date | null>(null);
+  readonly previewDate = signal<Date | null>(null);
   readonly panelMinWidth = signal(0);
   private readonly matchedMonths = signal<number | null>(null);
 
@@ -329,6 +330,7 @@ export class TxDatePicker extends TxFormControlBase<TxDatePickerValue> {
   close(focusInput = true): void {
     if (!this.isOpen()) return;
     this.isOpen.set(false);
+    this.previewDate.set(null);
     this.stopRepeat();
     this.markTouched();
     this.closed.emit();
@@ -560,6 +562,22 @@ export class TxDatePicker extends TxFormControlBase<TxDatePickerValue> {
     return !!start && !!end && compareDays(date, start) > 0 && compareDays(date, end) < 0;
   }
 
+  isPreview(date: Date): boolean {
+    const preview = this.previewDate();
+    if (this.selectionMode() !== 'range' || !preview) return false;
+    const [start, end] = this.dates();
+    if (!start || end || compareDays(preview, start) <= 0) return false;
+    return compareDays(date, start) > 0 && compareDays(date, preview) <= 0;
+  }
+
+  onDayEnter(day: TxCalendarDay): void {
+    if (this.selectionMode() === 'range') this.previewDate.set(day.selectable ? day.date : null);
+  }
+
+  onGridLeave(): void {
+    this.previewDate.set(null);
+  }
+
   isMonthSelected(month: number): boolean {
     return this.dates().some((date) => !!date && date.getMonth() === month && date.getFullYear() === this.viewYear());
   }
@@ -716,6 +734,7 @@ export class TxDatePicker extends TxFormControlBase<TxDatePickerValue> {
         next = [date];
     }
     this.pendingTime.set(null);
+    this.previewDate.set(null);
     this.setDates(next, true);
     this.selected.emit(date);
     void this.announcer.announce(this.translations().dateSelected.replace('{date}', this.formatValue(next)));
@@ -776,6 +795,7 @@ export class TxDatePicker extends TxFormControlBase<TxDatePickerValue> {
       this.monthChange.emit({ month: target.getMonth() + 1, year: target.getFullYear() });
     }
     this.focusedDate.set(startOfDay(date));
+    if (this.selectionMode() === 'range') this.previewDate.set(isSelectable(date, this.rules()) ? startOfDay(date) : null);
     this.focusActive();
   }
 

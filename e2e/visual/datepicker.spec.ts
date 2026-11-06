@@ -66,10 +66,24 @@ test.describe('datepicker', () => {
     );
     await days.nth(4).click();
     await expect(example(page, 'Range').getByText('Now pick the last day.')).toBeVisible();
+    await days.nth(10).hover();
+    await expect(panel(page).locator('.tx-datepicker__day--preview')).toHaveCount(6);
+    await panel(page)
+      .locator('.tx-datepicker__day-view')
+      .hover({ position: { x: 2, y: 2 } });
+    await page.mouse.move(0, 0);
+    await expect(panel(page).locator('.tx-datepicker__day--preview')).toHaveCount(0);
     await days.nth(10).click();
     await expect(example(page, 'Range').getByText('7 days')).toBeVisible();
     await field.click();
     await expect(panel(page).locator('.tx-datepicker__day--range')).toHaveCount(5);
+  });
+
+  test('picks a day of the next month shown in the grid', async ({ page }) => {
+    const field = example(page, 'Format').getByRole('combobox', { name: 'dd.mm.yy' });
+    await field.click();
+    await panel(page).locator('td.tx-datepicker__day-cell--other[data-date="2026-11-01"]').click();
+    await expect(field).toHaveValue('01.11.2026');
   });
 
   test('keeps the clear button off the icon button', async ({ page }) => {

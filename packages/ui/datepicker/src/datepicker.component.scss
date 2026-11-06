@@ -376,7 +376,7 @@
     color: var(--tx-date-picker-today-color);
   }
 
-  .tx-datepicker__day-cell:not([aria-disabled='true']):hover .tx-datepicker__day:not(.tx-datepicker__day--selected) {
+  .tx-datepicker__day-cell:not([aria-disabled='true']):hover .tx-datepicker__day:not(.tx-datepicker__day--selected, .tx-datepicker__day--preview) {
     background: var(--tx-date-picker-date-hover-background);
     color: var(--tx-date-picker-date-hover-color);
   }
@@ -388,7 +388,9 @@
   }
 
   .tx-datepicker__day--range,
-  .tx-datepicker__day-cell--today .tx-datepicker__day--range {
+  .tx-datepicker__day--preview,
+  .tx-datepicker__day-cell--today .tx-datepicker__day--range,
+  .tx-datepicker__day-cell--today .tx-datepicker__day--preview {
     background: var(--tx-date-picker-date-range-selected-background);
     color: var(--tx-date-picker-date-range-selected-color);
   }

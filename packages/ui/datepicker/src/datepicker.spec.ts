@@ -178,6 +178,36 @@ describe('TxDatePicker', () => {
     cell(iso(5)).click();
     await settle();
     expect(host.control.value).toEqual([new Date(today.getFullYear(), today.getMonth(), 5), null]);
+    cell(iso(9)).dispatchEvent(new MouseEvent('mouseenter'));
+    render();
+    expect(document.querySelectorAll('.tx-datepicker__day--preview')).toHaveLength(4);
+    expect(cell(iso(7)).getAttribute('aria-selected')).toBe('false');
+    cell(iso(3)).dispatchEvent(new MouseEvent('mouseenter'));
+    render();
+    expect(document.querySelectorAll('.tx-datepicker__day--preview')).toHaveLength(0);
+    cell(iso(9)).dispatchEvent(new MouseEvent('mouseenter'));
+    render();
+    (document.querySelector('.tx-datepicker__day-view') as HTMLElement).dispatchEvent(new MouseEvent('mouseleave'));
+    render();
+    expect(document.querySelectorAll('.tx-datepicker__day--preview')).toHaveLength(0);
+  });
+
+  it('previews the range from the keyboard and picks days of other months', async () => {
+    host.mode.set('range');
+    host.control.setValue([new Date(2026, 9, 28), null]);
+    await settle();
+    key(input(), 'ArrowDown');
+    await settle();
+    const active = () => document.querySelector('[data-active="true"]') as HTMLElement;
+    key(active(), 'ArrowRight');
+    key(active(), 'ArrowRight');
+    expect(document.querySelectorAll('.tx-datepicker__day--preview')).toHaveLength(2);
+    const other = cell('2026-11-01');
+    expect(other.classList).toContain('tx-datepicker__day-cell--other');
+    expect(other.getAttribute('aria-disabled')).toBeNull();
+    other.click();
+    await settle();
+    expect(host.control.value).toEqual([new Date(2026, 9, 28), new Date(2026, 10, 1)]);
   });
 
   it('collects multiple dates up to the limit', async () => {

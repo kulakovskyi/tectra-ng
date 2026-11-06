@@ -9,7 +9,7 @@ A date field with a calendar panel — one date, several dates or a range, with 
 ## Inputs
 | Name | Description |
 |---|---|
-| selectionMode | `single`, `multiple` or `range` (the value is `[start, end]`, `end` is `null` until picked) |
+| selectionMode | `single`, `multiple` or `range` (the value is `[start, end]`, `end` is `null` until picked; while the end is not picked, the days up to the hovered or focused day are highlighted) |
 | dateFormat | Format of the field: `d` / `dd` day, `o` / `oo` day of the year, `D` / `DD` weekday name, `m` / `mm` month, `M` / `MM` month name, `y` / `yy` year, `@` Unix ms, `!` ticks, `'text'` literal; locale default (`mm/dd/yy` us, `dd.mm.yy` ua) |
 | placeholder | Text of the empty field |
 | inputId | Id of the input, for an outside `<label for>` |
@@ -24,7 +24,7 @@ A date field with a calendar panel — one date, several dates or a range, with 
 | showClear | Shows a clear button in the field when it has a value |
 | showButtonBar | Today and Clear buttons under the calendar |
 | showOtherMonths | Shows days of the previous / next month |
-| selectOtherMonths | Lets those days be picked |
+| selectOtherMonths | Lets those days be picked; on by default (off in PrimeNG) |
 | showWeek | Week numbers (ISO) |
 | startWeekFromFirstDayOfYear | Counts week 1 from January 1 |
 | showTime | Hours and minutes under the calendar |

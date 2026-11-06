@@ -227,6 +227,7 @@
                 <table
                   role="grid"
                   class="tx-datepicker__day-view"
+                  (mouseleave)="onGridLeave()"
                   [attr.aria-label]="names().monthNames[month.month] + ' ' + month.year"
                   [class]="passThrough().table?.class"
                   [style]="passThrough().table?.style"
@@ -270,12 +271,14 @@
                               [attr.aria-disabled]="!day.selectable || (day.otherMonth && !selectOtherMonths()) || null"
                               [attr.aria-current]="day.today ? 'date' : null"
                               (click)="onDayClick(day)"
+                              (mouseenter)="onDayEnter(day)"
                               (keydown)="onDayKeydown($event, day)"
                             >
                               <span
                                 class="tx-datepicker__day"
                                 [class.tx-datepicker__day--selected]="isSelected(day.date)"
                                 [class.tx-datepicker__day--range]="isInRange(day.date)"
+                                [class.tx-datepicker__day--preview]="isPreview(day.date)"
                                 [class.tx-datepicker__day--disabled]="!day.selectable"
                                 [class]="passThrough().day?.class"
                                 [style]="passThrough().day?.style"
