@@ -204,6 +204,27 @@ test('textarea grows with the text, stops at its limit and counts characters', a
   await expect(counter.locator('tx-textarea-counter')).toHaveText('5 / 160');
 });
 
+test('textarea follows the resize handle smoothly', async ({ page }) => {
+  await page.goto('/components/textarea');
+  const field = page.locator('textarea-basic-example textarea');
+  await field.scrollIntoViewIfNeeded();
+  const box = await field.boundingBox();
+  const x = (box?.x ?? 0) + (box?.width ?? 0) - 3;
+  const y = (box?.y ?? 0) + (box?.height ?? 0) - 3;
+  await page.mouse.move(x, y);
+  await page.mouse.down();
+  const heights: number[] = [];
+  for (let step = 1; step <= 8; step += 1) {
+    await page.mouse.move(x, y + step * 10);
+    heights.push(await field.evaluate((element) => Math.round(element.getBoundingClientRect().height)));
+  }
+  await page.mouse.up();
+  for (let index = 1; index < heights.length; index += 1) {
+    expect(heights[index]).toBeGreaterThan(heights[index - 1]);
+  }
+  expect(heights[heights.length - 1] - (box?.height ?? 0)).toBeGreaterThan(70);
+});
+
 test('checkbox toggles with Space and its label; select all fills the group', async ({ page }) => {
   await page.goto('/components/checkbox');
   const basic = page.locator('checkbox-basic-example');

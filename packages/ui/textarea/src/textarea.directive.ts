@@ -38,6 +38,7 @@ export class TxTextarea {
   private document = inject(DOCUMENT);
   private ngControl = inject(NgControl, { self: true, optional: true });
   private lastHeight = 0;
+  private fitted = false;
 
   readonly autoResize = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly maxHeight = input<number | undefined, unknown>(undefined, { transform: optionalNumber });
@@ -88,12 +89,14 @@ export class TxTextarea {
   private fit(): void {
     const element = this.elementRef.nativeElement;
     if (!this.autoResize()) {
-      if (element.style.height) {
+      if (this.fitted) {
+        this.fitted = false;
         element.style.removeProperty('height');
         element.style.removeProperty('overflow-y');
       }
       return;
     }
+    this.fitted = true;
     const style = this.document.defaultView?.getComputedStyle(element);
     const borders = style ? px(style.borderTopWidth) + px(style.borderBottomWidth) : 0;
     element.style.height = 'auto';

@@ -87,6 +87,18 @@ describe('TxTextarea', () => {
     expect(textarea().style.height).toBe('');
   });
 
+  it('keeps a height the user dragged when autoResize is off', async () => {
+    fixture.componentInstance.autoResize.set(false);
+    await fixture.whenStable();
+    await new Promise((resolve) => setTimeout(resolve));
+    textarea().style.height = '150px';
+    textarea().value = 'Hi';
+    textarea().dispatchEvent(new Event('input'));
+    await fixture.whenStable();
+    await new Promise((resolve) => setTimeout(resolve));
+    expect(textarea().style.height).toBe('150px');
+  });
+
   it('counts characters against maxlength', async () => {
     expect(counter().textContent).toBe('0 / 10');
     textarea().value = '0123456789';
