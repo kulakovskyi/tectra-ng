@@ -7,3 +7,4 @@ apps/docs/src/generated/*
 test-results
 playwright-report
 .idea
+.wrangler
