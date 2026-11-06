@@ -1,0 +1,484 @@
+@if (inline()) {
+  <ng-container [ngTemplateOutlet]="panelTemplate" />
+} @else {
+  <div #field #origin="cdkOverlayOrigin" cdkOverlayOrigin class="tx-datepicker__field">
+    <input
+      #input
+      txInput
+      type="text"
+      role="combobox"
+      autocomplete="off"
+      aria-autocomplete="none"
+      aria-haspopup="dialog"
+      class="tx-datepicker__input"
+      [class]="passThrough().input?.class"
+      [style]="passThrough().input?.style"
+      [id]="resolvedInputId()"
+      [size]="size()"
+      [variant]="variant()"
+      [fluid]="true"
+      [invalid]="isInvalid()"
+      [unstyled]="isUnstyled()"
+      [disabled]="isDisabled()"
+      [readOnly]="readonly() || readonlyInput()"
+      [required]="required()"
+      [value]="inputText()"
+      [attr.inputmode]="readonlyInput() || touchUI() ? 'none' : null"
+      [attr.placeholder]="placeholder() ?? null"
+      [attr.name]="name() ?? null"
+      [attr.aria-label]="ariaLabel() ?? null"
+      [attr.aria-labelledby]="ariaLabelledBy() ?? null"
+      [attr.aria-expanded]="isOpen()"
+      [attr.aria-controls]="isOpen() ? panelId : null"
+      (focus)="onInputFocus($event)"
+      (blur)="onInputBlur($event)"
+      (click)="onInputClick()"
+      (input)="onInput($event)"
+      (keydown)="onInputKeydown($event)"
+    />
+    @if (canClear()) {
+      <button
+        type="button"
+        class="tx-datepicker__clear"
+        [class]="passThrough().clear?.class"
+        [style]="passThrough().clear?.style"
+        [attr.aria-label]="translations().clear"
+        (click)="onClearIcon()"
+      >
+        <tx-icon name="times" />
+      </button>
+    }
+    @if (showIcon() && iconDisplay() === 'input') {
+      <span
+        class="tx-datepicker__input-icon"
+        aria-hidden="true"
+        [class]="passThrough().inputIcon?.class"
+        [style]="passThrough().inputIcon?.style"
+        (click)="toggle(false)"
+      >
+        @if (inputIconTemplate(); as template) {
+          <ng-container [ngTemplateOutlet]="template.templateRef" [ngTemplateOutletContext]="{ $implicit: toggle.bind(this, false) }" />
+        } @else {
+          <tx-icon [name]="icon()" />
+        }
+      </span>
+    }
+    @if (showIcon() && iconDisplay() === 'button') {
+      <button
+        type="button"
+        class="tx-datepicker__dropdown"
+        aria-haspopup="dialog"
+        tabindex="-1"
+        [class]="passThrough().dropdown?.class"
+        [style]="passThrough().dropdown?.style"
+        [disabled]="!isEditable()"
+        [attr.aria-label]="iconAriaLabel() ?? translations().chooseDate"
+        [attr.aria-expanded]="isOpen()"
+        [attr.aria-controls]="isOpen() ? panelId : null"
+        (click)="toggle(true)"
+      >
+        @if (triggerIconTemplate(); as template) {
+          <ng-container [ngTemplateOutlet]="template.templateRef" />
+        } @else {
+          <tx-icon [name]="icon()" />
+        }
+      </button>
+    }
+  </div>
+
+  <ng-template
+    cdkConnectedOverlay
+    txOverlayAnchor
+    [cdkConnectedOverlayOrigin]="origin"
+    [cdkConnectedOverlayOpen]="isPanelMounted() && !touchUI()"
+    [cdkConnectedOverlayPositions]="positions"
+    [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
+    [cdkConnectedOverlayMinWidth]="panelMinWidth()"
+    [cdkConnectedOverlayDisableClose]="true"
+    (attach)="onAttach()"
+    (positionChange)="onPositionChange($event)"
+    (overlayOutsideClick)="onOutsideClick($event)"
+    (detach)="close(false)"
+  >
+    <ng-container [ngTemplateOutlet]="panelTemplate" />
+  </ng-template>
+}
+
+<ng-template #panelTemplate>
+  <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -- the panel only listens to keys and focus that bubble from its controls -->
+  <div
+    #panel
+    class="tx-datepicker__panel"
+    [cdkTrapFocus]="!inline()"
+    [attr.id]="panelId"
+    [attr.role]="inline() ? 'group' : 'dialog'"
+    [attr.aria-modal]="inline() ? null : 'true'"
+    [attr.aria-label]="ariaLabel() ?? translations().chooseDate"
+    [attr.data-styled]="!isUnstyled() || null"
+    [attr.data-view]="currentView()"
+    [class.tx-datepicker__panel--inline]="inline()"
+    [class.tx-datepicker__panel--touch]="touchUI() && !inline()"
+    [class.tx-datepicker__panel--time-only]="timeOnly()"
+    [class.tx-datepicker__panel--disabled]="isDisabled()"
+    [class]="passThrough().panel?.class"
+    [style]="panelStyle()"
+    [style.min-width.px]="inline() ? null : panelMinWidth()"
+    (keydown)="onPanelKeydown($event)"
+    (focusout)="onPanelFocusOut($event)"
+  >
+    @if (headerTemplate(); as template) {
+      <ng-container [ngTemplateOutlet]="template.templateRef" />
+    }
+    @if (!timeOnly()) {
+      <div class="tx-datepicker__calendars">
+        @for (month of currentView() === 'date' ? months() : [months()[0]]; track month.year * 12 + month.month; let first = $first; let last = $last) {
+          <div class="tx-datepicker__calendar" [class]="passThrough().calendar?.class" [style]="passThrough().calendar?.style">
+            <div class="tx-datepicker__header" [class]="passThrough().header?.class" [style]="passThrough().header?.style">
+              <button
+                txButton
+                type="button"
+                icon="chevron-left"
+                severity="secondary"
+                variant="text"
+                class="tx-datepicker__previous"
+                [rounded]="true"
+                [unstyled]="isUnstyled()"
+                [class.tx-datepicker__nav--hidden]="!first"
+                [class]="passThrough().previous?.class"
+                [style]="passThrough().previous?.style"
+                [disabled]="isDisabled()"
+                [attr.aria-hidden]="first ? null : 'true'"
+                [attr.tabindex]="first ? null : -1"
+                [attr.aria-label]="currentView() === 'year' ? translations().previousDecade : currentView() === 'month' ? translations().previousYear : translations().previousMonth"
+                (click)="previous()"
+              ></button>
+              <div class="tx-datepicker__title" [class]="passThrough().title?.class" [style]="passThrough().title?.style">
+                @switch (currentView()) {
+                  @case ('date') {
+                    <button
+                      type="button"
+                      class="tx-datepicker__select-month"
+                      [class]="passThrough().selectMonth?.class"
+                      [style]="passThrough().selectMonth?.style"
+                      [disabled]="isDisabled()"
+                      [attr.aria-label]="translations().chooseMonth + ', ' + names().monthNames[month.month]"
+                      (click)="showMonthView()"
+                    >
+                      {{ names().monthNames[month.month] }}
+                    </button>
+                    <button
+                      type="button"
+                      class="tx-datepicker__select-year"
+                      [class]="passThrough().selectYear?.class"
+                      [style]="passThrough().selectYear?.style"
+                      [disabled]="isDisabled()"
+                      [attr.aria-label]="translations().chooseYear + ', ' + month.year"
+                      (click)="showYearView()"
+                    >
+                      {{ month.year }}
+                    </button>
+                  }
+                  @case ('month') {
+                    <button
+                      type="button"
+                      class="tx-datepicker__select-year"
+                      [class]="passThrough().selectYear?.class"
+                      [style]="passThrough().selectYear?.style"
+                      [disabled]="isDisabled() || view() === 'year'"
+                      [attr.aria-label]="translations().chooseYear + ', ' + viewYear()"
+                      (click)="showYearView()"
+                    >
+                      {{ viewYear() }}
+                    </button>
+                  }
+                  @case ('year') {
+                    <span class="tx-datepicker__decade">
+                      @if (decadeTemplate(); as template) {
+                        <ng-container [ngTemplateOutlet]="template.templateRef" [ngTemplateOutletContext]="{ $implicit: decade() }" />
+                      } @else {
+                        {{ decade()[0] }} – {{ decade()[9] }}
+                      }
+                    </span>
+                  }
+                }
+              </div>
+              <button
+                txButton
+                type="button"
+                icon="chevron-right"
+                severity="secondary"
+                variant="text"
+                class="tx-datepicker__next"
+                [rounded]="true"
+                [unstyled]="isUnstyled()"
+                [class.tx-datepicker__nav--hidden]="!last"
+                [class]="passThrough().next?.class"
+                [style]="passThrough().next?.style"
+                [disabled]="isDisabled()"
+                [attr.aria-hidden]="last ? null : 'true'"
+                [attr.tabindex]="last ? null : -1"
+                [attr.aria-label]="currentView() === 'year' ? translations().nextDecade : currentView() === 'month' ? translations().nextYear : translations().nextMonth"
+                (click)="next()"
+              ></button>
+            </div>
+
+            @switch (currentView()) {
+              @case ('date') {
+                <table
+                  role="grid"
+                  class="tx-datepicker__day-view"
+                  [attr.aria-label]="names().monthNames[month.month] + ' ' + month.year"
+                  [class]="passThrough().table?.class"
+                  [style]="passThrough().table?.style"
+                >
+                  <thead>
+                    <tr>
+                      @if (showWeek()) {
+                        <th scope="col" class="tx-datepicker__weekday tx-datepicker__weekheader" [class]="passThrough().weekday?.class" [style]="passThrough().weekday?.style">
+                          {{ translations().weekHeader }}
+                        </th>
+                      }
+                      @for (weekday of weekdays(); track weekday.long) {
+                        <th scope="col" class="tx-datepicker__weekday" [attr.abbr]="weekday.long" [class]="passThrough().weekday?.class" [style]="passThrough().weekday?.style">
+                          {{ weekday.short }}
+                        </th>
+                      }
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (week of month.weeks; track week.number + '-' + $index) {
+                      <tr>
+                        @if (showWeek()) {
+                          <th scope="row" class="tx-datepicker__week-number" [class]="passThrough().weekNumber?.class" [style]="passThrough().weekNumber?.style">
+                            {{ week.number }}
+                          </th>
+                        }
+                        @for (day of week.days; track dayKey(day.date)) {
+                          @if (day.otherMonth && !showOtherMonths()) {
+                            <td role="gridcell" class="tx-datepicker__day-cell tx-datepicker__day-cell--empty"></td>
+                          } @else {
+                            <td
+                              role="gridcell"
+                              class="tx-datepicker__day-cell"
+                              [class.tx-datepicker__day-cell--today]="day.today"
+                              [class.tx-datepicker__day-cell--other]="day.otherMonth"
+                              [attr.data-date]="dayKey(day.date)"
+                              [attr.data-active]="isFocusedDay(day) || null"
+                              [attr.tabindex]="isFocusedDay(day) ? 0 : -1"
+                              [attr.aria-label]="dayLabel(day.date)"
+                              [attr.aria-selected]="isSelected(day.date) || isInRange(day.date)"
+                              [attr.aria-disabled]="!day.selectable || (day.otherMonth && !selectOtherMonths()) || null"
+                              [attr.aria-current]="day.today ? 'date' : null"
+                              (click)="onDayClick(day)"
+                              (keydown)="onDayKeydown($event, day)"
+                            >
+                              <span
+                                class="tx-datepicker__day"
+                                [class.tx-datepicker__day--selected]="isSelected(day.date)"
+                                [class.tx-datepicker__day--range]="isInRange(day.date)"
+                                [class.tx-datepicker__day--disabled]="!day.selectable"
+                                [class]="passThrough().day?.class"
+                                [style]="passThrough().day?.style"
+                              >
+                                @if (dateTemplate(); as template) {
+                                  <ng-container
+                                    [ngTemplateOutlet]="template.templateRef"
+                                    [ngTemplateOutletContext]="{ $implicit: day, selected: isSelected(day.date), inRange: isInRange(day.date) }"
+                                  />
+                                } @else {
+                                  {{ day.day }}
+                                }
+                              </span>
+                            </td>
+                          }
+                        }
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              }
+              @case ('month') {
+                <div
+                  role="grid"
+                  class="tx-datepicker__month-view"
+                  [attr.aria-label]="translations().chooseMonth"
+                  [class]="passThrough().monthView?.class"
+                  [style]="passThrough().monthView?.style"
+                >
+                  @for (row of [0, 1, 2, 3]; track row) {
+                    <div role="row" class="tx-datepicker__row">
+                      @for (column of [0, 1, 2]; track column) {
+                        @let monthIndex = row * 3 + column;
+                        <span
+                          role="gridcell"
+                          class="tx-datepicker__month"
+                          [class.tx-datepicker__month--selected]="isMonthSelected(monthIndex)"
+                          [class.tx-datepicker__month--disabled]="!monthSelectable(monthIndex)"
+                          [class]="passThrough().month?.class"
+                          [style]="passThrough().month?.style"
+                          [attr.data-active]="focusedMonth() === monthIndex || null"
+                          [attr.tabindex]="focusedMonth() === monthIndex ? 0 : -1"
+                          [attr.aria-label]="names().monthNames[monthIndex] + ' ' + viewYear()"
+                          [attr.aria-selected]="isMonthSelected(monthIndex)"
+                          [attr.aria-disabled]="!monthSelectable(monthIndex) || null"
+                          (click)="pickMonth(monthIndex)"
+                          (keydown)="onMonthKeydown($event, monthIndex)"
+                          >{{ names().monthNamesShort[monthIndex] }}</span
+                        >
+                      }
+                    </div>
+                  }
+                </div>
+              }
+              @case ('year') {
+                <div
+                  role="grid"
+                  class="tx-datepicker__year-view"
+                  [attr.aria-label]="translations().chooseYear"
+                  [class]="passThrough().yearView?.class"
+                  [style]="passThrough().yearView?.style"
+                >
+                  @for (row of [0, 1, 2, 3, 4]; track row) {
+                    <div role="row" class="tx-datepicker__row">
+                      @for (column of [0, 1]; track column) {
+                        @let year = decade()[row * 2 + column];
+                        <span
+                          role="gridcell"
+                          class="tx-datepicker__year"
+                          [class.tx-datepicker__year--selected]="isYearSelected(year)"
+                          [class.tx-datepicker__year--disabled]="!yearSelectable(year)"
+                          [class]="passThrough().year?.class"
+                          [style]="passThrough().year?.style"
+                          [attr.data-active]="focusedYear() === year || null"
+                          [attr.tabindex]="focusedYear() === year ? 0 : -1"
+                          [attr.aria-selected]="isYearSelected(year)"
+                          [attr.aria-disabled]="!yearSelectable(year) || null"
+                          (click)="pickYear(year)"
+                          (keydown)="onYearKeydown($event, year)"
+                          >{{ year }}</span
+                        >
+                      }
+                    </div>
+                  }
+                </div>
+              }
+            }
+          </div>
+        }
+      </div>
+    }
+
+    @if (hasTime() && currentView() === 'date') {
+      <div class="tx-datepicker__time" [class]="passThrough().timePicker?.class" [style]="passThrough().timePicker?.style">
+        <ng-container [ngTemplateOutlet]="spinner" [ngTemplateOutletContext]="{ unit: 'hour', value: hours() }" />
+        <span class="tx-datepicker__time-separator" aria-hidden="true">{{ timeSeparator() }}</span>
+        <ng-container [ngTemplateOutlet]="spinner" [ngTemplateOutletContext]="{ unit: 'minute', value: minutes() }" />
+        @if (showSeconds()) {
+          <span class="tx-datepicker__time-separator" aria-hidden="true">{{ timeSeparator() }}</span>
+          <ng-container [ngTemplateOutlet]="spinner" [ngTemplateOutletContext]="{ unit: 'second', value: seconds() }" />
+        }
+        @if (hourFormat() === '12') {
+          <div class="tx-datepicker__time-unit">
+            <button
+              txButton
+              type="button"
+              icon="chevron-up"
+              severity="secondary"
+              variant="text"
+              [rounded]="true"
+              [unstyled]="isUnstyled()"
+              [disabled]="!isEditable()"
+              [attr.aria-label]="translations().toggleAmPm"
+              (click)="toggleMeridiem()"
+            ></button>
+            <span class="tx-datepicker__time-value">{{ isPm() ? translations().pm : translations().am }}</span>
+            <button
+              txButton
+              type="button"
+              icon="chevron-down"
+              severity="secondary"
+              variant="text"
+              [rounded]="true"
+              [unstyled]="isUnstyled()"
+              [disabled]="!isEditable()"
+              [attr.aria-label]="translations().toggleAmPm"
+              (click)="toggleMeridiem()"
+            ></button>
+          </div>
+        }
+      </div>
+    }
+
+    @if (showButtonBar()) {
+      <div class="tx-datepicker__buttonbar" [class]="passThrough().buttonbar?.class" [style]="passThrough().buttonbar?.style">
+        @if (buttonBarTemplate(); as template) {
+          <ng-container [ngTemplateOutlet]="template.templateRef" [ngTemplateOutletContext]="{ today: selectToday.bind(this), clear: onClearButton.bind(this) }" />
+        } @else {
+          <button
+            txButton
+            type="button"
+            size="small"
+            severity="secondary"
+            variant="text"
+            [unstyled]="isUnstyled()"
+            [label]="translations().today"
+            [disabled]="!isEditable()"
+            (click)="selectToday()"
+          ></button>
+          <button
+            txButton
+            type="button"
+            size="small"
+            severity="secondary"
+            variant="text"
+            [unstyled]="isUnstyled()"
+            [label]="translations().clear"
+            [disabled]="!isEditable()"
+            (click)="onClearButton()"
+          ></button>
+        }
+      </div>
+    }
+    @if (footerTemplate(); as template) {
+      <ng-container [ngTemplateOutlet]="template.templateRef" />
+    }
+  </div>
+</ng-template>
+
+<ng-template #spinner let-unit="unit" let-value="value">
+  <div class="tx-datepicker__time-unit" role="group" [attr.aria-label]="unit === 'hour' ? translations().hour : unit === 'minute' ? translations().minute : translations().second">
+    <button
+      txButton
+      type="button"
+      icon="chevron-up"
+      severity="secondary"
+      variant="text"
+      [rounded]="true"
+      [unstyled]="isUnstyled()"
+      [disabled]="!isEditable()"
+      [attr.aria-label]="unit === 'hour' ? translations().nextHour : unit === 'minute' ? translations().nextMinute : translations().nextSecond"
+      (pointerdown)="startRepeat($event, unit, 1)"
+      (pointerup)="stopRepeat()"
+      (pointerleave)="stopRepeat()"
+      (pointercancel)="stopRepeat()"
+      (keydown)="onTimeKeydown($event, unit, 1)"
+    ></button>
+    <span class="tx-datepicker__time-value" aria-live="polite">{{ formatPart(value) }}</span>
+    <button
+      txButton
+      type="button"
+      icon="chevron-down"
+      severity="secondary"
+      variant="text"
+      [rounded]="true"
+      [unstyled]="isUnstyled()"
+      [disabled]="!isEditable()"
+      [attr.aria-label]="unit === 'hour' ? translations().previousHour : unit === 'minute' ? translations().previousMinute : translations().previousSecond"
+      (pointerdown)="startRepeat($event, unit, -1)"
+      (pointerup)="stopRepeat()"
+      (pointerleave)="stopRepeat()"
+      (pointercancel)="stopRepeat()"
+      (keydown)="onTimeKeydown($event, unit, -1)"
+    ></button>
+  </div>
+</ng-template>

@@ -146,9 +146,11 @@ Detailed checklist per component: [roadmap/stage-7-data.md](roadmap/stage-7-data
 
 ## Stage 8 — date & time
 
+Detailed checklist per component: [roadmap/stage-8-date.md](roadmap/stage-8-date.md).
+
 | tectra | PrimeNG equivalent | Usage | Status |
 |---|---|---|---|
-| `ui/datepicker` — single / range / multiple, time, month / year views, inline, min / max, locale | DatePicker | 58 | ⬜ |
+| `ui/datepicker` — single / range / multiple, time, month / year views, inline, touch, min / max, locale | DatePicker | 58 | ✅ |
 | `ui/month-calendar` (events grid) | — | 23 | ⬜ |
 | `ui/countdown` (on `ClockService`) | — | 1 | ⬜ |
 | `ui/analog-clock` | — | 1 | ⬜ |

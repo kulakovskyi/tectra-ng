@@ -40,6 +40,7 @@ import { splitButtonTokens } from './split-button.tokens';
 import { speedDialTokens } from './speed-dial.tokens';
 import { paginatorTokens } from './paginator.tokens';
 import { tableTokens } from './table.tokens';
+import { datePickerTokens } from './datepicker.tokens';
 
 export const COMPONENT_TOKENS = {
   icon: iconTokens,
@@ -108,6 +109,7 @@ export const COMPONENT_TOKENS = {
   statTiles: statTilesTokens,
   statTile: statTileTokens,
   sparkline: sparklineTokens,
+  datePicker: datePickerTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

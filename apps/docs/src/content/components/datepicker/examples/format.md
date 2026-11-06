@@ -1,0 +1,1 @@
+`dateFormat` shows and parses the date: `dd` / `mm` / `yy`, month and weekday names `M` / `MM` / `D` / `DD`, quoted literals. Without it the locale decides (`mm/dd/yy` in English, `dd.mm.yy` in Ukrainian), and so does the first day of the week.

@@ -1,0 +1,1 @@
+`showTime` adds hours and minutes (hold a button to spin), `hourFormat="12"` adds AM / PM, `stepMinute` / `stepHour` / `stepSecond` set the step, `showSeconds` adds seconds and `timeOnly` leaves only the time.

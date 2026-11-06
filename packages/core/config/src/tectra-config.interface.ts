@@ -68,6 +68,29 @@ export interface TxTranslations {
   exportCopy: string;
   exportCopied: string;
   exportPrint: string;
+  chooseDate: string;
+  previousMonth: string;
+  nextMonth: string;
+  previousYear: string;
+  nextYear: string;
+  previousDecade: string;
+  nextDecade: string;
+  chooseMonth: string;
+  chooseYear: string;
+  weekHeader: string;
+  am: string;
+  pm: string;
+  hour: string;
+  minute: string;
+  second: string;
+  nextHour: string;
+  previousHour: string;
+  nextMinute: string;
+  previousMinute: string;
+  nextSecond: string;
+  previousSecond: string;
+  toggleAmPm: string;
+  dateSelected: string;
   copyEmail: string;
   copyPhone: string;
   opensInNewTab: string;
@@ -143,6 +166,7 @@ export interface TxLocaleDefinition {
   code: string;
   intl: string;
   firstDayOfWeek: 0 | 1;
+  dateFormat?: string;
   translations: TxTranslations;
 }
 
