@@ -1,0 +1,1 @@
+Below `compactBreakpoint` (40rem by default) the paginator shows `compactPageLinkSize` page buttons (3) and no first / last buttons, so it fits one line on a phone. Narrow the window to see it; the second paginator is compact below 100rem.

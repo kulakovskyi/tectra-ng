@@ -1,0 +1,1 @@
+Server pages: `pageChange` gives `first` and `rows` for the request, `TxPaginationParams` is the shape of the request (`page` is 1-based) and `firstToPage` converts. The list below is loaded with a delay.

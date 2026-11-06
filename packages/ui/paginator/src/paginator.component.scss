@@ -1,0 +1,145 @@
+:host {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+.tx-paginator__bar {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+}
+
+.tx-paginator__pages {
+  display: flex;
+  align-items: center;
+}
+
+.tx-paginator__start {
+  margin-inline-end: auto;
+}
+
+.tx-paginator__end {
+  margin-inline-start: auto;
+}
+
+.tx-paginator__nav {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  border: 0 none;
+  font: inherit;
+  cursor: pointer;
+  user-select: none;
+}
+
+.tx-paginator__nav:disabled {
+  cursor: default;
+}
+
+.tx-paginator__first:dir(rtl),
+.tx-paginator__previous:dir(rtl),
+.tx-paginator__next:dir(rtl),
+.tx-paginator__last:dir(rtl) {
+  transform: rotate(180deg);
+}
+
+@media (width >= 64rem) {
+  :host {
+    flex-direction: row;
+  }
+
+  .tx-paginator__total {
+    position: absolute;
+    inset-inline-start: 0;
+  }
+}
+
+:host([data-styled]) {
+  .tx-paginator__total {
+    margin: var(--tx-paginator-total-margin);
+    color: var(--tx-paginator-total-color);
+    font-size: var(--tx-paginator-total-font-size);
+    font-weight: var(--tx-paginator-total-font-weight);
+  }
+
+  .tx-paginator__bar {
+    gap: var(--tx-paginator-gap);
+    padding: var(--tx-paginator-padding);
+    border-radius: var(--tx-paginator-border-radius);
+    background: var(--tx-paginator-background);
+    color: var(--tx-paginator-color);
+  }
+
+  .tx-paginator__pages {
+    gap: var(--tx-paginator-gap);
+  }
+
+  .tx-paginator__nav {
+    min-width: var(--tx-paginator-nav-button-width);
+    height: var(--tx-paginator-nav-button-height);
+    border-radius: var(--tx-paginator-nav-button-border-radius);
+    background: var(--tx-paginator-nav-button-background);
+    color: var(--tx-paginator-nav-button-color);
+    font-size: var(--tx-paginator-nav-button-font-size);
+    font-weight: var(--tx-paginator-nav-button-font-weight);
+    transition:
+      background var(--tx-paginator-transition-duration),
+      color var(--tx-paginator-transition-duration),
+      outline-color var(--tx-paginator-transition-duration);
+  }
+
+  .tx-paginator__nav:focus-visible {
+    outline: var(--tx-paginator-nav-button-focus-ring-width) var(--tx-paginator-nav-button-focus-ring-style)
+      var(--tx-paginator-nav-button-focus-ring-color);
+    outline-offset: var(--tx-paginator-nav-button-focus-ring-offset);
+  }
+
+  .tx-paginator__nav:not(:disabled):not(.tx-paginator__page--selected):hover {
+    background: var(--tx-paginator-nav-button-hover-background);
+    color: var(--tx-paginator-nav-button-hover-color);
+  }
+
+  .tx-paginator__nav:disabled {
+    opacity: var(--tx-paginator-nav-button-disabled-opacity);
+  }
+
+  .tx-paginator__page--selected {
+    background: var(--tx-paginator-nav-button-selected-background);
+    color: var(--tx-paginator-nav-button-selected-color);
+  }
+
+  .tx-paginator__icon {
+    --tx-icon-size: var(--tx-paginator-nav-button-icon-size);
+  }
+
+  .tx-paginator__report {
+    color: var(--tx-paginator-current-page-report-color);
+    font-size: var(--tx-paginator-current-page-report-font-size);
+    font-weight: var(--tx-paginator-current-page-report-font-weight);
+    white-space: nowrap;
+  }
+
+  .tx-paginator__jump-input {
+    max-width: var(--tx-paginator-jump-to-page-input-max-width);
+    text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) .tx-paginator__nav {
+    transition: none;
+  }
+}

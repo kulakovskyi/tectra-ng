@@ -1,0 +1,145 @@
+@if (showTotal()) {
+  <div class="tx-paginator__total" [class]="passThrough().total?.class" [style]="passThrough().total?.style">{{ totalLabel() }}</div>
+}
+<nav
+  class="tx-paginator__bar"
+  [class]="passThrough().bar?.class"
+  [style]="passThrough().bar?.style"
+  [attr.aria-label]="ariaLabel() ?? translations().pagination"
+>
+  @if (startTemplate(); as start) {
+    <div class="tx-paginator__start" [class]="passThrough().start?.class" [style]="passThrough().start?.style">
+      <ng-container [ngTemplateOutlet]="start.templateRef" [ngTemplateOutletContext]="{ $implicit: state() }" />
+    </div>
+  }
+  @if (showCurrentPageReport()) {
+    <span
+      class="tx-paginator__report"
+      aria-live="polite"
+      [class]="passThrough().currentPageReport?.class"
+      [style]="passThrough().currentPageReport?.style"
+      >{{ currentPageReport() }}</span
+    >
+  }
+  @if (showEnds()) {
+    <button
+      type="button"
+      class="tx-paginator__nav tx-paginator__first"
+      [class]="passThrough().first?.class"
+      [style]="passThrough().first?.style"
+      [disabled]="disabled() || isFirstPage()"
+      [attr.aria-label]="translations().firstPage"
+      (click)="changePage(0)"
+    >
+      <tx-icon class="tx-paginator__icon" aria-hidden="true" [name]="firstPageIcon()" />
+    </button>
+  }
+  <button
+    type="button"
+    class="tx-paginator__nav tx-paginator__previous"
+    [class]="passThrough().previous?.class"
+    [style]="passThrough().previous?.style"
+    [disabled]="disabled() || isFirstPage()"
+    [attr.aria-label]="translations().previousPage"
+    (click)="changePage(page() - 1)"
+  >
+    <tx-icon class="tx-paginator__icon" aria-hidden="true" [name]="previousPageIcon()" />
+  </button>
+  @if (showPageLinks()) {
+    <span class="tx-paginator__pages" [class]="passThrough().pages?.class" [style]="passThrough().pages?.style">
+      @for (link of pageLinks(); track link) {
+        <button
+          type="button"
+          class="tx-paginator__nav tx-paginator__page"
+          [class.tx-paginator__page--selected]="link === page()"
+          [class]="passThrough().page?.class"
+          [style]="passThrough().page?.style"
+          [disabled]="disabled()"
+          [attr.aria-label]="pageLabel(link)"
+          [attr.aria-current]="link === page() ? 'page' : null"
+          (click)="changePage(link)"
+        >
+          {{ format(link + 1) }}
+        </button>
+      }
+    </span>
+  }
+  @if (showJumpToPageDropdown() && !empty()) {
+    <tx-select
+      class="tx-paginator__jump-dropdown"
+      optionLabel="label"
+      optionValue="value"
+      [class]="passThrough().jumpToPageDropdown?.class"
+      [style]="passThrough().jumpToPageDropdown?.style"
+      [options]="jumpToPageItems()"
+      [scrollHeight]="dropdownScrollHeight()"
+      [ariaLabel]="translations().jumpToPage"
+      [unstyled]="isUnstyled()"
+      [disabled]="disabled()"
+      [ngModel]="page()"
+      (ngModelChange)="changePage($event)"
+    />
+  }
+  <button
+    type="button"
+    class="tx-paginator__nav tx-paginator__next"
+    [class]="passThrough().next?.class"
+    [style]="passThrough().next?.style"
+    [disabled]="disabled() || isLastPage()"
+    [attr.aria-label]="translations().nextPage"
+    (click)="changePage(page() + 1)"
+  >
+    <tx-icon class="tx-paginator__icon" aria-hidden="true" [name]="nextPageIcon()" />
+  </button>
+  @if (showEnds()) {
+    <button
+      type="button"
+      class="tx-paginator__nav tx-paginator__last"
+      [class]="passThrough().last?.class"
+      [style]="passThrough().last?.style"
+      [disabled]="disabled() || isLastPage()"
+      [attr.aria-label]="translations().lastPage"
+      (click)="changePage(pageCount() - 1)"
+    >
+      <tx-icon class="tx-paginator__icon" aria-hidden="true" [name]="lastPageIcon()" />
+    </button>
+  }
+  @if (showJumpToPageInput()) {
+    <input
+      #jumpInput
+      txInput
+      type="text"
+      inputmode="numeric"
+      class="tx-paginator__jump-input"
+      [class]="passThrough().jumpToPageInput?.class"
+      [style]="passThrough().jumpToPageInput?.style"
+      [value]="empty() ? '' : format(page() + 1)"
+      [disabled]="disabled() || empty()"
+      [unstyled]="isUnstyled()"
+      [attr.aria-label]="translations().jumpToPage"
+      (keydown.enter)="jumpTo(jumpInput)"
+      (blur)="jumpTo(jumpInput)"
+    />
+  }
+  @if (rowsPerPageItems().length) {
+    <tx-select
+      class="tx-paginator__rpp-dropdown"
+      optionLabel="label"
+      optionValue="value"
+      [class]="passThrough().rowsPerPageDropdown?.class"
+      [style]="passThrough().rowsPerPageDropdown?.style"
+      [options]="rowsPerPageItems()"
+      [scrollHeight]="dropdownScrollHeight()"
+      [ariaLabel]="translations().rowsPerPage"
+      [unstyled]="isUnstyled()"
+      [disabled]="disabled()"
+      [ngModel]="rows()"
+      (ngModelChange)="changeRows($event)"
+    />
+  }
+  @if (endTemplate(); as end) {
+    <div class="tx-paginator__end" [class]="passThrough().end?.class" [style]="passThrough().end?.style">
+      <ng-container [ngTemplateOutlet]="end.templateRef" [ngTemplateOutletContext]="{ $implicit: state() }" />
+    </div>
+  }
+</nav>

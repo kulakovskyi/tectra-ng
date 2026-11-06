@@ -67,6 +67,14 @@ export interface TxTranslations {
   maximize: string;
   restore: string;
   moreActions: string;
+  firstPage: string;
+  lastPage: string;
+  pageNumber: string;
+  rowsPerPage: string;
+  jumpToPage: string;
+  currentPageReport: string;
+  totalCount: string;
+  pagination: string;
 }
 
 export type TxValidationMessage = string | ((error: unknown) => string);

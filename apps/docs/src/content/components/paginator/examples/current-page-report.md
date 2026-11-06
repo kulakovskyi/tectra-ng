@@ -1,0 +1,1 @@
+`showCurrentPageReport` shows "3 of 12" (translated). `currentPageReportTemplate` takes `{currentPage}`, `{totalPages}`, `{first}`, `{last}`, `{rows}` and `{totalRecords}`; the report is a polite live region.

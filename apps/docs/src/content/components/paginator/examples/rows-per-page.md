@@ -1,0 +1,1 @@
+`rowsPerPageOptions` adds a page size select; `[(rows)]` follows it. A size that is not in the list (here 20) is added, `{ showAll: 'All' }` shows every record. After a size change the first record of the page stays on screen.

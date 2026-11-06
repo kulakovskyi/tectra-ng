@@ -1,0 +1,83 @@
+# Stage 7 — data, detailed checklist
+
+Part of [ROADMAP.md](../ROADMAP.md). One section per item, in the order we build them. Tick a box only when the code, the docs example and the test for it exist.
+
+Sources: PrimeNG 22 component APIs (Aura base theme) and what the first consumer app needs (usage = tags in its templates, 2026-11-05). In the first app every list goes through one table wrapper (356 tags) that renders the paginator itself; the standalone paginator wrapper is used by 170 lists that are not tables. The look comes from the first app's preset on top of Aura: nav buttons `2.25rem` with the `md` radius (the paginator bar is padded evenly, `0.5rem`, and the current page is solid primary); table header cells on `surface 50` / `surface 950`, header and body cells padded `0.625rem 0.875rem`, column titles weight 600. Root font size there is 14px, so `1rem` = 14px.
+
+**Every item also needs** (not repeated below): tokens in `packages/themes/src/components/`, `dt` / `pt` / `ptOptions` / `unstyled`, README (Inputs / Outputs / Slots / Keyboard), docs page with an example per feature, unit tests, e2e page check (light + dark, axe), lint clean.
+
+---
+
+## 7.1 Paginator — `ui/paginator` ✅
+
+PrimeNG: Paginator (`first`, `rows`, `totalRecords`, `pageLinkSize`, `rowsPerPageOptions` incl. a "show all" item, `alwaysShow`, `showFirstLastIcon`, `showPageLinks`, `showCurrentPageReport` + `currentPageReportTemplate` (`{currentPage}`, `{totalPages}`, `{first}`, `{last}`, `{rows}`, `{totalRecords}`), `showJumpToPageDropdown`, `showJumpToPageInput`, `locale`, templates start / end / dropdown item / jump-to-page item / icons, `(onPageChange)` with `{ page, first, rows, pageCount }`). First app: `first` / `rows` / `totalRecords` 170, a bold "Total: N" label on the left (centred above the paginator on narrow screens), `rowsPerPageOptions` `[5, 10, 50, 100]` with the current `rows` added when it is missing, an empty list hides the size select, compact below 40rem (3 page links, no first / last buttons), `PaginationInterface` for paginated requests.
+
+- [x] `<tx-paginator>`: first / previous / pages / next / last buttons (`aria-label`, `aria-current="page"`, disabled at the ends), `[(first)]` + `rows` + `totalRecords`, `pageLinkSize` window around the current page, `pageChange` with `TxPageState` (`page` 0-based, `first`, `rows`, `pageCount`), `alwaysShow`, `showFirstLastIcon`, `showPageLinks`
+- [x] Page size select on `tx-select` (`rowsPerPageOptions`, numbers or `{ label, value }` items such as "All"), the current `rows` added when missing, empty options hide it; a size change keeps the first visible record on screen
+- [x] Current page report with the PrimeNG placeholders (translated default), jump to page as a select or a number input (Enter / blur), `showTotal` "Total: N" (translated) at the start
+- [x] Compact mode below 40rem (`compactBreakpoint`, `compactPageLinkSize`): fewer page links, no first / last buttons
+- [x] Templates: `txPaginatorStart`, `txPaginatorEnd` (get the page state), own icons through inputs; locale number formatting of page numbers and totals
+- [x] `TxPaginationParams` (the shared request / response shape: `page`, `limit`, `total`) and helpers `pageToFirst`, `firstToPage`
+- [x] Docs + tests; e2e: keyboard through the buttons, size change, compact layout at phone width
+
+## 7.2 Table — `ui/table`
+
+PrimeNG: Table (`value`, `columns`, `dataKey`, sort single / multiple + `sortField` / `sortOrder` / `multiSortMeta` / `customSort`, `paginator` + all paginator inputs, `lazy` + `(onLazyLoad)`, `loading`, selection `single` / `multiple` / checkbox / radio + `metaKeySelection` + `(selectionChange)`, `contextMenu` + `contextMenuSelection`, `resizableColumns` + `columnResizeMode` fit / expand, `reorderableColumns` / `reorderableRows`, frozen columns and rows, `scrollable` + `scrollHeight`, `virtualScroll`, row expansion (`expandedRowKeys`), row grouping, column filters + global filter, editing (cell / row), `stateStorage` local / session, `exportCSV`, `size`, `showGridlines`, `stripedRows`, templates caption / header / body / footer / summary / empty / loading / expansion). First app (356): projected rows with `[cell]` markers, columns with `field`, label, `withoutSort`, `withoutDrag`, `width` / `initialWidth` / `minWidth` / `maxWidth`, `order`, `hidden`; sort arrows asc → desc → none, resize handles, header drag, settings popover (visible columns, row action order and pinning), widths / order / hidden saved per table id, select-all checkbox column, blurred loading overlay with a spinner, paginator under the table, toolbar slot, row actions with an overflow `…` menu and the same actions as a right-click menu, sticky columns, rows at least 50px, cards below 64rem (labels from the headers, first cell as title, checkbox in the corner, actions as the footer, own card template), `responsive` off for wide tables, ellipsis cells with a tooltip.
+
+- [ ] Structure: `<tx-table>` with `value` + `columns` (`TxTableColumn`), body by row template or projected rows with `txCell`, header / footer / caption / summary / empty / loading templates, `size`, `showGridlines`, `stripedRows`, `rowHover`, `dataKey`, `trackBy`
+- [ ] Sort: single (asc → desc → none) and multiple (Ctrl / ⌘), `[(sortField)]` / `[(sortOrder)]` / `[(multiSortMeta)]`, local sort or `customSort` / server sort, `aria-sort`, sortable header buttons
+- [ ] Pagination: built-in `tx-paginator` (all its inputs), local slicing or server pages
+- [ ] Lazy: `lazy` + `lazyLoad` with `{ first, rows, sortField, sortOrder, multiSortMeta, filters, globalFilter }`, loading overlay (blur + spinner, `aria-busy`)
+- [ ] Selection: single / multiple rows, `metaKeySelection`, checkbox column + select all (tri-state, current page), radio column, `[(selection)]`, `rowSelectable`, keyboard (arrows between rows, Space / Enter)
+- [ ] Columns: resize (`fit` / `expand`, min / max), reorder by dragging headers (keyboard too), frozen / sticky start and end columns, column settings popover (visibility, order), `stateKey` + `stateStorage` saving widths / order / hidden / sort / page
+- [ ] Rows: row actions cell with inline count and an overflow menu, the same actions on right-click (`contextMenu`), row expansion (`[(expandedRowKeys)]`, expansion template), row reorder by drag, row grouping (subheader / rowspan), frozen rows
+- [ ] Scroll: `scrollable` + `scrollHeight` with a sticky header, virtual scroll for long lists, minimum row height so sticky cells stay level
+- [ ] Filters: column filter menu (match modes per type, several rules, apply / clear), filter row, global filter; `filters` model
+- [ ] Editing: cell edit (`txEditableCell`, Enter / Escape / Tab), row edit (init / save / cancel)
+- [ ] Responsive cards below a breakpoint (`responsive`, `breakpoint`): header labels, title cell, checkbox corner, actions footer, own card template
+- [ ] Ellipsis cells with a tooltip when the text is cut; `exportCSV` from the visible columns
+- [ ] Docs + tests; e2e: sort, resize, reorder, sticky columns while scrolling sideways, selection by keys, cards at tablet width, axe in light and dark
+
+## 7.3 Tree and tree table — `ui/tree`, `ui/tree-table`
+
+PrimeNG: Tree (`value`, `selectionMode` single / multiple / checkbox, `[(selection)]`, `propagateSelectionUp` / `Down`, `filter` + `filterMode` lenient / strict, lazy children (`onNodeExpand`), drag and drop, context menu, templates per node type, `loading`, virtual scroll), TreeTable (columns, sort, pagination, selection, lazy, resize / reorder, frozen, scroll). First app: 0 (parity). The tree helpers and `tree` tokens of `ui/tree-select` are the base.
+
+- [ ] `<tx-tree>`: `role="tree"` with roving focus, expand / collapse, selection modes, checkbox propagation, filter, lazy children with a loader, node templates, drag and drop between nodes, context menu
+- [ ] `<tx-tree-table>`: tree rows inside the table (toggler in the first column, `aria-level`), sort, pagination, selection, lazy
+- [ ] Docs + tests; e2e: keyboard tree navigation, checkbox propagation
+
+## 7.4 Data view and virtual scroller — `ui/data-view`, `ui/virtual-scroller`
+
+PrimeNG: DataView (`layout` list / grid, `paginator`, `sortField` / `sortOrder`, `lazy`, `loading`, `emptyMessage`, list / grid / header / footer templates), VirtualScroller / Scroller (`items`, `itemSize`, `orientation` vertical / horizontal / both, `lazy`, `loaderDisabled`, `showLoader`, `numToleratedItems`, `scrollHeight`, templates item / loader). First app: 0 (parity).
+
+- [ ] `<tx-virtual-scroller>` on CDK virtual scroll: vertical / horizontal, item size, lazy with loader rows, `scrollToIndex`
+- [ ] `<tx-data-view>`: list / grid layouts with a layout switch, paginator, sort, lazy, loading, empty state
+- [ ] Docs + tests
+
+## 7.5 Timeline — `ui/timeline`
+
+PrimeNG: Timeline (`value`, `align` left / right / alternate / top / bottom, `layout` vertical / horizontal, templates content / opposite / marker / connector). First app: 0 (parity).
+
+- [ ] `<tx-timeline>`: vertical / horizontal, alignments, marker / content / opposite templates, ordered list semantics
+- [ ] Docs + tests
+
+## 7.6 Stat tiles — `ui/stat-tiles`
+
+Not in PrimeNG. First app (48): a responsive grid (`minWidth`, never below 15rem, `compact` 9rem) of tiles with a tinted icon square, label, big value (`null` → "-"), unit, meta line, tone (neutral / primary / success / info / warn / danger), share bar 0–100, text value (truncated with a title), fit value (scales with the tile), accent value, highlighted (tinted background and ring), link with a hover ring, aside slot (a change pill), default slot (a sparkline).
+
+- [ ] `<tx-stat-tiles>` + `<tx-stat-tile>` with every option above; link tiles are anchors / router links
+- [ ] Docs + tests
+
+## 7.7 Sparkline — `ui/sparkline`
+
+Not in PrimeNG. First app (4): SVG line with a soft filled area scaled between min and max, fewer than two values draw nothing, `aria-hidden`, full-width 2.25rem host, tones primary / info / success / warn / danger.
+
+- [ ] `<tx-sparkline>` with all tones in their own colours, optional accessible label
+- [ ] Docs + tests
+
+## 7.8 Export — `ui/export`
+
+Not in PrimeNG (Table has `exportCSV`). First app: CSV button 0, Excel button 2 — icon buttons with a translated tooltip, `fields` (`{ field, title, aggregator }`), `data` or async `fetchData` (returns `null` to cancel), `loading`, a busy button ignores clicks, `number` / `place` fields filled with the row index, CSV with a BOM, quoting and formula-injection guard, Excel through a lazily loaded `xlsx` peer.
+
+- [ ] `<tx-export-csv>` (no dependency) and `<tx-export-excel>` (optional `xlsx` peer, loaded on first click), shared `TxExportField` with `ui/table`
+- [ ] Docs + tests

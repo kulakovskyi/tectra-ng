@@ -68,6 +68,14 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     maximize: 'Maximize',
     restore: 'Restore',
     moreActions: 'More actions',
+    firstPage: 'First page',
+    lastPage: 'Last page',
+    pageNumber: 'Page {page}',
+    rowsPerPage: 'Rows per page',
+    jumpToPage: 'Go to page',
+    currentPageReport: '{currentPage} of {totalPages}',
+    totalCount: 'Total: {count}',
+    pagination: 'Pagination',
   },
 };
 
@@ -139,6 +147,14 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     maximize: 'Розгорнути',
     restore: 'Відновити',
     moreActions: 'Більше дій',
+    firstPage: 'Перша сторінка',
+    lastPage: 'Остання сторінка',
+    pageNumber: 'Сторінка {page}',
+    rowsPerPage: 'Рядків на сторінці',
+    jumpToPage: 'Перейти до сторінки',
+    currentPageReport: '{currentPage} з {totalPages}',
+    totalCount: 'Усього: {count}',
+    pagination: 'Пагінація',
   },
 };
 
