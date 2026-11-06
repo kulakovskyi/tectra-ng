@@ -1,0 +1,1 @@
+Items with `routerLink` are router links. The item of the current route is highlighted (a subset match by default, `routerLinkActiveOptions` to change it) and its parents open when you navigate. Here each link writes a query parameter, so the page stays.

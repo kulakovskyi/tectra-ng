@@ -1,0 +1,149 @@
+<div class="tx-menubar__start" [class]="passThrough().start?.class" [style]="passThrough().start?.style"><ng-content select="[txMenubarStart]" /></div>
+@if (mobile()) {
+  <button
+    type="button"
+    class="tx-menubar__button"
+    aria-haspopup="menu"
+    [attr.aria-label]="translations().menu"
+    [attr.aria-expanded]="mobileOpen()"
+    [attr.aria-controls]="listId"
+    [class]="passThrough().mobileButton?.class"
+    [style]="passThrough().mobileButton?.style"
+    (click)="toggleMobile()"
+  >
+    <tx-icon name="bars" />
+  </button>
+}
+<ng-container [ngTemplateOutlet]="list" [ngTemplateOutletContext]="{ $implicit: entries(), root: true }" />
+<div class="tx-menubar__end" [class]="passThrough().end?.class" [style]="passThrough().end?.style"><ng-content select="[txMenubarEnd]" /></div>
+
+<ng-template #list let-entries let-root="root">
+  <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -- the menu items inside take focus; the list handles their arrow keys -->
+  <ul
+    class="tx-menubar__list"
+    [class.tx-menubar__list--root]="root"
+    [class.tx-menubar__list--sub]="!root"
+    [attr.id]="root ? listId : null"
+    [attr.role]="root ? 'menubar' : 'menu'"
+    [attr.aria-orientation]="root && !mobile() ? 'horizontal' : 'vertical'"
+    [attr.aria-label]="root ? (ariaLabel() ?? null) : null"
+    [attr.aria-labelledby]="root ? (ariaLabelledBy() ?? null) : null"
+    [class]="root ? passThrough().list?.class : null"
+    [style]="root ? passThrough().list?.style : null"
+    (keydown)="root && onKeydown($event)"
+  >
+    @for (entry of entries; track entry.key) {
+      @if (entry.item.separator) {
+        <li role="separator" class="tx-menubar__separator" [class]="passThrough().separator?.class" [style]="passThrough().separator?.style"></li>
+      } @else {
+        <li role="none" class="tx-menubar__entry" [attr.data-key]="entry.key" [class.tx-menubar__entry--expanded]="isExpanded(entry)">
+          @if (entry.item.routerLink && !entry.item.disabled && !hasChildren(entry)) {
+            <a
+              role="menuitem"
+              class="tx-menubar__item"
+              [id]="entry.id"
+              [attr.tabindex]="tabIndex(entry)"
+              [attr.title]="entry.item.title ?? null"
+              [routerLink]="entry.item.routerLink"
+              [queryParams]="entry.item.queryParams"
+              [fragment]="entry.item.fragment"
+              [class]="passThrough().item?.class"
+              [style]="passThrough().item?.style"
+              (click)="onItemClick(entry, $event)"
+              (mouseenter)="onItemEnter(entry)"
+              (focus)="onItemFocus(entry)"
+            >
+              <ng-container [ngTemplateOutlet]="content" [ngTemplateOutletContext]="{ $implicit: entry }" />
+            </a>
+          } @else if (entry.item.url && !entry.item.disabled && !hasChildren(entry)) {
+            <a
+              role="menuitem"
+              class="tx-menubar__item"
+              [id]="entry.id"
+              [attr.tabindex]="tabIndex(entry)"
+              [attr.title]="entry.item.title ?? null"
+              [attr.href]="entry.item.url"
+              [attr.target]="entry.item.target ?? null"
+              [attr.rel]="entry.item.target === '_blank' ? 'noopener noreferrer' : null"
+              [class]="passThrough().item?.class"
+              [style]="passThrough().item?.style"
+              (click)="onItemClick(entry, $event)"
+              (mouseenter)="onItemEnter(entry)"
+              (focus)="onItemFocus(entry)"
+            >
+              <ng-container [ngTemplateOutlet]="content" [ngTemplateOutletContext]="{ $implicit: entry }" />
+            </a>
+          } @else {
+            <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events -- Enter / Space are handled by the list keydown -->
+            <div
+              role="menuitem"
+              class="tx-menubar__item"
+              [id]="entry.id"
+              [attr.tabindex]="tabIndex(entry)"
+              [attr.title]="entry.item.title ?? null"
+              [attr.aria-disabled]="entry.item.disabled || null"
+              [attr.aria-haspopup]="hasChildren(entry) ? 'menu' : null"
+              [attr.aria-expanded]="hasChildren(entry) ? isExpanded(entry) : null"
+              [attr.aria-controls]="hasChildren(entry) && mobile() ? entry.id + '-menu' : null"
+              [attr.data-severity]="entry.item.severity ?? null"
+              [class]="passThrough().item?.class"
+              [style]="passThrough().item?.style"
+              (click)="onItemClick(entry, $event)"
+              (mouseenter)="onItemEnter(entry)"
+              (focus)="onItemFocus(entry)"
+            >
+              <ng-container [ngTemplateOutlet]="content" [ngTemplateOutletContext]="{ $implicit: entry }" />
+            </div>
+          }
+          @if (mobile() && hasChildren(entry)) {
+            <div class="tx-menubar__collapse" [id]="entry.id + '-menu'" [attr.inert]="isExpanded(entry) ? null : ''">
+              <div class="tx-menubar__collapse-inner">
+                <ng-container [ngTemplateOutlet]="list" [ngTemplateOutletContext]="{ $implicit: entry.children, root: false }" />
+              </div>
+            </div>
+          }
+        </li>
+      }
+    }
+  </ul>
+</ng-template>
+
+<ng-template #content let-entry>
+  @if (itemTemplate(); as template) {
+    <ng-container [ngTemplateOutlet]="template.template" [ngTemplateOutletContext]="context(entry)" />
+  } @else {
+    @if (entry.item.icon) {
+      <tx-icon class="tx-menubar__icon" aria-hidden="true" [name]="entry.item.icon" [class]="passThrough().icon?.class" [style]="passThrough().icon?.style" />
+    }
+    <span class="tx-menubar__label" [class]="passThrough().label?.class" [style]="passThrough().label?.style">{{ entry.item.label }}</span>
+    @if (entry.item.badge !== undefined && entry.item.badge !== null) {
+      <tx-badge class="tx-menubar__badge" size="small" severity="secondary" [value]="entry.item.badge" [unstyled]="isUnstyled()" />
+    }
+    @if (hasChildren(entry)) {
+      <tx-icon
+        class="tx-menubar__submenu-icon"
+        aria-hidden="true"
+        [name]="mobile() || entry.level === 0 ? 'angle-down' : 'angle-right'"
+        [class]="passThrough().submenuIcon?.class"
+        [style]="passThrough().submenuIcon?.style"
+      />
+    }
+  }
+</ng-template>
+
+<ng-template #submenu let-items let-focus="focus">
+  <tx-menu-list
+    panel="submenu"
+    [items]="items"
+    [tiered]="true"
+    [level]="1"
+    [focusOnInit]="focus"
+    [itemTemplate]="itemTemplate()?.template ?? null"
+    [unstyled]="isUnstyled()"
+    [pt]="submenuPt()"
+    (selected)="onSubmenuSelected($event)"
+    (leave)="onSubmenuLeave()"
+    (tabbed)="closeSubmenu()"
+    (keydown)="onSubmenuKeydown($event)"
+  />
+</ng-template>

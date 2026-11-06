@@ -1,0 +1,1 @@
+`variant="sidebar"` is the app sidebar: root items become section titles, links get icons, `badge` counters (zero is hidden, more than `badgeMax` shows as `99+`) and a lock when disabled. Opening a branch closes its siblings unless `multiple` is on.

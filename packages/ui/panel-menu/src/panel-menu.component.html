@@ -1,0 +1,242 @@
+@for (block of blocks(); track block.node.key) {
+  @let node = block.node;
+  @if (node.separator) {
+    <div role="separator" class="tx-panel-menu__separator" [class]="passThrough().separator?.class" [style]="passThrough().separator?.style"></div>
+  } @else if (variant() === 'sidebar') {
+    @if (block.titled) {
+      <div class="tx-panel-menu__section" [id]="node.id" [class]="passThrough().section?.class" [style]="passThrough().section?.style">{{ node.item.label }}</div>
+    }
+    <ng-container *ngTemplateOutlet="tree; context: { $implicit: block.tree, labelledBy: block.titled ? node.id : null, label: block.titled ? null : node.item.label }" />
+  } @else {
+    <div
+      class="tx-panel-menu__panel"
+      [class.tx-panel-menu__panel--expanded]="node.children.length && isExpanded(node)"
+      [class]="passThrough().panel?.class"
+      [style]="passThrough().panel?.style"
+    >
+      @switch (linkKind(node)) {
+        @case ('router') {
+          <a
+            class="tx-panel-menu__header"
+            [id]="node.id"
+            [class.tx-panel-menu__header--active]="isActive(node)"
+            [attr.aria-current]="isActive(node) ? 'page' : null"
+            [attr.title]="node.item.title ?? null"
+            [attr.target]="node.item.target ?? null"
+            [routerLink]="routerCommands(node.item)"
+            [queryParams]="node.item.queryParams"
+            [fragment]="node.item.fragment"
+            [class]="passThrough().header?.class"
+            [style]="passThrough().header?.style"
+            (click)="onItemClick(node, $event)"
+            (keydown)="onHeaderKeydown($event)"
+          >
+            <ng-container *ngTemplateOutlet="content; context: { $implicit: node }" />
+          </a>
+        }
+        @case ('url') {
+          <a
+            class="tx-panel-menu__header"
+            [id]="node.id"
+            [attr.href]="href(node.item)"
+            [attr.title]="node.item.title ?? null"
+            [attr.target]="node.item.target ?? null"
+            [attr.rel]="node.item.target === '_blank' ? 'noopener noreferrer' : null"
+            [class]="passThrough().header?.class"
+            [style]="passThrough().header?.style"
+            (click)="onItemClick(node, $event)"
+            (keydown)="onHeaderKeydown($event)"
+          >
+            <ng-container *ngTemplateOutlet="content; context: { $implicit: node }" />
+          </a>
+        }
+        @default {
+          <button
+            type="button"
+            class="tx-panel-menu__header"
+            [id]="node.id"
+            [disabled]="node.item.disabled ?? false"
+            [attr.title]="node.item.title ?? null"
+            [attr.aria-expanded]="node.children.length ? isExpanded(node) : null"
+            [attr.aria-controls]="node.children.length ? node.id + '-content' : null"
+            [class]="passThrough().header?.class"
+            [style]="passThrough().header?.style"
+            (click)="onItemClick(node, $event)"
+            (keydown)="onHeaderKeydown($event)"
+          >
+            <ng-container *ngTemplateOutlet="content; context: { $implicit: node }" />
+          </button>
+        }
+      }
+      @if (node.children.length) {
+        <div
+          class="tx-panel-menu__collapse"
+          role="region"
+          [id]="node.id + '-content'"
+          [attr.aria-labelledby]="node.id"
+          [class.tx-panel-menu__collapse--open]="isExpanded(node)"
+          [attr.inert]="isExpanded(node) ? null : ''"
+        >
+          <div class="tx-panel-menu__collapse-inner">
+            <ng-container *ngTemplateOutlet="tree; context: { $implicit: block.tree, labelledBy: node.id, label: null }" />
+          </div>
+        </div>
+      }
+    </div>
+  }
+}
+
+<ng-template #tree let-nodes let-labelledBy="labelledBy" let-label="label">
+  <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -- the tree items take focus; the tree handles their arrow keys -->
+  <ul
+    class="tx-panel-menu__tree"
+    role="tree"
+    [attr.aria-labelledby]="labelledBy"
+    [attr.aria-label]="label"
+    [class]="passThrough().tree?.class"
+    [style]="passThrough().tree?.style"
+    (keydown)="onTreeKeydown($event, nodes)"
+  >
+    <ng-container *ngTemplateOutlet="branch; context: { $implicit: nodes, tree: nodes }" />
+  </ul>
+</ng-template>
+
+<ng-template #branch let-nodes let-tree="tree">
+  @for (node of nodes; track node.key) {
+    @if (node.separator) {
+      <li role="none" aria-hidden="true" class="tx-panel-menu__separator" [class]="passThrough().separator?.class" [style]="passThrough().separator?.style"></li>
+    } @else {
+      <li role="none" class="tx-panel-menu__node">
+        @switch (linkKind(node)) {
+          @case ('router') {
+            <a
+              role="treeitem"
+              class="tx-panel-menu__item"
+              [id]="node.id"
+              [attr.data-level]="ariaLevel(node)"
+              [style.--_level]="ariaLevel(node)"
+              [class.tx-panel-menu__item--active]="isActive(node)"
+              [attr.tabindex]="tabKey(tree) === node.key ? 0 : -1"
+              [attr.aria-level]="ariaLevel(node)"
+              [attr.aria-selected]="isActive(node)"
+              [attr.aria-current]="isActive(node) ? 'page' : null"
+              [attr.title]="node.item.title ?? null"
+              [attr.target]="node.item.target ?? null"
+              [routerLink]="routerCommands(node.item)"
+              [queryParams]="node.item.queryParams"
+              [fragment]="node.item.fragment"
+              [class]="passThrough().item?.class"
+              [style]="passThrough().item?.style"
+              (click)="onItemClick(node, $event)"
+              (focus)="focusKey.set(node.key)"
+            >
+              <ng-container *ngTemplateOutlet="content; context: { $implicit: node }" />
+            </a>
+          }
+          @case ('url') {
+            <a
+              role="treeitem"
+              class="tx-panel-menu__item"
+              [id]="node.id"
+              [attr.data-level]="ariaLevel(node)"
+              [style.--_level]="ariaLevel(node)"
+              [attr.tabindex]="tabKey(tree) === node.key ? 0 : -1"
+              [attr.aria-level]="ariaLevel(node)"
+              [attr.aria-selected]="false"
+              [attr.href]="href(node.item)"
+              [attr.title]="node.item.title ?? null"
+              [attr.target]="node.item.target ?? null"
+              [attr.rel]="node.item.target === '_blank' ? 'noopener noreferrer' : null"
+              [class]="passThrough().item?.class"
+              [style]="passThrough().item?.style"
+              (click)="onItemClick(node, $event)"
+              (focus)="focusKey.set(node.key)"
+            >
+              <ng-container *ngTemplateOutlet="content; context: { $implicit: node }" />
+            </a>
+          }
+          @default {
+            <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events -- the tree handles the keys of its items -->
+            <div
+              role="treeitem"
+              class="tx-panel-menu__item"
+              [id]="node.id"
+              [attr.data-level]="ariaLevel(node)"
+              [style.--_level]="ariaLevel(node)"
+              [class.tx-panel-menu__item--expanded]="node.children.length && isExpanded(node)"
+              [attr.tabindex]="node.item.disabled ? null : tabKey(tree) === node.key ? 0 : -1"
+              [attr.aria-level]="ariaLevel(node)"
+              [attr.aria-disabled]="node.item.disabled || null"
+              [attr.aria-selected]="false"
+              [attr.aria-expanded]="node.children.length ? isExpanded(node) : null"
+              [attr.aria-owns]="node.children.length ? node.id + '-group' : null"
+              [attr.title]="node.item.title ?? null"
+              [class]="passThrough().item?.class"
+              [style]="passThrough().item?.style"
+              (click)="onItemClick(node, $event)"
+              (focus)="focusKey.set(node.key)"
+            >
+              <ng-container *ngTemplateOutlet="content; context: { $implicit: node }" />
+            </div>
+          }
+        }
+        @if (node.children.length) {
+          <div class="tx-panel-menu__collapse" [class.tx-panel-menu__collapse--open]="isExpanded(node)" [attr.inert]="isExpanded(node) ? null : ''">
+            <div class="tx-panel-menu__collapse-inner">
+              <ul role="group" class="tx-panel-menu__group" [id]="node.id + '-group'">
+                <ng-container *ngTemplateOutlet="branch; context: { $implicit: node.children, tree: tree }" />
+              </ul>
+            </div>
+          </div>
+        }
+      </li>
+    }
+  }
+</ng-template>
+
+<ng-template #content let-node>
+  @if (itemTemplate(); as template) {
+    <ng-container *ngTemplateOutlet="template.template; context: context(node)" />
+  } @else {
+    @if (variant() === 'panel' && node.children.length) {
+      <tx-icon
+        class="tx-panel-menu__submenu-icon"
+        aria-hidden="true"
+        name="chevron-down"
+        [class]="passThrough().submenuIcon?.class"
+        [style]="passThrough().submenuIcon?.style"
+      />
+    } @else if (variant() === 'panel') {
+      <span class="tx-panel-menu__submenu-icon tx-panel-menu__submenu-icon--spacer" aria-hidden="true"></span>
+    }
+    @if (node.item.icon; as icon) {
+      <span class="tx-panel-menu__icon" aria-hidden="true" [class]="passThrough().icon?.class" [style]="passThrough().icon?.style">
+        @if (iconName(icon); as name) {
+          <tx-icon [name]="name" />
+        } @else {
+          <span [class]="icon"></span>
+        }
+      </span>
+    }
+    <span class="tx-panel-menu__label" [class]="passThrough().label?.class" [style]="passThrough().label?.style">{{ node.item.label }}</span>
+    @if (badgeText(node.item); as badge) {
+      @if (variant() === 'sidebar') {
+        <span class="tx-panel-menu__badge" [class]="passThrough().badge?.class" [style]="passThrough().badge?.style">{{ badge }}</span>
+      } @else {
+        <tx-badge class="tx-panel-menu__badge" size="small" severity="secondary" [value]="badge" [unstyled]="isUnstyled()" />
+      }
+    }
+    @if (variant() === 'sidebar' && node.item.disabled) {
+      <tx-icon class="tx-panel-menu__lock" aria-hidden="true" name="lock" [class]="passThrough().lock?.class" [style]="passThrough().lock?.style" />
+    }
+    @if (variant() === 'sidebar' && node.children.length) {
+      <tx-icon
+        class="tx-panel-menu__submenu-icon"
+        aria-hidden="true"
+        name="angle-down"
+        [class]="passThrough().submenuIcon?.class"
+        [style]="passThrough().submenuIcon?.style"
+      />
+    }
+  }
+</ng-template>

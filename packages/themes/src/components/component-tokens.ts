@@ -43,9 +43,11 @@ import { tableTokens } from './table.tokens';
 import { datePickerTokens } from './datepicker.tokens';
 import { monthCalendarTokens } from './month-calendar.tokens';
 import { tabsTokens } from './tabs.tokens';
+import { menubarTokens } from './menubar.tokens';
 import { accordionTokens } from './accordion.tokens';
 import { stepperTokens, stepsTokens } from './stepper.tokens';
 import { breadcrumbTokens } from './breadcrumb.tokens';
+import { panelMenuTokens } from './panel-menu.tokens';
 
 export const COMPONENT_TOKENS = {
   icon: iconTokens,
@@ -119,10 +121,12 @@ export const COMPONENT_TOKENS = {
   countdown: countdownTokens,
   analogClock: analogClockTokens,
   tabs: tabsTokens,
+  menubar: menubarTokens,
   accordion: accordionTokens,
   stepper: stepperTokens,
   steps: stepsTokens,
   breadcrumb: breadcrumbTokens,
+  panelMenu: panelMenuTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

@@ -634,7 +634,7 @@ test('amount and status icon read well in tables', async ({ page }) => {
 test('sidebar searches, collapses groups and keeps the current page in view', async ({ page }) => {
   await page.goto('/components/panel');
   const sidebar = page.getByRole('navigation', { name: 'Documentation' });
-  const current = sidebar.getByRole('link', { name: 'Panel' });
+  const current = sidebar.getByRole('link', { name: 'Panel', exact: true });
   await expect(current).toHaveAttribute('aria-current', 'page');
   await expect(current).toBeInViewport();
   const form = sidebar.getByRole('button', { name: /Form/ });
@@ -643,7 +643,7 @@ test('sidebar searches, collapses groups and keeps the current page in view', as
   await expect(sidebar.getByRole('link', { name: 'Checkbox' })).toBeHidden();
   await page.reload();
   await expect(sidebar.getByRole('button', { name: /Form/ })).toHaveAttribute('aria-expanded', 'false');
-  await expect(sidebar.getByRole('link', { name: 'Panel' })).toBeInViewport();
+  await expect(sidebar.getByRole('link', { name: 'Panel', exact: true })).toBeInViewport();
   await page.locator('main h1').first().click();
   await page.keyboard.press('/');
   const search = sidebar.getByRole('searchbox', { name: 'Search docs' });

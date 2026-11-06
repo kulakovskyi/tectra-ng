@@ -99,6 +99,7 @@ export interface TxTranslations {
   opensInNewTab: string;
   breadcrumb: string;
   stepCompleted: string;
+  menu: string;
   notifications: string;
   confirm: string;
   cancel: string;
