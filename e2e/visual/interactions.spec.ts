@@ -135,6 +135,9 @@ test('select panel opens clear of the sticky header, rides with its field and sl
 
 test('select panel opens clear of the stuck tab bar', async ({ page }) => {
   await page.goto('/components/select');
+  await page.locator('main h1').first().waitFor();
+  const main = await page.locator('main').boundingBox();
+  await page.mouse.move((main?.x ?? 400) + 200, 400);
   await page.mouse.wheel(0, 700);
   const tabsBar = page.locator('.tabs-bar');
   await expect.poll(() => tabsBar.evaluate((bar) => Math.round(bar.getBoundingClientRect().top))).toBe(56);
