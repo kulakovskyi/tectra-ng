@@ -1,6 +1,7 @@
 import { CdkConnectedOverlay, ConnectedPosition } from '@angular/cdk/overlay';
 import { Injector, afterNextRender, signal } from '@angular/core';
 import { orderByRoom } from './placements';
+import { txLayoutRect } from './overlay-viewport';
 import { TxOverlayInsetValues } from './overlay.types';
 import { txConnectedMargin, txOverlayBounds } from './overlay-insets.service';
 
@@ -34,7 +35,7 @@ export class TxOverlayRoom {
     }
     const size = { width: panel.offsetWidth, height: panel.offsetHeight };
     const bounds = txOverlayBounds(this.insets, this.margin, origin.ownerDocument);
-    const ordered = orderByRoom(this.preferred, origin.getBoundingClientRect(), size, bounds);
+    const ordered = orderByRoom(this.preferred, txLayoutRect(origin), size, bounds);
     if (ordered[0] === this.positions()[0]) {
       return false;
     }

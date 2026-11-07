@@ -28,16 +28,20 @@ function position(side: TxPlacementSide, align: TxPlacementAlign, offset: number
     : { originX: 'start', originY: y, overlayX: 'end', overlayY: y, offsetX: -offset, panelClass };
 }
 
-export function txPositions(placement: TxPlacement = 'bottom-start', offset = 4): ConnectedPosition[] {
-  const { side, align } = parsePlacement(placement);
+function sidesAround(side: TxPlacementSide, align: TxPlacementAlign): [TxPlacementSide, TxPlacementAlign][] {
   const otherAligns = ALIGNS.filter((value) => value !== align);
-  const order: [TxPlacementSide, TxPlacementAlign][] = [
+  return [
     [side, align],
     [OPPOSITE[side], align],
     ...otherAligns.map((value): [TxPlacementSide, TxPlacementAlign] => [side, value]),
     ...otherAligns.map((value): [TxPlacementSide, TxPlacementAlign] => [OPPOSITE[side], value]),
   ];
-  return order.map(([s, a]) => position(s, a, offset));
+}
+
+export function txPositions(placement: TxPlacement = 'bottom-start', offset = 4): ConnectedPosition[] {
+  const { side, align } = parsePlacement(placement);
+  const across = side === 'left' || side === 'right' ? sidesAround('bottom', 'center') : [];
+  return [...sidesAround(side, align), ...across].map(([s, a]) => position(s, a, offset));
 }
 
 export function placementFromPosition(position: ConnectedPosition): TxPlacement | null {
@@ -49,7 +53,8 @@ export function txArrowOffset(placement: TxPlacement, origin: TxOverlaySize, ins
   const { side, align } = parsePlacement(placement);
   const half = (side === 'top' || side === 'bottom' ? origin.width : origin.height) / 2;
   const lead = inset ? `min(${inset}, ${half}px)` : `${half}px`;
-  return align === 'start' ? lead : align === 'end' ? `calc(100% - ${lead})` : '50%';
+  const point = align === 'start' ? lead : align === 'end' ? `100% - ${lead}` : '50%';
+  return `calc(${point} - var(--tx-overlay-shift, 0px))`;
 }
 
 type TxEdge ='start' | 'center' | 'end' | 'top' | 'bottom';

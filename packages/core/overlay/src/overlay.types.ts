@@ -66,3 +66,15 @@ export interface TxOverlayInsetValues {
   top: number;
   bottom: number;
 }
+
+export interface TxOverlayShift {
+  x: number;
+  y: number;
+}
+
+export interface TxOverlayBox {
+  top: number;
+  left: number;
+  width: number;
+  height: number;
+}

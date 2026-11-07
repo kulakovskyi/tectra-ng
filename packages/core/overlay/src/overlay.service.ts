@@ -10,6 +10,7 @@ import {
 import { DOCUMENT, Injectable, Injector, TemplateRef, Type, inject, signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { txAnchorPane } from './overlay-anchor';
+import { txLayoutRect } from './overlay-viewport';
 import { txScrollStrategy } from './overlay-scroll';
 import { txAnimateEnter, txAnimateLeave } from './overlay-motion';
 import { orderByRoom, placementFromPosition, txPositions } from './placements';
@@ -112,7 +113,7 @@ export class TxOverlay {
     const preferRoom = () => {
       const pane = overlayRef.overlayElement;
       const size = { width: pane.offsetWidth, height: pane.offsetHeight };
-      positionStrategy.withPositions(orderByRoom(positions, origin.getBoundingClientRect(), size, txOverlayBounds(insets, margin, this.document)));
+      positionStrategy.withPositions(orderByRoom(positions, txLayoutRect(origin), size, txOverlayBounds(insets, margin, this.document)));
     };
     const reposition = () => {
       if (!overlayRef.hasAttached()) return;
@@ -122,7 +123,7 @@ export class TxOverlay {
 
     const instance = this.attach(overlayRef, content, options);
     reposition();
-    txAnchorPane(overlayRef, origin, this.overlayInsets);
+    txAnchorPane(overlayRef, origin, this.overlayInsets, margin);
     if (animate) {
       txAnimateEnter(motionTarget(), currentPlacement(), motion, origin);
     }

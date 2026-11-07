@@ -15,9 +15,20 @@ describe('placements', () => {
   });
 
   it('covers every alignment on both sides', () => {
+    const positions = txPositions('bottom');
+    expect(positions.map(placementFromPosition)).toEqual(['bottom', 'top', 'bottom-start', 'bottom-end', 'top-start', 'top-end']);
+  });
+
+  it('falls back to the top and bottom when a side placement has no room on a narrow screen', () => {
     const positions = txPositions('right');
-    expect(positions).toHaveLength(6);
-    expect(positions.map(placementFromPosition)).toEqual(['right', 'left', 'right-start', 'right-end', 'left-start', 'left-end']);
+    expect(positions.map(placementFromPosition)).toEqual([
+      'right', 'left', 'right-start', 'right-end', 'left-start', 'left-end',
+      'bottom', 'top', 'bottom-start', 'bottom-end', 'top-start', 'top-end',
+    ]);
+    const origin = { top: 300, left: 100, width: 57, height: 37 };
+    const phone = { top: 8, right: 394, bottom: 706, left: 8 };
+    const ordered = orderByRoom(positions, origin, { width: 260, height: 70 }, phone);
+    expect(placementFromPosition(ordered[0])).toBe('bottom-start');
   });
 });
 
@@ -43,9 +54,10 @@ describe('orderByRoom', () => {
 
   it('points the arrow at the middle of a centred origin and near the edge of an aligned one', () => {
     const origin = { width: 96, height: 37 };
-    expect(txArrowOffset('bottom', origin, 'var(--inset)')).toBe('50%');
-    expect(txArrowOffset('top-start', origin, 'var(--inset)')).toBe('min(var(--inset), 48px)');
-    expect(txArrowOffset('bottom-end', origin, 'var(--inset)')).toBe('calc(100% - min(var(--inset), 48px))');
-    expect(txArrowOffset('right-start', origin)).toBe('18.5px');
+    const shifted = (point: string) => `calc(${point} - var(--tx-overlay-shift, 0px))`;
+    expect(txArrowOffset('bottom', origin, 'var(--inset)')).toBe(shifted('50%'));
+    expect(txArrowOffset('top-start', origin, 'var(--inset)')).toBe(shifted('min(var(--inset), 48px)'));
+    expect(txArrowOffset('bottom-end', origin, 'var(--inset)')).toBe(shifted('100% - min(var(--inset), 48px)'));
+    expect(txArrowOffset('right-start', origin)).toBe(shifted('18.5px'));
   });
 });
