@@ -1,3 +1,24 @@
+## 0.1.4 (2026-11-07)
+
+### 🚀 Features
+
+- **editor:** rich text editor package ([9977370](https://github.com/kulakovskyi/tectra-ng/commit/9977370))
+- **editor:** slash menu, tables, callouts and AI actions ([7121cd9](https://github.com/kulakovskyi/tectra-ng/commit/7121cd9))
+- **ui:** table date filter and date editor use the date picker ([4bd1920](https://github.com/kulakovskyi/tectra-ng/commit/4bd1920))
+- **ui:** tabs, accordion, stepper and breadcrumb ([ca3e12d](https://github.com/kulakovskyi/tectra-ng/commit/ca3e12d))
+- **ui:** menubar and panel menu ([efa3900](https://github.com/kulakovskyi/tectra-ng/commit/efa3900))
+- **ui:** splitter, scroll panel and toolbar ([05ffe8d](https://github.com/kulakovskyi/tectra-ng/commit/05ffe8d))
+- **ui:** file upload ([10e918a](https://github.com/kulakovskyi/tectra-ng/commit/10e918a))
+
+### 🩹 Fixes
+
+- **ui:** input group squares the joined corners of every field ([7acf493](https://github.com/kulakovskyi/tectra-ng/commit/7acf493))
+- **ui:** textarea keeps the height dragged with the resize handle ([a90c01d](https://github.com/kulakovskyi/tectra-ng/commit/a90c01d))
+
+### ❤️ Thank You
+
+- tears @kulakovskyi
+
 ## 0.1.3 (2026-11-06)
 
 ### 🚀 Features
