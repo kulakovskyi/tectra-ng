@@ -100,6 +100,7 @@ export interface TxTranslations {
   breadcrumb: string;
   stepCompleted: string;
   menu: string;
+  resizePanels: string;
   notifications: string;
   confirm: string;
   cancel: string;

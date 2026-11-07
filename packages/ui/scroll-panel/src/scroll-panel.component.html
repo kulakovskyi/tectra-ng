@@ -1,0 +1,59 @@
+<div
+  #content
+  class="tx-scroll-panel__content"
+  tabindex="0"
+  [id]="contentId"
+  [attr.role]="ariaLabel() ? 'region' : null"
+  [attr.aria-label]="ariaLabel() ?? null"
+  [class]="passThrough().content?.class"
+  [style]="passThrough().content?.style"
+  (scroll)="refresh()"
+>
+  <div #inner class="tx-scroll-panel__inner">
+    <ng-content />
+  </div>
+</div>
+<div
+  class="tx-scroll-panel__bar tx-scroll-panel__bar--x"
+  role="scrollbar"
+  tabindex="-1"
+  aria-orientation="horizontal"
+  aria-valuemin="0"
+  aria-valuemax="100"
+  [attr.aria-valuenow]="barX().value"
+  [attr.aria-controls]="contentId"
+  [hidden]="!barX().visible"
+  [attr.data-grabbed]="grabbed() === 'x' || null"
+  [class]="passThrough().barX?.class"
+  [style]="passThrough().barX?.style"
+  [style.width.px]="barX().length"
+  [style.inset-inline-start.px]="barX().offset"
+  (pointerdown)="onGrab($event, 'x')"
+  (pointermove)="onDrag($event)"
+  (pointerup)="onRelease($event)"
+  (pointercancel)="onRelease($event)"
+  (lostpointercapture)="onRelease($event)"
+  (keydown)="onBarKeyDown($event, 'x')"
+></div>
+<div
+  class="tx-scroll-panel__bar tx-scroll-panel__bar--y"
+  role="scrollbar"
+  tabindex="-1"
+  aria-orientation="vertical"
+  aria-valuemin="0"
+  aria-valuemax="100"
+  [attr.aria-valuenow]="barY().value"
+  [attr.aria-controls]="contentId"
+  [hidden]="!barY().visible"
+  [attr.data-grabbed]="grabbed() === 'y' || null"
+  [class]="passThrough().barY?.class"
+  [style]="passThrough().barY?.style"
+  [style.height.px]="barY().length"
+  [style.top.px]="barY().offset"
+  (pointerdown)="onGrab($event, 'y')"
+  (pointermove)="onDrag($event)"
+  (pointerup)="onRelease($event)"
+  (pointercancel)="onRelease($event)"
+  (lostpointercapture)="onRelease($event)"
+  (keydown)="onBarKeyDown($event, 'y')"
+></div>

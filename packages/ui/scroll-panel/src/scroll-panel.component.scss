@@ -1,0 +1,93 @@
+:host {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+  min-height: 0;
+}
+
+:host([data-grabbed]) {
+  user-select: none;
+}
+
+.tx-scroll-panel__content {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+.tx-scroll-panel__inner {
+  display: flow-root;
+  width: fit-content;
+  min-width: 100%;
+}
+
+.tx-scroll-panel__bar {
+  position: absolute;
+  z-index: 2;
+  touch-action: none;
+}
+
+.tx-scroll-panel__bar[hidden] {
+  display: none;
+}
+
+.tx-scroll-panel__bar--x {
+  bottom: 0;
+}
+
+.tx-scroll-panel__bar--y {
+  inset-inline-end: 0;
+}
+
+:host([data-styled]) .tx-scroll-panel__content:focus-visible {
+  outline: var(--tx-scroll-panel-focus-ring-width) solid var(--tx-scroll-panel-focus-ring-color);
+  outline-offset: var(--tx-scroll-panel-focus-ring-offset);
+}
+
+:host([data-styled]) .tx-scroll-panel__bar {
+  border-radius: var(--tx-scroll-panel-bar-border-radius);
+  outline: var(--tx-scroll-panel-bar-focus-ring-width) solid transparent;
+  outline-offset: var(--tx-scroll-panel-bar-focus-ring-offset);
+  background: var(--tx-scroll-panel-bar-background);
+  cursor: pointer;
+  opacity: 0;
+  transition:
+    opacity var(--tx-scroll-panel-transition-duration),
+    outline-color var(--tx-scroll-panel-transition-duration);
+}
+
+:host([data-styled]) .tx-scroll-panel__bar--x {
+  height: var(--tx-scroll-panel-bar-size);
+}
+
+:host([data-styled]) .tx-scroll-panel__bar--y {
+  width: var(--tx-scroll-panel-bar-size);
+}
+
+:host([data-styled]:hover) .tx-scroll-panel__bar,
+:host([data-styled]:active) .tx-scroll-panel__bar,
+:host([data-styled]:focus-within) .tx-scroll-panel__bar,
+:host([data-styled][data-grabbed]) .tx-scroll-panel__bar {
+  opacity: 1;
+}
+
+:host([data-styled]) .tx-scroll-panel__bar:focus-visible {
+  outline-color: var(--tx-scroll-panel-bar-focus-ring-color);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) .tx-scroll-panel__bar {
+    transition: none;
+  }
+}

@@ -48,6 +48,9 @@ import { accordionTokens } from './accordion.tokens';
 import { stepperTokens, stepsTokens } from './stepper.tokens';
 import { breadcrumbTokens } from './breadcrumb.tokens';
 import { panelMenuTokens } from './panel-menu.tokens';
+import { scrollPanelTokens } from './scroll-panel.tokens';
+import { splitterTokens } from './splitter.tokens';
+import { toolbarTokens } from './toolbar.tokens';
 
 export const COMPONENT_TOKENS = {
   icon: iconTokens,
@@ -127,6 +130,9 @@ export const COMPONENT_TOKENS = {
   steps: stepsTokens,
   breadcrumb: breadcrumbTokens,
   panelMenu: panelMenuTokens,
+  splitter: splitterTokens,
+  scrollPanel: scrollPanelTokens,
+  toolbar: toolbarTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

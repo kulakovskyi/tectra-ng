@@ -1,0 +1,43 @@
+@for (panel of panels(); track panel; let index = $index, last = $last) {
+  <div
+    #panelElement
+    class="tx-splitter__panel"
+    [id]="panelId(index)"
+    [attr.data-index]="index"
+    [attr.data-collapsed]="collapsed()[index] || null"
+    [class]="passThrough().panel?.class"
+    [style]="passThrough().panel?.style"
+    [style.flex]="flex()[index]"
+  >
+    <ng-container [ngTemplateOutlet]="panel.content()" />
+  </div>
+  @if (!last) {
+    <div
+      class="tx-splitter__gutter"
+      role="separator"
+      [attr.tabindex]="disabled() ? -1 : 0"
+      [attr.aria-orientation]="layout() === 'horizontal' ? 'vertical' : 'horizontal'"
+      [attr.aria-valuenow]="gutterRanges()[index]?.now"
+      [attr.aria-valuemin]="gutterRanges()[index]?.min"
+      [attr.aria-valuemax]="gutterRanges()[index]?.max"
+      [attr.aria-controls]="panelId(index)"
+      [attr.aria-label]="gutterLabel()"
+      [attr.aria-disabled]="disabled() || null"
+      [attr.data-resizing]="resizingGutter() === index || null"
+      [class]="passThrough().gutter?.class"
+      [style]="passThrough().gutter?.style"
+      [style.width.px]="layout() === 'horizontal' ? gutterSize() : null"
+      [style.height.px]="layout() === 'vertical' ? gutterSize() : null"
+      (pointerdown)="onPointerDown($event, index)"
+      (pointermove)="onPointerMove($event)"
+      (pointerup)="onPointerUp($event)"
+      (pointercancel)="onPointerUp($event)"
+      (lostpointercapture)="onPointerUp($event)"
+      (keydown)="onKeyDown($event, index)"
+      (keyup)="onKeyUp($event)"
+      (blur)="onKeyUp($event)"
+    >
+      <div class="tx-splitter__handle" [class]="passThrough().handle?.class" [style]="passThrough().handle?.style"></div>
+    </div>
+  }
+}
