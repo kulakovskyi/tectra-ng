@@ -3,27 +3,27 @@
     <h3 class="doc-table__title">{{ title() }}</h3>
   }
   <div class="doc-table">
-    <table>
-      <thead>
-        <tr>
+    <table role="table">
+      <thead role="rowgroup">
+        <tr role="row">
           @for (column of columns(); track column.key) {
-            <th>{{ column.label }}</th>
+            <th role="columnheader">{{ column.label }}</th>
           }
         </tr>
       </thead>
-      <tbody>
+      <tbody role="rowgroup">
         @for (row of rows(); track $index) {
-          <tr>
+          <tr role="row">
             @for (column of columns(); track column.key) {
               @switch (column.format) {
                 @case ('code') {
-                  <td><code>{{ $any(row)[column.key] }}</code></td>
+                  <td role="cell" [attr.data-label]="column.label"><code>{{ $any(row)[column.key] }}</code></td>
                 }
                 @case ('html') {
-                  <td [innerHTML]="$any(row)[column.key]"></td>
+                  <td role="cell" [attr.data-label]="column.label" [innerHTML]="$any(row)[column.key]"></td>
                 }
                 @default {
-                  <td>{{ $any(row)[column.key] }}</td>
+                  <td role="cell" [attr.data-label]="column.label">{{ $any(row)[column.key] }}</td>
                 }
               }
             }

@@ -32,7 +32,43 @@
 }
 
 @media (width < 40rem) {
+  .stage {
+    padding: var(--tx-space-6) var(--tx-space-4) var(--tx-space-4);
+  }
+
   .compass {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--tx-space-2);
+    width: 100%;
+
+    span {
+      display: none;
+    }
+
+    [data-side='top'] {
+      order: 1;
+    }
+
+    [data-side='left'] {
+      order: 2;
+    }
+
+    [data-side='right'] {
+      order: 3;
+    }
+
+    [data-side='bottom'] {
+      order: 4;
+    }
+  }
+}
+
+@media (width < 22rem) {
+  .stage {
+    padding-inline: var(--tx-space-3);
+  }
+
+  .compass {
+    gap: var(--tx-space-1);
   }
 }

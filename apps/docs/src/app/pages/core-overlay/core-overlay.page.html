@@ -7,7 +7,7 @@
     @for (row of rows; track $index) {
       @for (placement of row; track $index) {
         @if (placement) {
-          <button txButton [size]="'small'" [outlined]="true" [severity]="'secondary'" (click)="open($event, placement)">{{ placement }}</button>
+          <button txButton [size]="'small'" [outlined]="true" [severity]="'secondary'" [attr.data-side]="placement.split('-')[0]" (click)="open($event, placement)">{{ placement }}</button>
         } @else {
           <span></span>
         }

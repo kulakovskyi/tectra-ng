@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { expect, test } from '@playwright/test';
+import { layoutViewport } from './helpers';
 
 test('select panel is opaque and selects with the keyboard', async ({ page }) => {
   await page.goto('/components/select');
@@ -131,7 +132,10 @@ test('select panel opens clear of the sticky header, rides with its field and sl
   await scrollTriggerTo(headerBottom - 60);
   await expect.poll(gap).toBeCloseTo(opened, 0);
   await expect(trigger).toHaveAttribute('aria-expanded', 'true');
-  const clipTop = await panel.evaluate((element) => parseFloat(getComputedStyle(element.closest('.cdk-overlay-pane')?.parentElement as Element).clipPath.replace('inset(', '')));
+  const clipTop = await panel.evaluate((element) => {
+    const layer = element.closest('.cdk-overlay-pane')?.parentElement as Element;
+    return parseFloat(getComputedStyle(layer).clipPath.replace('inset(', '')) + layer.getBoundingClientRect().top;
+  });
   expect(Math.abs(clipTop - headerBottom)).toBeLessThan(1);
 });
 
@@ -1095,4 +1099,56 @@ test('logo mark follows the primary and the favicon follows the picker', async (
   await expect.poll(tileFill).not.toBe(before);
   expect(await page.locator('link[rel="icon"]').getAttribute('href')).toMatch(/^data:image\/svg\+xml,/);
   await page.evaluate(() => localStorage.removeItem('tx-docs-theme'));
+});
+
+test.describe('on a phone', () => {
+  test.use({ viewport: { width: 390, height: 760 } });
+
+  test('a side panel without room drops below its element and stays on screen with the arrow on it', async ({ page }) => {
+    await page.goto('/components/popover');
+    const trigger = page.locator('popover-arrow-example').getByRole('button', { name: 'right', exact: true });
+    await trigger.scrollIntoViewIfNeeded();
+    await trigger.click();
+    const pane = page.locator('.tx-popover-pane').last();
+    await expect(pane).toHaveClass(/tx-placement-bottom/);
+    const { width } = await layoutViewport(page);
+    const box = await pane.boundingBox();
+    expect(box?.x ?? -1).toBeGreaterThanOrEqual(7);
+    expect((box?.x ?? 0) + (box?.width ?? 0)).toBeLessThanOrEqual(width - 7);
+    const arrow = await pane.locator('.tx-popover__arrow').boundingBox();
+    const origin = await trigger.boundingBox();
+    const arrowCenter = (arrow?.x ?? 0) + (arrow?.width ?? 0) / 2;
+    expect(arrowCenter).toBeGreaterThan(origin?.x ?? 0);
+    expect(arrowCenter).toBeLessThan((origin?.x ?? 0) + (origin?.width ?? 0));
+  });
+
+  test('a popover keeps its distance to the button while the page scrolls', async ({ page }) => {
+    await page.goto('/components/popover');
+    const trigger = page.locator('popover-basic-example').getByRole('button', { name: 'Share' });
+    await trigger.scrollIntoViewIfNeeded();
+    await trigger.click();
+    const pane = page.locator('.tx-popover-pane').last();
+    await expect(pane).toBeVisible();
+    const gap = () => Promise.all([pane.boundingBox(), trigger.boundingBox()]).then(([panel, origin]) => Math.round((panel?.y ?? 0) - (origin?.y ?? 0)));
+    const opened = await gap();
+    await page.mouse.wheel(0, 120);
+    await expect.poll(gap).toBe(opened);
+  });
+
+  test('doc tables stack into cards without sideways scrolling', async ({ page }) => {
+    await page.goto('/components/popover');
+    await page.getByRole('tab', { name: 'Theming' }).click();
+    const table = page.locator('.doc-table').first();
+    await expect(table).toBeVisible();
+    expect(await table.evaluate((element) => element.scrollWidth - element.clientWidth)).toBe(0);
+    await expect(table.getByRole('columnheader', { name: 'Variable' })).toBeAttached();
+  });
+
+  test('the overlay placement buttons fit their labels', async ({ page }) => {
+    await page.goto('/core/overlay');
+    const buttons = page.locator('.compass button');
+    await expect(buttons).toHaveCount(12);
+    const clipped = await buttons.evaluateAll((elements) => elements.filter((element) => element.scrollWidth > element.clientWidth).length);
+    expect(clipped).toBe(0);
+  });
 });

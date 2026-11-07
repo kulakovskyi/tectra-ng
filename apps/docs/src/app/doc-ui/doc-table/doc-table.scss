@@ -62,3 +62,52 @@ td:first-child code {
 td code {
   white-space: nowrap;
 }
+
+@media (width < 40rem) {
+  table,
+  tbody,
+  tr,
+  td {
+    display: block;
+  }
+
+  thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  tbody tr {
+    padding: var(--tx-space-3) var(--tx-space-4);
+    border-bottom: 1px solid var(--docs-hairline);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  td {
+    padding: 0;
+    border-bottom: none;
+  }
+
+  td + td {
+    margin-top: var(--tx-space-1);
+
+    &::before {
+      content: attr(data-label);
+      margin-inline-end: var(--tx-space-2);
+      color: var(--tx-text-muted);
+      font-size: 12px;
+      font-weight: 600;
+    }
+  }
+
+  td code {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}
