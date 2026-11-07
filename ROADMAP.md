@@ -212,3 +212,41 @@ Decide first: keep ApexCharts as a peer dependency or draw own SVG charts.
 | Services | `clock` (+ `remainingTime`), `polling` (`Poller`, `poll`, `refreshEvery`), `selection`, `track-breakpoint`, `form-change-tracker`, `form-validation` | ⬜ |
 | Functions | `validators`, `http-params`, `date`, `file`, `string`, `memory-storage` | ⬜ |
 
+
+## Editor backlog (`@tectra-ng/editor`, between stages)
+
+Ideas for the editor on top of 9.8, no new engine dependencies. Already shipped: slash menu, tables (rows, columns, header row, column resize), callouts, AI actions on a selection, emoji by `:`, typography, link over a selection, drafts.
+
+| Feature | What | Status |
+|---|---|---|
+| Block handle | ⋮⋮ on hover: drag a paragraph, list or table; menu "Turn into…", "Duplicate", "Delete", "Copy link to block" | ⬜ |
+| Code blocks | Own light tokenizer (TS / JS / JSON / HTML / CSS / SQL / bash), language picker, "Copy" button | ⬜ |
+| Image menu | Align left / center / right, caption, alt text, open in preview, replace | ⬜ |
+| Find and replace | Ctrl/⌘+F inside the editor: highlight matches, next / previous, replace all | ⬜ |
+| Dates | "Date" item next to mentions, opens the kit datepicker, inserts a localized date chip | ⬜ |
+| Tasks with due dates | Due date and assignee (`@`) on a task item | ⬜ |
+| Table of contents | Built from headings, heading anchors | ⬜ |
+| Export | PDF / DOCX of the text through `ui/export` | ⬜ |
+| Sticky toolbar | Toolbar sticks to the top while a long text scrolls | ⬜ |
+| Shortcut sheet | Ctrl/⌘+/ opens all shortcuts and markdown rules | ⬜ |
+| Word count | Words and reading time in the footer, word goal | ⬜ |
+| Focus mode | Full view: narrow centred column, toolbar hides while typing | ⬜ |
+| Table cells | Cell background, merge and split cells | ⬜ |
+| Hashtags | `#` suggestions for tags or task links on the suggestion engine | ⬜ |
+| Markdown | `format="markdown"`: read and write Markdown, paste Markdown as formatting | ⬜ |
+| Templates | Snippets and document templates | ⬜ |
+| Comments | Comments on text ranges, review style | ⬜ |
+| Version history | Versions with highlighted changes | ⬜ |
+| Collaboration | Real-time co-editing (needs a backend, own stage) | ⬜ |
+
+## Stage 13 — own editor engine (`@tectra-ng/editor`, later)
+
+The editor runs on the ProseMirror core (`prosemirror-model`, `-state`, `-view`, `-transform`, ~12 800 lines, MIT); everything above it is already ours. Later the core becomes our own code too: start from a copy of those four packages inside `packages/editor` (keep the MIT notice), then rewrite it piece by piece behind the same `tx-editor` API, so apps do not change.
+
+| Step | What | Status |
+|---|---|---|
+| Vendor | Copy the four packages into `packages/editor/src/engine/core`, drop the npm dependencies, keep their tests running | ⬜ |
+| State | Own state, selection, transactions and plugin system | ⬜ |
+| Model | Own schema with content expressions, fragments, resolved positions, DOM parse / serialize | ⬜ |
+| Transform | Own steps, position mapping, inversion and the replace fitting algorithm | ⬜ |
+| View | Own `contenteditable` bridge: input, IME composition, selection sync, clipboard, drag and drop, browser workarounds (Chrome, Safari, Firefox, Android, iOS) | ⬜ |
