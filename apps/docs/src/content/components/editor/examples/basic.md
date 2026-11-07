@@ -1,0 +1,1 @@
+Bind the HTML with `[(html)]` or a form control. Type `#` and a space for a heading, `-` for a list, `**bold**` for bold; select text for the formatting menu. `tx-editor-content` shows the saved HTML.

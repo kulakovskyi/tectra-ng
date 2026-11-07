@@ -8,6 +8,7 @@ const DEPENDENCY_RULES = [
   { sourceTag: 'pkg:flags', onlyDependOnLibsWithTags: [] },
   { sourceTag: 'pkg:core', onlyDependOnLibsWithTags: ['pkg:themes', 'pkg:tokens'] },
   { sourceTag: 'pkg:ui', onlyDependOnLibsWithTags: ['pkg:core', 'pkg:icons', 'pkg:themes', 'pkg:tokens'] },
+  { sourceTag: 'pkg:editor', onlyDependOnLibsWithTags: ['pkg:ui', 'pkg:core', 'pkg:icons', 'pkg:themes', 'pkg:tokens'] },
   { sourceTag: 'pkg:blocks', onlyDependOnLibsWithTags: ['pkg:ui', 'pkg:core', 'pkg:icons', 'pkg:themes', 'pkg:tokens'] },
   { sourceTag: 'type:app', onlyDependOnLibsWithTags: ['*'] },
   { sourceTag: 'type:e2e', onlyDependOnLibsWithTags: ['*'] },

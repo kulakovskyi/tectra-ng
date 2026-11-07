@@ -1,0 +1,17 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+:host(.tx-editor-content--zoom) .tx-editor-content__body ::ng-deep img {
+  cursor: zoom-in;
+}
+
+.tx-editor-content__preview {
+  display: block;
+  max-width: 100%;
+  max-height: 75vh;
+  margin: 0 auto;
+  border-radius: var(--tx-editor-content-image-border-radius);
+  object-fit: contain;
+}

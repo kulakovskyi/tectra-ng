@@ -168,7 +168,7 @@ Detailed checklist per component: [roadmap/stage-9-navigation.md](roadmap/stage-
 | `ui/menubar` (submenus on the kit menu, mobile menu), `ui/panel-menu` (`panel` and the app `sidebar` look, current route) | Menubar, PanelMenu | sidebar menu | ✅ |
 | `ui/splitter` (sizes, collapsible, nested, stored state), `ui/scroll-panel`, `ui/toolbar` | Splitter, ScrollPanel, Toolbar | — (parity) | ✅ |
 | `ui/file-upload` — drop zone or button, previews, validation, upload with progress, form control (own design) | FileUpload | 8 | ✅ |
-| `ui/editor` (rich text, Tiptap / ProseMirror instead of Quill) — own package `@tectra-ng/editor` | Editor | 6, 16 | ⬜ |
+| `@tectra-ng/editor` — own package on the ProseMirror core: toolbar presets, selection menu, links, colours, lists, checklists, images (resize, drag), video, mentions, Markdown shortcuts, Quill HTML in and out, full view, AI; `@tectra-ng/editor/content` renderer | Editor | 6, 16 | ✅ |
 | `ui/image` (preview, zoom), `ui/galleria`, `ui/carousel` | Image, Galleria, Carousel | 2 | ⬜ |
 
 ## Stage 10 — blocks (`@tectra-ng/blocks`, what PrimeNG does not have)

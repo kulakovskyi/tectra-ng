@@ -93,3 +93,22 @@ The look is the kit's own (the user asked for a more refined design than both re
 - [x] Templates: file row, drop zone content, footer actions; `dt` / `pt` / `unstyled`
 - [x] Accessibility: the zone is a button with the hint as its description, files as a list, remove buttons named after the file, progress bars, live announcements of added / rejected / uploaded files
 - [x] Docs + tests; e2e: drop and choose files, validation messages, upload progress to the end with a mocked request, single mode replace, keyboard
+
+## 9.8 Rich text editor — own package `@tectra-ng/editor` ✅
+
+Its own npm package so that `@tectra-ng/ui` stays free of the editor engine. Engine: only the ProseMirror core (`prosemirror-model`, `-state`, `-view`, `-transform`, MIT) — the user wants as few dependencies as possible (2026-11-07), so the keymap, undo history, editing and list commands, schema, Markdown input rules, autolinks, mentions, placeholder, counter, paste and drop handling, task items and video are our own code; the toolbar, menus, popovers and content styles are the kit's own design (the user asked for a refined own design, 2026-11-07). Entry points: `@tectra-ng/editor` (`tx-editor`) and `@tectra-ng/editor/content` (`tx-editor-content` and the HTML helpers; no editor engine, for pages that only show saved text).
+
+PrimeNG: Editor (Quill: `formats`, `modules`, `placeholder`, `readonly`, `style`, header template, `onTextChange` / `onSelectionChange` / `onInit`, form control). Quill 2 formats: bold, italic, underline, strike, inline code, link, script sub / super, size, font, colour, background, header 1–6, blockquote, code block, ordered / bullet / checked lists, indent, align, direction, image, video; history, clipboard cleaning, keyboard shortcuts. First app (6 editors, 16 previews): its own wrapper — `full` / `compact` toolbar presets, `height`, `placeholder`, form control or `[(model)]`, image button (data URL, 3 MB limit, toast), URLs and e-mails turned into links, links get `https://` and open in a new tab, an AI button that emits the HTML, a full view (backdrop, 90% of the window), `editorInit` used for `@` mentions in comments; a preview that renders the saved HTML and opens images in a lightbox. Saved content is Quill 2 HTML (`<ol><li data-list="bullet">`, `ql-align-*`, `ql-indent-*`, `ql-size-*`, `ql-code-block-container`, `ql-video`).
+
+- [x] Package: `packages/editor` with its build, release and module boundary, Tiptap as dependencies, docs pages from the package
+- [x] `<tx-editor>`: paragraphs, headings 1–6, bold, italic, underline, strike, inline code, sub / superscript, text and background colour, size, blockquote, code block, bullet / numbered / task lists with nesting, indent, align, horizontal rule, clear formatting, undo / redo, Markdown shortcuts
+- [x] Toolbar: `full` / `compact` / `minimal` presets or an own list of tools, groups, active states, tooltips with shortcuts, block style menu, colour popover, end slot; `toolbar="none"`
+- [x] Links: popover to add / edit / open / remove, `https://` added, new tab by default, URLs and e-mails turned into links while typing and on paste
+- [x] Images and video: image button with `imageUpload` (async upload) or data URLs with `maxImageSize`, paste and drop, images resized with side handles and moved by dragging with a drop cursor, video embeds
+- [x] Selection menu: inline formats and link over the selected text
+- [x] Mentions: `@` (own trigger) with an async items source and a suggestion list
+- [x] Form control (`formControl`, `ngModel`, signal forms) and `[(value)]`; `format` `html` (clean HTML, default) or `quill` (Quill 2 markup); reads Quill 2 HTML; `readonly`, `disabled`, `invalid`, `placeholder`, `height` / `minHeight` / `maxHeight`, character count with `maxLength`
+- [x] Full view in the kit's fullscreen dialog, AI button with the breathing sparkles of the first app (`aiRequested` with the HTML), `ready` with the editor, `focused` / `blurred`, `selectionChange`
+- [x] `<tx-editor-content>`: renders saved HTML in both formats with the same styles, an own allowlist sanitizer that keeps colours and alignment, images open in a lightbox; `toEditorHtml` / `toQuillHtml` helpers
+- [x] Accessibility: `role="textbox"` multiline with a name, toolbar pattern with roving focus, pressed states, keyboard shortcuts in the README, focus returns to the text after a toolbar action
+- [x] Docs + tests; e2e: typing with shortcuts, toolbar and menus, links, images, Quill HTML in and out, mentions, full view

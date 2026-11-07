@@ -23,7 +23,9 @@
       "@tectra-ng/flags": ["./packages/flags/src/index.ts"],
       "@tectra-ng/core/*": ["./packages/core/*/index.ts"],
       "@tectra-ng/ui/*": ["./packages/ui/*/index.ts"],
-      "@tectra-ng/blocks/*": ["./packages/blocks/*/index.ts"]
+      "@tectra-ng/blocks/*": ["./packages/blocks/*/index.ts"],
+      "@tectra-ng/editor": ["./packages/editor/index.ts"],
+      "@tectra-ng/editor/*": ["./packages/editor/*/index.ts"]
     }
   },
   "angularCompilerOptions": {

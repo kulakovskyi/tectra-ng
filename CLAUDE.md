@@ -25,6 +25,7 @@ packages/
   ui/<name>     @tectra-ng/ui/<name>     components, one flat entry point per component
   ui/export-font @tectra-ng/ui/export-font Onest (OFL) for PDF export, loaded on the first PDF export; `npm run export-font`
   ui/styles/    shared SCSS mixins (_form-field.scss)
+  editor/       @tectra-ng/editor        rich text editor on the ProseMirror core: model, state, view, transform (own package, engine deps stay out of ui; everything above the core is our code); editor/content = renderer + HTML helpers
   blocks/<name> @tectra-ng/blocks/<name> composed blocks
 apps/docs       docs site (port 4300), content in apps/docs/src/content/components/<name>
 apps/sandbox    playground (port 4301)
@@ -32,7 +33,7 @@ e2e/visual      Playwright checks of the built docs (port 4310)
 tools/          registry-builder (docs registry), icons, flags, export-font, serve-docs
 ```
 
-Aliases are wildcards in `tsconfig.base.json` (`@tectra-ng/ui/*` → `./packages/ui/*/index.ts`) — a new entry point needs no alias. Module boundaries (`eslint.config.mjs`, tags `pkg:*`): tokens → nothing; themes → tokens; core → themes, tokens; ui → core, icons, themes, tokens; blocks → ui + below. A ui entry point may import another ui entry point through its alias.
+Aliases are wildcards in `tsconfig.base.json` (`@tectra-ng/ui/*` → `./packages/ui/*/index.ts`) — a new entry point needs no alias. Module boundaries (`eslint.config.mjs`, tags `pkg:*`): tokens → nothing; themes → tokens; core → themes, tokens; ui → core, icons, themes, tokens; editor → ui + below; blocks → ui + below. A ui entry point may import another ui entry point through its alias.
 
 ## Commands
 

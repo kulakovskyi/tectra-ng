@@ -200,7 +200,7 @@ async function buildComponent(name) {
   const dir = join(contentDir, name);
   const { meta, body } = parseFrontMatter(read(join(dir, 'overview.md')));
   const title = body.match(/^#\s+(.+)/m)?.[1] ?? titleCase(name);
-  const packageDir = join(root, 'packages/ui', name);
+  const packageDir = meta.source ? join(root, meta.source) : join(root, 'packages/ui', name);
   const tables = parseReadmeTables(read(join(packageDir, 'README.md')));
   const { members: ownMembers, tokens, selector } = readSource(packageDir);
   const members = { ...coreMembers, ...ownMembers };
@@ -224,7 +224,7 @@ async function buildComponent(name) {
     title,
     category: meta.category ?? 'Other',
     selector,
-    importPath: `@tectra-ng/ui/${name}`,
+    importPath: meta.package ?? `@tectra-ng/ui/${name}`,
     importName: meta.import ?? `Tx${title.replace(/\s+/g, '')}`,
     descriptionHtml: marked.parse(body.replace(/^#\s+.+\n/m, '')),
     api: {

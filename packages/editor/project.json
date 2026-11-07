@@ -1,0 +1,26 @@
+{
+  "name": "editor",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "packages/editor",
+  "tags": ["pkg:editor"],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:package",
+      "outputs": ["{workspaceRoot}/dist/packages/editor"],
+      "options": {
+        "project": "packages/editor/ng-package.json",
+        "tsConfig": "packages/editor/tsconfig.lib.json"
+      }
+    },
+    "test": {
+      "executor": "@angular/build:unit-test",
+      "options": {
+        "buildTarget": "sandbox:build",
+        "tsConfig": "packages/editor/tsconfig.spec.json",
+        "runner": "vitest",
+        "watch": false
+      }
+    }
+  }
+}

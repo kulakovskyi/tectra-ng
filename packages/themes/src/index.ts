@@ -51,6 +51,7 @@ export * from './components/splitter.tokens';
 export * from './components/scroll-panel.tokens';
 export * from './components/toolbar.tokens';
 export * from './components/file-upload.tokens';
+export * from './components/editor.tokens';
 export * from './components/accordion.tokens';
 export * from './components/icon.tokens';
 export * from './components/ripple.tokens';

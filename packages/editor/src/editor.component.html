@@ -1,0 +1,363 @@
+<div
+  #frame
+  class="tx-editor__frame"
+  [attr.data-styled]="!isUnstyled() || null"
+  [class.tx-editor__frame--focused]="hasFocus()"
+  [class.tx-editor__frame--disabled]="isDisabled()"
+  [class.tx-editor__frame--invalid]="isInvalid()"
+  [class.tx-editor__frame--full]="fullView()"
+  [style]="hostStyle()"
+>
+  @if (groups().length || ai() || showFullViewButton() || toolbarEnd()) {
+    <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -- the tools inside take the focus; the toolbar only moves it with the arrows -->
+    <div
+      #toolbarElement
+      class="tx-editor__toolbar"
+      role="toolbar"
+      [attr.aria-label]="translations().editorToolbar"
+      [attr.aria-controls]="id + '-content'"
+      [class]="passThrough().toolbar?.class"
+      [style]="passThrough().toolbar?.style"
+      (keydown)="onToolbarKeydown($event)"
+    >
+      @for (group of groups(); track $index; let first = $first) {
+        @if (!first) {
+          <span class="tx-editor__separator" aria-hidden="true"></span>
+        }
+        @for (item of group; track item.tool) {
+          <button
+            type="button"
+            class="tx-editor__tool"
+            data-tool
+            [class.tx-editor__tool--label]="item.tool === 'blockStyle'"
+            [class.tx-editor__tool--active]="state()?.active?.[item.tool]"
+            [attr.data-tool-name]="item.tool"
+            [attr.tabindex]="item.index === focusIndex() ? 0 : -1"
+            [attr.aria-label]="item.tool === 'blockStyle' ? translations().editorTextStyle + ': ' + blockLabel() : toolName(item.tool)"
+            [attr.aria-pressed]="isToggleTool(item.tool) ? !!state()?.active?.[item.tool] : null"
+            [attr.aria-haspopup]="isMenuTool(item.tool) ? 'menu' : isPopoverTool(item.tool) ? 'dialog' : null"
+            [disabled]="toolDisabled(item.tool)"
+            [txTooltip]="toolLabel(item.tool)"
+            [class]="passThrough().tool?.class"
+            [style]="passThrough().tool?.style"
+            (mousedown)="keepFocus($event)"
+            (click)="onToolClick($event, item.tool, item.index)"
+          >
+            @switch (item.tool) {
+              @case ('blockStyle') {
+                <span class="tx-editor__tool-text">{{ blockLabel() }}</span>
+                <tx-icon class="tx-editor__chevron" name="chevron-down" />
+              }
+              @case ('align') {
+                <tx-icon [name]="toolIcon(item.tool)" />
+                <tx-icon class="tx-editor__chevron" name="chevron-down" />
+              }
+              @case ('fontSize') {
+                <tx-icon [name]="toolIcon(item.tool)" />
+                <tx-icon class="tx-editor__chevron" name="chevron-down" />
+              }
+              @case ('textColor') {
+                <span class="tx-editor__color-icon">
+                  <tx-icon [name]="toolIcon(item.tool)" />
+                  <span class="tx-editor__color-bar" [style.background]="state()?.color || null"></span>
+                </span>
+              }
+              @case ('highlight') {
+                <span class="tx-editor__color-icon">
+                  <tx-icon [name]="toolIcon(item.tool)" />
+                  <span class="tx-editor__color-bar" [style.background]="state()?.background || null"></span>
+                </span>
+              }
+              @default {
+                <tx-icon [name]="toolIcon(item.tool)" />
+              }
+            }
+          </button>
+        }
+      }
+      <span class="tx-editor__toolbar-end">
+        <ng-content select="[txEditorToolbarEnd]" />
+        @if (ai()) {
+          <button
+            type="button"
+            class="tx-editor__ai"
+            data-tool
+            [attr.tabindex]="groups().length ? -1 : 0"
+            [txTooltip]="aiLabel() ?? translations().editorAi"
+            [attr.aria-label]="aiLabel() ?? translations().editorAi"
+            [disabled]="isDisabled()"
+            (mousedown)="keepFocus($event)"
+            (click)="requestAi()"
+          >
+            <tx-icon class="tx-editor__ai-icon" name="sparkles" />
+            <span>AI</span>
+          </button>
+        }
+        @if (showFullViewButton()) {
+          <button
+            type="button"
+            class="tx-editor__tool"
+            data-tool
+            [attr.tabindex]="-1"
+            [attr.aria-pressed]="fullView()"
+            [attr.aria-label]="fullView() ? translations().editorNormalView : translations().editorFullView"
+            [txTooltip]="fullView() ? translations().editorNormalView : translations().editorFullView"
+            (mousedown)="keepFocus($event)"
+            (click)="toggleFullView()"
+          >
+            <tx-icon [name]="fullView() ? 'window-minimize' : 'window-maximize'" />
+          </button>
+        }
+      </span>
+    </div>
+  }
+
+  <div
+    #mount
+    class="tx-editor__content"
+    [class]="passThrough().content?.class"
+    [style]="passThrough().content?.style"
+    [style.height]="contentStyle().height"
+    [style.min-height]="contentStyle().minHeight"
+    [style.max-height]="contentStyle().maxHeight"
+  ></div>
+
+  @if (showCount() || maxLength()) {
+    <div class="tx-editor__footer" [class]="passThrough().footer?.class" [style]="passThrough().footer?.style">
+      <span class="tx-editor__count" [class.tx-editor__count--limit]="!!maxLength() && (state()?.count ?? 0) >= maxLength()!" aria-live="polite">
+        {{ countLabel() }}
+      </span>
+    </div>
+  }
+
+  <div
+    #bubbleAnchor
+    cdkOverlayOrigin
+    #bubbleOrigin="cdkOverlayOrigin"
+    class="tx-editor__anchor"
+    aria-hidden="true"
+    [style.left.px]="bubbleBox().left"
+    [style.top.px]="bubbleBox().top"
+    [style.width.px]="bubbleBox().width"
+    [style.height.px]="bubbleBox().height"
+  ></div>
+  <div
+    cdkOverlayOrigin
+    #suggestOrigin="cdkOverlayOrigin"
+    class="tx-editor__anchor"
+    aria-hidden="true"
+    [style.left.px]="suggestBox().left"
+    [style.top.px]="suggestBox().top"
+    [style.width.px]="suggestBox().width"
+    [style.height.px]="suggestBox().height"
+  ></div>
+</div>
+
+<tx-dialog
+  size="fullscreen"
+  [visible]="fullView()"
+  [ariaLabel]="translations().editorFullView"
+  [closeOnEscape]="!suggestion() && !popoverKind()"
+  [dt]="{ content: { padding: '0', lastPaddingBottom: '0' } }"
+  (visibleChange)="!$event && fullView.set(false)"
+  (opened)="onFullViewOpened()"
+  (closed)="unmountFullView()"
+>
+  <div #fullHost class="tx-editor__full-host"></div>
+</tx-dialog>
+
+<input #imageInput class="tx-editor__file" type="file" accept="image/*" multiple tabindex="-1" aria-hidden="true" (change)="onImagePicked($event)" />
+
+<tx-menu #blockMenuRef popup [model]="blockMenu()" [ariaLabel]="translations().editorTextStyle" />
+<tx-menu #alignMenuRef popup [model]="alignMenu()" [ariaLabel]="translations().editorAlign" />
+<tx-menu #sizeMenuRef popup [model]="sizeMenu()" [ariaLabel]="translations().editorFontSize" />
+
+<tx-popover #popover [arrow]="false" placement="bottom-start" [ariaLabel]="popoverLabel()" (closed)="onPopoverClosed()">
+  @switch (popoverKind()) {
+    @case ('link') {
+      <form class="tx-editor__form" (submit)="$event.preventDefault(); applyLink()">
+        <input
+          txInput
+          class="tx-editor__field"
+          type="text"
+          inputmode="url"
+          autocomplete="off"
+          placeholder="https://"
+          [attr.aria-label]="translations().editorLinkUrl"
+          [value]="linkDraft()"
+          (input)="linkDraft.set($any($event.target).value)"
+        />
+        <span class="tx-editor__form-actions">
+          @if (state()?.link) {
+            <button txButton type="button" size="small" text severity="danger" icon="tx-editor-unlink" (click)="removeLink()">
+              {{ translations().editorLinkRemove }}
+            </button>
+          }
+          <button txButton type="submit" size="small">{{ translations().editorLinkApply }}</button>
+        </span>
+      </form>
+    }
+    @case ('video') {
+      <form class="tx-editor__form" (submit)="$event.preventDefault(); applyVideo()">
+        <input
+          txInput
+          class="tx-editor__field"
+          type="text"
+          inputmode="url"
+          autocomplete="off"
+          placeholder="https://"
+          [attr.aria-label]="translations().editorVideoUrl"
+          [attr.aria-describedby]="id + '-video-hint'"
+          [value]="videoDraft()"
+          (input)="videoDraft.set($any($event.target).value)"
+        />
+        <span class="tx-editor__hint" [id]="id + '-video-hint'">{{ translations().editorVideoHint }}</span>
+        <span class="tx-editor__form-actions">
+          <button txButton type="submit" size="small">{{ translations().editorInsert }}</button>
+        </span>
+      </form>
+    }
+    @case ('textColor') {
+      <ng-container [ngTemplateOutlet]="swatches" [ngTemplateOutletContext]="{ $implicit: 'textColor', colors: textColors(), current: state()?.color }" />
+    }
+    @case ('highlight') {
+      <ng-container [ngTemplateOutlet]="swatches" [ngTemplateOutletContext]="{ $implicit: 'highlight', colors: highlightColors(), current: state()?.background }" />
+    }
+  }
+</tx-popover>
+
+<ng-template #swatches let-kind let-colors="colors" let-current="current">
+  <div class="tx-editor__swatches" role="group" [attr.aria-label]="popoverLabel()">
+    <button
+      type="button"
+      class="tx-editor__swatch tx-editor__swatch--none"
+      [attr.aria-label]="translations().editorDefaultColor"
+      [attr.aria-pressed]="!current"
+      [txTooltip]="translations().editorDefaultColor"
+      (click)="applyColor(kind, null)"
+    >
+      <tx-icon name="ban" />
+    </button>
+    @for (color of colors; track color.value) {
+      <button
+        type="button"
+        class="tx-editor__swatch"
+        [attr.data-kind]="kind"
+        [style.--_swatch]="color.value"
+        [attr.aria-label]="colorLabel(color)"
+        [attr.aria-pressed]="current === color.value"
+        [txTooltip]="colorLabel(color)"
+        (click)="applyColor(kind, color.value)"
+      >
+        @if (kind === 'textColor') {
+          <span class="tx-editor__swatch-letter" aria-hidden="true">A</span>
+        }
+      </button>
+    }
+  </div>
+</ng-template>
+
+<ng-template
+  cdkConnectedOverlay
+  #bubbleOverlay="cdkConnectedOverlay"
+  [cdkConnectedOverlayOrigin]="bubbleOrigin"
+  [cdkConnectedOverlayOpen]="showBubble()"
+  [cdkConnectedOverlayPositions]="bubblePositions"
+  [cdkConnectedOverlayDisableClose]="true"
+  [cdkConnectedOverlayPush]="true"
+>
+  <div
+    class="tx-editor__bubble"
+    role="toolbar"
+    [attr.data-styled]="!isUnstyled() || null"
+    [attr.aria-label]="translations().editorToolbar"
+    [style]="hostStyle()"
+    [class]="passThrough().bubble?.class"
+    (mousedown)="keepFocus($event)"
+  >
+    @if (state()?.empty && state()?.link; as link) {
+      <a class="tx-editor__bubble-link" [href]="link.href" target="_blank" rel="noopener noreferrer" tabindex="-1">{{ link.href }}</a>
+      <span class="tx-editor__separator" aria-hidden="true"></span>
+      <button type="button" class="tx-editor__tool" tabindex="-1" [attr.aria-label]="translations().editorLinkEdit" [txTooltip]="translations().editorLinkEdit" (click)="openLink(bubbleAnchor)">
+        <tx-icon name="pencil" />
+      </button>
+      <button type="button" class="tx-editor__tool" tabindex="-1" [attr.aria-label]="translations().editorLinkRemove" [txTooltip]="translations().editorLinkRemove" (click)="removeLink()">
+        <tx-icon name="tx-editor-unlink" />
+      </button>
+    } @else {
+      @for (tool of bubbleTools; track tool) {
+        <button
+          type="button"
+          class="tx-editor__tool"
+          tabindex="-1"
+          [class.tx-editor__tool--active]="state()?.active?.[tool]"
+          [attr.aria-pressed]="!!state()?.active?.[tool]"
+          [attr.aria-label]="toolName(tool)"
+          [txTooltip]="toolLabel(tool)"
+          (click)="onToolClick($event, tool, -1)"
+        >
+          <tx-icon [name]="toolIcon(tool)" />
+        </button>
+      }
+      <span class="tx-editor__separator" aria-hidden="true"></span>
+      <button
+        type="button"
+        class="tx-editor__tool"
+        tabindex="-1"
+        [class.tx-editor__tool--active]="state()?.active?.link"
+        [attr.aria-label]="toolName('link')"
+        [txTooltip]="toolLabel('link')"
+        (click)="openLink(bubbleAnchor)"
+      >
+        <tx-icon name="link" />
+      </button>
+    }
+  </div>
+</ng-template>
+
+<ng-template
+  cdkConnectedOverlay
+  #suggestOverlay="cdkConnectedOverlay"
+  [cdkConnectedOverlayOrigin]="suggestOrigin"
+  [cdkConnectedOverlayOpen]="!!suggestion()"
+  [cdkConnectedOverlayPositions]="suggestPositions"
+  [cdkConnectedOverlayDisableClose]="true"
+  [cdkConnectedOverlayPush]="true"
+>
+  <div
+    class="tx-editor__suggestions"
+    role="listbox"
+    [id]="id + '-mentions'"
+    [attr.data-styled]="!isUnstyled() || null"
+    [attr.aria-label]="translations().editorLabel"
+    [style]="hostStyle()"
+    [class]="passThrough().suggestions?.class"
+    (mousedown)="keepFocus($event)"
+  >
+    @for (item of suggestionItems(); track item.id; let index = $index) {
+      <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- the editor handles the keys for the list -->
+      <div
+        class="tx-editor__suggestion"
+        role="option"
+        [id]="optionId(index)"
+        [attr.aria-selected]="index === suggestionIndex()"
+        (mouseenter)="suggestionIndex.set(index)"
+        (click)="pickSuggestion(item)"
+      >
+        @if (item.avatar) {
+          <img class="tx-editor__avatar" alt="" [src]="item.avatar" />
+        } @else {
+          <span class="tx-editor__avatar" aria-hidden="true">{{ initials(item) }}</span>
+        }
+        <span class="tx-editor__suggestion-text">
+          <span class="tx-editor__suggestion-label">{{ item.label }}</span>
+          @if (item.description) {
+            <span class="tx-editor__suggestion-description">{{ item.description }}</span>
+          }
+        </span>
+      </div>
+    } @empty {
+      <div class="tx-editor__suggestion-empty">{{ translations().editorNoMatches }}</div>
+    }
+  </div>
+</ng-template>
