@@ -1,3 +1,17 @@
+## 0.1.5 (2026-11-07)
+
+### 🚀 Features
+
+- **ui:** image, galleria and carousel ([2aeec02](https://github.com/kulakovskyi/tectra-ng/commit/2aeec02))
+
+### 🩹 Fixes
+
+- **docs:** layout on phones and tablets ([04758ed](https://github.com/kulakovskyi/tectra-ng/commit/04758ed))
+
+### ❤️ Thank You
+
+- tears @kulakovskyi
+
 ## 0.1.4 (2026-11-07)
 
 ### 🚀 Features
