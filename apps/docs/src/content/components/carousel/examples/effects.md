@@ -1,0 +1,1 @@
+`effect` sets how a page replaces the previous one: `slide` (default) moves the strip; `fade`, `zoom`, `blur` and `flip` let the visible items leave and the next ones arrive one after another; `none` jumps.

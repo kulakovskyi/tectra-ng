@@ -1,0 +1,1 @@
+`previewSrc` shows another file in the preview, for example a larger one. `zoomStep`, `minZoom` and `maxZoom` set the zoom range; drag a zoomed image to look around and double-click to switch between the normal and the largest scale.

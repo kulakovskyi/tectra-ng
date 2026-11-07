@@ -1,0 +1,240 @@
+<ng-template #frame>
+  <div
+    class="tx-galleria__frame"
+    role="region"
+    [class]="passThrough().root?.class"
+    [style]="frameStyle()"
+    [attr.data-styled]="!isUnstyled() || null"
+    [attr.data-thumbnails]="showThumbnails() ? thumbnailsPosition() : null"
+    [attr.data-indicators]="showIndicators() ? indicatorsPosition() : null"
+    [attr.aria-roledescription]="translations().gallery"
+    [attr.aria-label]="label()"
+    [class.tx-galleria__frame--fullscreen]="fullScreen()"
+    [class.tx-galleria__frame--hover-navigators]="showItemNavigatorsOnHover()"
+    [class.tx-galleria__frame--inset-indicators]="showIndicators() && showIndicatorsOnItem()"
+    (mouseenter)="hovered.set(true)"
+    (mouseleave)="hovered.set(false)"
+    (focusin)="focused.set(true)"
+    (focusout)="onFocusOut($event)"
+  >
+    @if (header()) {
+      <div class="tx-galleria__header" [class]="passThrough().header?.class" [style]="passThrough().header?.style">
+        <ng-content select="[txGalleriaHeader]" />
+      </div>
+    }
+    <div class="tx-galleria__content" [class]="passThrough().content?.class" [style]="passThrough().content?.style">
+      <div class="tx-galleria__items-container">
+        <div
+          class="tx-galleria__items"
+          tabindex="0"
+          [class]="passThrough().items?.class"
+          [style]="passThrough().items?.style"
+          [attr.aria-live]="playing() ? 'off' : 'polite'"
+          (keydown)="onItemsKeydown($event)"
+          (pointerdown)="onSwipeStart($event)"
+          (dragstart)="$event.preventDefault()"
+        >
+          <div class="tx-galleria__stage">
+            @for (item of items(); track $index) {
+              @let index = $index;
+              @let shown = index === current();
+              @let image = imageOf(item);
+              <div
+                class="tx-galleria__item"
+                role="group"
+                [class]="passThrough().item?.class"
+                [style]="passThrough().item?.style"
+                [class.tx-galleria__item--active]="shown"
+                [class.tx-galleria__item--leaving]="index === leaving()"
+                [attr.data-index]="index"
+                [attr.aria-roledescription]="translations().slide"
+                [attr.aria-label]="slideLabel(index)"
+                [attr.aria-hidden]="shown ? null : 'true'"
+                [attr.inert]="shown ? null : ''"
+              >
+                @if (itemTemplate(); as template) {
+                  <ng-container [ngTemplateOutlet]="template.template" [ngTemplateOutletContext]="{ $implicit: item, index }" />
+                } @else if (image) {
+                  <img
+                    class="tx-galleria__image"
+                    [src]="image.src"
+                    [attr.alt]="image.alt ?? image.title ?? ''"
+                    [attr.width]="image.width ?? null"
+                    [attr.height]="image.height ?? null"
+                  />
+                }
+              </div>
+            }
+          </div>
+          @if (showItemNavigators()) {
+            <button
+              type="button"
+              class="tx-galleria__navigator tx-galleria__prev"
+              [class]="passThrough().navigator?.class"
+              [style]="passThrough().navigator?.style"
+              [disabled]="!canPrev()"
+              [attr.aria-label]="translations().previousImage"
+              (click)="onUserMove(-1)"
+            >
+              <tx-icon [name]="prevIcon()" />
+            </button>
+            <button
+              type="button"
+              class="tx-galleria__navigator tx-galleria__next"
+              [class]="passThrough().navigator?.class"
+              [style]="passThrough().navigator?.style"
+              [disabled]="!canNext()"
+              [attr.aria-label]="translations().nextImage"
+              (click)="onUserMove(1)"
+            >
+              <tx-icon [name]="nextIcon()" />
+            </button>
+          }
+          @if (hasCaption() && count()) {
+            <div class="tx-galleria__caption" [class]="passThrough().caption?.class" [style]="passThrough().caption?.style">
+              @if (captionTemplate(); as template) {
+                <ng-container [ngTemplateOutlet]="template.template" [ngTemplateOutletContext]="{ $implicit: activeItem(), index: current() }" />
+              } @else if (activeImage(); as image) {
+                @if (image.title) {
+                  <div class="tx-galleria__caption-title">{{ image.title }}</div>
+                }
+                @if (image.description) {
+                  <div class="tx-galleria__caption-text">{{ image.description }}</div>
+                }
+              }
+            </div>
+          }
+        </div>
+        @if (showIndicators() && count() > 1) {
+          <ul
+            class="tx-galleria__indicators"
+            [class]="passThrough().indicators?.class"
+            [style]="passThrough().indicators?.style"
+            [attr.aria-label]="label()"
+          >
+            @for (dot of indexes(); track dot) {
+              @let active = dot === current();
+              <li class="tx-galleria__indicator" [class]="passThrough().indicator?.class" [style]="passThrough().indicator?.style" [class.tx-galleria__indicator--active]="active">
+                <button
+                  type="button"
+                  class="tx-galleria__indicator-button"
+                  [attr.aria-label]="imageLabel(dot)"
+                  [attr.aria-current]="active ? 'true' : null"
+                  [tabIndex]="active ? 0 : -1"
+                  (click)="onSelect(dot)"
+                  (keydown)="onListKeydown($event, '.tx-galleria__indicator-button')"
+                  (mouseenter)="onIndicatorHover(dot)"
+                >
+                  @if (indicatorTemplate(); as template) {
+                    <ng-container [ngTemplateOutlet]="template.template" [ngTemplateOutletContext]="{ $implicit: dot, active }" />
+                  }
+                </button>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+      @if (showThumbnails() && count()) {
+        <div class="tx-galleria__thumbnails" [class]="passThrough().thumbnails?.class" [style]="passThrough().thumbnails?.style">
+          @if (showThumbnailNavigators()) {
+            <button
+              type="button"
+              class="tx-galleria__thumbnail-navigator"
+              [class]="passThrough().thumbnailNavigator?.class"
+              [style]="passThrough().thumbnailNavigator?.style"
+              [disabled]="!canPrev()"
+              [attr.aria-label]="translations().previousThumbnails"
+              (click)="onUserMove(-1)"
+            >
+              <tx-icon [name]="thumbnailsVertical() ? 'chevron-up' : prevIcon()" />
+            </button>
+          }
+          <div class="tx-galleria__thumbnails-viewport" [style.height]="thumbnailsVertical() ? verticalThumbnailViewPortHeight() : null">
+            <ul
+              class="tx-galleria__thumbnail-items"
+              [attr.aria-label]="translations().thumbnails"
+              [style.transform]="thumbnailTransform()"
+            >
+              @for (item of items(); track $index) {
+                @let active = $index === current();
+                @let image = imageOf(item);
+                <li class="tx-galleria__thumbnail-item" [class.tx-galleria__thumbnail-item--active]="active" [style.flex-basis]="thumbnailBasis()">
+                  <button
+                    type="button"
+                    class="tx-galleria__thumbnail"
+                    [class]="passThrough().thumbnail?.class"
+                    [style]="passThrough().thumbnail?.style"
+                    [attr.aria-label]="thumbnailTemplate() ? null : imageLabel($index)"
+                    [attr.aria-current]="active ? 'true' : null"
+                    [tabIndex]="active ? 0 : -1"
+                    (click)="onSelect($index)"
+                    (keydown)="onListKeydown($event, '.tx-galleria__thumbnail')"
+                  >
+                    @if (thumbnailTemplate(); as template) {
+                      <ng-container [ngTemplateOutlet]="template.template" [ngTemplateOutletContext]="{ $implicit: item, index: $index, active }" />
+                    } @else if (image) {
+                      <img
+                        class="tx-galleria__thumbnail-image"
+                        alt=""
+                        [src]="image.thumbnailSrc ?? image.src"
+                        [attr.width]="image.width ?? null"
+                        [attr.height]="image.height ?? null"
+                      />
+                    }
+                  </button>
+                </li>
+              }
+            </ul>
+          </div>
+          @if (showThumbnailNavigators()) {
+            <button
+              type="button"
+              class="tx-galleria__thumbnail-navigator"
+              [class]="passThrough().thumbnailNavigator?.class"
+              [style]="passThrough().thumbnailNavigator?.style"
+              [disabled]="!canNext()"
+              [attr.aria-label]="translations().nextThumbnails"
+              (click)="onUserMove(1)"
+            >
+              <tx-icon [name]="thumbnailsVertical() ? 'chevron-down' : nextIcon()" />
+            </button>
+          }
+        </div>
+      }
+    </div>
+    @if (footer()) {
+      <div class="tx-galleria__footer" [class]="passThrough().footer?.class" [style]="passThrough().footer?.style">
+        <ng-content select="[txGalleriaFooter]" />
+      </div>
+    }
+  </div>
+</ng-template>
+
+@if (!fullScreen()) {
+  <ng-container [ngTemplateOutlet]="frame" />
+}
+
+<ng-template #layer>
+  <div
+    class="tx-galleria-mask"
+    role="dialog"
+    aria-modal="true"
+    [class]="passThrough().mask?.class"
+    [style]="maskStyle()"
+    [attr.data-styled]="!isUnstyled() || null"
+    [attr.aria-label]="label()"
+  >
+    <div class="tx-galleria-mask__backdrop" aria-hidden="true" (click)="close()"></div>
+    <button
+      type="button"
+      class="tx-galleria__close"
+      [class]="passThrough().closeButton?.class"
+      [style]="passThrough().closeButton?.style"
+      [attr.aria-label]="translations().close"
+      (click)="close()"
+    >
+      <tx-icon [name]="closeIcon()" />
+    </button>
+    <ng-container [ngTemplateOutlet]="frame" />
+  </div>
+</ng-template>

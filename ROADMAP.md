@@ -155,7 +155,7 @@ Detailed checklist per component: [roadmap/stage-8-date.md](roadmap/stage-8-date
 | `ui/countdown` (value / unit or target date, remaining-time pipe) | — | 1 | ✅ |
 | `ui/analog-clock` | — | 1 | ✅ |
 
-## Stage 9 — navigation & structure
+## Stage 9 — navigation & structure ✅
 
 Detailed checklist per component: [roadmap/stage-9-navigation.md](roadmap/stage-9-navigation.md).
 
@@ -169,7 +169,7 @@ Detailed checklist per component: [roadmap/stage-9-navigation.md](roadmap/stage-
 | `ui/splitter` (sizes, collapsible, nested, stored state), `ui/scroll-panel`, `ui/toolbar` | Splitter, ScrollPanel, Toolbar | — (parity) | ✅ |
 | `ui/file-upload` — drop zone or button, previews, validation, upload with progress, form control (own design) | FileUpload | 8 | ✅ |
 | `@tectra-ng/editor` — own package on the ProseMirror core: toolbar presets, selection menu, links, colours, lists, checklists, images (resize, drag), video, mentions, Markdown shortcuts, Quill HTML in and out, full view, AI; `@tectra-ng/editor/content` renderer | Editor | 6, 16 | ✅ |
-| `ui/image` (preview, zoom), `ui/galleria`, `ui/carousel` | Image, Galleria, Carousel | 2 | ⬜ |
+| `ui/image` (preview with rotate, zoom and pan), `ui/galleria` (thumbnails on any side, indicators, slideshow, full screen), `ui/carousel` (responsive, vertical, autoplay, swipe) | Image, Galleria, Carousel | 2 | ✅ |
 
 ## Stage 10 — blocks (`@tectra-ng/blocks`, what PrimeNG does not have)
 

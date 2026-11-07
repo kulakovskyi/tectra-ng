@@ -1,0 +1,1 @@
+`autoplayInterval` turns pages on its own and loops. It pauses while the pointer or focus is on the carousel and stops after a manual step; `startAutoplay()` and `stopAutoplay()` control it from code.

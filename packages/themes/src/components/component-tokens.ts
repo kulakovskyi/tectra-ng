@@ -53,6 +53,9 @@ import { splitterTokens } from './splitter.tokens';
 import { toolbarTokens } from './toolbar.tokens';
 import { fileUploadTokens } from './file-upload.tokens';
 import { editorContentTokens, editorTokens } from './editor.tokens';
+import { imageTokens } from './image.tokens';
+import { galleriaTokens } from './galleria.tokens';
+import { carouselTokens } from './carousel.tokens';
 
 export const COMPONENT_TOKENS = {
   icon: iconTokens,
@@ -138,6 +141,9 @@ export const COMPONENT_TOKENS = {
   fileUpload: fileUploadTokens,
   editor: editorTokens,
   editorContent: editorContentTokens,
+  image: imageTokens,
+  galleria: galleriaTokens,
+  carousel: carouselTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

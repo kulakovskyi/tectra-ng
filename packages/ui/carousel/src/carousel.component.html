@@ -1,0 +1,98 @@
+@if (header()) {
+  <div class="tx-carousel__header" [class]="passThrough().header?.class" [style]="passThrough().header?.style">
+    <ng-content select="[txCarouselHeader]" />
+  </div>
+}
+<div class="tx-carousel__content" [class]="passThrough().content?.class" [style]="passThrough().content?.style">
+  @if (showNavigators()) {
+    <button
+      txButton
+      type="button"
+      text
+      rounded
+      severity="secondary"
+      class="tx-carousel__navigator tx-carousel__prev"
+      [class]="passThrough().navigator?.class"
+      [style]="passThrough().navigator?.style"
+      [icon]="prevIconName()"
+      [disabled]="!canPrev()"
+      [attr.aria-label]="translations().previousSlide"
+      (click)="onNavigate(-1)"
+    ></button>
+  }
+  <div
+    #viewport
+    class="tx-carousel__viewport"
+    [class]="passThrough().viewport?.class"
+    [style]="passThrough().viewport?.style"
+    [style.height]="vertical() ? verticalViewPortHeight() : null"
+    [attr.aria-live]="autoplaying() ? 'off' : 'polite'"
+    (pointerdown)="onPointerDown($event)"
+    (dragstart)="$event.preventDefault()"
+  >
+    <div class="tx-carousel__track" [class]="passThrough().track?.class" [style]="passThrough().track?.style" [style.transform]="trackTransform()">
+      @for (item of items(); track $index) {
+        @let shown = isShown($index);
+        <div
+          class="tx-carousel__item"
+          role="group"
+          [class]="passThrough().item?.class"
+          [style]="passThrough().item?.style"
+          [class.tx-carousel__item--active]="shown"
+          [style.flex-basis]="itemBasis()"
+          [attr.aria-roledescription]="translations().slide"
+          [attr.aria-label]="slideLabel($index)"
+          [attr.aria-hidden]="shown ? null : 'true'"
+          [attr.inert]="shown ? null : ''"
+        >
+          @if (itemTemplate(); as template) {
+            <ng-container [ngTemplateOutlet]="template.template" [ngTemplateOutletContext]="{ $implicit: item, index: $index, active: shown }" />
+          }
+        </div>
+      }
+    </div>
+  </div>
+  @if (showNavigators()) {
+    <button
+      txButton
+      type="button"
+      text
+      rounded
+      severity="secondary"
+      class="tx-carousel__navigator tx-carousel__next"
+      [class]="passThrough().navigator?.class"
+      [style]="passThrough().navigator?.style"
+      [icon]="nextIconName()"
+      [disabled]="!canNext()"
+      [attr.aria-label]="translations().nextSlide"
+      (click)="onNavigate(1)"
+    ></button>
+  }
+</div>
+@if (showIndicators() && totalPages() > 1) {
+  <ul #indicators class="tx-carousel__indicators" [class]="passThrough().indicators?.class" [style]="passThrough().indicators?.style">
+    @for (dot of pages(); track dot) {
+      @let active = dot === currentPage();
+      <li class="tx-carousel__indicator" [class]="passThrough().indicator?.class" [style]="passThrough().indicator?.style" [class.tx-carousel__indicator--active]="active">
+        <button
+          type="button"
+          class="tx-carousel__indicator-button"
+          [attr.aria-label]="pageLabel(dot)"
+          [attr.aria-current]="active ? 'true' : null"
+          [tabIndex]="active ? 0 : -1"
+          (click)="onIndicatorClick(dot)"
+          (keydown)="onIndicatorKeydown($event)"
+        >
+          @if (indicatorTemplate(); as template) {
+            <ng-container [ngTemplateOutlet]="template.template" [ngTemplateOutletContext]="{ $implicit: dot, active }" />
+          }
+        </button>
+      </li>
+    }
+  </ul>
+}
+@if (footer()) {
+  <div class="tx-carousel__footer" [class]="passThrough().footer?.class" [style]="passThrough().footer?.style">
+    <ng-content select="[txCarouselFooter]" />
+  </div>
+}
