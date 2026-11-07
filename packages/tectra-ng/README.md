@@ -26,4 +26,10 @@ import { Tectra } from '@tectra-ng/themes';
 
 Need only part of it? Install a package on its own — `npm i @tectra-ng/ui` brings `core`, `themes`, `tokens` and `icons` with it.
 
+The rich text editor is not part of `tectra-ng` — it carries the ProseMirror engine, so it is installed only where it is used:
+
+```bash
+npm i @tectra-ng/editor
+```
+
 Docs and examples: [tectra-ng.com](https://tectra-ng.com).

@@ -35,6 +35,14 @@ tools/          registry-builder (docs registry), icons, flags, export-font, ser
 
 Aliases are wildcards in `tsconfig.base.json` (`@tectra-ng/ui/*` → `./packages/ui/*/index.ts`) — a new entry point needs no alias. Module boundaries (`eslint.config.mjs`, tags `pkg:*`): tokens → nothing; themes → tokens; core → themes, tokens; ui → core, icons, themes, tokens; editor → ui + below; blocks → ui + below. A ui entry point may import another ui entry point through its alias.
 
+## New npm package (checklist)
+
+A new package under `packages/` (like `editor`) is not done until all of these are in place — users and the release must find it:
+
+- **Workspace:** `project.json` (`build`, `test`, tag `pkg:<name>`), `package.json` (peers on `@tectra-ng/*`, real dependencies only for an engine that cannot live in the kit, `publishConfig.access: public`), `ng-package.json` (`allowedNonPeerDependencies` for those), paths in `tsconfig.base.json`, module boundary in `eslint.config.mjs`, `build:packages` and `test` scripts in `package.json`, `release.projects` in `nx.json`.
+- **Install docs — say how to get it, everywhere people look:** the Install block and the Layout table of the root `README.md`; `packages/tectra-ng/README.md` (and its `dependencies` if the meta package includes it — say so explicitly when it does not); the install line at the top of the package README; a step in `apps/docs/src/app/data/install.data.ts`; the docs `overview.md` of its pages (`source:` / `package:` front matter); the `Workspace` tree and boundaries in this file.
+- **First npm publish is manual:** the `release` workflow publishes through npm Trusted Publishing, which is set per package and only for a package that exists. Before the first release the user publishes a placeholder (`0.0.1`, name only) with their npm login, then adds the trusted publisher on npmjs.com → package → Settings → Trusted Publisher → GitHub Actions (`kulakovskyi` / `tectra-ng` / `release.yml` / environment `npm`). Tell the user this when a package is added; never publish for them.
+
 ## Commands
 
 Prefix Nx commands with `NX_DAEMON=false NX_NO_CLOUD=true`.

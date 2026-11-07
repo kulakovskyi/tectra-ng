@@ -8,4 +8,4 @@ examples: basic, quill, images, design-tokens
 ---
 # Editor content
 
-Shows saved rich text with the editor's typography. Reads clean HTML and Quill markup, keeps colours and alignment, drops anything unsafe, and opens images in a preview. Does not load the editor engine.
+Shows saved rich text with the editor's typography. Reads clean HTML and Quill markup, keeps colours and alignment, drops anything unsafe, and opens images in a preview. Does not load the editor engine. Comes with `@tectra-ng/editor` — install it with `npm install @tectra-ng/editor`.

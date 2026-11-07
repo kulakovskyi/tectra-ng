@@ -7,7 +7,10 @@ Open-source Angular UI kit: tokens, themes, ~70 components and ready blocks for 
 ```bash
 npm install tectra-ng          # everything at one version
 npm install @tectra-ng/ui      # or only the components: core, themes, tokens and icons come with them
+npm install @tectra-ng/editor  # the rich text editor — its own package, not part of tectra-ng
 ```
+
+The rich text editor (`@tectra-ng/editor`) is installed on its own, also next to `tectra-ng`: it brings the ProseMirror engine with it, and apps without an editor should not carry it.
 
 Docs and examples: [tectra-ng.com](https://tectra-ng.com).
 
@@ -38,6 +41,7 @@ Plan of what moves in next and in which order: [ROADMAP.md](ROADMAP.md).
 | `packages/brand-icons` | optional brand logos from Simple Icons (CC0) under PrimeIcons names | npm `@tectra-ng/brand-icons` |
 | `packages/flags` | optional country flags as SVG, rectangle and circle, loaded one by one | npm `@tectra-ng/flags` |
 | `packages/ui` | components, one entry point each | npm `@tectra-ng/ui/<component>` |
+| `packages/editor` | rich text editor on the ProseMirror core (`@tectra-ng/editor`) and the renderer for saved text (`@tectra-ng/editor/content`); install it separately | npm `@tectra-ng/editor` |
 | `packages/blocks` | console-layout, filters-panel, stat-tiles … | npm `@tectra-ng/blocks/<block>` |
 | `apps/docs` | the documentation site | Cloudflare Pages |
 | `apps/sandbox` | local playground | — |
@@ -47,7 +51,7 @@ Plan of what moves in next and in which order: [ROADMAP.md](ROADMAP.md).
 ## Dependency direction
 
 ```
-tokens → themes → core → ui → blocks
+tokens → themes → core → ui → editor, blocks
                           ↓      ↓
                  apps/docs, apps/sandbox, e2e/visual
 ```

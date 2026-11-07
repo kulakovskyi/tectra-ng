@@ -1,5 +1,11 @@
 # Editor
 
+```bash
+npm install @tectra-ng/editor
+```
+
+Its own package: `tectra-ng` and `@tectra-ng/ui` do not include it, so apps without an editor do not carry the engine. It needs `@tectra-ng/ui` (and with it `core`, `themes`, `icons`) of the same version.
+
 A rich text editor for descriptions, comments and reports. It writes clean HTML (or Quill 2 markup with `format="quill"`) and reads both, so text saved by Quill opens as it was. Toolbar presets or your own tool list, a menu over selected text, a `/` menu for blocks, links, colours, lists and checklists, tables, callouts, images (resize, drag) and video, `@` mentions, `:` emoji, Markdown shortcuts and smart typography, a character limit, drafts, a full view, an AI button and AI actions on the selection. Show saved text with `tx-editor-content` from `@tectra-ng/editor/content`.
 
 ```html

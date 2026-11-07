@@ -32,6 +32,11 @@ export const appConfig: ApplicationConfig = {
 })`,
   },
   {
+    title: 'Optional: the rich text editor is its own package — tectra-ng does not include it',
+    language: 'bash',
+    code: 'npm install @tectra-ng/editor',
+  },
+  {
     title: 'Optional: the Onest and JetBrains Mono fonts in index.html — without them the system font is used',
     language: 'xml',
     code: `<link rel="preconnect" href="https://fonts.googleapis.com" />
