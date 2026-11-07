@@ -140,6 +140,13 @@
   }
 }
 
+@media (width < 64rem) {
+  .tabs-bar {
+    margin-inline: calc(-1 * var(--docs-gutter));
+    padding-inline: var(--docs-gutter);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .tab-panel {
     animation: none;

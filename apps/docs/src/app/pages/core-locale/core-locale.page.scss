@@ -27,6 +27,6 @@
 @media (width < 40rem) {
   .picker,
   .facts__row {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }

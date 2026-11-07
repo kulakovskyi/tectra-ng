@@ -24,6 +24,22 @@
   width: 160px;
 }
 
+@media (width < 40rem) {
+  .toolbar {
+    flex-wrap: wrap;
+    gap: var(--tx-space-4);
+  }
+
+  .toolbar__stroke {
+    flex: 1 1 100%;
+  }
+
+  .toolbar__slider {
+    flex: 1;
+    width: auto;
+  }
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
