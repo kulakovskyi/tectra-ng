@@ -142,6 +142,7 @@
     [style.height.px]="bubbleBox().height"
   ></div>
   <div
+    #suggestAnchor
     cdkOverlayOrigin
     #suggestOrigin="cdkOverlayOrigin"
     class="tx-editor__anchor"
@@ -157,7 +158,7 @@
   size="fullscreen"
   [visible]="fullView()"
   [ariaLabel]="translations().editorFullView"
-  [closeOnEscape]="!suggestion() && !popoverKind()"
+  [closeOnEscape]="!suggestion() && !popoverOpen()"
   [dt]="{ content: { padding: '0', lastPaddingBottom: '0' } }"
   (visibleChange)="!$event && fullView.set(false)"
   (opened)="onFullViewOpened()"
@@ -170,6 +171,7 @@
 
 <tx-menu #blockMenuRef popup [model]="blockMenu()" [ariaLabel]="translations().editorTextStyle" />
 <tx-menu #alignMenuRef popup [model]="alignMenu()" [ariaLabel]="translations().editorAlign" />
+<tx-menu #aiMenuRef popup [model]="aiMenu()" [ariaLabel]="aiLabel() ?? translations().editorAi" />
 <tx-menu #sizeMenuRef popup [model]="sizeMenu()" [ariaLabel]="translations().editorFontSize" />
 
 <tx-popover #popover [arrow]="false" placement="bottom-start" [ariaLabel]="popoverLabel()" (closed)="onPopoverClosed()">
@@ -259,10 +261,12 @@
 
 <ng-template
   cdkConnectedOverlay
+  txOverlayAnchor
   #bubbleOverlay="cdkConnectedOverlay"
+  [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
   [cdkConnectedOverlayOrigin]="bubbleOrigin"
   [cdkConnectedOverlayOpen]="showBubble()"
-  [cdkConnectedOverlayPositions]="bubblePositions"
+  [cdkConnectedOverlayPositions]="bubblePositions()"
   [cdkConnectedOverlayDisableClose]="true"
   [cdkConnectedOverlayPush]="true"
 >
@@ -275,7 +279,48 @@
     [class]="passThrough().bubble?.class"
     (mousedown)="keepFocus($event)"
   >
-    @if (state()?.empty && state()?.link; as link) {
+    @if (state()?.ai?.done) {
+      <span class="tx-editor__bubble-label"><tx-icon class="tx-editor__ai-icon" name="sparkles" />AI</span>
+      <span class="tx-editor__separator" aria-hidden="true"></span>
+      <button txButton type="button" size="small" text severity="secondary" icon="check" tabindex="-1" (click)="keepAi()">{{ translations().editorAiKeep }}</button>
+      <button txButton type="button" size="small" text severity="secondary" icon="undo" tabindex="-1" (click)="discardAi()">{{ translations().editorAiDiscard }}</button>
+    } @else if (state()?.empty && !state()?.link && state()?.table) {
+      <button type="button" class="tx-editor__tool" tabindex="-1" [attr.aria-label]="translations().editorRowAbove" [txTooltip]="translations().editorRowAbove" (click)="tableAction('rowAbove')">
+        <tx-icon name="tx-editor-row-above" />
+      </button>
+      <button type="button" class="tx-editor__tool" tabindex="-1" [attr.aria-label]="translations().editorRowBelow" [txTooltip]="translations().editorRowBelow" (click)="tableAction('rowBelow')">
+        <tx-icon name="tx-editor-row-below" />
+      </button>
+      <button type="button" class="tx-editor__tool" tabindex="-1" [attr.aria-label]="translations().editorColumnLeft" [txTooltip]="translations().editorColumnLeft" (click)="tableAction('columnLeft')">
+        <tx-icon name="tx-editor-column-left" />
+      </button>
+      <button type="button" class="tx-editor__tool" tabindex="-1" [attr.aria-label]="translations().editorColumnRight" [txTooltip]="translations().editorColumnRight" (click)="tableAction('columnRight')">
+        <tx-icon name="tx-editor-column-right" />
+      </button>
+      <span class="tx-editor__separator" aria-hidden="true"></span>
+      <button
+        type="button"
+        class="tx-editor__tool"
+        tabindex="-1"
+        [class.tx-editor__tool--active]="state()?.headerRow"
+        [attr.aria-pressed]="!!state()?.headerRow"
+        [attr.aria-label]="translations().editorHeaderRow"
+        [txTooltip]="translations().editorHeaderRow"
+        (click)="tableAction('header')"
+      >
+        <tx-icon name="tx-editor-header-row" />
+      </button>
+      <span class="tx-editor__separator" aria-hidden="true"></span>
+      <button type="button" class="tx-editor__tool" tabindex="-1" [attr.aria-label]="translations().editorDeleteRow" [txTooltip]="translations().editorDeleteRow" (click)="tableAction('deleteRow')">
+        <tx-icon name="tx-editor-delete-row" />
+      </button>
+      <button type="button" class="tx-editor__tool" tabindex="-1" [attr.aria-label]="translations().editorDeleteColumn" [txTooltip]="translations().editorDeleteColumn" (click)="tableAction('deleteColumn')">
+        <tx-icon name="tx-editor-delete-column" />
+      </button>
+      <button type="button" class="tx-editor__tool tx-editor__tool--danger" tabindex="-1" [attr.aria-label]="translations().editorDeleteTable" [txTooltip]="translations().editorDeleteTable" (click)="tableAction('delete')">
+        <tx-icon name="trash" />
+      </button>
+    } @else if (state()?.empty && state()?.link; as link) {
       <a class="tx-editor__bubble-link" [href]="link.href" target="_blank" rel="noopener noreferrer" tabindex="-1">{{ link.href }}</a>
       <span class="tx-editor__separator" aria-hidden="true"></span>
       <button type="button" class="tx-editor__tool" tabindex="-1" [attr.aria-label]="translations().editorLinkEdit" [txTooltip]="translations().editorLinkEdit" (click)="openLink(bubbleAnchor)">
@@ -300,6 +345,19 @@
         </button>
       }
       <span class="tx-editor__separator" aria-hidden="true"></span>
+      @if (aiActions().length) {
+        <button
+          type="button"
+          class="tx-editor__tool tx-editor__tool--ai"
+          tabindex="-1"
+          aria-haspopup="menu"
+          [attr.aria-label]="aiLabel() ?? translations().editorAi"
+          [txTooltip]="aiLabel() ?? translations().editorAi"
+          (click)="openAiMenu($event)"
+        >
+          <tx-icon class="tx-editor__ai-icon" name="sparkles" />
+        </button>
+      }
       <button
         type="button"
         class="tx-editor__tool"
@@ -317,9 +375,11 @@
 
 <ng-template
   cdkConnectedOverlay
+  txOverlayAnchor
   #suggestOverlay="cdkConnectedOverlay"
+  [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
   [cdkConnectedOverlayOrigin]="suggestOrigin"
-  [cdkConnectedOverlayOpen]="!!suggestion()"
+  [cdkConnectedOverlayOpen]="showSuggestions()"
   [cdkConnectedOverlayPositions]="suggestPositions"
   [cdkConnectedOverlayDisableClose]="true"
   [cdkConnectedOverlayPush]="true"
@@ -327,9 +387,10 @@
   <div
     class="tx-editor__suggestions"
     role="listbox"
-    [id]="id + '-mentions'"
+    [id]="id + '-suggestions'"
+    [attr.data-kind]="suggestion()?.kind"
     [attr.data-styled]="!isUnstyled() || null"
-    [attr.aria-label]="translations().editorLabel"
+    [attr.aria-label]="suggestionLabel()"
     [style]="hostStyle()"
     [class]="passThrough().suggestions?.class"
     (mousedown)="keepFocus($event)"
@@ -344,10 +405,14 @@
         (mouseenter)="suggestionIndex.set(index)"
         (click)="pickSuggestion(item)"
       >
-        @if (item.avatar) {
+        @if (item.glyph) {
+          <span class="tx-editor__glyph" aria-hidden="true">{{ item.glyph }}</span>
+        } @else if (item.icon) {
+          <span class="tx-editor__command-icon" aria-hidden="true"><tx-icon [name]="item.icon" /></span>
+        } @else if (item.avatar) {
           <img class="tx-editor__avatar" alt="" [src]="item.avatar" />
         } @else {
-          <span class="tx-editor__avatar" aria-hidden="true">{{ initials(item) }}</span>
+          <span class="tx-editor__avatar" aria-hidden="true">{{ initials(item.label) }}</span>
         }
         <span class="tx-editor__suggestion-text">
           <span class="tx-editor__suggestion-label">{{ item.label }}</span>
@@ -355,6 +420,9 @@
             <span class="tx-editor__suggestion-description">{{ item.description }}</span>
           }
         </span>
+        @if (item.shortcut) {
+          <kbd class="tx-editor__shortcut">{{ item.shortcut }}</kbd>
+        }
       </div>
     } @empty {
       <div class="tx-editor__suggestion-empty">{{ translations().editorNoMatches }}</div>

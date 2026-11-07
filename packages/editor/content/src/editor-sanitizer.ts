@@ -9,7 +9,7 @@ const DROP_WITH_CONTENT = new Set(['script', 'style', 'template', 'noscript', 'o
 const ALLOWED_ATTRIBUTES = new Set([
   'class', 'style', 'href', 'target', 'rel', 'src', 'alt', 'title', 'width', 'height', 'colspan', 'rowspan', 'start', 'dir',
   'data-list', 'data-type', 'data-checked', 'data-indent', 'data-language', 'data-id', 'data-label', 'data-mention-suggestion-char',
-  'colwidth', 'type', 'checked', 'disabled', 'frameborder', 'allowfullscreen', 'spellcheck',
+  'colwidth', 'data-colwidth', 'data-tone', 'type', 'checked', 'disabled', 'frameborder', 'allowfullscreen', 'spellcheck',
 ]);
 
 const ALLOWED_STYLES = new Set(['color', 'background-color', 'text-align', 'font-size', 'font-family', 'margin-left', 'padding-left', 'width', 'min-width']);

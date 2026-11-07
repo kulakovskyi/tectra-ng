@@ -82,7 +82,10 @@ Value controls extend `TxFormControlBase<T>` (`@tectra-ng/core/forms`) and provi
 
 ## 6. Overlays
 
-Panels use CDK connected overlay with `txPositions` / `placementFromPosition` and `txAnimateEnter` / `txAnimateLeave` (`@tectra-ng/core/overlay`); keep the panel mounted until the leave animation ends; set `cdkConnectedOverlayDisableClose` and close yourself so the leave animation runs. Panel CSS variables live on the panel element (the overlay is outside the host). Focus trap / list navigation / typeahead / announcer: `@tectra-ng/core/a11y`.
+Panels use CDK connected overlay with `txPositions` / `placementFromPosition` and `txAnimateEnter` / `txAnimateLeave` (`@tectra-ng/core/overlay`); keep the panel mounted until the leave animation ends; set `cdkConnectedOverlayDisableClose` and close yourself so the leave animation runs.
+
+- Never a bare `cdkConnectedOverlay`: always add the `txOverlayAnchor` directive and `[cdkConnectedOverlayScrollStrategy]="scrollStrategy"` with `readonly scrollStrategy = txScrollStrategy(inject(Injector))` (as in `ui/select`). Without them the panel lags behind its origin and jitters while the page scrolls. Prefer the kit's own overlays (`tx-popover`, `tx-menu`, `tx-dialog`, `txTooltip`) when they fit — they already do this.
+- Keep a panel's content until it has faded out. Do not clear the signal that feeds the content on `closed` / `visibleChange(false)`; drive visibility with a separate `open` signal and keep the content (or the last item shown) until the next open. Clearing it early leaves an empty panel — a small white blob — fading out. Panel CSS variables live on the panel element (the overlay is outside the host). Focus trap / list navigation / typeahead / announcer: `@tectra-ng/core/a11y`.
 
 ## 7. Accessibility
 

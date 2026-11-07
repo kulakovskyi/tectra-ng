@@ -1,0 +1,1 @@
+Insert a table from the `/` menu or the `table` tool. Tab moves between cells and adds a row at the end; the menu above the table adds and removes rows and columns; drag a column border to resize it. Tables pasted from spreadsheets keep their cells.

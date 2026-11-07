@@ -111,4 +111,7 @@ PrimeNG: Editor (Quill: `formats`, `modules`, `placeholder`, `readonly`, `style`
 - [x] Full view in the kit's fullscreen dialog, AI button with the breathing sparkles of the first app (`aiRequested` with the HTML), `ready` with the editor, `focused` / `blurred`, `selectionChange`
 - [x] `<tx-editor-content>`: renders saved HTML in both formats with the same styles, an own allowlist sanitizer that keeps colours and alignment, images open in a lightbox; `toEditorHtml` / `toQuillHtml` helpers
 - [x] Accessibility: `role="textbox"` multiline with a name, toolbar pattern with roving focus, pressed states, keyboard shortcuts in the README, focus returns to the text after a toolbar action
-- [x] Docs + tests; e2e: typing with shortcuts, toolbar and menus, links, images, Quill HTML in and out, mentions, full view
+- [x] `/` block menu (filter in English and Ukrainian, shortcuts shown), `:` emoji suggestions, smart typography (dashes, arrows, ellipses, locale quotes) with Backspace undo; one suggestion engine for `@`, `/` and `:`
+- [x] Tables (insert, Tab between cells, rows and columns from the menu below the table, header row, column widths by dragging, pasted spreadsheet tables) and callouts (info / success / warn / danger, tone from the marker), rendered the same by `tx-editor-content`
+- [x] AI actions on the selection (`aiActions`, `aiAction` with `replace` for text, HTML or a stream, shimmer while it streams, Keep / Undo), URL pasted over a selection becomes a link, drafts by `draftKey`
+- [x] Docs + tests; e2e: typing with shortcuts, toolbar and menus, links, images, Quill HTML in and out, mentions, full view, slash menu and tables, emoji and typography, AI actions, callouts, drafts

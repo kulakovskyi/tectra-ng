@@ -146,6 +146,77 @@ test.describe('editor', () => {
     await page.mouse.up();
     await expect.poll(() => textbox.evaluate((element) => Array.from(element.children).map((child) => child.tagName))).toEqual(['P', 'DIV']);
   });
+
+  test('the slash menu inserts a table that the table menu edits', async ({ page }) => {
+    const root = example(page, 'slash-menu');
+    const textbox = root.getByRole('textbox');
+    await textbox.locator('p').last().click();
+    await page.keyboard.type('/');
+    const list = page.getByRole('listbox', { name: 'Insert block' });
+    await expect(list.getByRole('option').first()).toBeVisible();
+    await page.keyboard.type('tab');
+    await expect(list.getByRole('option').first()).toContainText('Table');
+    await page.keyboard.press('Enter');
+    const table = textbox.locator('table');
+    await expect(table.locator('tr')).toHaveCount(3);
+    await page.keyboard.type('Name');
+    await page.keyboard.press('Tab');
+    await page.keyboard.type('Score');
+    await expect(table.locator('th').nth(1)).toHaveText('Score');
+    await page.locator('.tx-editor__bubble').getByRole('button', { name: 'Add row below' }).click();
+    await expect(table.locator('tr')).toHaveCount(4);
+    await page.locator('.tx-editor__bubble').getByRole('button', { name: 'Delete table' }).click();
+    await expect(textbox.locator('table')).toHaveCount(0);
+  });
+
+  test('emoji and typography appear while typing', async ({ page }) => {
+    const root = example(page, 'slash-menu');
+    const textbox = root.getByRole('textbox');
+    await textbox.locator('p').last().click();
+    await page.keyboard.type('Ship it :fir');
+    await expect(page.getByRole('listbox', { name: 'Emoji' }).getByRole('option').first()).toContainText(':fire:');
+    await page.keyboard.press('Enter');
+    await page.keyboard.type(' -> "done"...');
+    await expect(textbox.locator('p').last()).toHaveText('Ship it 🔥 → “done”…');
+    await page.keyboard.press('Backspace');
+    await expect(textbox.locator('p').last()).toHaveText('Ship it 🔥 → “done”...');
+  });
+
+  test('an AI action streams into the selection and can be kept', async ({ page }) => {
+    const root = example(page, 'ai-actions');
+    const paragraph = root.getByRole('textbox').locator('p');
+    await paragraph.click({ clickCount: 3 });
+    const bubble = page.locator('.tx-editor__bubble');
+    await bubble.getByRole('button', { name: 'Improve with AI' }).click();
+    await page.getByRole('menuitem', { name: 'Make shorter' }).click();
+    await expect(root.locator('.tx-editor__ai-pending')).toBeVisible();
+    await expect(root.locator('.tx-editor__ai-result')).toBeVisible();
+    await expect(paragraph).toHaveText('Select this sentence about the new…');
+    await page.locator('.tx-editor__bubble').getByRole('button', { name: 'Undo' }).click();
+    await expect(paragraph).toContainText('pick an AI action from the menu above it.');
+  });
+
+  test('the callout marker changes the tone', async ({ page }) => {
+    const callout = example(page, 'callouts').locator('[data-type="callout"]').first();
+    await expect(callout).toHaveAttribute('data-tone', 'info');
+    await callout.getByRole('button', { name: 'Change the callout colour' }).click();
+    await expect(callout).toHaveAttribute('data-tone', 'success');
+  });
+
+  test('a draft comes back after a reload and is cleared when sent', async ({ page }) => {
+    await page.evaluate(() => localStorage.removeItem('docs-editor-draft'));
+    const root = () => example(page, 'drafts');
+    await root().getByRole('textbox').click();
+    await page.keyboard.type('Half-written reply');
+    await page.waitForTimeout(600);
+    await page.reload();
+    await page.locator('main h1').first().waitFor();
+    await expect(root().getByRole('textbox')).toHaveText('Half-written reply');
+    await expect(root().getByText('Draft restored')).toBeVisible();
+    await root().getByRole('button', { name: 'Send' }).click();
+    await expect(root().getByRole('textbox')).toHaveText('');
+    expect(await page.evaluate(() => localStorage.getItem('docs-editor-draft'))).toBeNull();
+  });
 });
 
 test('editor content opens images in a preview', async ({ page }) => {

@@ -24,7 +24,9 @@ export type TxEditorTool =
   | 'blockquote'
   | 'codeBlock'
   | 'horizontalRule'
-  | 'clearFormatting';
+  | 'clearFormatting'
+  | 'table'
+  | 'callout';
 
 export type TxEditorToolbarPreset = 'full' | 'compact' | 'minimal' | 'none';
 
@@ -68,4 +70,17 @@ export interface TxEditorSelection {
 export interface TxEditorTextChange {
   html: string;
   text: string;
+}
+
+export interface TxEditorAiAction {
+  id: string;
+  label: string;
+  icon?: string;
+}
+
+export interface TxEditorAiRequest {
+  action: TxEditorAiAction;
+  text: string;
+  html: string;
+  replace: (content: string | AsyncIterable<string>) => Promise<void>;
 }

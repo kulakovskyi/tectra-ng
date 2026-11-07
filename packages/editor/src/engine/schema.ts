@@ -70,6 +70,18 @@ function styleAttrs(element: HTMLElement): Record<string, string | null> | null 
   return Object.values(attrs).some(Boolean) ? attrs : null;
 }
 
+export const CALLOUT_TONES = ['info', 'success', 'warn', 'danger'];
+
+function readColwidth(element: HTMLElement): number | null {
+  const value = Number(element.getAttribute('colwidth') ?? element.getAttribute('data-colwidth') ?? parseFloat(element.style.width));
+  return value > 0 ? Math.round(value) : null;
+}
+
+function cellAttrs(node: ProseNode): Record<string, string> {
+  const width = node.attrs['colwidth'];
+  return width ? { 'data-colwidth': String(width), style: `width: ${width}px` } : {};
+}
+
 const nodes: Record<string, NodeSpec> = {
   doc: { content: 'block+' },
   paragraph: {
@@ -202,6 +214,48 @@ const nodes: Record<string, NodeSpec> = {
       ['label', ['input', node.attrs['checked'] ? { type: 'checkbox', checked: 'checked' } : { type: 'checkbox' }], ['span']],
       ['div', 0],
     ],
+  },
+  callout: {
+    content: 'block+',
+    group: 'block',
+    defining: true,
+    attrs: { tone: { default: 'info' } },
+    parseDOM: [
+      {
+        tag: 'div[data-type="callout"]',
+        getAttrs: (dom) => {
+          const tone = (dom as HTMLElement).getAttribute('data-tone') ?? 'info';
+          return { tone: CALLOUT_TONES.includes(tone) ? tone : 'info' };
+        },
+      },
+    ],
+    toDOM: (node): DOMOutputSpec => ['div', { 'data-type': 'callout', 'data-tone': node.attrs['tone'] }, 0],
+  },
+  table: {
+    content: 'table_row+',
+    group: 'block',
+    isolating: true,
+    parseDOM: [{ tag: 'table' }],
+    toDOM: (): DOMOutputSpec => ['table', ['tbody', 0]],
+  },
+  table_row: {
+    content: '(table_cell | table_header)+',
+    parseDOM: [{ tag: 'tr' }],
+    toDOM: (): DOMOutputSpec => ['tr', 0],
+  },
+  table_cell: {
+    content: 'block+',
+    isolating: true,
+    attrs: { colwidth: { default: null } },
+    parseDOM: [{ tag: 'td', getAttrs: (dom) => ({ colwidth: readColwidth(dom as HTMLElement) }) }],
+    toDOM: (node): DOMOutputSpec => ['td', cellAttrs(node), 0],
+  },
+  table_header: {
+    content: 'block+',
+    isolating: true,
+    attrs: { colwidth: { default: null } },
+    parseDOM: [{ tag: 'th', getAttrs: (dom) => ({ colwidth: readColwidth(dom as HTMLElement) }) }],
+    toDOM: (node): DOMOutputSpec => ['th', cellAttrs(node), 0],
   },
   hard_break: {
     inline: true,

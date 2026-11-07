@@ -14,6 +14,8 @@ export default class EditorContentBasicExample {
     '<ul data-type="taskList"><li data-type="taskItem" data-checked="true"><div><p>Get a laptop</p></div></li>',
     '<li data-type="taskItem" data-checked="false"><div><p>Meet your mentor</p></div></li></ul>',
     '<blockquote><p>Ask questions early — everyone was new once.</p></blockquote>',
+    '<div data-type="callout" data-tone="success"><p>Your accounts are ready.</p></div>',
+    '<table><tbody><tr><th><p>Day</p></th><th><p>Plan</p></th></tr><tr><td><p>Monday</p></td><td><p>Setup</p></td></tr></tbody></table>',
     '<pre><code>npm install\nnpm start</code></pre>',
     '<p>Mark <span style="background-color: rgba(234, 179, 8, 0.28)">important</span> words and <code>inline code</code>.</p>',
   ].join('');

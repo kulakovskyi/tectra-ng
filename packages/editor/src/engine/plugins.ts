@@ -124,7 +124,16 @@ export function autolinkPlugin(target: () => string | null): Plugin {
   });
 }
 
+export type TxSuggestionKind = 'mention' | 'slash' | 'emoji';
+
+export interface TxSuggestionTrigger {
+  kind: TxSuggestionKind;
+  char: string;
+  minLength: number;
+}
+
 export interface TxSuggestionMatch {
+  kind: TxSuggestionKind;
   from: number;
   to: number;
   query: string;
@@ -137,22 +146,34 @@ export interface TxSuggestionHandlers {
 
 export const suggestionKey = new PluginKey<{ dismissedAt: number | null }>('txSuggestion');
 
-function findMatch(state: EditorState, trigger: string): TxSuggestionMatch | null {
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+export function findSuggestion(state: EditorState, triggers: readonly TxSuggestionTrigger[]): TxSuggestionMatch | null {
   const { $cursor } = state.selection as TextSelection;
   if (!$cursor || $cursor.parent.type.spec.code) {
     return null;
   }
-  const text = $cursor.parent.textBetween(Math.max(0, $cursor.parentOffset - 60), $cursor.parentOffset, undefined, '￼');
-  const escaped = trigger.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const match = new RegExp(`(?:^|\\s)${escaped}([\\p{L}\\p{N}_.-]{0,40})$`, 'u').exec(text);
-  if (!match) {
-    return null;
+  const text = $cursor.parent.textBetween(Math.max(0, $cursor.parentOffset - 60), $cursor.parentOffset, undefined, '\ufffc');
+  for (const trigger of triggers) {
+    const pattern = trigger.kind === 'emoji' ? '[\\p{L}\\p{N}_+-]' : '[\\p{L}\\p{N}_.-]';
+    const space = trigger.kind === 'slash' ? '[\\p{L}\\p{N}_ -]' : pattern;
+    const match = new RegExp(`(?:^|\\s)${escapeRegExp(trigger.char)}(${pattern}${space}{0,30})?$`, 'u').exec(text);
+    if (!match) {
+      continue;
+    }
+    const query = match[1] ?? '';
+    if (query.length < trigger.minLength) {
+      continue;
+    }
+    const length = query.length + trigger.char.length;
+    return { kind: trigger.kind, from: $cursor.pos - length, to: $cursor.pos, query };
   }
-  const length = match[1].length + trigger.length;
-  return { from: $cursor.pos - length, to: $cursor.pos, query: match[1] };
+  return null;
 }
 
-export function suggestionPlugin(trigger: () => string | null, handlers: TxSuggestionHandlers): Plugin {
+export function suggestionPlugin(triggers: () => readonly TxSuggestionTrigger[], handlers: TxSuggestionHandlers): Plugin {
   let active = false;
   return new Plugin<{ dismissedAt: number | null }>({
     key: suggestionKey,
@@ -168,8 +189,7 @@ export function suggestionPlugin(trigger: () => string | null, handlers: TxSugge
     },
     view: () => ({
       update(view) {
-        const char = trigger();
-        const match = char && view.hasFocus() ? findMatch(view.state, char) : null;
+        const match = view.hasFocus() ? findSuggestion(view.state, triggers()) : null;
         const dismissed = suggestionKey.getState(view.state)?.dismissedAt;
         const shown = match && match.from !== dismissed ? match : null;
         active = !!shown;
@@ -185,7 +205,7 @@ export function suggestionPlugin(trigger: () => string | null, handlers: TxSugge
           return false;
         }
         if (event.key === 'Escape') {
-          const match = findMatch(view.state, trigger() ?? '@');
+          const match = findSuggestion(view.state, triggers());
           view.dispatch(view.state.tr.setMeta(suggestionKey, { dismissedAt: match?.from ?? null }));
           return true;
         }

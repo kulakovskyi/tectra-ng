@@ -205,3 +205,65 @@ export class TxImageView implements NodeView {
     handle.addEventListener('pointercancel', end);
   }
 }
+
+const CALLOUT_ORDER = ['info', 'success', 'warn', 'danger'];
+
+export class TxCalloutView implements NodeView {
+  readonly dom: HTMLDivElement;
+  readonly contentDOM: HTMLDivElement;
+  private readonly marker: HTMLButtonElement;
+
+  constructor(
+    private node: ProseNode,
+    private view: EditorView,
+    private getPos: () => number | undefined,
+    label: () => string,
+  ) {
+    const document = view.dom.ownerDocument;
+    this.dom = document.createElement('div');
+    this.dom.setAttribute('data-type', 'callout');
+    this.marker = document.createElement('button');
+    this.marker.type = 'button';
+    this.marker.className = 'tx-editor__callout-marker';
+    this.marker.contentEditable = 'false';
+    this.marker.setAttribute('aria-label', label());
+    this.marker.title = label();
+    this.marker.addEventListener('mousedown', (event) => event.preventDefault());
+    this.marker.addEventListener('click', () => this.cycle());
+    this.contentDOM = document.createElement('div');
+    this.contentDOM.className = 'tx-editor__callout-body';
+    this.dom.append(this.marker, this.contentDOM);
+    this.render();
+  }
+
+  update(node: ProseNode): boolean {
+    if (node.type !== this.node.type) {
+      return false;
+    }
+    this.node = node;
+    this.render();
+    return true;
+  }
+
+  stopEvent(event: Event): boolean {
+    return event.target === this.marker;
+  }
+
+  ignoreMutation(mutation: MutationRecord | { type: 'selection'; target: Node }): boolean {
+    return !this.contentDOM.contains(mutation.target);
+  }
+
+  private render(): void {
+    this.dom.setAttribute('data-tone', String(this.node.attrs['tone']));
+    this.marker.disabled = !this.view.editable;
+  }
+
+  private cycle(): void {
+    const pos = this.getPos();
+    if (pos === undefined || !this.view.editable) {
+      return;
+    }
+    const tone = CALLOUT_ORDER[(CALLOUT_ORDER.indexOf(String(this.node.attrs['tone'])) + 1) % CALLOUT_ORDER.length];
+    this.view.dispatch(this.view.state.tr.setNodeMarkup(pos, undefined, { tone }));
+  }
+}

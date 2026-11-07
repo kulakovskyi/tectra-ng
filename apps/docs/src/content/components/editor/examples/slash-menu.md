@@ -1,0 +1,1 @@
+Type `/` at the start of a line for the block menu — headings, lists, checklists, quotes, code, callouts, tables, dividers, images and video. Type to filter, in English or Ukrainian. `:` and two letters suggest emoji; `--`, `->`, `...` and quotes turn into proper typography.

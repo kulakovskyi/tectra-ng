@@ -7,6 +7,7 @@ import { redo, undo } from './engine/history';
 import { chain } from './engine/keymap';
 import { currentList, liftCurrentItem, sinkCurrentItem, toggleList } from './engine/lists';
 import { txEditorSchema as schema } from './engine/schema';
+import { insertTable, tableContext } from './engine/tables';
 
 export interface TxEditorToolSpec {
   icon: string;
@@ -58,6 +59,8 @@ export const TX_EDITOR_TOOLS: Record<TxEditorTool, TxEditorToolSpec> = {
   codeBlock: { icon: 'tx-editor-code-block', label: 'editorCodeBlock', shortcut: 'Mod+Alt+C', command: toggleBlockType(nodes['code_block']), active: (s) => blockActive(s, nodes['code_block']) },
   horizontalRule: { icon: 'horizontal-rule', label: 'editorRule', command: insertNode(nodes['horizontal_rule'].create()) },
   clearFormatting: { icon: 'eraser', label: 'editorClear', command: clearFormatting() },
+  table: { icon: 'table', label: 'editorTable', command: insertTable, active: (s) => !!tableContext(s) },
+  callout: { icon: 'info-circle', label: 'editorCallout', command: toggleWrap(nodes['callout']), active: (s) => wrappedIn(s, 'callout') },
 };
 
 function wrappedIn(state: EditorState, name: string): boolean {
@@ -123,6 +126,13 @@ export const TX_EDITOR_ICONS: TxIconSet = {
     'M16 18.5V20.5',
     'M18.5 16H20.5',
   ],
+  'tx-editor-row-above': ['M4 13.5H20V19.5H4Z', 'M12 3.5V10', 'M8.75 6.75H15.25'],
+  'tx-editor-row-below': ['M4 4.5H20V10.5H4Z', 'M12 14V20.5', 'M8.75 17.25H15.25'],
+  'tx-editor-column-left': ['M13.5 4H19.5V20H13.5Z', 'M3.5 12H10', 'M6.75 8.75V15.25'],
+  'tx-editor-column-right': ['M4.5 4H10.5V20H4.5Z', 'M14 12H20.5', 'M17.25 8.75V15.25'],
+  'tx-editor-header-row': ['M5 4.5H19A1.5 1.5 0 0 1 20.5 6V18A1.5 1.5 0 0 1 19 19.5H5A1.5 1.5 0 0 1 3.5 18V6A1.5 1.5 0 0 1 5 4.5Z', { d: 'M3.5 6A1.5 1.5 0 0 1 5 4.5H19A1.5 1.5 0 0 1 20.5 6V9.5H3.5Z', fill: true }, 'M3.5 14.5H20.5', 'M12 9.5V19.5'],
+  'tx-editor-delete-row': ['M4 8.5H20V15.5H4Z', 'M9.5 10.5L14.5 13.5', 'M14.5 10.5L9.5 13.5'],
+  'tx-editor-delete-column': ['M8.5 4H15.5V20H8.5Z', 'M10.5 9.5L13.5 14.5', 'M13.5 9.5L10.5 14.5'],
   'tx-editor-code-block': [
     'M6 4.5H18A2.5 2.5 0 0 1 20.5 7V17A2.5 2.5 0 0 1 18 19.5H6A2.5 2.5 0 0 1 3.5 17V7A2.5 2.5 0 0 1 6 4.5Z',
     'M9.5 9.5L7 12L9.5 14.5',

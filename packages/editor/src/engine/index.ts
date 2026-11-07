@@ -6,3 +6,5 @@ export * from './keymap';
 export * from './plugins';
 export * from './html';
 export * from './setup';
+export * from './tables';
+export * from './ai';

@@ -147,7 +147,7 @@
   position: relative;
   width: fit-content;
   max-width: 100%;
-  margin: 0 0 var(--tx-editor-content-block-gap);
+  margin-block: var(--tx-editor-content-block-gap);
 
   img {
     margin: 0;
@@ -173,6 +173,91 @@
 
 .tx-editor__frame ::ng-deep .tx-editor__image--selected .tx-editor__image-handle {
   display: block;
+}
+
+.tx-editor__frame ::ng-deep .tx-editor__prose [data-type='callout']::before {
+  display: none;
+}
+
+.tx-editor__frame ::ng-deep .tx-editor__callout-body > :last-child {
+  margin-bottom: 0;
+}
+
+.tx-editor__frame ::ng-deep .tx-editor__callout-marker {
+  position: absolute;
+  inset-block-start: calc(
+    var(--tx-editor-content-callout-padding-block) +
+      (var(--tx-editor-content-font-size) * var(--tx-editor-content-line-height) - var(--tx-editor-content-callout-marker-size)) / 2
+  );
+  inset-inline-start: var(--tx-editor-content-callout-marker-start);
+  display: grid;
+  place-items: center;
+  width: var(--tx-editor-content-callout-marker-size);
+  height: var(--tx-editor-content-callout-marker-size);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--tx-radius-full);
+  background: var(--_tone);
+  color: var(--tx-editor-content-callout-marker-color);
+  font-family: inherit;
+  font-size: var(--tx-editor-content-callout-marker-font-size);
+  font-weight: var(--tx-font-weight-bold);
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+  transition: transform var(--_duration, 0.2s) var(--_easing, ease);
+
+  &::before {
+    content: 'i';
+  }
+
+  &:hover:not(:disabled) {
+    transform: scale(1.12);
+  }
+
+  &:disabled {
+    cursor: default;
+  }
+}
+
+.tx-editor__frame ::ng-deep [data-tone='success'] > .tx-editor__callout-marker::before {
+  content: '\2713';
+}
+
+.tx-editor__frame ::ng-deep [data-tone='warn'] > .tx-editor__callout-marker::before,
+.tx-editor__frame ::ng-deep [data-tone='danger'] > .tx-editor__callout-marker::before {
+  content: '!';
+}
+
+.tx-editor__frame ::ng-deep .tx-editor__ai-pending {
+  background: linear-gradient(
+      90deg,
+      var(--tx-editor-ai-color) 0%,
+      color-mix(in srgb, var(--tx-editor-ai-color) 35%, transparent) 50%,
+      var(--tx-editor-ai-color) 100%
+    )
+    0 0 / 200% 100%;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: tx-editor-shimmer 1.4s linear infinite;
+}
+
+.tx-editor__frame ::ng-deep .tx-editor__ai-result {
+  border-radius: var(--tx-radius-xs);
+  background: var(--tx-editor-ai-background);
+  box-decoration-break: clone;
+}
+
+.tx-editor__frame ::ng-deep .tx-editor--column-resize {
+  cursor: col-resize;
+}
+
+.tx-editor__frame ::ng-deep .tx-editor__prose td,
+.tx-editor__frame ::ng-deep .tx-editor__prose th {
+  position: relative;
+  min-width: 48px;
 }
 
 .tx-editor__frame ::ng-deep .tx-editor__drop-cursor {
@@ -277,6 +362,11 @@
   }
 }
 
+.tx-editor__bubble[data-styled] .tx-editor__tool--danger:hover {
+  background: color-mix(in srgb, var(--tx-danger-base) 12%, transparent);
+  color: var(--tx-danger-base);
+}
+
 .tx-editor__frame[data-styled] .tx-editor__tool--active,
 .tx-editor__bubble[data-styled] .tx-editor__tool--active {
   background: var(--tx-editor-tool-active-background);
@@ -290,7 +380,7 @@
 
 .tx-editor__frame[data-styled] .tx-editor__tool--label {
   justify-content: space-between;
-  min-width: 128px;
+  min-width: 112px;
   padding: var(--tx-editor-tool-label-padding);
   font-size: var(--tx-editor-tool-label-font-size);
   font-weight: var(--tx-editor-tool-label-font-weight);
@@ -455,6 +545,24 @@
   }
 }
 
+.tx-editor__bubble[data-styled] .tx-editor__bubble-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 7px;
+  color: var(--tx-editor-ai-color);
+  font-size: var(--tx-font-size-sm);
+  font-weight: var(--tx-font-weight-semibold);
+}
+
+.tx-editor__bubble[data-styled] .tx-editor__tool--ai {
+  color: var(--tx-editor-ai-color);
+}
+
+.tx-editor__bubble[data-styled] .tx-editor__ai-icon {
+  animation: tx-editor-ai-breathe var(--tx-editor-ai-animation-duration) ease-in-out infinite;
+}
+
 .tx-editor__bubble[data-styled] .tx-editor__bubble-link {
   max-width: var(--tx-editor-bubble-link-max-width);
   padding: 0 7px;
@@ -570,6 +678,40 @@
   object-fit: cover;
 }
 
+.tx-editor__suggestions[data-styled] .tx-editor__glyph {
+  display: inline-flex;
+  flex-shrink: 0;
+  justify-content: center;
+  width: var(--tx-editor-suggestion-avatar-size);
+  font-size: 1.15em;
+  line-height: 1;
+}
+
+.tx-editor__suggestions[data-styled] .tx-editor__command-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: calc(var(--tx-editor-suggestion-avatar-size) + 6px);
+  height: calc(var(--tx-editor-suggestion-avatar-size) + 6px);
+  border: 1px solid var(--tx-editor-bubble-border-color);
+  border-radius: var(--tx-radius-md);
+  background: var(--tx-editor-toolbar-background);
+  color: var(--tx-text-muted);
+  font-size: var(--tx-editor-tool-icon-size);
+}
+
+.tx-editor__suggestions[data-styled] .tx-editor__suggestion-text {
+  flex: 1 1 auto;
+}
+
+.tx-editor__suggestions[data-styled] .tx-editor__shortcut {
+  flex-shrink: 0;
+  color: var(--tx-editor-suggestion-secondary-color);
+  font-family: var(--tx-font-family);
+  font-size: var(--tx-font-size-xs);
+}
+
 .tx-editor__suggestions[data-styled] .tx-editor__suggestion-description,
 .tx-editor__suggestions[data-styled] .tx-editor__suggestion-empty {
   color: var(--tx-editor-suggestion-secondary-color);
@@ -593,6 +735,12 @@
   }
 }
 
+@keyframes tx-editor-shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
 @keyframes tx-editor-pop {
   from {
     opacity: 0;
@@ -609,6 +757,8 @@
   }
 
   .tx-editor__frame[data-styled] .tx-editor__ai-icon,
+  .tx-editor__bubble[data-styled] .tx-editor__ai-icon,
+  .tx-editor__frame ::ng-deep .tx-editor__ai-pending,
   .tx-editor__bubble[data-styled],
   .tx-editor__suggestions[data-styled] {
     animation: none;

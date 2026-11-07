@@ -4,8 +4,8 @@ tokens: editor, editorContent
 source: packages/editor
 package: @tectra-ng/editor
 import: TxEditor
-examples: basic, toolbars, form, quill, mentions, images, limit, ai, full-view, readonly, design-tokens
+examples: basic, toolbars, slash-menu, form, quill, mentions, tables, callouts, images, limit, ai, ai-actions, drafts, full-view, readonly, design-tokens
 ---
 # Editor
 
-A rich text editor with a toolbar, a menu over selected text, links, colours, lists, checklists, images, video, `@` mentions and Markdown shortcuts. It writes clean HTML or Quill markup and reads both. Its own package, `@tectra-ng/editor`.
+A rich text editor with a toolbar, a menu over selected text, a `/` block menu, links, colours, lists, checklists, tables, callouts, images, video, `@` mentions, `:` emoji, Markdown shortcuts and AI actions. It writes clean HTML or Quill markup and reads both. Its own package, `@tectra-ng/editor`.

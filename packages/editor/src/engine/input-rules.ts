@@ -1,5 +1,5 @@
 import { MarkType, NodeType } from 'prosemirror-model';
-import { EditorState, Plugin, Transaction } from 'prosemirror-state';
+import { Command, EditorState, Plugin, PluginKey, Transaction } from 'prosemirror-state';
 import { findWrapping } from 'prosemirror-transform';
 import { txEditorSchema as schema } from './schema';
 
@@ -10,6 +10,57 @@ interface TxInputRule {
 }
 
 const MAX_MATCH = 500;
+
+export interface TxTypographyOptions {
+  enabled: () => boolean;
+  quotes: () => readonly [string, string, string, string];
+}
+
+interface TxUndoable {
+  from: number;
+  to: number;
+  text: string;
+}
+
+const undoKey = new PluginKey<TxUndoable | null>('txInputRuleUndo');
+
+function replaceRule(match: RegExp, replacement: (found: RegExpMatchArray) => string): TxInputRule {
+  return {
+    match,
+    prefix: true,
+    handler: (state, found, start, end) => {
+      const text = replacement(found);
+      const tr = state.tr.insertText(text, start, end);
+      return tr.setMeta(undoKey, { from: start, to: start + text.length, text: found[0].slice(found[1].length) });
+    },
+  };
+}
+
+function typographyRules(options: TxTypographyOptions): TxInputRule[] {
+  const quote = (index: number) => () => options.quotes()[index];
+  return [
+    replaceRule(/(^|[^-])--\s$/, () => '— '),
+    replaceRule(/(^|[^-])->$/, () => '→'),
+    replaceRule(/(^|[^<])<-$/, () => '←'),
+    replaceRule(/(^|[^.])\.\.\.$/, () => '…'),
+    replaceRule(/(^|[^(])\([cC]\)$/, () => '©'),
+    replaceRule(/(^|[^(])\([tT][mM]\)$/, () => '™'),
+    replaceRule(/(^|[\s([{\u2014])"$/, quote(0)),
+    replaceRule(/(^|[^\s([{\u2014])"$/, quote(1)),
+    replaceRule(/(^|[\s([{\u2014])'$/, quote(2)),
+    replaceRule(/([\p{L}\p{N}])'$/u, () => '’'),
+    replaceRule(/(^|[^\s([{\u2014])'$/, quote(3)),
+  ];
+}
+
+export const undoInputRule: Command = (state, dispatch) => {
+  const undoable = undoKey.getState(state);
+  if (!undoable || state.selection.from !== undoable.to || !state.selection.empty) {
+    return false;
+  }
+  dispatch?.(state.tr.insertText(undoable.text, undoable.from, undoable.to).setMeta(undoKey, null));
+  return true;
+};
 
 function blockRule(match: RegExp, type: NodeType, attrs?: (match: RegExpMatchArray) => Record<string, unknown>): TxInputRule {
   return {
@@ -80,7 +131,7 @@ function hrRule(): TxInputRule {
   };
 }
 
-export function txInputRules(): Plugin {
+export function txInputRules(typography?: TxTypographyOptions): Plugin {
   const rules: TxInputRule[] = [
     blockRule(/^(#{1,6})\s$/, schema.nodes['heading'], (match) => ({ level: match[1].length })),
     wrapRule(/^\s*>\s$/, schema.nodes['blockquote']),
@@ -96,7 +147,19 @@ export function txInputRules(): Plugin {
     markRule(/(^|[^~\w])~~([^~\s](?:[^~]*[^~\s])?)~~$/, schema.marks['strike']),
     markRule(/(^|[^`\w])`([^`]+)`$/, schema.marks['code']),
   ];
-  return new Plugin({
+  const typographic = typography ? typographyRules(typography) : [];
+  return new Plugin<TxUndoable | null>({
+    key: undoKey,
+    state: {
+      init: () => null,
+      apply(tr, value) {
+        const meta = tr.getMeta(undoKey) as TxUndoable | null | undefined;
+        if (meta !== undefined) {
+          return meta;
+        }
+        return tr.docChanged || tr.selectionSet ? null : value;
+      },
+    },
     props: {
       handleTextInput(view, from, to, text) {
         const state = view.state;
@@ -105,7 +168,8 @@ export function txInputRules(): Plugin {
           return false;
         }
         const before = $from.parent.textBetween(Math.max(0, $from.parentOffset - MAX_MATCH), $from.parentOffset, undefined, '￼') + text;
-        for (const rule of rules) {
+        const inCode = !!schema.marks['code'].isInSet(state.storedMarks ?? $from.marks());
+        for (const rule of [...rules, ...(typography?.enabled() && !inCode ? typographic : [])]) {
           const match = rule.match.exec(before);
           if (!match) {
             continue;

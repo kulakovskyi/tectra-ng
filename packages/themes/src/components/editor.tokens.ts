@@ -1,16 +1,18 @@
-import { mix, tokenRef } from './token-helpers';
+import { lightDark, mix, tokenRef } from './token-helpers';
 
 export const editorContentTokens = {
   root: {
     color: tokenRef('text-primary'),
     fontSize: tokenRef('font-size-md'),
-    lineHeight: '1.65',
-    blockGap: '0.75em',
+    lineHeight: '1.625',
+    paragraphGap: '0',
+    blockGap: '0.5em',
   },
   heading: {
     fontWeight: tokenRef('font-weight-semibold'),
     lineHeight: '1.3',
-    spaceBefore: '1.25em',
+    spaceBefore: '0.6em',
+    spaceAfter: '0.15em',
     h1Size: '1.75em',
     h2Size: '1.45em',
     h3Size: '1.225em',
@@ -26,7 +28,7 @@ export const editorContentTokens = {
   },
   list: {
     indent: '1.5em',
-    itemGap: '0.25em',
+    itemGap: '0.1em',
     markerColor: tokenRef('text-muted'),
   },
   task: {
@@ -62,7 +64,7 @@ export const editorContentTokens = {
   },
   rule: {
     color: tokenRef('surface-border'),
-    spacing: '1.5em',
+    spacing: '0.75em',
   },
   image: {
     borderRadius: tokenRef('radius-lg'),
@@ -78,6 +80,21 @@ export const editorContentTokens = {
     background: mix(tokenRef('primary-base'), '12%', tokenRef('surface-card')),
     color: tokenRef('primary-base'),
     fontWeight: tokenRef('font-weight-medium'),
+  },
+  callout: {
+    paddingBlock: '12.25px',
+    paddingInlineEnd: '14px',
+    paddingInlineStart: '42px',
+    borderRadius: tokenRef('radius-lg'),
+    tint: '10%',
+    markerSize: '18px',
+    markerStart: '14px',
+    markerFontSize: '11px',
+    infoColor: lightDark(tokenRef('sky-600'), tokenRef('sky-400')),
+    successColor: lightDark(tokenRef('green-600'), tokenRef('green-400')),
+    warnColor: lightDark(tokenRef('orange-600'), tokenRef('orange-400')),
+    dangerColor: lightDark(tokenRef('red-600'), tokenRef('red-400')),
+    markerColor: tokenRef('surface-0'),
   },
   table: {
     borderColor: tokenRef('surface-border'),
@@ -100,7 +117,7 @@ export const editorTokens = {
     borderColor: tokenRef('surface-border'),
     separatorColor: tokenRef('surface-border'),
     separatorHeight: '17.5px',
-    separatorSpacing: '5.25px',
+    separatorSpacing: '3.5px',
   },
   tool: {
     size: '29.75px',
@@ -166,7 +183,7 @@ export const editorTokens = {
     selectedRing: tokenRef('primary-base'),
   },
   suggestion: {
-    width: '240px',
+    width: '264px',
     maxHeight: '260px',
     padding: '4px',
     itemPadding: '7px 10.5px',

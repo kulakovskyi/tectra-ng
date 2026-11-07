@@ -1,6 +1,6 @@
 # Editor
 
-A rich text editor for descriptions, comments and reports. It writes clean HTML (or Quill 2 markup with `format="quill"`) and reads both, so text saved by Quill opens as it was. Toolbar presets or your own tool list, a menu over selected text, links, colours, lists and checklists, images and video, `@` mentions, Markdown shortcuts, a character limit, a full view and an AI button. Show saved text with `tx-editor-content` from `@tectra-ng/editor/content`.
+A rich text editor for descriptions, comments and reports. It writes clean HTML (or Quill 2 markup with `format="quill"`) and reads both, so text saved by Quill opens as it was. Toolbar presets or your own tool list, a menu over selected text, a `/` menu for blocks, links, colours, lists and checklists, tables, callouts, images (resize, drag) and video, `@` mentions, `:` emoji, Markdown shortcuts and smart typography, a character limit, drafts, a full view, an AI button and AI actions on the selection. Show saved text with `tx-editor-content` from `@tectra-ng/editor/content`.
 
 ```html
 <tx-editor [formControl]="description" placeholder="Describe the task" height="220px" />
@@ -12,7 +12,7 @@ A rich text editor for descriptions, comments and reports. It writes clean HTML 
 
 The engine is the ProseMirror core (model, state, view, transform); everything above it — the schema, commands, keyboard, undo history, lists, Markdown shortcuts, autolinks and mentions — is part of the package. `@tectra-ng/ui` does not depend on it.
 
-Tools: `undo`, `redo`, `blockStyle`, `fontSize`, `bold`, `italic`, `underline`, `strike`, `code`, `subscript`, `superscript`, `textColor`, `highlight`, `bulletList`, `orderedList`, `taskList`, `outdent`, `indent`, `align`, `link`, `image`, `video`, `blockquote`, `codeBlock`, `horizontalRule`, `clearFormatting`.
+Tools: `table`, `callout`, `undo`, `redo`, `blockStyle`, `fontSize`, `bold`, `italic`, `underline`, `strike`, `code`, `subscript`, `superscript`, `textColor`, `highlight`, `bulletList`, `orderedList`, `taskList`, `outdent`, `indent`, `align`, `link`, `image`, `video`, `blockquote`, `codeBlock`, `horizontalRule`, `clearFormatting`.
 
 ## Inputs
 | Name | Description |
@@ -37,7 +37,12 @@ Tools: `undo`, `redo`, `blockStyle`, `fontSize`, `bold`, `italic`, `underline`, 
 | maxImageSize | Largest image in bytes; a bigger one emits `imageRejected` |
 | mentions | `(query) => items` or a Promise of them: turns on `@` mentions with a suggestion list |
 | mentionTrigger | Character that starts a mention |
-| selectionMenu | Shows the menu over selected text and over links |
+| selectionMenu | Shows the menu over selected text, links and tables |
+| slashMenu | Typing `/` at the start of a line or after a space opens the block menu |
+| emoji | Typing `:` and two letters suggests emoji |
+| typography | Turns `--` into —, `->` into →, `...` into …, straight quotes into the locale's quotes; Backspace right after undoes it |
+| draftKey | Keeps a draft under this key in the browser storage and restores it into an empty editor; `clearDraft()` after sending |
+| aiActions | Actions for the AI button of the selection menu, `{ id, label, icon? }`; picking one emits `aiAction` |
 | ai | Shows the AI button; it emits `aiRequested` |
 | aiLabel | Label of the AI button |
 | fullView | Two-way: the editor fills the window over a backdrop |
@@ -49,7 +54,7 @@ Tools: `undo`, `redo`, `blockStyle`, `fontSize`, `bold`, `italic`, `underline`, 
 | ptOptions | How `pt` merges with the global pass-through |
 | unstyled | Removes the tectra styles |
 
-`focus()`, `clear()`, `getHtml()`, `getText()` and `insertHtml(html)`; `editorView` is the ProseMirror view for own plugins and commands.
+`focus()`, `clear()`, `clearDraft()`, `getHtml()`, `getText()` and `insertHtml(html)`; `editorView` is the ProseMirror view for own plugins and commands.
 
 ## Outputs
 | Name | Description |
@@ -64,6 +69,8 @@ Tools: `undo`, `redo`, `blockStyle`, `fontSize`, `bold`, `italic`, `underline`, 
 | aiRequested | The AI button was pressed; emits the HTML |
 | imageRejected | An image was not added: `{ file, reason: 'type' \| 'size', message }` |
 | mentionSelected | A mention was picked from the list |
+| aiAction | An AI action was picked for the selection: `{ action, text, html, replace }`; `replace` takes a string, HTML or an `AsyncIterable` of chunks that stream into the text; then Keep / Undo appear |
+| draftRestored | A saved draft was put back into the editor; emits its HTML |
 
 ## Slots
 | Name | Description |
@@ -89,6 +96,10 @@ Tools: `undo`, `redo`, `blockStyle`, `fontSize`, `bold`, `italic`, `underline`, 
 | Ctrl / ⌘ + Enter | Leave a code block |
 | `#`–`######`, `-`, `1.`, `[ ]`, `>`, ```` ``` ````, `---` + space | Heading, list, checklist, quote, code block, divider |
 | `**bold**`, `*italic*`, `~~strike~~`, `` `code` `` | Inline formats while typing |
-| Up / Down, Enter, Escape | In the mention list: move, pick, close |
+| `/` | Block menu: type to filter, Up / Down, Enter |
+| `:` + two letters | Emoji suggestions |
+| Up / Down, Enter, Escape | In the mention, block and emoji lists: move, pick, close |
+| Tab / Shift + Tab | In a table: next / previous cell; Tab in the last cell adds a row |
+| Backspace | Right after a smart typography replacement: puts the typed characters back |
 | Left / Right, Home / End | In the toolbar: move between the tools |
 | Escape | Leaves the full view |

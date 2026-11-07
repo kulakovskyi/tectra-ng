@@ -1,0 +1,1 @@
+`aiActions` adds an AI button to the selection menu. `aiAction` gives you the selected text and a `replace` that takes a string, HTML or a stream of chunks — the text shimmers while it streams, then Keep or Undo. Here a stand-in streams the answer.

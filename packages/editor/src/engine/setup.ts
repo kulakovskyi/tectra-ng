@@ -18,21 +18,24 @@ import {
   toggleMark,
   toggleWrap,
 } from './commands';
+import { aiPlugin } from './ai';
 import { dropCursor } from './drop-cursor';
 import { history, redo, undo } from './history';
-import { txInputRules } from './input-rules';
+import { TxTypographyOptions, txInputRules, undoInputRule } from './input-rules';
 import { chain, keymap } from './keymap';
+import { goToCell, stayInCell, stayInCellForward, tableResize } from './tables';
 import { liftCurrentItem, liftEmptyListItem, liftListItemAtStart, sinkCurrentItem, splitListItem, toggleList } from './lists';
-import { TxSuggestionHandlers, autolinkPlugin, maxLengthPlugin, placeholderPlugin, suggestionPlugin } from './plugins';
+import { TxSuggestionHandlers, TxSuggestionTrigger, autolinkPlugin, maxLengthPlugin, placeholderPlugin, suggestionPlugin } from './plugins';
 import { txEditorSchema as schema } from './schema';
 
 export interface TxEditorEngineOptions {
   placeholder: () => string;
   maxLength: () => number | undefined;
   linkTarget: () => string | null;
-  mentionTrigger: () => string | null;
+  triggers: () => readonly TxSuggestionTrigger[];
   suggestion: TxSuggestionHandlers;
   openLink: () => void;
+  typography?: TxTypographyOptions;
 }
 
 export function editorKeymap(openLink: () => void): Record<string, Command> {
@@ -62,26 +65,28 @@ export function editorKeymap(openLink: () => void): Record<string, Command> {
       openLink();
       return true;
     },
-    Tab: sinkCurrentItem,
-    'Shift-Tab': liftCurrentItem,
+    Tab: chain(goToCell(1), sinkCurrentItem),
+    'Shift-Tab': chain(goToCell(-1), liftCurrentItem),
     Enter: chain(newlineInCode, splitListItem(), liftEmptyListItem, liftEmptyBlock, splitBlock),
     'Shift-Enter': insertHardBreak,
     'Mod-Enter': exitCode,
-    Backspace: chain(deleteSelection, liftListItemAtStart, outdentAtStart, liftFromQuoteAtStart, headingToParagraphAtStart, joinBackward),
-    Delete: chain(deleteSelection, joinForward),
+    Backspace: chain(undoInputRule, deleteSelection, stayInCell, liftListItemAtStart, outdentAtStart, liftFromQuoteAtStart, headingToParagraphAtStart, joinBackward),
+    Delete: chain(deleteSelection, stayInCellForward, joinForward),
     'Mod-a': selectAll,
   };
 }
 
 export function editorPlugins(options: TxEditorEngineOptions): Plugin[] {
   return [
-    suggestionPlugin(options.mentionTrigger, options.suggestion),
-    txInputRules(),
+    suggestionPlugin(options.triggers, options.suggestion),
+    txInputRules(options.typography),
     keymap(editorKeymap(options.openLink)),
     history(),
     placeholderPlugin(options.placeholder),
     maxLengthPlugin(options.maxLength),
     autolinkPlugin(options.linkTarget),
     dropCursor(),
+    tableResize(),
+    aiPlugin(),
   ];
 }

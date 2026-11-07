@@ -17,7 +17,7 @@ function options() {
     placeholder: () => 'Write',
     maxLength: () => undefined,
     linkTarget: () => '_blank',
-    mentionTrigger: () => null,
+    triggers: () => [],
     suggestion: { change: () => undefined, keydown: () => false },
     openLink: () => undefined,
   };
@@ -98,7 +98,7 @@ describe('editor engine', () => {
   it('adds a paragraph above when Enter is pressed at the start of a heading', () => {
     let state = at(stateOf('<h1>Title</h1>'), 'Title');
     state = run(state, splitBlock);
-    expect(html(state)).toBe('<p></p><h1>Title</h1>');
+    expect(html(state)).toBe('<p><br></p><h1>Title</h1>');
     expect(state.selection.$from.parent.type.name).toBe('heading');
   });
 
@@ -133,7 +133,7 @@ describe('editor engine', () => {
     const image = () => schema.nodes['image'].create({ src: 'https://example.com/a.png' });
     const img = '<img src="https://example.com/a.png">';
     expect(html(run(at(stateOf('<p>Text</p>'), 'Text'), insertNode(image())))).toBe(`${img}<p>Text</p>`);
-    expect(html(run(at(stateOf('<p>Text</p>'), 'Text', 4), insertNode(image())))).toBe(`<p>Text</p>${img}<p></p>`);
+    expect(html(run(at(stateOf('<p>Text</p>'), 'Text', 4), insertNode(image())))).toBe(`<p>Text</p>${img}<p><br></p>`);
     expect(html(run(at(stateOf('<p>Te</p><p>Next</p>'), 'Te', 1), insertNode(image())))).toBe(`<p>T</p>${img}<p>e</p><p>Next</p>`);
     const empty = stateOf('<p>One</p><p></p><p>Two</p>');
     expect(html(run(empty.apply(empty.tr.setSelection(TextSelection.create(empty.doc, 6))), insertNode(image())))).toBe(`<p>One</p>${img}<p>Two</p>`);
