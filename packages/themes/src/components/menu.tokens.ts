@@ -10,7 +10,7 @@ export const menuTokens = {
     padding: '3.5px',
     gap: '2px',
     minWidth: '200px',
-    maxHeight: 'min(420px, calc(100vh - 32px))',
+    maxHeight: 'min(420px, calc(100dvh - 32px))',
     fontSize: tokenRef('font-size-md'),
     lineHeight: '1.45',
   },
