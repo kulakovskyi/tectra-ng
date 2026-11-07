@@ -167,7 +167,7 @@ Detailed checklist per component: [roadmap/stage-9-navigation.md](roadmap/stage-
 | `ui/breadcrumb` — chevron / slash, router links, commands | Breadcrumb | console crumbs | ✅ |
 | `ui/menubar` (submenus on the kit menu, mobile menu), `ui/panel-menu` (`panel` and the app `sidebar` look, current route) | Menubar, PanelMenu | sidebar menu | ✅ |
 | `ui/splitter` (sizes, collapsible, nested, stored state), `ui/scroll-panel`, `ui/toolbar` | Splitter, ScrollPanel, Toolbar | — (parity) | ✅ |
-| `ui/file-upload` | FileUpload | 8 | ⬜ |
+| `ui/file-upload` — drop zone or button, previews, validation, upload with progress, form control (own design) | FileUpload | 8 | ✅ |
 | `ui/editor` (rich text, Tiptap / ProseMirror instead of Quill) — own package `@tectra-ng/editor` | Editor | 6, 16 | ⬜ |
 | `ui/image` (preview, zoom), `ui/galleria`, `ui/carousel` | Image, Galleria, Carousel | 2 | ⬜ |
 

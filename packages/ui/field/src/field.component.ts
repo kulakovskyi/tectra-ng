@@ -91,7 +91,7 @@ export class TxField {
 
   private linkControl(): void {
     const host = this.elementRef.nativeElement;
-    const group = host.querySelector<HTMLElement>('.tx-field__control :is([role="radiogroup"], [role="group"], [role="listbox"])');
+    const group = host.querySelector<HTMLElement>('.tx-field__control :is([data-tx-field-control], [role="radiogroup"], [role="group"], [role="listbox"])');
     const element = group ?? host.querySelector<HTMLElement>(`.tx-field__control :is(${CONTROL_SELECTOR})`);
     const describedBy = [host.querySelector(`#${this.hintId}`) ? this.hintId : null, this.errorId].filter((id): id is string => !!id);
     const key = `${describedBy.join(' ')}|${this.label() ? 'label' : ''}`;

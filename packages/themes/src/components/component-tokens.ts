@@ -51,6 +51,7 @@ import { panelMenuTokens } from './panel-menu.tokens';
 import { scrollPanelTokens } from './scroll-panel.tokens';
 import { splitterTokens } from './splitter.tokens';
 import { toolbarTokens } from './toolbar.tokens';
+import { fileUploadTokens } from './file-upload.tokens';
 
 export const COMPONENT_TOKENS = {
   icon: iconTokens,
@@ -133,6 +134,7 @@ export const COMPONENT_TOKENS = {
   splitter: splitterTokens,
   scrollPanel: scrollPanelTokens,
   toolbar: toolbarTokens,
+  fileUpload: fileUploadTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

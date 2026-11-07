@@ -1,0 +1,1 @@
+`customUpload` hands the files to `uploadHandler` with `progress`, `complete` and `fail` callbacks — here a simulated server that refuses PDF files. Use `url` to send them as a `FormData` request instead.

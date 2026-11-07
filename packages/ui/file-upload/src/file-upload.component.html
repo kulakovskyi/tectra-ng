@@ -1,0 +1,293 @@
+<input
+  #input
+  type="file"
+  class="tx-file-upload__input"
+  tabindex="-1"
+  aria-hidden="true"
+  [accept]="accept() ?? ''"
+  [multiple]="multiple()"
+  [disabled]="isDisabled()"
+  (change)="onInputChange($event)"
+/>
+
+<ng-template #thumbnail let-entry let-large="large">
+  <span
+    class="tx-file-upload__thumbnail"
+    aria-hidden="true"
+    [attr.data-kind]="entry.kind"
+    [attr.data-size]="large ? 'large' : null"
+    [class]="passThrough().thumbnail?.class"
+    [style]="passThrough().thumbnail?.style"
+  >
+    @if (entry.preview) {
+      <img class="tx-file-upload__preview" alt="" [src]="entry.preview" />
+    } @else {
+      <tx-icon class="tx-file-upload__kind" [name]="kindIcon(entry.kind)" />
+      @if (entry.extension) {
+        <span class="tx-file-upload__extension">{{ entry.extension }}</span>
+      }
+    }
+  </span>
+</ng-template>
+
+<ng-template #progress let-entry>
+  <span
+    class="tx-file-upload__progress"
+    role="progressbar"
+    aria-valuemin="0"
+    aria-valuemax="100"
+    [attr.aria-valuenow]="entry.progress"
+    [attr.aria-label]="entry.file.name"
+    [class]="passThrough().progress?.class"
+    [style]="passThrough().progress?.style"
+  >
+    <span class="tx-file-upload__progress-value" [style.width.%]="entry.progress"></span>
+  </span>
+</ng-template>
+
+<ng-template #messageList>
+  @if (messages().length) {
+    <div class="tx-file-upload__messages">
+      @for (message of messages(); track message.id) {
+        <div
+          class="tx-file-upload__message"
+          animate.enter="tx-file-upload--enter"
+          animate.leave="tx-file-upload--leave"
+          [class]="passThrough().message?.class"
+          [style]="passThrough().message?.style"
+        >
+          <tx-icon class="tx-file-upload__message-icon" name="exclamation-circle" />
+          <span class="tx-file-upload__message-text">{{ message.text }}</span>
+          <button type="button" class="tx-file-upload__dismiss" [attr.aria-label]="translations().close" (click)="dismiss(message)">
+            <tx-icon name="times" />
+          </button>
+        </div>
+      }
+    </div>
+  }
+</ng-template>
+
+@if (mode() === 'basic') {
+  <div class="tx-file-upload__basic" [class]="passThrough().basic?.class" [style]="passThrough().basic?.style">
+    <button
+      txButton
+      type="button"
+      severity="secondary"
+      outlined
+      [icon]="chooseIcon()"
+      [disabled]="isDisabled() || uploading()"
+      [attr.aria-describedby]="id + '-label'"
+      (click)="choose()"
+    >
+      {{ chooseText() }}
+    </button>
+    @if (hasTarget() && !auto() && showUploadButton() && waiting().length) {
+      <button txButton type="button" [icon]="uploadIcon()" [loading]="uploading()" (click)="upload()">
+        {{ uploadLabel() ?? translations().upload }}
+      </button>
+    }
+    <span class="tx-file-upload__basic-label" [id]="id + '-label'">
+      {{ basicLabel() }}
+      @if (rows().length === 1 && rows()[0].status !== 'pending') {
+        · {{ meta(rows()[0]) }}
+      }
+    </span>
+  </div>
+  <ng-container [ngTemplateOutlet]="messageList" />
+} @else {
+  <div
+    class="tx-file-upload__zone"
+    data-tx-field-control
+    [attr.data-state]="!multiple() && current() ? 'selected' : 'empty'"
+    [attr.role]="!multiple() && current() ? 'group' : 'button'"
+    [attr.tabindex]="!multiple() && current() ? null : isDisabled() || limitReached() ? -1 : 0"
+    [attr.aria-disabled]="!multiple() && current() ? null : isDisabled() || limitReached() || null"
+    [attr.aria-label]="ariaLabel() ?? null"
+    [attr.aria-labelledby]="zoneLabelledBy()"
+    [attr.aria-describedby]="!multiple() && current() && description() ? id + '-hint' : null"
+    [attr.aria-invalid]="isInvalid() || null"
+    [class]="passThrough().dropzone?.class"
+    [style]="passThrough().dropzone?.style"
+    (click)="onZoneClick($event)"
+    (keydown)="onZoneKeydown($event)"
+    (blur)="markTouched()"
+    (dragenter)="onDragEnter($event)"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave($event)"
+    (drop)="onDrop($event)"
+  >
+    <svg class="tx-file-upload__outline" aria-hidden="true" focusable="false"><rect class="tx-file-upload__outline-rect" /></svg>
+    @if (!multiple() && current(); as entry) {
+      <div class="tx-file-upload__selected" animate.enter="tx-file-upload--enter">
+        @if (fileTemplate(); as template) {
+          <ng-container [ngTemplateOutlet]="template.template" [ngTemplateOutletContext]="fileContext(entry, 0)" />
+        } @else {
+          <ng-container [ngTemplateOutlet]="thumbnail" [ngTemplateOutletContext]="{ $implicit: entry, large: true }" />
+          <span class="tx-file-upload__selected-info">
+            <span
+              class="tx-file-upload__name"
+              [id]="id + '-prompt'"
+              [title]="entry.file.name"
+              [class]="passThrough().fileName?.class"
+              [style]="passThrough().fileName?.style"
+              >{{ entry.file.name }}</span
+            >
+            <span
+              class="tx-file-upload__meta"
+              [attr.data-status]="entry.status"
+              [class]="passThrough().fileMeta?.class"
+              [style]="passThrough().fileMeta?.style"
+            >
+              @if (entry.status === 'uploaded') {
+                <tx-icon class="tx-file-upload__status-icon" name="check-circle" />
+              }
+              {{ meta(entry) }}
+            </span>
+          </span>
+          @if (entry.status === 'uploading') {
+            <ng-container [ngTemplateOutlet]="progress" [ngTemplateOutletContext]="{ $implicit: entry }" />
+          }
+          <span class="tx-file-upload__selected-actions">
+            @if (entry.status === 'failed') {
+              <button txButton type="button" size="small" text severity="secondary" icon="refresh" (click)="retry(entry)">{{ translations().retry }}</button>
+            }
+            @if (hasTarget() && !auto() && showUploadButton() && entry.status === 'pending') {
+              <button txButton type="button" size="small" [icon]="uploadIcon()" (click)="upload()">{{ uploadLabel() ?? translations().upload }}</button>
+            }
+            <button
+              txButton
+              type="button"
+              size="small"
+              text
+              severity="secondary"
+              icon="sync"
+              [disabled]="isDisabled() || entry.status === 'uploading'"
+              (click)="choose()"
+            >
+              {{ translations().replace }}
+            </button>
+            <button
+              txButton
+              type="button"
+              size="small"
+              text
+              severity="danger"
+              icon="trash"
+              [attr.aria-label]="removeLabel(entry)"
+              [disabled]="isDisabled() || entry.status === 'uploading'"
+              (click)="remove($event, entry)"
+            >
+              {{ translations().remove }}
+            </button>
+          </span>
+        }
+      </div>
+    } @else {
+      <span class="tx-file-upload__content" [id]="id + '-content'">
+        @if (dropzoneTemplate(); as template) {
+          <ng-container [ngTemplateOutlet]="template.template" [ngTemplateOutletContext]="{ $implicit: dragging(), choose: chooseFiles }" />
+        } @else {
+          <span class="tx-file-upload__icon" aria-hidden="true" [class]="passThrough().icon?.class" [style]="passThrough().icon?.style">
+            <tx-icon class="tx-file-upload__glyph" [name]="dragging() ? 'arrow-down' : 'cloud-upload'" />
+          </span>
+          <span class="tx-file-upload__prompt" [class]="passThrough().prompt?.class" [style]="passThrough().prompt?.style">
+            @if (dragging()) {
+              {{ translations().fileUploadRelease }}
+            } @else {
+              {{ prompt().before }}<span class="tx-file-upload__link">{{ prompt().link }}</span>{{ prompt().after }}
+            }
+          </span>
+          @if (description()) {
+            <span class="tx-file-upload__hint" [id]="id + '-hint'" [class]="passThrough().hint?.class" [style]="passThrough().hint?.style">{{ description() }}</span>
+          }
+        }
+      </span>
+    }
+  </div>
+
+  @if (!multiple() && current() && description()) {
+    <span class="tx-file-upload__hint tx-file-upload__hint--below" [id]="id + '-hint'">{{ description() }}</span>
+  }
+
+  <ng-container [ngTemplateOutlet]="messageList" />
+
+  @if (multiple() && rows().length) {
+    <ul class="tx-file-upload__list" [class]="passThrough().list?.class" [style]="passThrough().list?.style">
+      @for (entry of rows(); track entry.id; let index = $index) {
+        <li
+          class="tx-file-upload__file"
+          animate.enter="tx-file-upload--enter"
+          animate.leave="tx-file-upload--leave"
+          [attr.data-status]="entry.status"
+          [class]="passThrough().file?.class"
+          [style]="passThrough().file?.style"
+        >
+          @if (fileTemplate(); as template) {
+            <ng-container [ngTemplateOutlet]="template.template" [ngTemplateOutletContext]="fileContext(entry, index)" />
+          } @else {
+            <ng-container [ngTemplateOutlet]="thumbnail" [ngTemplateOutletContext]="{ $implicit: entry, large: false }" />
+            <span class="tx-file-upload__info">
+              <span class="tx-file-upload__name" [title]="entry.file.name" [class]="passThrough().fileName?.class" [style]="passThrough().fileName?.style">{{ entry.file.name }}</span>
+              <span class="tx-file-upload__meta" [attr.data-status]="entry.status" [class]="passThrough().fileMeta?.class" [style]="passThrough().fileMeta?.style">
+                @if (entry.status === 'uploaded') {
+                  <tx-icon class="tx-file-upload__status-icon" name="check-circle" />
+                }
+                {{ meta(entry) }}
+              </span>
+              @if (entry.status === 'uploading') {
+                <ng-container [ngTemplateOutlet]="progress" [ngTemplateOutletContext]="{ $implicit: entry }" />
+              }
+            </span>
+            @if (entry.status === 'failed') {
+              <button
+                txButton
+                type="button"
+                size="small"
+                text
+                rounded
+                severity="secondary"
+                icon="refresh"
+                iconOnly
+                [attr.aria-label]="translations().retry + ' ' + entry.file.name"
+                (click)="retry(entry)"
+              ></button>
+            }
+            <button
+              txButton
+              type="button"
+              size="small"
+              text
+              rounded
+              severity="secondary"
+              [icon]="cancelIcon()"
+              iconOnly
+              class="tx-file-upload__remove"
+              [attr.aria-label]="removeLabel(entry)"
+              [disabled]="isDisabled() || entry.status === 'uploading'"
+              (click)="remove($event, entry)"
+            ></button>
+          }
+        </li>
+      }
+    </ul>
+  }
+
+  @if (showFooter()) {
+    <div class="tx-file-upload__footer" [class]="passThrough().footer?.class" [style]="passThrough().footer?.style">
+      <ng-content select="[txFileUploadActions]" />
+      @if (hasTarget() && !auto() && showUploadButton() && waiting().length) {
+        <span class="tx-file-upload__summary">{{ summary() }}</span>
+        <span class="tx-file-upload__footer-buttons">
+          @if (showCancelButton()) {
+            <button txButton type="button" size="small" text severity="secondary" [icon]="cancelIcon()" (click)="clear()">
+              {{ cancelLabel() ?? translations().clear }}
+            </button>
+          }
+          <button txButton type="button" size="small" [icon]="uploadIcon()" [loading]="uploading()" (click)="upload()">
+            {{ uploadLabel() ?? translations().upload }}
+          </button>
+        </span>
+      }
+    </div>
+  }
+}
