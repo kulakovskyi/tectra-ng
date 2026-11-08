@@ -1,5 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
@@ -54,7 +55,7 @@ import { TxButtonIconPosition, TxButtonPart, TxButtonSeverity, TxButtonSize, TxB
     '[attr.aria-busy]': 'loading() || null',
   },
 })
-export class TxButton {
+export class TxButton implements AfterViewInit {
   private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private txIconRegistry = inject(TxIconRegistry);
 
@@ -134,12 +135,20 @@ export class TxButton {
     host.addEventListener('click', blockClick, { capture: true });
     destroyRef.onDestroy(() => host.removeEventListener('click', blockClick, { capture: true }));
     afterNextRender(() => {
-      const content = this.contentElement().nativeElement;
-      const update = () => this.hasProjectedLabel.set(!!content.textContent?.trim() || content.children.length > 0);
+      const update = () => this.hasProjectedLabel.set(this.projectsLabel());
       update();
       const observer = new MutationObserver(update);
-      observer.observe(content, { childList: true, characterData: true, subtree: true });
+      observer.observe(this.contentElement().nativeElement, { childList: true, characterData: true, subtree: true });
       destroyRef.onDestroy(() => observer.disconnect());
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.hasProjectedLabel.set(this.projectsLabel());
+  }
+
+  private projectsLabel(): boolean {
+    const content = this.contentElement().nativeElement;
+    return !!content.textContent?.trim() || content.children.length > 0;
   }
 }
