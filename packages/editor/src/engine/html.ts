@@ -5,7 +5,7 @@ import { txEditorSchema as schema } from './schema';
 export function parseHtml(html: string | null | undefined, document: Document): ProseNode {
   const inert = document.implementation.createHTMLDocument('');
   const container = inert.createElement('div');
-  container.innerHTML = fromQuillHtml(html ?? '');
+  container.innerHTML = fromQuillHtml(html ?? '', document);
   return ProseDOMParser.fromSchema(schema).parse(container, { preserveWhitespace: false });
 }
 

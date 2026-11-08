@@ -894,7 +894,7 @@ export class TxEditor extends TxFormControlBase<string> {
         callout: (node, view, getPos) => new TxCalloutView(node, view, getPos, () => this.translations().editorCalloutTone),
         image: (node, view, getPos) => new TxImageView(node, view, getPos),
       },
-      transformPastedHTML: (html) => fromQuillHtml(html),
+      transformPastedHTML: (html) => fromQuillHtml(html, this.document),
       handlePaste: (view, event) => this.handleFiles(Array.from(event.clipboardData?.files ?? []), null) || this.pasteLink(view, event),
       handleDrop: (view, event) => {
         const files = Array.from((event as DragEvent).dataTransfer?.files ?? []);
@@ -975,7 +975,7 @@ export class TxEditor extends TxFormControlBase<string> {
   }
 
   private serialize(doc: ProseNode): string {
-    return formatEditorHtml(serializeHtml(doc, this.document), this.format());
+    return formatEditorHtml(serializeHtml(doc, this.document), this.format(), this.document);
   }
 
   private applyExternal(html: string): void {

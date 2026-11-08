@@ -112,3 +112,24 @@ describe('sanitizeEditorHtml', () => {
     expect(body.querySelectorAll('p')[1].hasAttribute('style')).toBe(false);
   });
 });
+
+describe('without DOMParser (server rendering)', () => {
+  const Parser = globalThis.DOMParser;
+
+  beforeEach(() => {
+    Reflect.deleteProperty(globalThis, 'DOMParser');
+  });
+
+  afterEach(() => {
+    globalThis.DOMParser = Parser;
+  });
+
+  it('sanitizes and converts through the given document', () => {
+    expect(sanitizeEditorHtml('<p onclick="x()">Hi<script>x()</script></p>', document)).toBe('<p>Hi</p>');
+    expect(fromQuillHtml('<ol><li data-list="bullet">A</li></ol>', document)).toBe('<ul><li><p>A</p></li></ul>');
+  });
+
+  it('renders nothing unsafe without a document', () => {
+    expect(sanitizeEditorHtml('<p>Hi</p>')).toBe('');
+  });
+});

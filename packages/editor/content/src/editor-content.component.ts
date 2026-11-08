@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, afterRenderEffect, booleanAttribute, computed, inject, input, output, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DOCUMENT, ElementRef, afterRenderEffect, booleanAttribute, computed, inject, input, output, signal, viewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
@@ -51,6 +51,7 @@ import { sanitizeEditorHtml } from './editor-sanitizer';
 })
 export class TxEditorContent {
   private sanitizer = inject(DomSanitizer);
+  private document = inject(DOCUMENT);
 
   readonly html = input<string | null | undefined>(null);
   readonly previewImages = input(true, { transform: booleanAttribute });
@@ -67,7 +68,7 @@ export class TxEditorContent {
   private readonly body = viewChild<ElementRef<HTMLElement>>('body');
   protected readonly preview = signal<{ src: string; alt: string } | null>(null);
   protected readonly previewOpen = signal(false);
-  protected readonly safeHtml = computed(() => this.sanitizer.bypassSecurityTrustHtml(sanitizeEditorHtml(fromQuillHtml(this.html()))));
+  protected readonly safeHtml = computed(() => this.sanitizer.bypassSecurityTrustHtml(sanitizeEditorHtml(fromQuillHtml(this.html(), this.document), this.document)));
   readonly hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-editor-content'), ...this.passThrough().root?.style }));
 
   constructor() {

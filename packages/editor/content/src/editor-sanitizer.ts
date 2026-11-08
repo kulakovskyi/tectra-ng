@@ -1,3 +1,5 @@
+import { parseHtmlBody } from './parse-html';
+
 const ALLOWED_TAGS = new Set([
   'p', 'br', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'strong', 'b', 'em', 'i', 'u', 's', 'strike', 'del', 'code', 'pre',
   'blockquote', 'ul', 'ol', 'li', 'a', 'img', 'span', 'sub', 'sup', 'hr', 'mark', 'div', 'label', 'input',
@@ -105,15 +107,14 @@ function cleanNode(node: Node): void {
   }
 }
 
-export function sanitizeEditorHtml(html: string | null | undefined): string {
+export function sanitizeEditorHtml(html: string | null | undefined, document?: Document | null): string {
   if (!html) {
     return '';
   }
-  const Parser = globalThis.DOMParser;
-  if (!Parser) {
+  const body = parseHtmlBody(html, document);
+  if (!body) {
     return '';
   }
-  const body = new Parser().parseFromString(`<body>${html}</body>`, 'text/html').body;
   cleanNode(body);
   return body.innerHTML;
 }

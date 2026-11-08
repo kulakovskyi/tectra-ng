@@ -1,4 +1,5 @@
 import { TxEditorFormat } from './editor-content.types';
+import { parseHtmlBody } from './parse-html';
 
 const QUILL_SIZES: Record<string, string> = { small: '0.75em', large: '1.5em', huge: '2.5em' };
 const QUILL_FONTS: Record<string, string> = { serif: 'serif', monospace: 'monospace' };
@@ -7,11 +8,6 @@ const ALIGNMENTS = ['left', 'center', 'right', 'justify'];
 const QUILL_MARKERS = /data-list=|class="[^"]*\bql-|ql-code-block|ql-video/;
 
 type TxListKind = 'bullet' | 'ordered' | 'checked' | 'unchecked';
-
-function parse(html: string): HTMLElement | null {
-  const Parser = globalThis.DOMParser;
-  return Parser ? new Parser().parseFromString(`<body>${html}</body>`, 'text/html').body : null;
-}
 
 function classValue(element: Element, prefix: string): string | null {
   const match = Array.from(element.classList).find((name) => name.startsWith(prefix));
@@ -125,14 +121,14 @@ export function isQuillHtml(html: string | null | undefined): boolean {
   return !!html && QUILL_MARKERS.test(html);
 }
 
-export function fromQuillHtml(html: string | null | undefined): string {
+export function fromQuillHtml(html: string | null | undefined, document?: Document | null): string {
   if (!html) {
     return '';
   }
   if (!isQuillHtml(html)) {
     return html;
   }
-  const body = parse(html);
+  const body = parseHtmlBody(html, document);
   if (!body) {
     return html;
   }
@@ -215,19 +211,19 @@ function flattenList(list: Element, level: number, out: HTMLElement): void {
   }
 }
 
-export function toQuillHtml(html: string | null | undefined): string {
+export function toQuillHtml(html: string | null | undefined, document?: Document | null): string {
   if (!html) {
     return '';
   }
-  const body = parse(html);
+  const body = parseHtmlBody(html, document);
   if (!body) {
     return html;
   }
-  const document = body.ownerDocument;
+  const owner = body.ownerDocument;
   const topLists = Array.from(body.querySelectorAll('ol, ul')).filter((list) => !list.parentElement?.closest('ol, ul'));
   let previous: HTMLElement | null = null;
   for (const list of topLists) {
-    const target: HTMLElement = previous && previous.nextSibling === list ? previous : document.createElement('ol');
+    const target: HTMLElement = previous && previous.nextSibling === list ? previous : owner.createElement('ol');
     flattenList(list, 0, target);
     if (target === previous) {
       list.remove();
@@ -239,16 +235,16 @@ export function toQuillHtml(html: string | null | undefined): string {
   body.querySelectorAll('pre').forEach((pre) => {
     const code = pre.querySelector('code');
     const language = Array.from(code?.classList ?? []).find((name) => name.startsWith('language-'))?.slice(9) ?? 'plain';
-    const container = document.createElement('div');
+    const container = owner.createElement('div');
     container.className = 'ql-code-block-container';
     container.setAttribute('spellcheck', 'false');
     for (const line of (code?.textContent ?? pre.textContent ?? '').split('\n')) {
-      const block = document.createElement('div');
+      const block = owner.createElement('div');
       block.className = 'ql-code-block';
       block.setAttribute('data-language', language);
       block.textContent = line;
       if (!line) {
-        block.appendChild(document.createElement('br'));
+        block.appendChild(owner.createElement('br'));
       }
       container.appendChild(block);
     }
@@ -292,14 +288,14 @@ export function toQuillHtml(html: string | null | undefined): string {
       element.removeAttribute('style');
     }
   });
-  body.querySelectorAll('p:empty, h1:empty, h2:empty, h3:empty, h4:empty, h5:empty, h6:empty').forEach((block) => block.appendChild(document.createElement('br')));
+  body.querySelectorAll('p:empty, h1:empty, h2:empty, h3:empty, h4:empty, h5:empty, h6:empty').forEach((block) => block.appendChild(owner.createElement('br')));
   return body.innerHTML;
 }
 
-export function toEditorHtml(html: string | null | undefined): string {
-  return fromQuillHtml(html);
+export function toEditorHtml(html: string | null | undefined, document?: Document | null): string {
+  return fromQuillHtml(html, document);
 }
 
-export function formatEditorHtml(html: string, format: TxEditorFormat): string {
-  return format === 'quill' ? toQuillHtml(html) : html;
+export function formatEditorHtml(html: string, format: TxEditorFormat, document?: Document | null): string {
+  return format === 'quill' ? toQuillHtml(html, document) : html;
 }
