@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
@@ -14,6 +15,7 @@ import { NgControl } from '@angular/forms';
 import { injectFluid } from '@tectra-ng/core/fluid';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TxInput } from '@tectra-ng/ui/input';
+import { TxIconFieldSlotContent } from './icon-field.types';
 
 @Component({
   selector: 'tx-icon-field',
@@ -23,11 +25,14 @@ import { TxInput } from '@tectra-ng/ui/input';
   host: {
     class: 'tx-icon-field',
     '[class.tx-icon-field--fluid]': 'isFluid()',
-    '[style.--tx-field-inset-start]': 'startInset() + "px"',
-    '[style.--tx-field-inset-end]': 'endInset() + "px"',
+    '[class.tx-icon-field--start-icon]': 'startContent() === "icon"',
+    '[class.tx-icon-field--end-icon]': 'endContent() === "icon"',
+    '[class.tx-icon-field--end-action]': 'endContent() === "action"',
+    '[style.--tx-field-inset-start]': 'startInset() === null ? null : startInset() + "px"',
+    '[style.--tx-field-inset-end]': 'endInset() === null ? null : endInset() + "px"',
   },
 })
-export class TxIconField {
+export class TxIconField implements AfterViewInit {
   private destroyRef = inject(DestroyRef);
 
   readonly fluid = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
@@ -39,8 +44,10 @@ export class TxIconField {
   readonly end = viewChild.required<ElementRef<HTMLElement>>('end');
 
   readonly isFluid = injectFluid(this.fluid);
-  readonly startInset = signal(0);
-  readonly endInset = signal(0);
+  readonly startInset = signal<number | null>(null);
+  readonly endInset = signal<number | null>(null);
+  readonly startContent = signal<TxIconFieldSlotContent>('none');
+  readonly endContent = signal<TxIconFieldSlotContent>('none');
   readonly hasValue = signal(false);
   readonly isEditable = signal(true);
 
@@ -49,6 +56,11 @@ export class TxIconField {
       this.watchInsets();
       this.watchValue();
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.startContent.set(this.slotContent(this.start().nativeElement));
+    this.endContent.set(this.slotContent(this.end().nativeElement));
   }
 
   value(): string {
@@ -103,6 +115,13 @@ export class TxIconField {
       subscription?.unsubscribe();
     });
     update();
+  }
+
+  private slotContent(slot: HTMLElement): TxIconFieldSlotContent {
+    if (slot.querySelector('.tx-input-action')) {
+      return 'action';
+    }
+    return slot.querySelector('.tx-input-icon') ? 'icon' : 'none';
   }
 
   private inset(container: HTMLElement): number {

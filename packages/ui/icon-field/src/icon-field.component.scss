@@ -1,8 +1,23 @@
 :host {
+  --_icon-room: calc(var(--tx-form-field-font-size) + 6px);
+  --_action-room: calc(24px + 6px);
+
   position: relative;
   display: inline-flex;
   align-items: stretch;
   max-width: 100%;
+}
+
+:host(.tx-icon-field--start-icon) {
+  --tx-field-inset-start: var(--_icon-room);
+}
+
+:host(.tx-icon-field--end-icon) {
+  --tx-field-inset-end: var(--_icon-room);
+}
+
+:host(.tx-icon-field--end-action) {
+  --tx-field-inset-end: var(--_action-room);
 }
 
 :host(.tx-icon-field--fluid) {

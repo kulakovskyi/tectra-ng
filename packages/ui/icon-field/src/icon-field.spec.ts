@@ -42,6 +42,13 @@ describe('TxIconField', () => {
     expect(query('.tx-icon-field__slot--end tx-input-icon')?.textContent?.trim()).toBe('.com');
   });
 
+  it('marks what its slots hold, so the input leaves room before it is measured', () => {
+    const field = query('tx-icon-field');
+    expect(field.classList).toContain('tx-icon-field--start-icon');
+    expect(field.classList).toContain('tx-icon-field--end-action');
+    expect(field.classList).not.toContain('tx-icon-field--end-icon');
+  });
+
   it('clears the form value and hides the clear button', async () => {
     const clear = query('tx-input-clear button');
     expect(clear).not.toBeNull();
