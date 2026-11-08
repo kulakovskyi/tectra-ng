@@ -44,8 +44,17 @@ test('a new column slides in and options change colour smoothly', async ({ page 
   await example(page, 'Basic').getByRole('combobox').click();
   const option = page.getByRole('treeitem', { name: 'Poland' });
   expect(parseFloat(await option.evaluate((element) => getComputedStyle(element).transitionDuration))).toBeGreaterThan(0);
+  await page.evaluate(() => {
+    const target = window as unknown as { txColumnIn: boolean };
+    target.txColumnIn = false;
+    document.addEventListener('animationstart', (event) => {
+      if (event.animationName.includes('tx-cascade-column-in')) {
+        target.txColumnIn = true;
+      }
+    });
+  });
   await option.hover();
   const column = page.locator('.tx-cascade-select__column').nth(1);
   await expect(column).toContainText('Masovia');
-  expect(await column.evaluate((element) => element.getAnimations().length)).toBeGreaterThan(0);
+  await expect.poll(() => page.evaluate(() => (window as unknown as { txColumnIn: boolean }).txColumnIn)).toBe(true);
 });
