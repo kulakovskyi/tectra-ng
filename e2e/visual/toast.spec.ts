@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 import { trackPage } from './helpers';
 
 const OUTLET = 'tx-toast:not([data-position="top-center"]):not([key])';

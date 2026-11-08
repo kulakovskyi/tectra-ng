@@ -1,4 +1,5 @@
-import { Page, expect, test } from '@playwright/test';
+import { Page } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 const example = (page: Page, id: string) => page.locator(`menubar-${id}-example`);
 const submenus = (page: Page) => page.locator('tx-menu-list[data-panel="submenu"]');

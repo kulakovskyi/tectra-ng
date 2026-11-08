@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 test('popover moves focus in, closes with Escape and gives focus back', async ({ page }) => {
   await page.goto('/components/popover');

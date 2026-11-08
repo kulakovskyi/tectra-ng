@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 test('popup menu opens from the keyboard, moves with arrows and closes with Escape', async ({ page }) => {
   await page.goto('/components/menu');

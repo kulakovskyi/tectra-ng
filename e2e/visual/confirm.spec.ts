@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 test('confirm dialog starts on the safe button, confirms from the keyboard and gives focus back', async ({ page }) => {
   await page.goto('/components/confirm');

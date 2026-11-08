@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 import { layoutViewport } from './helpers';
 
 test('select panel is opaque and selects with the keyboard', async ({ page }) => {
@@ -689,11 +689,22 @@ test.describe('with motion', () => {
 
   test('overlay ends its enter animation exactly where it stays', async ({ page }) => {
     await page.goto('/core/overlay');
+    await page.evaluate(() => {
+      const animate = Element.prototype.animate;
+      Element.prototype.animate = function (this: Element, ...args: Parameters<Element['animate']>) {
+        const animation = animate.apply(this, args);
+        if (this.closest('.tx-overlay-pane') && animation.timeline === document.timeline) {
+          animation.pause();
+          (window as unknown as { txEnter?: Animation }).txEnter ??= animation;
+        }
+        return animation;
+      };
+    });
     await page.getByRole('button', { name: 'bottom', exact: true }).click();
     const pane = page.locator('.tx-overlay-pane');
+    await page.waitForFunction(() => !!(window as unknown as { txEnter?: Animation }).txEnter);
     const [nearEnd, final] = await pane.evaluate((element) => {
-      const [animation] = element.getAnimations({ subtree: true }).filter((running) => running.timeline === document.timeline);
-      animation.pause();
+      const animation = (window as unknown as { txEnter: Animation }).txEnter;
       animation.currentTime = Number(animation.effect?.getComputedTiming().duration) - 1;
       const before = element.getBoundingClientRect().top;
       animation.finish();
@@ -1092,12 +1103,13 @@ test('logo mark follows the primary and the favicon follows the picker', async (
   await expect(page.locator('.logo-mark__block')).toHaveCount(5);
   const tileFill = () => tile.evaluate((element) => getComputedStyle(element).fill);
   const before = await tileFill();
-  expect(await page.locator('link[rel="icon"]').getAttribute('href')).toBe('favicon.svg');
+  const favicon = page.locator('link[rel="icon"][type="image/svg+xml"]');
+  expect(await favicon.getAttribute('href')).toBe('/favicon.svg');
 
   await page.getByRole('button', { name: 'Theme settings' }).click();
   await page.getByRole('dialog', { name: 'Theme settings' }).getByRole('radio', { name: 'Rose' }).click();
   await expect.poll(tileFill).not.toBe(before);
-  expect(await page.locator('link[rel="icon"]').getAttribute('href')).toMatch(/^data:image\/svg\+xml,/);
+  expect(await favicon.getAttribute('href')).toMatch(/^data:image\/svg\+xml,/);
   await page.evaluate(() => localStorage.removeItem('tx-docs-theme'));
 });
 

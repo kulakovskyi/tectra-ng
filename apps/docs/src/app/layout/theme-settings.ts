@@ -85,7 +85,7 @@ export class DocsThemeSettings {
     this.txThemeService.applyPreset(preset);
     const { base, contrast } = preset.light.primary;
     const svg = logoSvg({ tile: base, contrast, soft: mixHex(contrast, base, 0.72), accent: SEVERITY_PALETTES.orange[300] });
-    this.document.querySelector('link[rel="icon"]')?.setAttribute('href', `data:image/svg+xml,${encodeURIComponent(svg)}`);
+    this.document.querySelector('link[rel="icon"][type="image/svg+xml"]')?.setAttribute('href', `data:image/svg+xml,${encodeURIComponent(svg)}`);
   }
 
   private read(): Partial<DocsThemeChoice> | null {

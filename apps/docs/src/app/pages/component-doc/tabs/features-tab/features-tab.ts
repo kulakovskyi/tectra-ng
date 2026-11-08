@@ -36,12 +36,16 @@ export class FeaturesTab {
       this.components();
       this.activeId.set(this.doc().examples[0]?.id ?? null);
     });
-    inject(DestroyRef).onDestroy(() => cancelAnimationFrame(this.frame));
+    inject(DestroyRef).onDestroy(() => this.frame && this.document.defaultView?.cancelAnimationFrame(this.frame));
   }
 
   scheduleActiveUpdate(): void {
-    cancelAnimationFrame(this.frame);
-    this.frame = requestAnimationFrame(() => this.updateActive());
+    const view = this.document.defaultView;
+    if (!view?.requestAnimationFrame) {
+      return;
+    }
+    view.cancelAnimationFrame(this.frame);
+    this.frame = view.requestAnimationFrame(() => this.updateActive());
   }
 
   scrollTo(event: Event, id: string): void {

@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../apps/docs/public/fonts/fonts.css" />
+    <style>
+      :root {
+        --blue: #2560e4;
+        --blue-soft: #c2d2f7;
+        --orange: #fdba74;
+        --ink: #0b0e14;
+        --text: #f5f7fb;
+        --muted: #8b93a7;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      html,
+      body {
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+      }
+      body {
+        position: relative;
+        display: flex;
+        align-items: center;
+        padding: 0 88px;
+        font-family: 'Onest', sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(640px 420px at 100% 0%, rgb(37 96 228 / 0.28), transparent 70%),
+          radial-gradient(520px 360px at 92% 100%, rgb(253 186 116 / 0.1), transparent 70%),
+          var(--ink);
+      }
+      .mosaic {
+        position: absolute;
+        top: 50%;
+        right: -40px;
+        display: grid;
+        grid-template-columns: repeat(6, 72px);
+        gap: 14px;
+        transform: translateY(-50%) rotate(-8deg);
+        mask-image: linear-gradient(to right, transparent 0%, #000 45%);
+      }
+      .mosaic span {
+        width: 72px;
+        height: 72px;
+        border-radius: 18px;
+        background: rgb(255 255 255 / 0.05);
+        border: 1px solid rgb(255 255 255 / 0.06);
+      }
+      .mosaic .b {
+        background: var(--blue);
+        border-color: transparent;
+      }
+      .mosaic .s {
+        background: rgb(194 210 247 / 0.35);
+        border-color: transparent;
+      }
+      .mosaic .o {
+        background: var(--orange);
+        border-color: transparent;
+      }
+      .content {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 34px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 32px;
+      }
+      .brand svg {
+        width: 128px;
+        height: 128px;
+        border-radius: 30px;
+        box-shadow: 0 24px 60px rgb(37 96 228 / 0.35);
+      }
+      .wordmark {
+        font-size: 132px;
+        font-weight: 800;
+        letter-spacing: -0.055em;
+        line-height: 1;
+      }
+      .wordmark i {
+        display: inline-block;
+        width: 26px;
+        height: 26px;
+        margin-left: 6px;
+        border-radius: 7px;
+        background: var(--orange);
+      }
+      .tagline {
+        font-size: 46px;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+      }
+      .meta {
+        display: flex;
+        gap: 14px;
+        font-size: 26px;
+        font-weight: 500;
+        color: var(--muted);
+      }
+      .meta b {
+        font-weight: 500;
+        color: var(--blue-soft);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="mosaic" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span class="s"></span><span></span>
+      <span></span><span></span><span class="b"></span><span class="b"></span><span class="o"></span><span></span>
+      <span></span><span></span><span></span><span class="b"></span><span></span><span></span>
+      <span></span><span class="s"></span><span></span><span class="b"></span><span></span><span class="b"></span>
+      <span></span><span></span><span></span><span class="s"></span><span></span><span></span>
+      <span></span><span></span><span class="b"></span><span></span><span></span><span class="s"></span>
+    </div>
+    <div class="content">
+      <div class="brand">
+        <svg viewBox="0 0 120 120" aria-hidden="true">
+          <rect width="120" height="120" rx="28" fill="#2560e4" />
+          <rect x="26" y="30" width="20" height="20" rx="5" fill="#ffffff" />
+          <rect x="50" y="30" width="20" height="20" rx="5" fill="#ffffff" />
+          <rect x="50" y="54" width="20" height="20" rx="5" fill="#ffffff" />
+          <rect x="50" y="78" width="20" height="20" rx="5" fill="#c2d2f7" />
+          <rect x="74" y="30" width="20" height="20" rx="5" fill="#fdba74" />
+        </svg>
+        <div class="wordmark">tectra<i></i></div>
+      </div>
+      <p class="tagline">Angular UI component library</p>
+      <p class="meta"><span>Open source</span><span>·</span><span>Built on signals</span><span>·</span><b>tectra-ng.com</b></p>
+    </div>
+  </body>
+</html>

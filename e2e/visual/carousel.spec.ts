@@ -1,4 +1,5 @@
-import { Locator, Page, expect, test } from '@playwright/test';
+import { Locator, Page } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 const example = (page: Page, id: string) => page.locator(`carousel-${id}-example`);
 

@@ -13,8 +13,12 @@
   "keywords": [
     "tectra",
     "angular",
+    "angular-icons",
     "icons",
-    "svg"
+    "icon-set",
+    "svg-icons",
+    "svg",
+    "icon-component"
   ],
   "peerDependencies": {
     "@angular/core": "^22.0.0"

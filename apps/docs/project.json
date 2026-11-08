@@ -12,6 +12,12 @@
       "options": { "command": "node tools/registry-builder/build-registry.mjs" }
     },
     "build": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build-app"],
+      "cache": false,
+      "options": { "command": "node tools/site-files/build-site-files.mjs" }
+    },
+    "build-app": {
       "executor": "@angular/build:application",
       "outputs": ["{options.outputPath}"],
       "dependsOn": ["registry"],
@@ -19,6 +25,8 @@
         "outputPath": "dist/apps/docs",
         "index": "apps/docs/src/index.html",
         "browser": "apps/docs/src/main.ts",
+        "server": "apps/docs/src/main.server.ts",
+        "outputMode": "static",
         "tsConfig": "apps/docs/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "styles": ["apps/docs/src/styles.scss"],
@@ -39,8 +47,8 @@
       "dependsOn": ["registry"],
       "options": { "port": 4300 },
       "configurations": {
-        "production": { "buildTarget": "docs:build:production" },
-        "development": { "buildTarget": "docs:build:development" }
+        "production": { "buildTarget": "docs:build-app:production" },
+        "development": { "buildTarget": "docs:build-app:development" }
       },
       "defaultConfiguration": "development"
     }

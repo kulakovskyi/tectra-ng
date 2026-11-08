@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 import { layoutViewport, trackPage } from './helpers';
 
 test('dialog traps focus, closes with Escape and returns its result', async ({ page }) => {

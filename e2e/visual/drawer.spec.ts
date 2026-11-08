@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 import { layoutViewport } from './helpers';
 
 test('drawer slides in at the right edge, traps focus and gives it back', async ({ page }) => {

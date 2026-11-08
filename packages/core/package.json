@@ -14,8 +14,13 @@
     "tectra",
     "angular",
     "overlay",
+    "popover",
+    "focus-trap",
     "a11y",
-    "i18n"
+    "accessibility",
+    "i18n",
+    "locale",
+    "forms"
   ],
   "peerDependencies": {
     "@angular/cdk": "^22.0.0",

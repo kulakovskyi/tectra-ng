@@ -50,6 +50,7 @@ export interface DocComponent {
   name: string;
   title: string;
   category: string;
+  summary: string;
   selector: string;
   importPath: string;
   importName: string;
@@ -64,6 +65,7 @@ export interface DocComponentEntry {
   name: string;
   title: string;
   category: string;
+  summary: string;
   load: () => Promise<DocComponent>;
 }
 

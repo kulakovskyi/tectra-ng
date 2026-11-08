@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 test('split button runs its action and opens its menu under the whole button', async ({ page }) => {
   await page.goto('/components/split-button');

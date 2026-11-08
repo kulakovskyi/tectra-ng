@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 test('email hint completes the domain, fixes a typo and fills the field', async ({ page }) => {
   await page.goto('/components/email-suggestion');

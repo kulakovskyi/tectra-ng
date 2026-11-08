@@ -12,10 +12,15 @@
   "bugs": "https://github.com/kulakovskyi/tectra-ng/issues",
   "keywords": [
     "tectra",
+    "angular",
     "theme",
+    "themes",
     "dark-mode",
+    "light-mode",
     "design-tokens",
-    "css-variables"
+    "css-variables",
+    "theming",
+    "presets"
   ],
   "peerDependencies": {
     "@tectra-ng/tokens": "^0.1.5"

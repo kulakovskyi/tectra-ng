@@ -1,4 +1,5 @@
-import { Page, expect, test } from '@playwright/test';
+import { Page } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 const example = (page: Page, id: string) => page.locator(`file-upload-${id}-example`);
 const file = (name: string, mimeType: string, kilobytes = 1) => ({ name, mimeType, buffer: Buffer.alloc(kilobytes * 1024, 65) });

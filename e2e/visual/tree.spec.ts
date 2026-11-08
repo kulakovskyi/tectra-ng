@@ -1,4 +1,5 @@
-import { Page, expect, test } from '@playwright/test';
+import { Page } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 const example = (page: Page, title: string) =>
   page.locator('docs-example-frame').filter({ has: page.locator('h2, h3', { hasText: new RegExp(`^\\s*${title}\\s*$`) }) });

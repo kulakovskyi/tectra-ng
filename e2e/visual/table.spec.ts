@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
-import { Page, expect, test } from '@playwright/test';
+import { Page } from '@playwright/test';
+import { expect, test } from './fixtures';
 import { setDarkMode } from './helpers';
 
 const example = (page: Page, title: string) =>

@@ -1,4 +1,5 @@
-import { Page, expect, test } from '@playwright/test';
+import { Page } from '@playwright/test';
+import { expect, test } from './fixtures';
 import { layoutViewport } from './helpers';
 
 const example = (page: Page, id: string) => page.locator(`editor-${id}-example`);

@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 test('tooltip shows above its button with the arrow on the middle and hides on leave', async ({ page }) => {
   await page.goto('/components/tooltip');

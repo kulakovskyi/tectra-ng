@@ -181,15 +181,6 @@ tx-fluid.stack,
   }
 }
 
-html.docs-first-paint::view-transition-group(*),
-html.docs-first-paint::view-transition-new(*) {
-  animation: none;
-}
-
-html.docs-first-paint::view-transition-old(*) {
-  display: none;
-}
-
 html.docs-theme-switch::view-transition-old(root),
 html.docs-theme-switch::view-transition-new(root) {
   animation: none;

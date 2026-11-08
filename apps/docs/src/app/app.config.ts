@@ -1,5 +1,6 @@
-import { ApplicationConfig, DOCUMENT, inject, provideAppInitializer, provideZonelessChangeDetection } from '@angular/core';
-import { provideRouter, Router, withComponentInputBinding, withInMemoryScrolling, withViewTransitions } from '@angular/router';
+import { ApplicationConfig, inject, provideAppInitializer, provideZonelessChangeDetection } from '@angular/core';
+import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import { provideRouter, Router, TitleStrategy, withComponentInputBinding, withInMemoryScrolling, withViewTransitions } from '@angular/router';
 import { provideTxBrandIcons } from '@tectra-ng/brand-icons';
 import { loadTxFlag } from '@tectra-ng/flags';
 import { provideTxFlags, txFlagImages } from '@tectra-ng/ui/country';
@@ -8,10 +9,12 @@ import { Tectra } from '@tectra-ng/themes';
 import { routes } from './app.routes';
 import { skipViewTransitionsWhileHidden } from './hidden-view-transitions';
 import { DocsThemeSettings } from './layout/theme-settings';
+import { DocsSeo } from './seo/docs-seo';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZonelessChangeDetection(),
+    provideClientHydration(withEventReplay()),
     provideAppInitializer(skipViewTransitionsWhileHidden),
     provideAppInitializer(() => inject(DocsThemeSettings).restore()),
     provideRouter(
@@ -20,16 +23,13 @@ export const appConfig: ApplicationConfig = {
       withInMemoryScrolling({ scrollPositionRestoration: 'top', anchorScrolling: 'enabled' }),
       withViewTransitions({
         onViewTransitionCreated: ({ transition }) => {
-          if (inject(Router).navigated) {
-            return;
+          if (!inject(Router).navigated) {
+            transition.skipTransition();
           }
-          const root = inject(DOCUMENT).documentElement;
-          const done = () => root.classList.remove('docs-first-paint');
-          root.classList.add('docs-first-paint');
-          transition.finished.then(done, done);
         },
       }),
     ),
+    { provide: TitleStrategy, useExisting: DocsSeo },
     provideTectra({ preset: Tectra, ripple: true }),
     provideTxBrandIcons(),
     provideTxFlags(txFlagImages(loadTxFlag)),

@@ -40,6 +40,21 @@ Everything tectra covers, ordered by dependencies and by how much the first cons
 
 Found and fixed while setting it up: a disabled `a[txButton]` still let the parent `(click)` run; `tx-select` had no accessible name (`ariaLabel`, `ariaLabelledBy`, falls back to the placeholder); light muted text and the white-on-green success colour were below WCAG AA (muted → surface 600, success → green 700); toggle-button text contrast.
 
+### Docs site discoverability
+
+Search engines and AI assistants only find the kit when every docs page is readable without JavaScript.
+
+| Item | Why | Status |
+|---|---|---|
+| Static prerender of every docs route (Angular SSG, `outputMode: 'static'`, routes from the registry) with hydration and event replay; e2e waits for hydration (`e2e/visual/fixtures.ts`) | crawlers and AI search see the real page, not an empty `<docs-root>`; proves the kit renders on the server | ✅ |
+| Per-page `<title>`, description, canonical, Open Graph / Twitter card, JSON-LD (`WebSite`, `SoftwareSourceCode`, breadcrumbs); favicon.ico 48 px + SVG, apple-touch icon, web manifest; social preview from `tools/brand` (`npm run brand`) | every page is its own search result with the site name, icon and a link preview | ✅ |
+| `sitemap.xml` and `robots.txt` from the prerendered routes (`tools/site-files`) | search engines find every page | ✅ |
+| `llms.txt`, `llms-full.txt` and one `components/<name>.md` per component (README API + every example) | AI assistants read the whole kit in one request | ✅ |
+| Cloudflare serves the prerendered pages (`drop-trailing-slash`), real 404 page for unknown routes | no soft 404s, no duplicate pages | ✅ |
+| Search Console and Bing Webmaster Tools, sitemap submitted (done by the owner) | indexing starts and can be watched | ⬜ |
+| Server render fixes found on the way: `txButton` label check runs on the server (was square on first paint), `@tectra-ng/editor/content` parses HTML through the given document when there is no `DOMParser` (rendered nothing on the server) | apps with SSR get the same first paint as the browser | ✅ |
+| Icon field insets before hydration: the icon covers the placeholder until the browser measures it | the first paint of a server-rendered form is right | ⬜ |
+
 ## Stage 2 — overlay core ✅
 
 | Item | Package | Notes | Status |

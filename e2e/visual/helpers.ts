@@ -1,9 +1,13 @@
-import { Page } from '@playwright/test';
+import { ConsoleMessage, Page } from '@playwright/test';
+
+const INTENTIONALLY_MISSING = /\/missing-[^/]*$/;
+
+const isIntentionallyMissing = (message: ConsoleMessage) => INTENTIONALLY_MISSING.test(message.location().url);
 
 export async function trackPage(page: Page): Promise<() => Promise<{ errors: string[]; layoutShift: number }>> {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
-  page.on('console', (message) => message.type() === 'error' && errors.push(message.text()));
+  page.on('console', (message) => message.type() === 'error' && !isIntentionallyMissing(message) && errors.push(message.text()));
   await page.addInitScript(() => {
     const target = window as unknown as { __layoutShift: number };
     target.__layoutShift = 0;

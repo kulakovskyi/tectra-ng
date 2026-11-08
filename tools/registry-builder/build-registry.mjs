@@ -86,6 +86,24 @@ async function exampleFiles(raw) {
   ];
 }
 
+const plainText = (markdown) =>
+  marked
+    .parseInline(markdown)
+    .replace(/<[^>]+>/g, '')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\s+/g, ' ')
+    .trim();
+
+const firstParagraph = (body) =>
+  body
+    .replace(/^#\s+.+\n/m, '')
+    .trim()
+    .split(/\n\s*\n/)[0] ?? '';
+
 function parseFrontMatter(markdown) {
   const match = markdown.match(/^---\n([\s\S]*?)\n---\n?/);
   if (!match) {
@@ -222,7 +240,9 @@ async function buildComponent(name) {
   return {
     name,
     title,
+    readme: join(packageDir, 'README.md').slice(root.length),
     category: meta.category ?? 'Other',
+    summary: plainText(firstParagraph(body)),
     selector,
     importPath: meta.package ?? `@tectra-ng/ui/${name}`,
     importName: meta.import ?? `Tx${title.replace(/\s+/g, '')}`,
@@ -263,11 +283,11 @@ const componentModule = ({ examples, ...component }) => {
       return `${data}, load: () => import('${importPath}').then((m) => m.default) }`;
     })
     .join(',\n    ');
-  return `import { DocComponent } from '../../app/types/doc-component.interface';\n\nexport const DOC: DocComponent = {\n  ...${JSON.stringify(component)},\n  examples: [\n    ${exampleCode}\n  ],\n};\n`;
+  return `import { DocComponent } from '../../app/types/doc-component.interface';\n\nexport const DOC: DocComponent = {\n  ...${JSON.stringify({ ...component, readme: undefined })},\n  examples: [\n    ${exampleCode}\n  ],\n};\n`;
 };
 
 const index = components
-  .map(({ name, title, category }) => `  { name: ${JSON.stringify(name)}, title: ${JSON.stringify(title)}, category: ${JSON.stringify(category)}, load: () => import('./components/${name}').then((m) => m.DOC) }`)
+  .map(({ name, title, category, summary }) => `  { name: ${JSON.stringify(name)}, title: ${JSON.stringify(title)}, category: ${JSON.stringify(category)}, summary: ${JSON.stringify(summary)}, load: () => import('./components/${name}').then((m) => m.DOC) }`)
   .join(',\n');
 
 const missing = components.flatMap(unresolved);
@@ -281,6 +301,24 @@ mkdirSync(componentsDir, { recursive: true });
 for (const component of components) {
   writeFileSync(join(componentsDir, `${component.name}.ts`), componentModule(component));
 }
+writeFileSync(
+  join(outDir, 'components.json'),
+  JSON.stringify(
+    components.map(({ name, title, category, summary, importPath, importName, selector, readme, examples }) => ({
+      name,
+      title,
+      category,
+      summary,
+      importPath,
+      importName,
+      selector,
+      readme,
+      examples: examples.map(({ id, title: exampleTitle }) => ({ id, title: exampleTitle })),
+    })),
+    null,
+    2,
+  ),
+);
 writeFileSync(
   join(outDir, 'registry.ts'),
   `import { DocComponentEntry } from '../app/types/doc-component.interface';\n\nexport const DOC_COMPONENTS: DocComponentEntry[] = [\n${index}\n];\n`,
