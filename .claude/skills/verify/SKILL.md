@@ -12,6 +12,7 @@ Run from the repo root with `NX_DAEMON=false NX_NO_CLOUD=true`.
 3. `npm run e2e` — builds the docs (registry first), serves `dist/apps/docs/browser` on 4310 (or `TX_E2E_PORT`), runs:
    - `pages.spec.ts`: every page in light and dark — no console errors, CLS < 0.02, no serious / critical axe violations;
    - `interactions.spec.ts`: behaviour tests. Add one for every bug fixed by layout / motion / focus.
+   The docs build prerenders every route on the server. Read its log: it must say `Prerendered N static routes` and contain no `ERROR` lines — a component that throws on the server only logs there, the build still passes. For a readable stack run `npx nx run docs:build-app:development`.
    Stop a leftover server on your port first: `lsof -ti tcp:4310 | xargs kill`. Never `pkill -f serve-docs.mjs` — it also kills the servers of other checkouts (another worktree runs e2e with `TX_E2E_PORT=4320`).
 4. Packages touched → `npm run build:packages` (ng-packagr catches entry point / export mistakes the app build hides).
 5. Look at the result. Unit tests and axe do not see misaligned labels, clipped text or wrong colours:

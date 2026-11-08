@@ -5,7 +5,7 @@ tectra is an open-source Angular UI kit: full-featured components (the feature s
 ## Product rules (hard)
 
 - **tectra is a standalone product.** Never mention the apps that use it, their names, their wrappers or company internals — not in code, examples, READMEs, docs, ROADMAP, checklists or commit messages. When usage data matters, say "the first consumer app".
-- Do not name other UI kits in product copy (docs site, READMEs). The internal roadmap may keep a "PrimeNG equivalent" column; the icon set keeps PrimeIcons-compatible names.
+- Never name PrimeNG, PrimeIcons or any other UI kit — not in docs, examples, READMEs, code, test names or package metadata. Only the internal roadmap (`ROADMAP.md`, `roadmap/`) may keep the comparison. Icon names stay as they are (a `pi-` prefix is still accepted), just never say where they come from.
 - Docs, READMEs, roadmap and code are English.
 - Commit only when the user asks; commit messages have **no** `Co-Authored-By` trailer. Conventional commits (`feat(ui): …`, `fix(docs): …`).
 - Work in roadmap order: [ROADMAP.md](ROADMAP.md) → the stage checklist (`roadmap/stage-3-forms.md`, …). Tick a box only when the code, the docs example and the test exist.
@@ -19,7 +19,7 @@ packages/
   tokens/       @tectra-ng/tokens        primitives + palettes (ink, accents, severities), radius, type, shadows, motion, layers
   themes/       @tectra-ng/themes        semantic light/dark tokens, component tokens, presets (createTectraPreset: style + primary + surface; styles in src/styles/<name>), definePreset, presetToCss, toStyleObject
   core/<entry>  @tectra-ng/core/<entry>  config (provideTectra, dt/pt/unstyled), overlay, a11y, forms, i18n, styles, ripple, fluid, utils
-  icons/        @tectra-ng/icons         own SVG icon set (PrimeIcons names) + TxIcon, provideTxIcons
+  icons/        @tectra-ng/icons         own SVG icon set + TxIcon, provideTxIcons
   brand-icons/  @tectra-ng/brand-icons   brand logos (Simple Icons, CC0)
   flags/        @tectra-ng/flags         country flags (generated from flag-icons, MIT), lazy chunks; `npm run flags`
   ui/<name>     @tectra-ng/ui/<name>     components, one flat entry point per component
@@ -74,6 +74,8 @@ Install packages with `npm i … --legacy-peer-deps` (npm arborist bug otherwise
 - Types in `<name>.types.ts`, one public barrel per entry point: `packages/ui/<name>/index.ts`.
 - Styles: tokens through `var(--tx-…)` only — no hard-coded colours, sizes come from tokens. Motion respects `prefers-reduced-motion`.
 - Accessibility is part of done: keyboard map in the README, ARIA roles/states, axe clean in light and dark.
+- Server rendering: every component renders on the server exactly as in the browser — the docs pages are prerendered and hydrated, and apps may use SSR. No `window`, `document`, `DOMParser`, `requestAnimationFrame` or `ResizeObserver` outside the browser: take `DOCUMENT`, put browser-only work in `afterNextRender`. Anything that changes the first paint (classes, insets, label checks) is decided from inputs or in `ngAfterViewInit`, not only after `afterNextRender`, or the page jumps after hydration. The server DOM has no `append` / `replaceWith` / `replaceChildren`: use `appendChild` / `insertBefore` / `replaceChild`.
+- e2e: import `test` / `expect` from `e2e/visual/fixtures.ts` — `goto` and `reload` wait for hydration. An asset named `missing-*` (a broken image on purpose) may 404 without failing the console check.
 - e2e geometry: the scrollbar takes ~10px of the window in CI (Linux) and on Windows, 0px on macOS. Compare positions with `layoutViewport(page)` from `e2e/visual/helpers.ts`, not `page.viewportSize()` / `innerWidth` (ESLint blocks them). Details in the `verify` skill.
 
 ## Skills (load before the matching task)
