@@ -1,3 +1,23 @@
+## 0.1.6 (2026-11-08)
+
+### 🚀 Features
+
+- **docs:** prerender every page for search engines and AI assistants ([1c655b7](https://github.com/kulakovskyi/tectra-ng/commit/1c655b7))
+
+### 🩹 Fixes
+
+- **core:** overlay positioning on phones and in Safari ([8ef7b1c](https://github.com/kulakovskyi/tectra-ng/commit/8ef7b1c))
+- **docs:** phone layout ([aefae0c](https://github.com/kulakovskyi/tectra-ng/commit/aefae0c))
+- **editor:** render content on the server ([9ad6984](https://github.com/kulakovskyi/tectra-ng/commit/9ad6984))
+- **editor:** convert Quill markup with the server DOM ([e4fcc95](https://github.com/kulakovskyi/tectra-ng/commit/e4fcc95))
+- **themes:** menu max height follows the dynamic viewport ([ee3d155](https://github.com/kulakovskyi/tectra-ng/commit/ee3d155))
+- **ui:** button sees its projected label on the server ([6ab7962](https://github.com/kulakovskyi/tectra-ng/commit/6ab7962))
+- **ui:** icon field leaves room for its icons before it is measured ([394d635](https://github.com/kulakovskyi/tectra-ng/commit/394d635))
+
+### ❤️ Thank You
+
+- tears @kulakovskyi
+
 ## 0.1.5 (2026-11-07)
 
 ### 🚀 Features
