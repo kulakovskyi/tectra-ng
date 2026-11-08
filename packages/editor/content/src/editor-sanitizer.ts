@@ -1,4 +1,4 @@
-import { parseHtmlBody } from './parse-html';
+import { parseHtmlBody, unwrapNode } from './parse-html';
 
 const ALLOWED_TAGS = new Set([
   'p', 'br', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'strong', 'b', 'em', 'i', 'u', 's', 'strike', 'del', 'code', 'pre',
@@ -77,7 +77,7 @@ function cleanNode(node: Node): void {
     }
     if (!ALLOWED_TAGS.has(tag)) {
       cleanNode(element);
-      element.replaceWith(...Array.from(element.childNodes));
+      unwrapNode(element);
       continue;
     }
     for (const attribute of Array.from(element.attributes)) {

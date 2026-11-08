@@ -132,4 +132,17 @@ describe('without DOMParser (server rendering)', () => {
   it('renders nothing unsafe without a document', () => {
     expect(sanitizeEditorHtml('<p>Hi</p>')).toBe('');
   });
+
+  it('works on a DOM without append, replaceWith and replaceChildren', () => {
+    const methods = ['append', 'replaceWith', 'replaceChildren'] as const;
+    const saved = methods.map((name) => [name, Object.getOwnPropertyDescriptor(Element.prototype, name)] as const);
+    methods.forEach((name) => Reflect.deleteProperty(Element.prototype, name));
+    try {
+      const quill = '<ol><li data-list="bullet">A</li><li data-list="bullet" class="ql-indent-1">B</li></ol><pre class="ql-syntax">x</pre>';
+      expect(fromQuillHtml(quill, document)).toBe('<ul><li><p>A</p><ul><li><p>B</p></li></ul></li></ul><pre><code>x</code></pre>');
+      expect(sanitizeEditorHtml('<p>a<custom>b</custom></p>', document)).toBe('<p>ab</p>');
+    } finally {
+      saved.forEach(([name, descriptor]) => descriptor && Object.defineProperty(Element.prototype, name, descriptor));
+    }
+  });
 });

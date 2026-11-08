@@ -1,5 +1,5 @@
 import { TxEditorFormat } from './editor-content.types';
-import { parseHtmlBody } from './parse-html';
+import { appendNodes, parseHtmlBody, replaceNode } from './parse-html';
 
 const QUILL_SIZES: Record<string, string> = { small: '0.75em', large: '1.5em', huge: '2.5em' };
 const QUILL_FONTS: Record<string, string> = { serif: 'serif', monospace: 'monospace' };
@@ -92,7 +92,7 @@ function convertQuillList(list: Element): void {
       paragraph.style.textAlign = align;
     }
     item.querySelectorAll('.ql-ui').forEach((node) => node.remove());
-    paragraph.append(...Array.from(item.childNodes));
+    appendNodes(paragraph, item.childNodes);
     if (kind === 'checked' || kind === 'unchecked') {
       next.setAttribute('data-type', 'taskItem');
       next.setAttribute('data-checked', String(kind === 'checked'));
@@ -100,7 +100,7 @@ function convertQuillList(list: Element): void {
     next.appendChild(paragraph);
     current.element.appendChild(next);
   }
-  list.replaceWith(fragment);
+  replaceNode(list, fragment);
 }
 
 function convertQuillCode(container: Element): void {
@@ -114,7 +114,7 @@ function convertQuillCode(container: Element): void {
   }
   code.textContent = lines.map((line) => line.textContent ?? '').join('\n');
   pre.appendChild(code);
-  container.replaceWith(pre);
+  replaceNode(container, pre);
 }
 
 export function isQuillHtml(html: string | null | undefined): boolean {
@@ -137,7 +137,8 @@ export function fromQuillHtml(html: string | null | undefined, document?: Docume
   body.querySelectorAll('pre.ql-syntax').forEach((pre) => {
     const code = body.ownerDocument.createElement('code');
     code.textContent = pre.textContent ?? '';
-    pre.replaceChildren(code);
+    pre.textContent = '';
+    pre.appendChild(code);
     pre.classList.remove('ql-syntax');
     cleanClassAttribute(pre);
   });
@@ -205,7 +206,7 @@ function flattenList(list: Element, level: number, out: HTMLElement): void {
         inline.push(...Array.from(child.childNodes));
       }
     }
-    next.append(...inline);
+    appendNodes(next, inline);
     out.appendChild(next);
     nested.forEach((child) => flattenList(child, level + 1, out));
   }
@@ -228,7 +229,7 @@ export function toQuillHtml(html: string | null | undefined, document?: Document
     if (target === previous) {
       list.remove();
     } else {
-      list.replaceWith(target);
+      replaceNode(list, target);
     }
     previous = target;
   }
@@ -248,7 +249,7 @@ export function toQuillHtml(html: string | null | undefined, document?: Document
       }
       container.appendChild(block);
     }
-    pre.replaceWith(container);
+    replaceNode(pre, container);
   });
   body.querySelectorAll('[style], [data-indent], [dir], iframe[data-type="video"]').forEach((element) => {
     const style = styleOf(element);
