@@ -5,7 +5,7 @@ export const HOME_FEATURES: { icon: TxIconName; title: string; text: string }[] 
   { icon: 'palette', title: 'Design tokens', text: 'Every size and colour is a CSS variable.' },
   { icon: 'sliders-h', title: 'dt · pt · unstyled', text: 'Restyle one instance or the whole app.' },
   { icon: 'sparkles', title: 'Motion that feels right', text: 'Ripple, transitions, reduced-motion aware.' },
-  { icon: 'th-large', title: '334 icons', text: 'Drawn for tectra, PrimeIcons names.' },
+  { icon: 'th-large', title: '334 icons', text: 'Drawn for tectra on one grid.' },
   { icon: 'shield', title: 'Accessible', text: 'Keyboard, ARIA, focus rings built in.' },
 ];
 

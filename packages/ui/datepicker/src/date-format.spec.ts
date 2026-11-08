@@ -8,7 +8,7 @@ const time = { hourFormat: '24' as const, showSeconds: false, separator: ':', am
 describe('date format', () => {
   const date = new Date(2026, 0, 5, 9, 7, 3);
 
-  it('formats every PrimeNG token', () => {
+  it('formats every date format token', () => {
     expect(formatDate(date, 'dd.mm.yy', names)).toBe('05.01.2026');
     expect(formatDate(date, 'd/m/y', names)).toBe('5/1/26');
     expect(formatDate(date, 'D, M d', names)).toBe('Mon, Jan 5');

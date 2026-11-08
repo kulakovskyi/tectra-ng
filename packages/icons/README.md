@@ -1,6 +1,6 @@
 # @tectra-ng/icons
 
-334 outline icons drawn for tectra on a 24 × 24 grid: round caps and joins, one stroke width, filled variants where the name says `-fill`. Names follow the PrimeIcons naming (`check`, `times`, `pencil`, `chevron-down`, `sort-amount-up-alt`…) so `pi pi-<name>` moves over by dropping the prefix. The drawings are original — no PrimeIcons artwork is used. Brand logos are not part of the set.
+334 outline icons drawn for tectra on a 24 × 24 grid: round caps and joins, one stroke width, filled variants where the name says `-fill`. Names are plain words (`check`, `times`, `pencil`, `chevron-down`, `sort-amount-up-alt`…); a `pi-` prefix is accepted and dropped. Brand logos are not part of the set.
 
 ```html
 <tx-icon [name]="'trash'" />

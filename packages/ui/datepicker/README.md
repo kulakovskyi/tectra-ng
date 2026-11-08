@@ -24,7 +24,7 @@ A date field with a calendar panel — one date, several dates or a range, with 
 | showClear | Shows a clear button in the field when it has a value |
 | showButtonBar | Today and Clear buttons under the calendar |
 | showOtherMonths | Shows days of the previous / next month |
-| selectOtherMonths | Lets those days be picked; on by default (off in PrimeNG) |
+| selectOtherMonths | Lets those days be picked; on by default |
 | showWeek | Week numbers (ISO) |
 | startWeekFromFirstDayOfYear | Counts week 1 from January 1 |
 | showTime | Hours and minutes under the calendar |

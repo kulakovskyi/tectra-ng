@@ -70,7 +70,7 @@ describe('TxMessage', () => {
     await fixture.whenStable();
   });
 
-  it('renders severity, size, variant, text and an icon with the PrimeIcons prefix', () => {
+  it('renders severity, size, variant, text and an icon with the pi- prefix', () => {
     const host = message();
     expect(host.getAttribute('data-severity')).toBe('warn');
     expect(host.getAttribute('data-size')).toBe('small');

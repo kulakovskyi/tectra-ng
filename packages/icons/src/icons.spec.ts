@@ -14,7 +14,7 @@ import { provideTxIcons } from './provide-icons';
 class Host {}
 
 describe('icons', () => {
-  it('has the PrimeIcons-compatible set', () => {
+  it('has the full icon set', () => {
     expect(Object.keys(TX_ICONS).length).toBe(334);
     expect(isTxIconName('chevron-down')).toBe(true);
     expect(isTxIconName('pi-check')).toBe(false);
@@ -31,7 +31,7 @@ describe('icons', () => {
     expect(logoPath.getAttribute('stroke')).toBe('none');
   });
 
-  it('accepts PrimeIcons names with the pi- prefix, but keeps full icon classes as classes', () => {
+  it('accepts names with the pi- prefix, but keeps full icon classes as classes', () => {
     const registry = TestBed.inject(TxIconRegistry);
     expect(registry.has('pi-check')).toBe(true);
     expect(registry.get('pi-check')).toEqual(registry.get('check'));
