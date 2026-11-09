@@ -1,0 +1,1 @@
+Because `itemSelect` comes after the menu has closed, a destructive action can open a confirm straight away; the focus goes back to the button when the confirm closes. Each row builds its own list — "Pause" or "Resume".

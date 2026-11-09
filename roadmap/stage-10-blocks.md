@@ -100,9 +100,15 @@ The look (rem × 14px): `14px` between columns, `14px` under the board, at least
 - [x] `<tx-kanban>` with `txKanbanCard`, `txKanbanColumnHeader`, `txKanbanColumnTop`, `txKanbanColumnFooter`, `txKanbanEmpty`; keyboard moves (our addition — the first app has none): Alt + arrows move a card up, down or to the next column, Alt + Left / Right move a column by its handle, the move is announced and the focus follows; focusable scrolling columns; `focusableCards` off when the card template takes the focus itself
 - [x] Docs (a task board in the first app's look — section header with add and menu, task cards, quick add on top / at the bottom, add section — that applies the moves; fixed height with pages, templates, tokens) + tests; e2e: keyboard and pointer moves between columns, a column moves, a fixed board pages and scrolls to the new cards, column rings stay unclipped, quick add
 
-## 10.10 Actions menu and action tile — `blocks/actions-menu`, `blocks/action-tile` (6, 1)
+## 10.10 Actions menu and action tile — `blocks/actions-menu`, `blocks/action-tile` (6, 1) ✅
 
 Outlined "more" button with a popover list of actions; full-width clickable tile (icon, title, text, chevron).
+
+The look (rem × 14px): actions menu — outlined secondary `⋯` button (`small` = `30px`), the list `168px` wide at least with `5.25px` padding (no extra popover padding) and a `1.75px` gap, actions `7px 10.5px`, `7px` radius, `12.25px` weight 500, icon gap `8.75px`, text-button hovers, red for `danger`. Tile — `12.25px` gap and padding, `10px` radius, card background with a `1px` border ring → primary ring and hover background, a `35px` icon square on 12% primary, title `13.125px` weight 600, text `12.25px` muted, the chevron moves `1.75px` and turns primary on hover, spinner while loading, 60% when disabled.
+
+- [x] `<tx-actions-menu>`: `items` (`id`, `label`, `icon`, `danger`), `tooltip`, `size`; emits `itemSelect` once the menu has closed; menu roles, arrows / Home / End, focus back to the button (our addition — the first app has no keyboard moves)
+- [x] `<tx-action-tile>`: `icon`, `title`, `text`, `loading`, `disabled`, `tileClick`
+- [x] Docs (header menu, sizes, a confirm from a table row, tokens; recovery methods with loading, states, tokens) + tests; e2e: keyboard and focus return, single padding, confirm after close, tile loading; the kanban example uses the small actions menu as in the first app
 
 ## 10.11 Preferences — `blocks/topbar-preferences`, `blocks/switch-theme`, `blocks/switch-language` (12, 1, 2)
 

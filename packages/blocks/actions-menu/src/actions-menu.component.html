@@ -1,0 +1,53 @@
+@if (items().length) {
+  <button
+    txButton
+    type="button"
+    class="tx-actions-menu__trigger"
+    severity="secondary"
+    outlined
+    icon="ellipsis-h"
+    [size]="size()"
+    [txTooltip]="tooltip()"
+    [txPopoverTrigger]="popover"
+    [attr.aria-label]="name()"
+    [unstyled]="isUnstyled()"
+    [class]="passThrough().trigger?.class"
+    [style]="passThrough().trigger?.style"
+  ></button>
+  <tx-popover #popover [ariaLabel]="name()" [dt]="popoverTokens" [unstyled]="isUnstyled()" (closed)="onClosed()">
+    <div
+      #list
+      class="tx-actions-menu__list"
+      role="menu"
+      tabindex="-1"
+      [attr.aria-label]="name()"
+      [attr.data-styled]="!isUnstyled() || null"
+      [style]="tokenStyle()"
+      [class]="passThrough().list?.class"
+      (keydown)="onKeydown($event)"
+    >
+      @for (item of items(); track item.id) {
+        <button
+          type="button"
+          role="menuitem"
+          class="tx-actions-menu__item"
+          [class.tx-actions-menu__item--danger]="item.danger"
+          [class]="passThrough().item?.class"
+          [style]="passThrough().item?.style"
+          (click)="select(item)"
+        >
+          @if (item.icon) {
+            <tx-icon
+              class="tx-actions-menu__icon"
+              aria-hidden="true"
+              [name]="item.icon"
+              [class]="passThrough().icon?.class"
+              [style]="passThrough().icon?.style"
+            />
+          }
+          <span class="tx-actions-menu__label" [class]="passThrough().label?.class" [style]="passThrough().label?.style">{{ item.label }}</span>
+        </button>
+      }
+    </div>
+  </tx-popover>
+}

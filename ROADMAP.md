@@ -186,8 +186,8 @@ Detailed checklist per block: [roadmap/stage-10-blocks.md](roadmap/stage-10-bloc
 | `pinned-tabs` | 1 | ✅ |
 | `command-palette` | 13 | ✅ |
 | `kanban` | 6 | ✅ |
-| `actions-menu` | 6 | ⬜ |
-| `action-tile` | 1 | ⬜ |
+| `actions-menu` | 6 | ✅ |
+| `action-tile` | 1 | ✅ |
 | `topbar-preferences`, `switch-theme` (circle reveal), `switch-language` | 12, 1, 2 | ⬜ |
 | `public-header`, `app-footer` ✅, `cookie-notice` | 5, 7, 4 | 🟡 |
 | `network-status` | 4 | ⬜ |

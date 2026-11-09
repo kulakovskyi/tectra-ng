@@ -18,11 +18,11 @@ import {
   TxKanbanColumnTop,
   TxKanbanItemDrop,
 } from '@tectra-ng/blocks/kanban';
+import { TxActionsMenu, TxActionsMenuItem } from '@tectra-ng/blocks/actions-menu';
 import { TxIcon } from '@tectra-ng/icons';
 import { TxAvatar } from '@tectra-ng/ui/avatar';
 import { TxButton } from '@tectra-ng/ui/button';
 import { TxInput } from '@tectra-ng/ui/input';
-import { TxMenu, TxMenuItem, TxMenuTrigger } from '@tectra-ng/ui/menu';
 import { TxFieldHint } from '@tectra-ng/ui/message';
 import { TxPill, TxPillTone } from '@tectra-ng/ui/pill';
 import { TxTooltip } from '@tectra-ng/ui/tooltip';
@@ -54,6 +54,7 @@ interface Adding {
   selector: 'kanban-basic-example',
   imports: [
     NgTemplateOutlet,
+    TxActionsMenu,
     TxKanban,
     TxKanbanCard,
     TxKanbanColumnHeader,
@@ -63,8 +64,6 @@ interface Adding {
     TxAvatar,
     TxButton,
     TxInput,
-    TxMenu,
-    TxMenuTrigger,
     TxFieldHint,
     TxPill,
     TxTooltip,
@@ -95,17 +94,13 @@ interface Adding {
               [attr.aria-label]="'Add task to ' + column.title"
               (click)="startAdding(column.id, 'top')"
             ></button>
-            <button
-              txButton
+            <tx-actions-menu
               size="small"
-              text
-              severity="secondary"
-              icon="ellipsis-h"
-              txTooltip="Section actions"
-              [attr.aria-label]="column.title + ' actions'"
-              [txMenuTrigger]="sectionMenu"
-              (click)="menuColumn.set(column.id)"
-            ></button>
+              tooltip="Section actions"
+              [ariaLabel]="column.title + ' actions'"
+              [items]="sectionItems"
+              (itemSelect)="sectionAction(column.id, $event)"
+            />
           </span>
         </div>
       </ng-template>
@@ -126,8 +121,8 @@ interface Adding {
           [attr.aria-label]="task.name"
           [class.task--done]="task.done"
           [class.task--selected]="selected() === task.id"
-          (click)="select(task.id)"
-          (keydown.enter)="select(task.id)"
+          (click)="select(task.id, $event)"
+          (keydown.enter)="select(task.id, $event)"
         >
           @if (task.project) {
             <div class="task-pills">
@@ -145,21 +140,17 @@ interface Adding {
               [icon]="task.done ? 'check-circle' : 'circle'"
               [attr.aria-label]="task.done ? 'Mark incomplete' : 'Mark complete'"
               [attr.aria-pressed]="task.done"
-              (click)="toggleDone(task.id); $event.stopPropagation()"
+              (click)="toggleDone(task.id)"
             ></button>
             <span class="task-name">{{ task.name }}</span>
-            <button
-              txButton
+            <tx-actions-menu
               class="task-menu"
               size="small"
-              text
-              rounded
-              severity="secondary"
-              icon="ellipsis-h"
-              [attr.aria-label]="task.name + ' actions'"
-              [txMenuTrigger]="taskMenu"
-              (click)="menuTask.set(task.id); $event.stopPropagation()"
-            ></button>
+              tooltip="Task actions"
+              [ariaLabel]="task.name + ' actions'"
+              [items]="taskItems"
+              (itemSelect)="taskAction(task.id, $event)"
+            />
           </div>
           @if (task.tags?.length) {
             <div class="task-pills">
@@ -249,9 +240,6 @@ interface Adding {
         </tx-field-hint>
       </div>
     </ng-template>
-
-    <tx-menu #sectionMenu popup ariaLabel="Section actions" [model]="sectionItems" />
-    <tx-menu #taskMenu popup ariaLabel="Task actions" [model]="taskItems" />
   `,
   styles: `
     .section {
@@ -351,7 +339,8 @@ interface Adding {
     }
 
     .task:hover .task-menu,
-    .task:focus-within .task-menu {
+    .task:focus-within .task-menu,
+    .task-menu:has([aria-expanded='true']) {
       opacity: 1;
     }
 
@@ -443,8 +432,6 @@ export default class KanbanBasicExample {
   readonly selected = signal<string | null>(null);
   readonly adding = signal<Adding | null>(null);
   readonly addingSection = signal(false);
-  readonly menuColumn = signal<string | null>(null);
-  readonly menuTask = signal<string | null>(null);
 
   readonly columns = signal<TxKanbanColumn<Task>[]>([
     {
@@ -510,35 +497,31 @@ export default class KanbanBasicExample {
     },
   ]);
 
-  readonly sectionItems: TxMenuItem[] = [
-    {
-      label: 'Add task to top',
-      icon: 'plus',
-      command: () => this.startAdding(this.menuColumn() ?? '', 'top'),
-    },
-    { separator: true },
-    {
-      label: 'Delete section',
-      icon: 'trash',
-      severity: 'danger',
-      command: () => this.removeColumn(this.menuColumn()),
-    },
+  readonly sectionItems: TxActionsMenuItem[] = [
+    { id: 'top', label: 'Add task to top', icon: 'plus' },
+    { id: 'delete', label: 'Delete section', icon: 'trash', danger: true },
   ];
 
-  readonly taskItems: TxMenuItem[] = [
-    {
-      label: 'Toggle complete',
-      icon: 'check-circle',
-      command: () => this.toggleDone(this.menuTask() ?? ''),
-    },
-    { separator: true },
-    {
-      label: 'Delete task',
-      icon: 'trash',
-      severity: 'danger',
-      command: () => this.removeTask(this.menuTask()),
-    },
+  readonly taskItems: TxActionsMenuItem[] = [
+    { id: 'toggle', label: 'Toggle complete', icon: 'check-circle' },
+    { id: 'delete', label: 'Delete task', icon: 'trash', danger: true },
   ];
+
+  sectionAction(columnId: string, action: string): void {
+    if (action === 'top') {
+      this.startAdding(columnId, 'top');
+    } else {
+      this.removeColumn(columnId);
+    }
+  }
+
+  taskAction(taskId: string, action: string): void {
+    if (action === 'toggle') {
+      this.toggleDone(taskId);
+    } else {
+      this.removeTask(taskId);
+    }
+  }
 
   isAdding(columnId: string, place: Adding['place']): boolean {
     const adding = this.adding();
@@ -588,7 +571,11 @@ export default class KanbanBasicExample {
     (event.target as HTMLInputElement).value = '';
   }
 
-  select(id: string): void {
+  select(id: string, event: Event): void {
+    const target = event.target as HTMLElement;
+    if (target !== event.currentTarget && target.closest('button')) {
+      return;
+    }
     this.selected.update((current) => (current === id ? null : id));
   }
 
@@ -601,7 +588,7 @@ export default class KanbanBasicExample {
     );
   }
 
-  removeTask(id: string | null): void {
+  removeTask(id: string): void {
     this.columns.update((columns) =>
       columns.map((column) => ({
         ...column,
@@ -610,7 +597,7 @@ export default class KanbanBasicExample {
     );
   }
 
-  removeColumn(id: string | null): void {
+  removeColumn(id: string): void {
     this.columns.update((columns) => columns.filter((column) => column.id !== id));
   }
 

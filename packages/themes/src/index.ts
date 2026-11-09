@@ -79,3 +79,5 @@ export * from './components/wizard.tokens';
 export * from './components/pinned-tabs.tokens';
 export * from './components/command-palette.tokens';
 export * from './components/kanban.tokens';
+export * from './components/actions-menu.tokens';
+export * from './components/action-tile.tokens';
