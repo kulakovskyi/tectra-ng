@@ -20,6 +20,7 @@ export type TxPanelMenuPart =
 export interface TxPanelMenuItem<TData = unknown> extends Omit<TxMenuItem<TData>, 'items'> {
   items?: TxPanelMenuItem<TData>[];
   expanded?: boolean;
+  active?: boolean;
   routerLinkActiveOptions?: { exact: boolean } | Partial<IsActiveMatchOptions>;
 }
 

@@ -7,7 +7,7 @@ A vertical menu of collapsible sections for app navigation. Two looks: `panel` (
 <tx-panel-menu variant="sidebar" ariaLabel="Main" [model]="navigation" [(expandedKeys)]="open" />
 ```
 
-Items are `TxPanelMenuItem` — the kit menu item (`label`, `icon`, `routerLink`, `queryParams`, `fragment`, `url`, `target`, `command`, `disabled`, `visible`, `separator`, `badge`, `title`, `items`, `id`) plus `expanded` (open at the start) and `routerLinkActiveOptions` (`{ exact: true }` or router match options; a subset match by default).
+Items are `TxPanelMenuItem` — the kit menu item (`label`, `icon`, `routerLink`, `queryParams`, `fragment`, `url`, `target`, `command`, `disabled`, `visible`, `separator`, `badge`, `title`, `items`, `id`) plus `expanded` (open at the start), `active` (marks the current item yourself — for items that run a `command`; without it the current item comes from the route) and `routerLinkActiveOptions` (`{ exact: true }` or router match options; a subset match by default).
 
 ## Inputs
 | Name | Description |

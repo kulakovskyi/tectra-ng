@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
 import { TxPanelMenu } from './panel-menu.component';
@@ -264,5 +264,32 @@ describe('TxPanelMenu sidebar', () => {
     await fixture.whenStable();
     expect(item('Settings').getAttribute('aria-expanded')).toBe('true');
     expect(item('Reports').getAttribute('aria-expanded')).toBe('false');
+  });
+});
+
+@Component({
+  imports: [TxPanelMenu],
+  template: `<tx-panel-menu variant="sidebar" [model]="model()" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class ActiveHost {
+  readonly current = signal('Website');
+  readonly model = computed<TxPanelMenuItem[]>(() => [
+    {
+      label: 'Projects',
+      items: ['Website', 'Shop'].map((label) => ({ label, active: label === this.current(), command: () => this.current.set(label) })),
+    },
+  ]);
+}
+
+describe('TxPanelMenu active items', () => {
+  it('marks the item flagged active without a router and follows the flag', async () => {
+    const fixture = TestBed.createComponent(ActiveHost);
+    await fixture.whenStable();
+    const items = () => Array.from(fixture.nativeElement.querySelectorAll('.tx-panel-menu__item')) as HTMLElement[];
+    expect(items().map((item) => item.getAttribute('aria-current'))).toEqual(['page', null]);
+    items()[1].click();
+    await fixture.whenStable();
+    expect(items().map((item) => item.classList.contains('tx-panel-menu__item--active'))).toEqual([false, true]);
   });
 });

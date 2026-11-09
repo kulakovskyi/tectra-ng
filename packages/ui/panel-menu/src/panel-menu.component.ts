@@ -120,12 +120,9 @@ export class TxPanelMenu {
   readonly activeKeys = computed(() => {
     const active = new Set<string>();
     const current = this.currentTree();
-    if (!current) {
-      return active;
-    }
     const visit = (nodes: TxPanelMenuNode[]) => {
       for (const node of nodes) {
-        if (this.matches(node.item, current)) {
+        if (node.item.active ?? (!!current && this.matches(node.item, current))) {
           active.add(node.key);
         }
         visit(node.children);
