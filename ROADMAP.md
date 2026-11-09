@@ -178,7 +178,7 @@ Detailed checklist per block: [roadmap/stage-10-blocks.md](roadmap/stage-10-bloc
 | Block | Usage | Status |
 |---|---|---|
 | `filters-panel` (card above a table, popover below 1024px, reset, field state) | 81 | ✅ |
-| `page-header` | 186 | ⬜ |
+| `page-header` | 186 | ✅ |
 | `empty-state` | **193** | ⬜ |
 | `console-layout` (header + crumbs, icon rail, footer, panel) | 10 | ⬜ |
 | `app-layout` (sidebar + topbar + menu, responsive) | 22 | ⬜ |

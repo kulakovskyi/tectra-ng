@@ -70,3 +70,4 @@ export * from './components/image.tokens';
 export * from './components/galleria.tokens';
 export * from './components/carousel.tokens';
 export * from './components/filters-panel.tokens';
+export * from './components/page-header.tokens';

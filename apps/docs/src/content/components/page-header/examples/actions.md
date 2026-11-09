@@ -1,0 +1,1 @@
+Put any number of actions inside; they wrap under the title on a narrow screen. A solid `secondary` button gets the card background and border, so a "Back" button stays visible on the page background.

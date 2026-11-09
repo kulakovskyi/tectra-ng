@@ -25,9 +25,14 @@ The look (rem × 14px). Panel: wrap, items at the end, `10.5px` gap, `17.5px` pa
 - [x] Accessibility: `search` landmark, menu button `aria-haspopup` / `aria-expanded` / translated label with the hidden count, `menuitemcheckbox` rows with `aria-checked`, locked rows disabled with a hint, toggle button `aria-expanded` / `aria-controls`, translated texts
 - [x] Docs + tests; e2e: hide / show a field and the order survive a reload, drag reorders the fields, a field with a value stays, below 1024px the button opens the panel and an outside click closes it
 
-## 10.2 Page header — `blocks/page-header` (186)
+## 10.2 Page header — `blocks/page-header` (186) ✅
 
-A title, an optional subtitle and an actions area on the right that wraps under the title on narrow screens.
+First app (186): `title` (required, an `<h1>`), `subtitle` (185 of 186 use it, often a count), actions projected on the right — buttons (44), tabs (4), pills (4); the space below is set from the outside (`mb-6`, 132). A solid `secondary` button among the actions gets the card background and the content border with a hover background (the first app also adds its card ring, which doubles the border on a button — left out), so a "Back" button stays visible on the page background.
+
+The look (rem × 14px): wrap, items at the end, `14px` gap; heading a column with `1.75px` gap; title `17.5px` weight 600, line height `1.25`, `-0.02em`, text colour; subtitle `12.25px` / `17.5px`, tabular digits, muted; actions `7px` gap, left out when empty.
+
+- [x] `<tx-page-header>`: `title`, `subtitle`, `headingLevel` (a real `h1`–`h6`, `1` by default), actions slot, the card look of solid secondary buttons
+- [x] Docs + tests; e2e: actions next to the title and under it on a narrow screen, solid vs outlined secondary look
 
 ## 10.3 Empty state — `blocks/empty-state` (193)
 

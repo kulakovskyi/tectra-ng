@@ -1,0 +1,33 @@
+import { tokenRef } from './token-helpers';
+
+export const pageHeaderTokens = {
+  root: {
+    gap: '14px',
+  },
+  heading: {
+    gap: '1.75px',
+  },
+  title: {
+    color: tokenRef('text-primary'),
+    fontSize: '17.5px',
+    fontWeight: tokenRef('font-weight-semibold'),
+    lineHeight: '1.25',
+    letterSpacing: '-0.02em',
+  },
+  subtitle: {
+    color: tokenRef('text-muted'),
+    fontSize: '12.25px',
+    lineHeight: '17.5px',
+  },
+  actions: {
+    gap: '7px',
+  },
+  secondaryButton: {
+    background: tokenRef('surface-card'),
+    hoverBackground: tokenRef('surface-hover'),
+    activeBackground: tokenRef('surface-hover'),
+    borderColor: tokenRef('surface-border'),
+  },
+};
+
+export type TectraPageHeaderTokens = typeof pageHeaderTokens;
