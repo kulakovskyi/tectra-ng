@@ -1,3 +1,24 @@
+## 0.1.8 (2026-11-09)
+
+### 🚀 Features
+
+- **blocks:** add the confetti and the hover effect ([d429e18](https://github.com/kulakovskyi/tectra-ng/commit/d429e18))
+- **blocks:** brand slot and link hover background in the public header ([e05e310](https://github.com/kulakovskyi/tectra-ng/commit/e05e310))
+- **docs:** add the landing page ([b99e2b1](https://github.com/kulakovskyi/tectra-ng/commit/b99e2b1))
+- **docs:** rebuild the introduction page ([bd04645](https://github.com/kulakovskyi/tectra-ng/commit/bd04645))
+- **docs:** rebuild the installation page and animate copy buttons ([fcad428](https://github.com/kulakovskyi/tectra-ng/commit/fcad428))
+- **docs:** rebuild the theming page and calm card hovers ([0f56147](https://github.com/kulakovskyi/tectra-ng/commit/0f56147))
+- **docs:** rebuild the icons page ([18bddb3](https://github.com/kulakovskyi/tectra-ng/commit/18bddb3))
+- **docs:** add the site footer to the docs ([7c4bdc5](https://github.com/kulakovskyi/tectra-ng/commit/7c4bdc5))
+
+### 🩹 Fixes
+
+- **themes:** contrast of the soft, edge and paper styles, checked by e2e ([0532f11](https://github.com/kulakovskyi/tectra-ng/commit/0532f11))
+
+### ❤️ Thank You
+
+- tears @kulakovskyi
+
 ## 0.1.7 (2026-11-09)
 
 ### 🚀 Features
