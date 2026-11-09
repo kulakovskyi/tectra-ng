@@ -34,9 +34,14 @@ The look (rem × 14px): wrap, items at the end, `14px` gap; heading a column wit
 - [x] `<tx-page-header>`: `title`, `subtitle`, `headingLevel` (a real `h1`–`h6`, `1` by default), actions slot, the card look of solid secondary buttons
 - [x] Docs + tests; e2e: actions next to the title and under it on a narrow screen, solid vs outlined secondary look
 
-## 10.3 Empty state — `blocks/empty-state` (193)
+## 10.3 Empty state — `blocks/empty-state` (193) ✅
 
-"Nothing here yet": tinted round icon, optional title, muted text, projected actions.
+First app (254 tags): `icon` (252, `pi-inbox` by default), `text` (237), `title` (125), `variant` `plain` / `framed` / `inset` (124), `size` `compact` / `normal` / `large` (58), `tone` `primary` (default) / `neutral` / `success` / `info` / `warn` / `danger` (49), actions projected under the text; a `status` region.
+
+The look (rem × 14px): a centred column, `10.5px` gap, `35px 21px` padding; icon `42px` circle with a 12% tint of the tone and the tone colour, `17.5px` glyph; body `3.5px` gap; title `14px` weight 600; text `12.25px`, line height `1.375`, muted, up to `392px`. `framed`: card background, content-border ring, `10px` radius, at least `252px` high, `49px 21px`. `inset`: ground background, `10px` radius, `28px 21px`. `large`: `42px 28px`, icon `49px` with a `14px` radius and a `21px` glyph, title `17.5px`. `compact`: a row from the start, `8.75px` gap, `14px` padding, icon `28px` with a `12.25px` glyph. Tones: primary, muted, green / sky / orange / red 600 (light) and 400 (dark).
+
+- [x] `<tx-empty-state>`: `icon`, `title`, `text`, `variant`, `size`, `tone`, actions slot, `status` role
+- [x] Docs (inside a table's `txTableEmpty`, a search without results) + tests; e2e: the empty state gives way to rows and comes back, clearing the search, compact row and large icon
 
 ## 10.4 Console layout — `blocks/console-layout` (10)
 

@@ -58,6 +58,7 @@ import { galleriaTokens } from './galleria.tokens';
 import { carouselTokens } from './carousel.tokens';
 import { filtersPanelTokens } from './filters-panel.tokens';
 import { pageHeaderTokens } from './page-header.tokens';
+import { emptyStateTokens } from './empty-state.tokens';
 
 export const COMPONENT_TOKENS = {
   icon: iconTokens,
@@ -148,6 +149,7 @@ export const COMPONENT_TOKENS = {
   carousel: carouselTokens,
   filtersPanel: filtersPanelTokens,
   pageHeader: pageHeaderTokens,
+  emptyState: emptyStateTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;
