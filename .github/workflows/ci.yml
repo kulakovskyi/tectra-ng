@@ -35,6 +35,10 @@ jobs:
           key: modules-${{ runner.os }}-node24-${{ hashFiles('package-lock.json') }}
       - if: steps.modules.outputs.cache-hit != 'true'
         run: npm ci --legacy-peer-deps
+      - run: npx nx show projects > /dev/null
+        env:
+          NX_DAEMON: 'false'
+          NX_NO_CLOUD: 'true'
       - run: npm run lint
       - run: npm run test
       - run: npm run build:packages
