@@ -3,8 +3,22 @@ name: ci
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - 'ROADMAP.md'
+      - 'roadmap/**'
+      - 'CLAUDE.md'
+      - '.claude/**'
   pull_request:
+    paths-ignore:
+      - 'ROADMAP.md'
+      - 'roadmap/**'
+      - 'CLAUDE.md'
+      - '.claude/**'
   workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   check:
@@ -14,27 +28,82 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 24
-          cache: npm
-      - run: npm ci --legacy-peer-deps
+      - id: modules
+        uses: actions/cache@v6
+        with:
+          path: node_modules
+          key: modules-${{ runner.os }}-node24-${{ hashFiles('package-lock.json') }}
+      - if: steps.modules.outputs.cache-hit != 'true'
+        run: npm ci --legacy-peer-deps
       - run: npm run lint
       - run: npm run test
       - run: npm run build:packages
-      - run: npx playwright install --with-deps chromium
-      - run: npm run e2e
-      - uses: actions/upload-artifact@v7
-        if: failure()
+
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
-          name: playwright-report
-          path: test-results
+          node-version: 24
+      - id: modules
+        uses: actions/cache@v6
+        with:
+          path: node_modules
+          key: modules-${{ runner.os }}-node24-${{ hashFiles('package-lock.json') }}
+      - if: steps.modules.outputs.cache-hit != 'true'
+        run: npm ci --legacy-peer-deps
+      - run: npx nx run docs:build
+        env:
+          NX_DAEMON: 'false'
+          NX_NO_CLOUD: 'true'
       - uses: actions/upload-artifact@v7
-        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         with:
           name: docs-site
           path: dist/apps/docs/browser
           retention-days: 7
 
+  e2e:
+    needs: docs
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5, 6, 7, 8]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - id: modules
+        uses: actions/cache@v6
+        with:
+          path: node_modules
+          key: modules-${{ runner.os }}-node24-${{ hashFiles('package-lock.json') }}
+      - if: steps.modules.outputs.cache-hit != 'true'
+        run: npm ci --legacy-peer-deps
+      - id: browsers
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+      - if: steps.browsers.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+      - if: steps.browsers.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+      - uses: actions/download-artifact@v8
+        with:
+          name: docs-site
+          path: dist/apps/docs/browser
+      - run: npx playwright test -c e2e/visual/playwright.config.ts --shard=${{ matrix.shard }}/8
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: playwright-report-${{ matrix.shard }}
+          path: test-results
+
   deploy-docs:
-    needs: check
+    needs: [check, e2e]
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:

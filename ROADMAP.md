@@ -194,16 +194,30 @@ Detailed checklist per block: [roadmap/stage-10-blocks.md](roadmap/stage-10-bloc
 | `qr-code` | 1 | ✅ |
 | `confetti`, `hover-effect` | 7, 0 | ✅ |
 
-## Stage 11 — charts (`@tectra-ng/charts`, own package because of the chart engine)
+## Catch-up — added in the first consumer app after its stage
 
-Decide first: keep ApexCharts as a peer dependency or draw own SVG charts.
+Parts the first app gained after their stage here was planned (usage counted 2026-11-09). Small items; do them before stage 11. Everything else it added is covered under another name: `ring-slider` = `ui/knob` (`arc="ring"`, `txKnobValue`), `keywords-input` = `ui/chips-input`, `link-view` = `ui/link`, `user-avatar` = `ui/avatar`, `confirm-modal` = `ui/confirm`, `upload-file` = `ui/file-upload`, `validation-message` = `tx-field-error`, `editor-preview` = `@tectra-ng/editor/content`, `export-csv` / `export-excel` = `ui/export`.
 
-| Chart | Usage | Status |
+| Item | Usage | Status |
 |---|---|---|
-| core (locale, no-data, theme from tokens) | 46 | ⬜ |
-| column, spline, pie | 18, 18, 9 | ⬜ |
-| bar-list, segmented-bar | 17, 11 | ⬜ |
-| heatmap, treemap, org-chart | 10, 2, 3 | ⬜ |
+| `ui/avatar` group: `+N` opens a popover that lists the hidden people (avatar + name), a name tooltip on every avatar | 10 | ⬜ |
+| `ui/list-input` — a textarea for pasting many lines (domains, URLs, emails, ids): live parsing with an own parser / validator, duplicate and invalid counters, "Clean up" (drop invalid and duplicates) and "Clear", the parsed array as the value | 6 | ⬜ |
+| `ui/truncate-text` — one line cut to a character limit with the full value in a tooltip, search highlight, optional link and copy button (long URLs, ids and names in table cells) | 4 | ⬜ |
+| `blocks/mascot` — a pixel-art SVG mascot in the accent colour with animated states (idle, thinking, happy, sleeping, walking, short tricks) for assistants, empty states and onboarding | 4 | ⬜ |
+| `ui/color-picker` field mode — a text field with a colour dot at its start: type the hex or open the picker from the dot, both in sync, a hex validator | 1 | ⬜ |
+
+## Stage 11 — charts (`@tectra-ng/charts`)
+
+Own SVG charts, no chart library: they render on the server like the rest of the kit, take every colour, font and radius from the tokens (so the themes, dark mode and `dt` work), use the kit's tooltip, legend and empty state, and are reachable from the keyboard. A broad catalogue for any app, not only the first one, built in levels on one core; each level ships on its own. Engine-level maths that is unreasonable to write (a hard layout) may come from a small pure module, decided per item. SVG holds tens of thousands of points with decimation; a canvas renderer can join the same core later. Detailed checklist: [roadmap/stage-11-charts.md](roadmap/stage-11-charts.md). Usage = elements in the first app (2026-11-09).
+
+| Level | Charts and features | Usage | Status |
+|---|---|---|---|
+| 1. Core | Scales (linear, log, time, band), nice ticks, axes, grid, legend that toggles series, tooltip with a crosshair, responsive size, motion, "No data", numbers and dates in the tectra locale, series palette from tokens, decimation, keyboard and screen reader access | 46 | ⬜ |
+| 2. Basic | line and area (`spline`), column and bar (grouped, stacked, 100%, horizontal), combo (columns + line, two y axes), pie and donut (centre total, legend beside), scatter and bubble | 18, 18, 9 | ⬜ |
+| 3. Lists and grids | bar-list, segmented-bar, heatmap (grid with sticky headers, calendar), treemap, rank-line (positions over time, rank 1 on top, gaps) | 11, 6, 4, 1, 1 | ⬜ |
+| 4. More shapes | radar, radial bar and gauge, funnel, waterfall, bullet | 0 | ⬜ |
+| 5. Special | candlestick (OHLC), boxplot, range area, timeline and gantt, sankey, sunburst, org-chart (pan / zoom canvas, minimap, search) | 2 (org-chart) | ⬜ |
+| 6. Interaction | zoom, pan and brush on an axis, annotations (lines, bands, points), export PNG / SVG / CSV, live updates | 2 (zoom) | ⬜ |
 
 ## Stage 12 — utils (`@tectra-ng/utils`)
 
@@ -252,3 +266,13 @@ The editor runs on the ProseMirror core (`prosemirror-model`, `-state`, `-view`,
 | Model | Own schema with content expressions, fragments, resolved positions, DOM parse / serialize | ⬜ |
 | Transform | Own steps, position mapping, inversion and the replace fitting algorithm | ⬜ |
 | View | Own `contenteditable` bridge: input, IME composition, selection sync, clipboard, drag and drop, browser workarounds (Chrome, Safari, Firefox, Android, iOS) | ⬜ |
+
+## Stage 14 — code editor (`@tectra-ng/code-editor`)
+
+The first app edits HTML, CSS, JavaScript and other source text and shows the changes between two versions (16 uses). Decide the engine first, the same way as the rich text editor: a modular core (CodeMirror 6: state, view, language packs; MIT) with everything above it ours, or a wrapper over a full editor (Monaco: heavy, own look, no server rendering). The core is the default choice.
+
+| Item | Usage | Status |
+|---|---|---|
+| Editor: `value` / `valueChange`, `language` (HTML, CSS, JavaScript, TypeScript, JSON, Markdown, plain), `height`, `readOnly`, line numbers, syntax colours from tokens (light / dark / styles), search, undo, works with forms | 16 | ⬜ |
+| Diff: inline and side by side views of `original` → `value`, scroll to the first change, read-only or editable modified side | — | ⬜ |
+| Docs, tests, server rendering (a static highlighted view on the server, the editor after hydration) | — | ⬜ |
