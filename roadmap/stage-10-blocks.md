@@ -153,6 +153,12 @@ The first app draws a canvas with an outside library: `data`, `size` 200, `margi
 - [x] `<tx-qr-code>` as an SVG (same on the server): `dotStyle` square / dots / rounded / soft, `eyeFrameStyle` and `eyeBallStyle` square / rounded / circle, `color`, `background`, `eyeColor`, `eyeBallColor`, linear or radial `gradient`, `logo` with a cleared area and level `H`, `download()` PNG / SVG, `toDataUrl()`, `toSvgString()` (our addition, asked for)
 - [x] Docs (live text, a designer with every option and downloads, shapes, colours, logo, download, tokens) + tests; e2e: every code on the page scans back with the browser's barcode reader (where the browser has one), PNG download, live update
 
-## 10.15 Confetti and hover effect — `blocks/confetti`, `blocks/hover-effect` (7, 0)
+## 10.15 Confetti and hover effect — `blocks/confetti`, `blocks/hover-effect` (7, 0) ✅
 
 One-time confetti burst; 3D tilt that follows the pointer.
+
+The look (rem × 14px): ten pieces from the middle — `10.5px` primary squares with `2.625px` corners, `7px × 14px` muted strips, success dots — each to its own place and turn in `1.1s cubic-bezier(0.16, 1, 0.3, 1)`, `40ms` apart, after `delay`; still at their places with reduced motion. Tilt: `perspective(100px)`, the pointer distance from the middle divided by `constrain` 100 in degrees.
+
+- [x] `<tx-confetti>`: `pieces`, `delay`, `play()`; decorative, takes no clicks
+- [x] `<tx-hover-effect>`: `constrain`, `disabled`, `reset()`; mouse only, off with reduced motion; settles back smoothly in `600ms` (our fix — the first app jumps back after 800 ms)
+- [x] Docs (success state with replay, delayed burst, a ring of own pieces, tokens; plan card, three strengths, tokens) + tests; e2e: pieces land at their places, the delay, tilt and smooth return

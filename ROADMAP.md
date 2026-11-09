@@ -192,7 +192,7 @@ Detailed checklist per block: [roadmap/stage-10-blocks.md](roadmap/stage-10-bloc
 | `public-header`, `app-footer`, `cookie-notice` | 5, 7, 4 | ✅ |
 | `network-status` | 4 | ✅ |
 | `qr-code` | 1 | ✅ |
-| `confetti`, `hover-effect` | 7, 0 | ⬜ |
+| `confetti`, `hover-effect` | 7, 0 | ✅ |
 
 ## Stage 11 — charts (`@tectra-ng/charts`, own package because of the chart engine)
 

@@ -1,0 +1,18 @@
+:host {
+  display: block;
+}
+
+.tx-hover-effect__layer {
+  transform: perspective(var(--tx-hover-effect-perspective, 100px)) rotateX(var(--tx-hover-effect-x, 0deg)) rotateY(var(--tx-hover-effect-y, 0deg));
+  will-change: transform;
+}
+
+:host([data-styled]) .tx-hover-effect__layer--resting {
+  transition: transform var(--tx-hover-effect-reset-duration) var(--tx-hover-effect-reset-easing);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tx-hover-effect__layer {
+    transform: none;
+  }
+}
