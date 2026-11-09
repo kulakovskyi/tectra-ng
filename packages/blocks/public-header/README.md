@@ -33,6 +33,7 @@ The panel closes on a link or a button inside, on Escape (the focus goes back to
 ## Slots
 | Name | Description |
 |---|---|
+| txPublicHeaderBrand | `<span txPublicHeaderBrand>` — own brand content (an animated logo, a wordmark) instead of `logo` and the `brand` text; `brand` stays the link's accessible name |
 | txPublicHeaderNav | `<nav txPublicHeaderNav>` — the links; direct `a` children get the link look |
 | txPublicHeaderActions | `<div txPublicHeaderActions>` — buttons at the end, e.g. sign in and sign up |
 

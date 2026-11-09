@@ -50,7 +50,7 @@ export class TxHoverEffect {
   protected readonly active = signal(false);
 
   constructor() {
-    inject(DestroyRef).onDestroy(() => this.document.defaultView?.cancelAnimationFrame(this.frame));
+    inject(DestroyRef).onDestroy(() => this.document.defaultView?.cancelAnimationFrame?.(this.frame));
   }
 
   protected onPointerMove(event: PointerEvent): void {
@@ -72,7 +72,7 @@ export class TxHoverEffect {
   }
 
   reset(): void {
-    this.document.defaultView?.cancelAnimationFrame(this.frame);
+    this.document.defaultView?.cancelAnimationFrame?.(this.frame);
     this.active.set(false);
     this.tilt.set({ x: 0, y: 0 });
   }

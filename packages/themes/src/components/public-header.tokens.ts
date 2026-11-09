@@ -31,6 +31,7 @@ export const publicHeaderTokens = {
     linkFontSize: '12.25px',
     linkColor: tokenRef('text-muted'),
     linkHoverColor: tokenRef('text-primary'),
+    linkHoverBackground: 'transparent',
   },
   end: {
     gap: '10.5px',

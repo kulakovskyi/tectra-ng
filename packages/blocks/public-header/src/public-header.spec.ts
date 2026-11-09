@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { TxPublicHeaderBrand } from './public-header-brand.directive';
 import { TxPublicHeader } from './public-header.component';
 
 @Component({
@@ -21,6 +22,13 @@ import { TxPublicHeader } from './public-header.component';
 class Host {
   readonly preferences = signal(true);
 }
+
+@Component({
+  imports: [TxPublicHeader, TxPublicHeaderBrand],
+  template: `<tx-public-header brand="Northwind" logo="/logo.svg"><span txPublicHeaderBrand class="own-logo">N</span></tx-public-header>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class BrandHost {}
 
 describe('TxPublicHeader', () => {
   beforeEach(() => TestBed.configureTestingModule({ providers: [provideRouter([])] }));
@@ -67,5 +75,14 @@ describe('TxPublicHeader', () => {
     await fixture.whenStable();
     expect(root.classList).not.toContain('tx-public-header--open');
     expect(document.activeElement).toBe(toggle);
+  });
+
+  it('takes own brand content and keeps the brand as the link name', async () => {
+    const fixture = TestBed.createComponent(BrandHost);
+    await fixture.whenStable();
+    const brand = fixture.nativeElement.querySelector('.tx-public-header__brand') as HTMLAnchorElement;
+    expect(brand.querySelector('.own-logo')?.textContent).toBe('N');
+    expect(brand.querySelector('img')).toBeNull();
+    expect(brand.getAttribute('aria-label')).toBe('Northwind');
   });
 });
