@@ -69,4 +69,10 @@ export const edgeDisplayTokens: TectraDeepPartial<TectraComponentTokens> = {
       legendFontWeight: tokenRef('font-weight-bold'),
     },
   },
+  iconLink: {
+    root: { activeColor: tokenRef('highlight-color') },
+  },
+  consoleLayout: {
+    railItem: { activeColor: tokenRef('primary-soft-text') },
+  },
 };

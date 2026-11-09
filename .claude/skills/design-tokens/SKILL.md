@@ -49,4 +49,5 @@ Registry key `floatLabel` → prefix `--tx-float-label`. Semantic tokens are `--
 - Severity variants (`primary`, `secondary`, `success`, `info`, `warn`, `danger`, `help`, `contrast`) map to the severity palettes the same way in every component.
 - Contrast: text tokens must pass WCAG AA on their background in both schemes (axe checks it in e2e). Muted text is `surface-600`-level, not lighter.
 - Changing a semantic or primitive token affects every component — run the whole `verify` skill, look at the docs Theming page in both themes.
+- Changing a style (`styles/<name>`) or adding one: run `TX_E2E_ALL_STYLES=1 npx playwright test themes.spec.ts` in `e2e/visual` — every page in every style, light and dark, axe contrast included. A new style goes into `STYLES` of `themes.spec.ts`. Components and examples that sit on `highlight-background` must also read on a solid highlight (Edge); use `primary-soft` for a tint.
 - Unit tests for presets / merging live in `packages/themes/src/*.spec.ts`.

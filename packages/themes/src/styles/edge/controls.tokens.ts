@@ -78,6 +78,7 @@ export const edgeControlsTokens: TectraDeepPartial<TectraComponentTokens> = {
   },
   checkbox: {
     root: { borderRadius: tokenRef('radius-xs') },
+    tile: { checkedBackground: tokenRef('primary-soft') },
   },
   radioButton: {
     root: {
@@ -87,6 +88,7 @@ export const edgeControlsTokens: TectraDeepPartial<TectraComponentTokens> = {
       checkedHoverBorderColor: tokenRef('form-field-hover-border-color'),
       dotColor: tokenRef('primary-base'),
     },
+    tile: { checkedBackground: tokenRef('primary-soft') },
   },
   toggleSwitch: {
     root: {

@@ -18,7 +18,7 @@ import { TxTabValue } from './tabs.types';
     }
     <span class="tx-tab__label" [class]="tabs.passThrough().label?.class" [style]="tabs.passThrough().label?.style"><ng-content /></span>
     @if (hasBadge()) {
-      <span class="tx-tab__badge" [class]="tabs.passThrough().badge?.class" [style]="tabs.passThrough().badge?.style">{{ badge() }}</span>
+      <span class="tx-tab__badge" [class]="tabs.passThrough().badge?.class" [style]="tabs.passThrough().badge?.style"><span class="tx-tab__badge-value">{{ badge() }}</span></span>
     }
   `,
   styleUrl: './tab.component.scss',

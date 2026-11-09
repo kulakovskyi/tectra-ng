@@ -21,7 +21,7 @@ export function edgeLight({ accent, surface }: TectraPalettes): TectraDeepPartia
 
 export function edgeDark({ accent, surface }: TectraPalettes): TectraDeepPartial<TectraSemanticTokens> {
   return {
-    primary: { base: accent[500], hover: accent[400], active: accent[300] },
+    primary: { base: accent[400], hover: accent[300], active: accent[200] },
     surface: { hover: surface[700], border: surface[500] },
     field: { border: surface[500], hoverBorder: surface[500], icon: surface[0] },
     highlight: { background: accent[500], focusBackground: accent[400], color: surface[950], focusColor: surface[950] },

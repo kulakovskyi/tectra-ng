@@ -83,4 +83,10 @@ export const paperDisplayTokens: TectraDeepPartial<TectraComponentTokens> = {
       focusRingOffset: '0',
     },
   },
+  tabs: {
+    badge: { solidActiveBackground: lightDark(tokenRef('primary-800'), tokenRef('primary-active')) },
+  },
+  editor: {
+    ai: { color: lightDark(tokenRef('primary-700'), tokenRef('primary-hover')) },
+  },
 };

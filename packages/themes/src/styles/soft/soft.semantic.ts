@@ -11,7 +11,7 @@ const shadow = {
 export function softLight({ surface }: TectraPalettes): TectraDeepPartial<TectraSemanticTokens> {
   return {
     surface: { border: surface[100], overlayBorder: 'transparent' },
-    field: { disabledBackground: surface[200] },
+    field: { disabledBackground: surface[200], placeholder: surface[600], icon: surface[600] },
     shadow,
   };
 }

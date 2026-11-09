@@ -29,8 +29,8 @@ import { TxPill } from '@tectra-ng/ui/pill';
       width: 16px;
       height: 16px;
       border-radius: 50%;
-      background: var(--tx-highlight-background);
-      color: var(--tx-highlight-color);
+      background: var(--tx-primary-soft);
+      color: var(--tx-primary-soft-text);
       font-size: 8px;
     }
 

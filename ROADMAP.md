@@ -23,7 +23,7 @@ Everything tectra covers, ordered by dependencies and by how much the first cons
 |---|---|---|
 | Tokens: ink surface, 5 accents, severity palettes, radius, typography, shadows | `@tectra-ng/tokens` | ✅ |
 | Themes: light / dark semantic, `createTectraPreset(options)`, component tokens, deep `definePreset` | `@tectra-ng/themes` | ✅ |
-| Theme picker: 17 primaries (`noir` follows the surface), 13 surfaces, 4 themes (`tectra` default, `soft`, `edge`, `paper`) via `createTectraPreset({ style, primary, surface })`, runtime ripple switch; docs header picker | `@tectra-ng/tokens`, `@tectra-ng/themes`, `@tectra-ng/core/config` | 🚧 |
+| Theme picker: 17 primaries (`noir` follows the surface), 13 surfaces, 4 themes (`tectra` default, `soft`, `edge`, `paper`) via `createTectraPreset({ style, primary, surface })`, runtime ripple switch; docs header picker; e2e of every style in light and dark (`themes.spec.ts`) | `@tectra-ng/tokens`, `@tectra-ng/themes`, `@tectra-ng/core/config` | ✅ |
 | `provideTectra` (preset, mode, `darkSelector`, ripple, unstyled, pt, ptOptions), forms base, i18n, style loader, ripple, fluid | `@tectra-ng/core` | ✅ |
 | 334 icons with PrimeIcons names + registry, brand logos | `@tectra-ng/icons`, `@tectra-ng/brand-icons` | ✅ |
 | Docs site, registry builder, sandbox | `apps/docs` | ✅ |

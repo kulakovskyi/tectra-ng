@@ -10,6 +10,8 @@ export const softFormsTokens: TectraDeepPartial<TectraComponentTokens> = {
       filledBackground: softFill,
       filledHoverBackground: softFillHover,
       filledFocusBackground: lightDark(tokenRef('surface-0'), tokenRef('surface-900')),
+      placeholderColor: lightDark(tokenRef('surface-600'), tokenRef('surface-400')),
+      iconColor: lightDark(tokenRef('surface-600'), tokenRef('surface-400')),
       borderColor: softFill,
       hoverBorderColor: softLine,
       shadow: 'none',
@@ -22,7 +24,7 @@ export const softFormsTokens: TectraDeepPartial<TectraComponentTokens> = {
     },
   },
   inputGroup: {
-    addon: { background: softFillHover, borderColor: softFill },
+    addon: { background: lightDark(tokenRef('surface-200'), tokenRef('surface-800')), borderColor: softFill },
   },
   select: {
     overlay: { borderRadius: tokenRef('radius-xl') },
@@ -30,6 +32,7 @@ export const softFormsTokens: TectraDeepPartial<TectraComponentTokens> = {
     option: { padding: '8px 12px', borderRadius: tokenRef('radius-lg') },
     chip: { borderRadius: tokenRef('radius-full') },
     checkbox: { borderRadius: '6px', borderColor: softLine },
+    optionGroup: { color: tokenRef('text-muted') },
   },
   listbox: {
     root: { focusRingShadow: softFocusShadow() },

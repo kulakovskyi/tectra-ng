@@ -35,6 +35,11 @@
   justify-content: center;
 }
 
+.tx-tab__badge-value {
+  display: block;
+  text-box: trim-both cap alphabetic;
+}
+
 :host([data-styled]) {
   --_padding: var(--tx-tabs-segmented-tab-padding);
   --_gap: var(--tx-tabs-segmented-tab-gap);

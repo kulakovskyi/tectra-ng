@@ -53,6 +53,7 @@ Prefix Nx commands with `NX_DAEMON=false NX_NO_CLOUD=true`.
 | Lint (must be clean, also warnings) | `npm run lint` |
 | Unit tests | `npm run test` |
 | e2e (builds docs, serves on 4310, `TX_E2E_PORT` to change) | `npm run e2e` |
+| e2e of the soft / edge / paper styles on every page (CI checks a subset) | `cd e2e/visual && TX_E2E_ALL_STYLES=1 npx playwright test themes.spec.ts` |
 | Build all packages | `npm run build:packages` |
 | Docs dev server (4300) | `npm run docs` |
 | Regenerate docs registry | `npm run registry` |

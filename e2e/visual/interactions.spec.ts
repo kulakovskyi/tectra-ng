@@ -1117,8 +1117,9 @@ test('icons page selects an icon, filters the sets and loads flags on demand', a
 
 test('logo mark follows the primary and the favicon follows the picker', async ({ page }) => {
   await page.goto('/getting-started');
-  const tile = page.locator('.logo-mark__tile');
-  await expect(page.locator('.logo-mark__block')).toHaveCount(5);
+  const header = page.locator('.header');
+  const tile = header.locator('.logo-mark__tile');
+  await expect(header.locator('.logo-mark__block')).toHaveCount(5);
   const tileFill = () => tile.evaluate((element) => getComputedStyle(element).fill);
   const before = await tileFill();
   const favicon = page.locator('link[rel="icon"][type="image/svg+xml"]');

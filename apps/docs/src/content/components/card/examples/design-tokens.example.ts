@@ -10,7 +10,7 @@ import { TxCard } from '@tectra-ng/ui/card';
       class="card"
       [dt]="{
         root: {
-          background: 'var(--tx-highlight-background)',
+          background: 'var(--tx-primary-soft)',
           borderColor: 'transparent',
           shadow: 'none',
           titleFontSize: '15px',
