@@ -1,0 +1,1 @@
+Below 1024px the stage becomes a band above the step and shows a smaller scene; from 640px the step gets wider side spacing. `responsive="container"` measures the wizard itself — pick a device to see each width.

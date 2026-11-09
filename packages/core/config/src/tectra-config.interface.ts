@@ -296,6 +296,10 @@ export interface TxTranslations {
   consoleSections: string;
   pinMenu: string;
   unpinMenu: string;
+  wizardNext: string;
+  wizardBack: string;
+  wizardSkip: string;
+  wizardProgress: string;
 }
 
 export type TxValidationMessage = string | ((error: unknown) => string);

@@ -298,6 +298,10 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     consoleSections: 'Sections',
     pinMenu: 'Keep the menu open',
     unpinMenu: 'Let the menu fold',
+    wizardNext: 'Next',
+    wizardBack: 'Back',
+    wizardSkip: 'Skip',
+    wizardProgress: 'Progress',
   },
 };
 
@@ -599,6 +603,10 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     consoleSections: 'Розділи',
     pinMenu: 'Закріпити меню',
     unpinMenu: 'Відкріпити меню',
+    wizardNext: 'Далі',
+    wizardBack: 'Назад',
+    wizardSkip: 'Пропустити',
+    wizardProgress: 'Прогрес',
   },
 };
 

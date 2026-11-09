@@ -1,0 +1,1 @@
+The parts work on their own too: the progress for any multi-step form, the step head as the heading of a setup page, the footer with its states — a hidden back button on the first step, a skip for optional steps and a loading finish.

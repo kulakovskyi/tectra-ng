@@ -1,0 +1,1 @@
+Four steps with a form, an optional step and a finish with a loading button. The stage on the right slides its scenes forward or back and shows the step number and name; the steps rise in with `tx-wizard-step--enter`.

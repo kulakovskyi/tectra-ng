@@ -182,7 +182,7 @@ Detailed checklist per block: [roadmap/stage-10-blocks.md](roadmap/stage-10-bloc
 | `empty-state` | **193** | ✅ |
 | `console-layout` (header + crumbs, icon rail, footer, panel) | 10 | ✅ |
 | `app-layout` (sidebar + topbar + menu, responsive) | 22 | ✅ |
-| `wizard` (stages, step head, progress, footer) | 53 | ⬜ |
+| `wizard` (stages, step head, progress, footer) | 53 | ✅ |
 | `pinned-tabs` | 1 | ⬜ |
 | `command-palette` | 13 | ⬜ |
 | `kanban` | 6 | ⬜ |

@@ -64,9 +64,14 @@ The look (rem × 14px): rail `73.5px`, open `224px`, width `0.3s cubic-bezier(0,
 - [x] `tx-panel-menu` `collapsed` (sidebar rail look); opening is smooth: labels never wrap (rows keep their height), nesting indents slide with the width, chevrons fade, badges settle at their new place
 - [x] Docs (screens, device frames) + tests; e2e: the rail opens over the page without moving it, pin / unpin moves the page, the phone menu slides in and closes after a pick, the plain top bar
 
-## 10.6 Wizard — `blocks/wizard` (53)
+## 10.6 Wizard — `blocks/wizard` (53) ✅
 
-Full-screen step-by-step layout: two columns, segmented progress, step head, animated stage, back / skip / next footer.
+First app (onboarding of three apps): a layout with header / body / footer / visual slots, a segmented progress (`total`, `current`, `label`, `stepLabels`), a step head (`title` as `h1`, `icon`, `lead`, `badge`), a stage (`direction`, `number`, `caption`, backdrop slot, scenes that slide in and out by direction) and a footer (`nextLabel`, `nextIcon`, `backLabel`, `showBack`, `skipLabel`, `loading`; `back` / `next` / `skip`); steps rise in on enter.
+
+The look (rem × 14px, breakpoints 640px / 1024px): card background, full window height; one column, the stage on top as a band; from 1024px two columns with a sticky stage of the window height. Step column up to `532px`, `21px 17.5px` → `21px 28px` from 640px → `35px 42px` from 1024px; main `28px` gap and padding. Progress `7px` gap, label `10.5px` weight 500 upper case `0.08em` muted, segments `5.25px` high and apart, border colour, primary fill sliding `500ms cubic-bezier(0.16, 1, 0.3, 1)`, the current one at `0.6`. Step head `10.5px` gap, icon `38.5px` square with a `10.5px` radius on 12% primary, `15.75px` glyph; title `21px` weight 600 `1.25` `-0.01em`; lead `13.125px` / `1.625` muted, up to `476px`; badge a small neutral pill. Stage 5% primary over the ground, `21px` gap (`35px` wide), `28px 21px` (`42px 21px` wide), at least `196px`; a `364px` square at half size on narrow screens; scenes in `680ms` from `56px` and `0.96`, out `260ms` to `-40px` and `0.98`, mirrored going back; caption from 1024px — the number `10.5px` weight 600 primary in two digits, the name `15.75px` weight 600, rising in `520ms`. Footer `10.5px` gap, `17.5px` top padding over a border, back outlined secondary, skip text secondary, next primary with its icon.
+
+- [x] `tx-wizard-layout`, `tx-wizard-progress`, `tx-wizard-step-head`, `tx-wizard-stage`, `tx-wizard-footer`; `tx-wizard-step--enter`, `tx-wizard-scene` / `--enter` / `--leave` classes; translated default footer labels (our addition); `responsive` `viewport` or `container`
+- [x] Docs (a four-step onboarding, device frames, parts) + tests; e2e: next / back move the steps with the progress and caption, the finish loads and starts over, the stage beside the step on a desktop and above it on a phone
 
 ## 10.7 Pinned tabs — `blocks/pinned-tabs` (1)
 

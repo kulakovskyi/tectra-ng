@@ -75,3 +75,4 @@ export * from './components/empty-state.tokens';
 export * from './components/app-footer.tokens';
 export * from './components/console-layout.tokens';
 export * from './components/app-layout.tokens';
+export * from './components/wizard.tokens';
