@@ -13,6 +13,7 @@ Items are `TxPanelMenuItem` — the kit menu item (`label`, `icon`, `routerLink`
 | Name | Description |
 |---|---|
 | model | The items, `TxPanelMenuItem[]` |
+| collapsed | `sidebar`: shows only the icons in one column (nested items lose their indent) — the labels and section titles fade out (their space stays), badges and locks sit on the icons; for a narrow rail that opens on hover |
 | variant | `panel` or `sidebar` |
 | multiple | Several branches can be open at once; off, opening one closes its siblings (root panels in `panel`, every level in `sidebar`) |
 | expandedKeys | Two-way: the open items, `{ [key]: boolean }`; a key is the item `id` or its index path (`0-1-2`) |

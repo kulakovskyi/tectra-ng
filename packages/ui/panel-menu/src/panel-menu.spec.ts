@@ -293,3 +293,31 @@ describe('TxPanelMenu active items', () => {
     expect(items().map((item) => item.classList.contains('tx-panel-menu__item--active'))).toEqual([false, true]);
   });
 });
+
+@Component({
+  imports: [TxPanelMenu],
+  template: `<tx-panel-menu [variant]="variant()" [collapsed]="collapsed()" [model]="model" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class CollapsedHost {
+  readonly variant = signal<TxPanelMenuVariant>('sidebar');
+  readonly collapsed = signal(true);
+  readonly model: TxPanelMenuItem[] = [{ label: 'Main', items: [{ label: 'Inbox', icon: 'inbox', badge: 3 }] }];
+}
+
+describe('TxPanelMenu collapsed', () => {
+  it('marks a collapsed sidebar and keeps the labels for screen readers', async () => {
+    const fixture = TestBed.createComponent(CollapsedHost);
+    await fixture.whenStable();
+    const root = fixture.nativeElement.querySelector('tx-panel-menu') as HTMLElement;
+    expect(root.classList).toContain('tx-panel-menu--collapsed');
+    expect(root.querySelector('.tx-panel-menu__label')?.textContent?.trim()).toBe('Inbox');
+    fixture.componentInstance.collapsed.set(false);
+    await fixture.whenStable();
+    expect(root.classList).not.toContain('tx-panel-menu--collapsed');
+    fixture.componentInstance.collapsed.set(true);
+    fixture.componentInstance.variant.set('panel');
+    await fixture.whenStable();
+    expect(root.classList).not.toContain('tx-panel-menu--collapsed');
+  });
+});
