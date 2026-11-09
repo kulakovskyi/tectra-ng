@@ -1,0 +1,40 @@
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.swatch {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--swatch);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--tx-text-primary) 12%, transparent) inset;
+  cursor: pointer;
+  transition:
+    box-shadow 0.2s,
+    transform 0.2s cubic-bezier(0.3, 1.4, 0.5, 1);
+
+  &:hover {
+    transform: scale(1.12);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--tx-focus-ring-color);
+    outline-offset: 2px;
+  }
+}
+
+.swatch--active {
+  box-shadow:
+    0 0 0 2px var(--docs-panel),
+    0 0 0 4px var(--swatch);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swatch {
+    transition: none;
+  }
+}

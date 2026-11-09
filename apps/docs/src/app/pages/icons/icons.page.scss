@@ -61,12 +61,10 @@
   cursor: pointer;
   transition:
     box-shadow 0.25s var(--docs-ease),
-    background-color 0.2s,
-    transform 0.25s var(--docs-ease);
+    background-color 0.2s;
 
   &:hover {
     box-shadow: var(--docs-elevation-hover);
-    transform: translateY(-2px);
 
     .tile__icon {
       color: var(--tx-primary-base);

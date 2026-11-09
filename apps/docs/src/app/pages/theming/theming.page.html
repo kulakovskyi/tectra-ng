@@ -1,23 +1,194 @@
 <p class="eyebrow">Get started</p>
-<h1 >Theming</h1>
-<p class="lead">A preset is data. <code>provideTectra()</code> turns it into CSS variables — change it and everything repaints.</p>
+<h1>Theming</h1>
+<p class="lead">
+  A preset is data: a style, a primary palette and a surface palette. <code>provideTectra()</code> turns it into CSS variables — change one value and every
+  component repaints, on the server and in the browser.
+</p>
 
-<p>A preset has three parts: a <strong>primary</strong> palette for actions and selection, a <strong>surface</strong> palette for backgrounds, borders and text, and a <strong>theme</strong> — the shape of every component (radius, spacing, focus ring, density). The same picker sits behind the palette button in the header.</p>
+<h2>Build a preset</h2>
+<p class="section-lead">Everything here repaints this whole site and is remembered — the same picker sits behind the palette button in the header.</p>
+<div class="panel builder">
+  <div class="builder__grid">
+    <div class="builder__controls">
+      <div class="control">
+        <span class="field-label" id="theming-style">Style</span>
+        <tx-tabs variant="segmented" size="small" ariaLabelledBy="theming-style" [tabs]="styles" [value]="settings.style()" (valueChange)="setStyle($event)" />
+        <p class="control__note">{{ styleNotes[settings.style()] }}</p>
+      </div>
+      <div class="control">
+        <span class="field-label" id="theming-primary">Primary</span>
+        <docs-swatches ariaLabelledBy="theming-primary" [options]="primaries" [value]="settings.primary()" (valueChange)="setPrimary($event)" />
+      </div>
+      <div class="control">
+        <span class="field-label" id="theming-surface">Surface</span>
+        <docs-swatches ariaLabelledBy="theming-surface" [options]="surfaces" [value]="settings.surface()" (valueChange)="setSurface($event)" />
+      </div>
+      <div class="control control--row">
+        <div class="control">
+          <span class="field-label" id="theming-mode">Mode</span>
+          <tx-tabs variant="segmented" size="small" ariaLabelledBy="theming-mode" [tabs]="modes" [value]="settings.mode()" (valueChange)="setMode($event)" />
+        </div>
+        <div class="control">
+          <span class="field-label" id="theming-ripple">Ripple</span>
+          <tx-toggle-switch ariaLabelledBy="theming-ripple" [ngModel]="settings.ripple()" (ngModelChange)="settings.setRipple($event)" />
+        </div>
+        <button txButton class="control__reset" size="small" text severity="secondary" icon="refresh" [disabled]="isDefault()" (click)="reset()">Reset</button>
+      </div>
+    </div>
 
-<div class="card picker">
-  <docs-theme-configurator />
+    <div class="preview" role="group" aria-label="Preview">
+      <div class="preview__head">
+        <tx-avatar [name]="name || 'Alex Morgan'" />
+        <div class="preview__who">
+          <span class="preview__name">{{ name || 'Alex Morgan' }}</span>
+          <span class="preview__mail">alex&#64;example.com</span>
+        </div>
+        <tx-tag value="Pro" severity="primary" rounded />
+      </div>
+      <tx-tabs variant="pills" size="small" ariaLabel="Account" [tabs]="sections" [(value)]="section" />
+      <div class="preview__fields">
+        <tx-field label="Display name">
+          <input txInput [(ngModel)]="name" />
+        </tx-field>
+        <tx-field label="Plan">
+          <tx-select [options]="plans" [(ngModel)]="plan" />
+        </tx-field>
+      </div>
+      <div class="preview__row">
+        <tx-toggle-switch label="Product updates" [(ngModel)]="updates" />
+        <tx-checkbox label="Weekly digest" [(ngModel)]="digest" />
+      </div>
+      <div class="preview__storage">
+        <div class="preview__storage-head">
+          <span>Storage</span>
+          <span class="preview__muted">64 of 100 GB</span>
+        </div>
+        <tx-progress-bar ariaLabel="Storage" [value]="64" />
+      </div>
+      <div class="preview__tags">
+        <tx-tag value="Paid" severity="success" />
+        <tx-tag value="Trial" severity="info" />
+        <tx-tag value="Due soon" severity="warn" />
+        <tx-tag value="Overdue" severity="danger" />
+      </div>
+      <tx-message severity="info" size="small" icon="info-circle" text="Every part of this card follows the preset." />
+      <div class="preview__actions">
+        <button txButton severity="secondary" outlined>Cancel</button>
+        <button txButton icon="check">Save</button>
+      </div>
+    </div>
+  </div>
+  <docs-code-card file="app.config.ts" [code]="presetCode()" />
 </div>
 
-<h2>Variables of the {{ mode() }} mode</h2>
-<div class="vars">
-  @for (variable of variables(); track variable.name) {
-    <div class="vars__row">
-      <span class="vars__swatch" [style.background]="variable.value"></span>
-      <code>{{ variable.name }}</code>
-      <span class="vars__value">{{ variable.value }}</span>
+<h2>Four layers</h2>
+<p class="section-lead">Each layer is built from the one before it. Override at the layer you need — the rest keeps working.</p>
+<ol class="layers">
+  @for (layer of layers; track layer.title; let index = $index) {
+    <li class="layer">
+      <span class="layer__step">{{ index + 1 }}</span>
+      <span class="layer__title">{{ layer.title }}</span>
+      <span class="layer__text">{{ layer.text }}</span>
+      <span class="layer__sample">
+        @switch (index) {
+          @case (0) {
+            <span class="layer__chip" style="background: var(--tx-primary-500)"></span>
+          }
+          @case (1) {
+            <span class="layer__chip" style="background: var(--tx-primary-base)"></span>
+          }
+          @case (2) {
+            <span class="layer__chip layer__chip--radius"></span>
+          }
+          @default {
+            <button txButton size="small" [dt]="instanceTokens">Pill</button>
+          }
+        }
+        <code>{{ layer.variable }}</code>
+      </span>
+      <span class="layer__where">{{ layer.file }}</span>
+    </li>
+  }
+</ol>
+
+<h2>Palettes</h2>
+<p class="section-lead">The scales of the current preset. Click a step to copy its variable.</p>
+<div class="palettes">
+  <div class="palette">
+    <span class="palette__name">Primary · {{ settings.primary() }}</span>
+    <div class="palette__steps">
+      @for (step of primarySteps; track step) {
+        <button type="button" class="palette__step" [attr.aria-label]="'Copy --tx-primary-' + step" (click)="copyVariable('--tx-primary-' + step)">
+          <span class="palette__chip" [style.background]="'var(--tx-primary-' + step + ')'"></span>
+          <span class="palette__label" aria-hidden="true">{{ step }}</span>
+        </button>
+      }
+    </div>
+  </div>
+  <div class="palette">
+    <span class="palette__name">Surface · {{ settings.surface() }}</span>
+    <div class="palette__steps">
+      @for (step of surfaceSteps; track step) {
+        <button type="button" class="palette__step" [attr.aria-label]="'Copy --tx-surface-' + step" (click)="copyVariable('--tx-surface-' + step)">
+          <span class="palette__chip" [style.background]="'var(--tx-surface-' + step + ')'"></span>
+          <span class="palette__label" aria-hidden="true">{{ step }}</span>
+        </button>
+      }
+    </div>
+  </div>
+</div>
+
+<div class="tokens-head">
+  <h2>Semantic tokens</h2>
+  <input txInput class="tokens-head__search" type="search" placeholder="Filter tokens" aria-label="Filter tokens" [ngModel]="query()" (ngModelChange)="query.set($event)" />
+</div>
+<p class="section-lead">{{ tokenCount() }} variables of the current preset, light and dark side by side. Click a row to copy <code>var(…)</code>.</p>
+<div class="groups">
+  @for (group of groups(); track group.key) {
+    <section class="group" [attr.aria-label]="group.title">
+      <div class="group__head">
+        <span class="group__title">{{ group.title }}</span>
+        <span class="group__modes" aria-hidden="true"><span>Light</span><span>Dark</span></span>
+      </div>
+      @for (row of group.rows; track row.name) {
+        <button type="button" class="token" [attr.aria-label]="'Copy ' + row.name" [title]="row.light + ' · ' + row.dark" (click)="copyVariable(row.name)">
+          <code class="token__name">{{ row.name }}</code>
+          @if (group.shadow) {
+            <span class="token__shadow" [style.box-shadow]="row.light"></span>
+            <span class="token__shadow token__shadow--dark" [style.box-shadow]="row.dark"></span>
+          } @else {
+            <span class="token__chip" [style.background]="row.light"></span>
+            <span class="token__chip" [style.background]="row.dark"></span>
+          }
+        </button>
+      }
+    </section>
+  } @empty {
+    <p class="groups__empty">No token matches “{{ query() }}”.</p>
+  }
+</div>
+
+<h2>Customize</h2>
+<div class="extras">
+  @for (recipe of recipes; track recipe.title) {
+    <div class="extra">
+      <div class="extra__head">
+        <span class="extra__icon"><tx-icon [name]="recipe.icon" /></span>
+        <span class="extra__title">{{ recipe.title }}</span>
+      </div>
+      <p class="extra__text">{{ recipe.text }}</p>
+      <docs-code-card [file]="recipe.file" [code]="recipe.code" [language]="recipe.language" />
     </div>
   }
 </div>
 
-<h2>Use a preset in your app</h2>
-<docs-code-block [code]="presetExample" [label]="'Accent preset example'" />
+<h2>Next steps</h2>
+<div class="next">
+  @for (link of next; track link.path) {
+    <a class="next__card" [routerLink]="link.path">
+      <span class="next__icon"><tx-icon [name]="link.icon" /></span>
+      <span class="next__title">{{ link.title }} <tx-icon class="next__arrow" name="arrow-right" /></span>
+      <span class="next__text">{{ link.text }}</span>
+    </a>
+  }
+</div>

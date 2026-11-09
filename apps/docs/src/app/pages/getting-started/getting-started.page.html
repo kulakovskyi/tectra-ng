@@ -57,55 +57,17 @@
           </div>
           <div class="theme__field">
             <span class="theme__label" id="install-primary">Primary</span>
-            <div class="swatches" role="radiogroup" aria-labelledby="install-primary">
-              @for (item of primaries; track item.value) {
-                <button
-                  type="button"
-                  role="radio"
-                  class="swatch"
-                  [class.swatch--active]="primary() === item.value"
-                  [style.--swatch]="item.color"
-                  [attr.aria-checked]="primary() === item.value"
-                  [attr.aria-label]="item.label"
-                  [attr.tabindex]="primary() === item.value ? 0 : -1"
-                  [title]="item.label"
-                  (keydown)="moveFocus($event)"
-                  (click)="primary.set(item.value)"
-                ></button>
-              }
-            </div>
+            <docs-swatches ariaLabelledBy="install-primary" [options]="primaries" [(value)]="primary" />
           </div>
           <div class="theme__field theme__field--row">
             <div class="theme__field">
               <span class="theme__label" id="install-surface">Surface</span>
-              <div class="swatches" role="radiogroup" aria-labelledby="install-surface">
-                @for (item of surfaces; track item.value) {
-                  <button
-                    type="button"
-                    role="radio"
-                    class="swatch"
-                    [class.swatch--active]="surface() === item.value"
-                    [style.--swatch]="item.color"
-                    [attr.aria-checked]="surface() === item.value"
-                    [attr.aria-label]="item.label"
-                    [attr.tabindex]="surface() === item.value ? 0 : -1"
-                    [title]="item.label"
-                    (keydown)="moveFocus($event)"
-                    (click)="surface.set(item.value)"
-                  ></button>
-                }
-              </div>
+              <docs-swatches ariaLabelledBy="install-surface" [options]="surfaces" [(value)]="surface" />
             </div>
             <button txButton severity="secondary" outlined icon="eye" (click)="preview()">Preview on this site</button>
           </div>
         </div>
-        <div class="code-card">
-          <div class="code-card__head">
-            <span class="code-card__file"><tx-icon name="file" />app.config.ts</span>
-            <docs-copy-button label="Copy the theme code" [text]="themeCode()" />
-          </div>
-          <docs-code-block [code]="themeCode()" language="typescript" label="app.config.ts" />
-        </div>
+        <docs-code-card file="app.config.ts" [code]="themeCode()" language="typescript" />
       </div>
     </div>
   </li>
@@ -116,13 +78,7 @@
       <h2 class="step__title">Use a component</h2>
       <p class="step__text">Import it into a standalone component and use it in the template. That is the whole setup.</p>
       <div class="panel panel--split">
-        <div class="code-card">
-          <div class="code-card__head">
-            <span class="code-card__file"><tx-icon name="file" />city-field.ts</span>
-            <docs-copy-button label="Copy the component code" [text]="useCode" />
-          </div>
-          <docs-code-block [code]="useCode" language="typescript" label="city-field.ts" />
-        </div>
+        <docs-code-card file="city-field.ts" [code]="useCode" language="typescript" />
         <div class="result">
           <span class="result__label">Result</span>
           <tx-select ariaLabel="City" placeholder="Pick a city" [options]="cities" [formControl]="city" />
@@ -142,13 +98,7 @@
         <span class="extra__title">{{ extra.title }}</span>
       </div>
       <p class="extra__text">{{ extra.text }}</p>
-      <div class="code-card">
-        <div class="code-card__head">
-          <span class="code-card__file"><tx-icon name="file" />{{ extra.file }}</span>
-          <docs-copy-button [label]="'Copy: ' + extra.title" [text]="extra.code" />
-        </div>
-        <docs-code-block [code]="extra.code" [language]="extra.language" [label]="extra.title" />
-      </div>
+      <docs-code-card [file]="extra.file" [code]="extra.code" [language]="extra.language" />
     </div>
   }
 </div>

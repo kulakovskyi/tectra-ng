@@ -1,0 +1,33 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.code-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 32px;
+  padding-left: 4px;
+}
+
+.code-card__file {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--tx-text-muted);
+  font-family: var(--tx-font-mono);
+  font-size: 12px;
+
+  tx-icon {
+    font-size: 13px;
+  }
+}
+
+docs-code-block {
+  display: grid;
+  flex: 1;
+}

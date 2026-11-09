@@ -8,7 +8,8 @@ import { TxButton } from '@tectra-ng/ui/button';
 import { TxCheckbox } from '@tectra-ng/ui/checkbox';
 import { TxSelect } from '@tectra-ng/ui/select';
 import { TxTabItem, TxTabValue, TxTabs } from '@tectra-ng/ui/tabs';
-import { CodeBlock } from '../../doc-ui/code-block/code-block';
+import { DocsCodeCard } from '../../doc-ui/code-card/code-card';
+import { DocsSwatches } from '../../doc-ui/swatches/swatches';
 import {
   INSTALL_ALL,
   INSTALL_EXTRAS,
@@ -23,13 +24,12 @@ import { PRIMARY_OPTIONS, STYLE_OPTIONS, SURFACE_OPTIONS } from '../../data/them
 import { DocsCopyButton } from '../../doc-ui/copy/copy-button';
 import { DocsThemeSettings } from '../../layout/theme-settings';
 
-const STEPS: Record<string, number> = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
 
 @Component({
   selector: 'docs-getting-started-page',
-  imports: [RouterLink, FormsModule, ReactiveFormsModule, TxButton, TxCheckbox, TxIcon, TxSelect, TxTabs, CodeBlock, DocsCopyButton],
+  imports: [RouterLink, FormsModule, ReactiveFormsModule, TxButton, TxCheckbox, TxIcon, TxSelect, TxTabs, DocsCodeCard, DocsCopyButton, DocsSwatches],
   templateUrl: './getting-started.page.html',
-  styleUrls: ['../page.scss', './getting-started.page.scss'],
+  styleUrls: ['../page.scss', '../guide.scss', './getting-started.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class GettingStartedPage {
@@ -90,20 +90,6 @@ export const appConfig: ApplicationConfig = {
 
   toggle(name: string, checked: boolean): void {
     this.picked.update((picked) => ({ ...picked, [name]: checked }));
-  }
-
-  moveFocus(event: KeyboardEvent): void {
-    const radio = event.currentTarget as HTMLButtonElement;
-    const radios = Array.from(radio.parentElement?.querySelectorAll<HTMLButtonElement>('[role="radio"]') ?? []);
-    const current = radios.indexOf(radio);
-    const next =
-      event.key === 'Home' ? 0 : event.key === 'End' ? radios.length - 1 : event.key in STEPS ? (current + STEPS[event.key] + radios.length) % radios.length : -1;
-    if (next < 0) {
-      return;
-    }
-    event.preventDefault();
-    radios[next].focus();
-    radios[next].click();
   }
 
   preview(): void {
