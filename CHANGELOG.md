@@ -1,3 +1,32 @@
+## 0.1.7 (2026-11-09)
+
+### 🚀 Features
+
+- **blocks:** publish @tectra-ng/blocks and add the filters panel ([d2d6ec0](https://github.com/kulakovskyi/tectra-ng/commit/d2d6ec0))
+- **blocks:** add the page header ([60ff3f5](https://github.com/kulakovskyi/tectra-ng/commit/60ff3f5))
+- **blocks:** add the empty state ([2d61b7e](https://github.com/kulakovskyi/tectra-ng/commit/2d61b7e))
+- **blocks:** add the console layout and the app footer ([b6ae4b0](https://github.com/kulakovskyi/tectra-ng/commit/b6ae4b0))
+- **blocks:** add the app layout ([8b35545](https://github.com/kulakovskyi/tectra-ng/commit/8b35545))
+- **blocks:** add the wizard ([0784c74](https://github.com/kulakovskyi/tectra-ng/commit/0784c74))
+- **blocks:** add the pinned tabs ([7fcde42](https://github.com/kulakovskyi/tectra-ng/commit/7fcde42))
+- **blocks:** add the command palette ([29a47c2](https://github.com/kulakovskyi/tectra-ng/commit/29a47c2))
+- **blocks:** add the kanban ([206f8c0](https://github.com/kulakovskyi/tectra-ng/commit/206f8c0))
+- **blocks:** add the actions menu and the action tile ([5666b4c](https://github.com/kulakovskyi/tectra-ng/commit/5666b4c))
+- **blocks:** add the theme and language switches and the preferences capsule ([d5ac601](https://github.com/kulakovskyi/tectra-ng/commit/d5ac601))
+- **blocks:** add the public header and the cookie notice ([09ad631](https://github.com/kulakovskyi/tectra-ng/commit/09ad631))
+- **blocks:** add the network status ([52ac168](https://github.com/kulakovskyi/tectra-ng/commit/52ac168))
+- **qr:** add the QR code package and block ([0a5af25](https://github.com/kulakovskyi/tectra-ng/commit/0a5af25))
+- **ui:** mark the current panel menu item with active ([6e00029](https://github.com/kulakovskyi/tectra-ng/commit/6e00029))
+- **ui:** collapsed rail look for the sidebar panel menu ([a8b551d](https://github.com/kulakovskyi/tectra-ng/commit/a8b551d))
+
+### 🩹 Fixes
+
+- **docs:** keep the scroll position when only the query changes ([c689dc1](https://github.com/kulakovskyi/tectra-ng/commit/c689dc1))
+
+### ❤️ Thank You
+
+- tears @kulakovskyi
+
 ## 0.1.6 (2026-11-08)
 
 ### 🚀 Features
