@@ -1,7 +1,17 @@
 # @tectra-ng/blocks
 
-Ready page parts built from `@tectra-ng/ui` — what makes Tectra different from other kits.
+Ready page blocks for consoles and admin apps, built from the tectra components: filters panel, page header, empty state, layouts, wizard, command palette and more.
 
-`console-layout`, `filters-panel`, `pinned-tabs`, `stat-tiles`, `empty-state`, `command-palette`, `wizard`, `kanban` …
+```bash
+npm install @tectra-ng/blocks
+```
 
-Same folder shape as a `@tectra-ng/ui` component. Depends on: `@tectra-ng/ui`, `@tectra-ng/core`.
+It also comes with `tectra-ng`. One entry point per block, same as the components:
+
+```ts
+import { TxFiltersPanel, TxFilterField } from '@tectra-ng/blocks/filters-panel';
+```
+
+Peer packages: `@tectra-ng/ui`, `@tectra-ng/core`, `@tectra-ng/themes`, `@tectra-ng/icons`.
+
+Docs and examples: [tectra-ng.com](https://tectra-ng.com).

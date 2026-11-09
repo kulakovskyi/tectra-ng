@@ -12,6 +12,15 @@
         "project": "packages/blocks/ng-package.json",
         "tsConfig": "packages/blocks/tsconfig.lib.json"
       }
+    },
+    "test": {
+      "executor": "@angular/build:unit-test",
+      "options": {
+        "buildTarget": "sandbox:build",
+        "tsConfig": "packages/blocks/tsconfig.spec.json",
+        "runner": "vitest",
+        "watch": false
+      }
     }
   }
 }

@@ -1,10 +1,38 @@
 {
   "name": "@tectra-ng/blocks",
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.1.6",
+  "description": "Ready page blocks for Angular consoles and admin apps on the tectra components: filters panel, page header, empty state, layouts, wizard, command palette and more.",
   "license": "MIT",
+  "homepage": "https://tectra-ng.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kulakovskyi/tectra-ng.git",
+    "directory": "packages/blocks"
+  },
+  "bugs": "https://github.com/kulakovskyi/tectra-ng/issues",
+  "keywords": [
+    "tectra",
+    "angular",
+    "angular-components",
+    "angular-ui",
+    "ui-blocks",
+    "admin",
+    "dashboard",
+    "console",
+    "filters",
+    "layout",
+    "signals"
+  ],
   "peerDependencies": {
-    "@tectra-ng/ui": "0.0.0",
-    "@tectra-ng/core": "0.0.0"
+    "@angular/cdk": "^22.0.0",
+    "@angular/common": "^22.0.0",
+    "@angular/core": "^22.0.0",
+    "@tectra-ng/core": "^0.1.6",
+    "@tectra-ng/icons": "^0.1.6",
+    "@tectra-ng/themes": "^0.1.6",
+    "@tectra-ng/ui": "^0.1.6"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

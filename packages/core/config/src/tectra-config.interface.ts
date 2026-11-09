@@ -284,6 +284,14 @@ export interface TxTranslations {
   editCell: string;
   moveRow: string;
   rowGroup: string;
+  filters: string;
+  clearFilters: string;
+  showFilters: string;
+  filterHasValue: string;
+  resetFiltersLayout: string;
+  reorderFilter: string;
+  filtersShown: string;
+  filtersHidden: string;
 }
 
 export type TxValidationMessage = string | ((error: unknown) => string);

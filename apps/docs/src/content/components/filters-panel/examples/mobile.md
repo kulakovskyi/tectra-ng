@@ -1,0 +1,1 @@
+On a phone the fields fold behind a "Filters" button that counts the active filters; they open in a panel under the bar, scroll inside it and close on a click outside or Escape. The reset action moves into the panel as "Clear filters". `collapse="always"` shows this look at any width (here in a phone-wide frame); `never` keeps the fields open.

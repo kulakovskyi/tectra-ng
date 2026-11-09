@@ -1,0 +1,1 @@
+With a `stateKey` the panel gets the "Show filters" menu: tick the fields to show and drag them by the handle (or Alt + arrows) into your order. The layout is saved under that key and comes back after a reload. A field with a value (`filterActive`) is always shown; `defaultVisible` sets how many fields are shown at first.

@@ -286,6 +286,14 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     editCell: 'Edit {column}',
     moveRow: 'Move row',
     rowGroup: '{count} rows',
+    filters: 'Filters',
+    clearFilters: 'Clear filters',
+    showFilters: 'Show filters',
+    filterHasValue: 'Has a value — shown while it is set',
+    resetFiltersLayout: 'Reset to default',
+    reorderFilter: 'Drag to reorder',
+    filtersShown: '{shown} of {total}',
+    filtersHidden: '{label}, {count} hidden',
   },
 };
 
@@ -575,6 +583,14 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     editCell: 'Редагувати «{column}»',
     moveRow: 'Перемістити рядок',
     rowGroup: 'Рядків: {count}',
+    filters: 'Фільтри',
+    clearFilters: 'Очистити фільтри',
+    showFilters: 'Показувати фільтри',
+    filterHasValue: 'Має значення — показується, поки воно вибране',
+    resetFiltersLayout: 'Скинути до стандартних',
+    reorderFilter: 'Перетягніть, щоб змінити порядок',
+    filtersShown: '{shown} з {total}',
+    filtersHidden: '{label}, приховано: {count}',
   },
 };
 

@@ -1,0 +1,1 @@
+Put any buttons into the end of the panel with `txFiltersActions`. Below 1024px a panel with two or more fields folds into a "Filters" button with the number of active filters; the fields open in a panel under it. The action marked `txFiltersReset` leaves the bar there and a "Clear filters" button in the panel runs it. Make the window narrower to try it.

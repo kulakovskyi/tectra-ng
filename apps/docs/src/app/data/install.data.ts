@@ -32,6 +32,11 @@ export const appConfig: ApplicationConfig = {
 })`,
   },
   {
+    title: 'Ready page blocks (filters panel, page header, layouts …) come with tectra-ng, or alone',
+    language: 'bash',
+    code: 'npm install @tectra-ng/blocks',
+  },
+  {
     title: 'Optional: the rich text editor is its own package — tectra-ng does not include it',
     language: 'bash',
     code: 'npm install @tectra-ng/editor',

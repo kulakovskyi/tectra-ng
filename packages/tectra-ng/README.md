@@ -17,6 +17,7 @@ import { Tectra } from '@tectra-ng/themes';
 | Package | What it holds |
 |---|---|
 | `@tectra-ng/ui` | Components, one entry point per component: `@tectra-ng/ui/button`, `@tectra-ng/ui/select`, … |
+| `@tectra-ng/blocks` | Ready page blocks, one entry point per block: `@tectra-ng/blocks/filters-panel`, … |
 | `@tectra-ng/core` | `provideTectra`, overlay, accessibility helpers, forms, locale |
 | `@tectra-ng/themes` | Light and dark themes, presets, component tokens |
 | `@tectra-ng/tokens` | Design tokens: palettes, radius, typography, shadows, motion |

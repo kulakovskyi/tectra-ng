@@ -11,7 +11,7 @@
     "flags": "node tools/flags/build-flags.mjs",
     "export-font": "node tools/export-font/build-export-font.mjs",
     "brand": "node tools/brand/build-brand-images.mjs",
-    "test": "nx run-many -t test -p themes core icons flags ui editor",
+    "test": "nx run-many -t test -p themes core icons flags ui editor blocks",
     "e2e": "nx e2e visual",
     "lint": "eslint .",
     "format:examples": "prettier --write \"apps/docs/src/content/**/*.example.ts\""

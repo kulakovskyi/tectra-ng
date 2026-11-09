@@ -69,3 +69,4 @@ export * from './components/panel-menu.tokens';
 export * from './components/image.tokens';
 export * from './components/galleria.tokens';
 export * from './components/carousel.tokens';
+export * from './components/filters-panel.tokens';
