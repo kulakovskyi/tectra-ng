@@ -61,6 +61,7 @@ Prefix Nx commands with `NX_DAEMON=false NX_NO_CLOUD=true`.
 | Rebuild flags | `npm run flags` |
 | Rebuild favicons and the social preview (`tools/brand/social-preview.html`) | `npm run brand` |
 | Rebuild the PDF export font | `npm run export-font -- <folder of an Onest release>` |
+| Retake the landing product shots (dev-only `/studio/:scene` page, own dev server on 4302) | `npm run landing-shots` |
 | Release (npm) | GitHub Actions → `release` → Run workflow; dry run locally: `node tools/release.mjs patch latest --dry-run` |
 
 Install packages with `npm i … --legacy-peer-deps` (npm arborist bug otherwise). Do not start or stop the user's dev servers; start your own `node tools/serve-docs.mjs dist/apps/docs/browser 4310` for checks and stop it afterwards.

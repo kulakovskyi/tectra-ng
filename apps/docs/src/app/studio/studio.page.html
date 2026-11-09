@@ -1,0 +1,87 @@
+<tx-app-layout title="Acme" logo="/favicon.svg" [model]="menu()">
+  <div txAppTopbar class="topbar">
+    <tx-command-palette label="Search" placeholder="Search customers, pages and actions" [items]="paletteItems" localFilter />
+    <button txButton text rounded severity="secondary" icon="bell" aria-label="Notifications"></button>
+    <tx-avatar name="Anna Koval" />
+  </div>
+
+  @switch (scene()) {
+    @case ('board') {
+      <tx-page-header title="Product roadmap" subtitle="Q4 · 8 items in flight">
+        <button txButton severity="secondary" outlined icon="filter">Filter</button>
+        <button txButton icon="plus">New item</button>
+      </tx-page-header>
+      <tx-kanban class="board" label="Roadmap" itemsDraggable columnsDraggable [columns]="board" [itemId]="taskId" [dt]="{ root: { columnWidth: '268px' } }">
+        <ng-template txKanbanCard let-task>
+          <div class="task">
+            <span class="task__title">{{ task.title }}</span>
+            <tx-pill size="small" [tone]="task.tone" [value]="task.tag" />
+            <span class="task__foot">
+              <tx-avatar [size]="22" [name]="task.owner" />
+              <span class="task__due">{{ task.due }}</span>
+            </span>
+          </div>
+        </ng-template>
+      </tx-kanban>
+    }
+    @case ('editor') {
+      <tx-page-header title="Q4 product review" subtitle="Edited 2 minutes ago by Olena Koval">
+        <button txButton severity="secondary" outlined icon="share-alt">Share</button>
+        <button txButton icon="check">Publish</button>
+      </tx-page-header>
+      <tx-editor class="editor" height="560px" [html]="document" />
+    }
+    @case ('calendar') {
+      <tx-page-header title="November 2026" subtitle="8 events this month">
+        <button txButton severity="secondary" outlined icon="angle-left" aria-label="Previous month"></button>
+        <button txButton severity="secondary" outlined icon="angle-right" aria-label="Next month"></button>
+        <button txButton icon="plus">New event</button>
+      </tx-page-header>
+      <tx-month-calendar [month]="month" [today]="today" [events]="events" [weekStartsOn]="1" />
+    }
+    @default {
+      <tx-page-header title="Customers" subtitle="7 accounts · $6,028 monthly revenue">
+        <button txButton severity="secondary" outlined icon="download">Export</button>
+        <button txButton icon="plus">Add customer</button>
+      </tx-page-header>
+      <tx-stat-tiles class="tiles" ariaLabel="Customer overview">
+        <tx-stat-tile label="Monthly revenue" icon="dollar" value="6,028" tone="primary" meta="+12.4% from October" />
+        <tx-stat-tile label="Active accounts" icon="users" value="5" tone="success" meta="2 joined this month" />
+        <tx-stat-tile label="Seats in use" icon="user-plus" value="243" tone="info" [share]="81" meta="81% of 300" />
+        <tx-stat-tile label="Overdue" icon="exclamation-triangle" value="1" tone="warn" meta="$48 to collect" />
+      </tx-stat-tiles>
+      <tx-filters-panel class="filters" ariaLabel="Customer filters">
+        <div txFilterField="search" filterLabel="Search">
+          <tx-label subtle for="studio-search">Search</tx-label>
+          <tx-icon-field>
+            <tx-input-icon icon="search" />
+            <input txInput id="studio-search" placeholder="Name or e-mail" />
+          </tx-icon-field>
+        </div>
+        <div txFilterField="plan" filterLabel="Plan">
+          <tx-label subtle for="studio-plan">Plan</tx-label>
+          <tx-select inputId="studio-plan" placeholder="Any plan" [options]="plans" />
+        </div>
+        <div txFilterField="status" filterLabel="Status">
+          <tx-label subtle for="studio-status">Status</tx-label>
+          <tx-select inputId="studio-status" placeholder="Any status" [options]="statuses" />
+        </div>
+      </tx-filters-panel>
+      <tx-table ariaLabel="Customers" dataKey="id" [value]="customers" [columns]="columns">
+        <ng-template txTableCell="name" let-row>
+          <span class="customer">
+            <tx-avatar [name]="row.name" />
+            <span class="customer__text">
+              <strong>{{ row.name }}</strong>
+              <span>{{ row.email }}</span>
+            </span>
+          </span>
+        </ng-template>
+        <ng-template txTableCell="status" let-row>
+          <tx-pill size="small" dot [tone]="row.tone" [value]="row.status" />
+        </ng-template>
+        <ng-template txTableCell="mrr" let-row>${{ row.mrr.toLocaleString('en-US') }}</ng-template>
+      </tx-table>
+    }
+  }
+</tx-app-layout>

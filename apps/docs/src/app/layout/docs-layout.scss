@@ -48,58 +48,6 @@
   text-decoration: none;
 }
 
-.logo__mark {
-  border-radius: 6.5px;
-  box-shadow: 0 1px 2px color-mix(in srgb, var(--tx-primary-base) 40%, transparent);
-}
-
-.logo__text {
-  display: inline-flex;
-  align-items: baseline;
-  font-size: 19px;
-  font-weight: 760;
-  letter-spacing: -0.05em;
-  line-height: 1;
-}
-
-.logo__letter,
-.logo__dot {
-  display: inline-block;
-
-  .logo:hover &,
-  .logo:focus-visible & {
-    animation: logo-letter-hop 0.55s cubic-bezier(0.3, 1.4, 0.5, 1) calc(var(--i) * 45ms + 120ms) both;
-  }
-}
-
-.logo__dot {
-  width: 5px;
-  height: 5px;
-  margin-left: 2.5px;
-  border-radius: 1.5px;
-  background: var(--tx-orange-300);
-}
-
-@keyframes logo-letter-hop {
-  40% {
-    transform: translateY(-4px);
-  }
-
-  70% {
-    transform: translateY(1px);
-  }
-}
-
-.logo__version {
-  padding: 1px 7px;
-  border-radius: var(--tx-radius-full);
-  box-shadow: 0 0 0 1px var(--docs-hairline) inset;
-  color: var(--tx-text-muted);
-  font-family: var(--tx-font-mono);
-  font-size: 11px;
-  font-weight: 500;
-}
-
 .header__nav {
   display: flex;
   gap: 2px;
@@ -221,22 +169,9 @@
   }
 }
 
-@media (width < 24rem) {
-  .logo__version {
-    display: none;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .sidebar {
     transition: none;
-  }
-
-  .logo:hover .logo__letter,
-  .logo:hover .logo__dot,
-  .logo:focus-visible .logo__letter,
-  .logo:focus-visible .logo__dot {
-    animation: none;
   }
 }
 
