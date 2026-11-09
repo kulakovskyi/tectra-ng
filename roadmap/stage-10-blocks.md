@@ -110,9 +110,16 @@ The look (rem × 14px): actions menu — outlined secondary `⋯` button (`small
 - [x] `<tx-action-tile>`: `icon`, `title`, `text`, `loading`, `disabled`, `tileClick`
 - [x] Docs (header menu, sizes, a confirm from a table row, tokens; recovery methods with loading, states, tokens) + tests; e2e: keyboard and focus return, single padding, confirm after close, tile loading; the kanban example uses the small actions menu as in the first app
 
-## 10.11 Preferences — `blocks/topbar-preferences`, `blocks/switch-theme`, `blocks/switch-language` (12, 1, 2)
+## 10.11 Preferences — `blocks/topbar-preferences`, `blocks/switch-theme`, `blocks/switch-language` (12, 1, 2) ✅
 
 Theme button with a circle reveal (also a directive), segmented language switch, both in one capsule or as rows.
+
+The look (rem × 14px): theme button `37px` round on the card colour with a 14% text ring and a small shadow, hover background, `0.9` press; sun and moon swap with a `90°` turn and a `0.5` scale in `500ms cubic-bezier(0.34, 1.56, 0.64, 1)`; the circle grows from the click in `550ms cubic-bezier(0.4, 0, 0.2, 1)`. Language switch `37px` high with `3px` padding on the ground colour and a border ring, a card-coloured thumb sliding in `300ms cubic-bezier(0.34, 1.3, 0.64, 1)`, codes `10.5px` weight 600 `0.04em`, at least `35px` wide with `10.5px` padding, muted → text colour. Capsule `3px` padding and `3.5px` gap, controls `31px`, a `1px × 14px` divider; raised — card colour, shadow, a 12% primary thumb with a 28% ring and a primary code; stacked rows `7px` apart with `12.25px` weight 500 muted labels.
+
+- [x] `<tx-switch-theme>` and `[txThemeReveal]` on `TxThemeService` (`modeChange`, `themeChange`, `revealDuration`, `revealEasing`); during the circle the CSS transitions and named view transitions are off so the whole page reveals at once; no circle without the View Transitions API or with reduced motion
+- [x] `<tx-switch-language>` on `TxLocaleService` (`languages`, two-way `value`, `syncLocale`); radio roles with arrows / Home / End (our addition — the first app has none)
+- [x] `<tx-topbar-preferences>`: `layout` inline / stacked, `raised`, `languageChange`, `modeChange`
+- [x] Docs (button, the directive on any control, own languages without the locale, plain and raised capsules, rows, tokens) + tests; e2e: theme and label switch, keyboard language switch with the thumb and the locale, capsule geometry
 
 ## 10.12 Public chrome — `blocks/public-header`, `blocks/app-footer` ✅ (built in 10.4), `blocks/cookie-notice` (5, 7, 4)
 

@@ -81,3 +81,6 @@ export * from './components/command-palette.tokens';
 export * from './components/kanban.tokens';
 export * from './components/actions-menu.tokens';
 export * from './components/action-tile.tokens';
+export * from './components/switch-theme.tokens';
+export * from './components/switch-language.tokens';
+export * from './components/topbar-preferences.tokens';

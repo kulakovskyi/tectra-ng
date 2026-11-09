@@ -68,6 +68,9 @@ import { commandPaletteTokens } from './command-palette.tokens';
 import { kanbanTokens } from './kanban.tokens';
 import { actionsMenuTokens } from './actions-menu.tokens';
 import { actionTileTokens } from './action-tile.tokens';
+import { switchThemeTokens } from './switch-theme.tokens';
+import { switchLanguageTokens } from './switch-language.tokens';
+import { topbarPreferencesTokens } from './topbar-preferences.tokens';
 
 export const COMPONENT_TOKENS = {
   icon: iconTokens,
@@ -168,6 +171,9 @@ export const COMPONENT_TOKENS = {
   kanban: kanbanTokens,
   actionsMenu: actionsMenuTokens,
   actionTile: actionTileTokens,
+  switchTheme: switchThemeTokens,
+  switchLanguage: switchLanguageTokens,
+  topbarPreferences: topbarPreferencesTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

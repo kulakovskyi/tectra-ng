@@ -1,0 +1,90 @@
+:host {
+  display: inline-flex;
+}
+
+.tx-switch-theme__button {
+  position: relative;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.tx-switch-theme__icon {
+  display: flex;
+  grid-area: 1 / 1;
+}
+
+:host([data-styled]) {
+  .tx-switch-theme__button {
+    width: var(--tx-switch-theme-size);
+    height: var(--tx-switch-theme-size);
+    border-radius: var(--tx-switch-theme-border-radius);
+    background: var(--tx-switch-theme-background);
+    box-shadow:
+      inset 0 0 0 1px var(--tx-switch-theme-ring-color),
+      var(--tx-switch-theme-shadow);
+    color: var(--tx-switch-theme-color);
+    transition:
+      background-color var(--tx-switch-theme-transition-duration),
+      transform var(--tx-switch-theme-transition-duration);
+
+    &:hover {
+      background: var(--tx-switch-theme-hover-background);
+    }
+
+    &:active {
+      transform: scale(var(--tx-switch-theme-active-scale));
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow:
+        inset 0 0 0 1px var(--tx-switch-theme-ring-color),
+        var(--tx-switch-theme-focus-ring-shadow);
+    }
+  }
+
+  .tx-switch-theme__icon {
+    font-size: var(--tx-switch-theme-icon-size);
+    transition:
+      opacity var(--tx-switch-theme-icon-duration) var(--tx-switch-theme-icon-easing),
+      transform var(--tx-switch-theme-icon-duration) var(--tx-switch-theme-icon-easing);
+  }
+
+  .tx-switch-theme__icon--hidden {
+    opacity: 0;
+    transform: scale(var(--tx-switch-theme-icon-hidden-scale));
+  }
+
+  .tx-switch-theme__icon--sun.tx-switch-theme__icon--hidden {
+    transform: scale(var(--tx-switch-theme-icon-hidden-scale)) rotate(90deg);
+  }
+
+  .tx-switch-theme__icon--moon.tx-switch-theme__icon--hidden {
+    transform: scale(var(--tx-switch-theme-icon-hidden-scale)) rotate(-90deg);
+  }
+}
+
+:host-context(.tx-theme-reveal) .tx-switch-theme__icon {
+  transition:
+    opacity var(--tx-switch-theme-icon-duration) var(--tx-switch-theme-icon-easing),
+    transform var(--tx-switch-theme-icon-duration) var(--tx-switch-theme-icon-easing) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) {
+    .tx-switch-theme__button,
+    .tx-switch-theme__icon {
+      transition: none;
+    }
+
+    .tx-switch-theme__button:active {
+      transform: none;
+    }
+  }
+}

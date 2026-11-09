@@ -1,0 +1,86 @@
+:host {
+  display: inline-flex;
+}
+
+.tx-switch-language__group {
+  position: relative;
+  display: inline-grid;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
+}
+
+.tx-switch-language__thumb {
+  position: absolute;
+  pointer-events: none;
+}
+
+.tx-switch-language__option {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+:host([data-styled]) {
+  .tx-switch-language__group {
+    box-sizing: border-box;
+    height: var(--tx-switch-language-height);
+    padding: var(--tx-switch-language-padding);
+    border-radius: var(--tx-switch-language-border-radius);
+    background: var(--tx-switch-language-background);
+    box-shadow: inset 0 0 0 1px var(--tx-switch-language-ring-color);
+  }
+
+  .tx-switch-language__thumb {
+    top: var(--tx-switch-language-padding);
+    bottom: var(--tx-switch-language-padding);
+    left: var(--tx-switch-language-padding);
+    width: calc((100% - 2 * var(--tx-switch-language-padding)) / var(--tx-switch-language-count));
+    border-radius: var(--tx-switch-language-border-radius);
+    background: var(--tx-switch-language-thumb-background);
+    box-shadow:
+      0 0 0 1px var(--tx-switch-language-thumb-ring-color),
+      var(--tx-switch-language-thumb-shadow);
+    transform: translateX(calc(var(--tx-switch-language-index) * 100%));
+    transition: transform var(--tx-switch-language-thumb-duration) var(--tx-switch-language-thumb-easing);
+  }
+
+  .tx-switch-language__option {
+    min-width: var(--tx-switch-language-option-min-width);
+    padding: 0 var(--tx-switch-language-option-padding-x);
+    border-radius: var(--tx-switch-language-border-radius);
+    color: var(--tx-switch-language-option-color);
+    font-family: var(--tx-font-family);
+    font-size: var(--tx-switch-language-option-font-size);
+    font-weight: var(--tx-switch-language-option-font-weight);
+    letter-spacing: var(--tx-switch-language-option-letter-spacing);
+    line-height: 1;
+    transition: color var(--tx-switch-language-option-transition-duration);
+
+    &:hover {
+      color: var(--tx-switch-language-option-hover-color);
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--tx-switch-language-option-focus-ring-shadow);
+    }
+  }
+
+  .tx-switch-language__option--active {
+    color: var(--tx-switch-language-option-active-color);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) {
+    .tx-switch-language__thumb,
+    .tx-switch-language__option {
+      transition: none;
+    }
+  }
+}

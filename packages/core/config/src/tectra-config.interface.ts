@@ -318,6 +318,10 @@ export interface TxTranslations {
   showMore: string;
   kanbanMoveHint: string;
   kanbanMoved: string;
+  switchToLight: string;
+  switchToDark: string;
+  language: string;
+  theme: string;
 }
 
 export type TxValidationMessage = string | ((error: unknown) => string);

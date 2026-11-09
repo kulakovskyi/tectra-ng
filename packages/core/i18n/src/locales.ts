@@ -320,6 +320,10 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     showMore: 'Show {count} more',
     kanbanMoveHint: 'Alt and the arrow keys move it',
     kanbanMoved: 'Moved to {column}, position {position}',
+    switchToLight: 'Switch to light theme',
+    switchToDark: 'Switch to dark theme',
+    language: 'Language',
+    theme: 'Theme',
   },
 };
 
@@ -643,6 +647,10 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     showMore: 'Показати ще {count}',
     kanbanMoveHint: 'Alt і стрілки переміщують картку',
     kanbanMoved: 'Переміщено в «{column}», позиція {position}',
+    switchToLight: 'Увімкнути світлу тему',
+    switchToDark: 'Увімкнути темну тему',
+    language: 'Мова',
+    theme: 'Тема',
   },
 };
 
