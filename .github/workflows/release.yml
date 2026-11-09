@@ -52,6 +52,7 @@ jobs:
           NX_DAEMON: 'false'
           NX_NO_CLOUD: 'true'
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: gh workflow run ci.yml --ref main
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

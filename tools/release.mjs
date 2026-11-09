@@ -1,4 +1,5 @@
 import { execSync } from 'node:child_process';
+import { writeFileSync } from 'node:fs';
 import { releaseChangelog, releasePublish, releaseVersion } from 'nx/release';
 
 const flags = new Set(process.argv.slice(2).filter((arg) => arg.startsWith('--')));
@@ -25,14 +26,25 @@ if (Object.values(published).some((result) => result.code !== 0)) {
   process.exit(1);
 }
 
-await releaseChangelog({
+const { workspaceChangelog } = await releaseChangelog({
   version: workspaceVersion,
   versionData: projectsVersionData,
   releaseGraph,
   dryRun,
   gitCommit: true,
   gitTag: true,
-  gitPush: true,
+  gitPush: false,
+  createRelease: false,
 });
+
+if (dryRun) {
+  process.exit(0);
+}
+
+const tagName = `v${workspaceVersion}`;
+execSync('git pull --no-rebase --no-edit origin main', { stdio: 'inherit' });
+execSync(`git push --atomic origin HEAD:main ${tagName}`, { stdio: 'inherit' });
+writeFileSync('release-notes.md', workspaceChangelog?.contents ?? '');
+execSync(`gh release create ${tagName} --title ${tagName} --notes-file release-notes.md --verify-tag`, { stdio: 'inherit' });
 
 process.exit(0);
