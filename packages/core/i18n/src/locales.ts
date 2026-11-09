@@ -294,6 +294,8 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     reorderFilter: 'Drag to reorder',
     filtersShown: '{shown} of {total}',
     filtersHidden: '{label}, {count} hidden',
+    legal: 'Legal',
+    consoleSections: 'Sections',
   },
 };
 
@@ -591,6 +593,8 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     reorderFilter: 'Перетягніть, щоб змінити порядок',
     filtersShown: '{shown} з {total}',
     filtersHidden: '{label}, приховано: {count}',
+    legal: 'Правова інформація',
+    consoleSections: 'Розділи',
   },
 };
 

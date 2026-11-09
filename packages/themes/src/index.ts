@@ -72,3 +72,5 @@ export * from './components/carousel.tokens';
 export * from './components/filters-panel.tokens';
 export * from './components/page-header.tokens';
 export * from './components/empty-state.tokens';
+export * from './components/app-footer.tokens';
+export * from './components/console-layout.tokens';

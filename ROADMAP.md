@@ -180,7 +180,7 @@ Detailed checklist per block: [roadmap/stage-10-blocks.md](roadmap/stage-10-bloc
 | `filters-panel` (card above a table, popover below 1024px, reset, field state) | 81 | ✅ |
 | `page-header` | 186 | ✅ |
 | `empty-state` | **193** | ✅ |
-| `console-layout` (header + crumbs, icon rail, footer, panel) | 10 | ⬜ |
+| `console-layout` (header + crumbs, icon rail, footer, panel) | 10 | ✅ |
 | `app-layout` (sidebar + topbar + menu, responsive) | 22 | ⬜ |
 | `wizard` (stages, step head, progress, footer) | 53 | ⬜ |
 | `pinned-tabs` | 1 | ⬜ |
@@ -189,7 +189,7 @@ Detailed checklist per block: [roadmap/stage-10-blocks.md](roadmap/stage-10-bloc
 | `actions-menu` | 6 | ⬜ |
 | `action-tile` | 1 | ⬜ |
 | `topbar-preferences`, `switch-theme` (circle reveal), `switch-language` | 12, 1, 2 | ⬜ |
-| `public-header`, `app-footer`, `cookie-notice` | 5, 7, 4 | ⬜ |
+| `public-header`, `app-footer` ✅, `cookie-notice` | 5, 7, 4 | 🟡 |
 | `network-status` | 4 | ⬜ |
 | `qr-code` | 1 | ⬜ |
 | `confetti`, `hover-effect` | 7, 0 | ⬜ |

@@ -1,0 +1,1 @@
+Below 1024px the panel becomes a bar above the page; below 768px the rail turns into a row under the header and only the brand stays in it. Without an app switcher the brand moves to the edge. `responsive="container"` measures the console itself instead of the window — here inside device frames; pick a device to see each width.

@@ -292,6 +292,8 @@ export interface TxTranslations {
   reorderFilter: string;
   filtersShown: string;
   filtersHidden: string;
+  legal: string;
+  consoleSections: string;
 }
 
 export type TxValidationMessage = string | ((error: unknown) => string);

@@ -43,9 +43,16 @@ The look (rem × 14px): a centred column, `10.5px` gap, `35px 21px` padding; ico
 - [x] `<tx-empty-state>`: `icon`, `title`, `text`, `variant`, `size`, `tone`, actions slot, `status` role
 - [x] Docs (inside a table's `txTableEmpty`, a search without results) + tests; e2e: the empty state gives way to rows and comes back, clearing the search, compact row and large icon
 
-## 10.4 Console layout — `blocks/console-layout` (10)
+## 10.4 Console layout — `blocks/console-layout` (10) ✅
 
-Chrome of an app inside an app: header with brand and route crumbs, icon rail, footer, optional sticky left panel.
+First app (consoles of 4 apps): the frame of an app inside an app — a sticky header (the topbar: flex, space between, at least `56px`) with an app switcher cell as wide as the rail, the brand (logo, title, muted second word, home link) and crumbs from the `data` key of the active routes, header actions; an icon rail of sections (router links, exact match for home, subset for sections); the page; the app footer in its `console` variant; the browser tab title `<last crumb> · <name>` and favicon while the console is open, restored on leave; a translate function for crumbs, rail and footer labels. `console-panel`: a sticky left list or tree next to the page that takes over the footer.
+
+The look (rem × 14px): ground background, full window height. Header: card background, bottom content border, `8.75px 21px 8.75px 0` padding, `14px` gap; apps cell `84px`; trail `10.5px` gap, `19.25px` start padding; brand `8.75px` gap, logo `28px`, title `14px` weight 600, muted word weight 500; slash in the border colour `15.75px`; crumbs `12.25px` muted, the current one weight 600 in the text colour. Rail `84px`, `10.5px 5.25px` padding, `3.5px` gap, card background, end border; items a column, `7px 3.5px`, `3.5px` gap, `10px` radius, `11px` / `1.25`, muted, icon `17.5px`; hover background and text colour; active 14% primary 500 (18% on hover), primary text, weight 600; focus outline `2px` primary, offset `2px`. Content `21px`. Below 768px: the rail is a row under the header (`5.25px 7px`, items at least `72px`), header end padding `14px`, apps cell `14px` start padding, trail `10.5px`, the muted word, slashes and crumbs hidden, content `14px`. Panel: `236px` column, card background, end border, nav sticky under the header, `14px 10.5px`; the aside slides in from the left `420ms cubic-bezier(0.22, 1, 0.36, 1)`, the page fades in `280ms` after `60ms`; below 1024px a bar above the page (bottom border, slides down `8px`; the open list `10.5px`), the page `14px`. Its offset matches the content padding at every width (the first app's `-14px` below 1024px left a `7px` gap between 768px and 1023px).
+
+- [x] `<tx-console-layout>`: brand (at the edge when there is no app switcher), crumbs from route data or `crumbs`, rail (`routerLink` + `queryParams` + `activeOptions`, `url`, `command` + `active`), apps / actions slots, footer, `documentTitle` / `favicon` restored on destroy, `translate`, sticky header and rail with `topOffset` / `viewportHeight` tokens; `responsive` `viewport` (default, like the first app) or `container` — the same `768px` / `1024px` rules as container queries on the console width (in px, since container `rem` follows the 14px root), for a console in a frame
+- [x] `<tx-console-panel>`: sticky aside, takes the footer under its page, motion off with reduced motion; below 1024px a folded bar (our addition — the first app shows the whole list there): a `label` button opens the list with a row animation, it closes after a link, on navigation and on Escape
+- [x] `blocks/app-footer` (needed here, item of 10.12): `© year name`, legal links (`routerLink` or `url`), `page` / `app` / `console` variants, translated "Legal" label
+- [x] Docs + tests; e2e: sections switch page and crumbs, header and rail stay while the page scrolls, router sections follow the address, the panel takes the footer and becomes a bar below 1024px, the rail is a row below 768px
 
 ## 10.5 App layout — `blocks/app-layout` (22)
 
@@ -75,7 +82,7 @@ Outlined "more" button with a popover list of actions; full-width clickable tile
 
 Theme button with a circle reveal (also a directive), segmented language switch, both in one capsule or as rows.
 
-## 10.12 Public chrome — `blocks/public-header`, `blocks/app-footer`, `blocks/cookie-notice` (5, 7, 4)
+## 10.12 Public chrome — `blocks/public-header`, `blocks/app-footer` ✅ (built in 10.4), `blocks/cookie-notice` (5, 7, 4)
 
 Header of public pages with a burger below tablet width, footer with `© year name` and links, essential-cookies notice.
 
