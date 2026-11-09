@@ -1,0 +1,1 @@
+Items with `items` open and close like an accordion; the parents of the current item open on their own and the other branches close. Badges, links to other sites and locked items work at any depth. On the rail the nested items keep only their icons.

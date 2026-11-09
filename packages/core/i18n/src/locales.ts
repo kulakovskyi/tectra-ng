@@ -296,6 +296,8 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     filtersHidden: '{label}, {count} hidden',
     legal: 'Legal',
     consoleSections: 'Sections',
+    pinMenu: 'Keep the menu open',
+    unpinMenu: 'Let the menu fold',
   },
 };
 
@@ -595,6 +597,8 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     filtersHidden: '{label}, приховано: {count}',
     legal: 'Правова інформація',
     consoleSections: 'Розділи',
+    pinMenu: 'Закріпити меню',
+    unpinMenu: 'Відкріпити меню',
   },
 };
 

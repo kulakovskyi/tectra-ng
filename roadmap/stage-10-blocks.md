@@ -54,9 +54,15 @@ The look (rem × 14px): ground background, full window height. Header: card back
 - [x] `blocks/app-footer` (needed here, item of 10.12): `© year name`, legal links (`routerLink` or `url`), `page` / `app` / `console` variants, translated "Legal" label
 - [x] Docs + tests; e2e: sections switch page and crumbs, header and rail stay while the page scrolls, router sections follow the address, the panel takes the footer and becomes a bar below 1024px, the rail is a row below 768px
 
-## 10.5 App layout — `blocks/app-layout` (22)
+## 10.5 App layout — `blocks/app-layout` (22) ✅
 
-Sidebar + topbar + menu, responsive.
+First app (every signed-in app): the shell with a menu model of sections, logo and app name, the top bar end slot, the page, a footer slot, a backdrop (`spectrum` — primary, purple, cyan; `accent` — primary shades, both over the ground with a grain), a plain mode without the sidebar (logo + name in the top bar). Every app runs the `drawer` menu mode (the other five modes are unused and not ported): a rail of icons that opens on hover over the page, a pin button that keeps it open and moves the page, the pin state kept in `localStorage`; below 1024px a burger in the top bar, the menu slides in over a mask. Theme and accent come from `provideTectra` / `createTectraPreset`, so its layout service is not ported.
+
+The look (rem × 14px): rail `73.5px`, open `224px`, width `0.3s cubic-bezier(0, 0, 0.2, 1)`; card background, end border; header `56px`, bottom border, `0 17.5px 0 21px` when open, logo `24.5px`, name `14.875px` weight 700 `-0.02em` fading in with the menu labels (`0.3s` in, `0.1s` out — the first app shows it only after `300ms`, which looked late); pin button — our own look instead of the first app's `16.1px` filled circle: a `28px` quiet icon button (`angle-double-left` to fold, `thumbtack` to pin) with a tooltip; menu `7px 0 28px`, the sidebar menu of `tx-panel-menu` with a new `collapsed` look (one column of icons with no nesting indent, labels and section titles fade, badges `15.75px` at `2.625px / 26.6px` with a `2px` ring, locks in a `15.75px` ground circle). Top bar at least `56px`, `10.5px 16.1px 10.5px 0`; menu button `35px`, `7px` radius, `17.5px` icon, `21px` after it, `16.1px` start padding. Page `21px 28px 14px` (`14px` below 1024px), at most `1504px` wide. Plain top bar `21px` sides, logo `28px`, name `17.5px` weight 600.
+
+- [x] `<tx-app-layout>`: `model`, `logo`, `title`, `homeLink`, `sidebar`, `[(anchored)]` + `stateKey`, `backdrop` / `backdropVariant`, top bar / footer slots; the rail opens on hover and on keyboard focus (our addition); the mobile menu closes after a pick, on navigation, on the mask and on Escape, and is inert while closed; `responsive` `viewport` or `container` (contains the mobile menu, mask and backdrop)
+- [x] `tx-panel-menu` `collapsed` (sidebar rail look); opening is smooth: labels never wrap (rows keep their height), nesting indents slide with the width, chevrons fade, badges settle at their new place
+- [x] Docs (screens, device frames) + tests; e2e: the rail opens over the page without moving it, pin / unpin moves the page, the phone menu slides in and closes after a pick, the plain top bar
 
 ## 10.6 Wizard — `blocks/wizard` (53)
 

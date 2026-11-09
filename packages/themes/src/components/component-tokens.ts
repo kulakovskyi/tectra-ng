@@ -61,6 +61,7 @@ import { pageHeaderTokens } from './page-header.tokens';
 import { emptyStateTokens } from './empty-state.tokens';
 import { appFooterTokens } from './app-footer.tokens';
 import { consoleLayoutTokens } from './console-layout.tokens';
+import { appLayoutTokens } from './app-layout.tokens';
 
 export const COMPONENT_TOKENS = {
   icon: iconTokens,
@@ -154,6 +155,7 @@ export const COMPONENT_TOKENS = {
   emptyState: emptyStateTokens,
   appFooter: appFooterTokens,
   consoleLayout: consoleLayoutTokens,
+  appLayout: appLayoutTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

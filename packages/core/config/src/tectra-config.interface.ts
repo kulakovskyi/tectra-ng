@@ -294,6 +294,8 @@ export interface TxTranslations {
   filtersHidden: string;
   legal: string;
   consoleSections: string;
+  pinMenu: string;
+  unpinMenu: string;
 }
 
 export type TxValidationMessage = string | ((error: unknown) => string);

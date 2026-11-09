@@ -1,0 +1,1 @@
+With `[anchored]="false"` the sidebar is a rail of icons; badges and locks sit on the icons. It opens over the page while the pointer or the keyboard focus is on it, and its pin button keeps it open. `stateKey` remembers the choice between visits.
