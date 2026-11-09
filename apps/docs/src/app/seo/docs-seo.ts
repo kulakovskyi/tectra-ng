@@ -34,7 +34,7 @@ export class DocsSeo extends TitleStrategy {
     const doc = route.data['doc'] as DocComponent | null | undefined;
     const page = doc ? componentMeta(doc.title, doc.summary) : PAGE_META[path];
     if (page) {
-      this.apply(path, page, path === '/' ? [] : [{ name: page.name, path }]);
+      this.apply(path, page, path === '/' || path === '/docs' ? [] : [{ name: page.name, path }]);
     } else {
       this.apply(path, NOT_FOUND, [], false);
     }
@@ -101,7 +101,7 @@ export class DocsSeo extends TitleStrategy {
       ? [
           {
             '@type': 'BreadcrumbList',
-            itemListElement: [{ name: 'Docs', path: '/' }, ...breadcrumbs].map((crumb, index) => ({
+            itemListElement: [{ name: 'Docs', path: '/docs' }, ...breadcrumbs].map((crumb, index) => ({
               '@type': 'ListItem',
               position: index + 1,
               name: crumb.name,

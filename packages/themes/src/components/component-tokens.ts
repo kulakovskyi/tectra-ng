@@ -75,6 +75,8 @@ import { publicHeaderTokens } from './public-header.tokens';
 import { cookieNoticeTokens } from './cookie-notice.tokens';
 import { networkStatusTokens } from './network-status.tokens';
 import { qrCodeTokens } from './qr-code.tokens';
+import { confettiTokens } from './confetti.tokens';
+import { hoverEffectTokens } from './hover-effect.tokens';
 
 export const COMPONENT_TOKENS = {
   icon: iconTokens,
@@ -182,6 +184,8 @@ export const COMPONENT_TOKENS = {
   cookieNotice: cookieNoticeTokens,
   networkStatus: networkStatusTokens,
   qrCode: qrCodeTokens,
+  confetti: confettiTokens,
+  hoverEffect: hoverEffectTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

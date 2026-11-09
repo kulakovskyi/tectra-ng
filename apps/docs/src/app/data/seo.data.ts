@@ -9,7 +9,12 @@ export const DESCRIPTION_LENGTH = 160;
 
 export const PAGE_META: Record<string, DocPageMeta> = {
   '/': {
-    name: 'Docs',
+    name: 'tectra',
+    title: 'tectra — Angular UI kit that feels finished',
+    description: `Angular UI kit on signals: ${DOC_COMPONENTS.length} components and ready page blocks, design tokens, light and dark themes, icons, a rich text editor and QR codes — open source.`,
+  },
+  '/docs': {
+    name: 'Introduction',
     title: 'tectra — Angular UI component library on signals',
     description: `Open-source Angular UI kit: ${DOC_COMPONENTS.length} standalone components on signals — table, datepicker, select, dialog, editor — with design tokens, dark mode and icons.`,
   },

@@ -41,7 +41,7 @@ Aliases are wildcards in `tsconfig.base.json` (`@tectra-ng/ui/*` → `./packages
 A new package under `packages/` (like `editor`) is not done until all of these are in place — users and the release must find it:
 
 - **Workspace:** `project.json` (`build`, `test`, tag `pkg:<name>`), `package.json` (peers on `@tectra-ng/*`, real dependencies only for an engine that cannot live in the kit, `publishConfig.access: public`), `ng-package.json` (`allowedNonPeerDependencies` for those), paths in `tsconfig.base.json`, module boundary in `eslint.config.mjs`, `build:packages` and `test` scripts in `package.json`, `release.projects` in `nx.json`.
-- **Install docs — say how to get it, everywhere people look:** the Install block and the Layout table of the root `README.md`; `packages/tectra-ng/README.md` (and its `dependencies` if the meta package includes it — say so explicitly when it does not); the install line at the top of the package README; a step in `apps/docs/src/app/data/install.data.ts`; the docs `overview.md` of its pages (`source:` / `package:` front matter); the `Workspace` tree and boundaries in this file.
+- **Install docs — say how to get it, everywhere people look:** the Install block and the Layout table of the root `README.md`; `packages/tectra-ng/README.md` (and its `dependencies` if the meta package includes it — say so explicitly when it does not); the install line at the top of the package README; an entry in `INSTALL_PACKAGES` of `apps/docs/src/app/data/install.data.ts` (and an extra in `INSTALL_EXTRAS` when it needs setup); the docs `overview.md` of its pages (`source:` / `package:` front matter); the `Workspace` tree and boundaries in this file.
 - **First npm publish is manual:** the `release` workflow publishes through npm Trusted Publishing, which is set per package and only for a package that exists. Before the first release the user publishes a placeholder (`0.0.1`, name only) with their npm login, then adds the trusted publisher on npmjs.com → package → Settings → Trusted Publisher → GitHub Actions (`kulakovskyi` / `tectra-ng` / `release.yml` / environment `npm`). Tell the user this when a package is added; never publish for them.
 
 ## Commands
@@ -61,6 +61,7 @@ Prefix Nx commands with `NX_DAEMON=false NX_NO_CLOUD=true`.
 | Rebuild flags | `npm run flags` |
 | Rebuild favicons and the social preview (`tools/brand/social-preview.html`) | `npm run brand` |
 | Rebuild the PDF export font | `npm run export-font -- <folder of an Onest release>` |
+| Retake the landing product shots (dev-only `/studio/:scene` page, own dev server on 4302) | `npm run landing-shots` |
 | Release (npm) | GitHub Actions → `release` → Run workflow; dry run locally: `node tools/release.mjs patch latest --dry-run` |
 
 Install packages with `npm i … --legacy-peer-deps` (npm arborist bug otherwise). Do not start or stop the user's dev servers; start your own `node tools/serve-docs.mjs dist/apps/docs/browser 4310` for checks and stop it afterwards.

@@ -1,89 +1,114 @@
-<section class="hero">
-  <a class="hero__pill reveal" routerLink="/components/button">
-    <tx-badge [value]="'new'" [severity]="'success'" />
-    Every button variant, tokens and ripple
-    <tx-icon [name]="'arrow-right'" />
-  </a>
-  <h1 class="hero__title reveal" style="--i: 1">
-    Angular UI that feels <span class="hero__accent">finished</span>.
-  </h1>
-  <p class="hero__lead reveal" style="--i: 2">Open-source Angular component library — components, tokens and icons for consoles and admin apps.</p>
-  <div class="hero__actions reveal" style="--i: 3">
-    <a txButton [size]="'large'" [icon]="'arrow-right'" [iconPos]="'right'" routerLink="/getting-started">Get started</a>
-    <a txButton [size]="'large'" [outlined]="true" [severity]="'secondary'" routerLink="/components/button">Components</a>
-  </div>
-  <button type="button" class="install reveal" style="--i: 4" (click)="copyInstall()">
-    <span class="install__prompt">$</span>
-    <code>{{ installCommand }}</code>
-    <span class="install__icon" [class.install__icon--done]="isCopied()"><tx-icon [name]="isCopied() ? 'check' : 'copy'" /></span>
-  </button>
+<p class="eyebrow">Get started</p>
+<h1>Introduction</h1>
+<p class="lead">
+  tectra is an open-source UI kit for Angular: {{ componentCount }} components and ready page blocks, design tokens, light and dark themes, {{ iconCount }} icons, a rich text editor and QR codes. Everything is standalone, on signals, zoneless and rendered on the server — and it looks finished out of the box.
+</p>
+
+<section class="start" aria-label="Start here">
+  @for (link of start; track link.path) {
+    <a class="start__card" [routerLink]="link.path">
+      <span class="start__icon"><tx-icon [name]="link.icon" /></span>
+      <span class="start__title">{{ link.title }} <tx-icon class="start__arrow" name="arrow-right" /></span>
+      <span class="start__text">{{ link.text }}</span>
+    </a>
+  }
 </section>
 
-<section class="bento">
-  <div class="tile tile--wide reveal" style="--i: 5">
-    <span class="tile__label">Buttons</span>
-    <div class="tile__row">
-      <button txButton>Primary</button>
-      <button txButton [severity]="'secondary'">Secondary</button>
-      <button txButton [severity]="'success'" [icon]="'check'">Done</button>
-      <button txButton [severity]="'danger'" [outlined]="true" [icon]="'trash'">Delete</button>
-      <button txButton [icon]="'refresh'" [severity]="'secondary'" [text]="true" [rounded]="true" [rippleCentered]="true" aria-label="Refresh"></button>
-      <button txButton [icon]="'check'" [loading]="isSaving()" (click)="save()">Save</button>
-    </div>
-  </div>
+<h2>Quick start</h2>
+<ol class="steps">
+  @for (step of steps; track step.title; let index = $index) {
+    <li class="step">
+      <span class="step__number">{{ index + 1 }}</span>
+      <div class="step__body">
+        <span class="step__title">{{ step.title }}</span>
+        <div class="step__code">
+          <docs-code-block [code]="step.code" [language]="step.language" [label]="step.title" />
+          <docs-copy-button class="step__copy" [label]="'Copy: ' + step.title" [text]="step.code" />
+        </div>
+      </div>
+    </li>
+  }
+</ol>
+<a class="more" routerLink="/getting-started">The full installation guide <tx-icon name="arrow-right" /></a>
 
-  <div class="tile reveal" style="--i: 6">
-    <span class="tile__label">Form</span>
-    <div class="tile__stack">
-      <input txInput [fluid]="true" placeholder="Full name" aria-label="Full name" />
-      <tx-select [options]="roles" [formControl]="role" [ariaLabel]="'Role'" />
-      <tx-toggle-button [onLabel]="'Notifications on'" [offLabel]="'Notifications off'" [onIcon]="'bell'" [offIcon]="'bell-slash'" />
-    </div>
-  </div>
-
-  <div class="tile reveal" style="--i: 7">
-    <span class="tile__label">Status</span>
-    <div class="tile__row">
-      <tx-badge [value]="'Live'" [severity]="'success'" />
-      <tx-badge [value]="'Draft'" [severity]="'secondary'" />
-      <tx-badge [value]="'3 issues'" [severity]="'warn'" />
-      <tx-badge [value]="'Blocked'" [severity]="'danger'" />
-    </div>
-    <div class="tile__row">
-      <button txButton [icon]="'bell'" [badge]="4" [severity]="'secondary'" [outlined]="true">Inbox</button>
-      <button txButton [icon]="'github'" [severity]="'contrast'" aria-label="GitHub"></button>
-      <button txButton [icon]="'google'" [severity]="'secondary'" [outlined]="true" aria-label="Google"></button>
-    </div>
-  </div>
-
-  <div class="tile tile--wide tile--marquee reveal" style="--i: 8">
-    <span class="tile__label">Icons</span>
-    <div class="marquee" aria-hidden="true">
-      <div class="marquee__track">
-        @for (icon of marqueeIcons; track $index) {
-          <span class="marquee__item"><tx-icon [name]="icon" /></span>
+<h2>Browse by category</h2>
+<div class="categories">
+  @for (category of categories; track category.name) {
+    <div class="category">
+      <a class="category__head" [routerLink]="'/components/' + category.first">
+        <span class="category__icon"><tx-icon [name]="category.icon" /></span>
+        <span class="category__name">{{ category.name }}</span>
+        <span class="category__count">{{ category.count }}</span>
+      </a>
+      <div class="category__links">
+        @for (item of category.preview; track item.name) {
+          <a class="category__link" [routerLink]="'/components/' + item.name">{{ item.title }}</a>
+        }
+        @if (category.more) {
+          <span class="category__more">+{{ category.more }} more</span>
         }
       </div>
     </div>
-    <a class="tile__link" routerLink="/icons">All 334 icons <tx-icon [name]="'arrow-right'" /></a>
+  }
+</div>
+
+<h2>Try it here</h2>
+<div class="taste">
+  <div class="taste__tile taste__tile--wide">
+    <span class="taste__label">Buttons</span>
+    <div class="taste__row">
+      <button txButton>Primary</button>
+      <button txButton severity="secondary">Secondary</button>
+      <button txButton severity="success" icon="check">Done</button>
+      <button txButton severity="danger" outlined icon="trash">Delete</button>
+      <button txButton icon="check" [loading]="saving()" (click)="save()">Save</button>
+    </div>
   </div>
-</section>
+  <div class="taste__tile">
+    <span class="taste__label">Form</span>
+    <div class="taste__stack">
+      <input txInput fluid placeholder="Full name" aria-label="Full name" />
+      <tx-select ariaLabel="Role" [options]="roles" [formControl]="role" />
+      <tx-toggle-button onLabel="Notifications on" offLabel="Notifications off" onIcon="bell" offIcon="bell-slash" />
+    </div>
+  </div>
+  <div class="taste__tile">
+    <span class="taste__label">Status</span>
+    <div class="taste__row">
+      <tx-badge value="Live" severity="success" />
+      <tx-badge value="Draft" severity="secondary" />
+      <tx-badge value="3 issues" severity="warn" />
+      <tx-badge value="Blocked" severity="danger" />
+    </div>
+    <div class="taste__row">
+      <button txButton icon="bell" severity="secondary" outlined [badge]="4">Inbox</button>
+      <button txButton icon="github" severity="contrast" aria-label="GitHub"></button>
+    </div>
+  </div>
+</div>
 
-<section class="stats">
-  @for (stat of stats; track stat.label; let i = $index) {
-    <div class="stats__item reveal" [style.--i]="9 + i">
-      <span class="stats__value">{{ stat.value }}</span>
-      <span class="stats__label">{{ stat.label }}</span>
+<h2>Packages</h2>
+<p class="section-lead">Install <code>tectra-ng</code> for everything, or take the packages you need.</p>
+<div class="packages">
+  @for (item of packages; track item.name) {
+    <a class="package" [routerLink]="item.path">
+      <code class="package__name">{{ item.name }}</code>
+      <span class="package__text">{{ item.text }}</span>
+      @if (item.own) {
+        <span class="package__tag">Separate</span>
+      }
+      <tx-icon class="package__arrow" name="angle-right" />
+    </a>
+  }
+</div>
+
+<h2>Principles</h2>
+<div class="principles">
+  @for (principle of principles; track principle.title) {
+    <div class="principle">
+      <span class="principle__icon"><tx-icon [name]="principle.icon" /></span>
+      <span class="principle__title">{{ principle.title }}</span>
+      <span class="principle__text">{{ principle.text }}</span>
     </div>
   }
-</section>
-
-<section class="features">
-  @for (feature of features; track feature.title; let i = $index) {
-    <div class="feature reveal" [style.--i]="12 + i">
-      <span class="feature__icon"><tx-icon [name]="feature.icon" /></span>
-      <h3 class="feature__title">{{ feature.title }}</h3>
-      <p class="feature__text">{{ feature.text }}</p>
-    </div>
-  }
-</section>
+</div>

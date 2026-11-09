@@ -1,41 +1,128 @@
 <p class="eyebrow">Get started</p>
-<h1 >Icons</h1>
-<p class="lead">{{ names.length }} icons drawn for tectra + {{ brandNames.length }} brand logos. Use the name, for example <code>'trash'</code>. Click to copy.</p>
+<h1>Icons</h1>
+<p class="lead">
+  {{ icons.length }} outline icons drawn for tectra, {{ brands.length }} brand logos and {{ flags.length }} country flags — all plain SVG. Use an icon by its name,
+  for example <code>'trash'</code>, in <code>&lt;tx-icon&gt;</code> or any <code>icon</code> input.
+</p>
 
-<div class="card toolbar">
-  <input txInput [fluid]="true" placeholder="Search icons" aria-label="Search icons" [value]="query()" (input)="onSearch($event)" />
-  <div class="toolbar__stroke">
-    <span id="icons-stroke-label">Stroke {{ strokeWidth() }}</span>
-    <tx-slider
-      class="toolbar__slider"
-      [min]="1"
-      [max]="2.5"
-      [step]="0.25"
-      [ariaLabelledBy]="'icons-stroke-label'"
-      [ngModel]="strokeWidth()"
-      (ngModelChange)="strokeWidth.set($event)"
-    />
+<div class="panel browser">
+  <div class="browser__bar">
+    <tx-tabs variant="segmented" size="small" ariaLabel="Icon set" [tabs]="tabs" [value]="tab()" (valueChange)="setTab($event)" />
+    <div class="browser__tools">
+      @switch (tab()) {
+        @case ('icons') {
+          <div class="option">
+            <span class="option__label" id="icons-stroke">Stroke {{ stroke() }}</span>
+            <tx-slider
+              class="option__slider"
+              ariaLabelledBy="icons-stroke"
+              [min]="1"
+              [max]="2.5"
+              [step]="0.25"
+              [ngModel]="stroke()"
+              (ngModelChange)="stroke.set($event)"
+            />
+          </div>
+        }
+        @case ('brands') {
+          <tx-toggle-switch label="Brand colours" [ngModel]="brandColors()" (ngModelChange)="brandColors.set($event)" />
+        }
+        @case ('flags') {
+          <tx-tabs variant="pills" size="small" ariaLabel="Flag shape" [tabs]="shapeTabs" [value]="shape()" (valueChange)="setShape($event)" />
+        }
+      }
+      <tx-icon-field class="browser__search">
+        <tx-input-icon icon="search" />
+        <input
+          txInput
+          [placeholder]="tab() === 'flags' ? 'Search countries' : 'Search ' + tab()"
+          aria-label="Search"
+          [ngModel]="query()"
+          (ngModelChange)="query.set($event)"
+        />
+        <tx-input-clear />
+      </tx-icon-field>
+    </div>
   </div>
-</div>
 
-<div class="grid" [style.--tx-icon-stroke-width]="strokeWidth()">
-  @for (name of visibleNames(); track name) {
-    <button type="button" class="tile" [class.tile--copied]="copied() === name" (click)="copyName(name)">
-      <tx-icon class="tile__icon" [name]="name" />
-      <span class="tile__name">{{ copied() === name ? 'Copied' : name }}</span>
-    </button>
-  } @empty {
-    <p class="hint">No icon matches "{{ query() }}".</p>
+  @if (tab() === 'flags') {
+    <div class="flags">
+      @for (flag of flagTiles(); track flag.code) {
+        <button type="button" class="flag" [attr.aria-label]="'Copy ' + flag.code + ', ' + flag.name" (click)="copyFlag(flag)">
+          <span class="flag__art" [class.flag__art--circle]="shape() === 'circle'">
+            @defer (on viewport) {
+              <tx-country size="large" [country]="flag.code" [showName]="false" [shape]="shape()" />
+            } @placeholder {
+              <span class="flag__placeholder"></span>
+            }
+          </span>
+          <span class="flag__name">{{ flag.name }}</span>
+          <span class="flag__code">{{ flag.code }}</span>
+        </button>
+      } @empty {
+        <p class="browser__empty">No country matches “{{ query() }}”.</p>
+      }
+    </div>
+  } @else {
+    <div class="browser__body">
+      <div class="tiles" [style.--tx-icon-stroke-width]="stroke()">
+        @for (tile of tiles(); track tile.name) {
+          <button
+            type="button"
+            class="tile"
+            [class.tile--active]="selected() === tile.name"
+            [style.--brand]="brandColors() ? tile.color : null"
+            [attr.aria-current]="selected() === tile.name || null"
+            (click)="pick(tile.name)"
+          >
+            <tx-icon class="tile__icon" [name]="tile.name" />
+            <span class="tile__name">{{ tile.label }}</span>
+          </button>
+        } @empty {
+          <p class="browser__empty">Nothing matches “{{ query() }}”.</p>
+        }
+      </div>
+
+      <section class="inspector" aria-label="Selected icon">
+        <div class="inspector__stage" [style.color]="selectedColor()" [style.--tx-icon-stroke-width]="stroke()">
+          <tx-icon [name]="selected()" />
+        </div>
+        <span class="inspector__name">{{ selectedLabel() }}</span>
+        <div class="inspector__code">
+          <code>{{ selectedCode() }}</code>
+          <docs-copy-button label="Copy the icon tag" [text]="selectedCode()" />
+        </div>
+      </section>
+    </div>
   }
 </div>
 
-<h2>Brands</h2>
-<p class="hint">Optional <code>&#64;tectra/brand-icons</code> + <code>provideTxBrandIcons()</code>. Simple Icons, CC0; logos are trademarks of their owners.</p>
-<div class="grid">
-  @for (name of visibleBrandNames(); track name) {
-    <button type="button" class="tile" [class.tile--copied]="copied() === name" (click)="copyName(name)">
-      <tx-icon class="tile__icon" [name]="name" />
-      <span class="tile__name">{{ copied() === name ? 'Copied' : name }}</span>
-    </button>
+<h2>Use them</h2>
+<div class="extras">
+  @for (recipe of recipes; track recipe.title) {
+    <div class="extra">
+      <div class="extra__head">
+        <span class="extra__icon"><tx-icon [name]="recipe.icon" /></span>
+        <span class="extra__title">{{ recipe.title }}</span>
+      </div>
+      <p class="extra__text">{{ recipe.text }}</p>
+      <docs-code-card [file]="recipe.file" [code]="recipe.code" [language]="recipe.language" />
+    </div>
+  }
+</div>
+
+<p class="note">
+  Brand logos come from Simple Icons (CC0) and are trademarks of their owners; flags are generated from flag-icons (MIT). Follow each brand's guidelines — most
+  only allow a logo to point to that brand.
+</p>
+
+<h2>Next steps</h2>
+<div class="next">
+  @for (link of next; track link.path) {
+    <a class="next__card" [routerLink]="link.path">
+      <span class="next__icon"><tx-icon [name]="link.icon" /></span>
+      <span class="next__title">{{ link.title }} <tx-icon class="next__arrow" name="arrow-right" /></span>
+      <span class="next__text">{{ link.text }}</span>
+    </a>
   }
 </div>

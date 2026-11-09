@@ -213,9 +213,12 @@
     border-radius: var(--tx-public-header-nav-link-border-radius);
     color: var(--tx-public-header-nav-link-color);
     font-size: var(--tx-public-header-nav-link-font-size);
-    transition: color var(--tx-public-header-panel-duration);
+    transition:
+      color var(--tx-public-header-panel-duration),
+      background-color var(--tx-public-header-panel-duration);
 
     &:hover {
+      background: var(--tx-public-header-nav-link-hover-background);
       color: var(--tx-public-header-nav-link-hover-color);
     }
 

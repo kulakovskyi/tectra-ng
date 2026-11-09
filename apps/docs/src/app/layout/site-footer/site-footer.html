@@ -1,0 +1,19 @@
+<div class="site-footer__inner">
+  <div class="site-footer__brand">
+    <a routerLink="/" aria-label="tectra home"><docs-logo /></a>
+    <p>An Angular UI kit that feels finished. Open source under the MIT license.</p>
+  </div>
+  @for (column of columns; track column.title) {
+    <nav class="site-footer__column" [attr.aria-label]="column.title">
+      <span class="site-footer__title">{{ column.title }}</span>
+      @for (link of column.links; track link.label) {
+        @if (link.path) {
+          <a class="site-footer__link" [routerLink]="link.path">{{ link.label }}</a>
+        } @else {
+          <a class="site-footer__link" target="_blank" rel="noopener" [href]="link.url">{{ link.label }}</a>
+        }
+      }
+    </nav>
+  }
+</div>
+<tx-app-footer name="tectra" [links]="links" [dt]="barTokens" />

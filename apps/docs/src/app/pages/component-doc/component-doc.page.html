@@ -15,7 +15,7 @@
         >{{ ' ' }}<span class="hljs-string">'{{ doc.importPath }}'</span>;</code
       >
       <span class="import__icon" [class.import__icon--done]="isImportCopied()">
-        <tx-icon [name]="isImportCopied() ? 'check' : 'copy'" />
+        <docs-copy-icon [copied]="isImportCopied()" />
       </span>
     </button>
   </header>

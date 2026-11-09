@@ -88,3 +88,5 @@ export * from './components/public-header.tokens';
 export * from './components/cookie-notice.tokens';
 export * from './components/network-status.tokens';
 export * from './components/qr-code.tokens';
+export * from './components/confetti.tokens';
+export * from './components/hover-effect.tokens';

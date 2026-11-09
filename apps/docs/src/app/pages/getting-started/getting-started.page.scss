@@ -1,3 +1,41 @@
+:host {
+  max-width: 940px;
+}
+
+.requirements {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 44px;
+}
+
+.requirement {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 4px 10px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--docs-bg-subtle);
+  box-shadow: 0 0 0 1px var(--docs-hairline) inset;
+}
+
+.requirement__icon {
+  color: var(--tx-primary-base);
+}
+
+.requirement__title {
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.requirement__text {
+  grid-column: 1 / -1;
+  color: var(--tx-text-muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
 .steps {
   margin: 0;
   padding: 0;
@@ -9,12 +47,12 @@
   display: grid;
   grid-template-columns: 32px minmax(0, 1fr);
   gap: var(--tx-space-5);
-  padding-bottom: var(--tx-space-6);
+  padding-bottom: 40px;
 
   &:not(:last-child)::before {
     position: absolute;
-    top: 36px;
-    bottom: 4px;
+    top: 40px;
+    bottom: 8px;
     left: 15px;
     width: 2px;
     border-radius: 2px;
@@ -29,30 +67,175 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: var(--docs-panel);
-  box-shadow: var(--docs-elevation);
-  color: var(--tx-text-primary);
+  background: var(--tx-primary-base);
+  color: var(--tx-primary-contrast);
   font-size: var(--tx-font-size-sm);
   font-weight: 650;
   font-variant-numeric: tabular-nums;
 }
 
+.step__body {
+  min-width: 0;
+}
+
 .step__title {
-  margin: 4px 0 var(--tx-space-3);
-  font-size: 17px;
-  letter-spacing: -0.015em;
+  margin: 3px 0 6px;
+  font-size: 20px;
 }
 
-.step__code {
-  position: relative;
+.step__text {
+  max-width: 64ch;
+  margin: 0 0 16px;
+  color: var(--tx-text-muted);
+  line-height: 1.55;
 }
 
-.step__copy {
-  position: absolute;
-  top: 8px;
-  right: 8px;
+.panel__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
-.step__code docs-code-block {
-  margin-bottom: var(--tx-space-2);
+.packages {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.command {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 10px 10px 16px;
+  border-radius: 12px;
+  background: var(--tx-surface-950);
+  color: var(--tx-surface-100);
+  font-family: var(--tx-font-mono);
+  font-size: 14px;
+
+  docs-copy-button {
+    --docs-copy-done: var(--tx-green-400);
+    --tx-button-text-secondary-color: var(--tx-surface-300);
+    --tx-button-text-secondary-hover-background: color-mix(in srgb, var(--tx-surface-50) 12%, transparent);
+    --tx-button-text-secondary-active-background: color-mix(in srgb, var(--tx-surface-50) 20%, transparent);
+
+    margin-left: auto;
+  }
+}
+
+.command__prompt {
+  color: var(--tx-surface-500);
+}
+
+.command__text {
+  min-width: 0;
+  padding: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  line-height: 1.6;
+  overflow-wrap: break-word;
+}
+
+.theme {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.theme__field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.theme__field--row {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.theme__label {
+  color: var(--tx-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.panel--split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  align-items: stretch;
+}
+
+.result {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  padding: 18px;
+  border-radius: 14px;
+  background: var(--docs-bg-subtle);
+  box-shadow: 0 0 0 1px var(--docs-hairline) inset;
+}
+
+.result__label {
+  color: var(--tx-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.result__value {
+  color: var(--tx-text-muted);
+  font-size: 13px;
+}
+
+@media (width < 900px) {
+  .requirements {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .panel--split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (width < 600px) {
+  .packages {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .step {
+    align-items: center;
+    gap: 0 12px;
+
+    &::before {
+      display: none;
+    }
+  }
+
+  .step__body {
+    display: contents;
+  }
+
+  .step__title {
+    margin: 0;
+  }
+
+  .step__text,
+  .panel {
+    grid-column: 1 / -1;
+  }
+
+  .step__text {
+    margin-top: 10px;
+  }
+
+  .panel {
+    padding: 14px;
+  }
 }

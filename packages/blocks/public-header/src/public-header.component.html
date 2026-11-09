@@ -1,18 +1,35 @@
+<ng-template #brandContent>
+  @if (brandSlot()) {
+    <ng-content select="[txPublicHeaderBrand]" />
+  } @else {
+    @if (logo(); as logo) {
+      <img class="tx-public-header__logo" alt="" [src]="logo" [class]="passThrough().logo?.class" [style]="passThrough().logo?.style" />
+    }
+    <span>{{ brand() }}</span>
+  }
+</ng-template>
 <header class="tx-public-header__bar" [class]="passThrough().bar?.class" [style]="passThrough().bar?.style">
   <div class="tx-public-header__inner">
     @if (router) {
-      <a class="tx-public-header__brand" [routerLink]="homeLink()" [class]="passThrough().brand?.class" [style]="passThrough().brand?.style" (click)="close()">
-        @if (logo(); as logo) {
-          <img class="tx-public-header__logo" alt="" [src]="logo" [class]="passThrough().logo?.class" [style]="passThrough().logo?.style" />
-        }
-        <span>{{ brand() }}</span>
+      <a
+        class="tx-public-header__brand"
+        [routerLink]="homeLink()"
+        [attr.aria-label]="brandSlot() ? brand() : null"
+        [class]="passThrough().brand?.class"
+        [style]="passThrough().brand?.style"
+        (click)="close()"
+      >
+        <ng-container *ngTemplateOutlet="brandContent" />
       </a>
     } @else {
-      <a class="tx-public-header__brand" [href]="homeHref()" [class]="passThrough().brand?.class" [style]="passThrough().brand?.style">
-        @if (logo(); as logo) {
-          <img class="tx-public-header__logo" alt="" [src]="logo" [class]="passThrough().logo?.class" [style]="passThrough().logo?.style" />
-        }
-        <span>{{ brand() }}</span>
+      <a
+        class="tx-public-header__brand"
+        [href]="homeHref()"
+        [attr.aria-label]="brandSlot() ? brand() : null"
+        [class]="passThrough().brand?.class"
+        [style]="passThrough().brand?.style"
+      >
+        <ng-container *ngTemplateOutlet="brandContent" />
       </a>
     }
 

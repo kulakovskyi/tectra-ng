@@ -15,7 +15,8 @@ const description =
   'Open-source Angular UI kit: standalone components on signals (zoneless, OnPush), its own design tokens as CSS variables, light and dark themes, an SVG icon set, brand logos, country flags and a rich text editor. Keyboard and screen reader friendly, MIT licensed.';
 
 const pages = [
-  { title: 'Introduction', path: '/', text: 'What tectra is, a tour of the components' },
+  { title: 'tectra', path: '/', text: 'What tectra is: the kit at a glance' },
+  { title: 'Introduction', path: '/docs', text: 'A tour of the components' },
   { title: 'Installation', path: '/getting-started', text: 'npm packages, provideTectra, first component' },
   { title: 'Theming', path: '/theming', text: 'design tokens, presets, light and dark mode, theme designer' },
   { title: 'Icons', path: '/icons', text: 'the icon set and TxIcon' },

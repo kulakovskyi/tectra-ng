@@ -7,11 +7,13 @@ import {
   afterNextRender,
   booleanAttribute,
   computed,
+  contentChild,
   inject,
   input,
   signal,
   viewChild,
 } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { uniqueId } from '@tectra-ng/core/a11y';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
@@ -20,6 +22,7 @@ import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TxIcon } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraPublicHeaderTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxTopbarPreferences } from '@tectra-ng/blocks/topbar-preferences';
+import { TxPublicHeaderBrand } from './public-header-brand.directive';
 import { TxPublicHeaderPart, TxPublicHeaderResponsive } from './public-header.types';
 
 const COMPACT_WIDTH = 768;
@@ -27,7 +30,7 @@ const CLOSE_FALLBACK_MS = 600;
 
 @Component({
   selector: 'tx-public-header',
-  imports: [RouterLink, TxIcon, TxTopbarPreferences],
+  imports: [NgTemplateOutlet, RouterLink, TxIcon, TxTopbarPreferences],
   templateUrl: './public-header.component.html',
   styleUrl: './public-header.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -47,6 +50,7 @@ export class TxPublicHeader {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly toggleButton = viewChild<ElementRef<HTMLButtonElement>>('menuButton');
   protected readonly router = inject(Router, { optional: true });
+  protected readonly brandSlot = contentChild(TxPublicHeaderBrand);
 
   readonly brand = input.required<string>();
   readonly logo = input<string | undefined>(undefined);

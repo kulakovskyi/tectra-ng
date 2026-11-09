@@ -3,7 +3,8 @@ import { RouterLink } from '@angular/router';
 import { TxOverlayInset } from '@tectra-ng/core/overlay';
 import { TxIcon } from '@tectra-ng/icons';
 import { TxTabItem, TxTabValue, TxTabs } from '@tectra-ng/ui/tabs';
-import { TxToastService } from '@tectra-ng/ui/toast';
+import { DocsClipboard } from '../../doc-ui/copy/clipboard.service';
+import { DocsCopyIcon } from '../../doc-ui/copy/copy-icon';
 import { DOC_TABS } from '../../data/doc-tabs.data';
 import { DocComponent, DocTab } from '../../types/doc-component.interface';
 import { A11yTab } from './tabs/a11y-tab/a11y-tab';
@@ -13,13 +14,13 @@ import { ThemingTab } from './tabs/theming-tab/theming-tab';
 
 @Component({
   selector: 'docs-component-doc-page',
-  imports: [FeaturesTab, ApiTab, ThemingTab, A11yTab, RouterLink, TxIcon, TxOverlayInset, TxTabs],
+  imports: [FeaturesTab, ApiTab, ThemingTab, A11yTab, RouterLink, TxIcon, TxOverlayInset, TxTabs, DocsCopyIcon],
   templateUrl: './component-doc.page.html',
   styleUrl: './component-doc.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class ComponentDocPage {
-  private readonly toast = inject(TxToastService);
+  private readonly clipboard = inject(DocsClipboard);
   name = input.required<string>();
 
   readonly doc = input<DocComponent | null>(null);
@@ -41,9 +42,8 @@ export default class ComponentDocPage {
   }
 
   copyImport(): void {
-    navigator.clipboard?.writeText(this.importLine());
+    this.clipboard.copy(this.importLine(), 'Import copied');
     this.isImportCopied.set(true);
-    this.toast.success('Import copied');
     setTimeout(() => this.isImportCopied.set(false), 1600);
   }
 }
