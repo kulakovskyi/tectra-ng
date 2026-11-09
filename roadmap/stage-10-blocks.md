@@ -142,9 +142,16 @@ The look (rem × 14px): a pill centred `21px` above the bottom, card colour at 8
 - [x] `<tx-network-status>`: browser `offline` / `online` events and `navigator.onLine`, in the browser only; `offlineText`, `restoredText`, `restoredDuration`, `bodyClass`, `statusChange`, `onOffline()` / `onOnline()`; a polite live region
 - [x] Docs (buttons that play the events in a frame, own texts, tokens) + tests; e2e: real offline and back, the pill hides, its place
 
-## 10.14 QR code — `blocks/qr-code` (1)
+## 10.14 QR code — `blocks/qr-code` (1) ✅
 
 A string drawn as a QR code (own encoder, no dependency).
+
+The first app draws a canvas with an outside library: `data`, `size` 200, `margin` 1, `10px` corners, a translated "Unable to render QR code". Same inputs here, so it swaps in one to one and the library can go.
+
+- [x] The engine is its own npm package `@tectra-ng/qr` (plain TypeScript, no dependencies, part of `tectra-ng`): `encodeQr`, `qrPaths`, `qrLayout`, `qrToSvg`, `qrToPng`; the block builds on it
+- [x] Own encoder `encodeQr`: versions 1–40, levels L / M / Q / H, numeric / alphanumeric / UTF-8, Reed–Solomon, mask by penalty; checked bit for bit against reference matrices of that library (versions 1 to 40, every level, several masks)
+- [x] `<tx-qr-code>` as an SVG (same on the server): `dotStyle` square / dots / rounded / soft, `eyeFrameStyle` and `eyeBallStyle` square / rounded / circle, `color`, `background`, `eyeColor`, `eyeBallColor`, linear or radial `gradient`, `logo` with a cleared area and level `H`, `download()` PNG / SVG, `toDataUrl()`, `toSvgString()` (our addition, asked for)
+- [x] Docs (live text, a designer with every option and downloads, shapes, colours, logo, download, tokens) + tests; e2e: every code on the page scans back with the browser's barcode reader (where the browser has one), PNG download, live update
 
 ## 10.15 Confetti and hover effect — `blocks/confetti`, `blocks/hover-effect` (7, 0)
 

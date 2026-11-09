@@ -1,0 +1,56 @@
+@if (layout(); as layout) {
+  <svg
+    #svg
+    class="tx-qr-code__svg"
+    role="img"
+    [attr.aria-label]="label()"
+    [attr.width]="size()"
+    [attr.height]="size()"
+    [attr.viewBox]="layout.viewBox.value"
+    [attr.shape-rendering]="dotStyle() === 'square' ? 'crispEdges' : null"
+    [class]="passThrough().svg?.class"
+    [style]="passThrough().svg?.style"
+  >
+    @if (gradientLine(); as line) {
+      <defs>
+        @if (line.radial) {
+          <radialGradient gradientUnits="userSpaceOnUse" [attr.id]="gradientId" [attr.cx]="line.center" [attr.cy]="line.center" [attr.r]="line.radius">
+            <stop offset="0" [attr.stop-color]="line.colors[0]" />
+            <stop offset="1" [attr.stop-color]="line.colors[1]" />
+          </radialGradient>
+        } @else {
+          <linearGradient gradientUnits="userSpaceOnUse" [attr.id]="gradientId" [attr.x1]="line.x1" [attr.y1]="line.y1" [attr.x2]="line.x2" [attr.y2]="line.y2">
+            <stop offset="0" [attr.stop-color]="line.colors[0]" />
+            <stop offset="1" [attr.stop-color]="line.colors[1]" />
+          </linearGradient>
+        }
+      </defs>
+    }
+    <rect
+      class="tx-qr-code__background"
+      [attr.x]="layout.viewBox.x"
+      [attr.y]="layout.viewBox.y"
+      [attr.width]="layout.viewBox.size"
+      [attr.height]="layout.viewBox.size"
+      [style.fill]="background() ?? null"
+    />
+    <path class="tx-qr-code__dots" [attr.d]="layout.paths.dots" [style.fill]="dotFill()" />
+    <path class="tx-qr-code__eye-frames" fill-rule="evenodd" [attr.d]="layout.paths.eyeFrames" [style.fill]="eyeColor() ?? dotFill()" />
+    <path class="tx-qr-code__eye-balls" [attr.d]="layout.paths.eyeBalls" [style.fill]="eyeBallColor() ?? eyeColor() ?? dotFill()" />
+    @if (layout.logoBox; as box) {
+      <image
+        class="tx-qr-code__logo"
+        preserveAspectRatio="xMidYMid meet"
+        [attr.href]="logo()"
+        [attr.x]="box.x"
+        [attr.y]="box.y"
+        [attr.width]="box.size"
+        [attr.height]="box.size"
+      />
+    }
+  </svg>
+} @else if (hasError()) {
+  <div class="tx-qr-code__error" role="alert" [style.width.px]="size()" [style.height.px]="size()" [class]="passThrough().error?.class" [style]="passThrough().error?.style">
+    {{ translations().qrCodeError }}
+  </div>
+}

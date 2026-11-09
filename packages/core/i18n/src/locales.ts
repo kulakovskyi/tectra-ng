@@ -333,6 +333,8 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     cookieLabel: 'Cookie notice',
     offline: 'No internet connection',
     connectionRestored: 'Connection restored',
+    qrCode: 'QR code',
+    qrCodeError: 'Unable to render QR code',
   },
 };
 
@@ -669,6 +671,8 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     cookieLabel: 'Повідомлення про cookie',
     offline: 'Немає з’єднання з інтернетом',
     connectionRestored: 'З’єднання відновлено',
+    qrCode: 'QR-код',
+    qrCodeError: 'Не вдалося створити QR-код',
   },
 };
 

@@ -35,7 +35,7 @@
     }
   },
   "release": {
-    "projects": ["tokens", "themes", "core", "icons", "brand-icons", "flags", "ui", "editor", "blocks", "tectra-ng"],
+    "projects": ["tokens", "themes", "core", "icons", "brand-icons", "flags", "qr", "ui", "editor", "blocks", "tectra-ng"],
     "projectsRelationship": "fixed",
     "releaseTag": {
       "pattern": "v{version}"

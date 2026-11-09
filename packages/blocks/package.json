@@ -30,11 +30,15 @@
     "@angular/router": "^22.0.0",
     "@tectra-ng/core": "^0.1.6",
     "@tectra-ng/icons": "^0.1.6",
+    "@tectra-ng/qr": "^0.1.6",
     "@tectra-ng/themes": "^0.1.6",
     "@tectra-ng/ui": "^0.1.6"
   },
   "peerDependenciesMeta": {
     "@angular/router": {
+      "optional": true
+    },
+    "@tectra-ng/qr": {
       "optional": true
     }
   },

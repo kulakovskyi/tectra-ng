@@ -331,6 +331,8 @@ export interface TxTranslations {
   cookieLabel: string;
   offline: string;
   connectionRestored: string;
+  qrCode: string;
+  qrCodeError: string;
 }
 
 export type TxValidationMessage = string | ((error: unknown) => string);

@@ -74,6 +74,7 @@ import { topbarPreferencesTokens } from './topbar-preferences.tokens';
 import { publicHeaderTokens } from './public-header.tokens';
 import { cookieNoticeTokens } from './cookie-notice.tokens';
 import { networkStatusTokens } from './network-status.tokens';
+import { qrCodeTokens } from './qr-code.tokens';
 
 export const COMPONENT_TOKENS = {
   icon: iconTokens,
@@ -180,6 +181,7 @@ export const COMPONENT_TOKENS = {
   publicHeader: publicHeaderTokens,
   cookieNotice: cookieNoticeTokens,
   networkStatus: networkStatusTokens,
+  qrCode: qrCodeTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;
