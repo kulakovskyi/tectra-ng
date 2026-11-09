@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { TxAppFooter } from '@tectra-ng/blocks/app-footer';
 import { TxPublicHeader, TxPublicHeaderBrand } from '@tectra-ng/blocks/public-header';
 import { TxThemeReveal } from '@tectra-ng/blocks/switch-theme';
 import { TX_FLAG_CODES } from '@tectra-ng/flags';
@@ -13,11 +12,10 @@ import { REPOSITORY_URL } from '../data/seo.data';
 import { DocsClipboard } from '../doc-ui/copy/clipboard.service';
 import { DocsCopyIcon } from '../doc-ui/copy/copy-icon';
 import { DocsLogo } from '../layout/logo/logo';
+import { DocsSiteFooter } from '../layout/site-footer/site-footer';
 import { DocsThemeSettings } from '../layout/theme-settings';
 import {
   INSTALL_SNIPPET,
-  LANDING_FOOTER,
-  LANDING_FOOTER_LINKS,
   LANDING_HERO,
   LANDING_HIGHLIGHTS,
   LANDING_NAV,
@@ -31,7 +29,7 @@ const IMAGE_ROOT = '/images/landing';
 
 @Component({
   selector: 'docs-landing-page',
-  imports: [RouterLink, TxAppFooter, TxPublicHeader, TxPublicHeaderBrand, TxThemeReveal, TxIcon, TxButton, DocsLogo, DocsScrollProgress, DocsCopyIcon],
+  imports: [RouterLink, TxPublicHeader, TxPublicHeaderBrand, TxThemeReveal, TxIcon, TxButton, DocsLogo, DocsScrollProgress, DocsCopyIcon, DocsSiteFooter],
   templateUrl: './landing.page.html',
   styleUrl: './landing.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,8 +39,6 @@ export default class LandingPage {
   protected readonly settings = inject(DocsThemeSettings);
 
   readonly nav = LANDING_NAV;
-  readonly footerLinks = LANDING_FOOTER_LINKS;
-  readonly footer = LANDING_FOOTER;
   readonly wall = LANDING_WALL;
   readonly headerTokens = {
     nav: {

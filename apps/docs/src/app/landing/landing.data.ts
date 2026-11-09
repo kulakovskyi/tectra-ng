@@ -1,6 +1,3 @@
-import { TxAppFooterLink } from '@tectra-ng/blocks/app-footer';
-import { REPOSITORY_URL } from '../data/seo.data';
-
 export interface LandingNavLink {
   label: string;
   path: string;
@@ -20,11 +17,6 @@ export interface LandingHighlight extends LandingShot {
   tone: string;
 }
 
-export interface LandingFooterColumn {
-  title: string;
-  links: { label: string; path?: string; url?: string }[];
-}
-
 export interface LandingTile extends LandingShot {
   eyebrow: string;
   title: string;
@@ -38,12 +30,6 @@ export const LANDING_NAV: LandingNavLink[] = [
   { label: 'Blocks', path: '/components/app-layout' },
   { label: 'Theming', path: '/theming' },
   { label: 'Icons', path: '/icons' },
-];
-
-export const LANDING_FOOTER_LINKS: TxAppFooterLink[] = [
-  { label: 'Docs', routerLink: '/docs' },
-  { label: 'Installation', routerLink: '/getting-started' },
-  { label: 'GitHub', url: REPOSITORY_URL, target: '_blank' },
 ];
 
 export const LANDING_HERO: LandingShot = {
@@ -130,35 +116,6 @@ export const INSTALL_SNIPPET = [
   { kind: 'plain', text: '(App, {\n  providers: [' },
   { kind: 'name', text: 'provideTectra' },
   { kind: 'plain', text: '({ preset: Tectra })],\n});' },
-];
-
-export const LANDING_FOOTER: LandingFooterColumn[] = [
-  {
-    title: 'Kit',
-    links: [
-      { label: 'Components', path: '/components/button' },
-      { label: 'Blocks', path: '/components/app-layout' },
-      { label: 'Editor', path: '/components/editor' },
-      { label: 'QR code', path: '/components/qr-code' },
-    ],
-  },
-  {
-    title: 'Docs',
-    links: [
-      { label: 'Introduction', path: '/docs' },
-      { label: 'Installation', path: '/getting-started' },
-      { label: 'Theming', path: '/theming' },
-      { label: 'Icons', path: '/icons' },
-    ],
-  },
-  {
-    title: 'Project',
-    links: [
-      { label: 'GitHub', url: REPOSITORY_URL },
-      { label: 'Changelog', url: `${REPOSITORY_URL}/blob/main/CHANGELOG.md` },
-      { label: 'npm', url: 'https://www.npmjs.com/package/tectra-ng' },
-    ],
-  },
 ];
 
 export const LANDING_WALL: LandingShot[][] = [

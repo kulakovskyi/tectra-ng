@@ -51,7 +51,10 @@
     <docs-sidebar [currentUrl]="currentUrl()" (navigate)="closeMenu()" />
   </nav>
 
-  <main class="content">
-    <router-outlet />
-  </main>
+  <div class="column">
+    <main class="content">
+      <router-outlet />
+    </main>
+    <docs-site-footer class="footer" width="940px" />
+  </div>
 </div>

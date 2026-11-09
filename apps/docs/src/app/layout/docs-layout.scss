@@ -102,12 +102,26 @@
   display: none;
 }
 
+.column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
 .content {
   --docs-gutter: clamp(20px, 4vw, 64px);
+  flex: 1;
   min-width: 0;
   background: radial-gradient(1200px 440px at 50% -140px, var(--docs-aura), transparent 70%) no-repeat;
   padding: 36px var(--docs-gutter) 96px;
   view-transition-name: docs-content;
+}
+
+.footer {
+  --site-footer-background: var(--docs-bg-subtle);
+  --site-footer-line: var(--docs-hairline);
+
+  border-top: 1px solid var(--docs-hairline);
 }
 
 @media (width < 64rem) {

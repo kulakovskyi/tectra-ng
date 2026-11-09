@@ -11,12 +11,13 @@ import { HEADER_LINKS } from '../data/header-links.data';
 import { TECTRA_VERSION } from '../../generated/version';
 import { DocsLogo } from './logo/logo';
 import { DocsSidebar } from './sidebar/docs-sidebar';
+import { DocsSiteFooter } from './site-footer/site-footer';
 import { DocsThemeConfigurator } from './theme-configurator/theme-configurator';
 import { DocsThemeSettings } from './theme-settings';
 
 @Component({
   selector: 'docs-layout',
-  imports: [RouterOutlet, RouterLink, TxButton, TxPopover, TxPopoverTrigger, TxOverlayInset, DocsLogo, DocsSidebar, DocsThemeConfigurator],
+  imports: [RouterOutlet, RouterLink, TxButton, TxPopover, TxPopoverTrigger, TxOverlayInset, DocsLogo, DocsSidebar, DocsSiteFooter, DocsThemeConfigurator],
   templateUrl: './docs-layout.html',
   styleUrl: './docs-layout.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
