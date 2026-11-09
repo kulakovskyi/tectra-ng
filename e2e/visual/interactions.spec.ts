@@ -1086,7 +1086,7 @@ test.describe('dark mode switch with motion', () => {
 test('icons stroke slider changes the stroke and the header shows the package version', async ({ page }) => {
   await page.goto('/icons');
   const slider = page.getByRole('slider', { name: /Stroke/ });
-  const stroke = () => page.locator('.grid').first().evaluate((element) => getComputedStyle(element).getPropertyValue('--tx-icon-stroke-width').trim());
+  const stroke = () => page.locator('.tiles').evaluate((element) => getComputedStyle(element).getPropertyValue('--tx-icon-stroke-width').trim());
   expect(await stroke()).toBe('1.75');
   await slider.focus();
   await slider.press('ArrowRight');
@@ -1095,6 +1095,24 @@ test('icons stroke slider changes the stroke and the header shows the package ve
 
   const { version } = JSON.parse(readFileSync(join(__dirname, '../../packages/tectra-ng/package.json'), 'utf8')) as { version: string };
   await expect(page.locator('.logo__version')).toHaveText(`v${version}`);
+});
+
+test('icons page selects an icon, filters the sets and loads flags on demand', async ({ page }) => {
+  await page.goto('/icons');
+  const inspector = page.getByRole('region', { name: 'Selected icon' });
+  await page.getByRole('textbox', { name: 'Search' }).fill('trash');
+  await page.locator('.tile', { hasText: 'trash' }).first().click();
+  await expect(inspector.locator('code')).toHaveText('<tx-icon name="trash" />');
+
+  await page.getByRole('tab', { name: /Brands/ }).click();
+  await expect(page.getByRole('textbox', { name: 'Search' })).toHaveValue('trash');
+  await page.getByRole('textbox', { name: 'Search' }).fill('git');
+  await expect(page.locator('.tile')).toHaveCount(1);
+
+  await page.getByRole('tab', { name: /Flags/ }).click();
+  await page.getByRole('textbox', { name: 'Search' }).fill('ukraine');
+  const flag = page.getByRole('button', { name: 'Copy ua, Ukraine' });
+  await expect(flag.locator('.tx-country__flag--image')).toBeVisible();
 });
 
 test('logo mark follows the primary and the favicon follows the picker', async ({ page }) => {
