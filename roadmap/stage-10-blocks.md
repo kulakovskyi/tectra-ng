@@ -121,9 +121,17 @@ The look (rem × 14px): theme button `37px` round on the card colour with a 14% 
 - [x] `<tx-topbar-preferences>`: `layout` inline / stacked, `raised`, `languageChange`, `modeChange`
 - [x] Docs (button, the directive on any control, own languages without the locale, plain and raised capsules, rows, tokens) + tests; e2e: theme and label switch, keyboard language switch with the thumb and the locale, capsule geometry
 
-## 10.12 Public chrome — `blocks/public-header`, `blocks/app-footer` ✅ (built in 10.4), `blocks/cookie-notice` (5, 7, 4)
+## 10.12 Public chrome — `blocks/public-header`, `blocks/app-footer` ✅ (built in 10.4), `blocks/cookie-notice` (5, 7, 4) ✅
 
 Header of public pages with a burger below tablet width, footer with `© year name` and links, essential-cookies notice.
+
+The look (rem × 14px): header sticky, `56px` high, content up to `1064px` with `17.5px` sides and `21px` gaps, card colour at 78% with a `24px` blur and a bottom border; brand `15.75px` weight 600 `-0.02em` with a `28px` logo; links `7px 10.5px` round, `12.25px` muted → text; preferences and actions `10.5px` / `7px` apart; below `768px` a `35px` round burger with a border ring opens a card-coloured panel (`10.5px 17.5px 17.5px`, `14px` gaps, overlay shadow, `200ms` slide-in) with `14px` text links divided by borders, stacked preferences and full-width buttons. Cookie notice: bottom-left card `336px` wide `21px` from the edges (full width with `14px` insets on phones), `14px` padding and radius, card colour at 84% with a blur, border ring and overlay shadow; a `31.5px` tinted shield, title `12.25px` weight 600, text `11.375px` muted, a primary "Learn more" link and a small "Got it" button; slides in after `600ms` in `500ms`.
+
+- [x] `<tx-public-header>`: `brand`, `logo`, `homeLink` (router or a plain link), `preferences`, `responsive` viewport / container; `txPublicHeaderNav` and `txPublicHeaderActions` slots; the panel closes on a link, Escape (focus back to the burger) and when it grows wide
+- [x] `<tx-cookie-notice>`: translated texts with own overrides, `link` / `href`, `cookieName`, `maxAgeDays`, `sharedDomain`, `dismissed`, `show()`; no extra dependency for the cookie; nothing on the server, so no jump after hydration
+- [x] Docs (sticky page, device frames, without preferences, tokens; notice in a frame with "show again", own texts, tokens) + tests; e2e: sticky row, burger panel and Escape, notice dismiss kept after a reload
+- [x] Fix: the live region of announcements (toasts, moves) is hidden from sight without the CDK stylesheet
+- [x] Fix: the burger panel of the header and the folded filters panel fade out on close as smoothly as they open (`leaveDuration` / `leaveEasing` tokens of the filters panel)
 
 ## 10.13 Network status — `blocks/network-status` (4)
 

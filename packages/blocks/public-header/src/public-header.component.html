@@ -1,0 +1,48 @@
+<header class="tx-public-header__bar" [class]="passThrough().bar?.class" [style]="passThrough().bar?.style">
+  <div class="tx-public-header__inner">
+    @if (router) {
+      <a class="tx-public-header__brand" [routerLink]="homeLink()" [class]="passThrough().brand?.class" [style]="passThrough().brand?.style" (click)="close()">
+        @if (logo(); as logo) {
+          <img class="tx-public-header__logo" alt="" [src]="logo" [class]="passThrough().logo?.class" [style]="passThrough().logo?.style" />
+        }
+        <span>{{ brand() }}</span>
+      </a>
+    } @else {
+      <a class="tx-public-header__brand" [href]="homeHref()" [class]="passThrough().brand?.class" [style]="passThrough().brand?.style">
+        @if (logo(); as logo) {
+          <img class="tx-public-header__logo" alt="" [src]="logo" [class]="passThrough().logo?.class" [style]="passThrough().logo?.style" />
+        }
+        <span>{{ brand() }}</span>
+      </a>
+    }
+
+    <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- closes the menu after a link or a button inside was used; they handle the keyboard themselves -->
+    <div class="tx-public-header__panel" [id]="panelId" [class]="passThrough().panel?.class" [style]="passThrough().panel?.style" (click)="onPanelClick($event)" (animationend)="onPanelAnimationEnd($event)">
+      <div class="tx-public-header__nav" [class]="passThrough().nav?.class" [style]="passThrough().nav?.style">
+        <ng-content select="[txPublicHeaderNav]" />
+      </div>
+      <div class="tx-public-header__end" [class]="passThrough().end?.class" [style]="passThrough().end?.style">
+        @if (preferences()) {
+          <tx-topbar-preferences class="tx-public-header__preferences" [layout]="compact() ? 'stacked' : 'inline'" [unstyled]="isUnstyled()" />
+        }
+        <div class="tx-public-header__actions" [class]="passThrough().actions?.class" [style]="passThrough().actions?.style">
+          <ng-content select="[txPublicHeaderActions]" />
+        </div>
+      </div>
+    </div>
+
+    <button
+      #menuButton
+      type="button"
+      class="tx-public-header__toggle"
+      [attr.aria-controls]="panelId"
+      [attr.aria-expanded]="open()"
+      [attr.aria-label]="open() ? translations().closeMenu : translations().openMenu"
+      [class]="passThrough().toggle?.class"
+      [style]="passThrough().toggle?.style"
+      (click)="toggle()"
+    >
+      <tx-icon aria-hidden="true" [name]="open() ? 'times' : 'bars'" />
+    </button>
+  </div>
+</header>

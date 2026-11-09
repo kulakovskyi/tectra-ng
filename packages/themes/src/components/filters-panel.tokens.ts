@@ -103,6 +103,8 @@ export const filtersPanelTokens = {
     footerPadding: '14px',
     enterDuration: '160ms',
     enterEasing: 'cubic-bezier(0.2, 0, 0, 1)',
+    leaveDuration: '120ms',
+    leaveEasing: 'cubic-bezier(0.4, 0, 1, 1)',
   },
 };
 

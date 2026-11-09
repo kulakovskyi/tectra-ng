@@ -71,6 +71,8 @@ import { actionTileTokens } from './action-tile.tokens';
 import { switchThemeTokens } from './switch-theme.tokens';
 import { switchLanguageTokens } from './switch-language.tokens';
 import { topbarPreferencesTokens } from './topbar-preferences.tokens';
+import { publicHeaderTokens } from './public-header.tokens';
+import { cookieNoticeTokens } from './cookie-notice.tokens';
 
 export const COMPONENT_TOKENS = {
   icon: iconTokens,
@@ -174,6 +176,8 @@ export const COMPONENT_TOKENS = {
   switchTheme: switchThemeTokens,
   switchLanguage: switchLanguageTokens,
   topbarPreferences: topbarPreferencesTokens,
+  publicHeader: publicHeaderTokens,
+  cookieNotice: cookieNoticeTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

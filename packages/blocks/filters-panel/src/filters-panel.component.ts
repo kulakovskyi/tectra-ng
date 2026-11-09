@@ -6,6 +6,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   DOCUMENT,
+  DestroyRef,
   ElementRef,
   booleanAttribute,
   computed,
@@ -43,6 +44,7 @@ import {
 
 const COLLAPSE_QUERY = '(width < 64rem)';
 const OVERLAY_CONTAINER = '.cdk-overlay-container';
+const CLOSE_FALLBACK_MS = 400;
 
 @Component({
   selector: 'tx-filters-panel',
@@ -64,6 +66,7 @@ const OVERLAY_CONTAINER = '.cdk-overlay-container';
     '[class.tx-filters-panel--busy]': 'busy()',
     '[class.tx-filters-panel--collapsible]': 'collapsible()',
     '[class.tx-filters-panel--expanded]': 'expanded()',
+    '[class.tx-filters-panel--closing]': 'closing()',
     '(document:click)': 'closeOnOutsideClick($event)',
     '(document:keydown.escape)': 'closeOnEscape($event)',
   },
@@ -103,6 +106,8 @@ export class TxFiltersPanel implements TxFiltersPanelContext, AfterViewInit {
   private readonly projectedCount = signal(0);
   private readonly narrow = signal(false);
   readonly expanded = signal(false);
+  protected readonly closing = signal(false);
+  private closingTimer: ReturnType<typeof setTimeout> | undefined;
   protected readonly menuOpen = signal(false);
 
   readonly collapsible = computed(() => this.collapse() !== 'never' && Math.max(this.fields().length, this.projectedCount()) > 1);
@@ -164,6 +169,7 @@ export class TxFiltersPanel implements TxFiltersPanelContext, AfterViewInit {
   protected readonly menuPopoverPt = computed(() => ({ root: { style: this.tokenStyle() } }));
 
   constructor() {
+    inject(DestroyRef).onDestroy(() => clearTimeout(this.closingTimer));
     effect((onCleanup) => {
       const view = this.document.defaultView;
       if (!view?.matchMedia) {
@@ -226,8 +232,24 @@ export class TxFiltersPanel implements TxFiltersPanelContext, AfterViewInit {
     if (this.expanded() === expanded) {
       return;
     }
+    this.finishClosing();
+    if (!expanded && this.folded() && !this.isUnstyled() && !this.document.defaultView?.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+      this.closing.set(true);
+      this.closingTimer = setTimeout(() => this.finishClosing(), CLOSE_FALLBACK_MS);
+    }
     this.expanded.set(expanded);
     this.expandedChange.emit(expanded);
+  }
+
+  protected onPanelAnimationEnd(event: AnimationEvent): void {
+    if (event.target === event.currentTarget && this.closing()) {
+      this.finishClosing();
+    }
+  }
+
+  private finishClosing(): void {
+    clearTimeout(this.closingTimer);
+    this.closing.set(false);
   }
 
   protected clearFilters(): void {

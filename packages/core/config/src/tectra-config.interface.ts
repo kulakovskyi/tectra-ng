@@ -322,6 +322,13 @@ export interface TxTranslations {
   switchToDark: string;
   language: string;
   theme: string;
+  openMenu: string;
+  closeMenu: string;
+  cookieTitle: string;
+  cookieText: string;
+  cookieLearnMore: string;
+  cookieAccept: string;
+  cookieLabel: string;
 }
 
 export type TxValidationMessage = string | ((error: unknown) => string);

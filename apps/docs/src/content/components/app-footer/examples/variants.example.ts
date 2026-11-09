@@ -9,7 +9,7 @@ const page = '/components/app-footer';
   template: `
     <div class="column">
       @for (variant of variants; track variant) {
-        <div class="frame">
+        <div class="frame" [class.frame--content]="variant === 'app'">
           <span class="name">{{ variant }}</span>
           <tx-app-footer name="Acme" [variant]="variant" [links]="links" />
         </div>
@@ -29,6 +29,14 @@ const page = '/components/app-footer';
       border-radius: 12px;
       background: var(--tx-surface-ground);
       overflow: hidden;
+    }
+
+    .frame--content {
+      padding: 12px 16px 14px;
+    }
+
+    .frame--content .name {
+      padding-inline: 0;
     }
 
     .name {

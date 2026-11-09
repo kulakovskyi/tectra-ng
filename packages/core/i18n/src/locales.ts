@@ -324,6 +324,13 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     switchToDark: 'Switch to dark theme',
     language: 'Language',
     theme: 'Theme',
+    openMenu: 'Open menu',
+    closeMenu: 'Close menu',
+    cookieTitle: 'Only essential cookies',
+    cookieText: 'We use a sign-in cookie and browser storage to keep you signed in and remember your settings. No ads, no tracking.',
+    cookieLearnMore: 'Learn more',
+    cookieAccept: 'Got it',
+    cookieLabel: 'Cookie notice',
   },
 };
 
@@ -651,6 +658,13 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     switchToDark: 'Увімкнути темну тему',
     language: 'Мова',
     theme: 'Тема',
+    openMenu: 'Відкрити меню',
+    closeMenu: 'Закрити меню',
+    cookieTitle: 'Лише необхідні cookie',
+    cookieText: 'Ми використовуємо cookie входу та сховище браузера, щоб ви залишалися в системі, і щоб зберегти ваші налаштування. Без реклами та стеження.',
+    cookieLearnMore: 'Докладніше',
+    cookieAccept: 'Зрозуміло',
+    cookieLabel: 'Повідомлення про cookie',
   },
 };
 

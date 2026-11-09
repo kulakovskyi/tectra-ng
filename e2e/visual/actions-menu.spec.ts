@@ -65,5 +65,8 @@ test.describe('action tile', () => {
     await expect(tiles.nth(0).locator('[data-icon="spinner"]')).toBeVisible();
     await expect(tiles.nth(1)).toBeEnabled({ timeout: 4000 });
     await expect(tiles.nth(0)).not.toHaveAttribute('aria-busy');
+    const region = page.locator('.cdk-live-announcer-element');
+    await expect(region).toContainText('Email a code: done');
+    expect((await box(region)).width).toBeLessThanOrEqual(1);
   });
 });

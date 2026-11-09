@@ -105,6 +105,25 @@ test.describe('filters panel', () => {
     await expect(toggle).toBeFocused();
   });
 
+  test('the folded panel fades out on close instead of vanishing', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    const root = example(page, 'mobile');
+    const toggle = root.getByRole('button', { name: /Filters/ });
+    const panel = root.locator('.tx-filters-panel__panel');
+    await toggle.click();
+    await expect(panel).toBeVisible();
+    await expect.poll(() => panel.evaluate((element) => element.getAnimations().length)).toBe(0);
+    const during = await root.locator('tx-filters-panel').evaluate(async (host) => {
+      host.querySelector<HTMLButtonElement>('.tx-filters-panel__toggle')?.click();
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      const element = host.querySelector('.tx-filters-panel__panel') as HTMLElement;
+      return { closing: host.classList.contains('tx-filters-panel--closing'), display: getComputedStyle(element).display, animations: element.getAnimations().length };
+    });
+    expect(during).toEqual({ closing: true, display: 'flex', animations: 1 });
+    await expect(panel).toBeHidden();
+    await expect(root.locator('tx-filters-panel')).not.toHaveClass(/tx-filters-panel--closing/);
+  });
+
   test('busy turns the fields into skeletons of the same size', async ({ page }) => {
     const root = example(page, 'busy');
     const field = root.locator('[txfilterfield="zone"]');

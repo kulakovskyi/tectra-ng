@@ -1,0 +1,36 @@
+@if (visible()) {
+  <section
+    class="tx-cookie-notice__panel"
+    role="region"
+    animate.enter="tx-cookie-notice__panel--enter"
+    animate.leave="tx-cookie-notice__panel--leave"
+    [attr.aria-label]="label() ?? translations().cookieLabel"
+  >
+    <span class="tx-cookie-notice__icon" aria-hidden="true" [class]="passThrough().icon?.class" [style]="passThrough().icon?.style">
+      <tx-icon [name]="icon()" />
+    </span>
+    <div class="tx-cookie-notice__body" [class]="passThrough().body?.class" [style]="passThrough().body?.style">
+      <p class="tx-cookie-notice__title" [class]="passThrough().title?.class" [style]="passThrough().title?.style">{{ title() ?? translations().cookieTitle }}</p>
+      <p class="tx-cookie-notice__text" [class]="passThrough().text?.class" [style]="passThrough().text?.style">{{ text() ?? translations().cookieText }}</p>
+      <div class="tx-cookie-notice__actions" [class]="passThrough().actions?.class" [style]="passThrough().actions?.style">
+        @if (link() !== undefined && router) {
+          <a class="tx-cookie-notice__link" [routerLink]="link()" [class]="passThrough().link?.class" [style]="passThrough().link?.style">{{ linkLabel() ?? translations().cookieLearnMore }}</a>
+        } @else if (href(); as href) {
+          <a class="tx-cookie-notice__link" [href]="href" [class]="passThrough().link?.class" [style]="passThrough().link?.style">{{ linkLabel() ?? translations().cookieLearnMore }}</a>
+        }
+        <button
+          txButton
+          type="button"
+          size="small"
+          class="tx-cookie-notice__accept"
+          [unstyled]="isUnstyled()"
+          [class]="passThrough().accept?.class"
+          [style]="passThrough().accept?.style"
+          (click)="dismiss()"
+        >
+          {{ acceptLabel() ?? translations().cookieAccept }}
+        </button>
+      </div>
+    </div>
+  </section>
+}

@@ -189,7 +189,7 @@ Detailed checklist per block: [roadmap/stage-10-blocks.md](roadmap/stage-10-bloc
 | `actions-menu` | 6 | ✅ |
 | `action-tile` | 1 | ✅ |
 | `topbar-preferences`, `switch-theme` (circle reveal), `switch-language` | 12, 1, 2 | ✅ |
-| `public-header`, `app-footer` ✅, `cookie-notice` | 5, 7, 4 | 🟡 |
+| `public-header`, `app-footer`, `cookie-notice` | 5, 7, 4 | ✅ |
 | `network-status` | 4 | ⬜ |
 | `qr-code` | 1 | ⬜ |
 | `confetti`, `hover-effect` | 7, 0 | ⬜ |

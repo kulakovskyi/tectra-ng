@@ -17,7 +17,8 @@
     width: 100%;
   }
 
-  :host(#{$host}.tx-filters-panel--expanded) .tx-filters-panel__panel {
+  :host(#{$host}.tx-filters-panel--expanded) .tx-filters-panel__panel,
+  :host(#{$host}.tx-filters-panel--closing) .tx-filters-panel__panel {
     display: flex;
   }
 
@@ -58,6 +59,10 @@
 
   :host([data-styled]#{$host}.tx-filters-panel--expanded) .tx-filters-panel__panel {
     animation: tx-filters-panel-in var(--tx-filters-panel-panel-enter-duration) var(--tx-filters-panel-panel-enter-easing);
+  }
+
+  :host([data-styled]#{$host}.tx-filters-panel--closing) .tx-filters-panel__panel {
+    animation: tx-filters-panel-out var(--tx-filters-panel-panel-leave-duration) var(--tx-filters-panel-panel-leave-easing) forwards;
   }
 
   :host([data-styled]#{$host}) .tx-filters-panel__fields {
@@ -356,6 +361,13 @@
 }
 
 @include folded-look('.tx-filters-panel--collapsible[data-collapse="always"]');
+
+@keyframes tx-filters-panel-out {
+  to {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+}
 
 @keyframes tx-filters-panel-in {
   from {
