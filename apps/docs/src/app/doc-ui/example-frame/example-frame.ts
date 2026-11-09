@@ -1,11 +1,12 @@
 import { NgComponentOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Type, computed, input, signal } from '@angular/core';
 import { TxButton } from '@tectra-ng/ui/button';
+import { DocsCopyButton } from '../copy/copy-button';
 import { DocExample } from '../../types/doc-component.interface';
 
 @Component({
   selector: 'docs-example-frame',
-  imports: [NgComponentOutlet, TxButton],
+  imports: [NgComponentOutlet, TxButton, DocsCopyButton],
   templateUrl: './example-frame.html',
   styleUrl: './example-frame.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,7 +16,6 @@ export class ExampleFrame {
   component = input<Type<unknown> | null>(null);
 
   isCodeVisible = signal(false);
-  isCopied = signal(false);
   activeFileIndex = signal(0);
   isTemplateExpanded = signal(false);
   activeFile = computed(() => this.example().files[this.activeFileIndex()]);
@@ -23,12 +23,6 @@ export class ExampleFrame {
 
   toggleCode(): void {
     this.isCodeVisible.update((visible) => !visible);
-  }
-
-  copyCode(): void {
-    navigator.clipboard?.writeText(this.activeFile().source);
-    this.isCopied.set(true);
-    setTimeout(() => this.isCopied.set(false), 1600);
   }
 
   moveTab(event: KeyboardEvent): void {

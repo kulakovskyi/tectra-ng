@@ -7,16 +7,7 @@
       <div class="example__description" [innerHTML]="example().descriptionHtml"></div>
     </div>
     <div class="example__actions">
-      <button
-        txButton
-        [size]="'small'"
-        [text]="true"
-        [severity]="'secondary'"
-        [icon]="isCopied() ? 'check' : 'copy'"
-        [attr.aria-label]="'Copy code'"
-        [title]="isCopied() ? 'Copied' : 'Copy ' + activeFile().label"
-        (click)="copyCode()"
-      ></button>
+      <docs-copy-button [label]="'Copy ' + activeFile().label" [text]="activeFile().source" />
       <button
         txButton
         [size]="'small'"

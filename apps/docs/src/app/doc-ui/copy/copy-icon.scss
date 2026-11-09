@@ -1,0 +1,42 @@
+:host {
+  display: inline-grid;
+  place-items: center;
+  width: 1em;
+  height: 1em;
+  line-height: 1;
+}
+
+tx-icon {
+  grid-area: 1 / 1;
+  transition:
+    opacity 0.22s ease,
+    transform 0.42s cubic-bezier(0.3, 1.6, 0.5, 1),
+    filter 0.22s ease;
+}
+
+.copy-icon__check {
+  color: var(--docs-copy-done, var(--tx-success-base));
+  opacity: 0;
+  filter: blur(2px);
+  transform: scale(0.3) rotate(-60deg);
+}
+
+:host(.copy-icon--done) {
+  .copy-icon__copy {
+    opacity: 0;
+    filter: blur(2px);
+    transform: scale(0.4) rotate(45deg);
+  }
+
+  .copy-icon__check {
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  tx-icon {
+    transition: opacity 0.15s;
+  }
+}

@@ -1,18 +1,165 @@
 <p class="eyebrow">Get started</p>
-<h1 >Installation</h1>
-<p class="lead">Install, provide a theme, use a component. Each component is its own entry point, so only what you import lands in your bundle.</p>
+<h1>Installation</h1>
+<p class="lead">Install the packages, provide a theme and render your first component — a few minutes from an empty Angular app. Each component is its own entry point, so only what you import lands in your bundle.</p>
+
+<div class="requirements">
+  @for (item of requirements; track item.title) {
+    <div class="requirement">
+      <tx-icon class="requirement__icon" [name]="item.icon" />
+      <span class="requirement__title">{{ item.title }}</span>
+      <span class="requirement__text">{{ item.text }}</span>
+    </div>
+  }
+</div>
 
 <ol class="steps">
-  @for (step of steps; track step.title; let i = $index) {
-    <li class="step">
-      <span class="step__number">{{ i + 1 }}</span>
-      <div class="step__body">
-        <h2 class="step__title">{{ step.title }}</h2>
-        <div class="step__code">
-          <docs-code-block [code]="step.code" [language]="step.language" [label]="step.title" />
-          <button txButton class="step__copy" [size]="'small'" [text]="true" [severity]="'secondary'" [icon]="copiedIndex() === i ? 'check' : 'copy'" aria-label="Copy" (click)="copy(i, step.code)"></button>
+  <li class="step">
+    <span class="step__number">1</span>
+    <div class="step__body">
+      <h2 class="step__title">Install</h2>
+      <p class="step__text">Take everything at one version, or only the packages you need.</p>
+      <div class="panel">
+        <div class="panel__bar">
+          <tx-tabs variant="segmented" size="small" ariaLabel="What to install" [tabs]="modes" [(value)]="mode" />
+          <tx-tabs variant="pills" size="small" ariaLabel="Package manager" [tabs]="managers" [(value)]="manager" />
+        </div>
+        <div class="packages">
+          @for (item of packages; track item.name) {
+            <tx-checkbox
+              tile
+              [label]="item.title"
+              [description]="item.text"
+              [disabled]="item.required || (mode() === 'all' && !item.separate)"
+              [ngModel]="included(item.name, item.separate)"
+              (ngModelChange)="toggle(item.name, $event)"
+            />
+          }
+        </div>
+        <div class="command">
+          <span class="command__prompt" aria-hidden="true">$</span>
+          <code class="command__text">{{ command() }}</code>
+          <docs-copy-button label="Copy the install command" [text]="command()" />
         </div>
       </div>
-    </li>
-  }
+    </div>
+  </li>
+
+  <li class="step">
+    <span class="step__number">2</span>
+    <div class="step__body">
+      <h2 class="step__title">Provide a theme</h2>
+      <p class="step__text">Pick a style, a primary colour and a surface — the code follows. Every value can be changed later with tokens.</p>
+      <div class="panel">
+        <div class="theme">
+          <div class="theme__field">
+            <span class="theme__label" id="install-style">Style</span>
+            <tx-tabs variant="segmented" size="small" ariaLabelledBy="install-style" [tabs]="styles" [(value)]="style" />
+          </div>
+          <div class="theme__field">
+            <span class="theme__label" id="install-primary">Primary</span>
+            <div class="swatches" role="radiogroup" aria-labelledby="install-primary">
+              @for (item of primaries; track item.value) {
+                <button
+                  type="button"
+                  role="radio"
+                  class="swatch"
+                  [class.swatch--active]="primary() === item.value"
+                  [style.--swatch]="item.color"
+                  [attr.aria-checked]="primary() === item.value"
+                  [attr.aria-label]="item.label"
+                  [attr.tabindex]="primary() === item.value ? 0 : -1"
+                  [title]="item.label"
+                  (keydown)="moveFocus($event)"
+                  (click)="primary.set(item.value)"
+                ></button>
+              }
+            </div>
+          </div>
+          <div class="theme__field theme__field--row">
+            <div class="theme__field">
+              <span class="theme__label" id="install-surface">Surface</span>
+              <div class="swatches" role="radiogroup" aria-labelledby="install-surface">
+                @for (item of surfaces; track item.value) {
+                  <button
+                    type="button"
+                    role="radio"
+                    class="swatch"
+                    [class.swatch--active]="surface() === item.value"
+                    [style.--swatch]="item.color"
+                    [attr.aria-checked]="surface() === item.value"
+                    [attr.aria-label]="item.label"
+                    [attr.tabindex]="surface() === item.value ? 0 : -1"
+                    [title]="item.label"
+                    (keydown)="moveFocus($event)"
+                    (click)="surface.set(item.value)"
+                  ></button>
+                }
+              </div>
+            </div>
+            <button txButton severity="secondary" outlined icon="eye" (click)="preview()">Preview on this site</button>
+          </div>
+        </div>
+        <div class="code-card">
+          <div class="code-card__head">
+            <span class="code-card__file"><tx-icon name="file" />app.config.ts</span>
+            <docs-copy-button label="Copy the theme code" [text]="themeCode()" />
+          </div>
+          <docs-code-block [code]="themeCode()" language="typescript" label="app.config.ts" />
+        </div>
+      </div>
+    </div>
+  </li>
+
+  <li class="step">
+    <span class="step__number">3</span>
+    <div class="step__body">
+      <h2 class="step__title">Use a component</h2>
+      <p class="step__text">Import it into a standalone component and use it in the template. That is the whole setup.</p>
+      <div class="panel panel--split">
+        <div class="code-card">
+          <div class="code-card__head">
+            <span class="code-card__file"><tx-icon name="file" />city-field.ts</span>
+            <docs-copy-button label="Copy the component code" [text]="useCode" />
+          </div>
+          <docs-code-block [code]="useCode" language="typescript" label="city-field.ts" />
+        </div>
+        <div class="result">
+          <span class="result__label">Result</span>
+          <tx-select ariaLabel="City" placeholder="Pick a city" [options]="cities" [formControl]="city" />
+          <span class="result__value">{{ city.value ?? 'Nothing picked yet' }}</span>
+        </div>
+      </div>
+    </div>
+  </li>
 </ol>
+
+<h2>Optional</h2>
+<div class="extras">
+  @for (extra of extras; track extra.title; let index = $index) {
+    <div class="extra">
+      <div class="extra__head">
+        <span class="extra__icon"><tx-icon [name]="extra.icon" /></span>
+        <span class="extra__title">{{ extra.title }}</span>
+      </div>
+      <p class="extra__text">{{ extra.text }}</p>
+      <div class="code-card">
+        <div class="code-card__head">
+          <span class="code-card__file"><tx-icon name="file" />{{ extra.file }}</span>
+          <docs-copy-button [label]="'Copy: ' + extra.title" [text]="extra.code" />
+        </div>
+        <docs-code-block [code]="extra.code" [language]="extra.language" [label]="extra.title" />
+      </div>
+    </div>
+  }
+</div>
+
+<h2>Next steps</h2>
+<div class="next">
+  @for (link of next; track link.path) {
+    <a class="next__card" [routerLink]="link.path">
+      <span class="next__icon"><tx-icon [name]="link.icon" /></span>
+      <span class="next__title">{{ link.title }} <tx-icon class="next__arrow" name="arrow-right" /></span>
+      <span class="next__text">{{ link.text }}</span>
+    </a>
+  }
+</div>

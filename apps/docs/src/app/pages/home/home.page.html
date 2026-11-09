@@ -23,16 +23,7 @@
         <span class="step__title">{{ step.title }}</span>
         <div class="step__code">
           <docs-code-block [code]="step.code" [language]="step.language" [label]="step.title" />
-          <button
-            txButton
-            class="step__copy"
-            size="small"
-            text
-            severity="secondary"
-            [icon]="copied() === index ? 'check' : 'copy'"
-            [attr.aria-label]="'Copy: ' + step.title"
-            (click)="copy(index, step.code)"
-          ></button>
+          <docs-copy-button class="step__copy" [label]="'Copy: ' + step.title" [text]="step.code" />
         </div>
       </div>
     </li>

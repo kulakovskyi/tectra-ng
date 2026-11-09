@@ -790,6 +790,8 @@
 }
 
 .install {
+  --docs-copy-done: var(--tx-green-400);
+
   display: inline-flex;
   align-items: center;
   align-self: flex-start;

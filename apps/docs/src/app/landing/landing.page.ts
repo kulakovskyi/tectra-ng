@@ -7,10 +7,11 @@ import { TX_FLAG_CODES } from '@tectra-ng/flags';
 import { TX_ICONS, TxIcon } from '@tectra-ng/icons';
 import { Tectra, toCssVariables } from '@tectra-ng/themes';
 import { TxButton } from '@tectra-ng/ui/button';
-import { TxToastService } from '@tectra-ng/ui/toast';
 import { DOC_COMPONENTS } from '../../generated/registry';
 import { INSTALL_COMMAND } from '../data/home.data';
 import { REPOSITORY_URL } from '../data/seo.data';
+import { DocsClipboard } from '../doc-ui/copy/clipboard.service';
+import { DocsCopyIcon } from '../doc-ui/copy/copy-icon';
 import { DocsLogo } from '../layout/logo/logo';
 import { DocsThemeSettings } from '../layout/theme-settings';
 import {
@@ -30,13 +31,13 @@ const IMAGE_ROOT = '/images/landing';
 
 @Component({
   selector: 'docs-landing-page',
-  imports: [RouterLink, TxAppFooter, TxPublicHeader, TxPublicHeaderBrand, TxThemeReveal, TxIcon, TxButton, DocsLogo, DocsScrollProgress],
+  imports: [RouterLink, TxAppFooter, TxPublicHeader, TxPublicHeaderBrand, TxThemeReveal, TxIcon, TxButton, DocsLogo, DocsScrollProgress, DocsCopyIcon],
   templateUrl: './landing.page.html',
   styleUrl: './landing.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class LandingPage {
-  private readonly toast = inject(TxToastService);
+  private readonly clipboard = inject(DocsClipboard);
   protected readonly settings = inject(DocsThemeSettings);
 
   readonly nav = LANDING_NAV;
@@ -77,9 +78,8 @@ export default class LandingPage {
   }
 
   copyInstall(): void {
-    void navigator.clipboard?.writeText(this.installCommand);
+    this.clipboard.copy(this.installCommand);
     this.copied.set(true);
-    this.toast.success('Copied to the clipboard');
     setTimeout(() => this.copied.set(false), 1600);
   }
 }

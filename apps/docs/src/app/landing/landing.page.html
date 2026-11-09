@@ -142,7 +142,7 @@
       <pre class="code"><code>@for (part of snippet; track $index) {<span [class]="'code__' + part.kind">{{ part.text }}</span>}</code></pre>
       <button type="button" class="install" (click)="copyInstall()">
         <code>{{ installCommand }}</code>
-        <tx-icon aria-hidden="true" [name]="copied() ? 'check' : 'copy'" />
+        <docs-copy-icon [copied]="copied()" />
         <span class="sr-only">Copy the install command</span>
       </button>
     </div>

@@ -8,6 +8,7 @@ import { TxInput } from '@tectra-ng/ui/input';
 import { TxSelect } from '@tectra-ng/ui/select';
 import { TxToggleButton } from '@tectra-ng/ui/toggle-button';
 import { DOC_COMPONENTS } from '../../../generated/registry';
+import { DocsCopyButton } from '../../doc-ui/copy/copy-button';
 import { CodeBlock } from '../../doc-ui/code-block/code-block';
 import { HOME_ROLES } from '../../data/home.data';
 import { INTRO_PACKAGES, INTRO_PRINCIPLES, INTRO_START, INTRO_STEPS } from '../../data/intro.data';
@@ -17,7 +18,7 @@ const CATEGORY_PREVIEW = 4;
 
 @Component({
   selector: 'docs-home-page',
-  imports: [RouterLink, ReactiveFormsModule, TxButton, TxInput, TxSelect, TxIcon, TxBadge, TxToggleButton, CodeBlock],
+  imports: [RouterLink, ReactiveFormsModule, TxButton, TxInput, TxSelect, TxIcon, TxBadge, TxToggleButton, CodeBlock, DocsCopyButton],
   templateUrl: './home.page.html',
   styleUrls: ['../page.scss', './home.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -45,14 +46,7 @@ export default class HomePage {
     .sort((a, b) => b.count - a.count);
 
   readonly role = new FormControl<string | null>('developer');
-  readonly copied = signal<number | null>(null);
   readonly saving = signal(false);
-
-  copy(index: number, code: string): void {
-    void navigator.clipboard?.writeText(code);
-    this.copied.set(index);
-    setTimeout(() => this.copied.set(null), 1600);
-  }
 
   save(): void {
     this.saving.set(true);
