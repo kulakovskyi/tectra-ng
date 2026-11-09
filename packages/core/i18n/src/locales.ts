@@ -331,6 +331,8 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     cookieLearnMore: 'Learn more',
     cookieAccept: 'Got it',
     cookieLabel: 'Cookie notice',
+    offline: 'No internet connection',
+    connectionRestored: 'Connection restored',
   },
 };
 
@@ -665,6 +667,8 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     cookieLearnMore: 'Докладніше',
     cookieAccept: 'Зрозуміло',
     cookieLabel: 'Повідомлення про cookie',
+    offline: 'Немає з’єднання з інтернетом',
+    connectionRestored: 'З’єднання відновлено',
   },
 };
 

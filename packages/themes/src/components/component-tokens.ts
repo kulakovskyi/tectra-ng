@@ -73,6 +73,7 @@ import { switchLanguageTokens } from './switch-language.tokens';
 import { topbarPreferencesTokens } from './topbar-preferences.tokens';
 import { publicHeaderTokens } from './public-header.tokens';
 import { cookieNoticeTokens } from './cookie-notice.tokens';
+import { networkStatusTokens } from './network-status.tokens';
 
 export const COMPONENT_TOKENS = {
   icon: iconTokens,
@@ -178,6 +179,7 @@ export const COMPONENT_TOKENS = {
   topbarPreferences: topbarPreferencesTokens,
   publicHeader: publicHeaderTokens,
   cookieNotice: cookieNoticeTokens,
+  networkStatus: networkStatusTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

@@ -86,3 +86,4 @@ export * from './components/switch-language.tokens';
 export * from './components/topbar-preferences.tokens';
 export * from './components/public-header.tokens';
 export * from './components/cookie-notice.tokens';
+export * from './components/network-status.tokens';

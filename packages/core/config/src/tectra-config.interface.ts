@@ -329,6 +329,8 @@ export interface TxTranslations {
   cookieLearnMore: string;
   cookieAccept: string;
   cookieLabel: string;
+  offline: string;
+  connectionRestored: string;
 }
 
 export type TxValidationMessage = string | ((error: unknown) => string);

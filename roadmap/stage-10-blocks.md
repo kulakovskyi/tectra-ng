@@ -133,9 +133,14 @@ The look (rem × 14px): header sticky, `56px` high, content up to `1064px` with 
 - [x] Fix: the live region of announcements (toasts, moves) is hidden from sight without the CDK stylesheet
 - [x] Fix: the burger panel of the header and the folded filters panel fade out on close as smoothly as they open (`leaveDuration` / `leaveEasing` tokens of the filters panel)
 
-## 10.13 Network status — `blocks/network-status` (4)
+## 10.13 Network status — `blocks/network-status` (4) ✅
 
 Offline banner and "Connection restored" for 3 seconds.
+
+The look (rem × 14px): a pill centred `21px` above the bottom, card colour at 88% with a blur, border ring and overlay shadow, `7px 14px 7px 7px` padding, `8.75px` gap, `12.25px` weight 500; a `24.5px` round icon on a 14% tint — amber wifi while offline, green check once restored; in `450ms cubic-bezier(0.16, 1, 0.3, 1)`, out in `300ms`.
+
+- [x] `<tx-network-status>`: browser `offline` / `online` events and `navigator.onLine`, in the browser only; `offlineText`, `restoredText`, `restoredDuration`, `bodyClass`, `statusChange`, `onOffline()` / `onOnline()`; a polite live region
+- [x] Docs (buttons that play the events in a frame, own texts, tokens) + tests; e2e: real offline and back, the pill hides, its place
 
 ## 10.14 QR code — `blocks/qr-code` (1)
 
