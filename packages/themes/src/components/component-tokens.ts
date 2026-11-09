@@ -63,6 +63,7 @@ import { appFooterTokens } from './app-footer.tokens';
 import { consoleLayoutTokens } from './console-layout.tokens';
 import { appLayoutTokens } from './app-layout.tokens';
 import { wizardTokens } from './wizard.tokens';
+import { pinnedTabsTokens } from './pinned-tabs.tokens';
 
 export const COMPONENT_TOKENS = {
   icon: iconTokens,
@@ -158,6 +159,7 @@ export const COMPONENT_TOKENS = {
   consoleLayout: consoleLayoutTokens,
   appLayout: appLayoutTokens,
   wizard: wizardTokens,
+  pinnedTabs: pinnedTabsTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

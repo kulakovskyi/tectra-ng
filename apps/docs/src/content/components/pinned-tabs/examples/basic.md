@@ -1,0 +1,1 @@
+Press "Customize", pin a few teams and save: they appear as tabs next to "All teams". The tabs and the full select share one value, so picking in either updates both; several values in the select leave no tab active. Reload the page — the pinned teams stay.

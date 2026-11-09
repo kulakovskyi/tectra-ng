@@ -73,9 +73,14 @@ The look (rem × 14px, breakpoints 640px / 1024px): card background, full window
 - [x] `tx-wizard-layout`, `tx-wizard-progress`, `tx-wizard-step-head`, `tx-wizard-stage`, `tx-wizard-footer`; `tx-wizard-step--enter`, `tx-wizard-scene` / `--enter` / `--leave` classes; translated default footer labels (our addition); `responsive` `viewport` or `container`
 - [x] Docs (a four-step onboarding, device frames, parts) + tests; e2e: next / back move the steps with the progress and caption, the finish loads and starts over, the stage beside the step on a desktop and above it on a phone
 
-## 10.7 Pinned tabs — `blocks/pinned-tabs` (1)
+## 10.7 Pinned tabs — `blocks/pinned-tabs` (1) ✅
 
-Quick-switch tabs for a filter with many values: the user pins values in a dialog, they show as tabs next to "All"; stored.
+First app: pills tabs "All" + the pinned values (in the option order) next to an outlined secondary small "Customize" button (labelled while nothing is pinned, a square icon with a tooltip next to tabs, disabled without options); a settings dialog with a hint, a "Selected: N of M" counter and a grid of toggle tiles with a check circle, Cancel / Save; the choice in `localStorage` under the key; `selected` + `selectedChange` (here `[(selected)]`).
+
+The look (rem × 14px): `7px` between tabs and button. Dialog `17.5px` gap, section `8.75px`, counter `10.5px` weight 500 muted; tiles `minmax(175px, 1fr)` `7px` apart, up to `50vh`; a tile `42px`, `0 10.5px 0 14px`, `10.5px` radius, `12.25px` weight 500, ground background, a transparent inset ring → hover background with a border ring, pressed `0.985`; selected 12% primary with a 55% primary ring (18% / primary on hover); check `17.5px` circle with a `1.5px` 45% muted ring, the check `8.75px` scaling `0.5` → `1`, filled primary when selected; `150ms ease-out`; full-width Cancel / Save.
+
+- [x] `<tx-pinned-tabs>`: `stateKey`, `options`, `allLabel`, `[(selected)]`, `dialogTitle` / `dialogText`, `openSettings()`; settings dialog on the kit dialog service; translated texts
+- [x] Docs (tabs and a multiselect on one value above a table) + tests; e2e: pin in the dialog, tabs filter the table and stay after a reload, Cancel keeps nothing
 
 ## 10.8 Command palette — `blocks/command-palette` (13)
 

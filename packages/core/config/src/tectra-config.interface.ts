@@ -300,6 +300,12 @@ export interface TxTranslations {
   wizardBack: string;
   wizardSkip: string;
   wizardProgress: string;
+  customize: string;
+  pinnedTabs: string;
+  pinnedTabsHint: string;
+  pinnedSelected: string;
+  all: string;
+  save: string;
 }
 
 export type TxValidationMessage = string | ((error: unknown) => string);

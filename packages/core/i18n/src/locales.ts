@@ -302,6 +302,12 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     wizardBack: 'Back',
     wizardSkip: 'Skip',
     wizardProgress: 'Progress',
+    customize: 'Customize',
+    pinnedTabs: 'Pinned tabs',
+    pinnedTabsHint: 'Selected items appear as tabs for quick switching. The choice is saved in this browser.',
+    pinnedSelected: 'Selected: {count} of {total}',
+    all: 'All',
+    save: 'Save',
   },
 };
 
@@ -607,6 +613,12 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     wizardBack: 'Назад',
     wizardSkip: 'Пропустити',
     wizardProgress: 'Прогрес',
+    customize: 'Налаштувати',
+    pinnedTabs: 'Закріплені вкладки',
+    pinnedTabsHint: 'Вибрані елементи з’являться вкладками для швидкого перемикання. Вибір зберігається в цьому браузері.',
+    pinnedSelected: 'Вибрано: {count} з {total}',
+    all: 'Усі',
+    save: 'Зберегти',
   },
 };
 
