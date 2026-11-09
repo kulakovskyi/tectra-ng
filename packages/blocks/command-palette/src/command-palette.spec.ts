@@ -59,7 +59,7 @@ describe('TxCommandPalette', () => {
   const key = (target: HTMLElement, name: string, extra: KeyboardEventInit = {}) => target.dispatchEvent(new KeyboardEvent('keydown', { key: name, bubbles: true, ...extra }));
 
   it('opens a combobox dialog with grouped results and the first one active', async () => {
-    const { root, input } = await open();
+    const { input } = await open();
     expect(document.querySelector('[role="dialog"]')?.getAttribute('aria-label')).toBe('Search');
     expect(input.getAttribute('role')).toBe('combobox');
     expect(input.placeholder).toBe('Search pages');
@@ -72,7 +72,7 @@ describe('TxCommandPalette', () => {
   });
 
   it('filters locally, moves with the arrows and runs a command on Enter', async () => {
-    const { fixture, root, input } = await open();
+    const { fixture, input } = await open();
     input.value = 'th';
     input.dispatchEvent(new Event('input'));
     await new Promise((resolve) => setTimeout(resolve));
@@ -95,7 +95,7 @@ describe('TxCommandPalette', () => {
   });
 
   it('navigates to a router item, shows the empty and loading rows, and toggles with the shortcut', async () => {
-    const { fixture, root, input } = await open();
+    const { fixture, input } = await open();
     (document.querySelectorAll<HTMLButtonElement>('[role="option"]')[1]).click();
     await fixture.whenStable();
     expect(TestBed.inject(Router).url).toBe('/reports');

@@ -65,6 +65,7 @@ import { appLayoutTokens } from './app-layout.tokens';
 import { wizardTokens } from './wizard.tokens';
 import { pinnedTabsTokens } from './pinned-tabs.tokens';
 import { commandPaletteTokens } from './command-palette.tokens';
+import { kanbanTokens } from './kanban.tokens';
 
 export const COMPONENT_TOKENS = {
   icon: iconTokens,
@@ -162,6 +163,7 @@ export const COMPONENT_TOKENS = {
   wizard: wizardTokens,
   pinnedTabs: pinnedTabsTokens,
   commandPalette: commandPaletteTokens,
+  kanban: kanbanTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

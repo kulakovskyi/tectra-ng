@@ -314,6 +314,12 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     paletteNavigate: 'to navigate',
     paletteOpen: 'to open',
     paletteClose: 'to close',
+    board: 'Board',
+    moveColumn: 'Drag to move the column',
+    noCards: 'No cards',
+    showMore: 'Show {count} more',
+    kanbanMoveHint: 'Alt and the arrow keys move it',
+    kanbanMoved: 'Moved to {column}, position {position}',
   },
 };
 
@@ -631,6 +637,12 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     paletteNavigate: 'щоб перейти',
     paletteOpen: 'щоб відкрити',
     paletteClose: 'щоб закрити',
+    board: 'Дошка',
+    moveColumn: 'Перетягніть, щоб перемістити колонку',
+    noCards: 'Немає карток',
+    showMore: 'Показати ще {count}',
+    kanbanMoveHint: 'Alt і стрілки переміщують картку',
+    kanbanMoved: 'Переміщено в «{column}», позиція {position}',
   },
 };
 

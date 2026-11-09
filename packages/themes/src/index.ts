@@ -78,3 +78,4 @@ export * from './components/app-layout.tokens';
 export * from './components/wizard.tokens';
 export * from './components/pinned-tabs.tokens';
 export * from './components/command-palette.tokens';
+export * from './components/kanban.tokens';

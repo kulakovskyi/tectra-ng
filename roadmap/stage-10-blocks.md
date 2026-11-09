@@ -91,9 +91,14 @@ The look (rem × 14px): button `37px`, `0 7px 0 10.5px`, `7px` gap and radius, c
 - [x] `<tx-command-palette>` with items that navigate (`routerLink` + `queryParams`) or run a `command`, translated default texts; the window is a dialog in the overlay container (above any stacking context — the first app renders it inside the button's parent) with a combobox (`aria-activedescendant`), a focus trap and focus back to the button
 - [x] Docs (a local list from a menu, a server search, compact, tokens) + tests; e2e: the shortcut opens it, keys and Enter pick, the server search shows loading and nothing found, the page does not scroll behind it, the mask closes it and focus comes back
 
-## 10.9 Kanban — `blocks/kanban` (6)
+## 10.9 Kanban — `blocks/kanban` (6) ✅
 
-Columns of cards, drag and drop of cards (inside and between columns) and of columns; emits drop events only.
+First app (task boards): columns (`id`, `title`, `items`) with a title and a count pill, a card template, header / top / footer / empty templates, a slot after the last column; cards drag inside and between columns, columns drag by a handle; the board only emits `itemDropped` (`itemId`, `fromColumnId`, `toColumnId`, `beforeId`, `afterId`) and `columnDropped`; "Show N more" pages (`pageSize` 30); a fixed `height` scrolls inside the columns; the board scrolls sideways when dragged by its background.
+
+The look (rem × 14px): `14px` between columns, `14px` under the board, at least `280px` high; columns `252px`, `10.5px` gap and padding, `10px` radius, card background with the card ring; header `28px` high with a `7px` gap, title `12.25px` weight 600; handle `21px`, `7px` radius, muted → hover background; lists `7px` gap, at least `49px`, a 5% primary tint while receiving; placeholders dashed `2px` 45% primary on 6% (cards at least `56px`); empty column `49px`, dashed border, `10.5px` muted; preview with the overlay shadow; moves `200ms cubic-bezier(0, 0, 0.2, 1)`. Our fixes: a `4px` inset around the scroll area so the column rings and focus rings are not clipped; "Show N more" fills the column width, scrolls to the first new card and moves the focus there.
+
+- [x] `<tx-kanban>` with `txKanbanCard`, `txKanbanColumnHeader`, `txKanbanColumnTop`, `txKanbanColumnFooter`, `txKanbanEmpty`; keyboard moves (our addition — the first app has none): Alt + arrows move a card up, down or to the next column, Alt + Left / Right move a column by its handle, the move is announced and the focus follows; focusable scrolling columns; `focusableCards` off when the card template takes the focus itself
+- [x] Docs (a task board in the first app's look — section header with add and menu, task cards, quick add on top / at the bottom, add section — that applies the moves; fixed height with pages, templates, tokens) + tests; e2e: keyboard and pointer moves between columns, a column moves, a fixed board pages and scrolls to the new cards, column rings stay unclipped, quick add
 
 ## 10.10 Actions menu and action tile — `blocks/actions-menu`, `blocks/action-tile` (6, 1)
 

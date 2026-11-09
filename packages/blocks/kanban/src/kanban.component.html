@@ -1,0 +1,127 @@
+<div
+  class="tx-kanban__board"
+  role="region"
+  tabindex="0"
+  [attr.aria-label]="boardName()"
+  (pointerdown)="onPointerDown($event)"
+  (pointermove)="onPointerMove($event)"
+  (pointerup)="onPointerUp()"
+  (pointercancel)="onPointerUp()"
+>
+  <div
+    class="tx-kanban__track"
+    cdkDropList
+    cdkDropListOrientation="horizontal"
+    [style.height]="height() || null"
+    [cdkDropListData]="columns()"
+    [cdkDropListDisabled]="!columnsDraggable()"
+    (cdkDropListDropped)="dropColumn($event)"
+  >
+    @for (view of views(); track view.column.id; let columnIndex = $index) {
+      @let column = view.column;
+      <section
+        class="tx-kanban__column"
+        cdkDrag
+        [cdkDragData]="column"
+        [cdkDragDisabled]="!columnsDraggable()"
+        [style.width]="columnWidth() || null"
+        [attr.aria-label]="column.title"
+        [class]="passThrough().column?.class"
+        [style]="passThrough().column?.style"
+      >
+        <div class="tx-kanban__column-placeholder" *cdkDragPlaceholder [style.width]="columnWidth() || null"></div>
+        <header class="tx-kanban__head" data-drag-ignore [class]="passThrough().header?.class" [style]="passThrough().header?.style">
+          @if (columnsDraggable()) {
+            <button
+              type="button"
+              class="tx-kanban__handle"
+              cdkDragHandle
+              [attr.data-kanban-handle]="column.id"
+              [attr.aria-label]="handleName() + ': ' + column.title"
+              [attr.aria-description]="translations().kanbanMoveHint"
+              [title]="handleName()"
+              (keydown)="onHandleKeydown($event, columnIndex)"
+            >
+              <tx-icon name="bars" aria-hidden="true" />
+            </button>
+          }
+          @if (headerTemplate(); as header) {
+            <ng-container *ngTemplateOutlet="header.template; context: { $implicit: column }" />
+          } @else {
+            <h3 class="tx-kanban__title">{{ column.title }}</h3>
+            <tx-pill size="small" [value]="column.items.length" [unstyled]="isUnstyled()" />
+          }
+        </header>
+        @if (topTemplate(); as top) {
+          <div class="tx-kanban__slot" data-drag-ignore>
+            <ng-container *ngTemplateOutlet="top.template; context: { $implicit: column }" />
+          </div>
+        }
+        <div
+          class="tx-kanban__list"
+          cdkDropList
+          [attr.role]="view.items.length ? 'list' : null"
+          [attr.tabindex]="height() ? 0 : null"
+          [attr.aria-label]="column.title"
+          [id]="listIds()[columnIndex]"
+          [cdkDropListData]="view"
+          [cdkDropListConnectedTo]="listIds()"
+          [cdkDropListDisabled]="!itemsDraggable()"
+          [class]="passThrough().list?.class"
+          [style]="passThrough().list?.style"
+          (cdkDropListDropped)="dropItem($event)"
+        >
+          @for (item of view.items; track itemId()(item); let itemIndex = $index) {
+            <div
+              class="tx-kanban__card"
+              role="listitem"
+              cdkDrag
+              data-drag-ignore
+              [attr.tabindex]="itemsDraggable() && focusableCards() ? 0 : null"
+              [attr.data-kanban-card]="itemId()(item)"
+              [attr.aria-description]="itemsDraggable() && focusableCards() ? translations().kanbanMoveHint : null"
+              [cdkDragData]="item"
+              [class]="passThrough().card?.class"
+              [style]="passThrough().card?.style"
+              (keydown)="onCardKeydown($event, columnIndex, itemIndex)"
+            >
+              <div class="tx-kanban__card-placeholder" *cdkDragPlaceholder></div>
+              <ng-container *ngTemplateOutlet="cardTemplate().template; context: { $implicit: item, column: column }" />
+            </div>
+          } @empty {
+            @if (emptyTemplate(); as empty) {
+              <ng-container *ngTemplateOutlet="empty.template; context: { $implicit: column }" />
+            } @else {
+              <div class="tx-kanban__empty" [class]="passThrough().empty?.class" [style]="passThrough().empty?.style">
+                {{ emptyText() ?? translations().noCards }}
+              </div>
+            }
+          }
+        </div>
+        @if (view.hidden) {
+          <button
+            txButton
+            type="button"
+            class="tx-kanban__more"
+            data-drag-ignore
+            text
+            severity="secondary"
+            icon="angle-down"
+            [unstyled]="isUnstyled()"
+            (click)="showMore(column.id)"
+          >
+            {{ showMoreLabel(view.hidden) }}
+          </button>
+        }
+        @if (footerTemplate(); as footer) {
+          <div class="tx-kanban__slot" data-drag-ignore>
+            <ng-container *ngTemplateOutlet="footer.template; context: { $implicit: column }" />
+          </div>
+        }
+      </section>
+    }
+    <div class="tx-kanban__after" data-drag-ignore>
+      <ng-content />
+    </div>
+  </div>
+</div>

@@ -312,6 +312,12 @@ export interface TxTranslations {
   paletteNavigate: string;
   paletteOpen: string;
   paletteClose: string;
+  board: string;
+  moveColumn: string;
+  noCards: string;
+  showMore: string;
+  kanbanMoveHint: string;
+  kanbanMoved: string;
 }
 
 export type TxValidationMessage = string | ((error: unknown) => string);

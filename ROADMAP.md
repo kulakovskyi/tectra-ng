@@ -185,7 +185,7 @@ Detailed checklist per block: [roadmap/stage-10-blocks.md](roadmap/stage-10-bloc
 | `wizard` (stages, step head, progress, footer) | 53 | ✅ |
 | `pinned-tabs` | 1 | ✅ |
 | `command-palette` | 13 | ✅ |
-| `kanban` | 6 | ⬜ |
+| `kanban` | 6 | ✅ |
 | `actions-menu` | 6 | ⬜ |
 | `action-tile` | 1 | ⬜ |
 | `topbar-preferences`, `switch-theme` (circle reveal), `switch-language` | 12, 1, 2 | ⬜ |

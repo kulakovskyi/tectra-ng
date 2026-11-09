@@ -292,9 +292,8 @@ export class TxFiltersPanel implements TxFiltersPanelContext, AfterViewInit {
   }
 
   private focusMenuItem(key: string): void {
-    this.menuList()
-      ?.nativeElement.querySelector<HTMLElement>(`[data-key="${CSS.escape(key)}"]`)
-      ?.focus();
+    const items = Array.from(this.menuList()?.nativeElement.querySelectorAll<HTMLElement>('[data-key]') ?? []);
+    items.find((item) => item.getAttribute('data-key') === key)?.focus();
   }
 
   private saveLayout(layout: TxFiltersPanelLayout): void {
