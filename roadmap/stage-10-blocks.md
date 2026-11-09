@@ -82,9 +82,14 @@ The look (rem × 14px): `7px` between tabs and button. Dialog `17.5px` gap, sect
 - [x] `<tx-pinned-tabs>`: `stateKey`, `options`, `allLabel`, `[(selected)]`, `dialogTitle` / `dialogText`, `openSettings()`; settings dialog on the kit dialog service; translated texts
 - [x] Docs (tabs and a multiselect on one value above a table) + tests; e2e: pin in the dialog, tabs filter the table and stay after a reload, Cancel keeps nothing
 
-## 10.8 Command palette — `blocks/command-palette` (13)
+## 10.8 Command palette — `blocks/command-palette` (13) ✅
 
-Top-bar search button + ⌘K / Ctrl K window with grouped results, keyboard navigation, router navigation.
+First app (every app and console): a top-bar button (icon, label, ⌘K / Ctrl K hint; a square icon below 768px) and a window opened by the button or the shortcut: a search field, results in groups with an icon, label, sublabel and an arrow on the active row, "Searching…" and "Nothing found" rows, a hints footer; arrows wrap, Enter opens through the router, Escape closes; `queryChange`, a debounced `searchChange` (`minQueryLength`), `itemSelect`, `closed`; `localFilter`; pipes `commandPaletteFilter` and `menuPaletteItems`; the page does not scroll behind it.
+
+The look (rem × 14px): button `37px`, `0 7px 0 10.5px`, `7px` gap and radius, card background, a 14% text-colour inset ring and `0 1px 2px` shadow → hover background, text colour and `0 2px 10px` shadow, pressed `0.97`; kbd `9.625px` weight 500 on the ground with a border ring. Mask `rgb(15 23 42 / 0.45)` with a `2px` blur, the window `12vh` from the top, up to `640px` × `70vh`, `14px` radius, border, card background, `0 24px 64px` shadow, in `180ms` from `-8px` and `0.98`; search `12.25px 14px`, `10.5px` gap, `15.75px` icon; results `7px`, group titles `9.625px` weight 600 upper case `0.05em` muted; rows `7px 10.5px`, `10.5px` gap, `7px` radius, `12.25px`, 10% primary when active; the icon box `28px` on the ground (14% primary when active); sublabel `10.5px` muted up to 45%; footer `8.75px 14px` on the ground with `10px` keys.
+
+- [x] `<tx-command-palette>` with items that navigate (`routerLink` + `queryParams`) or run a `command`, translated default texts; the window is a dialog in the overlay container (above any stacking context — the first app renders it inside the button's parent) with a combobox (`aria-activedescendant`), a focus trap and focus back to the button
+- [x] Docs (a local list from a menu, a server search, compact, tokens) + tests; e2e: the shortcut opens it, keys and Enter pick, the server search shows loading and nothing found, the page does not scroll behind it, the mask closes it and focus comes back
 
 ## 10.9 Kanban — `blocks/kanban` (6)
 

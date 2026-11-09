@@ -306,6 +306,12 @@ export interface TxTranslations {
   pinnedSelected: string;
   all: string;
   save: string;
+  search: string;
+  searching: string;
+  nothingFound: string;
+  paletteNavigate: string;
+  paletteOpen: string;
+  paletteClose: string;
 }
 
 export type TxValidationMessage = string | ((error: unknown) => string);

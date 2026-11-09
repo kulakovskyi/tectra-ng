@@ -184,7 +184,7 @@ Detailed checklist per block: [roadmap/stage-10-blocks.md](roadmap/stage-10-bloc
 | `app-layout` (sidebar + topbar + menu, responsive) | 22 | ✅ |
 | `wizard` (stages, step head, progress, footer) | 53 | ✅ |
 | `pinned-tabs` | 1 | ✅ |
-| `command-palette` | 13 | ⬜ |
+| `command-palette` | 13 | ✅ |
 | `kanban` | 6 | ⬜ |
 | `actions-menu` | 6 | ⬜ |
 | `action-tile` | 1 | ⬜ |

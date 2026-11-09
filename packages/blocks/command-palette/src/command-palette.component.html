@@ -1,0 +1,105 @@
+<button
+  type="button"
+  class="tx-command-palette__trigger"
+  aria-haspopup="dialog"
+  [attr.aria-expanded]="isOpen()"
+  [attr.aria-keyshortcuts]="shortcutAria()"
+  [class]="passThrough().trigger?.class"
+  [style]="passThrough().trigger?.style"
+  (click)="open()"
+>
+  <tx-icon class="tx-command-palette__trigger-icon" aria-hidden="true" [name]="icon()" />
+  <span class="tx-command-palette__trigger-text">{{ name() }}</span>
+  <kbd class="tx-command-palette__kbd" aria-hidden="true">{{ shortcutLabel() }}</kbd>
+</button>
+<ng-template #layer>
+  @if (isOpen()) {
+    <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- the mask closes on a click; Escape closes from the panel -->
+    <div
+      class="tx-command-palette__overlay"
+      animate.enter="tx-command-palette__overlay--enter"
+      animate.leave="tx-command-palette__overlay--leave"
+      [attr.data-styled]="!isUnstyled() || null"
+      [style]="tokenStyle()"
+      [class]="passThrough().overlay?.class"
+      (click)="close()"
+    >
+      <div
+        class="tx-command-palette__panel"
+        role="dialog"
+        aria-modal="true"
+        txFocusTrap
+        animate.enter="tx-command-palette__panel--enter"
+        animate.leave="tx-command-palette__panel--leave"
+        [attr.aria-label]="name()"
+        [class]="passThrough().panel?.class"
+        [style]="passThrough().panel?.style"
+        (click)="$event.stopPropagation()"
+        (keydown)="onPanelKeydown($event)"
+      >
+        <div class="tx-command-palette__search" [class]="passThrough().search?.class" [style]="passThrough().search?.style">
+          <tx-icon class="tx-command-palette__search-icon" aria-hidden="true" name="search" />
+          <input
+            class="tx-command-palette__input"
+            type="text"
+            role="combobox"
+            autocomplete="off"
+            spellcheck="false"
+            aria-autocomplete="list"
+            aria-expanded="true"
+            [attr.aria-controls]="id + '-list'"
+            [attr.aria-activedescendant]="activeId()"
+            [attr.aria-label]="hint()"
+            [placeholder]="hint()"
+            (input)="onInput($event)"
+          />
+          @if (loading()) {
+            <tx-icon class="tx-command-palette__spinner" aria-hidden="true" name="spinner" />
+          }
+        </div>
+        <div class="tx-command-palette__results" [class]="passThrough().results?.class" [style]="passThrough().results?.style">
+          <div class="tx-command-palette__list" role="listbox" [id]="id + '-list'" [attr.aria-label]="name()">
+            @for (item of visibleItems(); track item.id; let index = $index) {
+              @if (isNewGroup(index)) {
+                <div class="tx-command-palette__group" role="presentation">{{ groupLabel(item.group) }}</div>
+              }
+              <button
+                type="button"
+                role="option"
+                tabindex="-1"
+                class="tx-command-palette__item"
+                [id]="id + '-option-' + index"
+                [class.tx-command-palette__item--active]="activeIndex() === index"
+                [attr.aria-selected]="activeIndex() === index"
+                [class]="passThrough().item?.class"
+                [style]="passThrough().item?.style"
+                (mouseenter)="activeIndex.set(index)"
+                (click)="select(item)"
+              >
+                <span class="tx-command-palette__item-icon" aria-hidden="true"><tx-icon [name]="item.icon ?? 'file'" /></span>
+                <span class="tx-command-palette__label">{{ item.label }}</span>
+                @if (item.sublabel) {
+                  <span class="tx-command-palette__sublabel">{{ item.sublabel }}</span>
+                }
+                <tx-icon class="tx-command-palette__arrow" aria-hidden="true" name="arrow-right" />
+              </button>
+            }
+          </div>
+          @if (loading()) {
+            <div class="tx-command-palette__status" role="status">
+              <tx-icon class="tx-command-palette__spinner" aria-hidden="true" name="spinner" />
+              <span>{{ loadingText() ?? translations().searching }}</span>
+            </div>
+          } @else if (!visibleItems().length && query()) {
+            <div class="tx-command-palette__status tx-command-palette__status--empty" role="status">{{ emptyText() ?? translations().nothingFound }}</div>
+          }
+        </div>
+        <div class="tx-command-palette__footer" aria-hidden="true" [class]="passThrough().footer?.class" [style]="passThrough().footer?.style">
+          <span class="tx-command-palette__hint"><kbd>↑</kbd><kbd>↓</kbd> {{ translations().paletteNavigate }}</span>
+          <span class="tx-command-palette__hint"><kbd>↵</kbd> {{ translations().paletteOpen }}</span>
+          <span class="tx-command-palette__hint"><kbd>esc</kbd> {{ translations().paletteClose }}</span>
+        </div>
+      </div>
+    </div>
+  }
+</ng-template>

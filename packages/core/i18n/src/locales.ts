@@ -308,6 +308,12 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     pinnedSelected: 'Selected: {count} of {total}',
     all: 'All',
     save: 'Save',
+    search: 'Search',
+    searching: 'Searching…',
+    nothingFound: 'Nothing found',
+    paletteNavigate: 'to navigate',
+    paletteOpen: 'to open',
+    paletteClose: 'to close',
   },
 };
 
@@ -619,6 +625,12 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     pinnedSelected: 'Вибрано: {count} з {total}',
     all: 'Усі',
     save: 'Зберегти',
+    search: 'Пошук',
+    searching: 'Шукаємо…',
+    nothingFound: 'Нічого не знайдено',
+    paletteNavigate: 'щоб перейти',
+    paletteOpen: 'щоб відкрити',
+    paletteClose: 'щоб закрити',
   },
 };
 
