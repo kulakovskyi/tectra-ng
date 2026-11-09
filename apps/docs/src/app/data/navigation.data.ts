@@ -2,7 +2,7 @@ import { TxIconName } from '@tectra-ng/icons';
 import { DOC_COMPONENTS } from '../../generated/registry';
 import { DocNavSection } from '../types/navigation.interface';
 
-const CATEGORY_ICONS: Record<string, TxIconName> = {
+export const CATEGORY_ICONS: Record<string, TxIconName> = {
   Actions: 'bolt',
   Blocks: 'objects-column',
   Data: 'table',
@@ -10,6 +10,9 @@ const CATEGORY_ICONS: Record<string, TxIconName> = {
   Feedback: 'comment',
   Form: 'pencil',
   Layout: 'th-large',
+  Media: 'image',
+  Navigation: 'bars',
+  Overlay: 'window-maximize',
 };
 
 const categories = [...new Set(DOC_COMPONENTS.map((component) => component.category))].sort();
