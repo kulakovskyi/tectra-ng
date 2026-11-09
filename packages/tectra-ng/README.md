@@ -17,12 +17,14 @@ import { Tectra } from '@tectra-ng/themes';
 | Package | What it holds |
 |---|---|
 | `@tectra-ng/ui` | Components, one entry point per component: `@tectra-ng/ui/button`, `@tectra-ng/ui/select`, … |
+| `@tectra-ng/blocks` | Ready page blocks, one entry point per block: `@tectra-ng/blocks/filters-panel`, … |
 | `@tectra-ng/core` | `provideTectra`, overlay, accessibility helpers, forms, locale |
 | `@tectra-ng/themes` | Light and dark themes, presets, component tokens |
 | `@tectra-ng/tokens` | Design tokens: palettes, radius, typography, shadows, motion |
 | `@tectra-ng/icons` | Icon set and `TxIcon` |
 | `@tectra-ng/brand-icons` | Brand logos for `TxIcon` |
 | `@tectra-ng/flags` | Country flags for `TxCountry` and `TxCountrySelect` |
+| `@tectra-ng/qr` | QR codes with no dependencies — the engine of `@tectra-ng/blocks/qr-code`, usable without Angular too |
 
 Need only part of it? Install a package on its own — `npm i @tectra-ng/ui` brings `core`, `themes`, `tokens` and `icons` with it.
 

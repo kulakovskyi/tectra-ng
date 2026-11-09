@@ -129,5 +129,5 @@ export default {
   'graduation-cap': [polygon(12, 4.5, 22, 9.5, 12, 14.5, 2, 9.5), 'M6 11.5V16C7.5 17.75 9.5 18.5 12 18.5C14.5 18.5 16.5 17.75 18 16V11.5', line(22, 9.5, 22, 15)],
   filter,
   'filter-fill': fill(filter),
-  'filter-slash': [filter, line(3, 3, 21, 21)],
+  'filter-slash': ['M12.5 4.5H3.5L10 12.5V21L14 19V12.5L15.42 10.75', line(15.75, 3, 21, 8.25), line(21, 3, 15.75, 8.25)],
 };

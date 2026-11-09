@@ -173,23 +173,25 @@ Detailed checklist per component: [roadmap/stage-9-navigation.md](roadmap/stage-
 
 ## Stage 10 — blocks (`@tectra-ng/blocks`, what PrimeNG does not have)
 
+Detailed checklist per block: [roadmap/stage-10-blocks.md](roadmap/stage-10-blocks.md). `@tectra-ng/blocks` is a published package and part of `tectra-ng`.
+
 | Block | Usage | Status |
 |---|---|---|
-| `filters-panel` (card above a table, popover below 1024px, reset, field state) | 81 | ⬜ |
-| `page-header` | 186 | ⬜ |
-| `empty-state` | **193** | ⬜ |
-| `console-layout` (header + crumbs, icon rail, footer, panel) | 10 | ⬜ |
-| `app-layout` (sidebar + topbar + menu, responsive) | 22 | ⬜ |
-| `wizard` (stages, step head, progress, footer) | 53 | ⬜ |
-| `pinned-tabs` | 1 | ⬜ |
-| `command-palette` | 13 | ⬜ |
-| `kanban` | 6 | ⬜ |
-| `actions-menu` | 6 | ⬜ |
-| `action-tile` | 1 | ⬜ |
-| `topbar-preferences`, `switch-theme` (circle reveal), `switch-language` | 12, 1, 2 | ⬜ |
-| `public-header`, `app-footer`, `cookie-notice` | 5, 7, 4 | ⬜ |
-| `network-status` | 4 | ⬜ |
-| `qr-code` | 1 | ⬜ |
+| `filters-panel` (card above a table, popover below 1024px, reset, field state) | 81 | ✅ |
+| `page-header` | 186 | ✅ |
+| `empty-state` | **193** | ✅ |
+| `console-layout` (header + crumbs, icon rail, footer, panel) | 10 | ✅ |
+| `app-layout` (sidebar + topbar + menu, responsive) | 22 | ✅ |
+| `wizard` (stages, step head, progress, footer) | 53 | ✅ |
+| `pinned-tabs` | 1 | ✅ |
+| `command-palette` | 13 | ✅ |
+| `kanban` | 6 | ✅ |
+| `actions-menu` | 6 | ✅ |
+| `action-tile` | 1 | ✅ |
+| `topbar-preferences`, `switch-theme` (circle reveal), `switch-language` | 12, 1, 2 | ✅ |
+| `public-header`, `app-footer`, `cookie-notice` | 5, 7, 4 | ✅ |
+| `network-status` | 4 | ✅ |
+| `qr-code` | 1 | ✅ |
 | `confetti`, `hover-effect` | 7, 0 | ⬜ |
 
 ## Stage 11 — charts (`@tectra-ng/charts`, own package because of the chart engine)

@@ -1,0 +1,63 @@
+<header class="tx-console-layout__header" [class]="passThrough().header?.class" [style]="passThrough().header?.style">
+  <div class="tx-console-layout__start">
+    <div class="tx-console-layout__apps">
+      <ng-content select="[txConsoleApps]" />
+    </div>
+    <div class="tx-console-layout__trail" [class]="passThrough().crumbs?.class" [style]="passThrough().crumbs?.style">
+      <ng-template #brand>
+        @if (logo()) {
+          <img class="tx-console-layout__logo" alt="" [src]="logo()" [class]="passThrough().logo?.class" [style]="passThrough().logo?.style" />
+        }
+        <span class="tx-console-layout__brand-text"
+          >{{ title() }}
+          @if (titleMuted()) {
+            <span class="tx-console-layout__brand-muted">{{ titleMuted() }}</span>
+          }
+        </span>
+      </ng-template>
+      @if (homeLink() !== undefined) {
+        <a class="tx-console-layout__brand" [routerLink]="homeLink()" [class]="passThrough().brand?.class" [style]="passThrough().brand?.style">
+          <ng-container [ngTemplateOutlet]="brand" />
+        </a>
+      } @else {
+        <span class="tx-console-layout__brand" [class]="passThrough().brand?.class" [style]="passThrough().brand?.style">
+          <ng-container [ngTemplateOutlet]="brand" />
+        </span>
+      }
+      @for (crumb of visibleCrumbs(); track $index; let last = $last) {
+        <span class="tx-console-layout__slash" aria-hidden="true">/</span>
+        <span class="tx-console-layout__crumb" [class.tx-console-layout__crumb--current]="last" [attr.aria-current]="last ? 'page' : null">{{ crumb }}</span>
+      }
+    </div>
+  </div>
+  <div class="tx-console-layout__actions">
+    <ng-content select="[txConsoleActions]" />
+  </div>
+</header>
+<div class="tx-console-layout__body">
+  <tx-console-rail
+    class="tx-console-layout__rail"
+    [items]="visibleRailItems()"
+    [label]="railName()"
+    [unstyled]="isUnstyled()"
+    [attr.data-responsive]="responsive()"
+    [class]="passThrough().rail?.class"
+    [style]="passThrough().rail?.style"
+  />
+  <div class="tx-console-layout__column">
+    <main class="tx-console-layout__content" [class]="passThrough().content?.class" [style]="passThrough().content?.style">
+      <ng-content />
+    </main>
+    @if (footerName() && !hasPanel()) {
+      <tx-app-footer
+        class="tx-console-layout__footer"
+        variant="console"
+        [name]="footerName() ?? ''"
+        [links]="visibleFooterLinks()"
+        [unstyled]="isUnstyled()"
+        [class]="passThrough().footer?.class"
+        [style]="passThrough().footer?.style"
+      />
+    }
+  </div>
+</div>

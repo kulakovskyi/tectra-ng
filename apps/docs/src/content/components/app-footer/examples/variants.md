@@ -1,0 +1,1 @@
+`page` centres a column on full-width public pages with its own padding. `app` sits at the end of the page content of the signed-in layout: it adds space above itself and takes the side padding of that content — here a padded area. `console` fits the console frame.

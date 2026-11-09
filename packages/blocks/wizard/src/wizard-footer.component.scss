@@ -1,0 +1,20 @@
+:host {
+  display: flex;
+  align-items: center;
+}
+
+.tx-wizard-footer__end {
+  display: flex;
+  align-items: center;
+  margin-inline-start: auto;
+}
+
+:host([data-styled]) {
+  gap: var(--tx-wizard-footer-gap);
+  padding-top: var(--tx-wizard-footer-padding-top);
+  border-top: 1px solid var(--tx-wizard-footer-border-color);
+
+  .tx-wizard-footer__end {
+    gap: var(--tx-wizard-footer-end-gap);
+  }
+}

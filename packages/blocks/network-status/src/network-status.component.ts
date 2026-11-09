@@ -1,0 +1,121 @@
+import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, afterNextRender, computed, effect, inject, input, numberAttribute, output, signal } from '@angular/core';
+import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectTranslations } from '@tectra-ng/core/i18n';
+import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TxIcon } from '@tectra-ng/icons';
+import { TectraDeepPartial, TectraNetworkStatusTokens, toStyleObject } from '@tectra-ng/themes';
+import { TxNetworkState, TxNetworkStatusPart } from './network-status.types';
+
+@Component({
+  selector: 'tx-network-status',
+  imports: [TxIcon],
+  template: `
+    <div class="tx-network-status__region" role="status" aria-live="polite">
+      @if (visible()) {
+        <div
+          class="tx-network-status__pill"
+          animate.enter="tx-network-status__pill--enter"
+          animate.leave="tx-network-status__pill--leave"
+          [attr.data-status]="status()"
+          [class]="passThrough().pill?.class"
+          [style]="passThrough().pill?.style"
+        >
+          <span class="tx-network-status__icon" aria-hidden="true" [class]="passThrough().icon?.class" [style]="passThrough().icon?.style">
+            <tx-icon [name]="status() === 'restored' ? 'check' : 'wifi'" />
+          </span>
+          <span class="tx-network-status__text" [class]="passThrough().text?.class" [style]="passThrough().text?.style">{{ message() }}</span>
+        </div>
+      }
+    </div>
+  `,
+  styleUrl: './network-status.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'tx-network-status',
+    '[class]': 'passThrough().root?.class',
+    '[style]': 'hostStyle()',
+    '[attr.data-styled]': '!isUnstyled() || null',
+  },
+})
+export class TxNetworkStatus {
+  private readonly document = inject(DOCUMENT);
+  private restoreTimer: ReturnType<typeof setTimeout> | undefined;
+
+  readonly offlineText = input<string | undefined>(undefined);
+  readonly restoredText = input<string | undefined>(undefined);
+  readonly restoredDuration = input<number, unknown>(3000, { transform: numberAttribute });
+  readonly bodyClass = input<string>('tx-offline');
+  readonly dt = input<TectraDeepPartial<TectraNetworkStatusTokens> | undefined>(undefined);
+  readonly pt = input<TxPassThrough<TxNetworkStatusPart, TxNetworkStatus> | undefined>(undefined);
+  readonly ptOptions = input<TxPassThroughOptions | undefined>(undefined);
+  readonly unstyled = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
+
+  readonly statusChange = output<TxNetworkState>();
+
+  readonly isUnstyled = injectUnstyled(this.unstyled);
+  readonly passThrough = injectPassThrough('networkStatus', this, this.pt, this.ptOptions);
+  protected readonly translations = injectTranslations();
+  readonly hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-network-status'), ...this.passThrough().root?.style }));
+
+  readonly status = signal<TxNetworkState>('online');
+  protected readonly visible = computed(() => this.status() !== 'online');
+  protected readonly message = computed(() =>
+    this.status() === 'restored' ? (this.restoredText() ?? this.translations().connectionRestored) : (this.offlineText() ?? this.translations().offline),
+  );
+
+  constructor() {
+    const destroyRef = inject(DestroyRef);
+    afterNextRender(() => {
+      const view = this.document.defaultView;
+      if (!view) {
+        return;
+      }
+      if (view.navigator?.onLine === false) {
+        this.setStatus('offline');
+      }
+      const offline = () => this.onOffline();
+      const online = () => this.onOnline();
+      view.addEventListener('offline', offline);
+      view.addEventListener('online', online);
+      destroyRef.onDestroy(() => {
+        view.removeEventListener('offline', offline);
+        view.removeEventListener('online', online);
+      });
+    });
+    effect((onCleanup) => {
+      const name = this.bodyClass();
+      const body = this.document.body;
+      if (!name || !body) {
+        return;
+      }
+      body.classList.toggle(name, this.visible());
+      onCleanup(() => body.classList.remove(name));
+    });
+    destroyRef.onDestroy(() => clearTimeout(this.restoreTimer));
+  }
+
+  onOffline(): void {
+    clearTimeout(this.restoreTimer);
+    this.setStatus('offline');
+  }
+
+  onOnline(): void {
+    if (this.status() !== 'offline') {
+      return;
+    }
+    this.setStatus('restored');
+    clearTimeout(this.restoreTimer);
+    this.restoreTimer = setTimeout(() => {
+      if (this.status() === 'restored') {
+        this.setStatus('online');
+      }
+    }, this.restoredDuration());
+  }
+
+  private setStatus(status: TxNetworkState): void {
+    if (this.status() !== status) {
+      this.status.set(status);
+      this.statusChange.emit(status);
+    }
+  }
+}

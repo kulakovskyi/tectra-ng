@@ -56,6 +56,25 @@ import { editorContentTokens, editorTokens } from './editor.tokens';
 import { imageTokens } from './image.tokens';
 import { galleriaTokens } from './galleria.tokens';
 import { carouselTokens } from './carousel.tokens';
+import { filtersPanelTokens } from './filters-panel.tokens';
+import { pageHeaderTokens } from './page-header.tokens';
+import { emptyStateTokens } from './empty-state.tokens';
+import { appFooterTokens } from './app-footer.tokens';
+import { consoleLayoutTokens } from './console-layout.tokens';
+import { appLayoutTokens } from './app-layout.tokens';
+import { wizardTokens } from './wizard.tokens';
+import { pinnedTabsTokens } from './pinned-tabs.tokens';
+import { commandPaletteTokens } from './command-palette.tokens';
+import { kanbanTokens } from './kanban.tokens';
+import { actionsMenuTokens } from './actions-menu.tokens';
+import { actionTileTokens } from './action-tile.tokens';
+import { switchThemeTokens } from './switch-theme.tokens';
+import { switchLanguageTokens } from './switch-language.tokens';
+import { topbarPreferencesTokens } from './topbar-preferences.tokens';
+import { publicHeaderTokens } from './public-header.tokens';
+import { cookieNoticeTokens } from './cookie-notice.tokens';
+import { networkStatusTokens } from './network-status.tokens';
+import { qrCodeTokens } from './qr-code.tokens';
 
 export const COMPONENT_TOKENS = {
   icon: iconTokens,
@@ -144,6 +163,25 @@ export const COMPONENT_TOKENS = {
   image: imageTokens,
   galleria: galleriaTokens,
   carousel: carouselTokens,
+  filtersPanel: filtersPanelTokens,
+  pageHeader: pageHeaderTokens,
+  emptyState: emptyStateTokens,
+  appFooter: appFooterTokens,
+  consoleLayout: consoleLayoutTokens,
+  appLayout: appLayoutTokens,
+  wizard: wizardTokens,
+  pinnedTabs: pinnedTabsTokens,
+  commandPalette: commandPaletteTokens,
+  kanban: kanbanTokens,
+  actionsMenu: actionsMenuTokens,
+  actionTile: actionTileTokens,
+  switchTheme: switchThemeTokens,
+  switchLanguage: switchLanguageTokens,
+  topbarPreferences: topbarPreferencesTokens,
+  publicHeader: publicHeaderTokens,
+  cookieNotice: cookieNoticeTokens,
+  networkStatus: networkStatusTokens,
+  qrCode: qrCodeTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

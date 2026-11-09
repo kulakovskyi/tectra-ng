@@ -7,10 +7,14 @@ Open-source Angular UI kit: tokens, themes, ~70 components and ready blocks for 
 ```bash
 npm install tectra-ng          # everything at one version
 npm install @tectra-ng/ui      # or only the components: core, themes, tokens and icons come with them
+npm install @tectra-ng/blocks  # or only the ready page blocks (filters panel, page header, layouts …); part of tectra-ng
 npm install @tectra-ng/editor  # the rich text editor — its own package, not part of tectra-ng
+npm install @tectra-ng/qr      # QR codes without Angular or any other dependency; part of tectra-ng
 ```
 
 The rich text editor (`@tectra-ng/editor`) is installed on its own, also next to `tectra-ng`: it brings the ProseMirror engine with it, and apps without an editor should not carry it.
+
+The QR code generator (`@tectra-ng/qr`) is plain TypeScript with no dependencies — it works in any framework, in Node and on the server. `tectra-ng` includes it; the `<tx-qr-code>` block in `@tectra-ng/blocks/qr-code` is built on it.
 
 Docs and examples: [tectra-ng.com](https://tectra-ng.com).
 
@@ -42,7 +46,8 @@ Plan of what moves in next and in which order: [ROADMAP.md](ROADMAP.md).
 | `packages/flags` | optional country flags as SVG, rectangle and circle, loaded one by one | npm `@tectra-ng/flags` |
 | `packages/ui` | components, one entry point each | npm `@tectra-ng/ui/<component>` |
 | `packages/editor` | rich text editor on the ProseMirror core (`@tectra-ng/editor`) and the renderer for saved text (`@tectra-ng/editor/content`); install it separately | npm `@tectra-ng/editor` |
-| `packages/blocks` | console-layout, filters-panel, stat-tiles … | npm `@tectra-ng/blocks/<block>` |
+| `packages/qr` | QR codes without a framework: encoder (versions 1–40, levels L–H), SVG paths, styled SVG and PNG output; part of `tectra-ng` | npm `@tectra-ng/qr` |
+| `packages/blocks` | ready page blocks built from the components: filters panel, page header, empty state, layouts … one entry point each; part of `tectra-ng` | npm `@tectra-ng/blocks/<block>` |
 | `apps/docs` | the documentation site | Cloudflare Pages |
 | `apps/sandbox` | local playground | — |
 | `e2e/visual` | Playwright screenshots + axe | — |
@@ -51,7 +56,7 @@ Plan of what moves in next and in which order: [ROADMAP.md](ROADMAP.md).
 ## Dependency direction
 
 ```
-tokens → themes → core → ui → editor, blocks
+tokens → themes → core → ui → editor, blocks ← qr
                           ↓      ↓
                  apps/docs, apps/sandbox, e2e/visual
 ```

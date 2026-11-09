@@ -8,6 +8,7 @@ import { provideTectra } from '@tectra-ng/core/config';
 import { Tectra } from '@tectra-ng/themes';
 import { routes } from './app.routes';
 import { skipViewTransitionsWhileHidden } from './hidden-view-transitions';
+import { scrollToTopOnPageChange, snapshotPath } from './page-scroll';
 import { DocsThemeSettings } from './layout/theme-settings';
 import { DocsSeo } from './seo/docs-seo';
 
@@ -16,14 +17,15 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideClientHydration(withEventReplay()),
     provideAppInitializer(skipViewTransitionsWhileHidden),
+    provideAppInitializer(scrollToTopOnPageChange),
     provideAppInitializer(() => inject(DocsThemeSettings).restore()),
     provideRouter(
       routes,
       withComponentInputBinding(),
-      withInMemoryScrolling({ scrollPositionRestoration: 'top', anchorScrolling: 'enabled' }),
+      withInMemoryScrolling({ scrollPositionRestoration: 'disabled', anchorScrolling: 'enabled' }),
       withViewTransitions({
-        onViewTransitionCreated: ({ transition }) => {
-          if (!inject(Router).navigated) {
+        onViewTransitionCreated: ({ transition, from, to }) => {
+          if (!inject(Router).navigated || snapshotPath(from) === snapshotPath(to)) {
             transition.skipTransition();
           }
         },

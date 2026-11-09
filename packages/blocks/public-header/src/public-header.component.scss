@@ -1,0 +1,290 @@
+@mixin compact($mode) {
+  :host(#{$mode}) .tx-public-header__toggle {
+    display: grid;
+  }
+
+  :host(#{$mode}) .tx-public-header__panel {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  :host(#{$mode}.tx-public-header--open) .tx-public-header__panel,
+  :host(#{$mode}.tx-public-header--closing) .tx-public-header__panel {
+    display: flex;
+  }
+
+  :host(#{$mode}) .tx-public-header__nav {
+    flex-direction: column;
+    align-items: stretch;
+
+    ::ng-deep [txPublicHeaderNav] {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+
+  :host(#{$mode}) .tx-public-header__end {
+    flex-direction: column;
+    align-items: stretch;
+    margin-left: 0;
+  }
+
+  :host(#{$mode}) .tx-public-header__actions,
+  :host(#{$mode}) .tx-public-header__actions ::ng-deep [txPublicHeaderActions] {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  :host(#{$mode}[data-styled]) {
+    .tx-public-header__panel {
+      gap: var(--tx-public-header-panel-gap);
+      padding: var(--tx-public-header-panel-padding);
+      border-bottom: 1px solid var(--tx-public-header-border-color);
+      background: var(--tx-public-header-panel-background);
+      box-shadow: var(--tx-public-header-panel-shadow);
+    }
+
+    .tx-public-header__nav ::ng-deep [txPublicHeaderNav] {
+      gap: 0;
+    }
+
+    .tx-public-header__nav ::ng-deep [txPublicHeaderNav] > a {
+      padding: var(--tx-public-header-panel-link-padding);
+      border-bottom: 1px solid var(--tx-public-header-border-color);
+      border-radius: var(--tx-public-header-panel-link-border-radius);
+      color: var(--tx-public-header-panel-link-color);
+      font-size: var(--tx-public-header-panel-link-font-size);
+    }
+
+    .tx-public-header__end {
+      gap: var(--tx-public-header-panel-gap);
+    }
+  }
+
+  :host(#{$mode}[data-styled].tx-public-header--open) .tx-public-header__panel {
+    animation: tx-public-header-panel-in var(--tx-public-header-panel-duration) ease-out;
+  }
+
+  :host(#{$mode}[data-styled].tx-public-header--closing) .tx-public-header__panel {
+    animation: tx-public-header-panel-out var(--tx-public-header-panel-duration) ease-in forwards;
+  }
+
+  :host(#{$mode}) .tx-public-header__actions ::ng-deep .tx-button {
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+:host {
+  position: sticky;
+  top: 0;
+  display: block;
+}
+
+:host([data-responsive='container']) {
+  container: tx-public-header / inline-size;
+  contain: layout;
+}
+
+.tx-public-header__bar {
+  position: relative;
+}
+
+.tx-public-header__inner {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  margin: 0 auto;
+}
+
+.tx-public-header__brand {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+}
+
+.tx-public-header__logo {
+  height: auto;
+}
+
+.tx-public-header__panel {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  min-width: 0;
+}
+
+.tx-public-header__nav {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+
+  ::ng-deep [txPublicHeaderNav] {
+    display: flex;
+    align-items: center;
+  }
+
+  ::ng-deep [txPublicHeaderNav] > a {
+    text-decoration: none;
+  }
+}
+
+.tx-public-header__end {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  margin-left: auto;
+}
+
+.tx-public-header__actions {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+
+  ::ng-deep [txPublicHeaderActions] {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.tx-public-header__toggle {
+  display: none;
+  place-items: center;
+  margin: 0 0 0 auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+:host([data-styled]) {
+  z-index: var(--tx-public-header-z-index);
+  font-family: var(--tx-font-family);
+
+  .tx-public-header__bar {
+    border-bottom: 1px solid var(--tx-public-header-border-color);
+    background: var(--tx-public-header-background);
+    backdrop-filter: var(--tx-public-header-backdrop-filter);
+  }
+
+  .tx-public-header__inner {
+    gap: var(--tx-public-header-gap);
+    max-width: var(--tx-public-header-max-width);
+    height: var(--tx-public-header-height);
+    padding: 0 var(--tx-public-header-padding-x);
+  }
+
+  .tx-public-header__brand {
+    gap: var(--tx-public-header-brand-gap);
+    border-radius: var(--tx-public-header-brand-border-radius);
+    color: var(--tx-public-header-brand-color);
+    font-size: var(--tx-public-header-brand-font-size);
+    font-weight: var(--tx-public-header-brand-font-weight);
+    letter-spacing: var(--tx-public-header-brand-letter-spacing);
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--tx-public-header-focus-ring-shadow);
+    }
+  }
+
+  .tx-public-header__logo {
+    width: var(--tx-public-header-brand-logo-width);
+  }
+
+  .tx-public-header__panel {
+    gap: var(--tx-public-header-gap);
+  }
+
+  .tx-public-header__nav ::ng-deep [txPublicHeaderNav] {
+    gap: var(--tx-public-header-nav-gap);
+  }
+
+  .tx-public-header__nav ::ng-deep [txPublicHeaderNav] > a {
+    padding: var(--tx-public-header-nav-link-padding-y) var(--tx-public-header-nav-link-padding-x);
+    border-radius: var(--tx-public-header-nav-link-border-radius);
+    color: var(--tx-public-header-nav-link-color);
+    font-size: var(--tx-public-header-nav-link-font-size);
+    transition: color var(--tx-public-header-panel-duration);
+
+    &:hover {
+      color: var(--tx-public-header-nav-link-hover-color);
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--tx-public-header-focus-ring-shadow);
+    }
+  }
+
+  .tx-public-header__end {
+    gap: var(--tx-public-header-end-gap);
+  }
+
+  .tx-public-header__actions,
+  .tx-public-header__actions ::ng-deep [txPublicHeaderActions] {
+    gap: var(--tx-public-header-end-actions-gap);
+  }
+
+  .tx-public-header__toggle {
+    width: var(--tx-public-header-toggle-size);
+    height: var(--tx-public-header-toggle-size);
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1px var(--tx-public-header-toggle-ring-color);
+    color: var(--tx-public-header-toggle-color);
+    font-size: var(--tx-public-header-toggle-icon-size);
+    transition: background-color var(--tx-public-header-panel-duration);
+
+    &:hover {
+      background: var(--tx-public-header-toggle-hover-background);
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow:
+        inset 0 0 0 1px var(--tx-public-header-toggle-ring-color),
+        var(--tx-public-header-focus-ring-shadow);
+    }
+  }
+}
+
+@media (width < 768px) {
+  @include compact("[data-responsive='viewport']");
+}
+
+@container tx-public-header (width < 768px) {
+  @include compact("[data-responsive='container']");
+}
+
+@keyframes tx-public-header-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes tx-public-header-panel-out {
+  to {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) .tx-public-header__panel {
+    animation: none !important;
+  }
+
+  :host([data-styled]) .tx-public-header__nav ::ng-deep [txPublicHeaderNav] > a,
+  :host([data-styled]) .tx-public-header__toggle {
+    transition: none;
+  }
+}

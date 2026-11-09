@@ -1,0 +1,122 @@
+@mixin small($mode) {
+  :host(#{$mode}[data-styled]) .tx-wizard-layout__inner {
+    padding: var(--tx-wizard-layout-small-padding);
+  }
+}
+
+@mixin wide($mode) {
+  :host(#{$mode}) .tx-wizard-layout__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  :host(#{$mode}) .tx-wizard-layout__visual {
+    position: sticky;
+    top: 0;
+    order: 0;
+  }
+
+  :host(#{$mode}[data-styled]) {
+    .tx-wizard-layout__inner {
+      min-height: var(--tx-wizard-layout-min-height);
+      padding: var(--tx-wizard-layout-wide-padding);
+    }
+
+    .tx-wizard-layout__visual {
+      height: var(--tx-wizard-layout-min-height);
+    }
+  }
+}
+
+:host {
+  display: block;
+}
+
+.tx-wizard-layout__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-height: inherit;
+}
+
+:host([data-responsive='container']) {
+  container: tx-wizard / inline-size;
+  contain: layout;
+}
+
+.tx-wizard-layout__panel {
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+}
+
+.tx-wizard-layout__inner {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.tx-wizard-layout__main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.tx-wizard-layout__visual {
+  order: -1;
+  min-width: 0;
+}
+
+.tx-wizard-layout__visual:empty {
+  display: none;
+}
+
+:host([data-styled]) {
+  min-height: var(--tx-wizard-layout-min-height);
+  background: var(--tx-wizard-layout-background);
+  color: var(--tx-wizard-layout-color);
+  font-family: var(--tx-font-family);
+
+  .tx-wizard-layout__inner {
+    max-width: var(--tx-wizard-layout-max-width);
+    padding: var(--tx-wizard-layout-padding);
+  }
+
+  .tx-wizard-layout__main {
+    gap: var(--tx-wizard-layout-main-gap);
+    padding: var(--tx-wizard-layout-main-padding);
+  }
+
+  ::ng-deep .tx-wizard-step--enter {
+    animation: tx-wizard-step-in var(--tx-wizard-layout-step-duration) var(--tx-wizard-layout-step-easing) both;
+  }
+}
+
+@media (width >= 640px) {
+  @include small("[data-responsive='viewport']");
+}
+
+@container tx-wizard (width >= 640px) {
+  @include small("[data-responsive='container']");
+}
+
+@media (width >= 1024px) {
+  @include wide("[data-responsive='viewport']");
+}
+
+@container tx-wizard (width >= 1024px) {
+  @include wide("[data-responsive='container']");
+}
+
+@keyframes tx-wizard-step-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--tx-wizard-layout-step-shift));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) ::ng-deep .tx-wizard-step--enter {
+    animation: none;
+  }
+}

@@ -1,0 +1,103 @@
+@if (backdrop()) {
+  <div class="tx-app-layout__backdrop" aria-hidden="true" [attr.data-variant]="backdropVariant()"></div>
+}
+@if (sidebar()) {
+  <div class="tx-app-layout__slot">
+    <aside
+      class="tx-app-layout__sidebar"
+      [id]="id + '-sidebar'"
+      [attr.aria-label]="menuName()"
+      [attr.inert]="mobile() && !mobileOpen() ? '' : null"
+      [class]="passThrough().sidebar?.class"
+      [style]="passThrough().sidebar?.style"
+      (mouseenter)="setHovered(true)"
+      (mouseleave)="setHovered(false)"
+      (focusin)="onFocusIn($event)"
+      (focusout)="onFocusOut($event)"
+    >
+      <div class="tx-app-layout__sidebar-header">
+        @if (homeLink() !== undefined) {
+          <a class="tx-app-layout__brand" [routerLink]="homeLink()" [attr.aria-label]="title() ?? null" [class]="passThrough().brand?.class" [style]="passThrough().brand?.style">
+            <ng-container [ngTemplateOutlet]="brand" />
+          </a>
+        } @else {
+          <span class="tx-app-layout__brand" [class]="passThrough().brand?.class" [style]="passThrough().brand?.style">
+            <ng-container [ngTemplateOutlet]="brand" />
+          </span>
+        }
+        <button
+          type="button"
+          class="tx-app-layout__anchor"
+          tooltipPlacement="right"
+          [attr.aria-pressed]="anchored()"
+          [attr.aria-label]="anchored() ? translations().unpinMenu : translations().pinMenu"
+          [txTooltip]="anchored() ? translations().unpinMenu : translations().pinMenu"
+          (click)="toggleAnchored()"
+        >
+          <tx-icon class="tx-app-layout__pin-icon" aria-hidden="true" name="thumbtack" [class.tx-app-layout__pin-icon--on]="!anchored()" />
+          <tx-icon class="tx-app-layout__pin-icon" aria-hidden="true" name="angle-double-left" [class.tx-app-layout__pin-icon--on]="anchored()" />
+        </button>
+      </div>
+      <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- picks inside the menu are its own links and tree items -->
+      <div class="tx-app-layout__menu" (click)="onSidebarClick($event)">
+        <tx-panel-menu
+          variant="sidebar"
+          [ariaLabel]="menuName()"
+          [model]="model()"
+          [collapsed]="!wide()"
+          [unstyled]="isUnstyled()"
+          [class]="passThrough().menu?.class"
+          [style]="passThrough().menu?.style"
+        />
+      </div>
+    </aside>
+  </div>
+  <div class="tx-app-layout__mask" aria-hidden="true" [class]="passThrough().mask?.class" [style]="passThrough().mask?.style" (click)="closeMobile()"></div>
+}
+<div class="tx-app-layout__column">
+  <header class="tx-app-layout__topbar" [class]="passThrough().topbar?.class" [style]="passThrough().topbar?.style">
+    @if (sidebar()) {
+      <button
+        #menuButton
+        type="button"
+        class="tx-app-layout__menu-button"
+        [attr.aria-label]="menuName()"
+        [attr.aria-expanded]="mobileOpen()"
+        [attr.aria-controls]="id + '-sidebar'"
+        [class]="passThrough().menuButton?.class"
+        [style]="passThrough().menuButton?.style"
+        (click)="toggleMobile()"
+      >
+        <tx-icon name="bars" aria-hidden="true" />
+      </button>
+    } @else {
+      @if (homeLink() !== undefined) {
+        <a class="tx-app-layout__plain-brand" [routerLink]="homeLink()" [attr.aria-label]="title() ?? null">
+          <ng-container [ngTemplateOutlet]="brand" />
+        </a>
+      } @else {
+        <span class="tx-app-layout__plain-brand">
+          <ng-container [ngTemplateOutlet]="brand" />
+        </span>
+      }
+    }
+    <div class="tx-app-layout__topbar-end">
+      <ng-content select="[txAppTopbar]" />
+    </div>
+  </header>
+  <div class="tx-app-layout__wrapper">
+    <main class="tx-app-layout__content" [class]="passThrough().content?.class" [style]="passThrough().content?.style">
+      <ng-content />
+    </main>
+    <ng-content select="[txAppFooter]" />
+  </div>
+</div>
+
+<ng-template #brand>
+  @if (logo()) {
+    <img class="tx-app-layout__logo" alt="" [src]="logo()" />
+  }
+  @if (title()) {
+    <span class="tx-app-layout__name">{{ title() }}</span>
+  }
+</ng-template>

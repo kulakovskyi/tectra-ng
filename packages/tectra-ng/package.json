@@ -61,7 +61,9 @@
     "@tectra-ng/icons": "^0.1.6",
     "@tectra-ng/brand-icons": "^0.1.6",
     "@tectra-ng/flags": "^0.1.6",
-    "@tectra-ng/ui": "^0.1.6"
+    "@tectra-ng/qr": "^0.1.6",
+    "@tectra-ng/ui": "^0.1.6",
+    "@tectra-ng/blocks": "^0.1.6"
   },
   "publishConfig": {
     "access": "public"

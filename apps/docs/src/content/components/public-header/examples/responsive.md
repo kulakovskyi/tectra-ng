@@ -1,0 +1,1 @@
+`responsive="container"` makes the header follow its own width instead of the window — here the device frame. Below 768px a burger opens a panel with the links, the preferences as labelled rows and full-width buttons; it closes on a link, on Escape and when the header grows wide again.

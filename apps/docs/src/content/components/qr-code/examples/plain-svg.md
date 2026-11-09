@@ -1,0 +1,1 @@
+`qrToSvg(text, options)` from `@tectra-ng/qr` returns a finished SVG string — no component, no framework. Put it in a page, an e-mail or a PDF, or write it to a file on the server; `qrToPng` gives a PNG in the browser.

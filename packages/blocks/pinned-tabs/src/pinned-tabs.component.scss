@@ -1,0 +1,18 @@
+:host {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.tx-pinned-tabs__tabs {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.tx-pinned-tabs__button {
+  flex-shrink: 0;
+}
+
+:host([data-styled]) {
+  gap: var(--tx-pinned-tabs-gap);
+}

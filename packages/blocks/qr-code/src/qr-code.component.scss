@@ -1,0 +1,40 @@
+:host {
+  display: inline-flex;
+}
+
+.tx-qr-code__svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.tx-qr-code__error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+:host([data-styled]) {
+  .tx-qr-code__svg {
+    border-radius: var(--tx-qr-code-border-radius);
+  }
+
+  .tx-qr-code__background {
+    fill: var(--tx-qr-code-background);
+  }
+
+  .tx-qr-code__dots,
+  .tx-qr-code__eye-frames,
+  .tx-qr-code__eye-balls {
+    fill: var(--tx-qr-code-color);
+  }
+
+  .tx-qr-code__error {
+    color: var(--tx-qr-code-error-color);
+    font-family: var(--tx-font-family);
+    font-size: var(--tx-qr-code-error-font-size);
+  }
+}

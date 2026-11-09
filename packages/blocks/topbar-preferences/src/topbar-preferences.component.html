@@ -1,0 +1,29 @@
+@if (layout() === 'stacked') {
+  <div class="tx-topbar-preferences__stack" [class]="passThrough().stack?.class" [style]="passThrough().stack?.style">
+    <div class="tx-topbar-preferences__row" [class]="passThrough().row?.class" [style]="passThrough().row?.style">
+      <span class="tx-topbar-preferences__label" [class]="passThrough().label?.class" [style]="passThrough().label?.style">{{ translations().language }}</span>
+      <tx-switch-language
+        [languages]="languages()"
+        [syncLocale]="syncLocale()"
+        [ariaLabel]="translations().language"
+        [unstyled]="isUnstyled()"
+        (valueChange)="onLanguage($event)"
+      />
+    </div>
+    <div class="tx-topbar-preferences__row" [class]="passThrough().row?.class" [style]="passThrough().row?.style">
+      <span class="tx-topbar-preferences__label" aria-hidden="true" [class]="passThrough().label?.class" [style]="passThrough().label?.style">{{ translations().theme }}</span>
+      <tx-switch-theme [unstyled]="isUnstyled()" (modeChange)="modeChange.emit($event)" />
+    </div>
+  </div>
+} @else {
+  <div class="tx-topbar-preferences__capsule" [class]="passThrough().capsule?.class" [style]="passThrough().capsule?.style">
+    <tx-switch-language
+      [languages]="languages()"
+      [syncLocale]="syncLocale()"
+      [unstyled]="isUnstyled()"
+      (valueChange)="onLanguage($event)"
+    />
+    <span class="tx-topbar-preferences__divider" aria-hidden="true" [class]="passThrough().divider?.class" [style]="passThrough().divider?.style"></span>
+    <tx-switch-theme [unstyled]="isUnstyled()" (modeChange)="modeChange.emit($event)" />
+  </div>
+}

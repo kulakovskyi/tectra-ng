@@ -1,0 +1,29 @@
+<div class="tx-page-header__heading" [class]="passThrough().heading?.class" [style]="passThrough().heading?.style">
+  <ng-template #titleText>{{ title() }}</ng-template>
+  @switch (headingLevel()) {
+    @case (2) {
+      <h2 class="tx-page-header__title" [class]="passThrough().title?.class" [style]="passThrough().title?.style"><ng-container [ngTemplateOutlet]="titleText" /></h2>
+    }
+    @case (3) {
+      <h3 class="tx-page-header__title" [class]="passThrough().title?.class" [style]="passThrough().title?.style"><ng-container [ngTemplateOutlet]="titleText" /></h3>
+    }
+    @case (4) {
+      <h4 class="tx-page-header__title" [class]="passThrough().title?.class" [style]="passThrough().title?.style"><ng-container [ngTemplateOutlet]="titleText" /></h4>
+    }
+    @case (5) {
+      <h5 class="tx-page-header__title" [class]="passThrough().title?.class" [style]="passThrough().title?.style"><ng-container [ngTemplateOutlet]="titleText" /></h5>
+    }
+    @case (6) {
+      <h6 class="tx-page-header__title" [class]="passThrough().title?.class" [style]="passThrough().title?.style"><ng-container [ngTemplateOutlet]="titleText" /></h6>
+    }
+    @default {
+      <h1 class="tx-page-header__title" [class]="passThrough().title?.class" [style]="passThrough().title?.style"><ng-container [ngTemplateOutlet]="titleText" /></h1>
+    }
+  }
+  @if (subtitle()) {
+    <p class="tx-page-header__subtitle" [class]="passThrough().subtitle?.class" [style]="passThrough().subtitle?.style">{{ subtitle() }}</p>
+  }
+</div>
+<div class="tx-page-header__actions" [class]="passThrough().actions?.class" [style]="passThrough().actions?.style">
+  <ng-content />
+</div>

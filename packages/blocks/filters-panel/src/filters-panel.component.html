@@ -1,0 +1,140 @@
+@if (collapsible()) {
+  <button
+    #toggleButton
+    type="button"
+    class="tx-filters-panel__toggle"
+    [class]="passThrough().toggle?.class"
+    [style]="passThrough().toggle?.style"
+    [attr.aria-expanded]="expanded()"
+    [attr.aria-controls]="id + '-panel'"
+    (click)="setExpanded(!expanded())"
+  >
+    <tx-icon name="filter" aria-hidden="true" />
+    <span>{{ translations().filters }}</span>
+    @if (activeCount()) {
+      <span class="tx-filters-panel__count tx-filters-panel__count--inline">{{ activeCount() }}</span>
+    }
+    <tx-icon class="tx-filters-panel__chevron" name="chevron-down" aria-hidden="true" />
+  </button>
+}
+<div
+  class="tx-filters-panel__panel"
+  [id]="id + '-panel'"
+  [class]="passThrough().panel?.class"
+  [style]="passThrough().panel?.style"
+  (animationend)="onPanelAnimationEnd($event)"
+>
+  <div
+    #fieldsContainer
+    class="tx-filters-panel__fields"
+    [class]="passThrough().fields?.class"
+    [style]="passThrough().fields?.style"
+  >
+    <ng-content />
+  </div>
+  @if (collapsible() && resetAction()) {
+    <div class="tx-filters-panel__panel-footer">
+      <button
+        txButton
+        type="button"
+        severity="warn"
+        outlined
+        fluid
+        icon="filter-slash"
+        [unstyled]="isUnstyled()"
+        (click)="clearFilters()"
+      >
+        {{ translations().clearFilters }}
+      </button>
+    </div>
+  }
+</div>
+<div class="tx-filters-panel__actions" [class]="passThrough().actions?.class" [style]="passThrough().actions?.style">
+  @if (customizable()) {
+    <button
+      type="button"
+      class="tx-filters-panel__menu-button"
+      aria-haspopup="menu"
+      [class]="passThrough().menuButton?.class"
+      [style]="passThrough().menuButton?.style"
+      [class.tx-filters-panel__menu-button--open]="menuOpen()"
+      [attr.aria-label]="menuButtonLabel()"
+      [txTooltip]="menuOpen() ? undefined : translations().filters"
+      tooltipPlacement="top"
+      [txPopoverTrigger]="menu"
+    >
+      <tx-icon name="sliders-h" aria-hidden="true" />
+      @if (hiddenCount()) {
+        <span class="tx-filters-panel__count tx-filters-panel__count--corner" aria-hidden="true">{{ hiddenCount() }}</span>
+      }
+    </button>
+    <tx-popover
+      #menu
+      placement="bottom-end"
+      [offset]="8"
+      [ariaLabel]="translations().showFilters"
+      [dt]="menuPopoverDt"
+      [pt]="menuPopoverPt()"
+      [unstyled]="isUnstyled()"
+      (opened)="menuOpen.set(true)"
+      (closed)="menuOpen.set(false)"
+    >
+      <div class="tx-filters-panel-menu" [attr.data-styled]="!isUnstyled() || null" [class]="passThrough().menu?.class" [style]="passThrough().menu?.style">
+        <div class="tx-filters-panel-menu__head">
+          <span class="tx-filters-panel-menu__title" [id]="id + '-menu-title'">{{ translations().showFilters }}</span>
+          <span class="tx-filters-panel-menu__counter">{{ counterText() }}</span>
+        </div>
+        <div
+          #menuList
+          class="tx-filters-panel-menu__list"
+          role="menu"
+          cdkDropList
+          cdkDropListLockAxis="y"
+          [attr.aria-labelledby]="id + '-menu-title'"
+          (cdkDropListDropped)="drop($event)"
+        >
+          @for (option of options(); track option.key) {
+            <div
+              cdkDrag
+              cdkDragLockAxis="y"
+              cdkDragPreviewContainer="parent"
+              class="tx-filters-panel-menu__row"
+              role="none"
+              [cdkDragBoundary]="menuList"
+              [class.tx-filters-panel-menu__row--on]="option.visible"
+              [class.tx-filters-panel-menu__row--locked]="option.active"
+            >
+              <button
+                type="button"
+                class="tx-filters-panel-menu__toggle"
+                role="menuitemcheckbox"
+                [attr.data-key]="option.key"
+                [attr.aria-checked]="option.visible"
+                [attr.aria-disabled]="option.active || null"
+                [attr.aria-description]="option.active ? translations().filterHasValue : null"
+                [title]="option.active ? translations().filterHasValue : ''"
+                (click)="toggle(option.key)"
+                (keydown)="onMenuKeydown($event, option.key)"
+              >
+                <span class="tx-filters-panel-menu__check" aria-hidden="true"><tx-icon name="check" /></span>
+                <span class="tx-filters-panel-menu__label">{{ option.label }}</span>
+                @if (option.active) {
+                  <span class="tx-filters-panel-menu__dot" aria-hidden="true"></span>
+                }
+              </button>
+              <span class="tx-filters-panel-menu__handle" cdkDragHandle aria-hidden="true" [title]="translations().reorderFilter">
+                <tx-icon name="bars" />
+              </span>
+            </div>
+          }
+        </div>
+        <div class="tx-filters-panel-menu__footer" role="none">
+          <button type="button" class="tx-filters-panel-menu__reset" role="menuitem" (click)="reset()" (keydown)="onMenuKeydown($event, '')">
+            {{ translations().resetFiltersLayout }}
+          </button>
+        </div>
+      </div>
+    </tx-popover>
+  }
+  <ng-content select="[txFiltersActions]" />
+</div>

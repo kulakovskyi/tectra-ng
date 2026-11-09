@@ -4,6 +4,7 @@ import { DocNavSection } from '../types/navigation.interface';
 
 const CATEGORY_ICONS: Record<string, TxIconName> = {
   Actions: 'bolt',
+  Blocks: 'objects-column',
   Data: 'table',
   Display: 'eye',
   Feedback: 'comment',

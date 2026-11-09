@@ -1,0 +1,1 @@
+Below 1024px the menu hides behind the button at the start of the top bar and slides in over a mask; a pick, the mask or Escape closes it. Pick a device to see each width — `responsive="container"` measures the layout itself.

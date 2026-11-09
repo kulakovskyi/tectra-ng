@@ -1,0 +1,90 @@
+:host {
+  display: contents;
+}
+
+.tx-network-status__region {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.tx-network-status__pill {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  pointer-events: auto;
+}
+
+.tx-network-status__icon {
+  display: grid;
+  place-items: center;
+}
+
+:host([data-styled]) {
+  .tx-network-status__region {
+    z-index: var(--tx-network-status-z-index);
+    bottom: var(--tx-network-status-bottom);
+  }
+
+  .tx-network-status__pill {
+    --tx-network-status-tone: var(--tx-network-status-offline-color);
+
+    gap: var(--tx-network-status-gap);
+    padding: var(--tx-network-status-padding);
+    border-radius: var(--tx-network-status-border-radius);
+    background: var(--tx-network-status-background);
+    box-shadow:
+      0 0 0 1px var(--tx-network-status-ring-color),
+      var(--tx-network-status-shadow);
+    color: var(--tx-network-status-color);
+    font-family: var(--tx-font-family);
+    font-size: var(--tx-network-status-font-size);
+    font-weight: var(--tx-network-status-font-weight);
+    backdrop-filter: var(--tx-network-status-backdrop-filter);
+  }
+
+  .tx-network-status__pill[data-status='restored'] {
+    --tx-network-status-tone: var(--tx-network-status-restored-color);
+  }
+
+  .tx-network-status__icon {
+    width: var(--tx-network-status-icon-size);
+    height: var(--tx-network-status-icon-size);
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--tx-network-status-tone) var(--tx-network-status-icon-tint), transparent);
+    color: var(--tx-network-status-tone);
+    font-size: var(--tx-network-status-icon-font-size);
+  }
+
+  .tx-network-status__pill--enter {
+    animation: tx-network-status-in var(--tx-network-status-motion-enter-duration) var(--tx-network-status-motion-enter-easing);
+  }
+
+  .tx-network-status__pill--leave {
+    animation: tx-network-status-out var(--tx-network-status-motion-leave-duration) ease-in forwards;
+  }
+}
+
+@keyframes tx-network-status-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+  }
+}
+
+@keyframes tx-network-status-out {
+  to {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) {
+    .tx-network-status__pill--enter,
+    .tx-network-status__pill--leave {
+      animation-duration: 1ms;
+    }
+  }
+}

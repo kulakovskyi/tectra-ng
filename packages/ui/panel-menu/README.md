@@ -7,12 +7,13 @@ A vertical menu of collapsible sections for app navigation. Two looks: `panel` (
 <tx-panel-menu variant="sidebar" ariaLabel="Main" [model]="navigation" [(expandedKeys)]="open" />
 ```
 
-Items are `TxPanelMenuItem` — the kit menu item (`label`, `icon`, `routerLink`, `queryParams`, `fragment`, `url`, `target`, `command`, `disabled`, `visible`, `separator`, `badge`, `title`, `items`, `id`) plus `expanded` (open at the start) and `routerLinkActiveOptions` (`{ exact: true }` or router match options; a subset match by default).
+Items are `TxPanelMenuItem` — the kit menu item (`label`, `icon`, `routerLink`, `queryParams`, `fragment`, `url`, `target`, `command`, `disabled`, `visible`, `separator`, `badge`, `title`, `items`, `id`) plus `expanded` (open at the start), `active` (marks the current item yourself — for items that run a `command`; without it the current item comes from the route) and `routerLinkActiveOptions` (`{ exact: true }` or router match options; a subset match by default).
 
 ## Inputs
 | Name | Description |
 |---|---|
 | model | The items, `TxPanelMenuItem[]` |
+| collapsed | `sidebar`: shows only the icons in one column (nested items lose their indent) — the labels and section titles fade out (their space stays), badges and locks sit on the icons; for a narrow rail that opens on hover |
 | variant | `panel` or `sidebar` |
 | multiple | Several branches can be open at once; off, opening one closes its siblings (root panels in `panel`, every level in `sidebar`) |
 | expandedKeys | Two-way: the open items, `{ [key]: boolean }`; a key is the item `id` or its index path (`0-1-2`) |

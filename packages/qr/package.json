@@ -1,0 +1,28 @@
+{
+  "name": "@tectra-ng/qr",
+  "version": "0.1.6",
+  "description": "QR codes with no dependencies: an encoder for every version and error-correction level, and styled SVG or PNG output with shaped dots and eyes, colours, gradients and a logo. Works in any framework and on the server.",
+  "license": "MIT",
+  "homepage": "https://tectra-ng.com/components/qr-code",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kulakovskyi/tectra-ng.git",
+    "directory": "packages/qr"
+  },
+  "bugs": "https://github.com/kulakovskyi/tectra-ng/issues",
+  "keywords": [
+    "tectra",
+    "qr",
+    "qrcode",
+    "qr-code",
+    "qr-code-generator",
+    "svg",
+    "png",
+    "zero-dependency",
+    "typescript"
+  ],
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  }
+}

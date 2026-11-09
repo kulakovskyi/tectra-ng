@@ -1,0 +1,1 @@
+`logo` puts an image in the middle and clears the dots under it; the error correction goes up to `H` so the code still reads. `logoSize` is a share of the code, `logoMargin` the empty modules around it.

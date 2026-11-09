@@ -1,0 +1,1 @@
+`download('png' | 'svg', fileName)` saves the code — PNG at 1024 px by default — and `toSvgString()` gives a standalone SVG with the colours resolved. Here the code is Wi-Fi details: a phone offers to join the network.

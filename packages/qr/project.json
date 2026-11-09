@@ -1,0 +1,26 @@
+{
+  "name": "qr",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "packages/qr",
+  "tags": ["pkg:qr"],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:package",
+      "outputs": ["{workspaceRoot}/dist/packages/qr"],
+      "options": {
+        "project": "packages/qr/ng-package.json",
+        "tsConfig": "packages/qr/tsconfig.lib.json"
+      }
+    },
+    "test": {
+      "executor": "@angular/build:unit-test",
+      "options": {
+        "buildTarget": "sandbox:build",
+        "tsConfig": "packages/qr/tsconfig.spec.json",
+        "runner": "vitest",
+        "watch": false
+      }
+    }
+  }
+}

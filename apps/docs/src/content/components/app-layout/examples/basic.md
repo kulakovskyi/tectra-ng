@@ -1,0 +1,1 @@
+The sidebar is pinned open; items run commands and mark the current page with `active`, show badges and lock disabled items. The top bar end goes into `txAppTopbar`, the footer into `txAppFooter`. The pin button in the sidebar header lets it fold into a rail.

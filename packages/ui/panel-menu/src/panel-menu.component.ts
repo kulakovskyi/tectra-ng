@@ -68,6 +68,7 @@ const EXACT_MATCH: IsActiveMatchOptions = { paths: 'exact', queryParams: 'exact'
     '[style]': 'hostStyle()',
     '[attr.data-styled]': '!isUnstyled() || null',
     '[attr.data-variant]': 'variant()',
+    '[class.tx-panel-menu--collapsed]': 'collapsed() && variant() === "sidebar"',
     '[attr.role]': 'ariaLabel() ? "navigation" : null',
     '[attr.aria-label]': 'ariaLabel() ?? null',
   },
@@ -80,6 +81,7 @@ export class TxPanelMenu {
 
   readonly model = input<TxPanelMenuItem[]>([]);
   readonly variant = input<TxPanelMenuVariant>('panel');
+  readonly collapsed = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly multiple = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly expandedKeys = model<TxPanelMenuExpandedKeys>({});
   readonly badgeMax = input<number, unknown>(99, { transform: numberAttribute });
@@ -120,12 +122,9 @@ export class TxPanelMenu {
   readonly activeKeys = computed(() => {
     const active = new Set<string>();
     const current = this.currentTree();
-    if (!current) {
-      return active;
-    }
     const visit = (nodes: TxPanelMenuNode[]) => {
       for (const node of nodes) {
-        if (this.matches(node.item, current)) {
+        if (node.item.active ?? (!!current && this.matches(node.item, current))) {
           active.add(node.key);
         }
         visit(node.children);
