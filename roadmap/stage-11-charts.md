@@ -78,12 +78,14 @@ First app: a top-N ranking — label over a share bar scaled to the biggest valu
 - [x] `<tx-bar-list>` with the first app's API and look; plus `valueFormat`, `loading` (skeleton rows), `ariaLabel`, `dt` (`chart.barList`), `pt`, `unstyled`
 - [x] Docs + tests; e2e
 
-## 11.8 Segmented bar — `charts/segmented-bar` (6)
+## 11.8 Segmented bar — `charts/segmented-bar` (6) ✅
 
-First app: parts of one whole in one bar with a legend — `items` (`{ key, label, value, tone? }`, tones `primary`, `secondary` (primary mixed 35% into the card), `success`, `info`, `warn`, `danger`, `neutral`), `size` `small` (8px rounded bar) / `large` (36px track with the percent inside each segment), `showLegend`, `showValue`, `showPercent`, `hideEmptyInLegend`, `monoLabels`; order kept, zero and negative values not drawn; projected content at the end of the legend row; each segment titled `label: value`.
+First app: parts of one whole in one bar with a legend — `items` (`{ key, label, value, tone? }`, tones `primary`, `secondary` (primary mixed 35% into the card), `success`, `info`, `warn`, `danger`, `neutral`), `size` `small` (7px rounded bar) / `large` (31.5px track with the percent inside each segment), `showLegend`, `showValue`, `showPercent`, `hideEmptyInLegend`, `monoLabels`; order kept, zero and negative values not drawn; projected content at the end of the legend row; each segment titled `label: value`.
 
-- [ ] `<tx-segmented-bar>` with the first app's API and look
-- [ ] Docs + tests; e2e
+- [x] `<tx-segmented-bar>` with the first app's API and look; plus `valueFormat`, `ariaLabel` (the bar is read as an image when the legend is hidden), `dt` (`chart.segmentedBar`, a colour and a text token per tone), `pt`, `unstyled`
+- [x] Docs + tests; e2e
+
+The percent inside a large segment is dark on the bright tones in dark mode — the first app's light text there fails the contrast check.
 
 ## 11.9 Heatmap — `charts/heatmap` (4)
 

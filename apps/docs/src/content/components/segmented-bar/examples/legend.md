@@ -1,0 +1,1 @@
+`showValue`, `showPercent` and `hideEmptyInLegend` choose what the legend lists; `monoLabels` writes codes in the monospace font. Without a legend (`showLegend` off) the bar itself is read by screen readers with every part.

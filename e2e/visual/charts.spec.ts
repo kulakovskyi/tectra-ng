@@ -204,4 +204,33 @@ test.describe('charts', () => {
     await loading.getByRole('button', { name: 'Clear' }).click();
     await expect(loading.locator('.tx-bar-list__empty')).toBeVisible();
   });
+
+  test('segmented bar: server segments hydrate, the large bar fits its percents, legend switches work', async ({ page, request }) => {
+    const html = await (await request.get('/components/segmented-bar')).text();
+    const start = html.indexOf('<tx-segmented-bar');
+    const serverSegments = (html.slice(start, html.indexOf('</tx-segmented-bar>', start)).match(/class="tx-segmented-bar__segment[ "]/g) ?? []).length;
+    expect(serverSegments).toBe(3);
+    await page.goto('/components/segmented-bar');
+    const basic = example(page, 'Basic').locator('tx-segmented-bar');
+    await expect(basic.locator('.tx-segmented-bar__segment')).toHaveCount(serverSegments);
+    const track = await basic.locator('.tx-segmented-bar__track').boundingBox();
+    expect(track?.height).toBeCloseTo(7, 0);
+    await expect(basic.locator('.tx-segmented-bar__segment').first()).toHaveAttribute('title', 'Paid: 42');
+
+    const large = example(page, 'Large').locator('tx-segmented-bar');
+    await large.scrollIntoViewIfNeeded();
+    expect((await large.locator('.tx-segmented-bar__track').boundingBox())?.height).toBeCloseTo(31.5, 0);
+    for (const segment of await large.locator('.tx-segmented-bar__segment').all()) {
+      expect(await segment.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true);
+    }
+
+    const legend = example(page, 'Legend');
+    const bar = legend.locator('tx-segmented-bar');
+    await expect(bar.locator('.tx-segmented-bar__legend-item')).toHaveCount(4);
+    await legend.getByRole('switch', { name: 'Hide empty' }).click();
+    await expect(bar.locator('.tx-segmented-bar__legend-item')).toHaveCount(3);
+    await legend.getByRole('switch', { name: 'Legend' }).click();
+    await expect(bar.locator('.tx-segmented-bar__legend')).toHaveCount(0);
+    await expect(bar.locator('.tx-segmented-bar__track')).toHaveAttribute('role', 'img');
+  });
 });

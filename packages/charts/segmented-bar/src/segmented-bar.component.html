@@ -1,0 +1,48 @@
+@let parts = passThrough();
+<div
+  class="tx-segmented-bar__track"
+  [class]="parts.track?.class"
+  [style]="parts.track?.style"
+  [attr.role]="showLegend() ? null : 'img'"
+  [attr.aria-label]="showLegend() ? null : summary()"
+  [attr.aria-hidden]="showLegend() || null"
+>
+  @for (segment of barSegments(); track segment.key) {
+    <span
+      class="tx-segmented-bar__segment"
+      [class]="parts.segment?.class"
+      [style]="parts.segment?.style"
+      [attr.data-tone]="segment.tone"
+      [style.width.%]="segment.share"
+      [title]="segment.label + ': ' + segment.value"
+    >
+      @if (size() === 'large') {
+        {{ segment.percent }}
+      }
+    </span>
+  }
+</div>
+
+@if (showLegend()) {
+  <div class="tx-segmented-bar__legend" [class]="parts.legend?.class" [style]="parts.legend?.style" role="list" [attr.aria-label]="ariaLabel() || null">
+    @for (segment of legendSegments(); track segment.key) {
+      <span
+        class="tx-segmented-bar__legend-item"
+        [class]="parts.legendItem?.class"
+        [style]="parts.legendItem?.style"
+        [attr.data-tone]="segment.tone"
+        role="listitem"
+      >
+        <span class="tx-segmented-bar__dot" [class]="parts.dot?.class" [style]="parts.dot?.style" aria-hidden="true"></span>
+        <span class="tx-segmented-bar__label" [class]="parts.label?.class" [style]="parts.label?.style">{{ segment.label }}</span>
+        @if (showValue()) {
+          <span class="tx-segmented-bar__value" [class]="parts.value?.class" [style]="parts.value?.style">{{ segment.value }}</span>
+        }
+        @if (showPercent()) {
+          <span class="tx-segmented-bar__percent" [class]="parts.percent?.class" [style]="parts.percent?.style">{{ segment.percent }}</span>
+        }
+      </span>
+    }
+    <span class="tx-segmented-bar__aside" [class]="parts.aside?.class" [style]="parts.aside?.style"><ng-content /></span>
+  </div>
+}
