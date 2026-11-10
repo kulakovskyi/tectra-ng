@@ -3,6 +3,7 @@ import {
   Directive,
   ElementRef,
   Injector,
+  Signal,
   TemplateRef,
   ViewContainerRef,
   afterRenderEffect,
@@ -79,6 +80,7 @@ export class TxTooltip implements TxTooltipHandle {
   readonly tooltipHidden = output<void>();
 
   private readonly ref = signal<TxOverlayRef<TxTooltipPanel> | null>(null);
+  private readonly contentSource = signal<Signal<TxTooltipContent> | null>(null);
   private showTimer: ReturnType<typeof setTimeout> | undefined;
   private hideTimer: ReturnType<typeof setTimeout> | undefined;
   private lifeTimer: ReturnType<typeof setTimeout> | undefined;
@@ -101,12 +103,13 @@ export class TxTooltip implements TxTooltipHandle {
   readonly isUnstyled = injectUnstyled(this.tooltipUnstyled);
   readonly passThrough = injectPassThrough('tooltip', this, this.tooltipPt, this.tooltipPtOptions);
   readonly panelStyle = computed(() => toStyleObject(this.tooltipDt(), '--tx-tooltip'));
+  readonly content = computed<TxTooltipContent>(() => this.txTooltip() ?? this.contentSource()?.());
   readonly text = computed(() => {
-    const content = this.txTooltip();
+    const content = this.content();
     return typeof content === 'string' || typeof content === 'number' ? String(content).trim() : '';
   });
   readonly template = computed(() => {
-    const content = this.txTooltip();
+    const content = this.content();
     return content instanceof TemplateRef ? content : null;
   });
   readonly hasContent = computed(() => !this.tooltipDisabled() && (this.template() !== null || this.text() !== ''));
@@ -119,7 +122,7 @@ export class TxTooltip implements TxTooltipHandle {
   constructor() {
     afterRenderEffect((onCleanup) => {
       const text = this.tooltipDisabled() || !this.describesAhead() ? '' : this.text();
-      if (!text) {
+      if (!text || this.host.getAttribute('aria-label')?.trim() === text || this.host.textContent?.includes(text)) {
         return;
       }
       const node = this.registry.describe(`${this.id}-text`);
@@ -138,7 +141,7 @@ export class TxTooltip implements TxTooltipHandle {
     });
 
     afterRenderEffect(() => {
-      this.txTooltip();
+      this.content();
       this.tooltipContext();
       untracked(this.ref)?.updatePosition();
     });
@@ -153,6 +156,10 @@ export class TxTooltip implements TxTooltipHandle {
       this.destroyed = true;
       this.hideNow();
     });
+  }
+
+  useContent(source: Signal<TxTooltipContent>): void {
+    this.contentSource.set(source);
   }
 
   show(delay = this.showDelay()): void {
@@ -256,7 +263,7 @@ export class TxTooltip implements TxTooltipHandle {
     const state: TxTooltipPanelState = {
       id: this.id,
       origin: this.host,
-      content: this.txTooltip,
+      content: this.content,
       context: this.context,
       placement: computed(() => opened()?.placement() ?? requested),
       arrow: this.arrow,

@@ -1,0 +1,20 @@
+<svg class="tx-mascot__svg" shape-rendering="crispEdges" aria-hidden="true" [attr.viewBox]="viewBox" [class]="passThrough().svg?.class" [style]="passThrough().svg?.style">
+  <g class="tx-mascot__figure">
+    @for (layer of legLayers; track layer.part) {
+      <g [attr.class]="'tx-mascot__part tx-mascot__part--' + layer.part">
+        @for (pixel of layer.pixels; track $index) {
+          <rect width="1" height="1" [attr.x]="pixel.x" [attr.y]="pixel.y" />
+        }
+      </g>
+    }
+    <g class="tx-mascot__upper">
+      @for (layer of upperLayers; track layer.part) {
+        <g [attr.class]="'tx-mascot__part tx-mascot__part--' + layer.part">
+          @for (pixel of layer.pixels; track $index) {
+            <rect width="1" height="1" [attr.x]="pixel.x" [attr.y]="pixel.y" />
+          }
+        </g>
+      }
+    </g>
+  </g>
+</svg>

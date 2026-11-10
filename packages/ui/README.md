@@ -27,11 +27,11 @@ Every component takes `dt` (design tokens of this instance), `pt` / `ptOptions` 
 
 | Group | `@tectra-ng/ui/…` |
 |---|---|
-| Form | `autocomplete`, `cascade-select`, `checkbox`, `chips-input`, `color-picker`, `country-select`, `datepicker`, `email-suggestion`, `field`, `icon-field`, `input`, `input-group`, `input-mask`, `input-number`, `input-otp`, `key-filter`, `knob`, `label`, `listbox`, `mention-textarea`, `multiselect`, `password`, `password-generator`, `radio-button`, `rating`, `select`, `slider`, `textarea`, `toggle-button`, `toggle-switch`, `tree-select` |
+| Form | `autocomplete`, `cascade-select`, `checkbox`, `chips-input`, `color-picker`, `country-select`, `datepicker`, `email-suggestion`, `field`, `icon-field`, `input`, `input-group`, `input-mask`, `input-number`, `input-otp`, `key-filter`, `knob`, `label`, `list-input`, `listbox`, `mention-textarea`, `multiselect`, `password`, `password-generator`, `radio-button`, `rating`, `select`, `slider`, `textarea`, `toggle-button`, `toggle-switch`, `tree-select` |
 | Actions | `button`, `button-group`, `speed-dial`, `split-button` |
 | Data | `data-view`, `export`, `month-calendar`, `paginator`, `sparkline`, `stat-tiles`, `table`, `timeline`, `tree`, `tree-table`, `virtual-scroller` |
 | Overlay | `confirm`, `dialog`, `drawer`, `menu`, `popover`, `toast`, `tooltip` |
-| Display | `amount`, `avatar`, `badge`, `chip`, `country`, `highlight-text`, `link`, `overlay-badge`, `pill`, `status-icon`, `tag` |
+| Display | `amount`, `avatar`, `badge`, `chip`, `country`, `highlight-text`, `link`, `overlay-badge`, `pill`, `status-icon`, `tag`, `truncate-text` |
 | Feedback | `message`, `progress-bar`, `progress-spinner`, `skeleton` |
 | Layout | `card`, `divider`, `fieldset`, `panel` |
 | Misc | `analog-clock`, `countdown` |

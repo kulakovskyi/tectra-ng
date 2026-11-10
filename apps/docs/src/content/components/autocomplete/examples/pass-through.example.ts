@@ -16,7 +16,7 @@ import { TxAutocomplete } from '@tectra-ng/ui/autocomplete';
 export default class AutocompletePassThroughExample {
   readonly tags = ['urgent', 'review', 'design', 'backend', 'frontend'];
   readonly pt = {
-    input: { style: { fontFamily: 'var(--tx-font-family-mono, monospace)' } },
-    option: { style: { fontFamily: 'var(--tx-font-family-mono, monospace)' } },
+    input: { style: { fontFamily: 'var(--tx-font-mono, monospace)' } },
+    option: { style: { fontFamily: 'var(--tx-font-mono, monospace)' } },
   };
 }

@@ -1,0 +1,136 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+}
+
+.tx-avatar-group__more {
+  display: inline-flex;
+  flex-shrink: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.tx-avatar-group__add {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+.tx-avatar-group__list {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.tx-avatar-group__item {
+  display: flex;
+  align-items: center;
+}
+
+.tx-avatar-group__item-avatar {
+  display: inline-flex;
+}
+
+.tx-avatar-group__name {
+  white-space: nowrap;
+}
+
+:host([data-styled]) {
+  --_group-size: var(--tx-avatar-size);
+}
+
+@each $size, $key in (small: sm, large: lg, xlarge: xl) {
+  :host([data-styled][data-size='#{$size}']) {
+    --_group-size: var(--tx-avatar-#{$key}-size);
+  }
+}
+
+:host([data-styled]) ::ng-deep > tx-avatar,
+:host([data-styled]) .tx-avatar-group__more-avatar {
+  box-shadow: 0 0 0 var(--tx-avatar-group-ring-width) var(--tx-avatar-group-ring-color);
+}
+
+:host([data-styled]) ::ng-deep > tx-avatar + tx-avatar,
+:host([data-styled]) .tx-avatar-group__more {
+  margin-inline-start: calc(var(--_group-size) * var(--_overlap) * -1);
+}
+
+:host([data-styled]) .tx-avatar-group__more.tx-avatar-group__more--first {
+  margin-inline-start: 0;
+}
+
+:host([data-styled]) ::ng-deep > [txAvatarGroupEnd],
+:host([data-styled]) .tx-avatar-group__add {
+  margin-inline-start: var(--tx-avatar-group-end-gap);
+}
+
+:host([data-styled]) .tx-avatar-group__add {
+  width: var(--_group-size);
+  height: var(--_group-size);
+  border: 1px dashed var(--tx-avatar-group-add-border-color);
+  border-radius: 50%;
+  background: var(--tx-avatar-group-add-background);
+  color: var(--tx-avatar-group-add-color);
+  font-size: calc(var(--_group-size) * var(--tx-avatar-group-add-icon-scale));
+  transition: border-color var(--tx-motion-duration) ease;
+
+  &:hover {
+    border-color: var(--tx-avatar-group-add-hover-border-color);
+  }
+
+  &:focus-visible {
+    outline: var(--tx-avatar-group-more-focus-ring-width) solid var(--tx-avatar-group-more-focus-ring-color);
+    outline-offset: var(--tx-avatar-group-more-focus-ring-offset);
+  }
+}
+
+:host([data-styled][data-shape='square']) .tx-avatar-group__add {
+  border-radius: var(--tx-avatar-square-border-radius);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) .tx-avatar-group__add {
+    transition: none;
+  }
+}
+
+:host([data-styled]) .tx-avatar-group__more {
+  border-radius: 50%;
+
+  &:focus-visible {
+    outline: var(--tx-avatar-group-more-focus-ring-width) solid var(--tx-avatar-group-more-focus-ring-color);
+    outline-offset: var(--tx-avatar-group-more-focus-ring-offset);
+  }
+}
+
+:host([data-styled][data-shape='square']) .tx-avatar-group__more {
+  border-radius: var(--tx-avatar-square-border-radius);
+}
+
+:host([data-styled]) .tx-avatar-group__more-avatar {
+  background: var(--tx-avatar-group-more-background);
+  color: var(--tx-avatar-group-more-color);
+}
+
+.tx-avatar-group__list[data-styled] {
+  gap: var(--tx-avatar-list-gap);
+  max-height: var(--tx-avatar-list-max-height);
+  padding: var(--tx-avatar-list-padding);
+
+  .tx-avatar-group__item {
+    gap: var(--tx-avatar-list-item-gap);
+  }
+
+  .tx-avatar-group__name {
+    color: var(--tx-avatar-list-name-color);
+    font-size: var(--tx-avatar-list-name-font-size);
+  }
+}

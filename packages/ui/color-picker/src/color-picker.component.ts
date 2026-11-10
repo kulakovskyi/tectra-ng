@@ -1,4 +1,4 @@
-import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
+import { CdkConnectedOverlay, ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
 import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -15,27 +15,32 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { AbstractControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator } from '@angular/forms';
 import { uniqueId } from '@tectra-ng/core/a11y';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
-import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
+import { TX_FIELD_STATE, TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { TxOverlayInsets, TxPlacement, placementFromPosition, txAnimateEnter, txAnimateLeave, txPositions, watchOrigin, TxOverlayAnchor, txScrollStrategy } from '@tectra-ng/core/overlay';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TxIcon } from '@tectra-ng/icons';
 import { TectraColorPickerTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
+import { TxInput } from '@tectra-ng/ui/input';
 import { hsbToRgb, parseHex, rgbToHex, rgbToHsb, toHsb } from './color';
+import { txColorHexValidator } from './color-validator';
 import { TxColorFormat, TxColorPickerPart, TxColorPickerSize, TxColorValue, TxHsb } from './color-picker.types';
 
 const clamp = (value: number, min: number, max: number): number => Math.min(max, Math.max(min, value));
 
 @Component({
   selector: 'tx-color-picker',
-  imports: [CdkOverlayOrigin, CdkConnectedOverlay, TxOverlayAnchor, NgTemplateOutlet, TxIcon],
+  imports: [CdkConnectedOverlay, TxOverlayAnchor, NgTemplateOutlet, TxIcon, TxInput],
   templateUrl: './color-picker.component.html',
   styleUrl: './color-picker.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => TxColorPicker), multi: true }],
+  providers: [
+    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => TxColorPicker), multi: true },
+    { provide: NG_VALIDATORS, useExisting: forwardRef(() => TxColorPicker), multi: true },
+  ],
   host: {
     class: 'tx-color-picker',
     '[class]': 'passThrough().root?.class',
@@ -43,6 +48,7 @@ const clamp = (value: number, min: number, max: number): number => Math.min(max,
     '[attr.data-styled]': '!isUnstyled() || null',
     '[attr.data-size]': 'size()',
     '[class.tx-color-picker--inline]': 'inline()',
+    '[class.tx-color-picker--field]': 'field() && !inline()',
     '[class.tx-color-picker--open]': 'isOpen()',
     '[class.tx-color-picker--disabled]': 'disabled()',
     '[class.tx-color-picker--invalid]': 'isInvalid()',
@@ -50,9 +56,10 @@ const clamp = (value: number, min: number, max: number): number => Math.min(max,
     '[class.tx-color-picker--filled]': 'hasColor()',
   },
 })
-export class TxColorPicker extends TxFormControlBase<TxColorValue> {
+export class TxColorPicker extends TxFormControlBase<TxColorValue> implements Validator {
   readonly format = input<TxColorFormat>('hex');
   readonly inline = input<boolean, unknown>(false, { transform: booleanAttribute });
+  readonly field = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly presets = input<readonly string[]>([]);
   readonly showClear = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly showInput = input<boolean, unknown>(true, { transform: booleanAttribute });
@@ -79,6 +86,8 @@ export class TxColorPicker extends TxFormControlBase<TxColorValue> {
 
   private injector = inject(Injector);
   private host = inject<ElementRef<HTMLElement>>(ElementRef);
+  readonly hostElement = this.host.nativeElement;
+  private inField = !!inject(TX_FIELD_STATE, { optional: true });
   private overlayInsets = inject(TxOverlayInsets);
   private readonly connectedOverlay = viewChild(CdkConnectedOverlay);
   private readonly followOrigin = effect((onCleanup) => {
@@ -107,6 +116,7 @@ export class TxColorPicker extends TxFormControlBase<TxColorValue> {
   readonly isPanelMounted = signal(false);
   readonly placement = signal<TxPlacement>('bottom-start');
   readonly draft = signal<string | null>(null);
+  readonly fieldText = signal('');
   private readonly exact = signal<string | null>(null);
   private hasEntered = false;
 
@@ -125,6 +135,7 @@ export class TxColorPicker extends TxFormControlBase<TxColorValue> {
     const name = this.ariaLabel() ?? this.translations().pickColor;
     return this.showValue() ? `${name}, ${this.triggerText()}` : name;
   });
+  readonly fieldLabel = computed(() => this.ariaLabel() ?? (this.inputId() || this.ariaLabelledBy() || this.inField ? null : this.translations().colorHex));
   readonly editable = computed(() => !this.disabled() && !this.readonly());
   readonly hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-color-picker'), ...this.passThrough().root?.style }));
   readonly panelStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-color-picker'), ...this.passThrough().panel?.style }));
@@ -139,6 +150,40 @@ export class TxColorPicker extends TxFormControlBase<TxColorValue> {
       this.hsb.set(hsb);
     }
     this.draft.set(null);
+    this.fieldText.set(typeof value === 'string' ? value : hsb ? this.hex() : '');
+  }
+
+  validate(control: AbstractControl): ValidationErrors | null {
+    return this.field() ? txColorHexValidator()(control) : null;
+  }
+
+  onFieldInput(event: Event): void {
+    const text = (event.target as HTMLInputElement).value;
+    this.fieldText.set(text);
+    const rgb = parseHex(text);
+    this.exact.set(rgb ? rgbToHex(rgb) : null);
+    this.hasColor.set(!!rgb);
+    if (rgb) {
+      this.hsb.set(rgbToHsb(rgb));
+    }
+    const value = rgb && this.format() !== 'hex' ? this.toValue(this.hsb()) : text.trim() ? text : null;
+    this.updateValue(value);
+    this.changed.emit(value);
+  }
+
+  onFieldBlur(): void {
+    const text = this.fieldText();
+    const rgb = parseHex(text);
+    const normalized = rgb ? rgbToHex(rgb) : text.trim() ? text : '';
+    if (normalized !== text) {
+      this.fieldText.set(normalized);
+      const value = rgb ? this.toValue(this.hsb()) : null;
+      this.updateValue(value);
+      this.changed.emit(value);
+    }
+    if (!this.isOpen()) {
+      this.markTouched();
+    }
   }
 
   open(): void {
@@ -217,7 +262,7 @@ export class TxColorPicker extends TxFormControlBase<TxColorValue> {
     const element = event.currentTarget as HTMLElement;
     if (event.type === 'pointerdown') {
       element.setPointerCapture?.(event.pointerId);
-      element.focus();
+      element.focus({ preventScroll: true });
     }
     const rect = element.getBoundingClientRect();
     const s = Math.round(clamp((event.clientX - rect.left) / rect.width, 0, 1) * 100);
@@ -232,7 +277,7 @@ export class TxColorPicker extends TxFormControlBase<TxColorValue> {
     const element = event.currentTarget as HTMLElement;
     if (event.type === 'pointerdown') {
       element.setPointerCapture?.(event.pointerId);
-      element.focus();
+      element.focus({ preventScroll: true });
     }
     const rect = element.getBoundingClientRect();
     this.commit({ ...this.hsb(), h: Math.round(clamp((event.clientX - rect.left) / rect.width, 0, 1) * 360) });
@@ -299,6 +344,7 @@ export class TxColorPicker extends TxFormControlBase<TxColorValue> {
     this.exact.set(null);
     this.hasColor.set(false);
     this.draft.set(null);
+    this.fieldText.set('');
     this.updateValue(null);
     this.changed.emit(null);
   }
@@ -320,6 +366,7 @@ export class TxColorPicker extends TxFormControlBase<TxColorValue> {
       this.draft.set(null);
     }
     const value = this.toValue(hsb);
+    this.fieldText.set(this.hex());
     this.updateValue(value);
     this.changed.emit(value);
   }

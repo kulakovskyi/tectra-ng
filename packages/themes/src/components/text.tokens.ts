@@ -78,5 +78,20 @@ export const iconLinkTokens = {
 export type TectraHighlightTextTokens = typeof highlightTextTokens;
 export type TectraAmountTokens = typeof amountTokens;
 export type TectraStatusIconTokens = typeof statusIconTokens;
+export const truncateTextTokens = {
+  root: {
+    gap: '8px',
+    linkColor: tokenRef('primary-soft-text'),
+    linkHoverColor: tokenRef('primary-active'),
+    copyColor: 'inherit',
+    copyHoverColor: tokenRef('primary-soft-text'),
+    copiedColor: lightDark(tokenRef('green-700'), tokenRef('green-400')),
+    copyIconSize: tokenRef('font-size-md'),
+    focusRingColor: tokenRef('focus-ring-color'),
+    transitionDuration: tokenRef('motion-duration'),
+  },
+};
+
 export type TectraLinkTokens = typeof linkTokens;
+export type TectraTruncateTextTokens = typeof truncateTextTokens;
 export type TectraIconLinkTokens = typeof iconLinkTokens;

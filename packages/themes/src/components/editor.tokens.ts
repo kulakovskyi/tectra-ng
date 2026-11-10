@@ -47,7 +47,7 @@ export const editorContentTokens = {
     color: tokenRef('text-muted'),
   },
   code: {
-    fontFamily: tokenRef('font-family-mono'),
+    fontFamily: tokenRef('font-mono'),
     fontSize: '0.875em',
     padding: '0.15em 0.4em',
     borderRadius: tokenRef('radius-sm'),

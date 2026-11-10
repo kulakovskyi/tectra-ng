@@ -23,6 +23,8 @@ import { TxTooltipEvent } from './tooltip.types';
     </button>
     <button id="icon" [txTooltip]="'Delete'"><svg aria-hidden="true"></svg></button>
     <button id="labelled" aria-label="Archive" txTooltip="Moves to the archive"></button>
+    <button id="same-label" aria-label="Download" txTooltip="Download"></button>
+    <a id="same-text" href="#top" txTooltip="report-2026.pdf"><span aria-hidden="true">report-…</span><span>report-2026.pdf</span></a>
     <button id="rich" [txTooltip]="roles" [tooltipContext]="['Owner', 'Editor']" tooltipUnstyled>Roles</button>
     <ng-template #roles let-list let-close="close">
       <ul>
@@ -90,6 +92,13 @@ describe('TxTooltip', () => {
     const labelled = el('#labelled');
     expect(labelled.hasAttribute('aria-labelledby')).toBe(false);
     expect(document.getElementById(labelled.getAttribute('aria-describedby') ?? '')?.textContent).toBe('Moves to the archive');
+  });
+
+  it('does not repeat a text the element already has', () => {
+    for (const id of ['#same-label', '#same-text']) {
+      expect(el(id).hasAttribute('aria-describedby')).toBe(false);
+      expect(el(id).hasAttribute('aria-labelledby')).toBe(false);
+    }
   });
 
   it('shows on hover and hides on leave', async () => {

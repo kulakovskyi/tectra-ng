@@ -55,6 +55,12 @@ export const colorPickerTokens = {
     swatchBorderRadius: tokenRef('radius-sm'),
     swatchRing: `inset 0 0 0 1px ${tokenRef('surface-border')}`,
   },
+  dot: {
+    size: tokenRef('form-field-font-size'),
+    ringColor: `color-mix(in srgb, ${tokenRef('text-primary')} 30%, transparent)`,
+    emptyBorderColor: tokenRef('text-muted'),
+    focusRingColor: tokenRef('focus-ring-color'),
+  },
   panel: {
     width: '240px',
     padding: '12px',

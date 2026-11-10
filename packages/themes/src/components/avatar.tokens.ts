@@ -34,6 +34,23 @@ export const avatarTokens = {
     ringColor: tokenRef('surface-card'),
     moreBackground: lightDark(tokenRef('surface-100'), tokenRef('surface-800')),
     moreColor: tokenRef('text-muted'),
+    moreFocusRingWidth: '2px',
+    moreFocusRingOffset: '2px',
+    moreFocusRingColor: tokenRef('focus-ring-color'),
+    endGap: '6px',
+    addBackground: tokenRef('surface-ground'),
+    addBorderColor: tokenRef('surface-border'),
+    addHoverBorderColor: tokenRef('primary-base'),
+    addColor: tokenRef('primary-base'),
+    addIconScale: '0.45',
+  },
+  list: {
+    padding: '0',
+    gap: '8px',
+    itemGap: '8px',
+    maxHeight: '280px',
+    nameFontSize: tokenRef('font-size-md'),
+    nameColor: tokenRef('text-primary'),
   },
 };
 

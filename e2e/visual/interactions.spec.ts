@@ -564,9 +564,25 @@ test('avatar falls back to initials and a group shows +N', async ({ page }) => {
   await expect(fallback.locator('.hint')).toHaveText('The photo failed — initials instead');
   await expect(fallback.getByRole('img', { name: 'Kateryna Moroz' })).toHaveText('KM');
   const group = page.locator('avatar-group-example').getByRole('group', { name: 'Project members' });
-  await expect(group.getByRole('img')).toHaveCount(5);
-  await expect(group.getByRole('img', { name: '3 more' })).toHaveText('+3');
-  await expect(group.getByRole('button', { name: 'Invite' })).toBeVisible();
+  await expect(group.getByRole('img')).toHaveCount(4);
+  const more = group.getByRole('button', { name: '3 more' });
+  await expect(more).toHaveText('+3');
+
+  await group.getByRole('img', { name: 'Taras Shevchuk' }).hover();
+  await expect(page.locator('tx-tooltip')).toHaveText('Taras Shevchuk');
+  await expect(group.getByRole('img', { name: 'Taras Shevchuk' })).not.toHaveAttribute('title');
+
+  await more.click();
+  const list = page.getByRole('dialog', { name: '3 more' });
+  await expect(list.getByRole('listitem')).toContainText(['Sofia Melnyk', 'Andrii Koval', 'Daria Lysenko']);
+  const [origin, panel] = await Promise.all([more, list].map((locator) => locator.evaluate((element) => element.getBoundingClientRect().toJSON())));
+  expect(panel.top).toBeGreaterThanOrEqual(origin.bottom);
+  await page.keyboard.press('Escape');
+  await expect(list).toHaveCount(0);
+  await expect(more).toBeFocused();
+
+  await group.getByRole('button', { name: 'Invite' }).click();
+  await expect(group.getByRole('button', { name: '4 more' })).toHaveText('+4');
 });
 
 test('panel collapses by click and keyboard and hides its content', async ({ page }) => {

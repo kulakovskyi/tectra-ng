@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, effect, inject, input, ou
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TxIcon, TxIconName, TxIconRegistry } from '@tectra-ng/icons';
+import { TxTooltip } from '@tectra-ng/ui/tooltip';
 import { TectraAvatarTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TX_AVATAR_GROUP } from './avatar-group.token';
 import { TxAvatarPart, TxAvatarShape, TxAvatarSize, TxAvatarTone } from './avatar.types';
@@ -28,6 +29,7 @@ const TONES: TxAvatarTone[] = ['blue', 'green', 'sky', 'orange', 'purple', 'red'
     <ng-content />
   `,
   styleUrl: './avatar.component.scss',
+  hostDirectives: [{ directive: TxTooltip, inputs: ['tooltipPlacement'] }],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'tx-avatar',
@@ -40,7 +42,7 @@ const TONES: TxAvatarTone[] = ['blue', 'green', 'sky', 'orange', 'purple', 'red'
     '[attr.role]': 'accessibleName() ? "img" : null',
     '[attr.aria-label]': 'accessibleName()',
     '[attr.aria-hidden]': 'accessibleName() ? null : true',
-    '[attr.title]': 'name() ?? null',
+    '[attr.title]': 'showsTooltip() ? null : (name() ?? null)',
     '[hidden]': 'isHidden()',
   },
 })
@@ -56,6 +58,7 @@ export class TxAvatar {
   readonly shape = input<TxAvatarShape | undefined>(undefined);
   readonly tone = input<TxAvatarTone | undefined>(undefined);
   readonly ariaLabel = input<string | undefined>(undefined);
+  readonly tooltip = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
   readonly dt = input<TectraDeepPartial<TectraAvatarTokens> | undefined>(undefined);
   readonly pt = input<TxPassThrough<TxAvatarPart, TxAvatar> | undefined>(undefined);
   readonly ptOptions = input<TxPassThroughOptions | undefined>(undefined);
@@ -73,6 +76,8 @@ export class TxAvatar {
   readonly resolvedShape = computed(() => this.shape() ?? this.group?.shape() ?? 'circle');
   readonly resolvedTone = computed(() => this.tone() ?? (this.name() || this.label() ? TONES[hash(this.name() ?? this.label() ?? '') % TONES.length] : null));
   readonly accessibleName = computed(() => this.ariaLabel() ?? this.name() ?? null);
+  readonly showsTooltip = computed(() => (this.tooltip() ?? this.group?.tooltips() ?? false) && !!this.tooltipText());
+  readonly tooltipText = computed(() => this.name() || this.ariaLabel() || '');
   readonly isHidden = computed(() => !!this.group?.isHidden(this));
   readonly iconName = computed(() => (this.txIconRegistry.has(this.icon()) ? this.icon() : null));
   readonly hostStyle = computed(() => {
@@ -85,6 +90,7 @@ export class TxAvatar {
   });
 
   constructor() {
+    inject(TxTooltip, { self: true }).useContent(computed(() => (this.showsTooltip() ? this.tooltipText() : undefined)));
     effect(() => {
       this.image();
       this.failed.set(false);

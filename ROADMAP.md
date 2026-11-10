@@ -200,11 +200,11 @@ Parts the first app gained after their stage here was planned (usage counted 202
 
 | Item | Usage | Status |
 |---|---|---|
-| `ui/avatar` group: `+N` opens a popover that lists the hidden people (avatar + name), a name tooltip on every avatar | 10 | ⬜ |
-| `ui/list-input` — a textarea for pasting many lines (domains, URLs, emails, ids): live parsing with an own parser / validator, duplicate and invalid counters, "Clean up" (drop invalid and duplicates) and "Clear", the parsed array as the value | 6 | ⬜ |
-| `ui/truncate-text` — one line cut to a character limit with the full value in a tooltip, search highlight, optional link and copy button (long URLs, ids and names in table cells) | 4 | ⬜ |
-| `blocks/mascot` — a pixel-art SVG mascot in the accent colour with animated states (idle, thinking, happy, sleeping, walking, short tricks) for assistants, empty states and onboarding | 4 | ⬜ |
-| `ui/color-picker` field mode — a text field with a colour dot at its start: type the hex or open the picker from the dot, both in sync, a hex validator | 1 | ⬜ |
+| `ui/avatar` group: `+N` opens a popover that lists the hidden people (avatar + name), a name tooltip on every avatar (`tooltips`, `tooltip` on a single avatar), `morePopover="false"` keeps `+N` a label | 10 | ✅ |
+| `ui/list-input` — a textarea for pasting many lines (domains, URLs, emails, ids): live parsing with an own parser / validator, duplicate and invalid counters, "Clean up" (drop invalid and duplicates) and "Clear", the parsed array as the value; plural forms in `@tectra-ng/core/i18n` (`formatMessage`, `{count, plural, …}`) | 6 | ✅ |
+| `ui/truncate-text` — one line cut to a character limit with the full value in a tooltip, search highlight, optional link and copy button (long URLs, ids and names in table cells) | 4 | ✅ |
+| `blocks/mascot` — a pixel-art SVG mascot in the accent colour with animated states (idle, thinking, happy, sleeping, walking, short tricks) for assistants, empty states and onboarding | 4 | ✅ |
+| `ui/color-picker` field mode — a text field with a colour dot at its start: type the hex or open the picker from the dot, both in sync, a hex validator | 1 | ✅ |
 
 ## Stage 11 — charts (`@tectra-ng/charts`)
 

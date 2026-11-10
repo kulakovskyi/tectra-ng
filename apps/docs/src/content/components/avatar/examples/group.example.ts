@@ -1,26 +1,21 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TxAvatar, TxAvatarGroup } from '@tectra-ng/ui/avatar';
-import { TxButton } from '@tectra-ng/ui/button';
 
 @Component({
   selector: 'avatar-group-example',
-  imports: [TxAvatar, TxAvatarGroup, TxButton],
+  imports: [TxAvatar, TxAvatarGroup],
   template: `
     <div class="list">
-      <tx-avatar-group [max]="4" ariaLabel="Project members">
-        @for (name of members; track name) {
+      <tx-avatar-group
+        [max]="4"
+        [addButton]="invitees().length > 0"
+        addLabel="Invite"
+        ariaLabel="Project members"
+        (add)="invite()"
+      >
+        @for (name of members(); track name) {
           <tx-avatar [name]="name" />
         }
-        <button
-          txAvatarGroupEnd
-          txButton
-          icon="plus"
-          size="small"
-          severity="secondary"
-          [rounded]="true"
-          [outlined]="true"
-          aria-label="Invite"
-        ></button>
       </tx-avatar-group>
       <tx-avatar-group size="small" shape="square" ariaLabel="Teams">
         <tx-avatar name="Design" />
@@ -39,7 +34,7 @@ import { TxButton } from '@tectra-ng/ui/button';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class AvatarGroupExample {
-  readonly members = [
+  readonly members = signal([
     'Olena Kovalenko',
     'Taras Shevchuk',
     'Iryna Bondar',
@@ -47,5 +42,14 @@ export default class AvatarGroupExample {
     'Sofia Melnyk',
     'Andrii Koval',
     'Daria Lysenko',
-  ];
+  ]);
+  readonly invitees = signal(['Yurii Hnatiuk', 'Kateryna Savchenko', 'Bohdan Rudenko']);
+
+  invite(): void {
+    const [next, ...rest] = this.invitees();
+    if (next) {
+      this.invitees.set(rest);
+      this.members.update((members) => [...members, next]);
+    }
+  }
 }

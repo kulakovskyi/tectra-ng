@@ -1,10 +1,46 @@
 @if (inline()) {
   <ng-container [ngTemplateOutlet]="content" />
 } @else {
+  @if (field()) {
+    <span class="tx-color-picker__field">
+      <button
+        #trigger
+        type="button"
+        class="tx-color-picker__dot"
+        aria-haspopup="dialog"
+        [class.tx-color-picker__dot--empty]="!hasColor()"
+        [style.background-color]="hasColor() ? hex() : null"
+        [class]="passThrough().swatch?.class"
+        [style]="passThrough().swatch?.style"
+        [attr.aria-label]="ariaLabel() ?? translations().pickColor"
+        [attr.aria-expanded]="isOpen()"
+        [attr.aria-controls]="isOpen() ? panelId : null"
+        [disabled]="!editable()"
+        (click)="toggle()"
+      ></button>
+      <input
+        txInput
+        type="text"
+        spellcheck="false"
+        autocomplete="off"
+        [size]="size()"
+        [invalid]="isInvalid()"
+        [attr.id]="inputId() ?? null"
+        [attr.aria-label]="fieldLabel()"
+        [attr.aria-labelledby]="ariaLabelledBy() ?? null"
+        [placeholder]="placeholder() ?? ''"
+        [value]="fieldText()"
+        [readOnly]="readonly()"
+        [disabled]="disabled()"
+        [class]="passThrough().input?.class"
+        [style]="passThrough().input?.style"
+        (input)="onFieldInput($event)"
+        (blur)="onFieldBlur()"
+      />
+    </span>
+  } @else {
   <button
     #trigger
-    #origin="cdkOverlayOrigin"
-    cdkOverlayOrigin
     type="button"
     class="tx-color-picker__trigger"
     aria-haspopup="dialog"
@@ -32,10 +68,11 @@
       <span class="tx-color-picker__value" [id]="valueId" [class.tx-color-picker__value--empty]="!hasColor()">{{ triggerText() }}</span>
     }
   </button>
+  }
   <ng-template
     cdkConnectedOverlay
     txOverlayAnchor
-    [cdkConnectedOverlayOrigin]="origin"
+    [cdkConnectedOverlayOrigin]="hostElement"
     [cdkConnectedOverlayOpen]="isPanelMounted()"
     [cdkConnectedOverlayPositions]="positions"
     [cdkConnectedOverlayScrollStrategy]="scrollStrategy"

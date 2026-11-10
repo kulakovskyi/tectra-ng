@@ -121,3 +121,112 @@ describe('TxColorPicker', () => {
     expect(trigger().disabled).toBe(true);
   });
 });
+
+@Component({
+  imports: [TxColorPicker, ReactiveFormsModule],
+  template: `
+    <tx-color-picker id="field" field placeholder="#rrggbb" [formControl]="control" [presets]="['#22c55e']" showClear />
+    <tx-color-picker id="rgb" field format="rgb" inputId="rgb-field" [formControl]="rgb" />
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class FieldHost {
+  control = new FormControl<TxColorValue | null>(null);
+  rgb = new FormControl<TxColorValue | null>({ r: 255, g: 0, b: 0 });
+}
+
+describe('TxColorPicker field', () => {
+  let fixture: ComponentFixture<FieldHost>;
+  const el = (selector: string) => fixture.nativeElement.querySelector(selector) as HTMLElement;
+  const field = (id = 'field') => el(`#${id} input`) as HTMLInputElement;
+  const dot = (id = 'field') => el(`#${id} .tx-color-picker__dot`) as HTMLButtonElement;
+  const type = (value: string, id = 'field') => {
+    field(id).value = value;
+    field(id).dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+  };
+  const blur = (id = 'field') => {
+    field(id).dispatchEvent(new Event('blur'));
+    fixture.detectChanges();
+  };
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(FieldHost);
+    fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    fixture.destroy();
+    document.querySelector('.cdk-overlay-container')?.remove();
+  });
+
+  it('is a text field with an empty dot at its start', () => {
+    expect(el('#field').classList).toContain('tx-color-picker--field');
+    expect(el('#field .tx-color-picker__trigger')).toBeNull();
+    expect(field().getAttribute('placeholder')).toBe('#rrggbb');
+    expect(field().getAttribute('aria-label')).toBe('Hex colour');
+    expect(field().classList).toContain('tx-input');
+    expect(dot().classList).toContain('tx-color-picker__dot--empty');
+    expect(dot().getAttribute('aria-label')).toBe('Pick a colour');
+    expect(dot().getAttribute('aria-expanded')).toBe('false');
+    expect(field('rgb').getAttribute('id')).toBe('rgb-field');
+    expect(field('rgb').hasAttribute('aria-label')).toBe(false);
+    expect(field('rgb').value).toBe('#ff0000');
+  });
+
+  it('keeps the typed text, colours the dot and normalizes on blur', () => {
+    const control = fixture.componentInstance.control;
+    type('3C6');
+    expect(control.value).toBe('3C6');
+    expect(control.valid).toBe(true);
+    expect(dot().style.backgroundColor).toBe('rgb(51, 204, 102)');
+    expect(dot().classList).not.toContain('tx-color-picker__dot--empty');
+    blur();
+    expect(field().value).toBe('#33cc66');
+    expect(control.value).toBe('#33cc66');
+    expect(control.touched).toBe(true);
+  });
+
+  it('flags a value that is not a hex colour and clears a blank one', () => {
+    const control = fixture.componentInstance.control;
+    type('#12');
+    expect(control.value).toBe('#12');
+    expect(control.errors).toEqual({ pattern: { requiredPattern: '#rrggbb', actualValue: '#12' } });
+    blur();
+    expect(field().value).toBe('#12');
+    expect(field().getAttribute('aria-invalid')).toBe('true');
+    expect(dot().classList).toContain('tx-color-picker__dot--empty');
+    type('   ');
+    blur();
+    expect(control.value).toBeNull();
+    expect(field().value).toBe('');
+    expect(control.valid).toBe(true);
+  });
+
+  it('opens the picker from the dot and writes the picked colour into the field', async () => {
+    dot().click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(dot().getAttribute('aria-expanded')).toBe('true');
+    (document.querySelector('.tx-color-picker__preset') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.control.value).toBe('#22c55e');
+    expect(field().value).toBe('#22c55e');
+    (document.querySelector('.tx-color-picker__clear') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.control.value).toBeNull();
+    expect(field().value).toBe('');
+  });
+
+  it('writes a value from the form and gives an rgb value in rgb format', () => {
+    fixture.componentInstance.control.setValue('#ABCDEF');
+    fixture.detectChanges();
+    expect(field().value).toBe('#ABCDEF');
+    type('#00ff00', 'rgb');
+    expect(fixture.componentInstance.rgb.value).toEqual({ r: 0, g: 255, b: 0 });
+    fixture.componentInstance.control.disable();
+    fixture.detectChanges();
+    expect(field().disabled).toBe(true);
+    expect(dot().disabled).toBe(true);
+  });
+});

@@ -1,0 +1,78 @@
+<textarea
+  #field
+  class="tx-list-input__field"
+  spellcheck="false"
+  autocomplete="off"
+  [attr.id]="inputId() ?? null"
+  [rows]="rows()"
+  [placeholder]="placeholderText()"
+  [value]="text()"
+  [disabled]="isDisabled()"
+  [readOnly]="readonly()"
+  [class]="passThrough().field?.class"
+  [style]="passThrough().field?.style"
+  [attr.aria-label]="ariaLabel() ?? null"
+  [attr.aria-labelledby]="ariaLabelledBy() ?? null"
+  [attr.aria-describedby]="statusId"
+  [attr.aria-invalid]="isInvalid() || null"
+  (input)="onInput($event)"
+  (blur)="onBlur()"
+></textarea>
+
+<div class="tx-list-input__footer" [class]="passThrough().footer?.class" [style]="passThrough().footer?.style">
+  <div class="tx-list-input__stats" [id]="statusId" [class]="passThrough().stats?.class" [style]="passThrough().stats?.style">
+    @if (isEmpty()) {
+      <span class="tx-list-input__hint">{{ hintText() }}</span>
+    } @else {
+      <tx-pill tone="primary" [icon]="texts().icon" [value]="countText()" [unstyled]="isUnstyled()" />
+      @if (parsed().duplicates) {
+        <tx-pill tone="warn" icon="clone" [value]="duplicatesText()" [unstyled]="isUnstyled()" />
+      }
+      @if (parsed().invalid.length) {
+        <tx-pill tone="danger" icon="exclamation-circle" [value]="invalidCountText()" [unstyled]="isUnstyled()" />
+      }
+    }
+  </div>
+  @if (!readonly()) {
+    <div class="tx-list-input__actions" [class]="passThrough().actions?.class" [style]="passThrough().actions?.style">
+      @if (canCleanUp()) {
+        <button
+          type="button"
+          txButton
+          icon="sparkles"
+          [text]="true"
+          [label]="translations().listInputCleanUp"
+          [disabled]="isDisabled()"
+          [txTooltip]="translations().listInputCleanUpHint"
+          [unstyled]="isUnstyled()"
+          (click)="cleanUp()"
+        ></button>
+      }
+      @if (text()) {
+        <button
+          type="button"
+          txButton
+          icon="times"
+          severity="secondary"
+          [text]="true"
+          [label]="translations().clear"
+          [disabled]="isDisabled()"
+          [unstyled]="isUnstyled()"
+          (click)="clear()"
+        ></button>
+      }
+    </div>
+  }
+</div>
+
+@if (parsed().invalid.length) {
+  <div class="tx-list-input__invalid" [class]="passThrough().invalid?.class" [style]="passThrough().invalid?.style">
+    <span class="tx-list-input__invalid-title">{{ translations().listInputInvalid }}</span>
+    @for (item of invalidPreview(); track item) {
+      <tx-pill tone="danger" size="small" [value]="item" [unstyled]="isUnstyled()" />
+    }
+    @if (invalidHidden()) {
+      <span class="tx-list-input__hint">{{ moreText() }}</span>
+    }
+  </div>
+}

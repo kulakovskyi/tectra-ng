@@ -1,0 +1,1 @@
+`parser` takes your own rule: return the normalized item or `null`. Here order numbers keep their digits; `splitByLines` keeps a line with spaces as one token and `countLabel` names the counter with plural forms.

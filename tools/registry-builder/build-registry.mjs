@@ -128,7 +128,7 @@ function parseReadmeTables(readme) {
     if (!current || !line.trim().startsWith('|') || /^\|\s*-/.test(line.trim())) {
       continue;
     }
-    const cells = line.split('|').slice(1, -1).map((cell) => cell.trim());
+    const cells = line.split(/(?<!\\)\|/).slice(1, -1).map((cell) => cell.trim().replace(/\\\|/g, '|'));
     sections[current].push(cells);
   }
   return Object.fromEntries(Object.entries(sections).map(([name, rows]) => [name, rows.slice(1)]));

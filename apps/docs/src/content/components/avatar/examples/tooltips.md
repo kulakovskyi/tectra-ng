@@ -1,0 +1,1 @@
+Inside a group every avatar shows the person's name in a tooltip on hover; `[tooltips]="false"` turns it off and leaves the native title. A single avatar gets the same tooltip with `tooltip`, and `tooltipPlacement` moves it.

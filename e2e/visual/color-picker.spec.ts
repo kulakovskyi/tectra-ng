@@ -55,3 +55,29 @@ test('keyboard opens the popover, picks a preset and Escape returns focus', asyn
   await expect(button).toBeFocused();
   await expect(frame.getByText('Value: #22c55e')).toBeVisible();
 });
+
+test('color picker field takes a typed hex and a picked colour', async ({ page }) => {
+  await page.goto('/components/color-picker');
+  const example = page.locator('color-picker-field-example');
+  const accent = example.getByRole('textbox', { name: 'Accent colour' });
+  const badge = example.getByRole('textbox', { name: 'Badge colour' });
+  await expect(accent).toHaveValue('#3366cc');
+  await badge.fill('3c6');
+  await badge.blur();
+  await expect(badge).toHaveValue('#33cc66');
+  await badge.fill('#12');
+  await badge.blur();
+  await expect(badge).toHaveAttribute('aria-invalid', 'true');
+
+  const dot = example.getByRole('button', { name: 'Pick a colour' }).first();
+  await dot.click();
+  const dialog = page.getByRole('dialog', { name: 'Pick a colour' });
+  await expect(dialog).toBeVisible();
+  const [field, panel] = await Promise.all([accent, dialog].map((locator) => locator.evaluate((element) => element.getBoundingClientRect().toJSON())));
+  expect(panel.top >= field.bottom || panel.bottom <= field.top).toBe(true);
+  await dialog.getByRole('button', { name: '#22c55e' }).click();
+  await expect(accent).toHaveValue('#22c55e');
+  await page.keyboard.press('Escape');
+  await expect(dialog).toHaveCount(0);
+  await expect(dot).toBeFocused();
+});

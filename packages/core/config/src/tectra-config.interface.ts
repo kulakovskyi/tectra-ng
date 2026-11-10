@@ -333,6 +333,25 @@ export interface TxTranslations {
   connectionRestored: string;
   qrCode: string;
   qrCodeError: string;
+  addPerson: string;
+  listInputPlaceholder: string;
+  listInputPlaceholderDomain: string;
+  listInputPlaceholderEmail: string;
+  listInputPlaceholderUrl: string;
+  listInputHint: string;
+  listInputHintDomain: string;
+  listInputHintEmail: string;
+  listInputHintUrl: string;
+  listInputItems: string;
+  listInputDomains: string;
+  listInputEmails: string;
+  listInputUrls: string;
+  listInputDuplicates: string;
+  listInputInvalidCount: string;
+  listInputInvalid: string;
+  listInputMore: string;
+  listInputCleanUp: string;
+  listInputCleanUpHint: string;
 }
 
 export type TxValidationMessage = string | ((error: unknown) => string);

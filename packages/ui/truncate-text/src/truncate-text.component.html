@@ -1,0 +1,50 @@
+@if (copyable() && fullText()) {
+  <button
+    type="button"
+    class="tx-truncate-text__copy"
+    [class.tx-truncate-text__copy--done]="isCopied()"
+    [class]="passThrough().copy?.class"
+    [style]="passThrough().copy?.style"
+    [attr.aria-label]="copyLabel()"
+    [txTooltip]="copyLabel()"
+    [tooltipPlacement]="tooltipPlacement()"
+    (click)="copy()"
+  >
+    <tx-icon [name]="isCopied() ? 'check' : 'clone'" />
+  </button>
+}
+<ng-template #content>
+  @if (isTruncated()) {
+    <span aria-hidden="true"><tx-highlight-text [text]="displayText()" [highlight]="highlight()" [unstyled]="isUnstyled()" /></span>
+    <span class="tx-truncate-text__full">{{ fullText() }}</span>
+  } @else {
+    <tx-highlight-text [text]="displayText()" [highlight]="highlight()" [unstyled]="isUnstyled()" />
+  }
+</ng-template>
+@if (linkHref(); as link) {
+  <a
+    class="tx-truncate-text__text tx-truncate-text__link"
+    [href]="link"
+    [attr.target]="target()"
+    [attr.rel]="relation()"
+    [class]="passThrough().link?.class"
+    [style]="passThrough().link?.style"
+    [txTooltip]="tooltip()"
+    [tooltipPlacement]="tooltipPlacement()"
+    [tooltipInteractive]="true"
+  >
+    <ng-container [ngTemplateOutlet]="content" />
+  </a>
+} @else {
+  <span
+    class="tx-truncate-text__text"
+    [attr.tabindex]="isTruncated() ? 0 : null"
+    [class]="passThrough().text?.class"
+    [style]="passThrough().text?.style"
+    [txTooltip]="tooltip()"
+    [tooltipPlacement]="tooltipPlacement()"
+    [tooltipInteractive]="true"
+  >
+    <ng-container [ngTemplateOutlet]="content" />
+  </span>
+}

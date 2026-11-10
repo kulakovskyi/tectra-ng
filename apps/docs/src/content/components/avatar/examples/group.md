@@ -1,1 +1,1 @@
-`tx-avatar-group` overlaps the avatars with a ring, shows `max` of them and a `+N`; `txAvatarGroupEnd` adds an element at the end.
+`tx-avatar-group` overlaps the avatars with a ring and shows `max` of them. `+N` is a button: it opens a popover that lists the hidden people with their photo or initials and name. `addButton` puts a dashed add button of the same size at the end — here "Invite" adds a person; `txAvatarGroupEnd` takes any other element there.

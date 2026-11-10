@@ -20,7 +20,13 @@ import { TxSelectOptionTemplate, TxSelectValueTemplate } from '@tectra-ng/ui/sel
         </span>
       </ng-template>
       <ng-template txSelectValue let-items>
-        <tx-avatar-group [size]="'small'" [max]="4" [ariaLabel]="'Reviewers'">
+        <tx-avatar-group
+          [size]="'small'"
+          [max]="4"
+          [morePopover]="false"
+          [tooltips]="false"
+          [ariaLabel]="'Reviewers'"
+        >
           @for (item of items; track item.value) {
             <tx-avatar [name]="item.label" />
           }

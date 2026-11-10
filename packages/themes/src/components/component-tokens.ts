@@ -8,7 +8,7 @@ import { inputNumberTokens } from './input-number.tokens';
 import { inputOtpTokens } from './input-otp.tokens';
 import { knobTokens } from './knob.tokens';
 import { cardTokens, dividerTokens, fieldsetTokens, panelTokens } from './layout.tokens';
-import { amountTokens, highlightTextTokens, iconLinkTokens, linkTokens, statusIconTokens } from './text.tokens';
+import { amountTokens, highlightTextTokens, iconLinkTokens, linkTokens, statusIconTokens, truncateTextTokens } from './text.tokens';
 import { floatLabelTokens, iftaLabelTokens, labelTokens } from './label.tokens';
 import { fieldTokens } from './field.tokens';
 import { fieldMessageTokens, messageTokens } from './message.tokens';
@@ -26,6 +26,7 @@ import { skeletonTokens } from './skeleton.tokens';
 import { sliderTokens } from './slider.tokens';
 import { chipTokens, tagTokens } from './tag.tokens';
 import { textareaTokens } from './textarea.tokens';
+import { listInputTokens } from './list-input.tokens';
 import { iconTokens } from './icon.tokens';
 import { rippleTokens } from './ripple.tokens';
 import { toggleButtonTokens } from './toggle-button.tokens';
@@ -77,6 +78,7 @@ import { networkStatusTokens } from './network-status.tokens';
 import { qrCodeTokens } from './qr-code.tokens';
 import { confettiTokens } from './confetti.tokens';
 import { hoverEffectTokens } from './hover-effect.tokens';
+import { mascotTokens } from './mascot.tokens';
 
 export const COMPONENT_TOKENS = {
   icon: iconTokens,
@@ -102,6 +104,7 @@ export const COMPONENT_TOKENS = {
   fieldMessage: fieldMessageTokens,
   field: fieldTokens,
   textarea: textareaTokens,
+  listInput: listInputTokens,
   checkbox: checkboxTokens,
   radioButton: radioButtonTokens,
   toggleSwitch: toggleSwitchTokens,
@@ -128,6 +131,7 @@ export const COMPONENT_TOKENS = {
   statusIcon: statusIconTokens,
   link: linkTokens,
   iconLink: iconLinkTokens,
+  truncateText: truncateTextTokens,
   tooltip: tooltipTokens,
   popover: popoverTokens,
   toast: toastTokens,
@@ -186,6 +190,7 @@ export const COMPONENT_TOKENS = {
   qrCode: qrCodeTokens,
   confetti: confettiTokens,
   hoverEffect: hoverEffectTokens,
+  mascot: mascotTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

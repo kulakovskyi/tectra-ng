@@ -1,5 +1,6 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { TECTRA_CONFIG, TxLocaleCode, TxLocaleDefinition, TxTranslations } from '@tectra-ng/core/config';
+import { TxMessageParams, formatMessage } from './format-message';
 import { TX_LOCALES, TX_LOCALE_US } from './locales';
 
 @Injectable({ providedIn: 'root' })
@@ -13,8 +14,12 @@ export class TxLocaleService {
     this.locale.set(this.resolve(locale));
   }
 
-  translate(key: keyof TxTranslations, params: Record<string, string | number> = {}): string {
-    return this.translations()[key].replace(/\{(\w+)\}/g, (match, name: string) => String(params[name] ?? match));
+  translate(key: keyof TxTranslations, params: TxMessageParams = {}): string {
+    return this.format(this.translations()[key], params);
+  }
+
+  format(template: string, params: TxMessageParams = {}): string {
+    return formatMessage(template, params, this.locale().intl);
   }
 
   formatNumber(value: number, options?: Intl.NumberFormatOptions): string {

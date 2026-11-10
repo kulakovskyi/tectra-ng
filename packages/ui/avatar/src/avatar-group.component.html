@@ -1,0 +1,83 @@
+<ng-content />
+@if (extra() > 0 && !morePopover()) {
+  <tx-avatar
+    class="tx-avatar-group__more tx-avatar-group__more-avatar"
+    [class.tx-avatar-group__more--first]="hiddenAvatars().length === avatars().length"
+    [class]="passThrough().more?.class"
+    [style]="passThrough().more?.style"
+    [label]="'+' + extra()"
+    [ariaLabel]="moreText()"
+    [tooltip]="false"
+    [unstyled]="isUnstyled()"
+  />
+} @else if (extra() > 0) {
+  <button
+    type="button"
+    class="tx-avatar-group__more"
+    [class.tx-avatar-group__more--first]="hiddenAvatars().length === avatars().length"
+    [class]="passThrough().more?.class"
+    [style]="passThrough().more?.style"
+    [attr.aria-label]="moreText()"
+    [txPopoverTrigger]="list"
+  >
+    <tx-avatar
+      class="tx-avatar-group__more-avatar"
+      [label]="'+' + extra()"
+      [tooltip]="false"
+      [unstyled]="isUnstyled()"
+    />
+  </button>
+  <tx-popover #list [ariaLabel]="moreText()" autoFocus="none" [unstyled]="isUnstyled()">
+    <ng-template txPopoverContent>
+      <div
+        class="tx-avatar-group__list"
+        role="list"
+        [attr.data-styled]="!isUnstyled() || null"
+        [class]="passThrough().list?.class"
+        [style]="passThrough().list?.style"
+      >
+        @for (avatar of hiddenAvatars(); track avatar) {
+          <div
+            class="tx-avatar-group__item"
+            role="listitem"
+            [class]="passThrough().item?.class"
+            [style]="passThrough().item?.style"
+          >
+            <span class="tx-avatar-group__item-avatar" aria-hidden="true">
+              <tx-avatar
+                [image]="avatar.image()"
+                [name]="avatar.name()"
+                [label]="avatar.label()"
+                [icon]="avatar.icon()"
+                [tone]="avatar.tone()"
+                [shape]="avatar.shape()"
+                [tooltip]="false"
+                [unstyled]="isUnstyled()"
+              />
+            </span>
+            <span
+              class="tx-avatar-group__name"
+              [class]="passThrough().name?.class"
+              [style]="passThrough().name?.style"
+              >{{ nameOf(avatar) }}</span
+            >
+          </div>
+        }
+      </div>
+    </ng-template>
+  </tx-popover>
+}
+@if (addButton()) {
+  <button
+    type="button"
+    class="tx-avatar-group__add"
+    [class]="passThrough().add?.class"
+    [style]="passThrough().add?.style"
+    [attr.aria-label]="addText()"
+    [txTooltip]="addText()"
+    (click)="add.emit()"
+  >
+    <tx-icon name="plus" />
+  </button>
+}
+<ng-content select="[txAvatarGroupEnd]" />

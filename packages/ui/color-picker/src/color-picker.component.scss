@@ -17,6 +17,62 @@
   flex: none;
 }
 
+:host(.tx-color-picker--field) {
+  display: block;
+}
+
+.tx-color-picker__field {
+  --tx-field-inset-start: calc(var(--tx-form-field-font-size) + 6px);
+
+  position: relative;
+  display: flex;
+
+  > input {
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+.tx-color-picker__dot {
+  position: absolute;
+  top: 50%;
+  left: var(--tx-form-field-padding-x);
+  z-index: 1;
+  padding: 0;
+  transform: translateY(-50%);
+  cursor: pointer;
+
+  &:disabled {
+    cursor: default;
+  }
+}
+
+@each $size, $key in (small: sm, large: lg) {
+  :host([data-size='#{$size}']) .tx-color-picker__dot {
+    left: var(--tx-form-field-#{$key}-padding-x);
+  }
+}
+
+:host([data-styled]) .tx-color-picker__dot {
+  width: var(--tx-color-picker-dot-size);
+  height: var(--tx-color-picker-dot-size);
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--tx-color-picker-dot-ring-color);
+
+  &:focus-visible {
+    outline: 2px solid var(--tx-color-picker-dot-focus-ring-color);
+    outline-offset: 2px;
+  }
+}
+
+:host([data-styled]) .tx-color-picker__dot--empty {
+  border: 1px dashed var(--tx-color-picker-dot-empty-border-color);
+  box-shadow: none;
+}
+
 .tx-color-picker__panel {
   display: flex;
   flex-direction: column;
@@ -170,7 +226,7 @@
     @include field.box;
     @include field.size(sm);
 
-    font-family: var(--tx-font-family-mono, monospace);
+    font-family: var(--tx-font-mono, monospace);
     text-transform: lowercase;
 
     &:focus {
