@@ -1,0 +1,1 @@
+Long series are thinned with the largest-triangle method before drawing, so 20 000 points stay fast while peaks keep their shape; the tooltip and the keyboard still read every original value. Turn it off with `[decimation]="false"`. The hidden data table for screen readers keeps an even sample of 250 rows.

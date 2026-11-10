@@ -1,0 +1,1 @@
+`legendPosition` puts the legend on any side, `legendAlign` aligns a top or bottom legend. A legend item toggles its series (the colours stay put) and the arrow keys move between items. A single series has no legend.

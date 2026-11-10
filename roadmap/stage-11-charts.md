@@ -8,55 +8,61 @@ Charts live in `@tectra-ng/charts/<name>` (own package, one entry point per char
 
 ---
 
-## 11.0 Package
+## 11.0 Package ✅
 
-- [ ] `@tectra-ng/charts` is a published package: `project.json`, `package.json` (peers on `@tectra-ng/*`, no dependencies, `publishConfig`), `ng-package.json`, `tsconfig.base.json` paths, module boundary (`pkg:charts` → ui and below), `build:packages` / `test` scripts, `release.projects`, part of `tectra-ng`, install docs (README, `INSTALL_PACKAGES`), docs category `Charts`
+- [x] `@tectra-ng/charts` is a published package: `project.json`, `package.json` (peers on `@tectra-ng/*`, no dependencies, `publishConfig`), `ng-package.json`, `tsconfig.base.json` paths, module boundary (`pkg:charts` → ui and below), `build:packages` / `test` scripts, `release.projects`, part of `tectra-ng`, install docs (README, `INSTALL_PACKAGES`), docs category `Charts`
 
-## 11.1 Core — `charts/core` (46)
+## 11.1 Core — `charts/core` (46) ✅
 
 First app: a shared core for every chart — language (month names and toolbar texts per locale), "No data" text when there is no series, number formatter per language, the series palette read from the theme variables, grid / axis label / legend colours from the theme, the app font, a thin card-coloured stroke between pie and treemap segments.
 
-- [ ] Scales as pure functions: linear, log, time (with calendar-aware ticks), band; nice domains and ticks; tick formatting through the tectra locale (`Intl.NumberFormat`, `Intl.DateTimeFormat`), compact numbers (`1.2K`)
-- [ ] Layout: plot area from the size of the host, axis label space measured from the ticks, responsive size (`height` as a number or `'100%'` of a parent with a definite height), the same markup on the server (fixed `viewBox`), the real size after hydration without a jump
-- [ ] Axes and grid: x / y, top / bottom / left / right, label rotation or skipping when they collide, grid lines, zero line
-- [ ] Series palette from tokens (`--tx-chart-…` from the primary and the severity palettes), per series `color` override, stable colours when a series is hidden
-- [ ] Legend: position (top, bottom, side), toggles a series, keyboard, `txChartLegend` template
-- [ ] Tooltip on the kit overlay: crosshair, shared (all series at a point) or single, `txChartTooltip` template, follows the keyboard focus
-- [ ] "No data" through `empty-state` look, loading skeleton of the same size
-- [ ] Motion: series grow in once, values morph on change; off with reduced motion
-- [ ] Decimation for long series (largest-triangle) so tens of thousands of points stay fast
-- [ ] Accessibility: `role="img"` with a summary, a hidden data table for screen readers, arrow keys walk the points and read them
-- [ ] Docs + tests; e2e: server markup equals the hydrated one, resize redraws, legend toggle, tooltip on hover and keyboard
+- [x] Scales as pure functions: linear, log, time (with calendar-aware ticks), band; nice domains and ticks; tick formatting through the tectra locale (`Intl.NumberFormat`, `Intl.DateTimeFormat`), compact numbers (`1.2K`)
+- [x] Layout: plot area from the size of the host, axis label space measured from the ticks, responsive size (`height` as a number or `'100%'` of a parent with a definite height), the same markup on the server (fixed `viewBox`), the real size after hydration without a jump
+- [x] Axes and grid: x / y, top / bottom / left / right, label rotation or skipping when they collide, grid lines, zero line
+- [x] Series palette from tokens (`--tx-chart-…` from the primary and the severity palettes), per series `color` override, stable colours when a series is hidden
+- [x] Legend: position (top, bottom, side), toggles a series, keyboard, `txChartLegend` template
+- [x] Tooltip on the kit overlay: crosshair, shared (all series at a point) or single, `txChartTooltip` template, follows the keyboard focus
+- [x] "No data" through `empty-state` look, loading skeleton of the same size
+- [x] Motion: series grow in once, values morph on change; off with reduced motion
+- [x] Decimation for long series (largest-triangle) so tens of thousands of points stay fast
+- [x] Accessibility: `role="img"` with a summary, a hidden data table for screen readers, arrow keys walk the points and read them
+- [x] Docs + tests; e2e: server markup equals the hydrated one, resize redraws, legend toggle, tooltip on hover and keyboard
 
-## 11.2 Line and area — `charts/line` (18)
+## 11.2 Line and area — `charts/line` (18) ✅
 
 First app (`spline`, 18): smooth area / line chart for trends over time — `series` (`{ name, data }[]`), `categories` (labels or ISO dates), `toolbar` (download), `height` (450); new inputs redraw in place.
 
-- [ ] `<tx-line-chart>`: `series`, `categories` or x values, `curve` (smooth monotone, straight, step), `area` (gradient fill from the series colour), markers, gaps for `null`, `height`
-- [ ] Stacked areas, 100% areas
-- [ ] Time x axis with real gaps between dates
-- [ ] Docs + tests; e2e
+- [x] `<tx-line-chart>`: `series`, `categories` or x values, `curve` (smooth monotone, straight, step), `area` (gradient fill from the series colour), markers, gaps for `null`, `height`
+- [x] Stacked areas, 100% areas
+- [x] Time x axis with real gaps between dates
+- [x] Docs + tests; e2e
 
-## 11.3 Column and bar — `charts/column` (18)
+The first app's `toolbar` (download) input comes with export in 11.18; until then the chart has no download menu.
+
+## 11.3 Column and bar — `charts/column` (18) ✅
 
 First app (`column`, 18): always stacked, `series`, `categories`, `stackType` `normal` / `100%`, `height` (350, or `'100%'` of the parent), `horizontal`, `toolbar` (download).
 
-- [ ] `<tx-column-chart>`: grouped, stacked, 100%; vertical / `horizontal`; bar radius and gap from tokens; data labels on bars
-- [ ] Negative values around the zero line
-- [ ] Docs + tests; e2e
+- [x] `<tx-column-chart>`: grouped, stacked, 100%; vertical / `horizontal`; bar radius and gap from tokens; data labels on bars
+- [x] Negative values around the zero line
+- [x] Docs + tests; e2e
+
+`toolbar` (download) — with export in 11.18.
 
 ## 11.4 Combo — `charts/combo`
 
 - [ ] Columns + lines in one plot, a second y axis, per series `type` and `axis`
 - [ ] Docs + tests; e2e
 
-## 11.5 Pie and donut — `charts/pie` (9)
+## 11.5 Pie and donut — `charts/pie` (9) ✅
 
 First app (`pie`, 9): donut with `pieData` (`{ series, labels }`), `chartWidth` (200), `chartHeight` (400), `showLegend`, `showDataLabels` (`%` on segments), `totalLabel` (always show the total in the centre with this caption), `totalFormatter` (centre total and the hovered value), `donutSize` (`'65%'`), `segmentGap` (2, card-coloured stroke); a legend list beside a small donut (`label`, `value`, `percent`, `color`) instead of the chart's own.
 
-- [ ] `<tx-pie-chart>`: pie and donut (`innerRadius`), segment gap, centre content (`txPieCenter` template, total by default), hovered segment in the centre, data labels, start angle and half donut
-- [ ] Legend beside the chart with value and percent; the same palette exported for own legends
-- [ ] Docs + tests; e2e
+- [x] `<tx-pie-chart>`: pie and donut (`innerRadius`), segment gap, centre content (`txPieCenter` template, total by default), hovered segment in the centre, data labels, start angle and half donut
+- [x] Legend beside the chart with value and percent; the same palette exported for own legends
+- [x] Docs + tests; e2e
+
+The hole is `donutSize` (the first app's name, `'0%'` = pie). `toolbar` (download) — with export in 11.18.
 
 ## 11.6 Scatter and bubble — `charts/scatter`
 

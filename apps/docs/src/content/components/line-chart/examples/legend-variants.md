@@ -1,0 +1,1 @@
+`legendVariant` picks the look of the legend: `line` (the default of a line chart — a short stroke in the series colour), `dot`, `pill` (tinted chips, the easiest to hit on touch) or `stat` — a card per series with the value under the pointer, or the last one, in large type. A hidden series keeps a hollow or dashed marker.

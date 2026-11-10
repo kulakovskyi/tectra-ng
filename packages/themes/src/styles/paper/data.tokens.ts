@@ -8,6 +8,12 @@ const sm = { padding: '5.25px 7px' };
 const lg = { padding: '12.25px 15.75px' };
 
 export const paperDataTokens: TectraDeepPartial<TectraComponentTokens> = {
+  chart: {
+    pie: { segmentRadius: '2px' },
+    bar: { radius: tokenRef('radius-xs') },
+    legend: { borderRadius: tokenRef('radius-sm'), pillRadius: tokenRef('radius-sm'), statRadius: tokenRef('radius-sm') },
+    tooltip: { borderRadius: tokenRef('radius-sm'), shadow: '0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.14), 0px 1px 18px 0px rgba(0, 0, 0, 0.12)' },
+  },
   paginator: {
     root: { padding: '7px 12.25px', borderRadius: tokenRef('radius-sm') },
     navButton: { focusRing: { ...noOutline, offset: '0', shadow: ring } },

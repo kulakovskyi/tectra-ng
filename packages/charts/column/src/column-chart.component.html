@@ -1,0 +1,68 @@
+<tx-chart-frame
+  [height]="height()"
+  [(size)]="size"
+  [legendItems]="legendItems()"
+  [showLegend]="legendShown()"
+  [legendPosition]="legendPosition()"
+  [legendAlign]="legendAlign()"
+  [legendVariant]="legendVariant()"
+  [legendTemplate]="legendTemplate()?.template"
+  [empty]="isEmpty()"
+  [loading]="loading()"
+  emptyIcon="chart-bar"
+  [summary]="summary()"
+  [table]="dataTable()"
+  [tooltip]="tooltip()"
+  [tooltipTemplate]="tooltipTemplate()?.template"
+  [panelStyle]="tokenStyle()"
+  [parts]="passThrough()"
+  [styled]="!isUnstyled()"
+  (pointer)="onPointer($event)"
+  (navigate)="onNavigate($event)"
+  (legendToggled)="onLegendToggle($event)"
+  (legendHovered)="onLegendHover($event)"
+  (tooltipClosed)="active.set(null)"
+>
+  <svg:g [tx-chart-axes]="layout().axes" [gridPart]="passThrough().grid" [axisPart]="passThrough().axis" />
+  <svg:g class="tx-column-chart__bars">
+    @for (bar of bars(); track bar.key) {
+      <svg:rect
+        class="tx-column-chart__bar"
+        [class.tx-column-chart__bar--focused]="focusedSeries() === bar.series"
+        [class.tx-column-chart__bar--active]="isActive(bar.index, bar.series)"
+        [class]="passThrough().bar?.class"
+        [style]="passThrough().bar?.style"
+        [attr.data-series]="bar.series"
+        [attr.data-index]="bar.index"
+        [attr.data-end]="bar.end"
+        [attr.data-dir]="bar.dir"
+        [style.--tx-column-chart-order]="bar.index"
+        [attr.x]="bar.x"
+        [attr.y]="bar.y"
+        [attr.width]="bar.width"
+        [attr.height]="bar.height"
+        [style.--tx-column-chart-color]="bar.color"
+      />
+    }
+  </svg:g>
+  @if (dataLabels()) {
+    <svg:g class="tx-column-chart__labels">
+      @for (bar of bars(); track bar.key) {
+        @if (bar.label) {
+          <svg:text
+            class="tx-column-chart__label"
+            [class.tx-column-chart__label--outside]="!bar.inside"
+            [class]="passThrough().dataLabel?.class"
+            [style]="passThrough().dataLabel?.style"
+            [attr.x]="bar.labelX"
+            [attr.y]="bar.labelY"
+            [attr.text-anchor]="horizontal() && !bar.inside ? (bar.labelX >= bar.x ? 'start' : 'end') : 'middle'"
+            [attr.dominant-baseline]="horizontal() || bar.inside ? 'central' : bar.labelY < bar.y ? 'auto' : 'hanging'"
+          >
+            {{ bar.label }}
+          </svg:text>
+        }
+      }
+    </svg:g>
+  }
+</tx-chart-frame>

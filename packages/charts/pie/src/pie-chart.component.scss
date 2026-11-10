@@ -1,0 +1,129 @@
+:host {
+  display: block;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.tx-pie-chart__segments {
+  transform-box: view-box;
+}
+
+.tx-pie-chart__segment {
+  fill: var(--tx-pie-chart-color);
+}
+
+.tx-pie-chart__label,
+.tx-pie-chart__center {
+  pointer-events: none;
+}
+
+.tx-pie-chart__center-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+
+:host([data-styled]) {
+  .tx-pie-chart__segment {
+    stroke: var(--tx-chart-pie-segment-gap);
+    stroke-linejoin: round;
+    transition:
+      fill var(--tx-chart-motion-hover-duration) ease,
+      transform var(--tx-chart-motion-hover-duration) var(--tx-chart-motion-easing);
+  }
+
+  .tx-pie-chart__segment--hovered {
+    transform: translate(
+      calc(var(--tx-pie-chart-ux, 0) * var(--tx-chart-pie-hover-offset)),
+      calc(var(--tx-pie-chart-uy, 0) * var(--tx-chart-pie-hover-offset))
+    );
+  }
+
+  .tx-pie-chart__label {
+    fill: var(--tx-chart-pie-label-color);
+    font-size: var(--tx-chart-pie-label-font-size);
+    font-weight: var(--tx-chart-pie-label-font-weight);
+    filter: var(--tx-chart-pie-label-shadow);
+    transition: opacity var(--tx-chart-motion-hover-duration) ease;
+  }
+
+  .tx-pie-chart__center-name {
+    fill: var(--tx-chart-pie-name-color);
+    font-weight: var(--tx-chart-pie-name-font-weight);
+  }
+
+  .tx-pie-chart__center-name--total {
+    fill: var(--tx-chart-pie-total-label-color);
+  }
+
+  .tx-pie-chart__center-value {
+    fill: var(--tx-chart-pie-value-color);
+    font-weight: var(--tx-chart-pie-value-font-weight);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tx-pie-chart__center-content {
+    color: var(--tx-chart-pie-value-color);
+  }
+}
+
+:host([data-styled].tx-pie-chart--hovering) .tx-pie-chart__segment:not(.tx-pie-chart__segment--hovered) {
+  fill: color-mix(in oklab, var(--tx-pie-chart-color) var(--tx-chart-pie-dimmed-strength), var(--tx-chart-pie-dimmed-base));
+}
+
+:host([data-styled].tx-pie-chart--hovering) .tx-pie-chart__label {
+  opacity: 0;
+}
+
+:host([data-styled].tx-pie-chart--morph) .tx-pie-chart__segment {
+  transition:
+    fill var(--tx-chart-motion-hover-duration) ease,
+    transform var(--tx-chart-motion-hover-duration) var(--tx-chart-motion-easing),
+    d var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing);
+}
+
+:host([data-styled].tx-pie-chart--entering) .tx-pie-chart__segments {
+  animation: tx-pie-chart-enter var(--tx-chart-motion-enter-duration) var(--tx-chart-motion-easing) both;
+}
+
+:host([data-styled].tx-pie-chart--entering) .tx-pie-chart__labels,
+:host([data-styled].tx-pie-chart--entering) .tx-pie-chart__center {
+  animation: tx-pie-chart-fade var(--tx-chart-motion-enter-duration) ease both;
+}
+
+@keyframes tx-pie-chart-enter {
+  from {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.6);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes tx-pie-chart-fade {
+  0%,
+  60% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) .tx-pie-chart__segment,
+  :host([data-styled]) .tx-pie-chart__segments,
+  :host([data-styled]) .tx-pie-chart__labels,
+  :host([data-styled]) .tx-pie-chart__center {
+    transition: none;
+    animation: none;
+  }
+}

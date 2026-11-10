@@ -1,0 +1,1 @@
+The tooltip opens on the kit overlay, so it never gets clipped by a card. `tooltipMode="single"` shows only the series nearest to the pointer, `tooltipFormatter` formats each value, and `<ng-template txChartTooltip let-data>` replaces the whole content. It follows the keyboard focus too.

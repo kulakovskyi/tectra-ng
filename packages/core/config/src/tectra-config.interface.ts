@@ -352,6 +352,24 @@ export interface TxTranslations {
   listInputMore: string;
   listInputCleanUp: string;
   listInputCleanUpHint: string;
+  chartNoData: string;
+  chartLoading: string;
+  chartLegend: string;
+  chartDataTable: string;
+  chartCategory: string;
+  chartValue: string;
+  chartShare: string;
+  chartTotal: string;
+  chartSummary: string;
+  chartRange: string;
+  chartPoint: string;
+  chartNavigateHint: string;
+  chartLine: string;
+  chartArea: string;
+  chartColumn: string;
+  chartBar: string;
+  chartPie: string;
+  chartDonut: string;
 }
 
 export type TxValidationMessage = string | ((error: unknown) => string);

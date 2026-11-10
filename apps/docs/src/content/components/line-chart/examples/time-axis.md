@@ -1,0 +1,1 @@
+With `xType="time"` the x values are dates (ISO strings, `Date` or timestamps) and the spacing follows the calendar: a missing week leaves a real gap. Ticks pick days, months or years by the range and are formatted in the kit's locale.

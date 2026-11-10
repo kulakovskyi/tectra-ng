@@ -1,0 +1,1 @@
+For a small donut next to your own list, turn the legend off and build the rows with the `txPieLegend` pipe (or `pieLegend()`): it returns `label`, `value`, `percent` and the same `color` the chart uses.

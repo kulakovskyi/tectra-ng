@@ -1,0 +1,90 @@
+<tx-chart-frame
+  [height]="height()"
+  [(size)]="size"
+  [legendItems]="legendItems()"
+  [showLegend]="legendShown()"
+  [legendPosition]="legendPosition()"
+  [legendAlign]="legendAlign()"
+  [legendVariant]="legendVariant()"
+  [legendTemplate]="legendTemplate()?.template"
+  [empty]="isEmpty()"
+  [loading]="loading()"
+  emptyIcon="chart-line"
+  [summary]="summary()"
+  [table]="dataTable()"
+  [tooltip]="tooltip()"
+  [tooltipTemplate]="tooltipTemplate()?.template"
+  [panelStyle]="tokenStyle()"
+  [parts]="passThrough()"
+  [styled]="!isUnstyled()"
+  (pointer)="onPointer($event)"
+  (navigate)="onNavigate($event)"
+  (legendToggled)="onLegendToggle($event)"
+  (legendHovered)="onLegendHover($event)"
+  (tooltipClosed)="active.set(null)"
+>
+  <svg:g [tx-chart-axes]="layout().axes" [gridPart]="passThrough().grid" [axisPart]="passThrough().axis" />
+  @if (crosshair(); as line) {
+    <svg:line
+      class="tx-line-chart__crosshair"
+      [class]="passThrough().crosshair?.class"
+      [style]="passThrough().crosshair?.style"
+      [attr.x1]="line.x"
+      [attr.x2]="line.x"
+      [attr.y1]="line.y1"
+      [attr.y2]="line.y2"
+    />
+  }
+  @for (path of paths(); track path.key) {
+    <svg:g
+      class="tx-line-chart__series"
+      [class.tx-line-chart__series--focused]="focusedSeries() === path.index"
+      [class]="passThrough().series?.class"
+      [style]="passThrough().series?.style"
+      [style.--tx-line-chart-color]="path.color"
+      [attr.data-series]="path.index"
+    >
+      @if (path.area) {
+        <svg:linearGradient [attr.id]="path.gradient" x1="0" y1="0" x2="0" y2="1">
+          <svg:stop class="tx-line-chart__stop-from" offset="0" [style.stop-color]="path.color" />
+          <svg:stop class="tx-line-chart__stop-to" offset="0.95" [style.stop-color]="path.color" />
+        </svg:linearGradient>
+        <svg:path
+          class="tx-line-chart__area"
+          [class.tx-line-chart__area--stacked]="isStacked()"
+          [class]="passThrough().area?.class"
+          [style]="passThrough().area?.style"
+          [attr.d]="path.area"
+          [attr.fill]="'url(#' + path.gradient + ')'"
+        />
+      }
+      <svg:path
+        class="tx-line-chart__line"
+        [class]="passThrough().line?.class"
+        [style]="passThrough().line?.style"
+        [attr.d]="path.line"
+        [style.stroke]="path.color"
+      />
+      @for (marker of path.markers; track marker.index) {
+        <svg:circle
+          class="tx-line-chart__point"
+          [class]="passThrough().marker?.class"
+          [style]="passThrough().marker?.style"
+          [attr.cx]="marker.x"
+          [attr.cy]="marker.y"
+          [style.fill]="path.color"
+        />
+      }
+    </svg:g>
+  }
+  @for (point of activePoints(); track point.series) {
+    <svg:circle class="tx-line-chart__halo" [attr.cx]="point.x" [attr.cy]="point.y" [style.fill]="point.color" />
+    <svg:circle
+      class="tx-line-chart__marker"
+      [class]="passThrough().marker?.class"
+      [attr.cx]="point.x"
+      [attr.cy]="point.y"
+      [style.fill]="point.color"
+    />
+  }
+</tx-chart-frame>

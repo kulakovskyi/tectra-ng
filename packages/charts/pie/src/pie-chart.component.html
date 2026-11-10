@@ -1,0 +1,101 @@
+<tx-chart-frame
+  height="auto"
+  [plotHeight]="plotHeight()"
+  [(size)]="size"
+  [legendItems]="legendItems()"
+  [showLegend]="legendShown()"
+  [legendPosition]="legendPosition()"
+  [legendAlign]="legendAlign()"
+  [legendVariant]="legendVariant()"
+  [legendTemplate]="legendTemplate()?.template"
+  [empty]="isEmpty()"
+  [loading]="loading()"
+  emptyIcon="chart-pie"
+  [summary]="summary()"
+  [table]="dataTable()"
+  [tooltip]="tooltip()"
+  [tooltipTemplate]="tooltipTemplate()?.template"
+  [panelStyle]="tokenStyle()"
+  [parts]="passThrough()"
+  [styled]="!isUnstyled()"
+  (pointer)="onPointer($event)"
+  (navigate)="onNavigate($event)"
+  (legendToggled)="onLegendToggle($event)"
+  (legendHovered)="onLegendHover($event)"
+  (tooltipClosed)="hovered.set(null)"
+>
+  <svg:g class="tx-pie-chart__segments" [style.transform-origin]="geometry().fit.cx + 'px ' + geometry().fit.cy + 'px'">
+    @for (segment of segments(); track segment.key) {
+      <svg:path
+        class="tx-pie-chart__segment"
+        [class.tx-pie-chart__segment--hovered]="hovered() === segment.index"
+        [class]="passThrough().segment?.class"
+        [style]="passThrough().segment?.style"
+        [attr.data-index]="segment.index"
+        [attr.d]="segment.path"
+        [style.--tx-pie-chart-color]="segment.color"
+        [style.stroke-width]="segmentGap()"
+        [style.--tx-pie-chart-ux]="segment.ux"
+        [style.--tx-pie-chart-uy]="segment.uy"
+      />
+    }
+  </svg:g>
+  @if (showDataLabels()) {
+    <svg:g class="tx-pie-chart__labels">
+      @for (segment of segments(); track segment.key) {
+        @if (segment.label) {
+          <svg:text
+            class="tx-pie-chart__label"
+            [class]="passThrough().dataLabel?.class"
+            [style]="passThrough().dataLabel?.style"
+            text-anchor="middle"
+            dominant-baseline="central"
+            [attr.x]="segment.labelX"
+            [attr.y]="segment.labelY"
+          >
+            {{ segment.label }}
+          </svg:text>
+        }
+      }
+    </svg:g>
+  }
+  @if (inner() > 0) {
+    @if (centerTemplate(); as custom) {
+      <svg:foreignObject
+        class="tx-pie-chart__center"
+        [class]="passThrough().center?.class"
+        [style]="passThrough().center?.style"
+        [attr.x]="centerBox().x"
+        [attr.y]="centerBox().y"
+        [attr.width]="centerBox().size"
+        [attr.height]="centerBox().size"
+      >
+        <xhtml:div class="tx-pie-chart__center-content">
+          <ng-container [ngTemplateOutlet]="custom.template" [ngTemplateOutletContext]="{ $implicit: center() ?? { label: '', value: '', raw: total(), total: total(), hovered: false, index: -1, color: null } }" />
+        </xhtml:div>
+      </svg:foreignObject>
+    } @else if (center(); as data) {
+      <svg:g class="tx-pie-chart__center" [class]="passThrough().center?.class" [style]="passThrough().center?.style">
+        <svg:text
+          class="tx-pie-chart__center-value"
+          text-anchor="middle"
+          [attr.x]="centerBox().cx"
+          [attr.y]="centerBox().cy + centerFont().value * 0.32 - centerFont().name * 0.55"
+          [style.font-size.px]="centerFont().value"
+        >
+          {{ data.value }}
+        </svg:text>
+        <svg:text
+          class="tx-pie-chart__center-name"
+          text-anchor="middle"
+          dominant-baseline="hanging"
+          [attr.x]="centerBox().cx"
+          [attr.y]="centerBox().cy + centerFont().value * 0.32 - centerFont().name * 0.55 + 6"
+          [style.font-size.px]="centerFont().name"
+        >
+          {{ data.label }}
+        </svg:text>
+      </svg:g>
+    }
+  }
+</tx-chart-frame>

@@ -1,0 +1,1 @@
+Pass `series` (`{ name, data }`) and `categories`. Hover the chart — a rule marks the nearest value and the tooltip sits above it — or focus it and use the arrow keys; click a legend item to hide a series.

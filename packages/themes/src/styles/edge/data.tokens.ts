@@ -5,6 +5,13 @@ import { TectraDeepPartial } from '../../types/deep-partial.type';
 const radius = tokenRef('radius-xs');
 
 export const edgeDataTokens: TectraDeepPartial<TectraComponentTokens> = {
+  chart: {
+    pie: { segmentRadius: '1px' },
+    bar: { radius: radius },
+    legend: { borderRadius: radius, markerRadius: '1px', pillRadius: radius, statRadius: radius },
+    tooltip: { borderRadius: radius },
+    line: { strokeWidth: '2' },
+  },
   paginator: {
     root: { borderRadius: radius },
     navButton: { borderRadius: radius },

@@ -1,0 +1,112 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+:host(.tx-line-chart--fill) {
+  height: 100%;
+}
+
+.tx-line-chart__line {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.tx-line-chart__crosshair {
+  pointer-events: none;
+  shape-rendering: crispEdges;
+}
+
+.tx-line-chart__marker,
+.tx-line-chart__halo,
+.tx-line-chart__point {
+  pointer-events: none;
+}
+
+:host([data-styled]) {
+  .tx-line-chart__line {
+    stroke-width: var(--tx-chart-line-stroke-width);
+  }
+
+  .tx-line-chart__stop-from {
+    stop-opacity: var(--tx-chart-line-area-opacity-from);
+  }
+
+  .tx-line-chart__stop-to {
+    stop-opacity: var(--tx-chart-line-area-opacity-to);
+  }
+
+  .tx-line-chart__area--stacked {
+    fill: var(--tx-line-chart-color);
+    fill-opacity: var(--tx-chart-line-stacked-area-opacity);
+  }
+
+  .tx-line-chart__point {
+    r: var(--tx-chart-line-point-radius);
+    stroke: var(--tx-chart-marker-stroke-color);
+    stroke-width: var(--tx-chart-marker-stroke-width);
+  }
+
+  .tx-line-chart__marker {
+    r: var(--tx-chart-marker-radius);
+    stroke: var(--tx-chart-marker-stroke-color);
+    stroke-width: var(--tx-chart-marker-stroke-width);
+  }
+
+  .tx-line-chart__halo {
+    r: var(--tx-chart-marker-halo-radius);
+    opacity: var(--tx-chart-marker-halo-opacity);
+  }
+
+  .tx-line-chart__crosshair {
+    stroke: var(--tx-chart-crosshair-color);
+    stroke-width: var(--tx-chart-crosshair-width);
+    stroke-dasharray: var(--tx-chart-crosshair-dash);
+  }
+
+  .tx-line-chart__series {
+    transition: opacity var(--tx-chart-motion-update-duration) ease;
+  }
+}
+
+:host([data-styled].tx-line-chart--focused) .tx-line-chart__series:not(.tx-line-chart__series--focused) {
+  opacity: var(--tx-chart-line-dimmed-opacity);
+}
+
+:host([data-styled].tx-line-chart--morph) {
+  .tx-line-chart__line,
+  .tx-line-chart__area {
+    transition: d var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing);
+  }
+
+  .tx-line-chart__point {
+    transition:
+      cx var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing),
+      cy var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing);
+  }
+}
+
+:host([data-styled].tx-line-chart--entering) .tx-line-chart__series {
+  animation: tx-line-chart-reveal var(--tx-chart-motion-enter-duration) var(--tx-chart-motion-easing) both;
+}
+
+@keyframes tx-line-chart-reveal {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) .tx-line-chart__series,
+  :host([data-styled].tx-line-chart--morph) .tx-line-chart__line,
+  :host([data-styled].tx-line-chart--morph) .tx-line-chart__area,
+  :host([data-styled].tx-line-chart--morph) .tx-line-chart__point {
+    transition: none;
+    animation: none;
+  }
+}

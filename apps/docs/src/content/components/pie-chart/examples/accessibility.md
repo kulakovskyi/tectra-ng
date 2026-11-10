@@ -1,0 +1,1 @@
+Tab to the chart and use the arrow keys to walk the segments (Home / End to the ends, Escape to leave); each is announced with its value and share, and the tooltip follows. A summary and a hidden table with values and shares are there for screen readers.

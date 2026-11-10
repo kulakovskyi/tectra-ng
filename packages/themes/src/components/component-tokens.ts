@@ -79,6 +79,7 @@ import { qrCodeTokens } from './qr-code.tokens';
 import { confettiTokens } from './confetti.tokens';
 import { hoverEffectTokens } from './hover-effect.tokens';
 import { mascotTokens } from './mascot.tokens';
+import { chartTokens } from './chart.tokens';
 
 export const COMPONENT_TOKENS = {
   icon: iconTokens,
@@ -191,6 +192,7 @@ export const COMPONENT_TOKENS = {
   confetti: confettiTokens,
   hoverEffect: hoverEffectTokens,
   mascot: mascotTokens,
+  chart: chartTokens,
 };
 
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

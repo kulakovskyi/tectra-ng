@@ -1,0 +1,41 @@
+.tx-chart-axes__grid-line,
+.tx-chart-axes__zero,
+.tx-chart-axes__line {
+  fill: none;
+  shape-rendering: crispEdges;
+}
+
+.tx-chart-axes__label,
+.tx-chart-axes__title {
+  user-select: none;
+}
+
+:host-context([data-styled]) {
+  .tx-chart-axes__grid-line {
+    stroke: var(--tx-chart-grid-color);
+    stroke-width: var(--tx-chart-grid-width);
+    stroke-dasharray: var(--tx-chart-grid-dash);
+  }
+
+  .tx-chart-axes__zero {
+    stroke: var(--tx-chart-zero-line-color);
+    stroke-width: var(--tx-chart-zero-line-width);
+  }
+
+  .tx-chart-axes__line {
+    stroke: var(--tx-chart-axis-line-color);
+  }
+
+  .tx-chart-axes__label {
+    fill: var(--tx-chart-axis-label-color);
+    font-size: var(--tx-chart-axis-label-font-size);
+    font-weight: var(--tx-chart-axis-label-font-weight);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tx-chart-axes__title {
+    fill: var(--tx-chart-axis-title-color);
+    font-size: var(--tx-chart-axis-title-font-size);
+    font-weight: var(--tx-chart-axis-title-font-weight);
+  }
+}

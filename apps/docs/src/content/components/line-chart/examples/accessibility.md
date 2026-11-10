@@ -1,0 +1,1 @@
+The chart is an image with a summary (`ariaLabel` plus the type, the number of series and values and the range) and a visually hidden data table for screen readers. Tab to the chart and use ←/→ to move between values, ↑/↓ to switch series, Home / End and Escape — each value is announced and the tooltip follows.

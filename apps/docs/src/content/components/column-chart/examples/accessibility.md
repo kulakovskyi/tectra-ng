@@ -1,0 +1,1 @@
+Tab to the chart: ←/→ move between categories, ↑/↓ between the series of a stack (in a horizontal chart the keys swap), Home / End jump to the ends, Escape closes the tooltip. Each bar is announced; screen readers also get a summary and a hidden data table.

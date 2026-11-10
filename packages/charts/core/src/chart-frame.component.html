@@ -1,0 +1,138 @@
+@if (legendVisible()) {
+  <tx-chart-legend
+    class="tx-chart-frame__legend"
+    [class]="parts().legend?.class"
+    [style]="parts().legend?.style"
+    [attr.data-styled]="styled() || null"
+    [items]="legendItems()"
+    [position]="legendPosition()"
+    [align]="legendAlign()"
+    [variant]="legendVariant()"
+    [toggle]="legendToggle()"
+    [template]="legendTemplate()"
+    [itemPart]="parts().legendItem"
+    (toggled)="legendToggled.emit($event)"
+    (hovered)="legendHovered.emit($event)"
+  />
+}
+<div
+  #plot
+  class="tx-chart-frame__plot"
+  [class]="parts().plot?.class"
+  [style]="parts().plot?.style"
+  [style.height.px]="plotHeight()"
+  [class.tx-chart-frame__plot--fixed]="plotHeight() !== null"
+  [attr.role]="empty() || loading() ? null : 'img'"
+  [attr.aria-label]="empty() || loading() ? null : summary()"
+  [attr.aria-describedby]="interactive() && !empty() && !loading() ? hintId : null"
+  [attr.tabindex]="interactive() && !empty() && !loading() ? 0 : null"
+  (pointermove)="onPointer($event, 'move')"
+  (pointerdown)="onPointer($event, 'move')"
+  (pointerleave)="onPointer($event, 'leave')"
+  (click)="onPointer($event, 'click')"
+  (keydown)="onKeydown($event)"
+  (blur)="pointer.emit({ x: 0, y: 0, type: 'leave', target: null })"
+>
+  @if (loading()) {
+    <tx-skeleton
+      class="tx-chart-frame__skeleton"
+      [class]="parts().skeleton?.class"
+      [style]="parts().skeleton?.style"
+      width="100%"
+      height="100%"
+      [unstyled]="!styled()"
+      [attr.aria-label]="translations().chartLoading"
+      role="status"
+    />
+  } @else if (empty()) {
+    <div class="tx-chart-frame__empty" role="status" [class]="parts().empty?.class" [style]="parts().empty?.style">
+      <span class="tx-chart-frame__empty-icon" aria-hidden="true"><tx-icon [name]="emptyIcon()" /></span>
+      <span class="tx-chart-frame__empty-text">{{ translations().chartNoData }}</span>
+    </div>
+  } @else {
+    <svg
+      class="tx-chart-frame__svg"
+      [class]="parts().svg?.class"
+      [style]="parts().svg?.style"
+      xmlns="http://www.w3.org/2000/svg"
+      focusable="false"
+      aria-hidden="true"
+      preserveAspectRatio="xMinYMin meet"
+      [attr.viewBox]="viewBox()"
+    >
+      <ng-content />
+    </svg>
+    <span #anchor class="tx-chart-frame__anchor" aria-hidden="true"></span>
+  }
+</div>
+@if (interactive() && !empty() && !loading()) {
+  <span class="cdk-visually-hidden" [id]="hintId">{{ translations().chartNavigateHint }}</span>
+}
+@if (table(); as data) {
+  @if (!empty() && !loading()) {
+    <table class="cdk-visually-hidden">
+      <caption>
+        {{ summary() || translations().chartDataTable }}
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">{{ translations().chartCategory }}</th>
+          @for (column of data.columns; track column.key) {
+            <th scope="col">{{ column.label }}</th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of data.rows; track $index) {
+          <tr>
+            <th scope="row">{{ row.label }}</th>
+            @for (cell of row.cells; track $index) {
+              <td>{{ cell }}</td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+}
+
+<ng-template #tooltipPanel>
+  @if (shown(); as data) {
+    <div
+      class="tx-chart-frame__tooltip"
+      role="presentation"
+      [class]="parts().tooltip?.class"
+      [style]="panelStyle()"
+      [style.--tx-chart-tooltip-arrow-offset]="arrowOffset()"
+      [attr.data-side]="side()"
+      [attr.data-styled]="styled() || null"
+    >
+      @if (styled()) {
+        <span class="tx-chart-frame__tooltip-arrow" aria-hidden="true"></span>
+      }
+      @if (tooltipTemplate(); as custom) {
+        <ng-container [ngTemplateOutlet]="custom" [ngTemplateOutletContext]="{ $implicit: data }" />
+      } @else {
+        @if (data.title) {
+          <div class="tx-chart-frame__tooltip-title">{{ data.title }}</div>
+        }
+        @for (row of data.rows; track row.seriesIndex) {
+          <div class="tx-chart-frame__tooltip-row" [class.tx-chart-frame__tooltip-row--active]="row.active && data.rows.length > 1">
+            <span class="tx-chart-frame__tooltip-marker" [style.background]="row.color"></span>
+            <span class="tx-chart-frame__tooltip-label">{{ row.label }}</span>
+            <span class="tx-chart-frame__tooltip-value">{{ row.value }}</span>
+            @if (row.share) {
+              <span class="tx-chart-frame__tooltip-share">{{ row.share }}</span>
+            }
+          </div>
+        }
+        @if (data.total) {
+          <div class="tx-chart-frame__tooltip-row tx-chart-frame__tooltip-total">
+            <span class="tx-chart-frame__tooltip-label">{{ translations().chartTotal }}</span>
+            <span class="tx-chart-frame__tooltip-value">{{ data.total }}</span>
+          </div>
+        }
+      }
+    </div>
+  }
+</ng-template>

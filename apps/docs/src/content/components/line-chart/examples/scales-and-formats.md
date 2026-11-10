@@ -1,0 +1,1 @@
+`valueFormat` formats the value axis and the tooltip through the kit's locale: `number`, `integer`, `compact` (`1.2K`, `3.4M`), `percent` or your own function. `yScale="log"` spreads values that differ by orders of magnitude.

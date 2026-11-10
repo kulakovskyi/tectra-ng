@@ -26,6 +26,7 @@ packages/
   ui/export-font @tectra-ng/ui/export-font Onest (OFL) for PDF export, loaded on the first PDF export; `npm run export-font`
   ui/styles/    shared SCSS mixins (_form-field.scss)
   editor/       @tectra-ng/editor        rich text editor on the ProseMirror core: model, state, view, transform (own package, engine deps stay out of ui; everything above the core is our code); editor/content = renderer + HTML helpers
+  charts/<entry> @tectra-ng/charts/<entry> SVG charts without a chart library: core (scales, ticks, formats, curves, stacks, frame with legend / tooltip / a11y, axes), line, column, pie; one entry point per chart
   qr/           @tectra-ng/qr            QR codes without a framework: encoder, SVG paths, styled SVG / PNG (no dependencies; blocks/qr-code is the Angular block on it)
   blocks/<name> @tectra-ng/blocks/<name> composed blocks
 apps/docs       docs site (port 4300), content in apps/docs/src/content/components/<name>; every route prerendered (SSG + hydration), so docs code must run on the server (no bare window / requestAnimationFrame); SEO meta per page in src/app/seo + data/seo.data.ts
@@ -34,7 +35,7 @@ e2e/visual      Playwright checks of the built docs (port 4310)
 tools/          registry-builder (docs registry), site-files (sitemap, robots, llms.txt, component .md, 404 after the docs build), brand (favicons, social preview), icons, flags, export-font, serve-docs
 ```
 
-Aliases are wildcards in `tsconfig.base.json` (`@tectra-ng/ui/*` → `./packages/ui/*/index.ts`) — a new entry point needs no alias. Module boundaries (`eslint.config.mjs`, tags `pkg:*`): tokens → nothing; themes → tokens; core → themes, tokens; ui → core, icons, themes, tokens; qr → nothing; editor → ui + below; blocks → ui + below and qr. A ui entry point may import another ui entry point through its alias.
+Aliases are wildcards in `tsconfig.base.json` (`@tectra-ng/ui/*` → `./packages/ui/*/index.ts`) — a new entry point needs no alias. Module boundaries (`eslint.config.mjs`, tags `pkg:*`): tokens → nothing; themes → tokens; core → themes, tokens; ui → core, icons, themes, tokens; qr → nothing; editor → ui + below; charts → ui + below; blocks → ui + below and qr. A ui entry point may import another ui entry point through its alias.
 
 ## New npm package (checklist)
 

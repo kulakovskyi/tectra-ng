@@ -1,0 +1,1 @@
+`xAxisTitle` and `yAxisTitle` name the axes, `yAxisPosition` and `xAxisPosition` move the axes to the right or the top, `grid` draws `value`, `category`, `both` or `none` grid lines, `yMin` / `yMax` fix the value range. Labels that do not fit are skipped or turned (`labelMode`).

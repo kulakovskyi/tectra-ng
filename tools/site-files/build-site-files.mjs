@@ -64,7 +64,7 @@ const llms = [
   '',
   `> ${description}`,
   '',
-  `Version ${version}. Packages: \`tectra-ng\` (everything), \`@tectra-ng/ui/<name>\` (one entry point per component), \`@tectra-ng/core\`, \`@tectra-ng/themes\`, \`@tectra-ng/tokens\`, \`@tectra-ng/icons\`, \`@tectra-ng/editor\`, \`@tectra-ng/blocks/<name>\` (ready page blocks). Selectors start with \`tx-\`, CSS variables with \`--tx-\`. Every component has \`dt\` (design tokens), \`pt\` (pass-through) and \`unstyled\`.`,
+  `Version ${version}. Packages: \`tectra-ng\` (everything), \`@tectra-ng/ui/<name>\` (one entry point per component), \`@tectra-ng/core\`, \`@tectra-ng/themes\`, \`@tectra-ng/tokens\`, \`@tectra-ng/icons\`, \`@tectra-ng/editor\`, \`@tectra-ng/charts/<chart>\` (SVG charts: line, column, pie), \`@tectra-ng/blocks/<name>\` (ready page blocks). Selectors start with \`tx-\`, CSS variables with \`--tx-\`. Every component has \`dt\` (design tokens), \`pt\` (pass-through) and \`unstyled\`.`,
   '',
   '## Install',
   '',

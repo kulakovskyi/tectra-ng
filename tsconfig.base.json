@@ -26,6 +26,8 @@
       "@tectra-ng/ui/*": ["./packages/ui/*/index.ts"],
       "@tectra-ng/blocks/*": ["./packages/blocks/*/index.ts"],
       "@tectra-ng/editor": ["./packages/editor/index.ts"],
+      "@tectra-ng/charts": ["./packages/charts/index.ts"],
+      "@tectra-ng/charts/*": ["./packages/charts/*/index.ts"],
       "@tectra-ng/editor/*": ["./packages/editor/*/index.ts"]
     }
   },

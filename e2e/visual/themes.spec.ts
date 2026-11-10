@@ -25,6 +25,7 @@ const THEMED_PAGES = [
   '/components/stepper',
   '/components/filters-panel',
   '/components/kanban',
+  '/components/column-chart',
 ];
 
 const pages = process.env['TX_E2E_ALL_STYLES'] ? PAGES.filter((path) => path !== '/') : THEMED_PAGES;

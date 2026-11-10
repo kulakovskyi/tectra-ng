@@ -1,0 +1,1 @@
+`pt` adds classes and styles to the parts — `root`, `legend`, `legendItem`, `plot`, `svg`, `grid`, `axis`, `series`, `line`, `area`, `marker`, `crosshair`, `tooltip`, `empty`, `skeleton`. `unstyled` drops the tectra styles and keeps the behaviour.

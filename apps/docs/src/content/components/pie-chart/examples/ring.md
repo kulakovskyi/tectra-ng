@@ -1,0 +1,1 @@
+`donutSize` sets the hole (`'65%'` by default), `segmentGap` the card-coloured gap between segments in pixels and `segmentRadius` the rounding of their corners — large on a thin ring for soft capsule ends, `0` for sharp cuts. The rounding shrinks by itself where a segment is too narrow for it.
