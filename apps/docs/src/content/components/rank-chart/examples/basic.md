@@ -1,0 +1,1 @@
+Pass `series` with `points` of `{ time, rank }`. Rank 1 is on top, `null` leaves a gap (a check without a position), and `rankLabel` captions the rank in the tooltip. Hover a point or use the arrow keys.

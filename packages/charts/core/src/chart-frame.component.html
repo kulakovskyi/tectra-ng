@@ -132,6 +132,9 @@
             <span class="tx-chart-frame__tooltip-value">{{ data.total }}</span>
           </div>
         }
+        @if (data.note) {
+          <div class="tx-chart-frame__tooltip-note">{{ data.note }}</div>
+        }
       }
     </div>
   }

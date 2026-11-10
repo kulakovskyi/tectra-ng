@@ -374,6 +374,8 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     chartDonut: 'Donut chart',
     chartHeatmap: 'Heatmap',
     chartTreemap: 'Treemap',
+    chartRank: 'Rank chart',
+    chartRankValue: 'Rank',
   },
 };
 
@@ -751,6 +753,8 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     chartDonut: 'Кільцева діаграма',
     chartHeatmap: 'Теплова карта',
     chartTreemap: 'Деревоподібна карта',
+    chartRank: 'Графік позицій',
+    chartRankValue: 'Позиція',
   },
 };
 

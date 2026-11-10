@@ -167,6 +167,12 @@
     gap: var(--tx-chart-tooltip-marker-gap);
   }
 
+  .tx-chart-frame__tooltip-note {
+    margin-top: 2px;
+    color: var(--tx-chart-tooltip-note-color);
+    font-size: var(--tx-chart-tooltip-title-font-size);
+  }
+
   .tx-chart-frame__tooltip-marker {
     flex-shrink: 0;
     width: var(--tx-chart-tooltip-marker-size);

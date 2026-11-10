@@ -1,0 +1,55 @@
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.tx-rank-chart__line {
+  fill: none;
+  stroke: var(--tx-rank-chart-color);
+}
+
+.tx-rank-chart__marker {
+  fill: var(--tx-rank-chart-color);
+  r: 4px;
+  pointer-events: none;
+}
+
+:host([data-styled]) {
+  .tx-rank-chart__line {
+    stroke-width: var(--tx-chart-rank-line-stroke-width);
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+
+  .tx-rank-chart__marker {
+    r: calc(var(--tx-chart-rank-line-marker-radius) * 1px);
+    transition: r var(--tx-chart-motion-hover-duration) ease;
+  }
+
+  .tx-rank-chart__marker--active {
+    r: calc(var(--tx-chart-rank-line-marker-hover-radius) * 1px);
+  }
+}
+
+:host([data-styled].tx-rank-chart--entering) .tx-rank-chart__lines,
+:host([data-styled].tx-rank-chart--entering) .tx-rank-chart__markers {
+  animation: tx-rank-chart-enter var(--tx-chart-motion-enter-duration) var(--tx-chart-motion-easing) both;
+}
+
+@keyframes tx-rank-chart-enter {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) {
+    .tx-rank-chart__marker,
+    .tx-rank-chart__lines,
+    .tx-rank-chart__markers {
+      transition: none;
+      animation: none;
+    }
+  }
+}

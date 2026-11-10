@@ -17,7 +17,7 @@ function serverChart(html: string, tag: string): { paths: number; legend: number
   const start = html.indexOf(`<${tag}`);
   const chart = html.slice(start, html.indexOf(`</${tag}>`, start));
   return {
-    paths: (chart.match(/class="tx-line-chart__line/g) ?? chart.match(/class="tx-column-chart__bar[ "]/g) ?? chart.match(/class="tx-pie-chart__segment[ "]/g) ?? chart.match(/class="tx-treemap__tile[ "]/g) ?? []).length,
+    paths: (chart.match(/class="tx-line-chart__line/g) ?? chart.match(/class="tx-column-chart__bar[ "]/g) ?? chart.match(/class="tx-pie-chart__segment[ "]/g) ?? chart.match(/class="tx-treemap__tile[ "]/g) ?? chart.match(/class="tx-rank-chart__line[ "]/g) ?? []).length,
     legend: (chart.match(/class="tx-chart-legend__item/g) ?? []).length,
     labels: [...chart.matchAll(/class="tx-chart-axes__label"[^>]*>\s*([^<]*?)\s*</g)].map((match) => match[1]),
   };
@@ -26,6 +26,7 @@ function serverChart(html: string, tag: string): { paths: number; legend: number
 test.describe('charts', () => {
   for (const [path, tag, shape] of [
     ['/components/treemap', 'tx-treemap', '.tx-treemap__tile'],
+    ['/components/rank-chart', 'tx-rank-chart', '.tx-rank-chart__line'],
     ['/components/line-chart', 'tx-line-chart', '.tx-line-chart__line'],
     ['/components/column-chart', 'tx-column-chart', '.tx-column-chart__bar'],
     ['/components/pie-chart', 'tx-pie-chart', '.tx-pie-chart__segment'],
@@ -325,5 +326,36 @@ test.describe('charts', () => {
       }
     }
     await expect(example(page, 'Tile template').locator('.share').first()).toHaveText(/%$/);
+  });
+
+  test('rank chart: rank 1 on top, tooltip with the note, keyboard, legend toggle', async ({ page }) => {
+    await page.goto('/components/rank-chart');
+    const basic = example(page, 'Basic').locator('tx-rank-chart');
+    const labels = basic.locator('.tx-chart-axes__axis[data-position="left"] .tx-chart-axes__label');
+    await expect(labels.first()).toHaveText('1');
+    const top = await labels.first().boundingBox();
+    const bottom = await labels.last().boundingBox();
+    expect(top?.y ?? 0).toBeLessThan(bottom?.y ?? 0);
+    await expect(basic.locator('.tx-rank-chart__line')).toHaveCount(3);
+
+    const notes = example(page, 'Notes').locator('tx-rank-chart');
+    await notes.scrollIntoViewIfNeeded();
+    const last = notes.locator('.tx-rank-chart__marker').last();
+    const box = await last.boundingBox();
+    await page.mouse.move((box?.x ?? 0) + (box?.width ?? 0) / 2, (box?.y ?? 0) + (box?.height ?? 0) / 2);
+    await expect(tooltip(page)).toContainText('Position: 1');
+    await expect(page.locator('.tx-chart-frame__tooltip-note')).toHaveText('Featured snippet');
+    await page.mouse.click((box?.x ?? 0) + (box?.width ?? 0) / 2, (box?.y ?? 0) + (box?.height ?? 0) / 2);
+    await expect(example(page, 'Notes').locator('tx-message')).toContainText('position 1 — Featured snippet');
+    await page.mouse.move(0, 0);
+    await notes.locator('.tx-chart-frame__plot').focus();
+    await page.keyboard.press('Home');
+    await expect(tooltip(page)).toContainText('Position: 7');
+
+    const legend = example(page, 'Legend').locator('tx-rank-chart');
+    await legend.scrollIntoViewIfNeeded();
+    await expect(legend.locator('.tx-rank-chart__line')).toHaveCount(5);
+    await legend.locator('.tx-chart-legend__item').first().click();
+    await expect(legend.locator('.tx-rank-chart__line')).toHaveCount(4);
   });
 });

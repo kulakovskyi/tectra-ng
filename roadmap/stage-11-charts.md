@@ -104,12 +104,12 @@ First app: share of a total split into many categories, `items` (`{ label, value
 - [x] `<tx-treemap>`: squarified layout (pure function), labels that fit or end with an ellipsis (HTML in the tile, so any font or `pt` style stays inside), `txTreemapTile` template for own tile content, nested groups; tooltip with the share, hover dims the rest, arrow keys walk the tiles, `tileClick`, `valueFormat`, `tooltipFormatter`, `loading`
 - [x] Docs + tests; e2e
 
-## 11.11 Rank line — `charts/rank-line` (1)
+## 11.11 Rank line — `charts/rank-line` (1) ✅
 
 First app: search positions over real check times — rank 1 on top, one line per series with its own colour, a gap for a check without a rank, tooltip with the date, series name, rank and an optional note; `series` (`{ name, color, points: { time, rank | null, note? }[] }`), `maxRank` (ticks by 5 up to 20, by 10 deeper), `rankLabel`, `height`; a 12-colour line palette with stable colours by series index.
 
-- [ ] `<tx-rank-chart>` with the first app's API and look
-- [ ] Docs + tests; e2e
+- [x] `<tx-rank-chart>` with the first app's API and look; `color` optional (`rankLineColor(index)` from the 12-colour `chart.rankLine` tokens), optional legend that toggles series, `pointClick`, arrow keys walk a series and switch series, `note` in the core tooltip
+- [x] Docs + tests; e2e
 
 ## 11.12 Radar, radial bar and gauge
 

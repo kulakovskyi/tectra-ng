@@ -105,6 +105,7 @@ export interface TxChartTooltipData {
   y: number;
   placement?: TxChartTooltipPlacement;
   total?: string;
+  note?: string;
 }
 
 export type TxChartTooltipPlacement = 'top' | 'bottom' | 'left' | 'right';

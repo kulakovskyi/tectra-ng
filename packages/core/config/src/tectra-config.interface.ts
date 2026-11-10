@@ -372,6 +372,8 @@ export interface TxTranslations {
   chartDonut: string;
   chartHeatmap: string;
   chartTreemap: string;
+  chartRank: string;
+  chartRankValue: string;
 }
 
 export type TxValidationMessage = string | ((error: unknown) => string);

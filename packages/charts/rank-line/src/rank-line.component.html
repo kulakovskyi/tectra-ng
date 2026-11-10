@@ -1,0 +1,47 @@
+@let parts = passThrough();
+<tx-chart-frame
+  [height]="height()"
+  [(size)]="size"
+  [legendItems]="legendItems()"
+  [showLegend]="legendShown()"
+  [legendPosition]="legendPosition()"
+  [legendAlign]="legendAlign()"
+  [legendVariant]="legendVariant()"
+  [legendTemplate]="legendTemplate()?.template"
+  [empty]="isEmpty()"
+  [loading]="loading()"
+  emptyIcon="chart-line"
+  [summary]="summary()"
+  [table]="dataTable()"
+  [tooltip]="tooltip()"
+  [tooltipTemplate]="tooltipTemplate()?.template"
+  [panelStyle]="tokenStyle()"
+  [parts]="parts"
+  [styled]="!isUnstyled()"
+  (pointer)="onPointer($event)"
+  (navigate)="onNavigate($event)"
+  (legendToggled)="onLegendToggle($event)"
+  (tooltipClosed)="active.set(null)"
+>
+  <svg:g [tx-chart-axes]="layout().axes" [gridPart]="parts.grid" [axisPart]="parts.axis" />
+  <svg:g class="tx-rank-chart__lines">
+    @for (line of lines(); track line.key) {
+      <svg:path class="tx-rank-chart__line" [class]="parts.line?.class" [style]="parts.line?.style" [attr.d]="line.path" [style.--tx-rank-chart-color]="line.color" />
+    }
+  </svg:g>
+  <svg:g class="tx-rank-chart__markers">
+    @for (line of lines(); track line.key) {
+      @for (marker of line.markers; track marker.key) {
+        <svg:circle
+          class="tx-rank-chart__marker"
+          [class.tx-rank-chart__marker--active]="active() === marker.key"
+          [class]="parts.marker?.class"
+          [style]="parts.marker?.style"
+          [style.--tx-rank-chart-color]="line.color"
+          [attr.cx]="marker.x"
+          [attr.cy]="marker.y"
+        />
+      }
+    }
+  </svg:g>
+</tx-chart-frame>
