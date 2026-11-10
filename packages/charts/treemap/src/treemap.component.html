@@ -1,0 +1,78 @@
+@let parts = passThrough();
+<tx-chart-frame
+  [height]="height()"
+  [(size)]="size"
+  [showLegend]="false"
+  [empty]="isEmpty()"
+  [loading]="loading()"
+  emptyIcon="th-large"
+  [summary]="summary()"
+  [table]="dataTable()"
+  [tooltip]="tooltip()"
+  [tooltipTemplate]="tooltipTemplate()?.template"
+  [panelStyle]="tokenStyle()"
+  [parts]="parts"
+  [styled]="!isUnstyled()"
+  (pointer)="onPointer($event)"
+  (navigate)="onNavigate($event)"
+  (tooltipClosed)="hovered.set(null)"
+>
+  @for (group of layout().groups; track group.key) {
+    <svg:g class="tx-treemap__group" [class]="parts.group?.class" [style]="parts.group?.style">
+      <svg:rect class="tx-treemap__group-box" [attr.x]="group.x" [attr.y]="group.y" [attr.width]="group.width" [attr.height]="group.height" />
+      @if (group.width > 40) {
+        <svg:text
+          class="tx-treemap__group-label"
+          [class]="parts.groupLabel?.class"
+          [style]="parts.groupLabel?.style"
+          [attr.x]="group.x + 8"
+          [attr.y]="group.y + 11"
+          dominant-baseline="central"
+        >
+          {{ group.label }}
+        </svg:text>
+      }
+    </svg:g>
+  }
+  <svg:g class="tx-treemap__tiles">
+    @for (tile of layout().tiles; track tile.key) {
+      <svg:g class="tx-treemap__tile-group" [class.tx-treemap__tile-group--hovered]="hovered() === tile.index">
+        <svg:rect
+          class="tx-treemap__tile"
+          [class]="parts.tile?.class"
+          [style]="parts.tile?.style"
+          [style.--tx-treemap-color]="tile.color"
+          [attr.data-index]="tile.index"
+          [attr.x]="tile.x"
+          [attr.y]="tile.y"
+          [attr.width]="tile.width"
+          [attr.height]="tile.height"
+        />
+        @if (tile.nameFits) {
+          <svg:text
+            class="tx-treemap__tile-label"
+            [class]="parts.tileLabel?.class"
+            [style]="parts.tileLabel?.style"
+            [attr.x]="tile.x + 8"
+            [attr.y]="tile.y + 8"
+            dominant-baseline="hanging"
+          >
+            {{ tile.label }}
+          </svg:text>
+          @if (tile.valueFits) {
+            <svg:text
+              class="tx-treemap__tile-value"
+              [class]="parts.tileValue?.class"
+              [style]="parts.tileValue?.style"
+              [attr.x]="tile.x + 8"
+              [attr.y]="tile.y + 27"
+              dominant-baseline="hanging"
+            >
+              {{ tile.valueText }}
+            </svg:text>
+          }
+        }
+      </svg:g>
+    }
+  </svg:g>
+</tx-chart-frame>

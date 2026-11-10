@@ -17,7 +17,7 @@ function serverChart(html: string, tag: string): { paths: number; legend: number
   const start = html.indexOf(`<${tag}`);
   const chart = html.slice(start, html.indexOf(`</${tag}>`, start));
   return {
-    paths: (chart.match(/class="tx-line-chart__line/g) ?? chart.match(/class="tx-column-chart__bar[ "]/g) ?? chart.match(/class="tx-pie-chart__segment[ "]/g) ?? []).length,
+    paths: (chart.match(/class="tx-line-chart__line/g) ?? chart.match(/class="tx-column-chart__bar[ "]/g) ?? chart.match(/class="tx-pie-chart__segment[ "]/g) ?? chart.match(/class="tx-treemap__tile[ "]/g) ?? []).length,
     legend: (chart.match(/class="tx-chart-legend__item/g) ?? []).length,
     labels: [...chart.matchAll(/class="tx-chart-axes__label"[^>]*>\s*([^<]*?)\s*</g)].map((match) => match[1]),
   };
@@ -25,6 +25,7 @@ function serverChart(html: string, tag: string): { paths: number; legend: number
 
 test.describe('charts', () => {
   for (const [path, tag, shape] of [
+    ['/components/treemap', 'tx-treemap', '.tx-treemap__tile'],
     ['/components/line-chart', 'tx-line-chart', '.tx-line-chart__line'],
     ['/components/column-chart', 'tx-column-chart', '.tx-column-chart__bar'],
     ['/components/pie-chart', 'tx-pie-chart', '.tx-pie-chart__segment'],
@@ -287,5 +288,33 @@ test.describe('charts', () => {
     const calendar = example(page, 'Calendar').locator('tx-heatmap');
     await expect(calendar.locator('.tx-heatmap__group-label')).toHaveCount(12);
     await expect(calendar.locator('.tx-heatmap-cell__box--scale').first()).toBeVisible();
+  });
+
+  test('treemap: tiles fill the plot, tooltip on hover and keyboard, nested click', async ({ page }) => {
+    await page.goto('/components/treemap');
+    const chart = example(page, 'Basic').locator('tx-treemap');
+    const plot = chart.locator('svg.tx-chart-frame__svg');
+    const tiles = chart.locator('.tx-treemap__tile');
+    await expect(tiles).toHaveCount(8);
+    const box = await plot.boundingBox();
+    const areas = await tiles.evaluateAll((elements) => elements.reduce((sum, element) => sum + Number(element.getAttribute('width')) * Number(element.getAttribute('height')), 0));
+    const viewBox = (await plot.getAttribute('viewBox'))?.split(' ').map(Number) ?? [];
+    expect(areas).toBeCloseTo(viewBox[2] * viewBox[3], -1);
+    expect(Math.abs(viewBox[2] - (box?.width ?? 0))).toBeLessThanOrEqual(1);
+    await tiles.first().hover();
+    await expect(tooltip(page)).toContainText('Hosting');
+    await expect(tooltip(page)).toContainText('33');
+    await page.mouse.move(0, 0);
+    await chart.locator('.tx-chart-frame__plot').focus();
+    await page.keyboard.press('End');
+    await expect(tooltip(page)).toContainText('Other');
+
+    const nested = example(page, 'Nested');
+    await nested.locator('.tx-treemap__group-label').first().scrollIntoViewIfNeeded();
+    await expect(nested.locator('.tx-treemap__group-label')).toHaveCount(3);
+    const germany = nested.locator('.tx-treemap__tile-label', { hasText: 'Germany' });
+    const rect = await germany.boundingBox();
+    await page.mouse.click((rect?.x ?? 0) + 4, (rect?.y ?? 0) + 4);
+    await expect(nested.locator('tx-message')).toContainText('Europe / Germany: 4200');
   });
 });

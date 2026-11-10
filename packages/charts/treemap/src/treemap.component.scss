@@ -1,0 +1,88 @@
+:host {
+  display: block;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.tx-treemap__tile {
+  fill: var(--tx-treemap-color);
+}
+
+.tx-treemap__tile-label,
+.tx-treemap__tile-value,
+.tx-treemap__group-label {
+  pointer-events: none;
+}
+
+:host([data-styled]) {
+  .tx-treemap__tile {
+    rx: var(--tx-chart-treemap-radius);
+    stroke: var(--tx-chart-treemap-gap-color);
+    stroke-width: var(--tx-chart-treemap-gap);
+    transition: fill var(--tx-chart-motion-hover-duration) ease;
+  }
+
+  .tx-treemap__group-box {
+    fill: var(--tx-chart-treemap-group-background);
+    stroke: var(--tx-chart-treemap-gap-color);
+    stroke-width: var(--tx-chart-treemap-gap);
+    rx: var(--tx-chart-treemap-radius);
+  }
+
+  .tx-treemap__group-label {
+    fill: var(--tx-chart-treemap-group-label-color);
+    font-size: var(--tx-chart-treemap-group-label-font-size);
+    font-weight: var(--tx-chart-treemap-group-label-font-weight);
+  }
+
+  .tx-treemap__tile-label,
+  .tx-treemap__tile-value {
+    fill: var(--tx-chart-treemap-label-color);
+    filter: var(--tx-chart-treemap-label-shadow);
+    transition: opacity var(--tx-chart-motion-hover-duration) ease;
+  }
+
+  .tx-treemap__tile-label {
+    font-size: var(--tx-chart-treemap-label-font-size);
+    font-weight: var(--tx-chart-treemap-label-font-weight);
+  }
+
+  .tx-treemap__tile-value {
+    font-size: var(--tx-chart-treemap-value-font-size);
+    font-weight: var(--tx-chart-treemap-value-font-weight);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+:host([data-styled].tx-treemap--hovering) .tx-treemap__tile-group:not(.tx-treemap__tile-group--hovered) {
+  .tx-treemap__tile {
+    fill: color-mix(in oklab, var(--tx-treemap-color) var(--tx-chart-treemap-dimmed-strength), var(--tx-chart-treemap-dimmed-base));
+  }
+
+  .tx-treemap__tile-label,
+  .tx-treemap__tile-value {
+    opacity: 0.6;
+  }
+}
+
+:host([data-styled].tx-treemap--entering) .tx-treemap__tiles {
+  animation: tx-treemap-enter var(--tx-chart-motion-enter-duration) var(--tx-chart-motion-easing) both;
+}
+
+@keyframes tx-treemap-enter {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) {
+    .tx-treemap__tile,
+    .tx-treemap__tile-label,
+    .tx-treemap__tile-value,
+    .tx-treemap__tiles {
+      transition: none;
+      animation: none;
+    }
+  }
+}

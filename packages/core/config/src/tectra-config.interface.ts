@@ -371,6 +371,7 @@ export interface TxTranslations {
   chartPie: string;
   chartDonut: string;
   chartHeatmap: string;
+  chartTreemap: string;
 }
 
 export type TxValidationMessage = string | ((error: unknown) => string);

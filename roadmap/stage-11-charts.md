@@ -97,12 +97,12 @@ First app: rows × columns grouped in bands (days by week, hours by day), each c
 
 The wheel over the grid scrolls the page once the grid has nothing left to scroll (the first app's `overscroll-behavior: contain` trapped it); only sideways overscroll stays contained.
 
-## 11.10 Treemap — `charts/treemap` (1)
+## 11.10 Treemap — `charts/treemap` (1) ✅
 
 First app: share of a total split into many categories, `items` (`{ label, value }`), `height` (350), name and formatted value drawn inside the tiles so nothing overlaps, zero values dropped, "No data" when empty.
 
-- [ ] `<tx-treemap>`: squarified layout (pure function), labels that fit or hide, nested groups
-- [ ] Docs + tests; e2e
+- [x] `<tx-treemap>`: squarified layout (pure function), labels that fit or hide, nested groups; tooltip with the share, hover dims the rest, arrow keys walk the tiles, `tileClick`, `valueFormat`, `tooltipFormatter`, `loading`
+- [x] Docs + tests; e2e
 
 ## 11.11 Rank line — `charts/rank-line` (1)
 

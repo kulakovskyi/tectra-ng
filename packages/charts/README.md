@@ -16,6 +16,7 @@ Part of `tectra-ng`. One entry point per chart, so you only bundle what you impo
 | `@tectra-ng/charts/bar-list` | `<tx-bar-list>` — a top-N ranking: label over a share bar, value and percent of the total, router links |
 | `@tectra-ng/charts/segmented-bar` | `<tx-segmented-bar>` — parts of one whole in one bar with tones, a small or a large bar, legend with values and shares |
 | `@tectra-ng/charts/heatmap` | `<tx-heatmap>` — rows × grouped columns coloured by tones or a value scale, sticky headers, cell tooltips and clicks, `heatmapCalendar()` |
+| `@tectra-ng/charts/treemap` | `<tx-treemap>` — squarified tiles sized by value, labels that fit, nested groups |
 | `@tectra-ng/charts/core` | scales, ticks, formats, curves, stacks, the chart frame, axes and legend — for your own charts |
 
 ```ts

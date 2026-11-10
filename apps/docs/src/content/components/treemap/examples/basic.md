@@ -1,0 +1,1 @@
+Pass `items` with a `label` and a `value`. Bigger values get bigger tiles; names and values are drawn inside the tiles that have room. Hover a tile or use the arrow keys for the tooltip with its share.
