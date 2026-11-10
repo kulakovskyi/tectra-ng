@@ -13,7 +13,7 @@ import {
   orgChartSearch,
   orgChartToggle,
 } from './org-chart-tree';
-import { TX_ORG_CHART_ZOOM, centerOn, clampZoom, fitView, wheelIsMouse, wheelZoom, zoomAt } from './org-chart-view';
+import { TX_ORG_CHART_ZOOM, boundView, centerOn, clampZoom, fitView, wheelIsMouse, wheelZoom, zoomAt } from './org-chart-view';
 import { TxOrgChartNode } from './org-chart.types';
 
 const leaf = (id: string, extra: Partial<TxOrgChartNode> = {}): TxOrgChartNode => ({ id, title: id, ...extra });
@@ -129,6 +129,15 @@ describe('org chart view', () => {
     expect(fit?.x).toBe(40);
   });
 
+  it('keeps part of the tree inside the canvas', () => {
+    const viewport = { width: 800, height: 400 };
+    const stage = { width: 600, height: 300 };
+    expect(boundView({ x: -5000, y: -5000, zoom: 1 }, viewport, stage)).toEqual({ x: 64 - 600, y: 64 - 300, zoom: 1 });
+    expect(boundView({ x: 5000, y: 5000, zoom: 1 }, viewport, stage)).toEqual({ x: 800 - 64, y: 400 - 64, zoom: 1 });
+    expect(boundView({ x: 10, y: 20, zoom: 1 }, viewport, stage)).toEqual({ x: 10, y: 20, zoom: 1 });
+    expect(boundView({ x: -5000, y: 0, zoom: 1 }, { width: 0, height: 0 }, stage).x).toBe(-5000);
+  });
+
   it('tells a mouse wheel from a trackpad', () => {
     expect(wheelIsMouse({ deltaMode: 1, deltaX: 0, deltaY: 3 })).toBe(true);
     expect(wheelIsMouse({ deltaMode: 0, deltaX: 0, deltaY: 100 })).toBe(true);
@@ -239,6 +248,12 @@ describe('TxOrgChart', () => {
 
 describe('TxOrgChartMinimap', () => {
   it('keeps the viewport frame inside the map', () => {
+    const outside = TestBed.createComponent(TxOrgChartMinimap);
+    outside.componentRef.setInput('layout', { width: 1200, height: 340, items: [] });
+    outside.componentRef.setInput('viewport', { width: 900, height: 600 });
+    outside.componentRef.setInput('view', { x: 5000, y: 0, zoom: 1 });
+    outside.detectChanges();
+    expect(outside.nativeElement.querySelector('.tx-org-chart__map-viewport')).toBeNull();
     const fixture = TestBed.createComponent(TxOrgChartMinimap);
     fixture.componentRef.setInput('layout', { width: 1200, height: 340, items: [{ id: 'a', tone: 'primary', x: 0, y: 0, width: 200, height: 60 }] });
     fixture.componentRef.setInput('viewport', { width: 900, height: 600 });

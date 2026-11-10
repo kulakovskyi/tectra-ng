@@ -63,8 +63,8 @@
 
   .tx-org-chart-card__box--path {
     box-shadow:
-      0 0 0 var(--tx-chart-org-chart-path-width) var(--tx-chart-org-chart-card-path-border-color),
-      var(--tx-chart-org-chart-card-path-shadow);
+      0 0 0 var(--tx-chart-org-chart-path-width) var(--tx-chart-org-chart-path-color),
+      0 6px 18px -8px color-mix(in srgb, var(--tx-chart-org-chart-path-color) var(--tx-chart-org-chart-card-path-glow), transparent);
   }
 
   .tx-org-chart-card__icon {

@@ -144,7 +144,7 @@ First app: a hierarchy as a tree of cards on a pan / zoom canvas (drag, wheel / 
 - [x] `<tx-org-chart>` with the first app's API and look on kit parts (button, input, pill, avatar, skeleton, tooltip); texts from the tectra locale, `labels` overrides them; `txOrgChartHeader` / `txOrgChartNode` instead of `[chartOrgHeader]` / `#node`; helpers `orgChartToggle`, `orgChartExpandAll`, `orgChartSearch`, `orgChartReveal`, `orgChartPathTo`
 - [x] Docs + tests; e2e
 
-Changed on purpose: hotkeys work while the chart has the focus (not on the whole page) and arrow keys move the canvas; cards take the focus (Enter / Space = click); a drag never selects text; the hover path follows the connectors with their rounded corners and joins the card outline in one colour; the minimap frame stays inside the map.
+Changed on purpose: hotkeys work while the chart has the focus (not on the whole page) and arrow keys move the canvas; cards take the focus (Enter / Space = click); a drag never selects text; the hover path follows the connectors with their rounded corners and joins the card outline in one colour (`pathColor` drives both); the canvas cannot be moved so far that the tree leaves it (64px stay in view); the minimap frame stays inside the map.
 
 ## 11.18 Interaction
 

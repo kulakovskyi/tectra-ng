@@ -422,6 +422,27 @@ test.describe('charts', () => {
     await map.click({ position: { x: 4, y: (mapBox?.height ?? 0) / 2 } });
     await expect.poll(async () => Math.round(((await stage.boundingBox())?.x ?? 0) - (stageBefore?.x ?? 0))).not.toBe(0);
 
+    const far = await canvas.boundingBox();
+    await page.mouse.move((far?.x ?? 0) + 30, (far?.y ?? 0) + 30);
+    await page.mouse.down();
+    for (let step = 0; step < 6; step++) {
+      await page.mouse.move((far?.x ?? 0) + 30 - (step + 1) * 400, (far?.y ?? 0) + 30 - (step + 1) * 200);
+    }
+    await page.mouse.up();
+    const away = await stage.boundingBox();
+    expect((away?.x ?? 0) + (away?.width ?? 0)).toBeGreaterThanOrEqual((far?.x ?? 0) + 63);
+    expect((away?.y ?? 0) + (away?.height ?? 0)).toBeGreaterThanOrEqual((far?.y ?? 0) + 63);
+    await page.keyboard.press('f');
+
+    const tokens = example(page, 'Design tokens');
+    const leaf = tokens.locator('.tx-org-chart-node__card').nth(1);
+    await leaf.scrollIntoViewIfNeeded();
+    await leaf.hover();
+    const ring = await tokens.locator('.tx-org-chart-card__box--path').first().evaluate((element) => getComputedStyle(element).boxShadow);
+    const line = await tokens.locator('.tx-org-chart__path path').evaluate((element) => getComputedStyle(element).stroke);
+    expect(ring).toContain(line);
+    await page.mouse.move(0, 0);
+
     await chart.getByRole('button', { name: 'Full screen' }).click();
     await expect(chart.getByRole('button', { name: 'Exit full screen' }).first()).toBeVisible();
     await page.keyboard.press('Escape');

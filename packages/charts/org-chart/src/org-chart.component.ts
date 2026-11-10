@@ -26,7 +26,7 @@ import { TxOrgChartNodeView } from './org-chart-node.component';
 import { TxOrgChartNodeTemplate } from './org-chart-templates.directive';
 import { TxOrgChartToolbar } from './org-chart-toolbar.component';
 import { TX_ORG_CHART_CONNECTOR_GAP, orgChartExpandState, orgChartPathLine } from './org-chart-tree';
-import { TX_ORG_CHART_FOCUS_ZOOM, TX_ORG_CHART_PADDING, TX_ORG_CHART_ZOOM, centerOn, clampZoom, fitView, wheelIsMouse, wheelZoom, zoomAt } from './org-chart-view';
+import { TX_ORG_CHART_FOCUS_ZOOM, TX_ORG_CHART_PADDING, TX_ORG_CHART_ZOOM, boundView, centerOn, clampZoom, fitView, wheelIsMouse, wheelZoom, zoomAt } from './org-chart-view';
 import {
   TxOrgChartLabels,
   TxOrgChartMinimapItem,
@@ -385,7 +385,8 @@ export class TxOrgChart implements OnDestroy {
   }
 
   private panBy(dx: number, dy: number): void {
-    this.view.update((view) => ({ ...view, x: view.x + dx, y: view.y + dy }));
+    const { width, height } = this.minimapLayout();
+    this.view.update((view) => boundView({ ...view, x: view.x + dx, y: view.y + dy }, this.viewport(), { width, height }));
   }
 
   private zoomAtCenter(zoom: number): void {

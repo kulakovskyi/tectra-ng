@@ -43,3 +43,18 @@ export function wheelZoom(zoom: number, deltaY: number, pinch: boolean): number 
   const delta = Math.max(-TX_ORG_CHART_WHEEL_MAX_DELTA, Math.min(TX_ORG_CHART_WHEEL_MAX_DELTA, deltaY));
   return zoom * Math.exp(-delta * TX_ORG_CHART_WHEEL_SPEED * (pinch ? 4 : 1));
 }
+
+export const TX_ORG_CHART_KEEP_VISIBLE = 64;
+
+export function boundView(view: TxOrgChartView, viewport: TxOrgChartSize, stage: TxOrgChartSize, keep = TX_ORG_CHART_KEEP_VISIBLE): TxOrgChartView {
+  if (!viewport.width || !stage.width) return view;
+  const width = stage.width * view.zoom;
+  const height = stage.height * view.zoom;
+  const keepX = Math.min(keep, width, viewport.width);
+  const keepY = Math.min(keep, height, viewport.height);
+  return {
+    zoom: view.zoom,
+    x: Math.min(viewport.width - keepX, Math.max(keepX - width, view.x)),
+    y: Math.min(viewport.height - keepY, Math.max(keepY - height, view.y)),
+  };
+}

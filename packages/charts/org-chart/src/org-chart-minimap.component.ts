@@ -26,13 +26,15 @@ import { TxOrgChartMinimapLayout, TxOrgChartPoint, TxOrgChartRect, TxOrgChartSiz
           ></span>
         }
         @let rect = viewportRect();
-        <span
-          class="tx-org-chart__map-viewport"
-          [style.left.px]="rect.x"
-          [style.top.px]="rect.y"
-          [style.width.px]="rect.width"
-          [style.height.px]="rect.height"
-        ></span>
+        @if (rect.width >= 4 && rect.height >= 4) {
+          <span
+            class="tx-org-chart__map-viewport"
+            [style.left.px]="rect.x"
+            [style.top.px]="rect.y"
+            [style.width.px]="rect.width"
+            [style.height.px]="rect.height"
+          ></span>
+        }
       </div>
     }
   `,
