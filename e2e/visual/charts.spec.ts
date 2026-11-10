@@ -165,4 +165,43 @@ test.describe('charts', () => {
     expect(svg?.width).toBeGreaterThan(150);
     await expect(side.locator('.tx-chart-legend__percent').first()).toHaveText('38%');
   });
+
+  test('bar list: server rows hydrate, link rows hover and take focus, limit and loading work', async ({ page, request }) => {
+    const html = await (await request.get('/components/bar-list')).text();
+    const start = html.indexOf('<tx-bar-list');
+    const serverRows = (html.slice(start, html.indexOf('</tx-bar-list>', start)).match(/class="tx-bar-list__row[ "]/g) ?? []).length;
+    expect(serverRows).toBe(5);
+    await page.goto('/components/bar-list');
+    const basic = example(page, 'Basic').locator('tx-bar-list');
+    await expect(basic.locator('.tx-bar-list__row')).toHaveCount(serverRows);
+    await expect(basic.locator('.tx-bar-list__label').first()).toHaveText('Germany');
+    await expect(basic.locator('.tx-bar-list__percent').first()).toHaveText('33.2%');
+    const track = await basic.locator('.tx-bar-list__track').first().boundingBox();
+    const bar = await basic.locator('.tx-bar-list__bar').first().boundingBox();
+    expect(Math.abs((bar?.width ?? 0) - (track?.width ?? 0))).toBeLessThanOrEqual(1);
+    expect(track?.height).toBeCloseTo(28, 0);
+
+    const link = example(page, 'Links').locator('a.tx-bar-list__row--link').first();
+    await link.scrollIntoViewIfNeeded();
+    const before = await link.evaluate((element) => getComputedStyle(element).backgroundColor);
+    await link.hover();
+    await expect.poll(() => link.evaluate((element) => getComputedStyle(element).backgroundColor)).not.toBe(before);
+    await expect(link).toHaveAttribute('href', '/components/line-chart');
+    await link.focus();
+    await expect(link).toBeFocused();
+
+    const limit = example(page, 'Limit');
+    await expect(limit.locator('.tx-bar-list__row')).toHaveCount(3);
+    await limit.locator('tx-select').click();
+    await page.getByRole('option', { name: 'Top 5', exact: true }).click();
+    await expect(limit.locator('.tx-bar-list__row')).toHaveCount(5);
+
+    const loading = example(page, 'Loading and empty');
+    await expect(loading.locator('.tx-bar-list__empty')).toHaveText('No data');
+    await loading.getByRole('button', { name: 'Load data' }).click();
+    await expect(loading.locator('tx-skeleton').first()).toBeVisible();
+    await expect(loading.locator('.tx-bar-list__row')).toHaveCount(3);
+    await loading.getByRole('button', { name: 'Clear' }).click();
+    await expect(loading.locator('.tx-bar-list__empty')).toBeVisible();
+  });
 });

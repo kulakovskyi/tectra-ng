@@ -1,0 +1,45 @@
+@let parts = passThrough();
+@if (loading()) {
+  <ul class="tx-bar-list__list" [class]="parts.list?.class" [style]="parts.list?.style" [attr.aria-label]="translations().chartLoading">
+    @for (index of skeletonRows(); track index) {
+      <li class="tx-bar-list__item" [class]="parts.item?.class" [style]="parts.item?.style">
+        <div class="tx-bar-list__row">
+          <tx-skeleton class="tx-bar-list__skeleton" [class]="parts.skeleton?.class" [style]="parts.skeleton?.style" height="var(--tx-chart-bar-list-row-height)" />
+        </div>
+      </li>
+    }
+  </ul>
+} @else if (rows().length) {
+  <ul class="tx-bar-list__list" [class]="parts.list?.class" [style]="parts.list?.style" [attr.aria-label]="ariaLabel() || null">
+    @for (row of rows(); track $index) {
+      <li class="tx-bar-list__item" [class]="parts.item?.class" [style]="parts.item?.style">
+        @if (row.link) {
+          <a
+            class="tx-bar-list__row tx-bar-list__row--link"
+            [class]="parts.row?.class"
+            [style]="parts.row?.style"
+            [routerLink]="row.link"
+            [queryParams]="row.queryParams"
+          >
+            <ng-container [ngTemplateOutlet]="content" [ngTemplateOutletContext]="{ $implicit: row }" />
+          </a>
+        } @else {
+          <div class="tx-bar-list__row" [class]="parts.row?.class" [style]="parts.row?.style">
+            <ng-container [ngTemplateOutlet]="content" [ngTemplateOutletContext]="{ $implicit: row }" />
+          </div>
+        }
+      </li>
+    }
+  </ul>
+} @else {
+  <p class="tx-bar-list__empty" [class]="parts.empty?.class" [style]="parts.empty?.style">{{ translations().chartNoData }}</p>
+}
+
+<ng-template #content let-row>
+  <span class="tx-bar-list__track" [class]="parts.track?.class" [style]="parts.track?.style">
+    <span class="tx-bar-list__bar" [class]="parts.bar?.class" [style]="parts.bar?.style" [style.width.%]="row.share" aria-hidden="true"></span>
+    <span class="tx-bar-list__label" [class]="parts.label?.class" [style]="parts.label?.style" [title]="row.label">{{ row.label }}</span>
+  </span>
+  <span class="tx-bar-list__value" [class]="parts.value?.class" [style]="parts.value?.style">{{ row.value }}</span>
+  <span class="tx-bar-list__percent" [class]="parts.percent?.class" [style]="parts.percent?.style">{{ row.percent }}</span>
+</ng-template>

@@ -2,7 +2,9 @@
 
 Part of [ROADMAP.md](../ROADMAP.md). One section per item, in the order we build them. Tick a box only when the code, the docs example and the test for it exist.
 
-Charts live in `@tectra-ng/charts/<name>` (own package, one entry point per chart, no dependencies) and are drawn as SVG by Angular templates — the same markup on the server and in the browser. Sources: the first consumer app's chart libraries (usage = elements, 2026-11-09) — their API, behaviour and look are the reference for the charts it has; the rest of the catalogue gets our own design in the same language. Its root font size is 14px, so its `1rem` is 14px.
+Charts live in `@tectra-ng/charts/<name>` (own package, one entry point per chart, no dependencies) and are drawn as SVG by Angular templates — the same markup on the server and in the browser. Sources: the first consumer app's chart libraries (usage = elements, 2026-11-09) — their API, behaviour and look are the reference for the charts it has; the rest of the catalogue gets our own design in the same language. Its root font size is 14px, so its `1rem` is 14px. Checked against its chart libraries on 2026-11-10: spline, column, pie, bar-list, segmented-bar, heatmap, treemap, rank-line, org-chart (+ `ui/sparkline`, done in stage 7) — every one has an item below; its pages draw no chart outside them.
+
+**Build order (2026-11-10):** the first app's charts first, so it can switch over — 11.7 bar list, 11.8 segmented bar, 11.9 heatmap, 11.10 treemap, 11.11 rank line, 11.17 org chart; then 11.4 combo, 11.6 scatter and the rest in number order.
 
 **Every item also needs** (not repeated below): tokens in `packages/themes/src/components/` (colours only through tokens: series palette, grid, axis text, tooltip, legend), `dt` / `pt` / `ptOptions` / `unstyled`, README (Inputs / Outputs / Slots / Keyboard), docs page (category `Charts`, `source:` / `package:` front matter) with an example per feature, unit tests (scales and layouts as pure functions), e2e check of what the chart does, axe clean in light and dark and in every style, no layout shift after hydration, motion off with `prefers-reduced-motion`, lint clean.
 
@@ -69,12 +71,12 @@ The hole is `donutSize` (the first app's name, `'0%'` = pie). `toolbar` (downloa
 - [ ] `<tx-scatter-chart>`: x / y points, bubble size, per point colour, trend line
 - [ ] Docs + tests; e2e
 
-## 11.7 Bar list — `charts/bar-list` (11)
+## 11.7 Bar list — `charts/bar-list` (11) ✅
 
 First app: a top-N ranking — label over a share bar scaled to the biggest value, formatted value, percent of the total; sorted descending, zero values dropped; `items` (`{ label, value, link?, queryParams? }` — a row with a link is a router link with a hover background), `limit` (10); "No data" when empty.
 
-- [ ] `<tx-bar-list>` with the first app's API and look
-- [ ] Docs + tests; e2e
+- [x] `<tx-bar-list>` with the first app's API and look; plus `valueFormat`, `loading` (skeleton rows), `ariaLabel`, `dt` (`chart.barList`), `pt`, `unstyled`
+- [x] Docs + tests; e2e
 
 ## 11.8 Segmented bar — `charts/segmented-bar` (6)
 
@@ -85,7 +87,7 @@ First app: parts of one whole in one bar with a legend — `items` (`{ key, labe
 
 ## 11.9 Heatmap — `charts/heatmap` (4)
 
-First app: rows × columns grouped in bands (days by week, hours by day), each cell coloured by a tone; sticky header row, sticky row header and value columns, scroll both ways inside `maxHeight` (`26rem`), 16px rounded cells that scale on hover / focus when interactive, tooltip and aria label per cell, legend under the grid; `groups`, `rows`, `legend`, `labels`, `cellClick` (click / Enter / Space).
+First app: rows × columns grouped in bands (days by week, hours by day), each cell coloured by a tone; sticky header row, sticky row header and value columns, scroll both ways inside `maxHeight` (`26rem`), 16px rounded cells that scale on hover / focus when interactive, tooltip and aria label per cell, legend under the grid; `groups`, `rows`, `legend`, `labels`, `maxHeight`, `cellClick` (click / Enter / Space); `chartHeatmapRowHeader` and `chartHeatmapRowValue` templates for the sticky row header and value columns; the cell and the legend are separate parts (a legend cell is drawn without interaction).
 
 - [ ] `<tx-heatmap>` with the first app's API and look
 - [ ] Value heatmap with a colour scale (not only tones), calendar heatmap (a year of days)
@@ -133,7 +135,7 @@ First app: search positions over real check times — rank 1 on top, one line pe
 
 ## 11.17 Org chart — `charts/org-chart` (2)
 
-First app: a hierarchy as a tree of cards on a pan / zoom canvas (drag, wheel / pinch zoom at the cursor, trackpad pan), toolbar (search, zoom − / % / +, fit, expand / collapse all, full screen), minimap with click / drag navigation, hotkeys (`+` `−` `0` `F` `/`), full screen with an overlay fallback and Escape, the hover path to the root, search focus, fit on first render; `nodes`, `highlightIds`, `focusId`, `labels`, `toolbar`, `minimap`, `height`, `busy`, `pathKinds`; outputs `nodeToggle`, `nodeClick`, `searchChange` (400ms), `expandAll`, `collapseAll`; `[chartOrgHeader]` slot and a `#node` card template; the default card (icon / avatar, title, subtitle, pills, chevron).
+First app: a hierarchy as a tree of cards on a pan / zoom canvas (drag, wheel / pinch zoom at the cursor, trackpad pan), toolbar (search, zoom − / % / +, fit, expand / collapse all, full screen), minimap with click / drag navigation, hotkeys (`+` `−` `0` `F` `/`), full screen with an overlay fallback and Escape, the hover path to the root, search focus, fit on first render; `nodes`, `highlightIds`, `focusId`, `labels`, `toolbar`, `minimap`, `height`, `busy`, `pathKinds`; outputs `nodeToggle`, `nodeClick`, `searchChange` (400ms), `expandAll`, `collapseAll`; `[chartOrgHeader]` slot and a `chartOrgNode` card template; the default card (icon / avatar, title, subtitle, pills, chevron) exported on its own for custom node templates; a node skeleton while `busy`.
 
 - [ ] `<tx-org-chart>` with the first app's API and look
 - [ ] Docs + tests; e2e
