@@ -1,3 +1,14 @@
+## 0.1.9 (2026-11-10)
+
+### 🚀 Features
+
+- **charts:** @tectra-ng/charts — core, line, column and pie charts ([a40fc7d](https://github.com/kulakovskyi/tectra-ng/commit/a40fc7d))
+- **ui:** catch-up items — avatar group list, list input, truncate text, mascot, color field ([5107a7e](https://github.com/kulakovskyi/tectra-ng/commit/5107a7e))
+
+### ❤️ Thank You
+
+- tears @kulakovskyi
+
 ## 0.1.8 (2026-11-09)
 
 ### 🚀 Features

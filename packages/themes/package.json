@@ -1,6 +1,6 @@
 {
   "name": "@tectra-ng/themes",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Light and dark themes for tectra: semantic and component tokens, presets and CSS variables.",
   "license": "MIT",
   "homepage": "https://tectra-ng.com",
@@ -23,7 +23,7 @@
     "presets"
   ],
   "peerDependencies": {
-    "@tectra-ng/tokens": "^0.1.8"
+    "@tectra-ng/tokens": "^0.1.9"
   },
   "publishConfig": {
     "access": "public"

@@ -1,6 +1,6 @@
 {
   "name": "@tectra-ng/charts",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Angular charts drawn as SVG with no chart library: line and area, column and bar, pie and donut on one core of scales, axes, legend, tooltip and accessibility. Server rendered, themed by design tokens, dark mode ready.",
   "license": "MIT",
   "homepage": "https://tectra-ng.com/components/line-chart",
@@ -33,10 +33,10 @@
     "@angular/cdk": "^22.0.0",
     "@angular/common": "^22.0.0",
     "@angular/core": "^22.0.0",
-    "@tectra-ng/core": "^0.1.8",
-    "@tectra-ng/icons": "^0.1.8",
-    "@tectra-ng/themes": "^0.1.8",
-    "@tectra-ng/ui": "^0.1.8"
+    "@tectra-ng/core": "^0.1.9",
+    "@tectra-ng/icons": "^0.1.9",
+    "@tectra-ng/themes": "^0.1.9",
+    "@tectra-ng/ui": "^0.1.9"
   },
   "publishConfig": {
     "access": "public"
