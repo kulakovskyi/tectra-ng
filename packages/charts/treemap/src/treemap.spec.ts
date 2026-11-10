@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TxTreemap } from './treemap.component';
+import { TxTreemapTileTemplate } from './treemap-tile.directive';
 import { insetRect, squarify, treemapValue } from './treemap-layout';
 import { TxTreemapItem, TxTreemapTileEvent } from './treemap.types';
 
 @Component({
-  imports: [TxTreemap],
+  imports: [TxTreemap, TxTreemapTileTemplate],
   template: `
     <tx-treemap
       id="main"
@@ -18,6 +19,11 @@ import { TxTreemapItem, TxTreemapTileEvent } from './treemap.types';
     />
     <tx-treemap id="nested" [items]="nested" [height]="300" />
     <tx-treemap id="empty" [items]="[{ label: 'A', value: 0 }]" />
+    <tx-treemap id="custom" [items]="items()" [height]="300">
+      <ng-template txTreemapTile let-tile let-share="share">
+        <b class="own-text">{{ tile.label }} — {{ share }}</b>
+      </ng-template>
+    </tx-treemap>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -86,6 +92,12 @@ describe('TxTreemap', () => {
     const labels = [...main().querySelectorAll('.tx-treemap__tile-label')].map((label) => label.textContent?.trim());
     expect(labels).toContain('Hosting');
     expect([...main().querySelectorAll('.tx-treemap__tile-value')].map((value) => value.textContent?.trim())).toContain('600');
+  });
+
+  it('draws own tile content from the txTreemapTile template', () => {
+    const custom = fixture.nativeElement.querySelector('#custom') as HTMLElement;
+    expect([...custom.querySelectorAll('.own-text')].map((text) => text.textContent)).toEqual(['Hosting — 60%', 'Ads — 30%', 'Tools — 10%']);
+    expect(custom.querySelector('.tx-treemap__tile-label')).toBeNull();
   });
 
   it('lays nested items out inside a labelled group', () => {

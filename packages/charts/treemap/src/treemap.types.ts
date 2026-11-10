@@ -34,6 +34,17 @@ export interface TxTreemapTile extends TxTreemapRect {
   valueText: string;
 }
 
+export interface TxTreemapTileContext {
+  $implicit: TxTreemapTile;
+  tile: TxTreemapTile;
+  label: string;
+  value: string;
+  share: string;
+  color: string;
+  width: number;
+  height: number;
+}
+
 export interface TxTreemapGroup extends TxTreemapRect {
   key: string;
   label: string;
@@ -50,4 +61,4 @@ export interface TxTreemapTileEvent {
   share: number;
 }
 
-export type TxTreemapPart = TxChartPart | 'tile' | 'tileLabel' | 'tileValue' | 'group' | 'groupLabel';
+export type TxTreemapPart = TxChartPart | 'tile' | 'tileContent' | 'tileLabel' | 'tileValue' | 'group' | 'groupLabel';

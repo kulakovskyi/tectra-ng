@@ -48,29 +48,21 @@
           [attr.width]="tile.width"
           [attr.height]="tile.height"
         />
-        @if (tile.nameFits) {
-          <svg:text
-            class="tx-treemap__tile-label"
-            [class]="parts.tileLabel?.class"
-            [style]="parts.tileLabel?.style"
-            [attr.x]="tile.x + 8"
-            [attr.y]="tile.y + 8"
-            dominant-baseline="hanging"
-          >
-            {{ tile.label }}
-          </svg:text>
-          @if (tile.valueFits) {
-            <svg:text
-              class="tx-treemap__tile-value"
-              [class]="parts.tileValue?.class"
-              [style]="parts.tileValue?.style"
-              [attr.x]="tile.x + 8"
-              [attr.y]="tile.y + 27"
-              dominant-baseline="hanging"
-            >
-              {{ tile.valueText }}
-            </svg:text>
-          }
+        @if (tileTemplate(); as custom) {
+          <svg:foreignObject class="tx-treemap__tile-box" [attr.x]="tile.x" [attr.y]="tile.y" [attr.width]="tile.width" [attr.height]="tile.height">
+            <xhtml:div class="tx-treemap__tile-content" [class]="parts.tileContent?.class" [style]="parts.tileContent?.style">
+              <ng-container [ngTemplateOutlet]="custom.template" [ngTemplateOutletContext]="tileContext(tile)" />
+            </xhtml:div>
+          </svg:foreignObject>
+        } @else if (tile.nameFits) {
+          <svg:foreignObject class="tx-treemap__tile-box" [attr.x]="tile.x" [attr.y]="tile.y" [attr.width]="tile.width" [attr.height]="tile.height">
+            <xhtml:div class="tx-treemap__tile-content" [class]="parts.tileContent?.class" [style]="parts.tileContent?.style">
+              <xhtml:span class="tx-treemap__tile-label" [class]="parts.tileLabel?.class" [style]="parts.tileLabel?.style">{{ tile.label }}</xhtml:span>
+              @if (tile.valueFits) {
+                <xhtml:span class="tx-treemap__tile-value" [class]="parts.tileValue?.class" [style]="parts.tileValue?.style">{{ tile.valueText }}</xhtml:span>
+              }
+            </xhtml:div>
+          </svg:foreignObject>
         }
       </svg:g>
     }

@@ -8,10 +8,27 @@
   fill: var(--tx-treemap-color);
 }
 
-.tx-treemap__tile-label,
-.tx-treemap__tile-value,
+.tx-treemap__tile-box,
 .tx-treemap__group-label {
   pointer-events: none;
+}
+
+.tx-treemap__tile-content {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.tx-treemap__tile-label,
+.tx-treemap__tile-value {
+  display: block;
+  overflow: hidden;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 :host([data-styled]) {
@@ -35,11 +52,17 @@
     font-weight: var(--tx-chart-treemap-group-label-font-weight);
   }
 
+  .tx-treemap__tile-content {
+    gap: var(--tx-chart-treemap-label-gap);
+    padding: var(--tx-chart-treemap-label-padding);
+    color: var(--tx-chart-treemap-label-color);
+    line-height: 1.2;
+    transition: opacity var(--tx-chart-motion-hover-duration) ease;
+  }
+
   .tx-treemap__tile-label,
   .tx-treemap__tile-value {
-    fill: var(--tx-chart-treemap-label-color);
     filter: var(--tx-chart-treemap-label-shadow);
-    transition: opacity var(--tx-chart-motion-hover-duration) ease;
   }
 
   .tx-treemap__tile-label {
@@ -59,8 +82,7 @@
     fill: color-mix(in oklab, var(--tx-treemap-color) var(--tx-chart-treemap-dimmed-strength), var(--tx-chart-treemap-dimmed-base));
   }
 
-  .tx-treemap__tile-label,
-  .tx-treemap__tile-value {
+  .tx-treemap__tile-content {
     opacity: 0.6;
   }
 }
@@ -78,8 +100,7 @@
 @media (prefers-reduced-motion: reduce) {
   :host([data-styled]) {
     .tx-treemap__tile,
-    .tx-treemap__tile-label,
-    .tx-treemap__tile-value,
+    .tx-treemap__tile-content,
     .tx-treemap__tiles {
       transition: none;
       animation: none;

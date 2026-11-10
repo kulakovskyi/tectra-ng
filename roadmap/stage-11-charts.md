@@ -101,7 +101,7 @@ The wheel over the grid scrolls the page once the grid has nothing left to scrol
 
 First app: share of a total split into many categories, `items` (`{ label, value }`), `height` (350), name and formatted value drawn inside the tiles so nothing overlaps, zero values dropped, "No data" when empty.
 
-- [x] `<tx-treemap>`: squarified layout (pure function), labels that fit or hide, nested groups; tooltip with the share, hover dims the rest, arrow keys walk the tiles, `tileClick`, `valueFormat`, `tooltipFormatter`, `loading`
+- [x] `<tx-treemap>`: squarified layout (pure function), labels that fit or end with an ellipsis (HTML in the tile, so any font or `pt` style stays inside), `txTreemapTile` template for own tile content, nested groups; tooltip with the share, hover dims the rest, arrow keys walk the tiles, `tileClick`, `valueFormat`, `tooltipFormatter`, `loading`
 - [x] Docs + tests; e2e
 
 ## 11.11 Rank line — `charts/rank-line` (1)

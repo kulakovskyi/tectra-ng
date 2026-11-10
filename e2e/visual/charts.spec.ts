@@ -316,5 +316,14 @@ test.describe('charts', () => {
     const rect = await germany.boundingBox();
     await page.mouse.click((rect?.x ?? 0) + 4, (rect?.y ?? 0) + 4);
     await expect(nested.locator('tx-message')).toContainText('Europe / Germany: 4200');
+
+    for (const id of ['Pass through', 'Labels']) {
+      for (const label of await example(page, id).locator('.tx-treemap__tile-label').all()) {
+        const content = await label.locator('xpath=..').boundingBox();
+        const text = await label.boundingBox();
+        expect((text?.x ?? 0) + (text?.width ?? 0)).toBeLessThanOrEqual((content?.x ?? 0) + (content?.width ?? 0) + 0.5);
+      }
+    }
+    await expect(example(page, 'Tile template').locator('.share').first()).toHaveText(/%$/);
   });
 });

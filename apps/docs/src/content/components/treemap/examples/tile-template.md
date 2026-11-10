@@ -1,0 +1,1 @@
+`<ng-template txTreemapTile let-tile>` draws your own content in every tile: the context has `label`, `value` (formatted), `share`, `color`, `width` and `height`, so you can choose what fits. The content is clipped to the tile.

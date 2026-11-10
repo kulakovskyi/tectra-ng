@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -24,24 +25,25 @@ import {
   initialChartSize,
   injectChartEntrance,
   seriesColor,
-  textWidth,
 } from '@tectra-ng/charts/core';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { insetRect, squarify, treemapValue } from './treemap-layout';
-import { TxTreemapGroup, TxTreemapItem, TxTreemapPart, TxTreemapTile, TxTreemapTileEvent } from './treemap.types';
+import { TxTreemapTileTemplate } from './treemap-tile.directive';
+import { TxTreemapGroup, TxTreemapItem, TxTreemapPart, TxTreemapTile, TxTreemapTileContext, TxTreemapTileEvent } from './treemap.types';
 
 const LABEL_SIZE = 13;
 const VALUE_SIZE = 12;
 const LABEL_PADDING = 8;
+const MIN_LABEL_WIDTH = 36;
 const GROUP_HEADER = 22;
 const GROUP_PADDING = 3;
 
 @Component({
   selector: 'tx-treemap',
-  imports: [TxChartFrame],
+  imports: [TxChartFrame, NgTemplateOutlet],
   templateUrl: './treemap.component.html',
   styleUrl: './treemap.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -75,6 +77,7 @@ export class TxTreemap {
   readonly tileClick = output<TxTreemapTileEvent>();
 
   readonly tooltipTemplate = contentChild(TxChartTooltipTemplate);
+  readonly tileTemplate = contentChild(TxTreemapTileTemplate);
   private readonly frame = viewChild(TxChartFrame);
 
   readonly isUnstyled = injectUnstyled(this.unstyled);
@@ -158,6 +161,19 @@ export class TxTreemap {
     };
   });
 
+  tileContext(tile: TxTreemapTile): TxTreemapTileContext {
+    return {
+      $implicit: tile,
+      tile,
+      label: tile.label,
+      value: tile.valueText,
+      share: this.percentFormatter()(Number(tile.share.toFixed(1))),
+      color: tile.color,
+      width: tile.width,
+      height: tile.height,
+    };
+  }
+
   onPointer(event: TxChartPointerEvent): void {
     if (event.type === 'leave') {
       this.hovered.set(null);
@@ -187,9 +203,9 @@ export class TxTreemap {
   }
 
   private tile(node: { x: number; y: number; width: number; height: number; value: number }, path: number[], label: string, group: string | null, color: string, total: number): TxTreemapTile {
-    const nameFits = this.showDataLabels() && node.width >= textWidth(label, LABEL_SIZE) + LABEL_PADDING * 2 && node.height >= LABEL_SIZE + LABEL_PADDING * 2;
+    const nameFits = this.showDataLabels() && node.width >= MIN_LABEL_WIDTH && node.height >= LABEL_SIZE + LABEL_PADDING * 2;
     const value = this.valueFormatter()(node.value);
-    const valueFits = nameFits && this.showValues() && node.height >= LABEL_SIZE + VALUE_SIZE + LABEL_PADDING * 2 + 4 && node.width >= textWidth(value, VALUE_SIZE) + LABEL_PADDING * 2;
+    const valueFits = nameFits && this.showValues() && node.height >= LABEL_SIZE + VALUE_SIZE + LABEL_PADDING * 2 + 4;
     return {
       key: path.join('.'),
       index: 0,

@@ -4,7 +4,7 @@ tokens: chart
 source: packages/charts/treemap
 package: @tectra-ng/charts/treemap
 import: TxTreemap
-examples: basic, nested, labels, value-format, loading-and-empty, design-tokens, pass-through
+examples: basic, nested, labels, tile-template, value-format, loading-and-empty, design-tokens, pass-through
 ---
 # Treemap
 
