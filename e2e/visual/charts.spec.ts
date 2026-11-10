@@ -233,4 +233,59 @@ test.describe('charts', () => {
     await expect(bar.locator('.tx-segmented-bar__legend')).toHaveCount(0);
     await expect(bar.locator('.tx-segmented-bar__track')).toHaveAttribute('role', 'img');
   });
+
+  test('heatmap: server cells hydrate, headers stick while scrolling, cells click, tooltip and calendar', async ({ page, request }) => {
+    const html = await (await request.get('/components/heatmap')).text();
+    const start = html.indexOf('<tx-heatmap');
+    const serverCells = (html.slice(start, html.indexOf('</tx-heatmap>', start)).match(/<tx-heatmap-cell/g) ?? []).length;
+    expect(serverCells).toBe(81);
+    await page.goto('/components/heatmap');
+    const basic = example(page, 'Basic').locator('tx-heatmap');
+    await expect(basic.locator('tx-heatmap-cell')).toHaveCount(serverCells);
+    await expect(basic.locator('.tx-heatmap__row:not(.tx-heatmap__row--head) tx-heatmap-cell')).toHaveCount(75);
+    const box = await basic.locator('.tx-heatmap-cell__box--success').first().boundingBox();
+    expect(box?.width).toBeCloseTo(14, 0);
+    await basic.locator('.tx-heatmap-cell__box--success').first().hover();
+    await expect(page.locator('.tx-tooltip').first()).toContainText('passed');
+
+    const scroll = example(page, 'Scroll').locator('.tx-heatmap__scroll');
+    await scroll.scrollIntoViewIfNeeded();
+    const head = scroll.locator('.tx-heatmap__row--head');
+    const lead = scroll.locator('.tx-heatmap__row:not(.tx-heatmap__row--head) .tx-heatmap__lead').first();
+    const value = scroll.locator('.tx-heatmap__row:not(.tx-heatmap__row--head) .tx-heatmap__value').first();
+    const frame = await scroll.boundingBox();
+    await scroll.evaluate((element) => element.scrollTo({ top: 80, left: 200 }));
+    await expect.poll(async () => Math.round((await head.boundingBox())?.y ?? 0)).toBe(Math.round(frame?.y ?? 0));
+    expect(Math.round((await lead.boundingBox())?.x ?? 0)).toBe(Math.round(frame?.x ?? 0));
+    const valueBox = await value.boundingBox();
+    expect((valueBox?.x ?? 0) + (valueBox?.width ?? 0)).toBeLessThanOrEqual((frame?.x ?? 0) + (frame?.width ?? 0) + 1);
+
+    await scroll.evaluate((element) => element.scrollTo({ top: element.scrollHeight }));
+    const before = await page.evaluate(() => document.scrollingElement?.scrollTop ?? 0);
+    const scrollBox = await scroll.boundingBox();
+    await page.mouse.move((scrollBox?.x ?? 0) + (scrollBox?.width ?? 0) / 2, (scrollBox?.y ?? 0) + (scrollBox?.height ?? 0) / 2);
+    await page.mouse.wheel(0, 300);
+    await expect.poll(() => page.evaluate(() => document.scrollingElement?.scrollTop ?? 0)).toBeGreaterThan(before);
+
+    const plain = example(page, 'Pass through').locator('.tx-heatmap__scroll');
+    await plain.scrollIntoViewIfNeeded();
+    const top = await page.evaluate(() => document.scrollingElement?.scrollTop ?? 0);
+    const plainBox = await plain.boundingBox();
+    await page.mouse.move((plainBox?.x ?? 0) + 40, (plainBox?.y ?? 0) + (plainBox?.height ?? 0) / 2);
+    await page.mouse.wheel(0, 300);
+    await expect.poll(() => page.evaluate(() => document.scrollingElement?.scrollTop ?? 0)).toBeGreaterThan(top);
+
+    const interactive = example(page, 'Interactive');
+    const cell = interactive.locator('button.tx-heatmap-cell__box').first();
+    await cell.scrollIntoViewIfNeeded();
+    await cell.click();
+    await expect(interactive.locator('tx-message')).toContainText('January 2024');
+    await interactive.locator('button.tx-heatmap-cell__box').nth(1).focus();
+    await page.keyboard.press('Enter');
+    await expect(interactive.locator('tx-message')).toContainText('February 2024');
+
+    const calendar = example(page, 'Calendar').locator('tx-heatmap');
+    await expect(calendar.locator('.tx-heatmap__group-label')).toHaveCount(12);
+    await expect(calendar.locator('.tx-heatmap-cell__box--scale').first()).toBeVisible();
+  });
 });

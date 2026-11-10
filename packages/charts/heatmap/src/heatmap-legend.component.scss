@@ -1,0 +1,31 @@
+:host {
+  display: block;
+}
+
+.tx-heatmap-legend__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tx-heatmap-legend__item {
+  display: flex;
+  align-items: center;
+}
+
+:host([data-styled]) {
+  .tx-heatmap-legend__list {
+    column-gap: var(--tx-chart-heatmap-legend-gap-x);
+    row-gap: var(--tx-chart-heatmap-legend-gap-y);
+    margin-top: var(--tx-chart-heatmap-legend-margin-top);
+  }
+
+  .tx-heatmap-legend__item {
+    gap: var(--tx-chart-heatmap-legend-item-gap);
+    color: var(--tx-chart-heatmap-legend-color);
+    font-size: var(--tx-chart-heatmap-legend-font-size);
+  }
+}

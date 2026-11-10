@@ -1,0 +1,90 @@
+:host {
+  display: block;
+  flex-shrink: 0;
+}
+
+.tx-heatmap-cell__box {
+  display: block;
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  appearance: none;
+  background: transparent;
+}
+
+.tx-heatmap-cell__box--hidden {
+  visibility: hidden;
+}
+
+:host([data-styled]) {
+  .tx-heatmap-cell__box {
+    width: var(--tx-chart-heatmap-cell-size);
+    height: var(--tx-chart-heatmap-cell-size);
+    border-radius: var(--tx-chart-heatmap-cell-radius);
+    transition: transform var(--tx-chart-heatmap-cell-duration) ease;
+  }
+
+  .tx-heatmap-cell__box--legend {
+    width: var(--tx-chart-heatmap-legend-cell-size);
+    height: var(--tx-chart-heatmap-legend-cell-size);
+  }
+
+  .tx-heatmap-cell__box--success {
+    background: var(--tx-chart-heatmap-success-color);
+  }
+
+  .tx-heatmap-cell__box--danger {
+    background: var(--tx-chart-heatmap-danger-color);
+  }
+
+  .tx-heatmap-cell__box--warn {
+    background: var(--tx-chart-heatmap-warn-color);
+  }
+
+  .tx-heatmap-cell__box--info {
+    background-color: color-mix(in srgb, var(--tx-chart-heatmap-info-color) var(--tx-chart-heatmap-info-tint), transparent);
+    background-image: repeating-linear-gradient(135deg, var(--tx-chart-heatmap-info-color) 0 2px, transparent 2px 5px);
+  }
+
+  .tx-heatmap-cell__box--pending {
+    box-shadow: inset 0 0 0 1px var(--tx-chart-heatmap-pending-border-color);
+  }
+
+  .tx-heatmap-cell__box--neutral {
+    background: var(--tx-chart-heatmap-neutral-color);
+  }
+
+  .tx-heatmap-cell__box--empty {
+    background: var(--tx-chart-heatmap-empty-color);
+  }
+
+  .tx-heatmap-cell__box--scale {
+    background: color-mix(in srgb, var(--tx-chart-heatmap-scale-color) var(--tx-heatmap-level), var(--tx-chart-heatmap-scale-base));
+  }
+
+  .tx-heatmap-cell__box--interactive {
+    cursor: pointer;
+
+    &:hover,
+    &:focus-visible {
+      transform: scale(var(--tx-chart-heatmap-cell-hover-scale));
+    }
+
+    &:focus-visible {
+      outline: var(--tx-chart-focus-ring-width) solid var(--tx-chart-focus-ring-color);
+      outline-offset: 1px;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) .tx-heatmap-cell__box {
+    transition: none;
+
+    &:hover,
+    &:focus-visible {
+      transform: none;
+    }
+  }
+}

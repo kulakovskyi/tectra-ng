@@ -372,6 +372,7 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     chartBar: 'Bar chart',
     chartPie: 'Pie chart',
     chartDonut: 'Donut chart',
+    chartHeatmap: 'Heatmap',
   },
 };
 
@@ -747,6 +748,7 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     chartBar: 'Лінійчата діаграма',
     chartPie: 'Кругова діаграма',
     chartDonut: 'Кільцева діаграма',
+    chartHeatmap: 'Теплова карта',
   },
 };
 

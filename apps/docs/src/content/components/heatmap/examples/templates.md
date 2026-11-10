@@ -1,0 +1,1 @@
+`txHeatmapRowHeader` draws the sticky row header and `txHeatmapRowValue` a sticky value column at the end of each row; `labels` name both header cells. Their widths are the `leadWidth` and `valueWidth` tokens.

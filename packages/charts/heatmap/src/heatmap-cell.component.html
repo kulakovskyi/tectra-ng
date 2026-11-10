@@ -1,0 +1,37 @@
+@let item = cell();
+@if (legend() || !item || item.hidden) {
+  <span
+    class="tx-heatmap-cell__box"
+    [class]="['tx-heatmap-cell__box--' + kind(), boxClass() ?? '']"
+    [class.tx-heatmap-cell__box--legend]="legend()"
+    [style]="boxStyle()"
+    [style.--tx-heatmap-level]="levelStyle()"
+    aria-hidden="true"
+  ></span>
+} @else if (item.interactive) {
+  <button
+    type="button"
+    class="tx-heatmap-cell__box tx-heatmap-cell__box--interactive"
+    [class]="['tx-heatmap-cell__box--' + kind(), boxClass() ?? '']"
+    [style]="boxStyle()"
+    [style.--tx-heatmap-level]="levelStyle()"
+    [txTooltip]="item.tooltip"
+    tooltipPlacement="top"
+    [tooltipDisabled]="!item.tooltip"
+    [attr.aria-label]="label()"
+    (click)="activate.emit()"
+  ></button>
+} @else {
+  <span
+    class="tx-heatmap-cell__box"
+    [class]="['tx-heatmap-cell__box--' + kind(), boxClass() ?? '']"
+    [style]="boxStyle()"
+    [style.--tx-heatmap-level]="levelStyle()"
+    [attr.role]="label() ? 'img' : null"
+    [attr.aria-label]="label()"
+    [attr.aria-hidden]="label() ? null : 'true'"
+    [txTooltip]="item.tooltip"
+    tooltipPlacement="top"
+    [tooltipDisabled]="!item.tooltip"
+  ></span>
+}

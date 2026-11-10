@@ -1,0 +1,1 @@
+With many rows or columns the grid scrolls inside `maxHeight` (364px by default) and sideways; the header row, the row headers and the value column stay in place. The scroll region takes the keyboard focus.

@@ -1,0 +1,1 @@
+A cell with a `value` and no `tone` takes the primary colour, stronger for bigger values in `scaleSteps` steps; values at `scaleMin` (0 by default) stay empty. Legend items with a `value` show the step of that value.

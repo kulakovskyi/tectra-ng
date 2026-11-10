@@ -87,13 +87,15 @@ First app: parts of one whole in one bar with a legend — `items` (`{ key, labe
 
 The percent inside a large segment is dark on the bright tones in dark mode — the first app's light text there fails the contrast check.
 
-## 11.9 Heatmap — `charts/heatmap` (4)
+## 11.9 Heatmap — `charts/heatmap` (4) ✅
 
-First app: rows × columns grouped in bands (days by week, hours by day), each cell coloured by a tone; sticky header row, sticky row header and value columns, scroll both ways inside `maxHeight` (`26rem`), 16px rounded cells that scale on hover / focus when interactive, tooltip and aria label per cell, legend under the grid; `groups`, `rows`, `legend`, `labels`, `maxHeight`, `cellClick` (click / Enter / Space); `chartHeatmapRowHeader` and `chartHeatmapRowValue` templates for the sticky row header and value columns; the cell and the legend are separate parts (a legend cell is drawn without interaction).
+First app: rows × columns grouped in bands (days by week, hours by day), each cell coloured by a tone; sticky header row, sticky row header and value columns, scroll both ways inside `maxHeight` (`26rem`), 14px rounded cells that scale on hover / focus when interactive, tooltip and aria label per cell, legend under the grid; `groups`, `rows`, `legend`, `labels`, `maxHeight`, `cellClick` (click / Enter / Space); `chartHeatmapRowHeader` and `chartHeatmapRowValue` templates for the sticky row header and value columns; the cell and the legend are separate parts (a legend cell is drawn without interaction).
 
-- [ ] `<tx-heatmap>` with the first app's API and look
-- [ ] Value heatmap with a colour scale (not only tones), calendar heatmap (a year of days)
-- [ ] Docs + tests; e2e
+- [x] `<tx-heatmap>` with the first app's API and look (`txHeatmapRowHeader` / `txHeatmapRowValue` directives pick the templates; `row.label` for the default header)
+- [x] Value heatmap with a colour scale (not only tones): `value` cells, `scaleSteps`, `scaleMin`, `scaleMax`, value legend items; calendar heatmap (`heatmapCalendar()`, weeks by month × weekdays, any range)
+- [x] Docs + tests; e2e
+
+The wheel over the grid scrolls the page once the grid has nothing left to scroll (the first app's `overscroll-behavior: contain` trapped it); only sideways overscroll stays contained.
 
 ## 11.10 Treemap — `charts/treemap` (1)
 

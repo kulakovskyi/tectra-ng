@@ -1,0 +1,1 @@
+`heatmapCalendar(values, { from, to, intl, firstDayOfWeek })` lays dated values out as weeks grouped by month and seven weekday rows, with dated tooltips and accessible names; days outside the range are hidden. Feed the result to the heatmap.

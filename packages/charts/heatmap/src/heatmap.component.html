@@ -1,0 +1,78 @@
+@let label = text();
+@let parts = passThrough();
+@let valueTemplate = rowValueTemplate();
+@let headerTemplate = rowHeaderTemplate();
+<div
+  class="tx-heatmap__scroll"
+  [class]="parts.scroll?.class"
+  [style]="parts.scroll?.style"
+  [style.max-height]="maxHeight()"
+  tabindex="0"
+  role="region"
+  [attr.aria-label]="label.region"
+>
+  <div class="tx-heatmap__grid" [class]="parts.grid?.class" [style]="parts.grid?.style">
+    <div class="tx-heatmap__row tx-heatmap__row--head" [class]="parts.head?.class" [style]="parts.head?.style">
+      <div class="tx-heatmap__lead tx-heatmap__lead--head" [class]="parts.lead?.class" [style]="parts.lead?.style">{{ label.rowHeader }}</div>
+      <div class="tx-heatmap__groups" [class]="parts.groups?.class" [style]="parts.groups?.style">
+        @for (group of groups(); track group.key) {
+          <div class="tx-heatmap__group" [class]="parts.group?.class" [style]="parts.group?.style">
+            <span class="tx-heatmap__group-label" [class]="parts.groupLabel?.class" [style]="parts.groupLabel?.style" [attr.title]="group.label">{{ group.label }}</span>
+            <div class="tx-heatmap__columns" [class]="parts.columns?.class" [style]="parts.columns?.style">
+              @for (column of group.columns; track column.key) {
+                <span class="tx-heatmap__column" [class]="parts.column?.class" [style]="parts.column?.style">{{ column.label }}</span>
+              }
+            </div>
+          </div>
+        }
+      </div>
+      @if (valueTemplate) {
+        <div class="tx-heatmap__value tx-heatmap__value--head" [class]="parts.value?.class" [style]="parts.value?.style">{{ label.valueHeader }}</div>
+      }
+    </div>
+
+    @for (line of layout(); track line.row.key) {
+      <div class="tx-heatmap__row" [class]="parts.row?.class" [style]="parts.row?.style">
+        <div class="tx-heatmap__lead" [class]="parts.lead?.class" [style]="parts.lead?.style">
+          @if (headerTemplate) {
+            <ng-container [ngTemplateOutlet]="headerTemplate" [ngTemplateOutletContext]="line.context" />
+          } @else {
+            {{ line.row.label ?? line.row.key }}
+          }
+        </div>
+        <div class="tx-heatmap__groups" [class]="parts.groups?.class" [style]="parts.groups?.style">
+          @for (group of line.groups; track group.key) {
+            <div class="tx-heatmap__columns" [class]="parts.columns?.class" [style]="parts.columns?.style">
+              @for (slot of group.slots; track slot.columnKey) {
+                <tx-heatmap-cell
+                  [cell]="slot.cell"
+                  [level]="slot.level"
+                  [boxClass]="parts.cell?.class"
+                  [boxStyle]="parts.cell?.style"
+                  [unstyled]="isUnstyled()"
+                  (activate)="onCellActivate(line.row, slot)"
+                />
+              }
+            </div>
+          }
+        </div>
+        @if (valueTemplate) {
+          <div class="tx-heatmap__value" [class]="parts.value?.class" [style]="parts.value?.style">
+            <ng-container [ngTemplateOutlet]="valueTemplate" [ngTemplateOutletContext]="line.context" />
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>
+
+@if (legend().length) {
+  <tx-heatmap-legend
+    [class]="parts.legend?.class"
+    [style]="parts.legend?.style"
+    [items]="legend()"
+    [emptyLabel]="label.empty"
+    [scale]="scale()"
+    [unstyled]="isUnstyled()"
+  />
+}
