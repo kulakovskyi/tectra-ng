@@ -141,7 +141,7 @@
   border: var(--tx-chart-tooltip-border-width) solid var(--tx-chart-tooltip-border-color);
   border-radius: var(--tx-chart-tooltip-border-radius);
   background: var(--tx-chart-tooltip-background);
-  box-shadow: var(--tx-chart-tooltip-shadow);
+  filter: var(--tx-chart-tooltip-shadow);
   color: var(--tx-chart-tooltip-color);
   font-family: var(--tx-chart-font-family);
   font-size: var(--tx-chart-tooltip-font-size);
@@ -149,11 +149,22 @@
 
   .tx-chart-frame__tooltip-arrow {
     position: absolute;
-    width: var(--tx-chart-tooltip-arrow-size);
+    display: block;
+    width: calc(var(--tx-chart-tooltip-arrow-size) * 2);
     height: var(--tx-chart-tooltip-arrow-size);
-    border: var(--tx-chart-tooltip-border-width) solid var(--tx-chart-tooltip-border-color);
-    background: var(--tx-chart-tooltip-background);
-    transform: rotate(45deg);
+    overflow: visible;
+  }
+
+  .tx-chart-frame__tooltip-arrow-fill {
+    fill: var(--tx-chart-tooltip-background);
+  }
+
+  .tx-chart-frame__tooltip-arrow-line {
+    fill: none;
+    stroke: var(--tx-chart-tooltip-border-color);
+    stroke-width: var(--tx-chart-tooltip-border-width);
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
   }
 
   .tx-chart-frame__tooltip-title {
@@ -213,7 +224,7 @@
 .tx-chart-frame__tooltip[data-styled][data-side='top'] .tx-chart-frame__tooltip-arrow,
 .tx-chart-frame__tooltip[data-styled][data-side='bottom'] .tx-chart-frame__tooltip-arrow {
   left: var(--tx-chart-tooltip-arrow-offset);
-  margin-left: calc(var(--tx-chart-tooltip-arrow-size) / -2);
+  margin-left: calc(var(--tx-chart-tooltip-arrow-size) * -1);
 }
 
 .tx-chart-frame__tooltip[data-styled][data-side='left'] .tx-chart-frame__tooltip-arrow,
@@ -222,26 +233,21 @@
   margin-top: calc(var(--tx-chart-tooltip-arrow-size) / -2);
 }
 
-.tx-chart-frame__tooltip[data-styled][data-side='top'] .tx-chart-frame__tooltip-arrow {
-  bottom: calc(var(--tx-chart-tooltip-arrow-size) / -2 - var(--tx-chart-tooltip-border-width));
-  border-top-color: transparent;
-  border-left-color: transparent;
+.tx-chart-frame__tooltip[data-styled][data-side='bottom'] .tx-chart-frame__tooltip-arrow {
+  top: calc(var(--tx-chart-tooltip-arrow-size) * -1);
 }
 
-.tx-chart-frame__tooltip[data-styled][data-side='bottom'] .tx-chart-frame__tooltip-arrow {
-  top: calc(var(--tx-chart-tooltip-arrow-size) / -2 - var(--tx-chart-tooltip-border-width));
-  border-right-color: transparent;
-  border-bottom-color: transparent;
+.tx-chart-frame__tooltip[data-styled][data-side='top'] .tx-chart-frame__tooltip-arrow {
+  bottom: calc(var(--tx-chart-tooltip-arrow-size) * -1);
+  transform: rotate(180deg);
 }
 
 .tx-chart-frame__tooltip[data-styled][data-side='left'] .tx-chart-frame__tooltip-arrow {
-  right: calc(var(--tx-chart-tooltip-arrow-size) / -2 - var(--tx-chart-tooltip-border-width));
-  border-bottom-color: transparent;
-  border-left-color: transparent;
+  right: calc(var(--tx-chart-tooltip-arrow-size) * -1.5);
+  transform: rotate(90deg);
 }
 
 .tx-chart-frame__tooltip[data-styled][data-side='right'] .tx-chart-frame__tooltip-arrow {
-  left: calc(var(--tx-chart-tooltip-arrow-size) / -2 - var(--tx-chart-tooltip-border-width));
-  border-top-color: transparent;
-  border-right-color: transparent;
+  left: calc(var(--tx-chart-tooltip-arrow-size) * -1.5);
+  transform: rotate(-90deg);
 }

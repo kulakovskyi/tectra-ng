@@ -1,0 +1,1 @@
+Drag the canvas, scroll or pinch to zoom at the cursor, press `+` `−` `0` `F` or `/`. The chevrons emit `nodeToggle`; the search emits `searchChange` — here `orgChartSearch` finds the matches, `orgChartReveal` opens their ancestors and `focusId` centres the first one. Hover a card to see its path to the root.

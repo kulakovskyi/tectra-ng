@@ -1,0 +1,103 @@
+:host {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tx-org-chart-node__card {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  outline: none;
+}
+
+.tx-org-chart-node__children {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+:host([data-styled]) {
+  padding: var(--tx-chart-org-chart-connector-height) var(--tx-chart-org-chart-node-padding-x) 0;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    box-sizing: border-box;
+    width: 50%;
+    height: var(--tx-chart-org-chart-connector-height);
+    border-top: 1px solid var(--tx-chart-org-chart-connector-color);
+  }
+
+  &::before {
+    right: 50%;
+  }
+
+  &::after {
+    left: 50%;
+    border-left: 1px solid var(--tx-chart-org-chart-connector-color);
+  }
+
+  .tx-org-chart-node__children {
+    padding-top: var(--tx-chart-org-chart-connector-height);
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      height: var(--tx-chart-org-chart-connector-height);
+      border-left: 1px solid var(--tx-chart-org-chart-connector-color);
+    }
+  }
+
+  .tx-org-chart-node__empty {
+    padding: var(--tx-chart-org-chart-empty-padding);
+    border: 1px dashed var(--tx-chart-org-chart-connector-color);
+    border-radius: var(--tx-chart-org-chart-connector-radius);
+    color: var(--tx-chart-org-chart-empty-color);
+    font-size: var(--tx-chart-org-chart-empty-font-size);
+    background: var(--tx-chart-org-chart-empty-background);
+  }
+}
+
+:host([data-styled]:only-child) {
+  padding-top: 0;
+
+  &::before,
+  &::after {
+    display: none;
+  }
+}
+
+:host([data-styled]:first-child)::before,
+:host([data-styled]:last-child)::after {
+  border: 0;
+}
+
+:host([data-styled]:last-child)::before {
+  border-right: 1px solid var(--tx-chart-org-chart-connector-color);
+  border-top-right-radius: var(--tx-chart-org-chart-connector-radius);
+}
+
+:host([data-styled]:first-child)::after {
+  border-top-left-radius: var(--tx-chart-org-chart-connector-radius);
+}
+
+:host([data-styled].tx-org-chart-node--root) {
+  padding: 0;
+
+  &::before,
+  &::after {
+    display: none;
+  }
+}
+
+:host([data-styled]) > .tx-org-chart-node__card:focus-visible {
+  border-radius: var(--tx-chart-org-chart-card-radius);
+  box-shadow: 0 0 0 var(--tx-chart-focus-ring-width) var(--tx-chart-focus-ring-color);
+}

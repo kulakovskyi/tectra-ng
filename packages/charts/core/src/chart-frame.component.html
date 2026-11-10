@@ -108,7 +108,10 @@
       [attr.data-styled]="styled() || null"
     >
       @if (styled()) {
-        <span class="tx-chart-frame__tooltip-arrow" aria-hidden="true"></span>
+        <svg class="tx-chart-frame__tooltip-arrow" aria-hidden="true" viewBox="0 0 12 6" preserveAspectRatio="none">
+          <path class="tx-chart-frame__tooltip-arrow-fill" d="M0 6 L6 0 L12 6 Z" />
+          <path class="tx-chart-frame__tooltip-arrow-line" d="M0 6 L6 0 L12 6" />
+        </svg>
       }
       @if (tooltipTemplate(); as custom) {
         <ng-container [ngTemplateOutlet]="custom" [ngTemplateOutletContext]="{ $implicit: data }" />

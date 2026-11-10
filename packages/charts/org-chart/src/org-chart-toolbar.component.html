@@ -1,0 +1,90 @@
+@let current = state();
+@let text = labels();
+<div class="tx-org-chart__actions">
+  <tx-icon-field class="tx-org-chart__search">
+    <tx-input-icon icon="search" />
+    <input txInput type="search" [value]="query()" [placeholder]="text.search" [attr.aria-label]="text.search" (input)="onInput($event)" />
+  </tx-icon-field>
+  @if (current.hasQuery) {
+    <tx-pill [tone]="current.matchCount ? 'primary' : 'warn'" [icon]="current.matchCount ? 'check' : 'search'" role="status">
+      {{ current.matchCount ? matches(current.matchCount) : text.noMatches }}
+    </tx-pill>
+  }
+  <div class="tx-org-chart__group">
+    <button
+      txButton
+      type="button"
+      icon="search-minus"
+      severity="secondary"
+      outlined
+      [txTooltip]="text.zoomOut"
+      [attr.aria-label]="text.zoomOut"
+      [disabled]="!current.canZoomOut"
+      (click)="zoomOut.emit()"
+    ></button>
+    <button
+      txButton
+      type="button"
+      class="tx-org-chart__zoom"
+      [label]="current.zoomPercent + '%'"
+      severity="secondary"
+      outlined
+      [txTooltip]="text.resetZoom"
+      [attr.aria-label]="text.resetZoom + ', ' + current.zoomPercent + '%'"
+      (click)="resetZoom.emit()"
+    ></button>
+    <button
+      txButton
+      type="button"
+      icon="search-plus"
+      severity="secondary"
+      outlined
+      [txTooltip]="text.zoomIn"
+      [attr.aria-label]="text.zoomIn"
+      [disabled]="!current.canZoomIn"
+      (click)="zoomIn.emit()"
+    ></button>
+    <button
+      txButton
+      type="button"
+      icon="expand"
+      severity="secondary"
+      outlined
+      [txTooltip]="text.fit"
+      [attr.aria-label]="text.fit"
+      [disabled]="!current.hasContent"
+      (click)="fit.emit()"
+    ></button>
+  </div>
+  <div class="tx-org-chart__group">
+    <button
+      txButton
+      type="button"
+      icon="angle-double-down"
+      [label]="text.expandAll"
+      severity="secondary"
+      outlined
+      [disabled]="!current.hasContent || current.allExpanded"
+      (click)="expandAll.emit()"
+    ></button>
+    <button
+      txButton
+      type="button"
+      icon="angle-double-up"
+      [label]="text.collapseAll"
+      severity="secondary"
+      outlined
+      [disabled]="current.noneExpanded"
+      (click)="collapseAll.emit()"
+    ></button>
+  </div>
+  <button
+    txButton
+    type="button"
+    [icon]="current.isFullscreen ? 'window-minimize' : 'window-maximize'"
+    [label]="current.isFullscreen ? text.exitFullscreen : text.fullscreen"
+    [severity]="current.isFullscreen ? 'primary' : 'secondary'"
+    [outlined]="!current.isFullscreen"
+    (click)="fullscreen.emit()"
+  ></button>
+</div>

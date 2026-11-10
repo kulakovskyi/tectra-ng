@@ -1,0 +1,1 @@
+`pathKinds` limits the hover path to some node `kind`s (here people, not teams). `minimapTone` colours a node in the minimap: `primary`, `accent`, `muted` or `default`; click or drag the minimap to move the view.

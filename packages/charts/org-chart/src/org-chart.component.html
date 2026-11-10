@@ -1,0 +1,108 @@
+@let label = text();
+@let parts = passThrough();
+<div class="tx-org-chart__bar" [class]="parts.bar?.class" [style]="parts.bar?.style">
+  <div class="tx-org-chart__heading">
+    <ng-content select="[txOrgChartHeader]" />
+  </div>
+  @if (toolbar()) {
+    <tx-org-chart-toolbar
+      [class]="parts.toolbar?.class"
+      [style]="parts.toolbar?.style"
+      [state]="toolbarState()"
+      [labels]="label"
+      [intl]="intl()"
+      [query]="query()"
+      (searchChange)="onSearch($event)"
+      (zoomIn)="zoomIn()"
+      (zoomOut)="zoomOut()"
+      (resetZoom)="resetZoom()"
+      (fit)="fitToScreen()"
+      (expandAll)="expandAll.emit()"
+      (collapseAll)="collapseAll.emit()"
+      (fullscreen)="toggleFullscreen()"
+    />
+  }
+</div>
+
+@if (fullscreen()) {
+  <div class="tx-org-chart__backdrop" aria-hidden="true"></div>
+}
+<div
+  #canvas
+  class="tx-org-chart__canvas"
+  [class]="parts.canvas?.class"
+  [style]="parts.canvas?.style"
+  [style.height]="fullscreen() ? null : height()"
+  [class.tx-org-chart__canvas--busy]="busy()"
+  [class.tx-org-chart__canvas--fullscreen]="fullscreen()"
+  [class.tx-org-chart__canvas--dragging]="dragging()"
+  [class.tx-org-chart__canvas--settled]="settled()"
+  tabindex="0"
+  role="region"
+  [attr.aria-label]="label.title"
+  [attr.aria-busy]="busy() || null"
+  (wheel)="onWheel($event)"
+  (pointerdown)="onPointerDown($event)"
+  (pointermove)="onPointerMove($event)"
+  (pointerup)="onPointerUp($event)"
+  (pointercancel)="onPointerUp($event)"
+  (keydown)="onKeydown($event)"
+>
+  @if (fullscreen()) {
+    <div class="tx-org-chart__floating" data-drag-ignore>
+      <span class="tx-org-chart__floating-title">
+        {{ label.title }}
+        <span class="tx-org-chart__hint">{{ label.hint }}</span>
+      </span>
+      @if (toolbar()) {
+        <tx-org-chart-toolbar
+          [state]="toolbarState()"
+          [labels]="label"
+          [intl]="intl()"
+          [query]="query()"
+          (searchChange)="onSearch($event)"
+          (zoomIn)="zoomIn()"
+          (zoomOut)="zoomOut()"
+          (resetZoom)="resetZoom()"
+          (fit)="fitToScreen()"
+          (expandAll)="expandAll.emit()"
+          (collapseAll)="collapseAll.emit()"
+          (fullscreen)="toggleFullscreen()"
+        />
+      }
+    </div>
+  }
+  <div #stage class="tx-org-chart__stage" [class]="parts.stage?.class" [style]="parts.stage?.style" [style.transform]="stageTransform()">
+    @if (pathLine()) {
+      <svg class="tx-org-chart__path" aria-hidden="true" [attr.width]="minimapLayout().width" [attr.height]="minimapLayout().height">
+        <path [attr.d]="pathLine()"></path>
+      </svg>
+    }
+    <div class="tx-org-chart__forest" role="list">
+      @for (root of list(); track root.id) {
+        <tx-org-chart-node
+          [node]="root"
+          [state]="treeState()"
+          [template]="nodeTemplate()?.template ?? null"
+          root
+          (toggleNode)="nodeToggle.emit($event)"
+          (hoverPath)="highlightPath($event)"
+          (nodeClick)="onNodeClick($event)"
+        />
+      }
+    </div>
+  </div>
+  @if (minimap()) {
+    <tx-org-chart-minimap
+      [class]="parts.minimap?.class"
+      [style]="parts.minimap?.style"
+      [layout]="minimapLayout()"
+      [viewport]="viewport()"
+      [view]="view()"
+      (navigate)="centerOn($event)"
+    />
+  }
+</div>
+@if (!fullscreen() && label.hint) {
+  <span class="tx-org-chart__hint" [class]="parts.hint?.class" [style]="parts.hint?.style">{{ label.hint }}</span>
+}

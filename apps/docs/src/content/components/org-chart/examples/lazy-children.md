@@ -1,0 +1,1 @@
+Load children when a node opens: set `expanded` and `loading` on `nodeToggle`, then the children. A loading node shows a card skeleton and a spinner on its chevron; `childrenEmptyText` fills an empty branch; `busy` dims the whole canvas.

@@ -358,4 +358,73 @@ test.describe('charts', () => {
     await legend.locator('.tx-chart-legend__item').first().click();
     await expect(legend.locator('.tx-rank-chart__line')).toHaveCount(4);
   });
+
+  test('org chart: drag, wheel zoom, path on hover, search focus, minimap, hotkeys, full screen', async ({ page }) => {
+    await page.goto('/components/org-chart');
+    const chart = example(page, 'Basic').locator('tx-org-chart');
+    const canvas = chart.locator('.tx-org-chart__canvas');
+    const stage = chart.locator('.tx-org-chart__stage');
+    await canvas.scrollIntoViewIfNeeded();
+    await expect(chart.locator('.tx-org-chart-card__title').first()).toHaveText('Ada Brooks');
+    await expect(canvas).toHaveClass(/tx-org-chart__canvas--settled/);
+
+    const box = await canvas.boundingBox();
+    const cx = (box?.x ?? 0) + 40;
+    const cy = (box?.y ?? 0) + (box?.height ?? 0) - 40;
+    const before = await stage.boundingBox();
+    await page.mouse.move(cx, cy);
+    await page.mouse.down();
+    await page.mouse.move(cx + 60, cy - 30, { steps: 4 });
+    await page.mouse.up();
+    await expect.poll(async () => Math.round(((await stage.boundingBox())?.x ?? 0) - (before?.x ?? 0))).toBe(60);
+    expect(await page.evaluate(() => getSelection()?.toString() ?? '')).toBe('');
+
+    const zoom = chart.locator('.tx-org-chart__zoom');
+    const zoomBefore = await zoom.textContent();
+    await page.mouse.wheel(0, -120);
+    await expect(zoom).not.toHaveText(zoomBefore ?? '');
+    await canvas.focus();
+    await page.keyboard.press('0');
+    await expect(zoom).toHaveText('100%');
+    await page.keyboard.press('f');
+    await expect(zoom).not.toHaveText('100%');
+
+    const card = chart.locator('.tx-org-chart-node__card[data-org-id="infra"]');
+    const cardBox = await card.boundingBox();
+    await page.mouse.move((cardBox?.x ?? 0) + (cardBox?.width ?? 0) / 2, (cardBox?.y ?? 0) + (cardBox?.height ?? 0) / 2);
+    await expect(chart.locator('.tx-org-chart__path path')).toHaveAttribute('d', /A /);
+    await expect(chart.locator('.tx-org-chart-card__box--path')).toHaveCount(3);
+    await page.mouse.move(0, 0);
+
+    await canvas.focus();
+    await page.keyboard.press('/');
+    await expect(chart.locator('.tx-org-chart__bar input')).toBeFocused();
+    await page.keyboard.type('gina');
+    await expect(chart.locator('.tx-org-chart-card__box--match .tx-org-chart-card__title')).toHaveText('Gina Ives');
+    await expect(chart.locator('tx-org-chart-toolbar tx-pill')).toHaveText('1 found');
+    const match = await chart.locator('.tx-org-chart-card__box--match').boundingBox();
+    const canvasBox = await canvas.boundingBox();
+    await expect
+      .poll(async () => {
+        const current = await chart.locator('.tx-org-chart-card__box--match').boundingBox();
+        return Math.abs((current?.x ?? 0) + (current?.width ?? 0) / 2 - ((canvasBox?.x ?? 0) + (canvasBox?.width ?? 0) / 2));
+      })
+      .toBeLessThan(4);
+    expect(match).not.toBeNull();
+
+    const map = chart.locator('.tx-org-chart__map');
+    const frame = chart.locator('.tx-org-chart__map-viewport');
+    const mapBox = await map.boundingBox();
+    const frameBox = await frame.boundingBox();
+    expect((frameBox?.y ?? 0) + 0.5).toBeGreaterThanOrEqual(mapBox?.y ?? 0);
+    expect((frameBox?.y ?? 0) + (frameBox?.height ?? 0)).toBeLessThanOrEqual((mapBox?.y ?? 0) + (mapBox?.height ?? 0) + 0.5);
+    const stageBefore = await stage.boundingBox();
+    await map.click({ position: { x: 4, y: (mapBox?.height ?? 0) / 2 } });
+    await expect.poll(async () => Math.round(((await stage.boundingBox())?.x ?? 0) - (stageBefore?.x ?? 0))).not.toBe(0);
+
+    await chart.getByRole('button', { name: 'Full screen' }).click();
+    await expect(chart.getByRole('button', { name: 'Exit full screen' }).first()).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(chart.locator('.tx-org-chart__canvas--fullscreen')).toHaveCount(0);
+  });
 });

@@ -1,0 +1,56 @@
+@let current = node();
+@let tree = state();
+<div
+  class="tx-org-chart-node__card"
+  [attr.data-org-id]="current.id"
+  [attr.data-org-tone]="current.minimapTone ?? 'default'"
+  tabindex="0"
+  (mouseenter)="onHover(true)"
+  (mouseleave)="onHover(false)"
+  (focusin)="onHover(true)"
+  (focusout)="onHover(false)"
+  (click)="nodeClick.emit(current)"
+  (keydown.enter)="onKey($event)"
+  (keydown.space)="onKey($event)"
+>
+  @if (template(); as custom) {
+    <ng-container [ngTemplateOutlet]="custom" [ngTemplateOutletContext]="context()" />
+  } @else {
+    <tx-org-chart-card
+      [node]="current"
+      [highlighted]="tree.highlightIds.has(current.id)"
+      [inPath]="tree.pathIds.has(current.id)"
+      [expandLabel]="tree.labels.expand"
+      [collapseLabel]="tree.labels.collapse"
+      [unstyled]="tree.unstyled"
+      (toggleNode)="toggleNode.emit(current.id)"
+    />
+  }
+</div>
+@switch (children().kind) {
+  @case ('nodes') {
+    <div class="tx-org-chart-node__children" role="list">
+      @for (child of children().nodes; track child.id) {
+        <tx-org-chart-node
+          [node]="child"
+          [state]="tree"
+          [template]="template()"
+          [path]="childPath()"
+          (toggleNode)="toggleNode.emit($event)"
+          (hoverPath)="hoverPath.emit($event)"
+          (nodeClick)="nodeClick.emit($event)"
+        />
+      }
+    </div>
+  }
+  @case ('loading') {
+    <div class="tx-org-chart-node__children">
+      <tx-org-chart-node-skeleton [unstyled]="tree.unstyled" />
+    </div>
+  }
+  @case ('empty') {
+    <div class="tx-org-chart-node__children">
+      <span class="tx-org-chart-node__empty">{{ children().emptyText }}</span>
+    </div>
+  }
+}

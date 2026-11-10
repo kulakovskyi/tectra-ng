@@ -18,6 +18,7 @@ Part of `tectra-ng`. One entry point per chart, so you only bundle what you impo
 | `@tectra-ng/charts/heatmap` | `<tx-heatmap>` — rows × grouped columns coloured by tones or a value scale, sticky headers, cell tooltips and clicks, `heatmapCalendar()` |
 | `@tectra-ng/charts/treemap` | `<tx-treemap>` — squarified tiles sized by value, labels that fit, nested groups |
 | `@tectra-ng/charts/rank-line` | `<tx-rank-chart>` — positions over time, rank 1 on top, gaps, notes in the tooltip |
+| `@tectra-ng/charts/org-chart` | `<tx-org-chart>` — a tree of cards on a pan / zoom canvas with search, minimap, full screen and hotkeys |
 | `@tectra-ng/charts/core` | scales, ticks, formats, curves, stacks, the chart frame, axes and legend — for your own charts |
 
 ```ts

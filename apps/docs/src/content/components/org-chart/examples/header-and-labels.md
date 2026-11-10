@@ -1,0 +1,1 @@
+Content marked `txOrgChartHeader` sits left of the toolbar. `labels` replaces any text of the chart — the title read by screen readers, the hint, the search and the button captions; the rest comes from the tectra locale.

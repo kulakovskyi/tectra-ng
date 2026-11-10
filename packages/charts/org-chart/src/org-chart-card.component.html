@@ -1,0 +1,43 @@
+@let current = node();
+<div
+  class="tx-org-chart-card__box"
+  [class.tx-org-chart-card__box--match]="highlighted()"
+  [class.tx-org-chart-card__box--path]="inPath()"
+  [class.tx-org-chart-card__box--open]="current.collapsible && current.expanded"
+  [attr.title]="current.title"
+>
+  @if (current.avatar; as avatar) {
+    <tx-avatar class="tx-org-chart-card__avatar" [image]="avatar.src" [name]="avatar.name ?? current.title" shape="circle" />
+  } @else if (current.icon) {
+    <span class="tx-org-chart-card__icon" aria-hidden="true"><tx-icon [name]="current.icon" /></span>
+  }
+  <div class="tx-org-chart-card__heading">
+    <span class="tx-org-chart-card__title">{{ current.title }}</span>
+    @if (current.subtitle) {
+      <span class="tx-org-chart-card__subtitle">{{ current.subtitle }}</span>
+    }
+    @if (current.pills?.length) {
+      <div class="tx-org-chart-card__pills">
+        @for (pill of current.pills; track $index) {
+          <tx-pill [tone]="pill.tone ?? 'neutral'" size="small" [icon]="pill.icon">{{ pill.label }}</tx-pill>
+        }
+      </div>
+    }
+  </div>
+  @if (current.collapsible) {
+    <button
+      txButton
+      type="button"
+      class="tx-org-chart-card__toggle"
+      size="small"
+      severity="secondary"
+      text
+      [icon]="current.expanded ? 'chevron-up' : 'chevron-down'"
+      [loading]="!!current.loading"
+      [txTooltip]="toggleLabel()"
+      [attr.aria-label]="toggleLabel()"
+      [attr.aria-expanded]="!!current.expanded"
+      (click)="onToggle($event)"
+    ></button>
+  }
+</div>

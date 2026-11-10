@@ -374,6 +374,21 @@ export interface TxTranslations {
   chartTreemap: string;
   chartRank: string;
   chartRankValue: string;
+  orgChartTitle: string;
+  orgChartHint: string;
+  orgChartSearch: string;
+  orgChartMatches: string;
+  orgChartNoMatches: string;
+  orgChartZoomIn: string;
+  orgChartZoomOut: string;
+  orgChartResetZoom: string;
+  orgChartFit: string;
+  orgChartExpandAll: string;
+  orgChartCollapseAll: string;
+  orgChartFullscreen: string;
+  orgChartExitFullscreen: string;
+  orgChartExpand: string;
+  orgChartCollapse: string;
 }
 
 export type TxValidationMessage = string | ((error: unknown) => string);

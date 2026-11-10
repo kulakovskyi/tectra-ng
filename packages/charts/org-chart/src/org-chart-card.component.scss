@@ -1,0 +1,108 @@
+:host {
+  display: block;
+}
+
+.tx-org-chart-card__box {
+  display: flex;
+  align-items: center;
+}
+
+.tx-org-chart-card__heading {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.tx-org-chart-card__title,
+.tx-org-chart-card__subtitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tx-org-chart-card__pills {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.tx-org-chart-card__icon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.tx-org-chart-card__avatar {
+  flex-shrink: 0;
+}
+
+:host([data-styled]) {
+  .tx-org-chart-card__box {
+    gap: var(--tx-chart-org-chart-card-gap);
+    box-sizing: border-box;
+    width: var(--tx-chart-org-chart-card-width);
+    padding: var(--tx-chart-org-chart-card-padding-y) var(--tx-chart-org-chart-card-padding-x);
+    border-radius: var(--tx-chart-org-chart-card-radius);
+    background: var(--tx-chart-org-chart-card-background);
+    box-shadow: 0 0 0 1px var(--tx-chart-org-chart-card-border-color);
+    transition:
+      box-shadow var(--tx-chart-motion-hover-duration) ease,
+      background-color var(--tx-chart-motion-hover-duration) ease;
+  }
+
+  .tx-org-chart-card__box--open {
+    box-shadow: 0 0 0 1px var(--tx-chart-org-chart-card-open-border-color);
+  }
+
+  .tx-org-chart-card__box--match {
+    background: var(--tx-chart-org-chart-card-match-background);
+    box-shadow: 0 0 0 2px var(--tx-chart-org-chart-card-match-border-color);
+  }
+
+  .tx-org-chart-card__box--path {
+    box-shadow:
+      0 0 0 var(--tx-chart-org-chart-path-width) var(--tx-chart-org-chart-card-path-border-color),
+      var(--tx-chart-org-chart-card-path-shadow);
+  }
+
+  .tx-org-chart-card__icon {
+    width: var(--tx-chart-org-chart-icon-size);
+    height: var(--tx-chart-org-chart-icon-size);
+    border-radius: var(--tx-chart-org-chart-icon-radius);
+    color: var(--tx-chart-org-chart-icon-color);
+    font-size: var(--tx-chart-org-chart-icon-font-size);
+    background: var(--tx-chart-org-chart-icon-background);
+  }
+
+  .tx-org-chart-card__avatar {
+    --tx-avatar-size: var(--tx-chart-org-chart-avatar-size);
+  }
+
+  .tx-org-chart-card__heading {
+    gap: var(--tx-chart-org-chart-heading-gap);
+  }
+
+  .tx-org-chart-card__title {
+    color: var(--tx-chart-org-chart-title-color);
+    font-size: var(--tx-chart-org-chart-title-font-size);
+    font-weight: var(--tx-chart-org-chart-title-font-weight);
+  }
+
+  .tx-org-chart-card__subtitle {
+    color: var(--tx-chart-org-chart-subtitle-color);
+    font-size: var(--tx-chart-org-chart-subtitle-font-size);
+  }
+
+  .tx-org-chart-card__pills {
+    gap: var(--tx-chart-org-chart-pills-gap);
+    margin-top: var(--tx-chart-org-chart-pills-gap);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) .tx-org-chart-card__box {
+    transition: none;
+  }
+}

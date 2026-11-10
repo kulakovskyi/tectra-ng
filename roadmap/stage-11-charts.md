@@ -137,12 +137,14 @@ First app: search positions over real check times — rank 1 on top, one line pe
 - [ ] `<tx-sankey-chart>` (nodes and weighted links), `<tx-sunburst-chart>` (nested rings, drill down)
 - [ ] Docs + tests; e2e
 
-## 11.17 Org chart — `charts/org-chart` (2)
+## 11.17 Org chart — `charts/org-chart` (2) ✅
 
 First app: a hierarchy as a tree of cards on a pan / zoom canvas (drag, wheel / pinch zoom at the cursor, trackpad pan), toolbar (search, zoom − / % / +, fit, expand / collapse all, full screen), minimap with click / drag navigation, hotkeys (`+` `−` `0` `F` `/`), full screen with an overlay fallback and Escape, the hover path to the root, search focus, fit on first render; `nodes`, `highlightIds`, `focusId`, `labels`, `toolbar`, `minimap`, `height`, `busy`, `pathKinds`; outputs `nodeToggle`, `nodeClick`, `searchChange` (400ms), `expandAll`, `collapseAll`; `[chartOrgHeader]` slot and a `chartOrgNode` card template; the default card (icon / avatar, title, subtitle, pills, chevron) exported on its own for custom node templates; a node skeleton while `busy`.
 
-- [ ] `<tx-org-chart>` with the first app's API and look
-- [ ] Docs + tests; e2e
+- [x] `<tx-org-chart>` with the first app's API and look on kit parts (button, input, pill, avatar, skeleton, tooltip); texts from the tectra locale, `labels` overrides them; `txOrgChartHeader` / `txOrgChartNode` instead of `[chartOrgHeader]` / `#node`; helpers `orgChartToggle`, `orgChartExpandAll`, `orgChartSearch`, `orgChartReveal`, `orgChartPathTo`
+- [x] Docs + tests; e2e
+
+Changed on purpose: hotkeys work while the chart has the focus (not on the whole page) and arrow keys move the canvas; cards take the focus (Enter / Space = click); a drag never selects text; the hover path follows the connectors with their rounded corners and joins the card outline in one colour; the minimap frame stays inside the map.
 
 ## 11.18 Interaction
 

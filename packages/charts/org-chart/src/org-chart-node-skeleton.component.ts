@@ -1,0 +1,50 @@
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { injectUnstyled } from '@tectra-ng/core/config';
+import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TxSkeleton } from '@tectra-ng/ui/skeleton';
+
+@Component({
+  selector: 'tx-org-chart-node-skeleton',
+  imports: [TxSkeleton],
+  template: `
+    <div class="tx-org-chart-node-skeleton__box" aria-hidden="true">
+      <tx-skeleton shape="circle" size="var(--tx-chart-org-chart-avatar-size)" />
+      <div class="tx-org-chart-node-skeleton__lines">
+        <tx-skeleton width="98px" height="10.5px" borderRadius="999px" />
+        <tx-skeleton width="70px" height="8.75px" borderRadius="999px" />
+      </div>
+    </div>
+  `,
+  styles: `
+    .tx-org-chart-node-skeleton__box {
+      display: flex;
+      align-items: center;
+    }
+    .tx-org-chart-node-skeleton__lines {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+    }
+    :host([data-styled]) .tx-org-chart-node-skeleton__box {
+      gap: var(--tx-chart-org-chart-card-gap);
+      box-sizing: border-box;
+      width: var(--tx-chart-org-chart-card-width);
+      padding: var(--tx-chart-org-chart-card-padding-y);
+      border-radius: var(--tx-chart-org-chart-card-radius);
+      background: var(--tx-chart-org-chart-card-background);
+      box-shadow: 0 0 0 1px var(--tx-chart-org-chart-card-border-color);
+    }
+    :host([data-styled]) .tx-org-chart-node-skeleton__lines {
+      gap: var(--tx-chart-org-chart-toolbar-gap);
+    }
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'tx-org-chart-node-skeleton',
+    '[attr.data-styled]': '!isUnstyled() || null',
+  },
+})
+export class TxOrgChartNodeSkeleton {
+  readonly unstyled = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
+  readonly isUnstyled = injectUnstyled(this.unstyled);
+}
