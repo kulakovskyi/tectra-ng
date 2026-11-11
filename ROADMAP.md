@@ -215,7 +215,7 @@ Own SVG charts, no chart library: they render on the server like the rest of the
 | 1. Core | Scales (linear, log, time, band), nice ticks, axes, grid, legend that toggles series, tooltip with a crosshair, responsive size, motion, "No data", numbers and dates in the tectra locale, series palette from tokens, decimation, keyboard and screen reader access | 46 | ✅ |
 | 2. Basic | line and area (`spline`), column and bar (grouped, stacked, 100%, horizontal), combo (columns + line, two y axes), pie and donut (centre total, legend beside), scatter and bubble — all done | 18, 18, 9 | ✅ |
 | 3. Lists and grids | bar-list, segmented-bar, heatmap (grid with sticky headers, calendar), treemap, rank-line (positions over time, rank 1 on top, gaps) | 11, 6, 4, 1, 1 | ✅ |
-| 4. More shapes | radar, radial bar and gauge, funnel, waterfall, bullet | 0 | ⬜ |
+| 4. More shapes | radar, radial bar and gauge, funnel, waterfall, bullet — radar, radial bar and gauge done | 0 | 🟡 |
 | 5. Special | candlestick (OHLC), boxplot, range area, timeline and gantt, sankey, sunburst, org-chart (pan / zoom canvas, minimap, search) — org-chart done | 2 (org-chart) | 🟡 |
 | 6. Interaction | zoom, pan and brush on an axis, annotations (lines, bands, points), export PNG / SVG / CSV, live updates — export done (the first app's download toolbar) | 0 (zoom is off in the first app) | 🟡 |
 

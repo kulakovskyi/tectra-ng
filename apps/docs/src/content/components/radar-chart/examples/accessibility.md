@@ -1,0 +1,1 @@
+Tab to the chart: ←/→ move between the axes, ↑/↓ between the series, Home / End jump to the first and last axis, Escape closes the tooltip. Each value is announced; screen readers also get a summary and a hidden data table.

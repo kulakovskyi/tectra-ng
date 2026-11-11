@@ -1,0 +1,128 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+:host(.tx-gauge--fill) {
+  height: 100%;
+}
+
+.tx-gauge__track,
+.tx-gauge__band,
+.tx-gauge__progress {
+  fill: none;
+}
+
+.tx-gauge__track {
+  stroke: currentColor;
+  stroke-opacity: 0.12;
+  stroke-linecap: round;
+}
+
+.tx-gauge__progress {
+  stroke-linecap: round;
+}
+
+:host([data-mode='needle']) .tx-gauge__track {
+  stroke-linecap: butt;
+}
+
+.tx-gauge__tick-line {
+  stroke: currentColor;
+}
+
+.tx-gauge__needle {
+  transform-box: view-box;
+}
+
+.tx-gauge__needle-body,
+.tx-gauge__hub {
+  fill: currentColor;
+}
+
+:host([data-styled]) {
+  .tx-gauge__track {
+    stroke: var(--tx-chart-gauge-track-color);
+    stroke-opacity: 1;
+  }
+
+  .tx-gauge__tick-line {
+    stroke: var(--tx-chart-gauge-tick-color);
+  }
+
+  .tx-gauge__tick-label {
+    fill: var(--tx-chart-gauge-tick-label-color);
+    font-size: var(--tx-chart-gauge-tick-label-font-size);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tx-gauge__needle-body {
+    fill: var(--tx-chart-gauge-needle-color);
+  }
+
+  .tx-gauge__hub {
+    fill: var(--tx-chart-gauge-hub-color);
+    stroke: var(--tx-chart-gauge-needle-color);
+    stroke-width: var(--tx-chart-gauge-hub-stroke-width);
+  }
+
+  .tx-gauge__value {
+    fill: var(--tx-chart-gauge-value-color);
+    font-weight: var(--tx-chart-gauge-value-font-weight);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tx-gauge__label {
+    fill: var(--tx-chart-gauge-label-color);
+    font-weight: var(--tx-chart-gauge-label-font-weight);
+  }
+}
+
+:host([data-styled].tx-gauge--morph) {
+  .tx-gauge__progress {
+    transition: d var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing);
+  }
+
+  .tx-gauge__needle {
+    transition: transform var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing);
+  }
+}
+
+:host([data-styled].tx-gauge--entering) {
+  .tx-gauge__progress {
+    stroke-dasharray: 1 1;
+    animation: tx-gauge-draw var(--tx-chart-motion-enter-duration) var(--tx-chart-motion-easing) both;
+  }
+
+  .tx-gauge__needle {
+    animation: tx-gauge-swing var(--tx-chart-motion-enter-duration) var(--tx-chart-motion-easing) both;
+  }
+}
+
+@keyframes tx-gauge-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes tx-gauge-swing {
+  from {
+    transform: rotate(var(--tx-gauge-start));
+  }
+
+  to {
+    transform: rotate(var(--tx-gauge-angle));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) .tx-gauge__progress,
+  :host([data-styled]) .tx-gauge__needle {
+    transition: none;
+    animation: none;
+  }
+}

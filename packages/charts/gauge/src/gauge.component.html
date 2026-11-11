@@ -1,0 +1,85 @@
+<tx-chart-frame
+  [height]="height()"
+  [(size)]="size"
+  [showLegend]="false"
+  [interactive]="false"
+  [empty]="isEmpty()"
+  [loading]="loading()"
+  [toolbar]="toolbar()"
+  [exportName]="ariaLabel() || label()"
+  emptyIcon="chart-pie"
+  [summary]="summary()"
+  [panelStyle]="tokenStyle()"
+  [parts]="passThrough()"
+  [styled]="!isUnstyled()"
+>
+  <svg:path class="tx-gauge__track" [class]="passThrough().track?.class" [style]="passThrough().track?.style" [attr.d]="track()" [style.stroke-width.px]="width()" />
+  @for (band of bandArcs(); track band.key) {
+    <svg:path
+      class="tx-gauge__band"
+      [class]="passThrough().band?.class"
+      [style]="passThrough().band?.style"
+      [attr.d]="band.path"
+      [style.stroke]="band.color"
+      [style.stroke-width.px]="width()"
+    />
+  }
+  @if (progress()) {
+    <svg:path
+      class="tx-gauge__progress"
+      [class]="passThrough().progress?.class"
+      [style]="passThrough().progress?.style"
+      [attr.d]="progress()"
+      pathLength="1"
+      [style.stroke]="progressColor()"
+      [style.stroke-width.px]="width()"
+    />
+  }
+  @for (tick of tickMarks(); track tick.value) {
+    <svg:g class="tx-gauge__tick" [class]="passThrough().tick?.class" [style]="passThrough().tick?.style">
+      <svg:line class="tx-gauge__tick-line" [attr.x1]="tick.x1" [attr.y1]="tick.y1" [attr.x2]="tick.x2" [attr.y2]="tick.y2" />
+      <svg:text class="tx-gauge__tick-label" [attr.x]="tick.labelX" [attr.y]="tick.labelY" [attr.text-anchor]="tick.anchor" dominant-baseline="middle">{{ tick.label }}</svg:text>
+    </svg:g>
+  }
+  @if (hasNeedle()) {
+    <svg:g
+      class="tx-gauge__needle"
+      [class]="passThrough().needle?.class"
+      [style]="passThrough().needle?.style"
+      [style.transform-origin]="fit().cx + 'px ' + fit().cy + 'px'"
+      [style.transform]="'rotate(' + needleRotation() + ')'"
+      [style.--tx-gauge-start]="startRotation()"
+      [style.--tx-gauge-angle]="needleRotation()"
+    >
+      <svg:path class="tx-gauge__needle-body" [attr.d]="needlePath()" />
+      <svg:circle class="tx-gauge__hub" [attr.cx]="fit().cx" [attr.cy]="fit().cy" [attr.r]="geometry().hubRadius" />
+    </svg:g>
+  }
+  @if (showValue()) {
+    <svg:text
+      class="tx-gauge__value"
+      [class]="passThrough().value?.class"
+      [style]="passThrough().value?.style"
+      text-anchor="middle"
+      [attr.x]="fit().cx"
+      [attr.y]="valueY()"
+      [style.font-size.px]="valueFont().value"
+    >
+      {{ formatted() }}
+    </svg:text>
+    @if (label()) {
+      <svg:text
+        class="tx-gauge__label"
+        [class]="passThrough().label?.class"
+        [style]="passThrough().label?.style"
+        text-anchor="middle"
+        dominant-baseline="hanging"
+        [attr.x]="fit().cx"
+        [attr.y]="valueY() + 6"
+        [style.font-size.px]="valueFont().label"
+      >
+        {{ label() }}
+      </svg:text>
+    }
+  }
+</tx-chart-frame>

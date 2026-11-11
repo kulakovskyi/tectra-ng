@@ -1,0 +1,82 @@
+<tx-chart-frame
+  [height]="height()"
+  [(size)]="size"
+  [legendItems]="legendItems()"
+  [showLegend]="legendShown()"
+  [legendPosition]="legendPosition()"
+  [legendAlign]="legendAlign()"
+  [legendVariant]="legendVariant()"
+  [legendTemplate]="legendTemplate()?.template"
+  [empty]="isEmpty()"
+  [loading]="loading()"
+  [toolbar]="toolbar()"
+  [exportName]="ariaLabel()"
+  emptyIcon="chart-pie"
+  [summary]="summary()"
+  [table]="dataTable()"
+  [tooltip]="tooltip()"
+  [tooltipTemplate]="tooltipTemplate()?.template"
+  [panelStyle]="tokenStyle()"
+  [parts]="passThrough()"
+  [styled]="!isUnstyled()"
+  (pointer)="onPointer($event)"
+  (navigate)="onNavigate($event)"
+  (legendToggled)="onLegendToggle($event)"
+  (legendHovered)="onLegendHover($event)"
+  (tooltipClosed)="hovered.set(null)"
+>
+  @for (ring of rings(); track ring.key) {
+    <svg:g
+      class="tx-radial-bar__ring"
+      [class.tx-radial-bar__ring--hovered]="hovered() === ring.index"
+      [attr.data-index]="ring.index"
+      [style.--tx-radial-bar-color]="ring.color"
+      [style.--tx-radial-bar-order]="ring.index"
+    >
+      @if (track()) {
+        <svg:path
+          class="tx-radial-bar__track"
+          [class]="passThrough().track?.class"
+          [style]="passThrough().track?.style"
+          [attr.d]="ring.track"
+          [style.stroke-width.px]="ring.width"
+        />
+      }
+      @if (ring.bar) {
+        <svg:path
+          class="tx-radial-bar__bar"
+          [class]="passThrough().bar?.class"
+          [style]="passThrough().bar?.style"
+          [attr.d]="ring.bar"
+          pathLength="1"
+          [style.stroke-width.px]="ring.width"
+        />
+      }
+    </svg:g>
+  }
+  @if (center(); as data) {
+    <svg:g class="tx-radial-bar__center" [class]="passThrough().center?.class" [style]="passThrough().center?.style">
+      <svg:text
+        class="tx-radial-bar__center-value"
+        text-anchor="middle"
+        [attr.x]="fit().cx"
+        [attr.y]="fit().cy + centerFont().value * 0.3 - (data.label ? centerFont().label * 0.6 : 0)"
+        [style.font-size.px]="centerFont().value"
+      >
+        {{ data.value }}
+      </svg:text>
+      @if (data.label) {
+        <svg:text
+          class="tx-radial-bar__center-label"
+          text-anchor="middle"
+          dominant-baseline="hanging"
+          [attr.x]="fit().cx"
+          [attr.y]="fit().cy + centerFont().value * 0.3 - centerFont().label * 0.6 + 6"
+          [style.font-size.px]="centerFont().label"
+        >
+          {{ data.label }}
+        </svg:text>
+      }
+    </svg:g>
+  }
+</tx-chart-frame>

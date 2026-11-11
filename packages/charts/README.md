@@ -15,6 +15,9 @@ Part of `tectra-ng`. One entry point per chart, so you only bundle what you impo
 | `@tectra-ng/charts/combo` | `<tx-combo-chart>` — columns with lines or areas in one plot, a second value axis aligned to the grid of the first |
 | `@tectra-ng/charts/scatter` | `<tx-scatter-chart>` — points and bubbles on two value axes, per point colours and labels, trend lines, a time x axis |
 | `@tectra-ng/charts/pie` | `<tx-pie-chart>` — pie, donut and half donut, centre total, legend with values, `txPieLegend` |
+| `@tectra-ng/charts/radar` | `<tx-radar-chart>` — series on axes around a centre, polygon or circular rings, filled areas |
+| `@tectra-ng/charts/radial-bar` | `<tx-radial-bar>` — progress rings over a track, a full circle or any arc, the share in the centre |
+| `@tectra-ng/charts/gauge` | `<tx-gauge>` — one value on a scale: a progress arc in a tone, or a needle over coloured bands |
 | `@tectra-ng/charts/bar-list` | `<tx-bar-list>` — a top-N ranking: label over a share bar, value and percent of the total, router links |
 | `@tectra-ng/charts/segmented-bar` | `<tx-segmented-bar>` — parts of one whole in one bar with tones, a small or a large bar, legend with values and shares |
 | `@tectra-ng/charts/heatmap` | `<tx-heatmap>` — rows × grouped columns coloured by tones or a value scale, sticky headers, cell tooltips and clicks, `heatmapCalendar()` |

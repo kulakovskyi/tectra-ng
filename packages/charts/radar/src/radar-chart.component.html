@@ -1,0 +1,102 @@
+<tx-chart-frame
+  [height]="height()"
+  [(size)]="size"
+  [legendItems]="legendItems()"
+  [showLegend]="legendShown()"
+  [legendPosition]="legendPosition()"
+  [legendAlign]="legendAlign()"
+  [legendVariant]="legendVariant()"
+  [legendTemplate]="legendTemplate()?.template"
+  [empty]="isEmpty()"
+  [loading]="loading()"
+  [toolbar]="toolbar()"
+  [exportName]="ariaLabel()"
+  emptyIcon="chart-line"
+  [summary]="summary()"
+  [table]="dataTable()"
+  [tooltip]="tooltip()"
+  [tooltipTemplate]="tooltipTemplate()?.template"
+  [panelStyle]="tokenStyle()"
+  [parts]="passThrough()"
+  [styled]="!isUnstyled()"
+  (pointer)="onPointer($event)"
+  (navigate)="onNavigate($event)"
+  (legendToggled)="onLegendToggle($event)"
+  (legendHovered)="onLegendHover($event)"
+  (tooltipClosed)="active.set(null)"
+>
+  <svg:g class="tx-radar-chart__grid" [class]="passThrough().grid?.class" [style]="passThrough().grid?.style">
+    @for (ring of ringShapes(); track ring.value) {
+      <svg:path class="tx-radar-chart__ring" [class]="passThrough().ring?.class" [style]="passThrough().ring?.style" [attr.d]="ring.path" />
+    }
+    @for (axis of axes(); track axis.index) {
+      <svg:line
+        class="tx-radar-chart__axis-line"
+        [class.tx-radar-chart__axis-line--active]="active()?.index === axis.index"
+        [class]="passThrough().axisLine?.class"
+        [style]="passThrough().axisLine?.style"
+        [attr.x1]="fit().cx"
+        [attr.y1]="fit().cy"
+        [attr.x2]="axis.x"
+        [attr.y2]="axis.y"
+      />
+    }
+  </svg:g>
+  @for (polygon of polygons(); track polygon.key) {
+    <svg:g
+      class="tx-radar-chart__series"
+      [class.tx-radar-chart__series--focused]="focusedSeries() === polygon.index"
+      [class.tx-radar-chart__series--current]="active()?.series === polygon.index"
+      [class]="passThrough().series?.class"
+      [style]="passThrough().series?.style"
+      [style.--tx-radar-chart-color]="polygon.color"
+      [style.transform-origin]="fit().cx + 'px ' + fit().cy + 'px'"
+      [attr.data-series]="polygon.index"
+    >
+      @if (fill()) {
+        <svg:path class="tx-radar-chart__area" [class]="passThrough().area?.class" [style]="passThrough().area?.style" [attr.d]="polygon.path" />
+      }
+      <svg:path class="tx-radar-chart__line" [class]="passThrough().line?.class" [style]="passThrough().line?.style" [attr.d]="polygon.path" />
+      @if (markers()) {
+        @for (point of polygon.points; track $index) {
+          @if (point) {
+            <svg:circle
+              class="tx-radar-chart__point"
+              [class]="passThrough().marker?.class"
+              [style]="passThrough().marker?.style"
+              [attr.cx]="point.x"
+              [attr.cy]="point.y"
+            />
+          }
+        }
+      }
+    </svg:g>
+  }
+  @for (point of activePoints(); track point.series) {
+    @if (point.current) {
+      <svg:circle class="tx-radar-chart__halo" [attr.cx]="point.x" [attr.cy]="point.y" [style.fill]="point.color" />
+    }
+    <svg:circle class="tx-radar-chart__marker" [attr.cx]="point.x" [attr.cy]="point.y" [style.fill]="point.color" />
+  }
+  <svg:g class="tx-radar-chart__labels" aria-hidden="true">
+    @for (axis of axes(); track axis.index) {
+      <svg:text
+        class="tx-radar-chart__label"
+        [class.tx-radar-chart__label--active]="active()?.index === axis.index"
+        [class]="passThrough().axisLabel?.class"
+        [style]="passThrough().axisLabel?.style"
+        [attr.x]="axis.labelX"
+        [attr.y]="axis.labelY"
+        [attr.text-anchor]="axis.anchor"
+        [attr.dominant-baseline]="axis.baseline"
+      >
+        {{ axis.label }}
+      </svg:text>
+    }
+    @if (showTicks()) {
+      @for (ring of ringShapes(); track ring.value) {
+        <svg:text class="tx-radar-chart__tick" [attr.x]="ring.labelX" [attr.y]="ring.labelY" dominant-baseline="middle">{{ ring.label }}</svg:text>
+      }
+    }
+  </svg:g>
+</tx-chart-frame>

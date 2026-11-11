@@ -1,0 +1,166 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+:host(.tx-radar-chart--fill) {
+  height: 100%;
+}
+
+.tx-radar-chart__ring,
+.tx-radar-chart__line {
+  fill: none;
+}
+
+.tx-radar-chart__ring,
+.tx-radar-chart__axis-line {
+  stroke: currentColor;
+  stroke-opacity: 0.2;
+}
+
+.tx-radar-chart__area {
+  fill: var(--tx-radar-chart-color);
+  fill-opacity: 0.2;
+}
+
+.tx-radar-chart__line {
+  stroke: var(--tx-radar-chart-color);
+  stroke-linejoin: round;
+}
+
+.tx-radar-chart__point {
+  fill: var(--tx-radar-chart-color);
+}
+
+.tx-radar-chart__grid,
+.tx-radar-chart__labels,
+.tx-radar-chart__series,
+.tx-radar-chart__marker,
+.tx-radar-chart__halo {
+  pointer-events: none;
+}
+
+.tx-radar-chart__series {
+  transform-box: view-box;
+}
+
+:host([data-styled]) {
+  .tx-radar-chart__ring,
+  .tx-radar-chart__axis-line {
+    stroke: var(--tx-chart-grid-color);
+    stroke-opacity: 1;
+    stroke-width: var(--tx-chart-grid-width);
+    stroke-dasharray: var(--tx-chart-grid-dash);
+  }
+
+  .tx-radar-chart__axis-line {
+    transition: stroke var(--tx-chart-motion-hover-duration) ease;
+  }
+
+  .tx-radar-chart__axis-line--active {
+    stroke: var(--tx-chart-crosshair-color);
+    stroke-dasharray: var(--tx-chart-crosshair-dash);
+  }
+
+  .tx-radar-chart__area {
+    fill-opacity: var(--tx-chart-radar-fill-opacity);
+    transition: fill-opacity var(--tx-chart-motion-hover-duration) ease;
+  }
+
+  .tx-radar-chart__series--current .tx-radar-chart__area {
+    fill-opacity: var(--tx-chart-radar-active-fill-opacity);
+  }
+
+  .tx-radar-chart__line {
+    stroke-width: var(--tx-chart-radar-stroke-width);
+  }
+
+  .tx-radar-chart__point {
+    r: var(--tx-chart-radar-point-radius);
+    stroke: var(--tx-chart-marker-stroke-color);
+    stroke-width: var(--tx-chart-marker-stroke-width);
+  }
+
+  .tx-radar-chart__marker {
+    r: var(--tx-chart-marker-radius);
+    stroke: var(--tx-chart-marker-stroke-color);
+    stroke-width: var(--tx-chart-marker-stroke-width);
+  }
+
+  .tx-radar-chart__halo {
+    r: var(--tx-chart-marker-halo-radius);
+    opacity: var(--tx-chart-marker-halo-opacity);
+  }
+
+  .tx-radar-chart__label {
+    fill: var(--tx-chart-radar-label-color);
+    font-size: var(--tx-chart-radar-label-font-size);
+    font-weight: var(--tx-chart-radar-label-font-weight);
+    transition: fill var(--tx-chart-motion-hover-duration) ease;
+  }
+
+  .tx-radar-chart__label--active {
+    fill: var(--tx-chart-radar-active-label-color);
+  }
+
+  .tx-radar-chart__tick {
+    fill: var(--tx-chart-radar-tick-color);
+    font-size: var(--tx-chart-radar-tick-font-size);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tx-radar-chart__series {
+    transition: opacity var(--tx-chart-motion-update-duration) ease;
+  }
+}
+
+:host(:not([data-styled])) .tx-radar-chart__point {
+  r: 3px;
+}
+
+:host([data-styled].tx-radar-chart--focused) .tx-radar-chart__series:not(.tx-radar-chart__series--focused) {
+  opacity: var(--tx-chart-radar-dimmed-opacity);
+}
+
+:host([data-styled].tx-radar-chart--morph) {
+  .tx-radar-chart__area,
+  .tx-radar-chart__line,
+  .tx-radar-chart__ring {
+    transition:
+      d var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing),
+      fill-opacity var(--tx-chart-motion-hover-duration) ease;
+  }
+
+  .tx-radar-chart__point {
+    transition:
+      cx var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing),
+      cy var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing);
+  }
+}
+
+:host([data-styled].tx-radar-chart--entering) .tx-radar-chart__series {
+  animation: tx-radar-chart-grow var(--tx-chart-motion-enter-duration) var(--tx-chart-motion-easing) both;
+}
+
+@keyframes tx-radar-chart-grow {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) .tx-radar-chart__series,
+  :host([data-styled].tx-radar-chart--morph) .tx-radar-chart__area,
+  :host([data-styled].tx-radar-chart--morph) .tx-radar-chart__line,
+  :host([data-styled].tx-radar-chart--morph) .tx-radar-chart__ring,
+  :host([data-styled].tx-radar-chart--morph) .tx-radar-chart__point {
+    transition: none;
+    animation: none;
+  }
+}

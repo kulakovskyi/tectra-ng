@@ -2,6 +2,7 @@ export * from './src/chart.types';
 export * from './src/scale';
 export * from './src/format';
 export * from './src/curve';
+export * from './src/polar';
 export * from './src/stack';
 export * from './src/decimate';
 export * from './src/palette';

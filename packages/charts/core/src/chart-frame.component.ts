@@ -134,7 +134,7 @@ export class TxChartFrame {
     return [
       { id: 'svg', label: t.chartDownloadSvg, icon: 'image' },
       { id: 'png', label: t.chartDownloadPng, icon: 'image' },
-      { id: 'csv', label: t.chartDownloadCsv, icon: 'file' },
+      ...(this.table() ? [{ id: 'csv', label: t.chartDownloadCsv, icon: 'file' }] : []),
     ];
   });
 

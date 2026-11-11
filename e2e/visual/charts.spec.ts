@@ -17,7 +17,7 @@ function serverChart(html: string, tag: string): { paths: number; legend: number
   const start = html.indexOf(`<${tag}`);
   const chart = html.slice(start, html.indexOf(`</${tag}>`, start));
   return {
-    paths: (chart.match(/class="tx-line-chart__line/g) ?? chart.match(/class="tx-column-chart__bar[ "]/g) ?? chart.match(/class="tx-pie-chart__segment[ "]/g) ?? chart.match(/class="tx-treemap__tile[ "]/g) ?? chart.match(/class="tx-rank-chart__line[ "]/g) ?? chart.match(/class="tx-combo-chart__bar[ "]/g) ?? chart.match(/class="tx-scatter-chart__point[ "]/g) ?? []).length,
+    paths: (chart.match(/class="tx-line-chart__line/g) ?? chart.match(/class="tx-column-chart__bar[ "]/g) ?? chart.match(/class="tx-pie-chart__segment[ "]/g) ?? chart.match(/class="tx-treemap__tile[ "]/g) ?? chart.match(/class="tx-rank-chart__line[ "]/g) ?? chart.match(/class="tx-combo-chart__bar[ "]/g) ?? chart.match(/class="tx-scatter-chart__point[ "]/g) ?? chart.match(/class="tx-radar-chart__area[ "]/g) ?? chart.match(/class="tx-radial-bar__bar[ "]/g) ?? chart.match(/class="tx-gauge__progress[ "]/g) ?? []).length,
     legend: (chart.match(/class="tx-chart-legend__item/g) ?? []).length,
     labels: [...chart.matchAll(/class="tx-chart-axes__label"[^>]*>\s*([^<]*?)\s*</g)].map((match) => match[1]),
   };
@@ -32,6 +32,9 @@ test.describe('charts', () => {
     ['/components/pie-chart', 'tx-pie-chart', '.tx-pie-chart__segment'],
     ['/components/combo-chart', 'tx-combo-chart', '.tx-combo-chart__bar'],
     ['/components/scatter-chart', 'tx-scatter-chart', '.tx-scatter-chart__point'],
+    ['/components/radar-chart', 'tx-radar-chart', '.tx-radar-chart__area'],
+    ['/components/radial-bar', 'tx-radial-bar', '.tx-radial-bar__bar'],
+    ['/components/gauge', 'tx-gauge', '.tx-gauge__progress'],
   ] as const) {
     test(`${tag}: the hydrated chart keeps the server markup and its box`, async ({ page, request }) => {
       const server = serverChart(await (await request.get(path)).text(), tag);
@@ -172,6 +175,65 @@ test.describe('charts', () => {
       const ring = await point.boundingBox();
       expect(ring && plot && ring.x >= plot.x - 1 && ring.x + ring.width <= plot.x + plot.width + 1).toBeTruthy();
     }
+  });
+
+  test('radar chart: the labels stay inside the chart and hover picks an axis', async ({ page }) => {
+    await page.goto('/components/radar-chart');
+    const chart = example(page, 'Basic').locator('tx-radar-chart');
+    await chart.scrollIntoViewIfNeeded();
+    await expect
+      .poll(() =>
+        chart.evaluate((element) => {
+          const box = element.querySelector('svg.tx-chart-frame__svg')?.getBoundingClientRect();
+          return (
+            !!box &&
+            [...element.querySelectorAll('.tx-radar-chart__label')].every((label) => {
+              const rect = label.getBoundingClientRect();
+              return rect.left >= box.left - 1 && rect.right <= box.right + 1 && rect.top >= box.top - 1 && rect.bottom <= box.bottom + 1;
+            })
+          );
+        }),
+      )
+      .toBe(true);
+    const end = await chart.locator('.tx-radar-chart__axis-line').nth(1).evaluate((line) => {
+      const rect = line.getBoundingClientRect();
+      return { x: rect.right, y: rect.top + rect.height / 2 };
+    });
+    await page.mouse.move(end.x - 20, end.y);
+    await expect(chart.locator('.tx-radar-chart__label--active')).toHaveText(/Backend/);
+    await expect(tooltip(page)).toContainText('Candidate A');
+    await page.mouse.move(0, 0);
+    await expect(tooltip(page)).toHaveCount(0);
+  });
+
+  test('radial bar and gauge: rings and arcs fit the box, the needle points at the value', async ({ page }) => {
+    await page.goto('/components/radial-bar');
+    const radial = example(page, 'Horseshoe').locator('tx-radial-bar');
+    await radial.scrollIntoViewIfNeeded();
+    const inside = (root: Locator, selector: string) =>
+      root.evaluate((element, parts) => {
+        const box = element.querySelector('svg.tx-chart-frame__svg')?.getBoundingClientRect();
+        return (
+          !!box &&
+          [...element.querySelectorAll(parts)].every((part) => {
+            const rect = part.getBoundingClientRect();
+            return rect.left >= box.left - 1 && rect.right <= box.right + 1 && rect.top >= box.top - 1 && rect.bottom <= box.bottom + 1;
+          })
+        );
+      }, selector);
+    await expect.poll(() => inside(radial, '.tx-radial-bar__track')).toBe(true);
+    await radial.locator('.tx-chart-frame__plot').focus();
+    await page.keyboard.press('ArrowDown');
+    await expect(radial.locator('.tx-radial-bar__center')).toContainText('Revenue');
+    await expect(tooltip(page)).toContainText('84');
+
+    await page.goto('/components/gauge');
+    const gauge = example(page, 'Bands').locator('tx-gauge');
+    await gauge.scrollIntoViewIfNeeded();
+    await expect(gauge.locator('.tx-gauge__band')).toHaveCount(3);
+    const transform = await gauge.locator('.tx-gauge__needle').evaluate((needle) => getComputedStyle(needle).transform);
+    const [a, b] = transform.replace(/^matrix\(|\)$/g, '').split(',').map(Number);
+    expect(Math.round((Math.atan2(b, a) * 180) / Math.PI)).toBe(34);
   });
 
   test('column chart: hover on the column pins the tooltip above it, horizontal bars fit', async ({ page }) => {

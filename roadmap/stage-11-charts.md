@@ -113,11 +113,13 @@ First app: search positions over real check times — rank 1 on top, one line pe
 - [x] `<tx-rank-chart>` with the first app's API and look; `color` optional (`rankLineColor(index)` from the 12-colour `chart.rankLine` tokens), optional legend that toggles series, `pointClick`, arrow keys walk a series and switch series, `note` in the core tooltip
 - [x] Docs + tests; e2e
 
-## 11.12 Radar, radial bar and gauge
+## 11.12 Radar, radial bar and gauge ✅
 
-- [ ] `<tx-radar-chart>`: axes around a centre, filled series, grid rings
-- [ ] `<tx-radial-bar>` and `<tx-gauge>`: rings with values, a needle gauge with bands
-- [ ] Docs + tests; e2e
+- [x] `<tx-radar-chart>` (`charts/radar`): axes around a centre, filled series, polygon or circular grid rings with values, fixed `min` / `max` / `rings`; hover picks the nearest axis (spoke and label light up, every series gets a marker), arrows walk axes and series; the radius shrinks so long labels fit
+- [x] `<tx-radial-bar>` (`charts/radial-bar`) and `<tx-gauge>` (`charts/gauge`): rings with values over a track (any arc, per item `max`, the share or the value in the centre, average under `totalLabel`); a gauge as a progress arc in a tone or a needle over bands, ticks with values around the arc, the band label read by screen readers
+- [x] Docs + tests; e2e
+
+Arc helpers (`polar`, `arcPath`, `strokeArc`, `fitArc`) moved from `charts/pie` to `charts/core` for every round chart; `charts/pie` still re-exports them. The chart menu drops "Download CSV" when a chart has no data table (gauge).
 
 ## 11.13 Funnel, waterfall and bullet
 

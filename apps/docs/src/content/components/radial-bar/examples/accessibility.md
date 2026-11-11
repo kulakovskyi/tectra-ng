@@ -1,0 +1,1 @@
+Tab to the chart: the arrow keys walk the rings, Home / End jump to the outer and inner ring, Escape clears the focus. Each ring is announced with its value and share; screen readers also get a summary and a hidden data table.

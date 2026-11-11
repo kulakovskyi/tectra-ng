@@ -372,6 +372,11 @@ export interface TxTranslations {
   chartScatter: string;
   chartBubble: string;
   chartSize: string;
+  chartRadar: string;
+  chartAverage: string;
+  chartRadialBar: string;
+  chartGauge: string;
+  chartGaugeValue: string;
   chartPie: string;
   chartDonut: string;
   chartMenu: string;

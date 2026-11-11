@@ -1,0 +1,1 @@
+The gauge is one image for screen readers: `ariaLabel`, the caption, the value with the scale and the label of the band — "Checkout service, Gauge, Error budget used: 83% of 0% to 100%, Exhausted". It takes no focus: there is nothing to walk.
