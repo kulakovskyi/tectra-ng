@@ -17,7 +17,7 @@ function serverChart(html: string, tag: string): { paths: number; legend: number
   const start = html.indexOf(`<${tag}`);
   const chart = html.slice(start, html.indexOf(`</${tag}>`, start));
   return {
-    paths: (chart.match(/class="tx-line-chart__line/g) ?? chart.match(/class="tx-column-chart__bar[ "]/g) ?? chart.match(/class="tx-pie-chart__segment[ "]/g) ?? chart.match(/class="tx-treemap__tile[ "]/g) ?? chart.match(/class="tx-rank-chart__line[ "]/g) ?? chart.match(/class="tx-combo-chart__bar[ "]/g) ?? []).length,
+    paths: (chart.match(/class="tx-line-chart__line/g) ?? chart.match(/class="tx-column-chart__bar[ "]/g) ?? chart.match(/class="tx-pie-chart__segment[ "]/g) ?? chart.match(/class="tx-treemap__tile[ "]/g) ?? chart.match(/class="tx-rank-chart__line[ "]/g) ?? chart.match(/class="tx-combo-chart__bar[ "]/g) ?? chart.match(/class="tx-scatter-chart__point[ "]/g) ?? []).length,
     legend: (chart.match(/class="tx-chart-legend__item/g) ?? []).length,
     labels: [...chart.matchAll(/class="tx-chart-axes__label"[^>]*>\s*([^<]*?)\s*</g)].map((match) => match[1]),
   };
@@ -31,6 +31,7 @@ test.describe('charts', () => {
     ['/components/column-chart', 'tx-column-chart', '.tx-column-chart__bar'],
     ['/components/pie-chart', 'tx-pie-chart', '.tx-pie-chart__segment'],
     ['/components/combo-chart', 'tx-combo-chart', '.tx-combo-chart__bar'],
+    ['/components/scatter-chart', 'tx-scatter-chart', '.tx-scatter-chart__point'],
   ] as const) {
     test(`${tag}: the hydrated chart keeps the server markup and its box`, async ({ page, request }) => {
       const server = serverChart(await (await request.get(path)).text(), tag);
@@ -144,6 +145,33 @@ test.describe('charts', () => {
     expect(tip && tip.y + tip.height <= top + 1).toBeTruthy();
     await page.mouse.move(0, 0);
     await expect(tooltip(page)).toHaveCount(0);
+  });
+
+  test('scatter chart: the pointer picks the nearest point, bubbles keep the small ones on top', async ({ page }) => {
+    await page.goto('/components/scatter-chart');
+    const chart = example(page, 'Basic').locator('tx-scatter-chart');
+    await chart.scrollIntoViewIfNeeded();
+    const dot = chart.locator('.tx-scatter-chart__point[data-series="0"][data-index="3"]');
+    const box = await dot.boundingBox();
+    if (!box) throw new Error('no point');
+    await page.mouse.move(box.x + box.width / 2 + box.width / 2 + 3, box.y + box.height / 2);
+    await expect(dot).toHaveClass(/tx-scatter-chart__point--active/);
+    await expect(chart.locator('.tx-scatter-chart__guide')).toHaveCount(2);
+    await expect(tooltip(page)).toContainText('Session length, min');
+    const tip = await tooltip(page).boundingBox();
+    expect(tip && tip.y + tip.height <= box.y + 1).toBeTruthy();
+    await page.mouse.move(0, 0);
+    await expect(tooltip(page)).toHaveCount(0);
+
+    const bubbles = example(page, 'Bubble').locator('tx-scatter-chart');
+    await bubbles.scrollIntoViewIfNeeded();
+    const radii = await bubbles.locator('.tx-scatter-chart__point').evaluateAll((points) => points.map((point) => Number(point.getAttribute('r'))));
+    expect(radii).toEqual([...radii].sort((a, b) => b - a));
+    const plot = await bubbles.locator('.tx-chart-frame__svg').boundingBox();
+    for (const point of await bubbles.locator('.tx-scatter-chart__point').all()) {
+      const ring = await point.boundingBox();
+      expect(ring && plot && ring.x >= plot.x - 1 && ring.x + ring.width <= plot.x + plot.width + 1).toBeTruthy();
+    }
   });
 
   test('column chart: hover on the column pins the tooltip above it, horizontal bars fit', async ({ page }) => {

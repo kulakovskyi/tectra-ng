@@ -1,0 +1,1 @@
+Tab to the chart: ←/→ walk the points of a series in x order, ↑/↓ jump to the nearest point of the next series, Home / End go to the ends, Escape closes the tooltip. Each point is announced with its axis names; screen readers also get a summary and a hidden table of every point.

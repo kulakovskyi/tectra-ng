@@ -68,10 +68,10 @@ First app (`pie`, 9): donut with `pieData` (`{ series, labels }`), `chartWidth` 
 
 The hole is `donutSize` (the first app's name, `'0%'` = pie). `toolbar` (download menu) — done with export in 11.18.
 
-## 11.6 Scatter and bubble — `charts/scatter`
+## 11.6 Scatter and bubble — `charts/scatter` ✅
 
-- [ ] `<tx-scatter-chart>`: x / y points, bubble size, per point colour, trend line
-- [ ] Docs + tests; e2e
+- [x] `<tx-scatter-chart>`: x / y points (objects or `[x, y, size]` tuples), bubble size (area follows the value, big ones drawn first), per point colour and label, least-squares trend line per series, numeric or time x axis, log y, own formats for x, y and size; the nearest point within a few pixels takes the hover, dashed guides to both axes, arrows walk a series by x and jump between series at the nearest x
+- [x] Docs + tests; e2e
 
 ## 11.7 Bar list — `charts/bar-list` (11) ✅
 

@@ -371,6 +371,7 @@ export interface TxTranslations {
   chartCombo: string;
   chartScatter: string;
   chartBubble: string;
+  chartSize: string;
   chartPie: string;
   chartDonut: string;
   chartMenu: string;

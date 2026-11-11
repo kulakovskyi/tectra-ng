@@ -146,7 +146,7 @@
         @if (data.title) {
           <div class="tx-chart-frame__tooltip-title">{{ data.title }}</div>
         }
-        @for (row of data.rows; track row.seriesIndex) {
+        @for (row of data.rows; track $index) {
           <div class="tx-chart-frame__tooltip-row" [class.tx-chart-frame__tooltip-row--active]="row.active && data.rows.length > 1">
             <span class="tx-chart-frame__tooltip-marker" [style.background]="row.color"></span>
             <span class="tx-chart-frame__tooltip-label">{{ row.label }}</span>

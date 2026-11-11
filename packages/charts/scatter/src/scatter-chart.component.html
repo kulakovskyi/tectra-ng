@@ -1,0 +1,67 @@
+<tx-chart-frame
+  [height]="height()"
+  [(size)]="size"
+  [legendItems]="legendItems()"
+  [showLegend]="legendShown()"
+  [legendPosition]="legendPosition()"
+  [legendAlign]="legendAlign()"
+  [legendVariant]="legendVariant()"
+  [legendTemplate]="legendTemplate()?.template"
+  [empty]="isEmpty()"
+  [loading]="loading()"
+  [toolbar]="toolbar()"
+  [exportName]="ariaLabel()"
+  emptyIcon="chart-scatter"
+  [summary]="summary()"
+  [table]="dataTable()"
+  [tooltip]="tooltip()"
+  [tooltipTemplate]="tooltipTemplate()?.template"
+  [panelStyle]="tokenStyle()"
+  [parts]="passThrough()"
+  [styled]="!isUnstyled()"
+  (pointer)="onPointer($event)"
+  (navigate)="onNavigate($event)"
+  (legendToggled)="onLegendToggle($event)"
+  (legendHovered)="onLegendHover($event)"
+  (tooltipClosed)="active.set(null)"
+>
+  <svg:g [tx-chart-axes]="layout().axes" [gridPart]="passThrough().grid" [axisPart]="passThrough().axis" />
+  @if (guides(); as guide) {
+    <svg:g class="tx-scatter-chart__guides" [class]="passThrough().guide?.class" [style]="passThrough().guide?.style">
+      <svg:line class="tx-scatter-chart__guide" [attr.x1]="guide.x.x1" [attr.y1]="guide.x.y1" [attr.x2]="guide.x.x2" [attr.y2]="guide.x.y2" />
+      <svg:line class="tx-scatter-chart__guide" [attr.x1]="guide.y.x1" [attr.y1]="guide.y.y1" [attr.x2]="guide.y.x2" [attr.y2]="guide.y.y2" />
+    </svg:g>
+  }
+  <svg:g class="tx-scatter-chart__points">
+    @for (dot of drawnDots(); track dot.key) {
+      <svg:circle
+        class="tx-scatter-chart__point"
+        [class.tx-scatter-chart__point--focused]="focusedSeries() === dot.series"
+        [class.tx-scatter-chart__point--active]="isActive(dot)"
+        [class]="passThrough().point?.class"
+        [style]="passThrough().point?.style"
+        [attr.data-series]="dot.series"
+        [attr.data-index]="dot.index"
+        [attr.cx]="dot.cx"
+        [attr.cy]="dot.cy"
+        [attr.r]="dot.r"
+        [style.--tx-scatter-chart-color]="dot.color"
+        [style.--tx-scatter-chart-order]="dot.order"
+      />
+    }
+  </svg:g>
+  @for (trend of trends(); track trend.key) {
+    <svg:line
+      class="tx-scatter-chart__trend"
+      [class.tx-scatter-chart__trend--focused]="focusedSeries() === trend.series"
+      [class]="passThrough().trendLine?.class"
+      [style]="passThrough().trendLine?.style"
+      [attr.data-series]="trend.series"
+      [attr.x1]="trend.x1"
+      [attr.y1]="trend.y1"
+      [attr.x2]="trend.x2"
+      [attr.y2]="trend.y2"
+      [style.stroke]="trend.color"
+    />
+  }
+</tx-chart-frame>

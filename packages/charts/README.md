@@ -13,6 +13,7 @@ Part of `tectra-ng`. One entry point per chart, so you only bundle what you impo
 | `@tectra-ng/charts/line` | `<tx-line-chart>` — line and area, stacked and 100%, time axis, gaps, decimation |
 | `@tectra-ng/charts/column` | `<tx-column-chart>` — columns and bars, stacked, 100% and grouped, data labels, negative values |
 | `@tectra-ng/charts/combo` | `<tx-combo-chart>` — columns with lines or areas in one plot, a second value axis aligned to the grid of the first |
+| `@tectra-ng/charts/scatter` | `<tx-scatter-chart>` — points and bubbles on two value axes, per point colours and labels, trend lines, a time x axis |
 | `@tectra-ng/charts/pie` | `<tx-pie-chart>` — pie, donut and half donut, centre total, legend with values, `txPieLegend` |
 | `@tectra-ng/charts/bar-list` | `<tx-bar-list>` — a top-N ranking: label over a share bar, value and percent of the total, router links |
 | `@tectra-ng/charts/segmented-bar` | `<tx-segmented-bar>` — parts of one whole in one bar with tones, a small or a large bar, legend with values and shares |
