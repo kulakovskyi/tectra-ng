@@ -10,7 +10,7 @@
     [tooltipPlacement]="tooltipPlacement()"
     (click)="copy()"
   >
-    <tx-icon [name]="isCopied() ? 'check' : 'clone'" />
+    <span class="tx-copy-swap" [class.tx-copy-swap--done]="isCopied()"><tx-icon class="tx-copy-swap__icon tx-copy-swap__icon--idle" name="clone" /><tx-icon class="tx-copy-swap__icon tx-copy-swap__icon--done" name="check" /></span>
   </button>
 }
 <ng-template #content>

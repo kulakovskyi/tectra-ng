@@ -1,0 +1,1 @@
+With a photo the camera button opens "Change photo" and "Remove"; without one it opens the file picker at once. Removing asks first. `photoChange` gives the file (or `null`): upload it, keep `loading` on meanwhile, then set the new `image`.

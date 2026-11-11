@@ -1215,3 +1215,39 @@ test.describe('on a phone', () => {
     expect(clipped).toBe(0);
   });
 });
+
+test('avatar editor opens the photo menu and asks before removing', async ({ page }) => {
+  await page.goto('/components/avatar-editor');
+  const root = page.locator('avatar-editor-basic-example');
+  await root.getByRole('button', { name: 'Photo actions' }).click();
+  const menu = page.getByRole('menu');
+  await expect(menu.getByRole('menuitem')).toHaveText(['Change photo', 'Remove']);
+  await menu.getByRole('menuitem', { name: 'Remove' }).click();
+  const dialog = page.getByRole('alertdialog');
+  await expect(dialog).toContainText('Delete photo');
+  await dialog.getByRole('button', { name: 'Remove' }).click();
+  await expect(root.locator('.tx-avatar-editor__loader')).toBeVisible();
+  await expect(root.getByRole('button', { name: 'Upload photo' })).toBeVisible();
+});
+
+test('tag list opens the hidden tags from +N', async ({ page }) => {
+  await page.goto('/components/tag-list');
+  const root = page.locator('tag-list-basic-example tx-tag-list').first();
+  await expect(root.locator('tx-tag')).toHaveText(['Travel', 'Photography', 'Mountains', '+3']);
+  await root.getByRole('button', { name: '3 more' }).click();
+  await expect(page.locator('.tx-tag-list__popover tx-tag')).toHaveText(['Hiking', 'Gear', 'Autumn']);
+  await page.keyboard.press('Escape');
+  await expect(page.locator('.tx-tag-list__popover')).toHaveCount(0);
+  await expect(root.getByRole('button', { name: '3 more' })).toBeFocused();
+});
+
+test('copy buttons turn the copy icon into a check', async ({ page, context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto('/components/tag');
+  const button = page.locator('tag-copyable-example .tx-tag__copy').first();
+  const opacity = (selector: string) => button.locator(selector).evaluate((element) => getComputedStyle(element).opacity);
+  expect(await opacity('.tx-copy-swap__icon--done')).toBe('0');
+  await button.click();
+  await expect.poll(() => opacity('.tx-copy-swap__icon--done')).toBe('1');
+  await expect.poll(() => opacity('.tx-copy-swap__icon--idle')).toBe('0');
+});

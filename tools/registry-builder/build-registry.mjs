@@ -167,6 +167,9 @@ function readSource(packageDir) {
     return { name: m[1], value: value ? value[1].trim() : '—' };
   });
   const selector = source.match(/selector:\s*'([^']+)'/)?.[1] ?? '';
+  const selectors = Object.fromEntries(
+    [...source.matchAll(/selector:\s*'([^']+)'[^@]*?export class (\w+)/g)].map((m) => [m[2], m[1]]),
+  );
 
   const imported = Object.fromEntries(
     [...source.matchAll(/import \{([^}]+)\} from '@tectra-ng\/ui\/([\w-]+)'/g)].flatMap((m) => m[1].split(',').map((name) => [name.trim(), m[2]])),
@@ -191,7 +194,7 @@ function readSource(packageDir) {
     }
   }
 
-  return { members, tokens, selector };
+  return { members, tokens, selector, selectors };
 }
 
 const themesBundle = buildSync({
@@ -223,7 +226,8 @@ async function buildComponent(name) {
   const packageDir = meta.source ? join(root, meta.source) : join(root, 'packages/ui', name);
   const readmePath = meta.readme ? join(root, meta.readme) : join(packageDir, 'README.md');
   const tables = parseReadmeTables(read(readmePath));
-  const { members: ownMembers, tokens, selector } = readSource(packageDir);
+  const { members: ownMembers, tokens, selector: firstSelector, selectors } = readSource(packageDir);
+  const selector = (meta.import && selectors[meta.import]) || firstSelector;
   const members = { ...coreMembers, ...ownMembers };
   const withSource = (rows) =>
     (rows ?? []).map(([memberName, description]) => ({

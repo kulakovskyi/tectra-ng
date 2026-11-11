@@ -1,3 +1,5 @@
+@use '../../styles/copy-swap';
+
 :host {
   display: inline-flex;
 }
@@ -33,3 +35,5 @@ button {
 .tx-input-action--done {
   color: var(--tx-success-base);
 }
+
+@include copy-swap.icons;

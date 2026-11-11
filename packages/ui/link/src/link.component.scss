@@ -1,3 +1,5 @@
+@use '../../styles/copy-swap';
+
 :host {
   display: inline-flex;
   align-items: center;
@@ -93,3 +95,5 @@
     transition: none;
   }
 }
+
+@include copy-swap.icons;

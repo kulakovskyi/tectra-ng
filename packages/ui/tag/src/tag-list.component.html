@@ -1,0 +1,48 @@
+<ng-template #tagTemplate let-tag>
+  <tx-tag
+    [value]="tag.value"
+    [severity]="tag.severity ?? severity()"
+    [icon]="tag.icon"
+    [size]="size()"
+    [rounded]="rounded()"
+    [unstyled]="isUnstyled()"
+    [txTooltip]="tag.tooltip ?? ''"
+    [class]="passThrough().tag?.class"
+    [style]="passThrough().tag?.style"
+  />
+</ng-template>
+
+@for (tag of visible(); track $index) {
+  <span class="tx-tag-list__item" role="listitem"><ng-container *ngTemplateOutlet="tagTemplate; context: { $implicit: tag }" /></span>
+} @empty {
+  <span class="tx-tag-list__empty" role="listitem">{{ emptyText() }}</span>
+}
+@if (hidden().length) {
+  <span class="tx-tag-list__item" role="listitem">
+    <button
+      type="button"
+      class="tx-tag-list__more"
+      [class]="passThrough().more?.class"
+      [style]="passThrough().more?.style"
+      [attr.aria-label]="moreText()"
+      [txPopoverTrigger]="rest"
+    >
+      <tx-tag [value]="'+' + hidden().length" [severity]="severity()" [size]="size()" [rounded]="rounded()" [unstyled]="isUnstyled()" />
+    </button>
+  </span>
+  <tx-popover #rest [ariaLabel]="t().tagListHidden" autoFocus="none" [unstyled]="isUnstyled()">
+    <ng-template txPopoverContent>
+      <div
+        class="tx-tag-list__popover"
+        role="list"
+        [attr.data-styled]="!isUnstyled() || null"
+        [class]="passThrough().popover?.class"
+        [style]="passThrough().popover?.style"
+      >
+        @for (tag of hidden(); track $index) {
+          <span role="listitem"><ng-container *ngTemplateOutlet="tagTemplate; context: { $implicit: tag }" /></span>
+        }
+      </div>
+    </ng-template>
+  </tx-popover>
+}

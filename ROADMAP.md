@@ -205,6 +205,8 @@ Parts the first app gained after their stage here was planned (usage counted 202
 | `ui/truncate-text` — one line cut to a character limit with the full value in a tooltip, search highlight, optional link and copy button (long URLs, ids and names in table cells) | 4 | ✅ |
 | `blocks/mascot` — a pixel-art SVG mascot in the accent colour with animated states (idle, thinking, happy, sleeping, walking, short tricks) for assistants, empty states and onboarding | 4 | ✅ |
 | `ui/color-picker` field mode — a text field with a colour dot at its start: type the hex or open the picker from the dot, both in sync, a hex validator | 1 | ✅ |
+| `ui/avatar` editable photo — pick, replace or remove the photo from the avatar itself: file picker with type and size checks, loading state, a hint, remove behind a confirm, an output with the chosen file (found by the migration audit, 2026-11-11) — `tx-avatar-editor` | 6 | ✅ |
+| `ui/tag` list with a limit — a row of tags that shows the first N and a `+N` tag with the rest in a popover (found by the migration audit, 2026-11-11) — `tx-tag-list` | 2 | ✅ |
 
 ## Stage 11 — charts (`@tectra-ng/charts`)
 

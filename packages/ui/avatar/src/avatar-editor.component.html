@@ -1,0 +1,34 @@
+<div
+  class="tx-avatar-editor__photo"
+  [class]="passThrough().photo?.class"
+  [style]="passThrough().photo?.style"
+  (dragover)="onDragOver($event)"
+  (dragleave)="onDragLeave()"
+  (drop)="onDrop($event)"
+>
+  <tx-avatar class="tx-avatar-editor__image" [image]="image()" [name]="name()" [tooltip]="false" [unstyled]="isUnstyled()" />
+  <span class="tx-avatar-editor__badge" [class]="passThrough().badge?.class" [style]="passThrough().badge?.style">
+    <button
+      txButton
+      type="button"
+      icon="camera"
+      rounded
+      size="small"
+      [disabled]="blocked()"
+      [attr.aria-label]="hasPhoto() ? t().avatarPhotoActions : changeText()"
+      [attr.aria-haspopup]="hasPhoto() ? 'menu' : null"
+      [txTooltip]="changeText()"
+      (click)="onBadge($event)"
+    ></button>
+  </span>
+  @if (loading()) {
+    <div class="tx-avatar-editor__loader" [class]="passThrough().loader?.class" [style]="passThrough().loader?.style">
+      <tx-progress-spinner size="small" [ariaLabel]="t().loading" />
+    </div>
+  }
+</div>
+@if (hint()) {
+  <span class="tx-avatar-editor__hint" [class]="passThrough().hint?.class" [style]="passThrough().hint?.style">{{ hint() }}</span>
+}
+<tx-menu #menu popup [model]="menuItems()" [ariaLabel]="t().avatarPhotoActions" />
+<input #fileInput class="tx-avatar-editor__input" type="file" tabindex="-1" aria-hidden="true" [accept]="accept()" (change)="onFile($event)" />

@@ -39,6 +39,13 @@ export interface TxTranslations {
   generatePassword: string;
   remove: string;
   moreItems: string;
+  avatarChangePhoto: string;
+  avatarUploadPhoto: string;
+  avatarRemovePhoto: string;
+  avatarRemoveTitle: string;
+  avatarRemoveMessage: string;
+  avatarPhotoActions: string;
+  tagListHidden: string;
   selectedItems: string;
   selectedOfTotal: string;
   showOptions: string;
