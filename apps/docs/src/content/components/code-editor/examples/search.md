@@ -1,0 +1,1 @@
+Ctrl/⌘+F opens search, Ctrl+H (⌥⌘F on macOS) opens replace. Match case, whole word and regular expressions; Enter and Shift+Enter go through the matches, Escape closes. `openSearch()` opens it from code.

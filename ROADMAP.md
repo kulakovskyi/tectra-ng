@@ -270,12 +270,14 @@ The editor runs on the ProseMirror core (`prosemirror-model`, `-state`, `-view`,
 | Transform | Own steps, position mapping, inversion and the replace fitting algorithm | ⬜ |
 | View | Own `contenteditable` bridge: input, IME composition, selection sync, clipboard, drag and drop, browser workarounds (Chrome, Safari, Firefox, Android, iOS) | ⬜ |
 
-## Stage 14 — code editor (`@tectra-ng/code-editor`)
+## Stage 14 — code editor (`@tectra-ng/code-editor`) ✅
 
-The first app edits HTML, CSS, JavaScript and other source text and shows the changes between two versions (16 uses). Decide the engine first, the same way as the rich text editor: a modular core (CodeMirror 6: state, view, language packs; MIT) with everything above it ours, or a wrapper over a full editor (Monaco: heavy, own look, no server rendering). The core is the default choice.
+Detailed checklist: [roadmap/stage-14-code-editor.md](roadmap/stage-14-code-editor.md). Engine: the CodeMirror core (state + view) as a dependency, everything above it our code; an own engine can replace the core later behind the same API, like stage 13.
+
+The first app edits HTML, CSS, JavaScript and other source text and shows the changes between two versions (16 uses).
 
 | Item | Usage | Status |
 |---|---|---|
-| Editor: `value` / `valueChange`, `language` (HTML, CSS, JavaScript, TypeScript, JSON, Markdown, plain), `height`, `readOnly`, line numbers, syntax colours from tokens (light / dark / styles), search, undo, works with forms | 16 | ⬜ |
-| Diff: inline and side by side views of `original` → `value`, scroll to the first change, read-only or editable modified side | — | ⬜ |
-| Docs, tests, server rendering (a static highlighted view on the server, the editor after hydration) | — | ⬜ |
+| Editor: `value` / `valueChange`, `language` (HTML, CSS, JavaScript, TypeScript, JSON, Markdown, plain), `height`, `readOnly`, line numbers, indent guides, syntax colours from tokens (light / dark / styles), search, undo, works with forms | 16 | ✅ |
+| Diff: inline and side by side views of `original` → `value`, scroll to the first change, read-only or editable modified side | 1 | ✅ |
+| Docs, tests, server rendering (a static highlighted view on the server, the editor after hydration) | — | ✅ |

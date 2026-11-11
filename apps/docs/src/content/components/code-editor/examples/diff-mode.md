@@ -1,0 +1,1 @@
+`diffMode` with `originalValue` shows the changes from the original to `value` inline and scrolls to the first change; the new side stays editable unless `readOnly`. For more options use [Code diff](/components/code-diff).

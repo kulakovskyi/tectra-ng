@@ -1,0 +1,1 @@
+`language` takes `html`, `css`, `javascript`, `typescript`, `json`, `markdown` or `plain` (short names such as `js`, `ts`, `md` work too). Each language has its own colours, comment style and indent rules.

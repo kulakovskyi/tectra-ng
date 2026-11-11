@@ -1,0 +1,88 @@
+[data-styled] {
+  .tx-code-tok-comment,
+  .tx-code-tok-quote {
+    color: var(--tx-code-syntax-comment);
+  }
+
+  .tx-code-tok-quote {
+    color: var(--tx-code-syntax-quote);
+  }
+
+  .tx-code-tok-keyword {
+    color: var(--tx-code-syntax-keyword);
+  }
+
+  .tx-code-tok-literal {
+    color: var(--tx-code-syntax-literal);
+  }
+
+  .tx-code-tok-string {
+    color: var(--tx-code-syntax-string);
+  }
+
+  .tx-code-tok-number {
+    color: var(--tx-code-syntax-number);
+  }
+
+  .tx-code-tok-regexp {
+    color: var(--tx-code-syntax-regexp);
+  }
+
+  .tx-code-tok-type {
+    color: var(--tx-code-syntax-type);
+  }
+
+  .tx-code-tok-delimiter {
+    color: var(--tx-code-syntax-delimiter);
+  }
+
+  .tx-code-tok-tag {
+    color: var(--tx-code-syntax-tag);
+  }
+
+  .tx-code-tok-tag-delimiter {
+    color: var(--tx-code-syntax-tag-delimiter);
+  }
+
+  .tx-code-tok-meta {
+    color: var(--tx-code-syntax-meta);
+  }
+
+  .tx-code-tok-attribute {
+    color: var(--tx-code-syntax-attribute);
+  }
+
+  .tx-code-tok-attribute-value {
+    color: var(--tx-code-syntax-attribute-value);
+  }
+
+  .tx-code-tok-value {
+    color: var(--tx-code-syntax-value);
+  }
+
+  .tx-code-tok-key {
+    color: var(--tx-code-syntax-key);
+  }
+
+  .tx-code-tok-heading {
+    color: var(--tx-code-syntax-heading);
+    font-weight: var(--tx-code-syntax-heading-weight);
+  }
+
+  .tx-code-tok-strong {
+    font-weight: var(--tx-code-syntax-strong-weight);
+  }
+
+  .tx-code-tok-emphasis {
+    font-style: italic;
+  }
+
+  .tx-code-tok-link {
+    color: var(--tx-code-syntax-link);
+    text-decoration: underline;
+  }
+
+  .tx-code-tok-code {
+    color: var(--tx-code-syntax-code);
+  }
+}
