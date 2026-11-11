@@ -7,7 +7,7 @@
     "docs:build": "npm run registry && nx build docs",
     "sandbox": "nx serve sandbox",
     "landing-shots": "node tools/landing-shots/shoot.mjs",
-    "build:packages": "nx run-many -t build -p tokens themes core icons brand-icons flags qr ui editor code-editor charts utils blocks tectra-ng",
+    "build:packages": "nx run-many -t build -p tokens themes core icons brand-icons flags qr ui editor code-editor charts utils blocks tectra-ng && node tools/npm-readme.mjs",
     "icons": "node tools/icons/build-icons.mjs && node tools/icons/build-brand-icons.mjs",
     "flags": "node tools/flags/build-flags.mjs",
     "export-font": "node tools/export-font/build-export-font.mjs",

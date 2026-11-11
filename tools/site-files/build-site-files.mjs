@@ -26,10 +26,13 @@ const pages = [
 
 function section(markdown, heading) {
   const match = markdown.match(new RegExp(`^## ${heading}\\n([\\s\\S]*?)(?=^## |$(?![\\s\\S]))`, 'm'));
-  return match ? match[1].trim() : '';
+  if (!match) {
+    throw new Error(`site-files: no "## ${heading}" section in the README`);
+  }
+  return match[1].trim();
 }
 
-const install = section(read(join(root, 'README.md')), 'Install');
+const install = section(read(join(root, 'README.md')), 'Quick start');
 
 const demote = (markdown) => markdown.replace(/^(#{1,5}) /gm, '#$1 ');
 
