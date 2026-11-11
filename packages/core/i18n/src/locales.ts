@@ -476,6 +476,8 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     validationSumExceeded: 'The total must not exceed {max}',
     validationPriceFormat: 'Enter a price like 12.50',
     validationPricePositive: 'The price must be above zero',
+    copiedToClipboard: 'Copied to clipboard',
+    copyToClipboardFailed: 'Could not copy',
   },
 };
 
@@ -955,6 +957,8 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     validationSumExceeded: 'Сума не може перевищувати {max}',
     validationPriceFormat: 'Введіть ціну у форматі 12.50',
     validationPricePositive: 'Ціна має бути більшою за нуль',
+    copiedToClipboard: 'Скопійовано в буфер обміну',
+    copyToClipboardFailed: 'Не вдалося скопіювати',
   },
 };
 

@@ -474,6 +474,8 @@ export interface TxTranslations {
   validationSumExceeded: string;
   validationPriceFormat: string;
   validationPricePositive: string;
+  copiedToClipboard: string;
+  copyToClipboardFailed: string;
 }
 
 export type TxValidationMessage = string | ((error: unknown) => string);
