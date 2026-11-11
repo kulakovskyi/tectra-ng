@@ -1,0 +1,158 @@
+@let parts = passThrough();
+@let t = translations();
+@if (toolbar()) {
+  <div class="tx-gantt-chart__toolbar" [class]="parts.toolbar?.class" [style]="parts.toolbar?.style">
+    <tx-button-group role="group" [attr.aria-label]="t.zoomIn + ' / ' + t.zoomOut">
+      @for (level of zooms; track level) {
+        <button
+          txButton
+          type="button"
+          size="small"
+          [variant]="zoom() === level ? undefined : 'outlined'"
+          [severity]="zoom() === level ? 'primary' : 'secondary'"
+          [label]="zoomLabels()[level]"
+          [attr.aria-pressed]="zoom() === level"
+          (click)="setZoom(level)"
+        ></button>
+      }
+    </tx-button-group>
+    @if (todayX() !== null) {
+      <button txButton type="button" size="small" variant="text" severity="secondary" icon="calendar" [label]="t.today" (click)="scrollToToday()"></button>
+    }
+  </div>
+}
+<div
+  #scroller
+  class="tx-gantt-chart__scroll"
+  [class]="parts.scroll?.class"
+  [style]="parts.scroll?.style"
+  [style.max-height]="maxHeight() || null"
+  tabindex="0"
+  role="region"
+  [attr.aria-label]="summary()"
+  [attr.aria-describedby]="uid + '-hint'"
+  (wheel)="onWheel($event)"
+>
+  <div class="tx-gantt-chart__grid" [style.--tx-gantt-chart-width.px]="width()">
+    <div class="tx-gantt-chart__head" [class]="parts.head?.class" [style]="parts.head?.style">
+      <div class="tx-gantt-chart__corner" [class]="parts.corner?.class" [style]="parts.corner?.style">{{ labelHeader() || (layout() === 'timeline' ? t.chartTimeline : t.chartTask) }}</div>
+      <div class="tx-gantt-chart__scale" [class]="parts.scale?.class" [style]="parts.scale?.style" aria-hidden="true">
+        <div class="tx-gantt-chart__tier tx-gantt-chart__tier--top">
+          @for (tick of ticks().top; track tick.key) {
+            <span class="tx-gantt-chart__tick" [style.left.px]="tick.x" [style.width.px]="tick.width"><span class="tx-gantt-chart__tick-text">{{ tick.label }}</span></span>
+          }
+        </div>
+        <div class="tx-gantt-chart__tier">
+          @for (tick of ticks().bottom; track tick.key) {
+            <span class="tx-gantt-chart__tick" [class.tx-gantt-chart__tick--weekend]="tick.weekend" [style.left.px]="tick.x" [style.width.px]="tick.width">{{ tick.label }}</span>
+          }
+        </div>
+      </div>
+    </div>
+
+    @if (loading()) {
+      @for (row of skeletonRows; track row) {
+        <div class="tx-gantt-chart__row">
+          <div class="tx-gantt-chart__label"><tx-skeleton width="70%" height="0.75rem" /></div>
+          <div class="tx-gantt-chart__lane"><tx-skeleton class="tx-gantt-chart__skeleton" [style.margin-left.%]="row * 12" width="30%" height="0.9rem" /></div>
+        </div>
+      }
+    } @else if (isEmpty()) {
+      <div class="tx-gantt-chart__empty" role="status" [class]="parts.empty?.class" [style]="parts.empty?.style">
+        <tx-icon name="calendar" aria-hidden="true" />
+        <span>{{ t.chartNoData }}</span>
+      </div>
+    } @else {
+      <div class="tx-gantt-chart__body">
+        <div class="tx-gantt-chart__backdrop" aria-hidden="true">
+          @for (tick of ticks().bottom; track tick.key) {
+            <span class="tx-gantt-chart__column" [class.tx-gantt-chart__column--weekend]="tick.weekend" [style.left.px]="tick.x" [style.width.px]="tick.width"></span>
+          }
+        </div>
+        @for (row of rows(); track row.key) {
+          <div
+            class="tx-gantt-chart__row"
+            [class.tx-gantt-chart__row--group]="row.kind === 'group'"
+            [class]="row.kind === 'group' ? parts.group?.class : parts.row?.class"
+            [style]="row.kind === 'group' ? parts.group?.style : parts.row?.style"
+          >
+            <div class="tx-gantt-chart__label" [class]="parts.label?.class" [style]="parts.label?.style">
+              @if (row.kind === 'group' && row.group) {
+                <button type="button" class="tx-gantt-chart__toggle" [attr.aria-expanded]="!row.collapsed" (click)="onToggle(row.group)">
+                  <tx-icon class="tx-gantt-chart__chevron" name="chevron-down" aria-hidden="true" />
+                  <span class="tx-gantt-chart__label-text">{{ row.label }}</span>
+                  <span class="tx-gantt-chart__count">{{ row.count }}</span>
+                </button>
+              } @else {
+                <span class="tx-gantt-chart__label-text" [attr.title]="row.label">{{ row.label }}</span>
+              }
+            </div>
+            <div class="tx-gantt-chart__lane" [class]="parts.lane?.class" [style]="parts.lane?.style">
+              @if (row.summary; as summary) {
+                <span class="tx-gantt-chart__summary" aria-hidden="true" [style.left.px]="summary.x" [style.width.px]="summary.width"></span>
+              }
+              @for (span of row.spans; track span.task.id) {
+                @if (span.task.milestone) {
+                  <button
+                    type="button"
+                    class="tx-gantt-chart__milestone"
+                    [class]="parts.milestone?.class"
+                    [style]="parts.milestone?.style"
+                    [attr.data-task]="span.task.id"
+                    [style.left.px]="span.x"
+                    [style.--tx-gantt-chart-color]="span.task.color ?? null"
+                    [tabindex]="tabStop() === span.task.id ? 0 : -1"
+                    [attr.aria-label]="ariaFor(span)"
+                    [txTooltip]="tooltipFor(span)"
+                    (click)="onBarClick(span)"
+                    (focus)="onBarFocus(span, $any($event.target))"
+                    (keydown)="onBarKeydown($event, span)"
+                  >
+                    <span class="tx-gantt-chart__diamond" aria-hidden="true"></span>
+                    @if (labelsOutside()) {
+                      <span class="tx-gantt-chart__bar-label tx-gantt-chart__bar-label--outside">{{ span.task.label }}</span>
+                    }
+                  </button>
+                } @else {
+                  <button
+                    type="button"
+                    class="tx-gantt-chart__bar"
+                    [class.tx-gantt-chart__bar--inside]="labelsInside()"
+                    [class]="parts.bar?.class"
+                    [style]="parts.bar?.style"
+                    [attr.data-task]="span.task.id"
+                    [style.left.px]="span.x"
+                    [style.width.px]="span.width"
+                    [style.--tx-gantt-chart-color]="span.color"
+                    [style.--tx-gantt-chart-progress]="progressOf(span) === null ? null : progressOf(span) + '%'"
+                    [tabindex]="tabStop() === span.task.id ? 0 : -1"
+                    [attr.aria-label]="ariaFor(span)"
+                    [txTooltip]="tooltipFor(span)"
+                    (click)="onBarClick(span)"
+                    (focus)="onBarFocus(span, $any($event.target))"
+                    (keydown)="onBarKeydown($event, span)"
+                  >
+                    @if (progressOf(span) !== null) {
+                      <span class="tx-gantt-chart__progress" aria-hidden="true"></span>
+                    }
+                    @if (labelsInside()) {
+                      <span class="tx-gantt-chart__bar-label">{{ span.task.label }}</span>
+                    }
+                  </button>
+                  @if (labelsOutside()) {
+                    <span class="tx-gantt-chart__bar-label tx-gantt-chart__bar-label--outside" aria-hidden="true" [style.left.px]="span.x + span.width">{{ span.task.label }}</span>
+                  }
+                }
+              }
+            </div>
+          </div>
+        }
+        @let todayAt = todayX();
+        @if (todayAt !== null) {
+          <span class="tx-gantt-chart__today" [class]="parts.today?.class" [style]="parts.today?.style" aria-hidden="true" [style.left]="'calc(var(--tx-gantt-chart-label-width) + ' + todayAt + 'px)'"></span>
+        }
+      </div>
+    }
+  </div>
+</div>
+<span class="cdk-visually-hidden" [id]="uid + '-hint'">{{ t.chartGanttHint }}</span>

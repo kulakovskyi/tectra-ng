@@ -1,0 +1,1 @@
+The bars are one tab stop: ↑/↓ move between rows, ←/→ between bars, Home / End to the ends, Enter clicks, + / − zoom. Every bar has an accessible name with its dates, length and progress; the region is named by a summary with the date range.

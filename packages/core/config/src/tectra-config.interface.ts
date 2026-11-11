@@ -399,6 +399,18 @@ export interface TxTranslations {
   chartQ1: string;
   chartQ3: string;
   chartOutliers: string;
+  chartGantt: string;
+  chartSummaryTasks: string;
+  chartTask: string;
+  chartDays: string;
+  chartProgress: string;
+  chartMilestone: string;
+  chartZoomDay: string;
+  chartZoomWeek: string;
+  chartZoomMonth: string;
+  chartZoomQuarter: string;
+  chartTimeline: string;
+  chartGanttHint: string;
   chartGaugeValue: string;
   chartPie: string;
   chartDonut: string;

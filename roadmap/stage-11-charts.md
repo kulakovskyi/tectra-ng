@@ -131,10 +131,12 @@ Arc helpers (`polar`, `arcPath`, `strokeArc`, `fitArc`) moved from `charts/pie` 
 - [x] `<tx-candlestick-chart>` (`charts/candlestick`: candles or OHLC bars, volume along the bottom on its own scale, periods side by side so days off leave no gaps, dates or any labels, crosshair), `<tx-boxplot-chart>` (`charts/boxplot`: five numbers from raw values with 1.5 × IQR whiskers or given ready, outliers, series side by side), `<tx-range-area-chart>` (`charts/range-area`: min–max band with an optional line, gaps, category or time axis)
 - [x] Docs + tests; e2e
 
-## 11.15 Timeline and gantt
+## 11.15 Timeline and gantt ✅
 
-- [ ] `<tx-gantt-chart>`: rows of time ranges, groups, milestones, today line, scroll and zoom by time
-- [ ] Docs + tests; e2e
+- [x] `<tx-gantt-chart>` (`charts/gantt`): rows of time ranges under groups that fold (summary bar per group), progress, milestones, today line, sticky names and scale while scrolling both ways, zoom `day` / `week` / `month` / `quarter` from the toolbar, + / − and Ctrl + wheel at the pointer; a `timeline` layout with a lane per group; bars are one tab stop with arrow keys, tooltips and accessible names with dates, length and progress
+- [x] Docs + tests; e2e
+
+Built in HTML rather than SVG: sticky headers and text that cuts off cleanly come from CSS, and the scroll area is the kit's own.
 
 ## 11.16 Sankey and sunburst
 

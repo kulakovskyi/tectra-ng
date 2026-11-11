@@ -341,6 +341,35 @@ test.describe('charts', () => {
     await expect(tooltip(page)).toContainText('-3 – 1');
   });
 
+  test('gantt chart: sticky names and scale, zoom at the toolbar, the keyboard walks the bars', async ({ page }) => {
+    await page.goto('/components/gantt-chart');
+    const chart = example(page, 'Basic').locator('tx-gantt-chart');
+    await chart.scrollIntoViewIfNeeded();
+    const scroll = chart.locator('.tx-gantt-chart__scroll');
+    const label = chart.locator('.tx-gantt-chart__label').first();
+    const before = await label.boundingBox();
+    await scroll.evaluate((element) => (element.scrollLeft = 300));
+    await expect.poll(async () => Math.round((await label.boundingBox())?.x ?? 0)).toBe(Math.round(before?.x ?? 0));
+    const bar = chart.locator('[data-task="research"]');
+    const box = await bar.boundingBox();
+    const today = await chart.locator('.tx-gantt-chart__today').boundingBox();
+    expect(box && today && today.x > box.x).toBeTruthy();
+    await bar.hover();
+    await expect(page.locator('tx-tooltip').first()).toContainText('User research');
+
+    await chart.getByRole('button', { name: 'Months', exact: true }).click();
+    await expect(chart).toHaveAttribute('data-zoom', 'month');
+    await expect.poll(async () => (await chart.locator('[data-task="research"]').boundingBox())?.width ?? 0).toBeLessThan((box?.width ?? 0) / 4);
+
+    await chart.locator('[data-task="brief"]').focus();
+    await page.keyboard.press('ArrowDown');
+    await expect(chart.locator('[data-task="research"]')).toBeFocused();
+    await page.keyboard.press('+');
+    await expect(chart).toHaveAttribute('data-zoom', 'week');
+    await chart.locator('.tx-gantt-chart__toggle').first().click();
+    await expect(chart.locator('[data-task="research"]')).toHaveCount(0);
+  });
+
   test('column chart: hover anywhere in a category lays a band, the tooltip follows the cursor, horizontal bars fit', async ({ page }) => {
     await page.goto('/components/column-chart');
     const chart = example(page, 'Basic').locator('tx-column-chart');

@@ -1,0 +1,1 @@
+Tasks sit under their groups with a summary bar each; a group folds from its header. Bars show the progress, diamonds are milestones and the red line is today. Hover or focus a bar for its dates, length and progress.

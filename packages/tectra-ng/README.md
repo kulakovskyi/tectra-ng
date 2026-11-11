@@ -24,7 +24,7 @@ import { Tectra } from '@tectra-ng/themes';
 | `@tectra-ng/icons` | Icon set and `TxIcon` |
 | `@tectra-ng/brand-icons` | Brand logos for `TxIcon` |
 | `@tectra-ng/flags` | Country flags for `TxCountry` and `TxCountrySelect` |
-| `@tectra-ng/charts` | SVG charts without a chart library, one entry point per chart: `@tectra-ng/charts/line`, `/column`, `/combo`, `/scatter`, `/pie`, `/radar`, `/radial-bar`, `/gauge`, `/funnel`, `/waterfall`, `/bullet`, `/candlestick`, `/boxplot`, `/range-area`, `/bar-list`, `/segmented-bar`, `/heatmap`, `/treemap`, `/rank-line`, `/org-chart`, `/core` |
+| `@tectra-ng/charts` | SVG charts without a chart library, one entry point per chart: `@tectra-ng/charts/line`, `/column`, `/combo`, `/scatter`, `/pie`, `/radar`, `/radial-bar`, `/gauge`, `/funnel`, `/waterfall`, `/bullet`, `/candlestick`, `/boxplot`, `/range-area`, `/gantt`, `/bar-list`, `/segmented-bar`, `/heatmap`, `/treemap`, `/rank-line`, `/org-chart`, `/core` |
 | `@tectra-ng/qr` | QR codes with no dependencies — the engine of `@tectra-ng/blocks/qr-code`, usable without Angular too |
 
 Need only part of it? Install a package on its own — `npm i @tectra-ng/ui` brings `core`, `themes`, `tokens` and `icons` with it.
