@@ -46,15 +46,45 @@ function blockAttrsToDom(attrs: Record<string, unknown>): Record<string, string>
 
 const blockAttrs = { align: { default: null }, indent: { default: 0 }, dir: { default: null } };
 
+const YOUTUBE_HOSTS = new Set(['youtube.com', 'www.youtube.com', 'm.youtube.com', 'youtube-nocookie.com', 'www.youtube-nocookie.com']);
+const VIMEO_HOSTS = new Set(['vimeo.com', 'www.vimeo.com', 'player.vimeo.com']);
+const VIDEO_ID = /^[\w-]{6,}$/;
+
+function parseVideoUrl(value: string): URL | null {
+  try {
+    return new URL(/^[a-z][a-z\d+.-]*:\/\//i.test(value) ? value : `https://${value}`);
+  } catch {
+    return null;
+  }
+}
+
+function youtubeId(url: URL): string | null {
+  const host = url.hostname.toLowerCase();
+  const [first, second] = url.pathname.split('/').filter(Boolean);
+  if (host === 'youtu.be') {
+    return first ?? null;
+  }
+  if (!YOUTUBE_HOSTS.has(host)) {
+    return null;
+  }
+  if (first === 'watch') {
+    return url.searchParams.get('v');
+  }
+  return first === 'embed' || first === 'shorts' ? (second ?? null) : null;
+}
+
 export function toVideoEmbed(value: string): string | null {
   const url = value.trim();
-  const youtube = url.match(/(?:youtube(?:-nocookie)?\.com\/(?:watch\?(?:[^&#]*&)*v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{6,})/i);
-  if (youtube) {
-    return `https://www.youtube.com/embed/${youtube[1]}`;
-  }
-  const vimeo = url.match(/vimeo\.com\/(?:video\/)?(\d+)/i);
-  if (vimeo) {
-    return `https://player.vimeo.com/video/${vimeo[1]}`;
+  const parsed = parseVideoUrl(url);
+  if (parsed) {
+    const youtube = youtubeId(parsed);
+    if (youtube && VIDEO_ID.test(youtube)) {
+      return `https://www.youtube.com/embed/${youtube}`;
+    }
+    const vimeo = VIMEO_HOSTS.has(parsed.hostname.toLowerCase()) ? parsed.pathname.split('/').find((part) => /^\d+$/.test(part)) : undefined;
+    if (vimeo) {
+      return `https://player.vimeo.com/video/${vimeo}`;
+    }
   }
   return /^https:\/\/\S+$/i.test(url) ? url : null;
 }

@@ -6,7 +6,7 @@ import { parseHtml, serializeHtml } from './html';
 import { keyName } from './keymap';
 import { liftListItem, sinkListItem, splitListItem, toggleList } from './lists';
 import { editorKeymap, editorPlugins } from './setup';
-import { txEditorSchema as schema } from './schema';
+import { toVideoEmbed, txEditorSchema as schema } from './schema';
 
 function stateOf(html: string, plugins = editorPlugins(options())): EditorState {
   return EditorState.create({ schema, doc: parseHtml(html, document), plugins });
@@ -196,5 +196,30 @@ describe('editor engine', () => {
       type('a');
       expect(view.dom.querySelector('.tx-editor__placeholder')).toBeNull();
     });
+  });
+});
+
+describe('toVideoEmbed', () => {
+  it('turns YouTube and Vimeo links into embed addresses', () => {
+    expect(toVideoEmbed('https://www.youtube.com/watch?v=dQw4w9WgXcQ')).toBe('https://www.youtube.com/embed/dQw4w9WgXcQ');
+    expect(toVideoEmbed('youtube.com/watch?feature=share&t=10&v=dQw4w9WgXcQ')).toBe('https://www.youtube.com/embed/dQw4w9WgXcQ');
+    expect(toVideoEmbed('https://youtu.be/dQw4w9WgXcQ?t=5')).toBe('https://www.youtube.com/embed/dQw4w9WgXcQ');
+    expect(toVideoEmbed('https://www.youtube.com/shorts/abcdef12')).toBe('https://www.youtube.com/embed/abcdef12');
+    expect(toVideoEmbed('https://www.youtube-nocookie.com/embed/abcdefg')).toBe('https://www.youtube.com/embed/abcdefg');
+    expect(toVideoEmbed('https://vimeo.com/76979871')).toBe('https://player.vimeo.com/video/76979871');
+    expect(toVideoEmbed('https://player.vimeo.com/video/76979871')).toBe('https://player.vimeo.com/video/76979871');
+  });
+
+  it('keeps other https links and drops the rest', () => {
+    expect(toVideoEmbed('https://example.com/video.mp4')).toBe('https://example.com/video.mp4');
+    expect(toVideoEmbed('http://example.com/video.mp4')).toBeNull();
+    expect(toVideoEmbed('javascript:alert(1)')).toBeNull();
+    expect(toVideoEmbed('https://notyoutube.com/watch?v=dQw4w9WgXcQ')).toBe('https://notyoutube.com/watch?v=dQw4w9WgXcQ');
+  });
+
+  it('answers fast on a long hostile string', () => {
+    const start = Date.now();
+    toVideoEmbed(`https://youtube.com/watch?${'a&'.repeat(50000)}`);
+    expect(Date.now() - start).toBeLessThan(200);
   });
 });

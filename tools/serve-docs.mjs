@@ -1,6 +1,6 @@
 import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
-import { extname, isAbsolute, join, relative, resolve } from 'node:path';
+import { extname, resolve, sep } from 'node:path';
 
 const root = resolve(process.argv[2] ?? 'dist/apps/docs/browser');
 const port = Number(process.argv[3] ?? 4310);
@@ -19,25 +19,20 @@ const types = {
   '.xml': 'application/xml',
 };
 
-const inRoot = (file) => {
-  const path = relative(root, file);
-  return path === '' || (!path.startsWith('..') && !isAbsolute(path));
-};
-const isFile = async (file) => inRoot(file) && (await stat(file).catch(() => null))?.isFile();
-
-async function resolveFile(path) {
-  const file = resolve(root, `.${path.replace(/\/+$/, '') || '/'}`);
-  for (const candidate of [file, join(file, 'index.html')]) {
-    if (await isFile(candidate)) {
-      return { file: candidate, status: 200 };
+async function load(urlPath) {
+  const base = resolve(root, `.${urlPath.replace(/\/+$/, '') || '/'}`);
+  for (const candidate of [base, resolve(base, 'index.html')]) {
+    if ((candidate === root || candidate.startsWith(root + sep)) && (await stat(candidate).catch(() => null))?.isFile()) {
+      return { file: candidate, status: 200, body: await readFile(candidate) };
     }
   }
-  const notFound = join(root, '404.html');
-  return { file: (await isFile(notFound)) ? notFound : join(root, 'index.html'), status: 404 };
+  const notFound = resolve(root, '404.html');
+  const fallback = (await stat(notFound).catch(() => null))?.isFile() ? notFound : resolve(root, 'index.html');
+  return { file: fallback, status: 404, body: await readFile(fallback) };
 }
 
 createServer(async (request, response) => {
-  const { file, status } = await resolveFile(decodeURIComponent((request.url ?? '/').split('?')[0]));
+  const { file, status, body } = await load(decodeURIComponent((request.url ?? '/').split('?')[0]));
   response.writeHead(status, { 'content-type': types[extname(file)] ?? 'application/octet-stream' });
-  response.end(await readFile(file));
+  response.end(body);
 }).listen(port, () => console.log(`docs on http://localhost:${port}`));

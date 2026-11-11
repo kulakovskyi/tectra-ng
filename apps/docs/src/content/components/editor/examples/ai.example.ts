@@ -11,11 +11,8 @@ export default class EditorAiExample {
   readonly html = signal('<p>we fixed login bug and also the export was slow, now its faster</p>');
 
   improve(html: string): void {
-    const text = html
-      .replace(/<[^>]*>?/g, '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
+    const plain = new DOMParser().parseFromString(html, 'text/html').body.textContent ?? '';
+    const text = plain.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     this.html.set(
       `<p>${text.charAt(0).toUpperCase()}${text.slice(1)}.</p><p><em>Polished by the assistant.</em></p>`,
     );

@@ -86,17 +86,10 @@ async function exampleFiles(raw) {
   ];
 }
 
-const plainText = (markdown) =>
-  marked
-    .parseInline(markdown)
-    .replace(/<[^>]*>?/g, '')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&amp;/g, '&')
-    .replace(/\s+/g, ' ')
-    .trim();
+const tokenText = (tokens) =>
+  tokens.map((token) => (token.tokens ? tokenText(token.tokens) : token.type === 'html' ? '' : (token.text ?? ''))).join('');
+
+const plainText = (markdown) => tokenText(marked.Lexer.lexInline(markdown)).replace(/\s+/g, ' ').trim();
 
 const firstParagraph = (body) =>
   body
