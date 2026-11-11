@@ -11,5 +11,7 @@ Part of `tectra-ng`. One entry point per utility, so you only bundle what you im
 | Entry point | What it holds |
 |---|---|
 | `@tectra-ng/utils/date` | `txDate` and `txDateRange` pipes, `provideTxDateFormat`, calendar functions (`addDays`, `startOfWeek`, `calendarDaysBetween` …), format presets and time constants |
+| `@tectra-ng/utils/plural` | `txPluralForm` (`one` / `few` / `many` for translation keys) and `txPlural` pipes in the tectra locale |
+| `@tectra-ng/utils/debounce-input` | `txDebounceInput` — reports a field's value after a pause, at once on Enter |
 
 Docs and examples: [tectra-ng.com](https://tectra-ng.com/components/date).

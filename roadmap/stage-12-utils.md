@@ -25,13 +25,13 @@ Utilities live in `@tectra-ng/utils/<name>` — own package, one flat entry poin
 - [x] Functions: `addDays`, `addMonths`, `addYears`, `startOfDay`, `endOfDay`, `middleOfDay`, `startOfWeek` (first day of week from the locale), `calendarDaysBetween`, `isSameDay`, `toIsoDay`, `toIsoString`, `isExpiringWithin`
 - [x] `txDateRange` pipe + `toIsoRange()` — `[start, end]` from a range datepicker → `{ start, end }` ISO strings or `null`
 
-## 12.2 Plural forms — `utils/plural` (plural-form 173)
+## 12.2 Plural forms — `utils/plural` (plural-form 173) ✅
 
-- [ ] `txPluralForm` pipe + `pluralForm(count, locale?)` → `'one' | 'few' | 'many'` for translation keys, locale from the tectra locale by default; `txPlural` pipe over `formatMessage` (`{count, plural, …}`)
+- [x] `txPluralForm` pipe + `pluralForm(count, locale?)` → `'one' | 'few' | 'many'` for translation keys, locale from the tectra locale by default; `txPlural` pipe over `formatMessage` (`{count, plural, …}`)
 
-## 12.3 Debounced input — `utils/debounce-input` (79)
+## 12.3 Debounced input — `utils/debounce-input` (79) ✅
 
-- [ ] `txDebounceInput` directive: `debounceTime` (1000 by default), `debounceInput` output with the event, Enter emits at once, cancels on destroy; works on `txInput`, textarea and kit fields with a native input inside; `distinct` (skip the same value), `minLength`
+- [x] `txDebounceInput` directive: `debounceTime` (1000 by default), `debounceInput` output with the event, Enter emits at once, cancels on destroy; works on `txInput`, textarea and kit fields with a native input inside; `distinct` (skip the same value), `minLength`
 
 ## 12.4 Form validation — `utils/form-validation` (70)
 
