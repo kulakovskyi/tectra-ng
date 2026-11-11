@@ -22,7 +22,10 @@ const types = {
 async function load(urlPath) {
   const base = resolve(root, `.${urlPath.replace(/\/+$/, '') || '/'}`);
   for (const candidate of [base, resolve(base, 'index.html')]) {
-    if ((candidate === root || candidate.startsWith(root + sep)) && (await stat(candidate).catch(() => null))?.isFile()) {
+    if (!candidate.startsWith(root + sep)) {
+      continue;
+    }
+    if ((await stat(candidate).catch(() => null))?.isFile()) {
       return { file: candidate, status: 200, body: await readFile(candidate) };
     }
   }
