@@ -42,7 +42,8 @@ if (dryRun) {
 }
 
 const tagName = `v${workspaceVersion}`;
-execSync('git pull --no-rebase --no-edit origin main', { stdio: 'inherit' });
+execSync('git pull --rebase origin main', { stdio: 'inherit' });
+execSync(`git tag -f ${tagName}`, { stdio: 'inherit' });
 execSync(`git push --atomic origin HEAD:main ${tagName}`, { stdio: 'inherit' });
 writeFileSync('release-notes.md', workspaceChangelog?.contents ?? '');
 execSync(`gh release create ${tagName} --title ${tagName} --notes-file release-notes.md --verify-tag`, { stdio: 'inherit' });
