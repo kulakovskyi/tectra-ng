@@ -79,14 +79,28 @@ describe('TxGanttChart', () => {
     toggle.click();
     await fixture.whenStable();
     expect(fixture.componentInstance.toggles).toEqual([{ group: 'Design', collapsed: true }]);
-    expect(all('#main .tx-gantt-chart__bar')).toHaveLength(1);
     expect(el('#main .tx-gantt-chart__toggle').getAttribute('aria-expanded')).toBe('false');
+    const fold = el(`#${toggle.getAttribute('aria-controls')}`);
+    expect(fold.classList).toContain('tx-gantt-chart__fold--collapsed');
+    expect(fold.hasAttribute('inert')).toBe(true);
+    expect(Array.from(fold.querySelectorAll('[data-task]')).map((bar) => bar.getAttribute('data-task'))).toEqual(['a', 'b']);
+    expect(all('#main .tx-gantt-chart__fold--collapsed')).toHaveLength(1);
+    expect(all('#main [data-task]').filter((bar) => bar.tabIndex === 0).map((bar) => bar.dataset['task'])).toEqual(['d']);
+    el('#main [data-task="d"]').dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await fixture.whenStable();
+    expect(el('#main [data-task="c"]').tabIndex).toBe(0);
+    toggle.click();
+    await fixture.whenStable();
+    expect(fold.classList).not.toContain('tx-gantt-chart__fold--collapsed');
+    expect(fold.hasAttribute('inert')).toBe(false);
   });
 
   it('puts the tasks of a group on one lane in the timeline layout with labels inside', async () => {
     fixture.componentInstance.layout.set('timeline');
     await fixture.whenStable();
     expect(all('#main .tx-gantt-chart__row')).toHaveLength(3);
+    expect(all('#main .tx-gantt-chart__toggle')).toHaveLength(0);
+    expect(all('#main .tx-gantt-chart__fold--collapsed')).toHaveLength(0);
     expect(all('#main .tx-gantt-chart__bar--inside')).toHaveLength(3);
     expect(el('#main .tx-gantt-chart__corner').textContent?.trim()).toBe('Timeline');
   });

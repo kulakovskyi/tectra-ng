@@ -125,6 +125,24 @@
   position: relative;
 }
 
+.tx-gantt-chart__fold {
+  display: grid;
+  grid-template-rows: 1fr;
+  overflow: visible clip;
+}
+
+.tx-gantt-chart__fold--collapsed {
+  grid-template-rows: 0fr;
+}
+
+.tx-gantt-chart__fold-content {
+  min-height: 0;
+}
+
+.tx-gantt-chart__fold--collapsed > .tx-gantt-chart__fold-content {
+  visibility: hidden;
+}
+
 .tx-gantt-chart__backdrop {
   position: absolute;
   inset: 0 0 0 var(--tx-gantt-chart-label-width);
@@ -275,6 +293,13 @@
     box-shadow: inset -1px 0 0 var(--tx-chart-gantt-border-color);
   }
 
+  .tx-gantt-chart__label {
+    box-shadow:
+      inset -1px 0 0 var(--tx-chart-gantt-border-color),
+      inset 0 0 0 var(--tx-gantt-chart-row-height) var(--tx-gantt-chart-tint);
+    transition: box-shadow var(--tx-chart-motion-hover-duration) ease;
+  }
+
   .tx-gantt-chart__corner {
     color: var(--tx-chart-gantt-header-color);
     font-size: var(--tx-chart-gantt-header-font-size);
@@ -302,11 +327,22 @@
   }
 
   .tx-gantt-chart__row {
-    transition: background-color var(--tx-chart-motion-hover-duration) ease;
+    --tx-gantt-chart-tint: transparent;
+
+    box-shadow: inset 0 0 0 var(--tx-gantt-chart-row-height) var(--tx-gantt-chart-tint);
+    transition: box-shadow var(--tx-chart-motion-hover-duration) ease;
   }
 
   .tx-gantt-chart__row:hover {
-    background: var(--tx-chart-gantt-row-hover-background);
+    --tx-gantt-chart-tint: var(--tx-chart-gantt-row-hover-background);
+  }
+
+  .tx-gantt-chart__fold {
+    transition: grid-template-rows var(--tx-chart-gantt-fold-duration) var(--tx-chart-gantt-fold-easing);
+  }
+
+  .tx-gantt-chart__fold--collapsed > .tx-gantt-chart__fold-content {
+    transition: visibility 0s linear var(--tx-chart-gantt-fold-duration);
   }
 
   .tx-gantt-chart__row--group {
@@ -329,7 +365,7 @@
   }
 
   .tx-gantt-chart__chevron {
-    transition: transform var(--tx-chart-motion-hover-duration) var(--tx-chart-motion-easing);
+    transition: transform var(--tx-chart-gantt-fold-duration) var(--tx-chart-gantt-fold-easing);
   }
 
   .tx-gantt-chart__count {
@@ -429,7 +465,10 @@
   :host([data-styled]) .tx-gantt-chart__summary,
   :host([data-styled]) .tx-gantt-chart__bar-label--outside,
   :host([data-styled]) .tx-gantt-chart__chevron,
-  :host([data-styled]) .tx-gantt-chart__row {
+  :host([data-styled]) .tx-gantt-chart__row,
+  :host([data-styled]) .tx-gantt-chart__label,
+  :host([data-styled]) .tx-gantt-chart__fold,
+  :host([data-styled]) .tx-gantt-chart__fold--collapsed > .tx-gantt-chart__fold-content {
     transition: none;
   }
 }

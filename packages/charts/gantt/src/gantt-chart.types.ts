@@ -60,6 +60,13 @@ export interface TxGanttRow {
   count: number;
 }
 
+export interface TxGanttFold {
+  key: string;
+  head: TxGanttRow | null;
+  rows: TxGanttRow[];
+  collapsed: boolean;
+}
+
 export interface TxGanttTaskEvent {
   task: TxGanttTask;
   start: Date;

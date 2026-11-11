@@ -26,7 +26,7 @@ import { TxGanttChart } from '@tectra-ng/charts/gantt';
 | labelHeader | Text of the corner over the names; "Task" or "Timeline" by default |
 | loading | Shows skeleton rows |
 | ariaLabel | What the chart shows; starts the summary read by screen readers |
-| dt | Design tokens of this chart (`chart`) — row and header height, label column, bars, progress, milestones, weekends, today line |
+| dt | Design tokens of this chart (`chart`) — row and header height, label column, bars, progress, milestones, weekends, today line, folding |
 | pt | Classes and styles of the parts: `root`, `toolbar`, `scroll`, `head`, `corner`, `scale`, `row`, `group`, `label`, `lane`, `bar`, `milestone`, `today`, `empty` |
 | ptOptions | How `pt` merges with the global pass-through |
 | unstyled | Removes the tectra styles and keeps the layout and the behaviour |
@@ -50,4 +50,4 @@ import { TxGanttChart } from '@tectra-ng/charts/gantt';
 
 ## Notes
 
-The names stay in a sticky column and the scale in a sticky header while you scroll both ways. Ctrl (⌘ on a Mac) and the wheel zoom at the pointer, keeping the date under it in place; the zoom buttons keep the centre. A focused bar scrolls into view. Weekends are shaded on the day scale. Each bar has a tooltip and an accessible name with its dates, length and progress.
+The names stay in a sticky column and the scale in a sticky header while you scroll both ways. Ctrl (⌘ on a Mac) and the wheel zoom at the pointer, keeping the date under it in place; the zoom buttons keep the centre. A group folds and unfolds with a height animation (none under reduced motion); the tasks of a folded group leave the tab order and the arrow keys skip them. A focused bar scrolls into view. Weekends are shaded on the day scale. Each bar has a tooltip and an accessible name with its dates, length and progress.

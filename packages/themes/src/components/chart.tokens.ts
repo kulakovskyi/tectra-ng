@@ -293,6 +293,8 @@ export const chartTokens = {
     borderColor: tokenRef('surface-border'),
     weekendBackground: lightDark(mix(tokenRef('surface-400'), '7%', 'transparent'), mix(tokenRef('surface-300'), '5%', 'transparent')),
     rowHoverBackground: tokenRef('surface-hover'),
+    foldDuration: '0.25s',
+    foldEasing: 'cubic-bezier(0.2, 0, 0, 1)',
     todayColor: lightDark(tokenRef('red-500'), tokenRef('red-400')),
     todayWidth: '2px',
     milestoneSize: '14px',

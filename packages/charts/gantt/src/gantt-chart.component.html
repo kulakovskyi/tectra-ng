@@ -69,80 +69,97 @@
             <span class="tx-gantt-chart__column" [class.tx-gantt-chart__column--weekend]="tick.weekend" [style.left.px]="tick.x" [style.width.px]="tick.width"></span>
           }
         </div>
-        @for (row of rows(); track row.key) {
-          <div
-            class="tx-gantt-chart__row"
-            [class.tx-gantt-chart__row--group]="row.kind === 'group'"
-            [class]="row.kind === 'group' ? parts.group?.class : parts.row?.class"
-            [style]="row.kind === 'group' ? parts.group?.style : parts.row?.style"
-          >
-            <div class="tx-gantt-chart__label" [class]="parts.label?.class" [style]="parts.label?.style">
-              @if (row.kind === 'group' && row.group) {
-                <button type="button" class="tx-gantt-chart__toggle" [attr.aria-expanded]="!row.collapsed" (click)="onToggle(row.group)">
+        @for (fold of folds(); track fold.key; let foldIndex = $index) {
+          @if (fold.head; as head) {
+            <div class="tx-gantt-chart__row tx-gantt-chart__row--group" [class]="parts.group?.class" [style]="parts.group?.style">
+              <div class="tx-gantt-chart__label" [class]="parts.label?.class" [style]="parts.label?.style">
+                <button
+                  type="button"
+                  class="tx-gantt-chart__toggle"
+                  [attr.aria-expanded]="!head.collapsed"
+                  [attr.aria-controls]="uid + '-fold-' + foldIndex"
+                  (click)="onToggle(head.group ?? head.label)"
+                >
                   <tx-icon class="tx-gantt-chart__chevron" name="chevron-down" aria-hidden="true" />
-                  <span class="tx-gantt-chart__label-text">{{ row.label }}</span>
-                  <span class="tx-gantt-chart__count">{{ row.count }}</span>
+                  <span class="tx-gantt-chart__label-text">{{ head.label }}</span>
+                  <span class="tx-gantt-chart__count">{{ head.count }}</span>
                 </button>
-              } @else {
-                <span class="tx-gantt-chart__label-text" [attr.title]="row.label">{{ row.label }}</span>
-              }
-            </div>
-            <div class="tx-gantt-chart__lane" [class]="parts.lane?.class" [style]="parts.lane?.style">
-              @if (row.summary; as summary) {
-                <span class="tx-gantt-chart__summary" aria-hidden="true" [style.left.px]="summary.x" [style.width.px]="summary.width"></span>
-              }
-              @for (span of row.spans; track span.task.id) {
-                @if (span.task.milestone) {
-                  <button
-                    type="button"
-                    class="tx-gantt-chart__milestone"
-                    [class]="parts.milestone?.class"
-                    [style]="parts.milestone?.style"
-                    [attr.data-task]="span.task.id"
-                    [style.left.px]="span.x"
-                    [style.--tx-gantt-chart-color]="span.task.color ?? null"
-                    [tabindex]="tabStop() === span.task.id ? 0 : -1"
-                    [attr.aria-label]="ariaFor(span)"
-                    [txTooltip]="tooltipFor(span)"
-                    (click)="onBarClick(span)"
-                    (focus)="onBarFocus(span, $any($event.target))"
-                    (keydown)="onBarKeydown($event, span)"
-                  >
-                    <span class="tx-gantt-chart__diamond" aria-hidden="true"></span>
-                    @if (labelsOutside()) {
-                      <span class="tx-gantt-chart__bar-label tx-gantt-chart__bar-label--outside">{{ span.task.label }}</span>
-                    }
-                  </button>
-                } @else {
-                  <button
-                    type="button"
-                    class="tx-gantt-chart__bar"
-                    [class.tx-gantt-chart__bar--inside]="labelsInside()"
-                    [class]="parts.bar?.class"
-                    [style]="parts.bar?.style"
-                    [attr.data-task]="span.task.id"
-                    [style.left.px]="span.x"
-                    [style.width.px]="span.width"
-                    [style.--tx-gantt-chart-color]="span.color"
-                    [style.--tx-gantt-chart-progress]="progressOf(span) === null ? null : progressOf(span) + '%'"
-                    [tabindex]="tabStop() === span.task.id ? 0 : -1"
-                    [attr.aria-label]="ariaFor(span)"
-                    [txTooltip]="tooltipFor(span)"
-                    (click)="onBarClick(span)"
-                    (focus)="onBarFocus(span, $any($event.target))"
-                    (keydown)="onBarKeydown($event, span)"
-                  >
-                    @if (progressOf(span) !== null) {
-                      <span class="tx-gantt-chart__progress" aria-hidden="true"></span>
-                    }
-                    @if (labelsInside()) {
-                      <span class="tx-gantt-chart__bar-label">{{ span.task.label }}</span>
-                    }
-                  </button>
-                  @if (labelsOutside()) {
-                    <span class="tx-gantt-chart__bar-label tx-gantt-chart__bar-label--outside" aria-hidden="true" [style.left.px]="span.x + span.width">{{ span.task.label }}</span>
-                  }
+              </div>
+              <div class="tx-gantt-chart__lane" [class]="parts.lane?.class" [style]="parts.lane?.style">
+                @if (head.summary; as summary) {
+                  <span class="tx-gantt-chart__summary" aria-hidden="true" [style.left.px]="summary.x" [style.width.px]="summary.width"></span>
                 }
+              </div>
+            </div>
+          }
+          <div
+            class="tx-gantt-chart__fold"
+            [class.tx-gantt-chart__fold--collapsed]="fold.collapsed"
+            [attr.id]="fold.head ? uid + '-fold-' + foldIndex : null"
+            [attr.inert]="fold.collapsed ? '' : null"
+          >
+            <div class="tx-gantt-chart__fold-content">
+              @for (row of fold.rows; track row.key) {
+                <div class="tx-gantt-chart__row" [class]="parts.row?.class" [style]="parts.row?.style">
+                  <div class="tx-gantt-chart__label" [class]="parts.label?.class" [style]="parts.label?.style">
+                    <span class="tx-gantt-chart__label-text" [attr.title]="row.label">{{ row.label }}</span>
+                  </div>
+                  <div class="tx-gantt-chart__lane" [class]="parts.lane?.class" [style]="parts.lane?.style">
+                    @for (span of row.spans; track span.task.id) {
+                      @if (span.task.milestone) {
+                        <button
+                          type="button"
+                          class="tx-gantt-chart__milestone"
+                          [class]="parts.milestone?.class"
+                          [style]="parts.milestone?.style"
+                          [attr.data-task]="span.task.id"
+                          [style.left.px]="span.x"
+                          [style.--tx-gantt-chart-color]="span.task.color ?? null"
+                          [tabindex]="tabStop() === span.task.id ? 0 : -1"
+                          [attr.aria-label]="ariaFor(span)"
+                          [txTooltip]="tooltipFor(span)"
+                          (click)="onBarClick(span)"
+                          (focus)="onBarFocus(span, $any($event.target))"
+                          (keydown)="onBarKeydown($event, span)"
+                        >
+                          <span class="tx-gantt-chart__diamond" aria-hidden="true"></span>
+                          @if (labelsOutside()) {
+                            <span class="tx-gantt-chart__bar-label tx-gantt-chart__bar-label--outside">{{ span.task.label }}</span>
+                          }
+                        </button>
+                      } @else {
+                        <button
+                          type="button"
+                          class="tx-gantt-chart__bar"
+                          [class.tx-gantt-chart__bar--inside]="labelsInside()"
+                          [class]="parts.bar?.class"
+                          [style]="parts.bar?.style"
+                          [attr.data-task]="span.task.id"
+                          [style.left.px]="span.x"
+                          [style.width.px]="span.width"
+                          [style.--tx-gantt-chart-color]="span.color"
+                          [style.--tx-gantt-chart-progress]="progressOf(span) === null ? null : progressOf(span) + '%'"
+                          [tabindex]="tabStop() === span.task.id ? 0 : -1"
+                          [attr.aria-label]="ariaFor(span)"
+                          [txTooltip]="tooltipFor(span)"
+                          (click)="onBarClick(span)"
+                          (focus)="onBarFocus(span, $any($event.target))"
+                          (keydown)="onBarKeydown($event, span)"
+                        >
+                          @if (progressOf(span) !== null) {
+                            <span class="tx-gantt-chart__progress" aria-hidden="true"></span>
+                          }
+                          @if (labelsInside()) {
+                            <span class="tx-gantt-chart__bar-label">{{ span.task.label }}</span>
+                          }
+                        </button>
+                        @if (labelsOutside()) {
+                          <span class="tx-gantt-chart__bar-label tx-gantt-chart__bar-label--outside" aria-hidden="true" [style.left.px]="span.x + span.width">{{ span.task.label }}</span>
+                        }
+                      }
+                    }
+                  </div>
+                </div>
               }
             </div>
           </div>

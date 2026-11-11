@@ -367,7 +367,43 @@ test.describe('charts', () => {
     await page.keyboard.press('+');
     await expect(chart).toHaveAttribute('data-zoom', 'week');
     await chart.locator('.tx-gantt-chart__toggle').first().click();
-    await expect(chart.locator('[data-task="research"]')).toHaveCount(0);
+    await expect(chart.locator('[data-task="research"]')).toBeHidden();
+    await expect(chart.locator('.tx-gantt-chart__fold--collapsed')).toHaveAttribute('inert', '');
+  });
+
+  test('sankey and sunburst: nodes stay inside, a hovered node lights its flows, a click zooms the rings in and the centre back', async ({ page }) => {
+    await page.goto('/components/sankey-chart');
+    const sankey = example(page, 'Basic').locator('tx-sankey-chart');
+    await sankey.scrollIntoViewIfNeeded();
+    const inside = () =>
+      sankey.evaluate((element) => {
+        const box = element.querySelector('svg.tx-chart-frame__svg')?.getBoundingClientRect();
+        return !!box && [...element.querySelectorAll('.tx-sankey-chart__node, .tx-sankey-chart__label')].every((part) => {
+          const rect = part.getBoundingClientRect();
+          return rect.left >= box.left - 1 && rect.right <= box.right + 1 && rect.top >= box.top - 1 && rect.bottom <= box.bottom + 1;
+        });
+      });
+    await expect.poll(inside).toBe(true);
+    const node = await sankey.locator('[data-node="pricing"]').boundingBox();
+    if (!node) throw new Error('no node');
+    await page.mouse.move(node.x + node.width / 2, node.y + node.height / 2);
+    await expect(tooltip(page)).toContainText('Pricing');
+    await expect(sankey.locator('.tx-sankey-chart__link--lit')).toHaveCount(5);
+    await page.mouse.move(0, 0);
+
+    await page.goto('/components/sunburst-chart');
+    const sunburst = example(page, 'Basic').locator('tx-sunburst-chart');
+    await sunburst.scrollIntoViewIfNeeded();
+    await sunburst.locator('.tx-chart-frame__plot').focus();
+    await page.keyboard.press('ArrowRight');
+    await expect(tooltip(page)).toContainText('Photos');
+    await page.keyboard.press('Enter');
+    await expect(sunburst.locator('.tx-sunburst-chart__center')).toContainText('Photos');
+    await expect(sunburst.locator('[data-key="0.0"][data-depth="1"]')).toHaveCount(1);
+    const svg = await sunburst.locator('svg.tx-chart-frame__svg').boundingBox();
+    if (!svg) throw new Error('no svg');
+    await page.mouse.click(svg.x + svg.width / 2, svg.y + svg.height / 2);
+    await expect(sunburst.locator('.tx-sunburst-chart__center')).toContainText('GB used');
   });
 
   test('column chart: hover anywhere in a category lays a band, the tooltip follows the cursor, horizontal bars fit', async ({ page }) => {

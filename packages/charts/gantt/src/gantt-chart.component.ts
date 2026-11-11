@@ -24,7 +24,7 @@ import { TxButton } from '@tectra-ng/ui/button';
 import { TxButtonGroup } from '@tectra-ng/ui/button-group';
 import { TxSkeleton } from '@tectra-ng/ui/skeleton';
 import { TxTooltip } from '@tectra-ng/ui/tooltip';
-import { TX_GANTT_DAY, TX_GANTT_DAY_WIDTH, ganttDays, ganttRange, ganttRows, ganttTicks, ganttTime, ganttX } from './gantt-layout';
+import { TX_GANTT_DAY, TX_GANTT_DAY_WIDTH, ganttDays, ganttFolds, ganttRange, ganttRows, ganttTicks, ganttTime, ganttX } from './gantt-layout';
 import { TxGanttDate, TxGanttGroupToggle, TxGanttLayout, TxGanttPart, TxGanttSpan, TxGanttTask, TxGanttTaskEvent, TxGanttZoom } from './gantt-chart.types';
 
 const ZOOMS: readonly TxGanttZoom[] = ['quarter', 'month', 'week', 'day'];
@@ -98,11 +98,14 @@ export class TxGanttChart {
   readonly width = computed(() => Math.ceil(ganttX(this.range()[1], this.range()[0], this.dayWidth())));
   readonly ticks = computed(() => ganttTicks(this.range(), this.zoom(), this.intl()));
   readonly rows = computed(() => ganttRows(this.list(), this.layout(), this.collapsed(), this.range()[0], this.dayWidth(), MIN_BAR));
+  readonly folds = computed(() => ganttFolds(this.rows()));
   readonly spans = computed(() => this.rows().flatMap((row) => row.spans));
+  private readonly openRows = computed(() => this.rows().filter((row) => row.spans.length && !row.collapsed));
+  private readonly openSpans = computed(() => this.openRows().flatMap((row) => row.spans));
   readonly labelsInside = computed(() => this.barLabels() === 'inside' || (this.barLabels() === 'auto' && this.layout() === 'timeline'));
   readonly labelsOutside = computed(() => this.barLabels() === 'outside' || (this.barLabels() === 'auto' && this.layout() === 'tasks'));
   readonly tabStop = computed(() => {
-    const spans = this.spans();
+    const spans = this.openSpans();
     const focused = this.focused();
     return spans.some((span) => span.task.id === focused) ? focused : (spans[0]?.task.id ?? null);
   });
@@ -229,12 +232,12 @@ export class TxGanttChart {
       this.stepZoom(-1);
       return;
     }
-    const spans = this.spans();
+    const spans = this.openSpans();
     const index = spans.indexOf(span);
-    const row = this.rows().find((item) => item.spans.includes(span));
+    const rows = this.openRows();
+    const row = rows.find((item) => item.spans.includes(span));
     let next = -1;
     if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-      const rows = this.rows().filter((item) => item.spans.length);
       const at = rows.indexOf(row as (typeof rows)[number]) + (event.key === 'ArrowDown' ? 1 : -1);
       const target = rows[Math.max(0, Math.min(rows.length - 1, at))];
       next = target ? spans.indexOf(target.spans.reduce((best, item) => (Math.abs(item.x - span.x) < Math.abs(best.x - span.x) ? item : best))) : -1;

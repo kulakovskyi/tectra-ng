@@ -1,4 +1,4 @@
-import { ganttDays, ganttRange, ganttRows, ganttTaskRange, ganttTicks, ganttTime, ganttX } from './gantt-layout';
+import { ganttDays, ganttFolds, ganttRange, ganttRows, ganttTaskRange, ganttTicks, ganttTime, ganttX } from './gantt-layout';
 import { TxGanttTask } from './gantt-chart.types';
 
 const day = (month: number, date: number) => new Date(2026, month, date).getTime();
@@ -49,13 +49,31 @@ describe('gantt layout', () => {
     expect(rows[0].spans[0].width).toBe(0);
     expect(rows[2].spans[0].color).not.toBe(rows[5].spans[0].color);
     const folded = ganttRows(tasks, 'tasks', new Set(['Design']), start, 10, 4);
-    expect(folded.map((row) => row.label)).toEqual(['Launch', 'Design', 'Build', 'API']);
-    expect(folded[1].collapsed).toBe(true);
+    expect(folded.map((row) => [row.label, row.collapsed])).toEqual([
+      ['Launch', false],
+      ['Design', true],
+      ['Brief', true],
+      ['Mockups', true],
+      ['Build', false],
+      ['API', false],
+    ]);
     const lanes = ganttRows(tasks, 'timeline', new Set(), start, 10, 4);
     expect(lanes.map((row) => [row.label, row.spans.length])).toEqual([
       ['Design', 2],
       ['Build', 1],
       ['Launch', 1],
     ]);
+  });
+
+  it('wraps the tasks of each group in a fold under its group row', () => {
+    const start = day(2, 1);
+    const folds = ganttFolds(ganttRows(tasks, 'tasks', new Set(['Design']), start, 10, 4));
+    expect(folds.map((fold) => [fold.head?.label ?? null, fold.collapsed, fold.rows.map((row) => row.label)])).toEqual([
+      [null, false, ['Launch']],
+      ['Design', true, ['Brief', 'Mockups']],
+      ['Build', false, ['API']],
+    ]);
+    const lanes = ganttFolds(ganttRows(tasks, 'timeline', new Set(['Design']), start, 10, 4));
+    expect(lanes.map((fold) => [fold.head, fold.collapsed, fold.rows.length])).toEqual([[null, false, 3]]);
   });
 });

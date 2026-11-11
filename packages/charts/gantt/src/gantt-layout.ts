@@ -1,5 +1,5 @@
 import { dateFormat, seriesColor, toTime } from '@tectra-ng/charts/core';
-import { TxGanttDate, TxGanttLayout, TxGanttRow, TxGanttSpan, TxGanttTask, TxGanttTick, TxGanttZoom } from './gantt-chart.types';
+import { TxGanttDate, TxGanttFold, TxGanttLayout, TxGanttRow, TxGanttSpan, TxGanttTask, TxGanttTick, TxGanttZoom } from './gantt-chart.types';
 
 export const TX_GANTT_DAY = 86_400_000;
 
@@ -155,9 +155,20 @@ export function ganttRows(
     const items = tasks.flatMap((task, index) => (task.group === group && spans[index] ? [spans[index] as TxGanttSpan] : []));
     const closed = collapsed.has(group);
     rows.push({ key: `group:${group}`, kind: 'group', label: group, group, spans: [], summary: summary(items), collapsed: closed, count: items.length });
-    if (!closed) items.forEach((span) => rows.push({ key: `task:${span.task.id}`, kind: 'task', label: span.task.label, group, spans: [span], summary: null, collapsed: false, count: 1 }));
+    items.forEach((span) => rows.push({ key: `task:${span.task.id}`, kind: 'task', label: span.task.label, group, spans: [span], summary: null, collapsed: closed, count: 1 }));
   }
   return rows;
+}
+
+export function ganttFolds(rows: readonly TxGanttRow[]): TxGanttFold[] {
+  const folds: TxGanttFold[] = [];
+  for (const row of rows) {
+    const last = folds[folds.length - 1];
+    if (row.kind === 'group') folds.push({ key: row.key, head: row, rows: [], collapsed: row.collapsed });
+    else if (last && (last.head ? last.head.group === row.group : true)) last.rows.push(row);
+    else folds.push({ key: `rows:${row.key}`, head: null, rows: [row], collapsed: false });
+  }
+  return folds;
 }
 
 export function ganttDays(start: number, end: number): number {
