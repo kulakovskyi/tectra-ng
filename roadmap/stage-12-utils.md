@@ -109,39 +109,39 @@ Utilities live in `@tectra-ng/utils/<name>` — own package, one flat entry poin
 
 - [x] `txStopPropagation` directive: stops `click` (or the events listed), optional `preventDefault`
 
-## 12.20 Search filter — `utils/filter` (filter 4; PrimeNG `FilterService`)
+## 12.20 Search filter — `utils/filter` (filter 4; PrimeNG `FilterService`) ✅
 
-- [ ] `filterBySearch(items, query, fields)` and `filterBy(items, value, fields, matchMode, locale)` with the match modes (`startsWith`, `contains`, `notContains`, `endsWith`, `equals`, `notEquals`, `in`, `lt`, `lte`, `gt`, `gte`, `between`, `dateIs`, `dateIsNot`, `dateBefore`, `dateAfter`), accent and case insensitive, `resolveField(item, 'a.b.c')`, own match modes
+- [x] `filterBySearch(items, query, fields)` and `filterBy(items, value, fields, matchMode, locale)` with the match modes (`startsWith`, `contains`, `notContains`, `endsWith`, `equals`, `notEquals`, `in`, `lt`, `lte`, `gt`, `gte`, `between`, `dateIs`, `dateIsNot`, `dateBefore`, `dateAfter`), accent and case insensitive, `resolveField(item, 'a.b.c')`, own match modes
 
-## 12.21 Text — `utils/text` (string 2, truncate 2, capitalize 1, normalize-keyword 2, add-http-prefix 0)
+## 12.21 Text — `utils/text` (string 2, truncate 2, capitalize 1, normalize-keyword 2, add-http-prefix 0) ✅
 
-- [ ] Pipes `txTruncate` (limit, trail, `position: 'end' | 'middle'`), `txCapitalize`, `txHttpPrefix`
-- [ ] Functions `truncate`, `capitalize`, `normalizeKeyword`, `withHttpPrefix`, `transliterate` (Ukrainian / Russian → Latin), `slugify`, `escapeHtml`
+- [x] Pipes `txTruncate` (limit, trail, `position: 'end' | 'middle'`), `txCapitalize`, `txHttpPrefix`
+- [x] Functions `truncate`, `capitalize`, `normalizeKeyword`, `withHttpPrefix`, `transliterate` (Ukrainian / Russian → Latin), `slugify`, `escapeHtml`
 
-## 12.22 Stream — `utils/stream` (3)
+## 12.22 Stream — `utils/stream` (3) ✅
 
-- [ ] `readTextStream(response, onChunk)` and an async iterator `textChunks(response)` for streamed answers
+- [x] `readTextStream(response, onChunk)` and an async iterator `textChunks(response)` for streamed answers
 
-## 12.23 Drag scroll — `utils/drag-scroll` (2)
+## 12.23 Drag scroll — `utils/drag-scroll` (2) ✅
 
-- [ ] `txDragScroll` directive: drag a scrolling box with the mouse (grab cursor, no click after a drag, buttons / links / inputs / `[data-drag-ignore]` stay clickable), `panMode` + `panMove` for a canvas
+- [x] `txDragScroll` directive: drag a scrolling box with the mouse (grab cursor, no click after a drag, buttons / links / inputs / `[data-drag-ignore]` stay clickable), `panMode` + `panMove` for a canvas
 
-## 12.24 Form changes — `utils/form-changes` (form-change-tracker 1)
+## 12.24 Form changes — `utils/form-changes` (form-change-tracker 1) ✅
 
-- [ ] `TxFormChangeTracker` with the first app's API (`initFormTracking`, `hasFormChanges`, `updateInitialFormState`, `resetFormToInitial`, `resetFormTracking`) + `trackFormChanges(form)` → `changed` signal; own deep compare (dates by time)
+- [x] `TxFormChangeTracker` with the first app's API (`initFormTracking`, `hasFormChanges`, `updateInitialFormState`, `resetFormToInitial`, `resetFormTracking`) + `trackFormChanges(form)` → `changed` signal; own deep compare (dates by time)
 
-## 12.25 Scroll end — `utils/scroll-end` (scroll-to-bottom 0)
+## 12.25 Scroll end — `utils/scroll-end` (scroll-to-bottom 0) ✅
 
-- [ ] `txScrollEnd` directive (infinite scroll): `scrolledToBottom` near the end (`offset` in px), `maxLimit` / `currentCount` stop it, no repeat until new content
+- [x] `txScrollEnd` directive (infinite scroll): `scrolledToBottom` near the end (`offset` in px), `maxLimit` / `currentCount` stop it, no repeat until new content
 
-## 12.26 Random — `utils/random` (1)
+## 12.26 Random — `utils/random` (1) ✅
 
-- [ ] `pickRandom(items)`, `pickRandomN(items, count)`
+- [x] `pickRandom(items)`, `pickRandomN(items, count)`
 
-## 12.27 Auto focus — `utils/auto-focus` (PrimeNG `AutoFocus`; `autofocus` in 6 forms)
+## 12.27 Auto focus — `utils/auto-focus` (PrimeNG `AutoFocus`; `autofocus` in 6 forms) ✅
 
-- [ ] `txAutoFocus` directive: focuses its element (or the kit field's input inside) after render, also inside dialogs and deferred views; `txAutoFocus="false"` turns it off
+- [x] `txAutoFocus` directive: focuses its element (or the kit field's input inside) after render, also inside dialogs and deferred views; `txAutoFocus="false"` turns it off
 
-## 12.28 Style class — `utils/style-class` (PrimeNG `StyleClass`)
+## 12.28 Style class — `utils/style-class` (PrimeNG `StyleClass`) ✅
 
-- [ ] `txStyleClass` directive: toggles classes on a target (`@next`, `@prev`, `@parent`, `@grandparent` or a selector) with enter / leave classes for animations, `toggleClass`, hide on outside click, Escape and resize
+- [x] `txStyleClass` directive: toggles classes on a target (`@next`, `@prev`, `@parent`, `@grandparent` or a selector) with enter / leave classes for animations, `toggleClass`, hide on outside click, Escape and resize

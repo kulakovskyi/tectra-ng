@@ -29,5 +29,14 @@ Part of `tectra-ng`. One entry point per utility, so you only bundle what you im
 | `@tectra-ng/utils/breakpoint` | `TxBreakpoints` — `isMobile`, `isTablet` and any media query as signals |
 | `@tectra-ng/utils/selection` | `TxSelection` — checked rows by key with header checkbox state |
 | `@tectra-ng/utils/stop-propagation` | `txStopPropagation` — keeps clicks or other events inside an element |
+| `@tectra-ng/utils/filter` | `txSearch`, `txFilterBy`, `filterBySearch`, `filterBy` with the table match modes |
+| `@tectra-ng/utils/text` | `txTruncate` (end or middle), `txCapitalize`, `txHttpPrefix`, `slugify`, `transliterate`, `escapeHtml` |
+| `@tectra-ng/utils/stream` | `readTextStream`, `textChunks` — streamed text as it arrives |
+| `@tectra-ng/utils/drag-scroll` | `txDragScroll` — drag a box to scroll it, or pan a canvas |
+| `@tectra-ng/utils/form-changes` | `trackFormChanges` (`changed` signal, commit, revert), `TxFormChangeTracker` |
+| `@tectra-ng/utils/scroll-end` | `txScrollEnd` — infinite scrolling for a box |
+| `@tectra-ng/utils/random` | `pickRandom`, `pickRandomN`, `shuffle` |
+| `@tectra-ng/utils/auto-focus` | `txAutoFocus` — focus a field or the first field inside after render |
+| `@tectra-ng/utils/style-class` | `txStyleClass` — show, hide or toggle an element by classes with enter / leave animations |
 
 Docs and examples: [tectra-ng.com](https://tectra-ng.com/components/date).
