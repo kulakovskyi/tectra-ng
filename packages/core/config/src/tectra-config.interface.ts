@@ -410,6 +410,16 @@ export interface TxTranslations {
   chartZoomMonth: string;
   chartZoomQuarter: string;
   chartTimeline: string;
+  chartSankey: string;
+  chartSunburst: string;
+  chartFlow: string;
+  chartIncoming: string;
+  chartOutgoing: string;
+  chartOfSource: string;
+  chartOfParent: string;
+  chartOfTotal: string;
+  chartDrillUp: string;
+  chartFlows: string;
   chartGanttHint: string;
   chartGaugeValue: string;
   chartPie: string;

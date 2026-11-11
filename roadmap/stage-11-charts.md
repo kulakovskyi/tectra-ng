@@ -138,10 +138,12 @@ Arc helpers (`polar`, `arcPath`, `strokeArc`, `fitArc`) moved from `charts/pie` 
 
 Built in HTML rather than SVG: sticky headers and text that cuts off cleanly come from CSS, and the scroll area is the kit's own.
 
-## 11.16 Sankey and sunburst
+## 11.16 Sankey and sunburst ✅
 
-- [ ] `<tx-sankey-chart>` (nodes and weighted links), `<tx-sunburst-chart>` (nested rings, drill down)
-- [ ] Docs + tests; e2e
+- [x] `<tx-sankey-chart>` (`charts/sankey`: nodes and weighted links with our own layout — columns by the longest path, `justify` / `left` alignment, relaxation passes, links stacked by their other ends; cycles and self links left out; hover lights the flows of a node or a link), `<tx-sunburst-chart>` (`charts/sunburst`: nested rings sized by value, a fading colour per branch, drill down by click / Enter and back from the centre / Escape, `levels`, labels where they fit)
+- [x] Docs + tests; e2e
+
+The chart frame forwards Enter, Space and Backspace to a chart that asks for them (`actionKeys`), so sunburst can drill with the keyboard while the other charts ignore those keys.
 
 ## 11.17 Org chart — `charts/org-chart` (2) ✅
 

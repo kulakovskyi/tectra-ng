@@ -1,0 +1,90 @@
+<tx-chart-frame
+  [height]="height()"
+  [(size)]="size"
+  [showLegend]="false"
+  actionKeys
+  [empty]="isEmpty()"
+  [loading]="loading()"
+  [toolbar]="toolbar()"
+  [exportName]="ariaLabel()"
+  emptyIcon="chart-pie"
+  [summary]="summary()"
+  [table]="dataTable()"
+  [tooltip]="tooltip()"
+  [tooltipTemplate]="tooltipTemplate()?.template"
+  [panelStyle]="tokenStyle()"
+  [parts]="passThrough()"
+  [styled]="!isUnstyled()"
+  (pointer)="onPointer($event)"
+  (navigate)="onNavigate($event)"
+  (tooltipClosed)="active.set(null)"
+>
+  <svg:g class="tx-sunburst-chart__segments" [style.transform-origin]="fit().cx + 'px ' + fit().cy + 'px'">
+    @for (segment of segments(); track segment.key) {
+      <svg:path
+        class="tx-sunburst-chart__segment"
+        [class.tx-sunburst-chart__segment--lit]="isLit(segment.key)"
+        [class.tx-sunburst-chart__segment--drill]="segment.hasChildren && drill()"
+        [class]="passThrough().segment?.class"
+        [style]="passThrough().segment?.style"
+        [attr.data-key]="segment.key"
+        [attr.data-depth]="segment.depth"
+        [attr.d]="segment.d"
+        [style.fill]="segment.fill"
+      />
+    }
+  </svg:g>
+  @if (showLabels()) {
+    <svg:g class="tx-sunburst-chart__labels">
+      @for (segment of segments(); track segment.key) {
+        @if (segment.text) {
+          <svg:text
+            class="tx-sunburst-chart__label"
+            [class]="passThrough().label?.class"
+            [style]="passThrough().label?.style"
+            text-anchor="middle"
+            dominant-baseline="central"
+            [attr.x]="segment.labelX"
+            [attr.y]="segment.labelY"
+          >
+            {{ segment.text }}
+          </svg:text>
+        }
+      }
+    </svg:g>
+  }
+  <svg:g
+    class="tx-sunburst-chart__center"
+    [class.tx-sunburst-chart__center--up]="center().canGoUp"
+    [class.tx-sunburst-chart__center--hover]="active() === 'center'"
+    [class]="passThrough().center?.class"
+    [style]="passThrough().center?.style"
+  >
+    <svg:circle class="tx-sunburst-chart__hole" [attr.cx]="fit().cx" [attr.cy]="fit().cy" [attr.r]="holeRadius()" />
+    @if (center().canGoUp) {
+      <svg:path
+        class="tx-sunburst-chart__back"
+        [attr.d]="'M' + (fit().cx - 4) + ',' + (fit().cy - centerFont().value * 0.95 - 4) + 'l4,-4l4,4'"
+      />
+    }
+    <svg:text
+      class="tx-sunburst-chart__center-value"
+      text-anchor="middle"
+      [attr.x]="fit().cx"
+      [attr.y]="fit().cy + centerFont().value * 0.3 - centerFont().label * 0.55"
+      [style.font-size.px]="centerFont().value"
+    >
+      {{ center().value }}
+    </svg:text>
+    <svg:text
+      class="tx-sunburst-chart__center-label"
+      text-anchor="middle"
+      dominant-baseline="hanging"
+      [attr.x]="fit().cx"
+      [attr.y]="fit().cy + centerFont().value * 0.3 - centerFont().label * 0.55 + 6"
+      [style.font-size.px]="centerFont().label"
+    >
+      {{ center().label }}
+    </svg:text>
+  </svg:g>
+</tx-chart-frame>

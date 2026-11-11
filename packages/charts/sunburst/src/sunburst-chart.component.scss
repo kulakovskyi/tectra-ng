@@ -1,0 +1,127 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+:host(.tx-sunburst-chart--fill) {
+  height: 100%;
+}
+
+.tx-sunburst-chart__segments {
+  transform-box: view-box;
+}
+
+.tx-sunburst-chart__segment {
+  stroke: transparent;
+}
+
+.tx-sunburst-chart__labels,
+.tx-sunburst-chart__center text,
+.tx-sunburst-chart__back {
+  pointer-events: none;
+}
+
+.tx-sunburst-chart__hole {
+  fill: transparent;
+}
+
+.tx-sunburst-chart__back {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.tx-sunburst-chart__center--up {
+  cursor: pointer;
+}
+
+.tx-sunburst-chart__segment--drill {
+  cursor: pointer;
+}
+
+:host([data-styled]) {
+  .tx-sunburst-chart__segment {
+    stroke: var(--tx-chart-sunburst-gap-color);
+    stroke-width: var(--tx-chart-sunburst-gap);
+    stroke-linejoin: round;
+    transition: opacity var(--tx-chart-motion-hover-duration) ease;
+  }
+
+  .tx-sunburst-chart__label {
+    fill: var(--tx-chart-sunburst-label-color);
+    font-size: var(--tx-chart-sunburst-label-font-size);
+    font-weight: var(--tx-chart-sunburst-label-font-weight);
+    filter: var(--tx-chart-sunburst-label-shadow);
+  }
+
+  .tx-sunburst-chart__hole {
+    transition: fill var(--tx-chart-motion-hover-duration) ease;
+  }
+
+  .tx-sunburst-chart__center--hover .tx-sunburst-chart__hole {
+    fill: var(--tx-chart-sunburst-center-hover-background);
+  }
+
+  .tx-sunburst-chart__back {
+    stroke: var(--tx-chart-sunburst-center-label-color);
+    stroke-width: var(--tx-chart-marker-stroke-width);
+  }
+
+  .tx-sunburst-chart__center-value {
+    fill: var(--tx-chart-sunburst-center-value-color);
+    font-weight: var(--tx-chart-sunburst-center-value-font-weight);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tx-sunburst-chart__center-label {
+    fill: var(--tx-chart-sunburst-center-label-color);
+  }
+}
+
+:host([data-styled].tx-sunburst-chart--active) .tx-sunburst-chart__segment:not(.tx-sunburst-chart__segment--lit) {
+  opacity: var(--tx-chart-sunburst-dimmed-opacity);
+}
+
+:host([data-styled].tx-sunburst-chart--entering) {
+  .tx-sunburst-chart__segments {
+    animation: tx-sunburst-chart-grow var(--tx-chart-motion-enter-duration) var(--tx-chart-motion-easing) both;
+  }
+
+  .tx-sunburst-chart__labels {
+    animation: tx-sunburst-chart-fade var(--tx-chart-motion-enter-duration) ease both;
+  }
+}
+
+@keyframes tx-sunburst-chart-grow {
+  from {
+    transform: scale(0.82) rotate(-25deg);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1) rotate(0);
+    opacity: 1;
+  }
+}
+
+@keyframes tx-sunburst-chart-fade {
+  0%,
+  50% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) .tx-sunburst-chart__segment,
+  :host([data-styled]) .tx-sunburst-chart__segments,
+  :host([data-styled]) .tx-sunburst-chart__labels,
+  :host([data-styled]) .tx-sunburst-chart__hole {
+    transition: none;
+    animation: none;
+  }
+}

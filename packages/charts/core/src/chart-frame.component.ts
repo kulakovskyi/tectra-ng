@@ -48,6 +48,8 @@ import { TxChartMenu, TxChartMenuItem } from './chart-menu.component';
 
 const TOOLTIP_OFFSET = 10;
 const ARROW_ROOM = 16;
+const NAVIGATION_KEYS = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End', 'Escape'];
+const ACTION_KEYS = ['Enter', ' ', 'Backspace'];
 const FOLLOW_PLACEMENT: TxPlacement = 'right';
 const FOLLOW_OFFSET = 14;
 
@@ -96,6 +98,7 @@ export class TxChartFrame {
   readonly parts = input<TxResolvedPassThrough<TxChartPart>>({});
   readonly styled = input<boolean, unknown>(true, { transform: booleanAttribute });
   readonly interactive = input<boolean, unknown>(true, { transform: booleanAttribute });
+  readonly actionKeys = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly plotHeight = input<number | null>(null);
   readonly toolbar = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly exportName = input('');
@@ -176,7 +179,7 @@ export class TxChartFrame {
       return;
     }
     this.cursor = null;
-    if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End', 'Escape'].includes(event.key)) {
+    if (NAVIGATION_KEYS.includes(event.key) || (this.actionKeys() && ACTION_KEYS.includes(event.key))) {
       event.preventDefault();
       this.navigate.emit(event);
     }

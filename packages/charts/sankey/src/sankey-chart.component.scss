@@ -1,0 +1,124 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+:host(.tx-sankey-chart--fill) {
+  height: 100%;
+}
+
+.tx-sankey-chart__link {
+  fill: var(--tx-sankey-chart-color);
+  fill-opacity: 0.35;
+}
+
+.tx-sankey-chart__links,
+.tx-sankey-chart__labels {
+  pointer-events: none;
+}
+
+.tx-sankey-chart__nodes {
+  pointer-events: none;
+}
+
+:host([data-styled]) {
+  .tx-sankey-chart__link {
+    fill: color-mix(in srgb, var(--tx-sankey-chart-color) var(--tx-chart-sankey-link-strength), var(--tx-chart-sankey-link-base));
+    fill-opacity: 1;
+    stroke: var(--tx-chart-sankey-link-edge-color);
+    stroke-width: var(--tx-chart-sankey-link-edge-width);
+    stroke-linejoin: round;
+    transition: fill var(--tx-chart-motion-hover-duration) ease;
+  }
+
+  .tx-sankey-chart__node {
+    rx: var(--tx-chart-sankey-node-radius);
+    transition: opacity var(--tx-chart-motion-hover-duration) ease;
+  }
+
+  .tx-sankey-chart__label {
+    fill: var(--tx-chart-sankey-label-color);
+    font-size: var(--tx-chart-sankey-label-font-size);
+    font-weight: var(--tx-chart-sankey-label-font-weight);
+  }
+
+  .tx-sankey-chart__value {
+    fill: var(--tx-chart-sankey-value-color);
+    font-weight: var(--tx-font-weight-regular);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+:host([data-styled].tx-sankey-chart--active) {
+  .tx-sankey-chart__link {
+    fill: color-mix(in srgb, var(--tx-sankey-chart-color) var(--tx-chart-sankey-link-dimmed-strength), var(--tx-chart-sankey-link-base));
+  }
+
+  .tx-sankey-chart__link--lit {
+    fill: color-mix(in srgb, var(--tx-sankey-chart-color) var(--tx-chart-sankey-link-active-strength), var(--tx-chart-sankey-link-base));
+  }
+
+  .tx-sankey-chart__node--dimmed {
+    opacity: var(--tx-chart-sankey-node-dimmed-opacity);
+  }
+}
+
+:host([data-styled].tx-sankey-chart--morph) {
+  .tx-sankey-chart__link {
+    transition:
+      fill var(--tx-chart-motion-hover-duration) ease,
+      d var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing);
+  }
+
+  .tx-sankey-chart__node {
+    transition:
+      opacity var(--tx-chart-motion-hover-duration) ease,
+      y var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing),
+      height var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing);
+  }
+}
+
+:host([data-styled].tx-sankey-chart--entering) {
+  .tx-sankey-chart__node {
+    animation: tx-sankey-chart-fade var(--tx-chart-motion-enter-duration) ease both;
+    animation-delay: calc(var(--tx-sankey-chart-order, 0) * var(--tx-chart-motion-stagger) * 3);
+  }
+
+  .tx-sankey-chart__links {
+    animation: tx-sankey-chart-reveal var(--tx-chart-motion-enter-duration) var(--tx-chart-motion-easing) both;
+  }
+
+  .tx-sankey-chart__labels {
+    animation: tx-sankey-chart-fade var(--tx-chart-motion-enter-duration) ease both;
+  }
+}
+
+@keyframes tx-sankey-chart-reveal {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes tx-sankey-chart-fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) .tx-sankey-chart__link,
+  :host([data-styled]) .tx-sankey-chart__node,
+  :host([data-styled]) .tx-sankey-chart__links,
+  :host([data-styled]) .tx-sankey-chart__labels {
+    transition: none;
+    animation: none;
+  }
+}

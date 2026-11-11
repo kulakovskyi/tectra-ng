@@ -1,0 +1,69 @@
+<tx-chart-frame
+  [height]="height()"
+  [(size)]="size"
+  [showLegend]="false"
+  [empty]="isEmpty()"
+  [loading]="loading()"
+  [toolbar]="toolbar()"
+  [exportName]="ariaLabel()"
+  emptyIcon="chart-bar"
+  [summary]="summary()"
+  [table]="dataTable()"
+  [tooltip]="tooltip()"
+  [tooltipTemplate]="tooltipTemplate()?.template"
+  [panelStyle]="tokenStyle()"
+  [parts]="passThrough()"
+  [styled]="!isUnstyled()"
+  (pointer)="onPointer($event)"
+  (navigate)="onNavigate($event)"
+  (tooltipClosed)="active.set(null)"
+>
+  <svg:g class="tx-sankey-chart__links">
+    @for (link of drawnLinks(); track link.key) {
+      <svg:path
+        class="tx-sankey-chart__link"
+        [class.tx-sankey-chart__link--lit]="isLinkLit(link)"
+        [class]="passThrough().link?.class"
+        [style]="passThrough().link?.style"
+        [attr.data-link]="link.key"
+        [attr.d]="link.path"
+        [style.--tx-sankey-chart-color]="link.color"
+      />
+    }
+  </svg:g>
+  <svg:g class="tx-sankey-chart__nodes">
+    @for (node of layout().nodes; track node.id) {
+      <svg:rect
+        class="tx-sankey-chart__node"
+        [class.tx-sankey-chart__node--dimmed]="isNodeDimmed(node)"
+        [class]="passThrough().node?.class"
+        [style]="passThrough().node?.style"
+        [attr.data-node]="node.id"
+        [attr.x]="node.x"
+        [attr.y]="node.y"
+        [attr.width]="node.width"
+        [attr.height]="node.height"
+        [style.fill]="node.color"
+        [style.--tx-sankey-chart-order]="node.depth"
+      />
+    }
+  </svg:g>
+  <svg:g class="tx-sankey-chart__labels">
+    @for (label of labels(); track label.key) {
+      <svg:text
+        class="tx-sankey-chart__label"
+        [class]="passThrough().label?.class"
+        [style]="passThrough().label?.style"
+        dominant-baseline="central"
+        [attr.x]="label.x"
+        [attr.y]="label.y"
+        [attr.text-anchor]="label.anchor"
+      >
+        {{ label.label }}
+        @if (label.value) {
+          <svg:tspan class="tx-sankey-chart__value" dx="5">{{ label.value }}</svg:tspan>
+        }
+      </svg:text>
+    }
+  </svg:g>
+</tx-chart-frame>

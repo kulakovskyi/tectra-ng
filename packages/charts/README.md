@@ -25,6 +25,8 @@ Part of `tectra-ng`. One entry point per chart, so you only bundle what you impo
 | `@tectra-ng/charts/boxplot` | `<tx-boxplot-chart>` — quartiles, median, whiskers and outliers from raw values or ready numbers, series side by side |
 | `@tectra-ng/charts/range-area` | `<tx-range-area-chart>` — a low–high band with a line inside, category or time axis |
 | `@tectra-ng/charts/gantt` | `<tx-gantt-chart>` — tasks on a calendar with groups, progress, milestones and a today line, zoom from days to quarters, a timeline layout of lanes |
+| `@tectra-ng/charts/sankey` | `<tx-sankey-chart>` — flows between stages as links as wide as their value, nodes in columns, own layout |
+| `@tectra-ng/charts/sunburst` | `<tx-sunburst-chart>` — a hierarchy as nested rings, zoom into a branch and back from the centre |
 | `@tectra-ng/charts/bar-list` | `<tx-bar-list>` — a top-N ranking: label over a share bar, value and percent of the total, router links |
 | `@tectra-ng/charts/segmented-bar` | `<tx-segmented-bar>` — parts of one whole in one bar with tones, a small or a large bar, legend with values and shares |
 | `@tectra-ng/charts/heatmap` | `<tx-heatmap>` — rows × grouped columns coloured by tones or a value scale, sticky headers, cell tooltips and clicks, `heatmapCalendar()` |

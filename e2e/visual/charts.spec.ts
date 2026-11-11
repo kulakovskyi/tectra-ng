@@ -32,7 +32,7 @@ function serverChart(html: string, tag: string): { paths: number; legend: number
   const start = html.indexOf(`<${tag}`);
   const chart = html.slice(start, html.indexOf(`</${tag}>`, start));
   return {
-    paths: (chart.match(/class="tx-line-chart__line/g) ?? chart.match(/class="tx-column-chart__bar[ "]/g) ?? chart.match(/class="tx-pie-chart__segment[ "]/g) ?? chart.match(/class="tx-treemap__tile[ "]/g) ?? chart.match(/class="tx-rank-chart__line[ "]/g) ?? chart.match(/class="tx-combo-chart__bar[ "]/g) ?? chart.match(/class="tx-scatter-chart__point[ "]/g) ?? chart.match(/class="tx-radar-chart__area[ "]/g) ?? chart.match(/class="tx-radial-bar__bar[ "]/g) ?? chart.match(/class="tx-gauge__progress[ "]/g) ?? chart.match(/class="tx-waterfall-chart__bar[ "]/g) ?? chart.match(/class="tx-funnel-chart__stage[ "]/g) ?? chart.match(/class="tx-bullet-chart__bar[ "]/g) ?? chart.match(/class="tx-candlestick-chart__candle[ "]/g) ?? chart.match(/class="tx-boxplot-chart__box[ "]/g) ?? chart.match(/class="tx-range-area-chart__band[ "]/g) ?? []).length,
+    paths: (chart.match(/class="tx-line-chart__line/g) ?? chart.match(/class="tx-column-chart__bar[ "]/g) ?? chart.match(/class="tx-pie-chart__segment[ "]/g) ?? chart.match(/class="tx-treemap__tile[ "]/g) ?? chart.match(/class="tx-rank-chart__line[ "]/g) ?? chart.match(/class="tx-combo-chart__bar[ "]/g) ?? chart.match(/class="tx-scatter-chart__point[ "]/g) ?? chart.match(/class="tx-radar-chart__area[ "]/g) ?? chart.match(/class="tx-radial-bar__bar[ "]/g) ?? chart.match(/class="tx-gauge__progress[ "]/g) ?? chart.match(/class="tx-waterfall-chart__bar[ "]/g) ?? chart.match(/class="tx-funnel-chart__stage[ "]/g) ?? chart.match(/class="tx-bullet-chart__bar[ "]/g) ?? chart.match(/class="tx-candlestick-chart__candle[ "]/g) ?? chart.match(/class="tx-boxplot-chart__box[ "]/g) ?? chart.match(/class="tx-range-area-chart__band[ "]/g) ?? chart.match(/class="tx-sankey-chart__link[ "]/g) ?? chart.match(/class="tx-sunburst-chart__segment[ "]/g) ?? []).length,
     legend: (chart.match(/class="tx-chart-legend__item/g) ?? []).length,
     labels: [...chart.matchAll(/class="tx-chart-axes__label"[^>]*>\s*([^<]*?)\s*</g)].map((match) => match[1]),
   };
@@ -56,6 +56,8 @@ test.describe('charts', () => {
     ['/components/candlestick-chart', 'tx-candlestick-chart', '.tx-candlestick-chart__candle'],
     ['/components/boxplot-chart', 'tx-boxplot-chart', '.tx-boxplot-chart__box'],
     ['/components/range-area-chart', 'tx-range-area-chart', '.tx-range-area-chart__band'],
+    ['/components/sankey-chart', 'tx-sankey-chart', '.tx-sankey-chart__link'],
+    ['/components/sunburst-chart', 'tx-sunburst-chart', '.tx-sunburst-chart__segment'],
   ] as const) {
     test(`${tag}: the hydrated chart keeps the server markup and its box`, async ({ page, request }) => {
       const server = serverChart(await (await request.get(path)).text(), tag);

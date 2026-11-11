@@ -1,0 +1,1 @@
+Tab to the chart: ←/→ walk the segments of one parent, ↓ goes to the first child, ↑ to the parent, Enter zooms in and Escape zooms out. Every segment is announced with its path, value and share; screen readers also get a summary and a hidden table.

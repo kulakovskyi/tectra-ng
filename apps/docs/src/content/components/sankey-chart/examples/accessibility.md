@@ -1,0 +1,1 @@
+Tab to the chart: the arrow keys walk the nodes column by column, each one lights its flows and is announced with its in and out totals. Screen readers also get a summary and a hidden table of every flow.
