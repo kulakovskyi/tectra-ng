@@ -1,0 +1,50 @@
+{
+  "name": "@tectra-ng/utils",
+  "version": "0.2.0",
+  "description": "Angular utilities on signals next to the tectra components: date, relative time, plural, file size and currency pipes; debounced input, copy to clipboard, in view, defer, drag scroll and auto focus directives; form validators and scroll to the first invalid field; filters kept in storage and the URL; HTTP params, retries and polling; clock, page title and breakpoints. Server rendering safe.",
+  "license": "MIT",
+  "homepage": "https://tectra-ng.com/components/date",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kulakovskyi/tectra-ng.git",
+    "directory": "packages/utils"
+  },
+  "bugs": "https://github.com/kulakovskyi/tectra-ng/issues",
+  "keywords": [
+    "tectra",
+    "angular",
+    "angular-utils",
+    "utilities",
+    "pipes",
+    "directives",
+    "validators",
+    "date-pipe",
+    "relative-time",
+    "clipboard",
+    "debounce",
+    "polling",
+    "intersection-observer",
+    "ssr",
+    "signals"
+  ],
+  "peerDependencies": {
+    "@angular/common": "^22.0.0",
+    "@angular/core": "^22.0.0",
+    "@angular/forms": "^22.0.0",
+    "@angular/platform-browser": "^22.0.0",
+    "@angular/router": "^22.0.0",
+    "rxjs": "^7.8.0",
+    "@tectra-ng/core": "^0.2.0",
+    "@tectra-ng/icons": "^0.2.0",
+    "@tectra-ng/themes": "^0.2.0",
+    "@tectra-ng/ui": "^0.2.0"
+  },
+  "peerDependenciesMeta": {
+    "@angular/forms": { "optional": true },
+    "@angular/platform-browser": { "optional": true },
+    "@angular/router": { "optional": true }
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -4,6 +4,7 @@
 
 :host([data-styled]) {
   display: grid;
+  align-content: start;
   gap: var(--tx-field-gap);
   min-width: 0;
 }

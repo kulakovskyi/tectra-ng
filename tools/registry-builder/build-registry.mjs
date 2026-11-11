@@ -115,6 +115,8 @@ function parseFrontMatter(markdown) {
   return { meta, body: markdown.slice(match[0].length) };
 }
 
+const API_SECTIONS = ['pipes', 'functions', 'methods', 'options', 'constants', 'providers'];
+
 function parseReadmeTables(readme) {
   const sections = {};
   let current = null;
@@ -251,6 +253,10 @@ async function buildComponent(name) {
       inputs: withSource(tables.inputs),
       outputs: withSource(tables.outputs),
       slots: (tables.slots ?? []).map(([slotName, description]) => ({ name: slotName, description: marked.parseInline(description ?? '') })),
+      sections: Object.keys(tables).filter((section) => API_SECTIONS.includes(section) && tables[section].length).map((section) => ({
+        title: titleCase(section),
+        rows: tables[section].map(([memberName, description]) => ({ name: memberName, description: marked.parseInline(description ?? '') })),
+      })),
     },
     keyboard: (tables.keyboard ?? []).map(([key, action]) => ({ key, action: marked.parseInline(action ?? '') })),
     tokens: presetTokens(name, meta.tokens?.split(',').map((key) => key.trim())) ?? tokens,

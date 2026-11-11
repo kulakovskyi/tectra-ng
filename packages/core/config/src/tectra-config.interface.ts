@@ -450,6 +450,32 @@ export interface TxTranslations {
   orgChartExpand: string;
   orgChartCollapse: string;
   orgChartMore: string;
+  httpStatusOk: string;
+  httpStatusRedirect: string;
+  httpStatusClientError: string;
+  httpStatusServerError: string;
+  httpStatusWarning: string;
+  httpStatusNoResponse: string;
+  httpStatusUnknown: string;
+  validationCodeFormat: string;
+  validationDate: string;
+  validationPastDate: string;
+  validationUrl: string;
+  validationWeakPassword: string;
+  validationMismatch: string;
+  validationPasswordMismatch: string;
+  validationDistinct: string;
+  validationIp: string;
+  validationDomain: string;
+  validationDuplicate: string;
+  validationTime: string;
+  validationJson: string;
+  validationValueMismatch: string;
+  validationSumExceeded: string;
+  validationPriceFormat: string;
+  validationPricePositive: string;
+  copiedToClipboard: string;
+  copyToClipboardFailed: string;
 }
 
 export type TxValidationMessage = string | ((error: unknown) => string);

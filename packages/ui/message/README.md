@@ -10,7 +10,7 @@ Inline feedback. `<tx-message>` is a box with a severity, an optional icon and a
 <tx-field-error for="email" [control]="email" />
 ```
 
-Error texts: `messages` on the field, then `provideTectra({ validationMessages })`, then `error.message` of a custom validator, then the built-in text of the locale (`required`, `email`, `minlength`, `maxlength`, `min`, `max`, `pattern`; anything else is "Invalid value"). `{param}` is replaced with the fields of the error object, e.g. `{requiredLength}`, `{min}`.
+Error texts: `messages` on the field, then `provideTectra({ validationMessages })`, then `error.message` of a custom validator, then the built-in text of the locale (`required`, `email`, `minlength`, `maxlength`, `min`, `max`, `pattern`, and the keys of `TxValidators` from `@tectra-ng/utils/validators`; anything else is "Invalid value"). `{param}` is replaced with the fields of the error object, e.g. `{requiredLength}`, `{min}`.
 
 ## Inputs
 | Name | Description |

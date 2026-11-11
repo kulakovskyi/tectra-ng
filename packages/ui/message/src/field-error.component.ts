@@ -24,6 +24,23 @@ const BUILT_IN_MESSAGES: Record<string, keyof TxTranslations> = {
   min: 'validationMin',
   max: 'validationMax',
   pattern: 'validationPattern',
+  invalidCodeFormat: 'validationCodeFormat',
+  invalidDate: 'validationDate',
+  pastDate: 'validationPastDate',
+  invalidUrl: 'validationUrl',
+  weakPassword: 'validationWeakPassword',
+  mismatch: 'validationMismatch',
+  passwordMismatch: 'validationPasswordMismatch',
+  distinctControls: 'validationDistinct',
+  invalidIp: 'validationIp',
+  invalidDomain: 'validationDomain',
+  duplicate: 'validationDuplicate',
+  invalidTime: 'validationTime',
+  invalidJson: 'validationJson',
+  valueMismatch: 'validationValueMismatch',
+  sumExceeded: 'validationSumExceeded',
+  priceFormat: 'validationPriceFormat',
+  pricePositive: 'validationPricePositive',
 };
 
 @Component({

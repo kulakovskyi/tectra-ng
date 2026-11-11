@@ -14,6 +14,7 @@ export const CATEGORY_ICONS: Record<string, TxIconName> = {
   Media: 'image',
   Navigation: 'bars',
   Overlay: 'window-maximize',
+  Utilities: 'wrench',
 };
 
 const categories = [...new Set(DOC_COMPONENTS.map((component) => component.category))].sort();

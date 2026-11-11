@@ -7,10 +7,15 @@ import { DocComponent } from '../../../../types/doc-component.interface';
   selector: 'docs-api-tab',
   imports: [DocTable],
   template: `
-    <p class="hint">Selector <code>{{ doc().selector }}</code></p>
+    @if (doc().selector) {
+      <p class="hint">Selector <code>{{ doc().selector }}</code></p>
+    }
     <docs-table [title]="'Inputs'" [columns]="memberColumns" [rows]="doc().api.inputs" />
     <docs-table [title]="'Outputs'" [columns]="memberColumns" [rows]="doc().api.outputs" />
     <docs-table [title]="'Slots'" [columns]="slotColumns" [rows]="doc().api.slots" />
+    @for (section of doc().api.sections; track section.title) {
+      <docs-table [title]="section.title" [columns]="slotColumns" [rows]="section.rows" />
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
