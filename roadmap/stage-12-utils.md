@@ -64,23 +64,23 @@ Utilities live in `@tectra-ng/utils/<name>` — own package, one flat entry poin
 
 - [x] `txCopy` directive: copies its value on click, a "Copied to clipboard" kit toast (translated; own text or off), `copied` / `copyFailed` outputs, works without a secure context (fallback), keyboard (Enter / Space on a non-button host); `copyToClipboard(text)` function
 
-## 12.10 Polling — `utils/polling` (24)
+## 12.10 Polling — `utils/polling` (24) ✅
 
-- [ ] `poll(config)`: repeat a request while `isActive(value)`, fixed or back-off delay, `maxAttempts`, pause while the tab is hidden, retries, `skipErrors`, `initial`
-- [ ] `refreshEvery(config)`: timer refresh with `when`, `immediate`, hidden-tab pause, no overlap
-- [ ] `TxPoller` class with `isLoading` / `isPolling` / `error` signals, `watch`, `restart`, `stop`; `POLL_DEFAULT_DELAY`, `POLL_SLOW_DELAY`
+- [x] `poll(config)`: repeat a request while `isActive(value)`, fixed or back-off delay, `maxAttempts`, pause while the tab is hidden, retries, `skipErrors`, `initial`
+- [x] `refreshEvery(config)`: timer refresh with `when`, `immediate`, hidden-tab pause, no overlap
+- [x] `TxPoller` class with `isLoading` / `isPolling` / `error` signals, `watch`, `restart`, `stop`; `POLL_DEFAULT_DELAY`, `POLL_SLOW_DELAY`
 
-## 12.11 Clock — `utils/clock` (18)
+## 12.11 Clock — `utils/clock` (18) ✅
 
-- [ ] `TxClock` service: `now` signal ticking every second in the browser only (no timer on the server), `countdown(target, endingSoonMs)` → `remainingMs`, `isExpired`, `isEndingSoon` signals, `isInFuture(value)`
+- [x] `TxClock` service: `now` signal ticking every second in the browser only (no timer on the server), `countdown(target, endingSoonMs)` → `remainingMs`, `isExpired`, `isEndingSoon` signals, `isInFuture(value)`
 
-## 12.12 Go back — `utils/go-back` (9)
+## 12.12 Go back — `utils/go-back` (9) ✅
 
-- [ ] `txGoBack` directive: back in history on click, a `fallback` route when the page was opened directly
+- [x] `txGoBack` directive: back in history on click, a `fallback` route when the page was opened directly
 
-## 12.13 Currency symbol — `utils/currency` (8)
+## 12.13 Currency symbol — `utils/currency` (8) ✅
 
-- [ ] `txCurrencySymbol` pipe + `currencySymbol(code, locale?)` for any ISO currency through `Intl` (`narrowSymbol`), the code itself when unknown
+- [x] `txCurrencySymbol` pipe + `currencySymbol(code, locale?)` for any ISO currency through `Intl` (`narrowSymbol`), the code itself when unknown
 
 ## 12.14 In view — `utils/in-view` (in-view 7, visible-on-scroll 1; PrimeNG `AnimateOnScroll`, `Defer`)
 

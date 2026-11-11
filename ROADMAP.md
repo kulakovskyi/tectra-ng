@@ -226,11 +226,11 @@ Directives, pipes, services and helpers apps use next to the components — the 
 | Group | Items | Usage | Status |
 |---|---|---|---|
 | Package | `@tectra-ng/utils`, docs category `Utilities`, README API tables (pipes, functions, methods, options, constants, providers) on the docs API tab | — | ✅ |
-| Dates and text | `date` (`txDate`, functions, date range), `plural`, `relative-time`, `currency`, `text`, `file` (file size, download) | 318, 173, 48, 8, 7, 11 | 🟡 date, plural, relative-time |
+| Dates and text | `date` (`txDate`, functions, date range), `plural`, `relative-time`, `currency`, `text`, `file` (file size, download) | 318, 173, 48, 8, 7, 11 | 🟡 date, plural, relative-time, currency |
 | Forms | `debounce-input`, `form-validation`, `validators`, `form-changes`, `auto-focus` | 79, 70, 45, 1, 6 | 🟡 debounce-input, form-validation, validators |
-| Data | `filter-state` (local storage + URL), `http` (params, retry, status), `polling`, `selection`, `filter`, `stream`, `random` | 70, 98, 24, 4, 4, 3, 1 | 🟡 filter-state, http |
-| DOM | `clipboard`, `in-view` (+ defer, visible on scroll), `go-back`, `stop-propagation`, `drag-scroll`, `scroll-end`, `style-class` | 38, 8, 9, 4, 2, 0, 0 | 🟡 clipboard |
-| Services | `clock`, `title`, `breakpoint` | 18, 5, 5 | ⬜ |
+| Data | `filter-state` (local storage + URL), `http` (params, retry, status), `polling`, `selection`, `filter`, `stream`, `random` | 70, 98, 24, 4, 4, 3, 1 | 🟡 filter-state, http, polling |
+| DOM | `clipboard`, `in-view` (+ defer, visible on scroll), `go-back`, `stop-propagation`, `drag-scroll`, `scroll-end`, `style-class` | 38, 8, 9, 4, 2, 0, 0 | 🟡 clipboard, go-back |
+| Services | `clock`, `title`, `breakpoint` | 18, 5, 5 | 🟡 clock |
 
 ## Editor backlog (`@tectra-ng/editor`, between stages)
 
