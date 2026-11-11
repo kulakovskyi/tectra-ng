@@ -1,0 +1,1 @@
+Tab to the chart: ←/→ move between categories, ↑/↓ between the series, Home / End jump to the ends, Escape closes the tooltip. Each value is announced in the format of its axis; screen readers also get a summary and a hidden data table.

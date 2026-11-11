@@ -153,13 +153,15 @@ button.tx-chart-legend__item {
   gap: var(--tx-chart-legend-list-gap);
 }
 
-:host([data-styled][data-variant='line']) .tx-chart-legend__marker {
+:host([data-styled][data-variant='line']) .tx-chart-legend__marker,
+:host([data-styled]:not([data-variant='stat'])) .tx-chart-legend__item[data-marker='line'] .tx-chart-legend__marker {
   width: var(--tx-chart-legend-line-width);
   height: var(--tx-chart-legend-line-height);
   border-radius: var(--tx-radius-full);
 }
 
-:host([data-styled][data-variant='line']) .tx-chart-legend__item--hidden .tx-chart-legend__marker {
+:host([data-styled][data-variant='line']) .tx-chart-legend__item--hidden .tx-chart-legend__marker,
+:host([data-styled]:not([data-variant='stat'])) .tx-chart-legend__item--hidden[data-marker='line'] .tx-chart-legend__marker {
   background: repeating-linear-gradient(90deg, var(--tx-chart-legend-item-color) 0 3px, transparent 3px 5px);
   box-shadow: none;
 }

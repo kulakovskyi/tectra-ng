@@ -1,7 +1,7 @@
 {
   "name": "@tectra-ng/charts",
   "version": "0.1.9",
-  "description": "Angular charts drawn as SVG with no chart library: line and area, column and bar, pie and donut, bar list, segmented bar, heatmap, treemap, rank chart, org chart on one core of scales, axes, legend, tooltip and accessibility. Server rendered, themed by design tokens, dark mode ready.",
+  "description": "Angular charts drawn as SVG with no chart library: line and area, column and bar, combo with two value axes, pie and donut, bar list, segmented bar, heatmap, treemap, rank chart, org chart on one core of scales, axes, legend, tooltip and accessibility. Server rendered, themed by design tokens, dark mode ready.",
   "license": "MIT",
   "homepage": "https://tectra-ng.com/components/line-chart",
   "repository": {
@@ -21,6 +21,7 @@
     "area-chart",
     "bar-chart",
     "column-chart",
+    "combo-chart",
     "pie-chart",
     "donut-chart",
     "bar-list",

@@ -54,6 +54,7 @@ export interface TxCartesianOptions {
   horizontal?: boolean;
   category: TxCategoryAxisOptions;
   value: TxValueAxisOptions;
+  secondaryValue?: TxValueAxisOptions;
   grid?: TxChartGridMode;
   fontSize?: number;
   showCategoryAxis?: boolean;
@@ -67,8 +68,10 @@ export type TxCategoryScale = TxBandScale | TxPointScale | TxContinuousScale | T
 export interface TxCartesianLayout {
   plot: TxChartPlot;
   value: TxContinuousScale;
+  secondaryValue: TxContinuousScale | null;
   category: TxCategoryScale;
   valueTicks: number[];
+  secondaryValueTicks: number[];
   axes: TxChartAxesModel;
   horizontal: boolean;
   categoryPosition(index: number, x?: number): number;
@@ -90,6 +93,40 @@ function valueDomain(options: TxValueAxisOptions, count: number): TxRange {
   const max = options.max ?? (includeZero ? Math.max(0, rawMax) : rawMax);
   const nice = niceDomain(min, max, count);
   return [options.min ?? nice[0], options.max ?? nice[1]];
+}
+
+const NICE_STEPS = [1, 2, 2.5, 5, 10];
+
+function niceStepAtLeast(raw: number): number {
+  if (!(raw > 0) || !Number.isFinite(raw)) return 1;
+  const base = 10 ** Math.floor(Math.log10(raw));
+  const factor = NICE_STEPS.find((step) => step * base >= raw * (1 - 1e-9)) ?? 10;
+  return factor * base;
+}
+
+export function alignedDomain(options: TxValueAxisOptions, intervals: number, zeroAt: number | null = null): { domain: TxRange; ticks: number[] } | null {
+  if (intervals < 1 || options.scale === 'log' || options.min !== undefined || options.max !== undefined) return null;
+  const [rawMin, rawMax] = options.extent ?? [0, 1];
+  const includeZero = options.includeZero ?? true;
+  let min = includeZero ? Math.min(0, rawMin) : rawMin;
+  let max = includeZero ? Math.max(0, rawMax) : rawMax;
+  if (min === max) {
+    min = min > 0 ? 0 : min - 1;
+    max = max < 0 ? 0 : max + 1;
+  }
+  const below = zeroAt !== null && zeroAt > 0 && zeroAt < intervals ? zeroAt : null;
+  let step = below !== null ? niceStepAtLeast(Math.max(max / (intervals - below), -min / below)) : niceStepAtLeast((max - min) / intervals);
+  for (let round = 0; round < 12; round++) {
+    const start = below !== null ? -below * step : Math.floor(min / step + 1e-9) * step;
+    const stop = start + intervals * step;
+    if (stop >= max - 1e-9 && start <= min + 1e-9) {
+      const decimals = Math.max(0, -Math.floor(Math.log10(step) + 1e-9) + 1);
+      const ticks = Array.from({ length: intervals + 1 }, (_, index) => Number((start + index * step).toFixed(decimals)) || 0);
+      return { domain: [ticks[0], ticks[intervals]], ticks };
+    }
+    step = niceStepAtLeast(step * 1.0001);
+  }
+  return null;
 }
 
 interface CategoryTick {
@@ -121,6 +158,17 @@ export function cartesianLayout(options: TxCartesianOptions): TxCartesianLayout 
   const valueLabels = valueTicks.map((tick) => valueFormat(tick));
   const valueLabelWidth = showValueAxis ? Math.max(0, ...valueLabels.map((label) => textWidth(label, fontSize))) : 0;
 
+  const second = horizontal ? undefined : options.secondaryValue;
+  const evenTicks =
+    valueTicks.length > 1 && valueTicks[0] === domain[0] && valueTicks[valueTicks.length - 1] === domain[1] && options.value.scale !== 'log';
+  const primaryZero = evenTicks ? valueTicks.indexOf(0) : -1;
+  const aligned = second && evenTicks ? alignedDomain(second, valueTicks.length - 1, primaryZero > 0 ? primaryZero : null) : null;
+  const secondDomain: TxRange | null = second ? (aligned?.domain ?? valueDomain(second, tickCount)) : null;
+  const secondTicks = second && secondDomain ? (aligned?.ticks ?? (second.scale === 'log' ? logScale(secondDomain, [0, 1]) : linearScale(secondDomain, [0, 1])).ticks(tickCount)) : [];
+  const secondFormat = tickFormatter(options.intl, secondTicks, second?.format);
+  const secondLabels = secondTicks.map((tick) => secondFormat(tick));
+  const secondLabelWidth = second ? Math.max(0, ...secondLabels.map((label) => textWidth(label, fontSize))) : 0;
+
   const cat = options.category;
   const count = cat.count ?? cat.labels?.length ?? 0;
   const maxLabelWidth = cat.maxLabelWidth ?? 220;
@@ -149,8 +197,9 @@ export function cartesianLayout(options: TxCartesianOptions): TxCartesianLayout 
     if (options.value.title && showValueAxis) ySpace += titleSpace;
   }
   const edgeY = horizontal ? 4 : fontSize / 2 + 4;
-  let left = yRight ? (horizontal ? edgeX : 4) : ySpace;
-  let right = yRight ? ySpace : edgeX;
+  const secondSpace = second ? secondLabelWidth + LABEL_PAD + 4 + (second.title ? titleSpace : 0) : 0;
+  let left = yRight ? (second ? secondSpace : horizontal ? edgeX : 4) : ySpace;
+  let right = yRight ? ySpace : second ? secondSpace : edgeX;
   let top = xTop ? xSpace : edgeY;
   let bottom = xTop ? edgeY : xSpace;
 
@@ -239,6 +288,7 @@ export function cartesianLayout(options: TxCartesianOptions): TxCartesianLayout 
 
   const valueRange: TxRange = horizontal ? [plot.left, plot.left + plot.width] : [plot.top + plot.height, plot.top];
   const value = options.value.scale === 'log' ? logScale(domain, valueRange) : linearScale(domain, valueRange);
+  const secondaryValue = second && secondDomain ? (second.scale === 'log' ? logScale(secondDomain, valueRange) : linearScale(secondDomain, valueRange)) : null;
 
   const grid: TxChartGridLine[] = [];
   const gridMode = options.grid ?? 'value';
@@ -266,7 +316,7 @@ export function cartesianLayout(options: TxCartesianOptions): TxCartesianLayout 
   }
 
   const xTitle = (text: string) => ({ text, x: plot.left + plot.width / 2, y: xTop ? lineHeight - 2 : height - 4, rotate: 0 });
-  const yTitle = (text: string) => ({ text, x: yRight ? width - lineHeight / 2 - 2 : lineHeight / 2 + 2, y: plot.top + plot.height / 2, rotate: yRight ? 90 : -90 });
+  const yTitle = (text: string, onRight = yRight) => ({ text, x: onRight ? width - lineHeight / 2 - 2 : lineHeight / 2 + 2, y: plot.top + plot.height / 2, rotate: onRight ? 90 : -90 });
 
   if (showValueAxis) {
     axes.push({
@@ -274,6 +324,23 @@ export function cartesianLayout(options: TxCartesianOptions): TxCartesianLayout 
       labels: valueAxisLabels,
       line: null,
       title: options.value.title ? (horizontal ? xTitle(options.value.title) : yTitle(options.value.title)) : undefined,
+    });
+  }
+
+  if (second && secondaryValue) {
+    const onRight = !yRight;
+    axes.push({
+      position: onRight ? 'right' : 'left',
+      labels: secondTicks.map((tick, index) => ({
+        text: secondLabels[index],
+        x: onRight ? right2 + LABEL_PAD : plot.left - LABEL_PAD,
+        y: secondaryValue.map(tick),
+        anchor: onRight ? 'start' : 'end',
+        baseline: 'middle',
+        rotate: 0,
+      })),
+      line: null,
+      title: second.title ? yTitle(second.title, onRight) : undefined,
     });
   }
 
@@ -334,5 +401,5 @@ export function cartesianLayout(options: TxCartesianOptions): TxCartesianLayout 
     return best;
   };
 
-  return { plot, value, category: scale, valueTicks, axes: { axes, grid, zero }, horizontal, categoryPosition, categoryIndexAt };
+  return { plot, value, secondaryValue, category: scale, valueTicks, secondaryValueTicks: secondTicks, axes: { axes, grid, zero }, horizontal, categoryPosition, categoryIndexAt };
 }

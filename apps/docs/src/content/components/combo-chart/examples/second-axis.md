@@ -1,0 +1,1 @@
+`axis: 'secondary'` puts a series on a second value axis on the other side, with its own format (`y2ValueFormat`) and title (`y2AxisTitle`). Its ticks stand on the grid lines of the main axis, so the plot keeps one grid.

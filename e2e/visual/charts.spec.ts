@@ -17,7 +17,7 @@ function serverChart(html: string, tag: string): { paths: number; legend: number
   const start = html.indexOf(`<${tag}`);
   const chart = html.slice(start, html.indexOf(`</${tag}>`, start));
   return {
-    paths: (chart.match(/class="tx-line-chart__line/g) ?? chart.match(/class="tx-column-chart__bar[ "]/g) ?? chart.match(/class="tx-pie-chart__segment[ "]/g) ?? chart.match(/class="tx-treemap__tile[ "]/g) ?? chart.match(/class="tx-rank-chart__line[ "]/g) ?? []).length,
+    paths: (chart.match(/class="tx-line-chart__line/g) ?? chart.match(/class="tx-column-chart__bar[ "]/g) ?? chart.match(/class="tx-pie-chart__segment[ "]/g) ?? chart.match(/class="tx-treemap__tile[ "]/g) ?? chart.match(/class="tx-rank-chart__line[ "]/g) ?? chart.match(/class="tx-combo-chart__bar[ "]/g) ?? []).length,
     legend: (chart.match(/class="tx-chart-legend__item/g) ?? []).length,
     labels: [...chart.matchAll(/class="tx-chart-axes__label"[^>]*>\s*([^<]*?)\s*</g)].map((match) => match[1]),
   };
@@ -30,6 +30,7 @@ test.describe('charts', () => {
     ['/components/line-chart', 'tx-line-chart', '.tx-line-chart__line'],
     ['/components/column-chart', 'tx-column-chart', '.tx-column-chart__bar'],
     ['/components/pie-chart', 'tx-pie-chart', '.tx-pie-chart__segment'],
+    ['/components/combo-chart', 'tx-combo-chart', '.tx-combo-chart__bar'],
   ] as const) {
     test(`${tag}: the hydrated chart keeps the server markup and its box`, async ({ page, request }) => {
       const server = serverChart(await (await request.get(path)).text(), tag);
@@ -111,6 +112,38 @@ test.describe('charts', () => {
     await loading.getByRole('button', { name: 'Load data' }).click();
     await expect(loading.locator('tx-skeleton')).toBeVisible();
     await expect(loading.locator('.tx-line-chart__line')).toHaveCount(1);
+  });
+
+  test('combo chart: hovering a category marks its columns and line, the second axis shares the grid', async ({ page }) => {
+    await page.goto('/components/combo-chart');
+    const chart = example(page, 'Second axis').locator('tx-combo-chart');
+    const plot = chart.locator('.tx-chart-frame__plot');
+    await plot.scrollIntoViewIfNeeded();
+    const left = chart.locator('.tx-chart-axes__axis[data-position="left"] .tx-chart-axes__label');
+    const right = chart.locator('.tx-chart-axes__axis[data-position="right"] .tx-chart-axes__label');
+    await expect(right.first()).toContainText('%');
+    expect(await right.count()).toBe(await left.count());
+    const leftY = await left.evaluateAll((labels) => labels.map((label) => Math.round(label.getBoundingClientRect().y)));
+    const rightY = await right.evaluateAll((labels) => labels.map((label) => Math.round(label.getBoundingClientRect().y)));
+    expect(rightY).toEqual(leftY);
+    const svg = await chart.locator('svg.tx-chart-frame__svg').boundingBox();
+    const lastRight = await right.last().boundingBox();
+    expect(svg && lastRight && lastRight.x + lastRight.width <= svg.x + svg.width + 1).toBeTruthy();
+
+    const bar = chart.locator('.tx-combo-chart__bar[data-index="3"]');
+    const box = await bar.boundingBox();
+    if (!box) throw new Error('no bar');
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height - 4);
+    await expect(chart).toHaveClass(/tx-combo-chart--active/);
+    await expect(chart.locator('.tx-combo-chart__marker')).toHaveCount(1);
+    await expect(tooltip(page)).toContainText('Q4 2025');
+    await expect(tooltip(page)).toContainText('Margin');
+    const tip = await tooltip(page).boundingBox();
+    const marker = await chart.locator('.tx-combo-chart__marker').boundingBox();
+    const top = Math.min(box.y, marker?.y ?? box.y);
+    expect(tip && tip.y + tip.height <= top + 1).toBeTruthy();
+    await page.mouse.move(0, 0);
+    await expect(tooltip(page)).toHaveCount(0);
   });
 
   test('column chart: hover on the column pins the tooltip above it, horizontal bars fit', async ({ page }) => {

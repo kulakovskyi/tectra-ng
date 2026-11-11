@@ -72,11 +72,14 @@ export type TxChartLegendAlign = 'start' | 'center' | 'end';
 
 export type TxChartLegendVariant = 'dot' | 'line' | 'pill' | 'stat';
 
+export type TxChartLegendMarker = 'dot' | 'line';
+
 export interface TxChartLegendItem {
   key: string;
   label: string;
   color: string;
   hidden?: boolean;
+  marker?: TxChartLegendMarker;
   value?: string;
   percent?: string;
   caption?: string;

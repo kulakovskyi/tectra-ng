@@ -19,6 +19,7 @@ import { TxChartLegendAlign, TxChartLegendContext, TxChartLegendItem, TxChartLeg
           [style.--tx-chart-legend-item-color]="item.color"
           [attr.aria-pressed]="!item.hidden"
           [attr.data-key]="item.key"
+          [attr.data-marker]="item.marker"
           [tabindex]="index === 0 ? 0 : -1"
           (click)="toggled.emit(item.key)"
           (pointerenter)="hovered.emit(item.key)"
@@ -38,6 +39,7 @@ import { TxChartLegendAlign, TxChartLegendContext, TxChartLegendItem, TxChartLeg
           [style]="itemPart()?.style"
           [style.--tx-chart-legend-item-color]="item.color"
           [attr.data-key]="item.key"
+          [attr.data-marker]="item.marker"
           (pointerenter)="hovered.emit(item.key)"
           (pointerleave)="hovered.emit(null)"
         >

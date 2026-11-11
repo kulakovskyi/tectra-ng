@@ -1,0 +1,97 @@
+<tx-chart-frame
+  [height]="height()"
+  [(size)]="size"
+  [legendItems]="legendItems()"
+  [showLegend]="legendShown()"
+  [legendPosition]="legendPosition()"
+  [legendAlign]="legendAlign()"
+  [legendVariant]="legendVariant()"
+  [legendTemplate]="legendTemplate()?.template"
+  [empty]="isEmpty()"
+  [loading]="loading()"
+  [toolbar]="toolbar()"
+  [exportName]="ariaLabel()"
+  emptyIcon="chart-bar"
+  [summary]="summary()"
+  [table]="dataTable()"
+  [tooltip]="tooltip()"
+  [tooltipTemplate]="tooltipTemplate()?.template"
+  [panelStyle]="tokenStyle()"
+  [parts]="passThrough()"
+  [styled]="!isUnstyled()"
+  (pointer)="onPointer($event)"
+  (navigate)="onNavigate($event)"
+  (legendToggled)="onLegendToggle($event)"
+  (legendHovered)="onLegendHover($event)"
+  (tooltipClosed)="active.set(null)"
+>
+  <svg:g [tx-chart-axes]="layout().axes" [gridPart]="passThrough().grid" [axisPart]="passThrough().axis" />
+  <svg:g class="tx-combo-chart__bars">
+    @for (bar of bars(); track bar.key) {
+      <svg:rect
+        class="tx-combo-chart__bar"
+        [class.tx-combo-chart__bar--focused]="focusedSeries() === bar.series"
+        [class.tx-combo-chart__bar--active]="isActive(bar.index, bar.series)"
+        [class]="passThrough().bar?.class"
+        [style]="passThrough().bar?.style"
+        [attr.data-series]="bar.series"
+        [attr.data-index]="bar.index"
+        [attr.data-end]="bar.end"
+        [attr.data-dir]="bar.dir"
+        [style.--tx-combo-chart-order]="bar.index"
+        [attr.x]="bar.x"
+        [attr.y]="bar.y"
+        [attr.width]="bar.width"
+        [attr.height]="bar.height"
+        [style.--tx-combo-chart-color]="bar.color"
+      />
+    }
+  </svg:g>
+  @for (path of paths(); track path.key) {
+    <svg:g
+      class="tx-combo-chart__series"
+      [class.tx-combo-chart__series--focused]="focusedSeries() === path.index"
+      [class]="passThrough().series?.class"
+      [style]="passThrough().series?.style"
+      [style.--tx-combo-chart-color]="path.color"
+      [attr.data-series]="path.index"
+    >
+      @if (path.area) {
+        <svg:linearGradient [attr.id]="path.gradient" x1="0" y1="0" x2="0" y2="1">
+          <svg:stop class="tx-combo-chart__stop-from" offset="0" [style.stop-color]="path.color" />
+          <svg:stop class="tx-combo-chart__stop-to" offset="0.95" [style.stop-color]="path.color" />
+        </svg:linearGradient>
+        <svg:path
+          class="tx-combo-chart__area"
+          [class]="passThrough().area?.class"
+          [style]="passThrough().area?.style"
+          [attr.d]="path.area"
+          [attr.fill]="'url(#' + path.gradient + ')'"
+        />
+      }
+      <svg:path
+        class="tx-combo-chart__line"
+        [class]="passThrough().line?.class"
+        [style]="passThrough().line?.style"
+        [attr.d]="path.line"
+        [style.stroke]="path.color"
+      />
+      @for (point of path.points; track $index) {
+        @if (point) {
+          <svg:circle
+            class="tx-combo-chart__point"
+            [class]="passThrough().marker?.class"
+            [style]="passThrough().marker?.style"
+            [attr.cx]="point.x"
+            [attr.cy]="point.y"
+            [style.fill]="path.color"
+          />
+        }
+      }
+    </svg:g>
+  }
+  @for (point of activePoints(); track point.series) {
+    <svg:circle class="tx-combo-chart__halo" [attr.cx]="point.x" [attr.cy]="point.y" [style.fill]="point.color" />
+    <svg:circle class="tx-combo-chart__marker" [class]="passThrough().marker?.class" [attr.cx]="point.x" [attr.cy]="point.y" [style.fill]="point.color" />
+  }
+</tx-chart-frame>

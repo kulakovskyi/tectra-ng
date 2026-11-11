@@ -1,5 +1,5 @@
 import { TX_LOCALE_US } from '@tectra-ng/core/i18n';
-import { cartesianLayout } from './cartesian';
+import { alignedDomain, cartesianLayout } from './cartesian';
 import { chartMonthNames, chartNumberFormatter, compactNumber, textWidth, tickFormatter, timeTickOptions, truncateText } from './format';
 import { chartSummary, chartTable, hasChartData, normalizeSeries, tableRows } from './series-data';
 
@@ -123,5 +123,42 @@ describe('chart formats', () => {
     expect(time.category.kind).toBe('time');
     expect(time.axes.axes.find((axis) => axis.position === 'bottom')?.labels[0].text).toBe('Jan');
     expect(time.categoryIndexAt(time.plot.left + 1, [new Date(2026, 0, 1).getTime(), new Date(2026, 6, 1).getTime()])).toBe(0);
+  });
+
+  it('adds a second value axis whose ticks sit on the grid of the first', () => {
+    const layout = cartesianLayout({
+      width: 600,
+      height: 300,
+      intl: 'en-US',
+      category: { kind: 'band', labels: ['A', 'B', 'C'] },
+      value: { extent: [0, 480] },
+      secondaryValue: { extent: [0, 0.37], format: 'percent', title: 'Share' },
+    });
+    const right = layout.axes.axes.find((axis) => axis.position === 'right');
+    expect(layout.secondaryValue).not.toBeNull();
+    expect(layout.secondaryValueTicks.length).toBe(layout.valueTicks.length);
+    expect(layout.secondaryValue?.domain[1]).toBeGreaterThanOrEqual(0.37);
+    expect(right?.labels.map((label) => label.y)).toEqual(layout.valueTicks.map((tick) => layout.value.map(tick)));
+    expect(right?.labels[0].x).toBeGreaterThan(layout.plot.left + layout.plot.width);
+    expect(right?.title?.rotate).toBe(90);
+    expect(layout.plot.left + layout.plot.width).toBeLessThan(600 - 30);
+  });
+
+  it('keeps zero on one line for both value axes', () => {
+    const domain = alignedDomain({ extent: [-3, 12] }, 4, 1);
+    expect(domain?.ticks).toEqual([-5, 0, 5, 10, 15]);
+    expect(alignedDomain({ extent: [0, 37] }, 5)?.ticks).toEqual([0, 10, 20, 30, 40, 50]);
+    expect(alignedDomain({ extent: [0, 10], min: 0 }, 5)).toBeNull();
+    const left = cartesianLayout({
+      width: 600,
+      height: 300,
+      intl: 'en-US',
+      yAxisPosition: 'right',
+      category: { kind: 'band', labels: ['A'] },
+      value: { extent: [-40, 80] },
+      secondaryValue: { extent: [0, 7] },
+    });
+    expect(left.axes.axes.find((axis) => axis.position === 'left')?.labels[0].anchor).toBe('end');
+    expect(left.secondaryValue?.map(0)).toBeCloseTo(left.value.map(0));
   });
 });

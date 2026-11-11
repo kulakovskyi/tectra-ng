@@ -51,10 +51,12 @@ First app (`column`, 18): always stacked, `series`, `categories`, `stackType` `n
 
 `toolbar` (download menu) — done with export in 11.18.
 
-## 11.4 Combo — `charts/combo`
+## 11.4 Combo — `charts/combo` ✅
 
-- [ ] Columns + lines in one plot, a second y axis, per series `type` and `axis`
-- [ ] Docs + tests; e2e
+- [x] `<tx-combo-chart>`: columns + lines or areas in one plot, a second y axis, per series `type` (`column`, `line`, `area`) and `axis` (`primary`, `secondary`); grouped or stacked columns (one stack per axis), own format, title and range for the second axis (`y2ValueFormat`, `y2AxisTitle`, `y2Min`, `y2Max`); line series marked with a line in the legend
+- [x] Docs + tests; e2e
+
+The second axis puts its ticks on the grid lines of the first and keeps zero on one line (`alignedDomain` in `charts/core`), so the plot has one grid; a fixed `y2Min` / `y2Max` keeps its own ticks.
 
 ## 11.5 Pie and donut — `charts/pie` (9) ✅
 

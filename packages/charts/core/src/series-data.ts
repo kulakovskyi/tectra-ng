@@ -118,16 +118,16 @@ export function tableRows(count: number, limit = TX_CHART_TABLE_ROWS): number[] 
 export function chartTable(
   labels: readonly string[],
   series: readonly { name: string; values: readonly (number | null)[] }[],
-  format: (value: number) => string,
+  format: (value: number, seriesIndex: number) => string,
   limit = TX_CHART_TABLE_ROWS,
 ): TxChartTable {
   return {
     columns: series.map((item, index) => ({ key: `${index}`, label: item.name })),
     rows: tableRows(labels.length, limit).map((index) => ({
       label: labels[index],
-      cells: series.map((item) => {
+      cells: series.map((item, seriesIndex) => {
         const value = item.values[index];
-        return value === null || value === undefined ? '—' : format(value);
+        return value === null || value === undefined ? '—' : format(value, seriesIndex);
       }),
     })),
   };

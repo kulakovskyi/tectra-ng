@@ -1,0 +1,160 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+:host(.tx-combo-chart--fill) {
+  height: 100%;
+}
+
+.tx-combo-chart__bar {
+  fill: var(--tx-combo-chart-color);
+  transform-box: fill-box;
+}
+
+.tx-combo-chart__bar[data-dir='up'] {
+  transform-origin: 50% 100%;
+}
+
+.tx-combo-chart__bar[data-dir='down'] {
+  transform-origin: 50% 0;
+}
+
+.tx-combo-chart__line {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.tx-combo-chart__area,
+.tx-combo-chart__line,
+.tx-combo-chart__point,
+.tx-combo-chart__marker,
+.tx-combo-chart__halo {
+  pointer-events: none;
+}
+
+:host([data-styled]) {
+  .tx-combo-chart__bar {
+    transition: fill var(--tx-chart-motion-hover-duration) ease;
+  }
+
+  .tx-combo-chart__bar[data-end='top'] {
+    clip-path: inset(0 round var(--tx-chart-bar-radius) var(--tx-chart-bar-radius) 0 0);
+  }
+
+  .tx-combo-chart__bar[data-end='bottom'] {
+    clip-path: inset(0 round 0 0 var(--tx-chart-bar-radius) var(--tx-chart-bar-radius));
+  }
+
+  .tx-combo-chart__line {
+    stroke-width: var(--tx-chart-line-stroke-width);
+  }
+
+  .tx-combo-chart__stop-from {
+    stop-opacity: var(--tx-chart-line-area-opacity-from);
+  }
+
+  .tx-combo-chart__stop-to {
+    stop-opacity: var(--tx-chart-line-area-opacity-to);
+  }
+
+  .tx-combo-chart__point {
+    r: var(--tx-chart-line-point-radius);
+    stroke: var(--tx-chart-marker-stroke-color);
+    stroke-width: var(--tx-chart-marker-stroke-width);
+  }
+
+  .tx-combo-chart__marker {
+    r: var(--tx-chart-marker-radius);
+    stroke: var(--tx-chart-marker-stroke-color);
+    stroke-width: var(--tx-chart-marker-stroke-width);
+  }
+
+  .tx-combo-chart__halo {
+    r: var(--tx-chart-marker-halo-radius);
+    opacity: var(--tx-chart-marker-halo-opacity);
+  }
+
+  .tx-combo-chart__series {
+    transition: opacity var(--tx-chart-motion-update-duration) ease;
+  }
+}
+
+:host([data-styled].tx-combo-chart--stacked) .tx-combo-chart__bar {
+  stroke: var(--tx-chart-bar-segment-gap-color);
+  stroke-width: var(--tx-chart-bar-segment-gap);
+}
+
+:host([data-styled].tx-combo-chart--active) .tx-combo-chart__bar:not(.tx-combo-chart__bar--active),
+:host([data-styled].tx-combo-chart--focused) .tx-combo-chart__bar:not(.tx-combo-chart__bar--focused) {
+  fill: color-mix(in oklab, var(--tx-combo-chart-color) var(--tx-chart-bar-dimmed-strength), var(--tx-chart-bar-dimmed-base));
+}
+
+:host([data-styled].tx-combo-chart--focused) .tx-combo-chart__series:not(.tx-combo-chart__series--focused) {
+  opacity: var(--tx-chart-line-dimmed-opacity);
+}
+
+:host([data-styled].tx-combo-chart--morph) {
+  .tx-combo-chart__bar {
+    transition:
+      fill var(--tx-chart-motion-hover-duration) ease,
+      x var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing),
+      y var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing),
+      width var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing),
+      height var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing);
+  }
+
+  .tx-combo-chart__line,
+  .tx-combo-chart__area {
+    transition: d var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing);
+  }
+
+  .tx-combo-chart__point {
+    transition:
+      cx var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing),
+      cy var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing);
+  }
+}
+
+:host([data-styled].tx-combo-chart--entering) {
+  .tx-combo-chart__bar {
+    animation: tx-combo-chart-grow var(--tx-chart-motion-enter-duration) var(--tx-chart-motion-easing) both;
+    animation-delay: calc(var(--tx-combo-chart-order, 0) * var(--tx-chart-motion-stagger));
+  }
+
+  .tx-combo-chart__series {
+    animation: tx-combo-chart-reveal var(--tx-chart-motion-enter-duration) var(--tx-chart-motion-easing) both;
+  }
+}
+
+@keyframes tx-combo-chart-grow {
+  from {
+    transform: scaleY(0);
+  }
+
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes tx-combo-chart-reveal {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) .tx-combo-chart__bar,
+  :host([data-styled]) .tx-combo-chart__series,
+  :host([data-styled].tx-combo-chart--morph) .tx-combo-chart__line,
+  :host([data-styled].tx-combo-chart--morph) .tx-combo-chart__area,
+  :host([data-styled].tx-combo-chart--morph) .tx-combo-chart__point {
+    transition: none;
+    animation: none;
+  }
+}

@@ -1,0 +1,1 @@
+`type: 'area'` fills the space under a line with a soft gradient. `curve` sets the line shape (`smooth`, `straight`, `step`) and `markers` turns the value points off. Here the sign-ups stand on the second axis, so the small numbers stay readable under the large ones.
