@@ -37,7 +37,7 @@ export const INSTALL_PACKAGES: InstallPackage[] = [
   { name: '@tectra-ng/blocks', title: 'Blocks', text: 'Layouts, filters, kanban, wizard, command palette and more.' },
   { name: '@tectra-ng/brand-icons', title: 'Brand logos', text: 'Logos of well-known brands for the icon component.' },
   { name: '@tectra-ng/flags', title: 'Country flags', text: 'Flags for the country select, loaded one by one.' },
-  { name: '@tectra-ng/charts', title: 'Charts', text: 'Line, column, combo, scatter, pie, radar, radial bar, gauge, bar list, segmented bar, heatmap, treemap, rank and org charts drawn as SVG, no chart library; SVG / PNG / CSV download.' },
+  { name: '@tectra-ng/charts', title: 'Charts', text: 'Line, column, combo, scatter, pie, radar, radial bar, gauge, funnel, waterfall, bullet, bar list, segmented bar, heatmap, treemap, rank and org charts drawn as SVG, no chart library; SVG / PNG / CSV download.' },
   { name: '@tectra-ng/qr', title: 'QR codes', text: 'Own encoder in plain TypeScript, no dependencies.' },
   { name: '@tectra-ng/editor', title: 'Rich text editor', text: 'Its own package — tectra-ng does not include it.', separate: true },
 ];

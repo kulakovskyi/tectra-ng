@@ -18,6 +18,9 @@ Part of `tectra-ng`. One entry point per chart, so you only bundle what you impo
 | `@tectra-ng/charts/radar` | `<tx-radar-chart>` — series on axes around a centre, polygon or circular rings, filled areas |
 | `@tectra-ng/charts/radial-bar` | `<tx-radial-bar>` — progress rings over a track, a full circle or any arc, the share in the centre |
 | `@tectra-ng/charts/gauge` | `<tx-gauge>` — one value on a scale: a progress arc in a tone, or a needle over coloured bands |
+| `@tectra-ng/charts/funnel` | `<tx-funnel-chart>` — steps of a process as centred bars with connectors and the conversion between them |
+| `@tectra-ng/charts/waterfall` | `<tx-waterfall-chart>` — a running total built step by step, increases and decreases in their own colours, total bars |
+| `@tectra-ng/charts/bullet` | `<tx-bullet-chart>` — a value against a target over qualitative ranges, one row per measure on a shared scale |
 | `@tectra-ng/charts/bar-list` | `<tx-bar-list>` — a top-N ranking: label over a share bar, value and percent of the total, router links |
 | `@tectra-ng/charts/segmented-bar` | `<tx-segmented-bar>` — parts of one whole in one bar with tones, a small or a large bar, legend with values and shares |
 | `@tectra-ng/charts/heatmap` | `<tx-heatmap>` — rows × grouped columns coloured by tones or a value scale, sticky headers, cell tooltips and clicks, `heatmapCalendar()` |

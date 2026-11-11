@@ -121,10 +121,10 @@ First app: search positions over real check times — rank 1 on top, one line pe
 
 Arc helpers (`polar`, `arcPath`, `strokeArc`, `fitArc`) moved from `charts/pie` to `charts/core` for every round chart; `charts/pie` still re-exports them. The chart menu drops "Download CSV" when a chart has no data table (gauge).
 
-## 11.13 Funnel, waterfall and bullet
+## 11.13 Funnel, waterfall and bullet ✅
 
-- [ ] `<tx-funnel-chart>`, `<tx-waterfall-chart>` (running total, up / down colours, total bars), `<tx-bullet-chart>` (value, target, ranges)
-- [ ] Docs + tests; e2e
+- [x] `<tx-funnel-chart>` (`charts/funnel`: centred bars, connectors, conversion from the step before and share of the first, one colour or `colorful`), `<tx-waterfall-chart>` (`charts/waterfall`: running total, up / down colours, total bars that close a section, signed labels, dashed connectors, a non-toggling legend), `<tx-bullet-chart>` (`charts/bullet`: value, target, qualitative ranges shared or per row, one row per measure on a shared scale, height from the rows)
+- [x] Docs + tests; e2e
 
 ## 11.14 Financial and statistical
 

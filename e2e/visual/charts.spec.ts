@@ -17,7 +17,7 @@ function serverChart(html: string, tag: string): { paths: number; legend: number
   const start = html.indexOf(`<${tag}`);
   const chart = html.slice(start, html.indexOf(`</${tag}>`, start));
   return {
-    paths: (chart.match(/class="tx-line-chart__line/g) ?? chart.match(/class="tx-column-chart__bar[ "]/g) ?? chart.match(/class="tx-pie-chart__segment[ "]/g) ?? chart.match(/class="tx-treemap__tile[ "]/g) ?? chart.match(/class="tx-rank-chart__line[ "]/g) ?? chart.match(/class="tx-combo-chart__bar[ "]/g) ?? chart.match(/class="tx-scatter-chart__point[ "]/g) ?? chart.match(/class="tx-radar-chart__area[ "]/g) ?? chart.match(/class="tx-radial-bar__bar[ "]/g) ?? chart.match(/class="tx-gauge__progress[ "]/g) ?? []).length,
+    paths: (chart.match(/class="tx-line-chart__line/g) ?? chart.match(/class="tx-column-chart__bar[ "]/g) ?? chart.match(/class="tx-pie-chart__segment[ "]/g) ?? chart.match(/class="tx-treemap__tile[ "]/g) ?? chart.match(/class="tx-rank-chart__line[ "]/g) ?? chart.match(/class="tx-combo-chart__bar[ "]/g) ?? chart.match(/class="tx-scatter-chart__point[ "]/g) ?? chart.match(/class="tx-radar-chart__area[ "]/g) ?? chart.match(/class="tx-radial-bar__bar[ "]/g) ?? chart.match(/class="tx-gauge__progress[ "]/g) ?? chart.match(/class="tx-waterfall-chart__bar[ "]/g) ?? chart.match(/class="tx-funnel-chart__stage[ "]/g) ?? chart.match(/class="tx-bullet-chart__bar[ "]/g) ?? []).length,
     legend: (chart.match(/class="tx-chart-legend__item/g) ?? []).length,
     labels: [...chart.matchAll(/class="tx-chart-axes__label"[^>]*>\s*([^<]*?)\s*</g)].map((match) => match[1]),
   };
@@ -35,6 +35,9 @@ test.describe('charts', () => {
     ['/components/radar-chart', 'tx-radar-chart', '.tx-radar-chart__area'],
     ['/components/radial-bar', 'tx-radial-bar', '.tx-radial-bar__bar'],
     ['/components/gauge', 'tx-gauge', '.tx-gauge__progress'],
+    ['/components/waterfall-chart', 'tx-waterfall-chart', '.tx-waterfall-chart__bar'],
+    ['/components/funnel-chart', 'tx-funnel-chart', '.tx-funnel-chart__stage'],
+    ['/components/bullet-chart', 'tx-bullet-chart', '.tx-bullet-chart__bar'],
   ] as const) {
     test(`${tag}: the hydrated chart keeps the server markup and its box`, async ({ page, request }) => {
       const server = serverChart(await (await request.get(path)).text(), tag);
@@ -234,6 +237,41 @@ test.describe('charts', () => {
     const transform = await gauge.locator('.tx-gauge__needle').evaluate((needle) => getComputedStyle(needle).transform);
     const [a, b] = transform.replace(/^matrix\(|\)$/g, '').split(',').map(Number);
     expect(Math.round((Math.atan2(b, a) * 180) / Math.PI)).toBe(34);
+  });
+
+  test('waterfall, funnel and bullet: bars join up, hover shows the running total and the conversion', async ({ page }) => {
+    await page.goto('/components/waterfall-chart');
+    const waterfall = example(page, 'Basic').locator('tx-waterfall-chart');
+    await waterfall.scrollIntoViewIfNeeded();
+    const joins = await waterfall.evaluate((element) => {
+      const bars = [...element.querySelectorAll('.tx-waterfall-chart__bar')].map((bar) => bar.getBoundingClientRect());
+      const lines = [...element.querySelectorAll('.tx-waterfall-chart__connector')].map((line) => line.getBoundingClientRect());
+      return lines.every((line, index) => Math.abs(line.left - bars[index].right) <= 1 && Math.abs(line.right - bars[index + 1].left) <= 1);
+    });
+    expect(joins).toBe(true);
+    const sales = waterfall.locator('.tx-waterfall-chart__bar[data-index="1"]');
+    const box = await sales.boundingBox();
+    if (!box) throw new Error('no bar');
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await expect(tooltip(page)).toContainText('Sales');
+    await expect(tooltip(page)).toContainText('+310K');
+
+    await page.goto('/components/funnel-chart');
+    const funnel = example(page, 'Basic').locator('tx-funnel-chart');
+    await funnel.scrollIntoViewIfNeeded();
+    const stage = await funnel.locator('.tx-funnel-chart__stage[data-index="2"]').boundingBox();
+    if (!stage) throw new Error('no stage');
+    await page.mouse.move(stage.x + 2, stage.y + stage.height / 2);
+    await expect(tooltip(page)).toContainText('Conversion');
+    await expect(tooltip(page)).toContainText('39.6%');
+
+    await page.goto('/components/bullet-chart');
+    const bullet = example(page, 'Basic').locator('tx-bullet-chart');
+    await bullet.scrollIntoViewIfNeeded();
+    await bullet.locator('.tx-chart-frame__plot').focus();
+    await page.keyboard.press('ArrowDown');
+    await expect(bullet.locator('.tx-bullet-chart__row--active')).toHaveAttribute('data-index', '0');
+    await expect(tooltip(page)).toContainText('Target');
   });
 
   test('column chart: hover on the column pins the tooltip above it, horizontal bars fit', async ({ page }) => {

@@ -1,0 +1,121 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+:host(.tx-funnel-chart--fill) {
+  height: 100%;
+}
+
+.tx-funnel-chart__stage {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+.tx-funnel-chart__connector {
+  fill-opacity: 0.16;
+}
+
+.tx-funnel-chart__connector,
+.tx-funnel-chart__label,
+.tx-funnel-chart__value,
+.tx-funnel-chart__conversion {
+  pointer-events: none;
+}
+
+:host([data-styled]) {
+  .tx-funnel-chart__stage {
+    clip-path: inset(0 round var(--tx-chart-funnel-radius));
+    transition: opacity var(--tx-chart-motion-hover-duration) ease;
+  }
+
+  .tx-funnel-chart__connector {
+    fill-opacity: var(--tx-chart-funnel-connector-opacity);
+  }
+
+  .tx-funnel-chart__label {
+    fill: var(--tx-chart-funnel-label-color);
+    font-size: var(--tx-chart-funnel-label-font-size);
+    font-weight: var(--tx-chart-funnel-label-font-weight);
+  }
+
+  .tx-funnel-chart__value {
+    fill: var(--tx-chart-funnel-value-color);
+    font-size: var(--tx-chart-funnel-value-font-size);
+    font-weight: var(--tx-chart-funnel-value-font-weight);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tx-funnel-chart__value--outside {
+    fill: var(--tx-chart-funnel-outside-value-color);
+  }
+
+  .tx-funnel-chart__conversion {
+    fill: var(--tx-chart-funnel-conversion-color);
+    font-size: var(--tx-chart-funnel-conversion-font-size);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+:host([data-styled].tx-funnel-chart--active) .tx-funnel-chart__stage:not(.tx-funnel-chart__stage--active) {
+  opacity: var(--tx-chart-funnel-dimmed-opacity);
+}
+
+:host([data-styled].tx-funnel-chart--morph) {
+  .tx-funnel-chart__stage {
+    transition:
+      opacity var(--tx-chart-motion-hover-duration) ease,
+      x var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing),
+      y var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing),
+      width var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing),
+      height var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing);
+  }
+
+  .tx-funnel-chart__connector {
+    transition: d var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing);
+  }
+}
+
+:host([data-styled].tx-funnel-chart--entering) {
+  .tx-funnel-chart__stage {
+    animation: tx-funnel-chart-grow var(--tx-chart-motion-enter-duration) var(--tx-chart-motion-easing) both;
+    animation-delay: calc(var(--tx-funnel-chart-order, 0) * var(--tx-chart-motion-stagger) * 2);
+  }
+
+  .tx-funnel-chart__connector,
+  .tx-funnel-chart__value,
+  .tx-funnel-chart__conversion {
+    animation: tx-funnel-chart-fade var(--tx-chart-motion-enter-duration) ease both;
+  }
+}
+
+@keyframes tx-funnel-chart-grow {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes tx-funnel-chart-fade {
+  0%,
+  60% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) .tx-funnel-chart__stage,
+  :host([data-styled]) .tx-funnel-chart__connector,
+  :host([data-styled]) .tx-funnel-chart__value,
+  :host([data-styled]) .tx-funnel-chart__conversion {
+    transition: none;
+    animation: none;
+  }
+}

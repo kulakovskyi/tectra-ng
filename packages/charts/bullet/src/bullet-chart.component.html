@@ -1,0 +1,66 @@
+<tx-chart-frame
+  [height]="frameHeight()"
+  [(size)]="size"
+  [showLegend]="false"
+  [empty]="isEmpty()"
+  [loading]="loading()"
+  [toolbar]="toolbar()"
+  [exportName]="ariaLabel()"
+  emptyIcon="chart-bar"
+  [summary]="summary()"
+  [table]="dataTable()"
+  [tooltip]="tooltip()"
+  [tooltipTemplate]="tooltipTemplate()?.template"
+  [panelStyle]="tokenStyle()"
+  [parts]="passThrough()"
+  [styled]="!isUnstyled()"
+  (pointer)="onPointer($event)"
+  (navigate)="onNavigate($event)"
+  (tooltipClosed)="active.set(null)"
+>
+  <svg:g [tx-chart-axes]="layout().axes" [gridPart]="passThrough().grid" [axisPart]="passThrough().axis" />
+  @for (row of rows(); track row.key) {
+    <svg:g
+      class="tx-bullet-chart__row"
+      [class.tx-bullet-chart__row--active]="active() === row.index"
+      [attr.data-index]="row.index"
+      [style.--tx-bullet-chart-order]="row.index"
+    >
+      @for (range of row.ranges; track range.key) {
+        <svg:rect
+          class="tx-bullet-chart__range"
+          [class]="passThrough().range?.class"
+          [style]="passThrough().range?.style"
+          [attr.data-level]="range.level"
+          [attr.x]="range.x"
+          [attr.y]="row.trackY"
+          [attr.width]="range.width"
+          [attr.height]="row.trackHeight"
+        />
+      }
+      @if (row.barWidth > 0) {
+        <svg:rect
+          class="tx-bullet-chart__bar"
+          [class]="passThrough().bar?.class"
+          [style]="passThrough().bar?.style"
+          [attr.x]="row.barX"
+          [attr.y]="row.barY"
+          [attr.width]="row.barWidth"
+          [attr.height]="row.barHeight"
+          [style.--tx-bullet-chart-own]="row.color"
+        />
+      }
+      @if (row.targetX !== null) {
+        <svg:line
+          class="tx-bullet-chart__target"
+          [class]="passThrough().target?.class"
+          [style]="passThrough().target?.style"
+          [attr.x1]="row.targetX"
+          [attr.x2]="row.targetX"
+          [attr.y1]="row.targetY1"
+          [attr.y2]="row.targetY2"
+        />
+      }
+    </svg:g>
+  }
+</tx-chart-frame>

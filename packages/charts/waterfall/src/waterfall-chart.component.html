@@ -1,0 +1,78 @@
+<tx-chart-frame
+  [height]="height()"
+  [(size)]="size"
+  [legendItems]="legendItems()"
+  [showLegend]="legendShown()"
+  [legendPosition]="legendPosition()"
+  [legendAlign]="legendAlign()"
+  [legendToggle]="false"
+  [empty]="isEmpty()"
+  [loading]="loading()"
+  [toolbar]="toolbar()"
+  [exportName]="ariaLabel()"
+  emptyIcon="chart-bar"
+  [summary]="summary()"
+  [table]="dataTable()"
+  [tooltip]="tooltip()"
+  [tooltipTemplate]="tooltipTemplate()?.template"
+  [panelStyle]="tokenStyle()"
+  [parts]="passThrough()"
+  [styled]="!isUnstyled()"
+  (pointer)="onPointer($event)"
+  (navigate)="onNavigate($event)"
+  (tooltipClosed)="active.set(null)"
+>
+  <svg:g [tx-chart-axes]="layout().axes" [gridPart]="passThrough().grid" [axisPart]="passThrough().axis" />
+  @if (connectors()) {
+    <svg:g class="tx-waterfall-chart__connectors">
+      @for (line of connectorLines(); track line.key) {
+        <svg:line
+          class="tx-waterfall-chart__connector"
+          [class]="passThrough().connector?.class"
+          [style]="passThrough().connector?.style"
+          [attr.x1]="line.x1"
+          [attr.x2]="line.x2"
+          [attr.y1]="line.y"
+          [attr.y2]="line.y"
+        />
+      }
+    </svg:g>
+  }
+  <svg:g class="tx-waterfall-chart__bars">
+    @for (bar of bars(); track bar.key) {
+      <svg:rect
+        class="tx-waterfall-chart__bar"
+        [class.tx-waterfall-chart__bar--active]="active() === bar.index"
+        [class]="passThrough().bar?.class"
+        [style]="passThrough().bar?.style"
+        [attr.data-kind]="bar.kind"
+        [attr.data-index]="bar.index"
+        [attr.data-dir]="bar.above ? 'up' : 'down'"
+        [attr.x]="bar.x"
+        [attr.y]="bar.y"
+        [attr.width]="bar.width"
+        [attr.height]="bar.height"
+        [style.--tx-waterfall-chart-own]="bar.color"
+        [style.--tx-waterfall-chart-order]="bar.index"
+      />
+    }
+  </svg:g>
+  @if (dataLabels()) {
+    <svg:g class="tx-waterfall-chart__labels">
+      @for (bar of bars(); track bar.key) {
+        <svg:text
+          class="tx-waterfall-chart__label"
+          [class]="passThrough().dataLabel?.class"
+          [style]="passThrough().dataLabel?.style"
+          [attr.data-kind]="bar.kind"
+          text-anchor="middle"
+          [attr.dominant-baseline]="bar.above ? 'auto' : 'hanging'"
+          [attr.x]="bar.x + bar.width / 2"
+          [attr.y]="bar.textY"
+        >
+          {{ bar.text }}
+        </svg:text>
+      }
+    </svg:g>
+  }
+</tx-chart-frame>

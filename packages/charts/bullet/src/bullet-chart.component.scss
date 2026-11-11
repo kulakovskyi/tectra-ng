@@ -1,0 +1,107 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+:host(.tx-bullet-chart--fill) {
+  height: 100%;
+}
+
+.tx-bullet-chart__range {
+  fill: currentColor;
+  fill-opacity: 0.08;
+}
+
+.tx-bullet-chart__range[data-level='1'] {
+  fill-opacity: 0.24;
+}
+
+.tx-bullet-chart__range[data-level='2'] {
+  fill-opacity: 0.16;
+}
+
+.tx-bullet-chart__bar {
+  fill: var(--tx-bullet-chart-own, currentColor);
+  transform-box: fill-box;
+  transform-origin: 0 50%;
+}
+
+.tx-bullet-chart__target {
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+.tx-bullet-chart__row {
+  pointer-events: none;
+}
+
+:host([data-styled]) {
+  .tx-bullet-chart__range {
+    fill-opacity: 1;
+  }
+
+  .tx-bullet-chart__range[data-level='1'] {
+    fill: var(--tx-chart-bullet-range-color1);
+  }
+
+  .tx-bullet-chart__range[data-level='2'] {
+    fill: var(--tx-chart-bullet-range-color2);
+  }
+
+  .tx-bullet-chart__range[data-level='3'] {
+    fill: var(--tx-chart-bullet-range-color3);
+  }
+
+  .tx-bullet-chart__bar {
+    fill: var(--tx-bullet-chart-own, var(--tx-chart-bullet-bar-color));
+    clip-path: inset(0 round var(--tx-chart-bullet-bar-radius));
+  }
+
+  .tx-bullet-chart__target {
+    stroke: var(--tx-chart-bullet-target-color);
+    stroke-width: var(--tx-chart-bullet-target-width);
+    stroke-linecap: round;
+  }
+
+  .tx-bullet-chart__row {
+    transition: opacity var(--tx-chart-motion-hover-duration) ease;
+  }
+}
+
+:host([data-styled].tx-bullet-chart--active) .tx-bullet-chart__row:not(.tx-bullet-chart__row--active) {
+  opacity: var(--tx-chart-bullet-dimmed-opacity);
+}
+
+:host([data-styled].tx-bullet-chart--morph) {
+  .tx-bullet-chart__bar,
+  .tx-bullet-chart__range {
+    transition:
+      x var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing),
+      width var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing);
+  }
+}
+
+:host([data-styled].tx-bullet-chart--entering) .tx-bullet-chart__bar {
+  animation: tx-bullet-chart-grow var(--tx-chart-motion-enter-duration) var(--tx-chart-motion-easing) both;
+  animation-delay: calc(var(--tx-bullet-chart-order, 0) * var(--tx-chart-motion-stagger) * 2);
+}
+
+@keyframes tx-bullet-chart-grow {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) .tx-bullet-chart__row,
+  :host([data-styled]) .tx-bullet-chart__bar,
+  :host([data-styled]) .tx-bullet-chart__range,
+  :host([data-styled]) .tx-bullet-chart__target {
+    transition: none;
+    animation: none;
+  }
+}

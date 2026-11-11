@@ -1,0 +1,1 @@
+Tab to the chart: ←/→ walk the steps and each one is announced with its change and the running total; Home / End jump to the ends. Screen readers also get a summary with the final total and a hidden table.

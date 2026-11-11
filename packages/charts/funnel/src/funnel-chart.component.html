@@ -1,0 +1,94 @@
+<tx-chart-frame
+  [height]="height()"
+  [(size)]="size"
+  [showLegend]="false"
+  [empty]="isEmpty()"
+  [loading]="loading()"
+  [toolbar]="toolbar()"
+  [exportName]="ariaLabel()"
+  emptyIcon="chart-bar"
+  [summary]="summary()"
+  [table]="dataTable()"
+  [tooltip]="tooltip()"
+  [tooltipTemplate]="tooltipTemplate()?.template"
+  [panelStyle]="tokenStyle()"
+  [parts]="passThrough()"
+  [styled]="!isUnstyled()"
+  (pointer)="onPointer($event)"
+  (navigate)="onNavigate($event)"
+  (tooltipClosed)="active.set(null)"
+>
+  @if (connectors()) {
+    @for (shape of connectorShapes(); track shape.key) {
+      <svg:path
+        class="tx-funnel-chart__connector"
+        [class]="passThrough().connector?.class"
+        [style]="passThrough().connector?.style"
+        [attr.d]="shape.path"
+        [style.fill]="shape.color"
+      />
+    }
+  }
+  @for (stage of stages(); track stage.key) {
+    <svg:rect
+      class="tx-funnel-chart__stage"
+      [class.tx-funnel-chart__stage--active]="active() === stage.index"
+      [class]="passThrough().stage?.class"
+      [style]="passThrough().stage?.style"
+      [attr.data-index]="stage.index"
+      [attr.x]="stage.x"
+      [attr.y]="stage.y"
+      [attr.width]="stage.width"
+      [attr.height]="stage.height"
+      [style.fill]="stage.color"
+      [style.--tx-funnel-chart-order]="stage.index"
+    />
+  }
+  @if (showConversion() && gapHeight() >= geometry().conversionFontSize + 2) {
+    @for (shape of connectorShapes(); track shape.key) {
+      <svg:text
+        class="tx-funnel-chart__conversion"
+        [class]="passThrough().conversion?.class"
+        [style]="passThrough().conversion?.style"
+        text-anchor="middle"
+        dominant-baseline="central"
+        [attr.x]="shape.textX"
+        [attr.y]="shape.textY"
+      >
+        {{ formatPercent()(shape.conversion) }}
+      </svg:text>
+    }
+  }
+  @for (text of labels(); track text.key) {
+    @if (showLabels()) {
+      <svg:text
+        class="tx-funnel-chart__label"
+        [class.tx-funnel-chart__label--active]="active() === text.index"
+        [class]="passThrough().label?.class"
+        [style]="passThrough().label?.style"
+        dominant-baseline="central"
+        [attr.x]="text.labelX"
+        [attr.y]="text.y"
+      >
+        {{ text.label }}
+        @if (text.label !== text.full) {
+          <svg:title>{{ text.full }}</svg:title>
+        }
+      </svg:text>
+    }
+    @if (showValues()) {
+      <svg:text
+        class="tx-funnel-chart__value"
+        [class.tx-funnel-chart__value--outside]="!text.inside"
+        [class]="passThrough().value?.class"
+        [style]="passThrough().value?.style"
+        dominant-baseline="central"
+        [attr.text-anchor]="text.inside ? 'middle' : 'start'"
+        [attr.x]="text.valueX"
+        [attr.y]="text.y"
+      >
+        {{ text.value }}
+      </svg:text>
+    }
+  }
+</tx-chart-frame>

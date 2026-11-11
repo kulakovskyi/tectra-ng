@@ -1,0 +1,1 @@
+Tab to the chart: ↑/↓ walk the steps and each one is announced with its value and conversion; Home / End jump to the ends. The summary ends with the overall conversion; screen readers also get a hidden table.

@@ -1,0 +1,1 @@
+Each step floats from the running total: increases in green, decreases in red, and `total: true` draws the running total from zero. Signed labels and dashed connectors show where the next step starts.

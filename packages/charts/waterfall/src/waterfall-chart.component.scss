@@ -1,0 +1,126 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+:host(.tx-waterfall-chart--fill) {
+  height: 100%;
+}
+
+.tx-waterfall-chart__bar {
+  fill: var(--tx-waterfall-chart-own, currentColor);
+  transform-box: fill-box;
+}
+
+.tx-waterfall-chart__bar[data-dir='up'] {
+  transform-origin: 50% 100%;
+}
+
+.tx-waterfall-chart__bar[data-dir='down'] {
+  transform-origin: 50% 0;
+}
+
+.tx-waterfall-chart__connector {
+  stroke: currentColor;
+  stroke-opacity: 0.4;
+}
+
+.tx-waterfall-chart__connectors,
+.tx-waterfall-chart__labels {
+  pointer-events: none;
+}
+
+:host([data-styled]) {
+  .tx-waterfall-chart__bar {
+    clip-path: inset(0 round var(--tx-chart-bar-radius));
+    transition: fill var(--tx-chart-motion-hover-duration) ease;
+  }
+
+  .tx-waterfall-chart__bar[data-kind='up'] {
+    fill: var(--tx-waterfall-chart-own, var(--tx-chart-waterfall-up-color));
+  }
+
+  .tx-waterfall-chart__bar[data-kind='down'] {
+    fill: var(--tx-waterfall-chart-own, var(--tx-chart-waterfall-down-color));
+  }
+
+  .tx-waterfall-chart__bar[data-kind='total'] {
+    fill: var(--tx-waterfall-chart-own, var(--tx-chart-waterfall-total-color));
+  }
+
+  .tx-waterfall-chart__connector {
+    stroke: var(--tx-chart-waterfall-connector-color);
+    stroke-opacity: 1;
+    stroke-width: var(--tx-chart-waterfall-connector-width);
+    stroke-dasharray: var(--tx-chart-waterfall-connector-dash);
+  }
+
+  .tx-waterfall-chart__label {
+    fill: var(--tx-chart-bar-outside-label-color);
+    font-size: var(--tx-chart-bar-label-font-size);
+    font-weight: var(--tx-chart-bar-label-font-weight);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+:host([data-styled].tx-waterfall-chart--active) .tx-waterfall-chart__bar:not(.tx-waterfall-chart__bar--active) {
+  opacity: var(--tx-chart-waterfall-dimmed-opacity);
+}
+
+:host([data-styled].tx-waterfall-chart--active) .tx-waterfall-chart__bar {
+  transition:
+    fill var(--tx-chart-motion-hover-duration) ease,
+    opacity var(--tx-chart-motion-hover-duration) ease;
+}
+
+:host([data-styled].tx-waterfall-chart--morph) .tx-waterfall-chart__bar {
+  transition:
+    fill var(--tx-chart-motion-hover-duration) ease,
+    opacity var(--tx-chart-motion-hover-duration) ease,
+    x var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing),
+    y var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing),
+    width var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing),
+    height var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing);
+}
+
+:host([data-styled].tx-waterfall-chart--entering) {
+  .tx-waterfall-chart__bar {
+    animation: tx-waterfall-chart-grow var(--tx-chart-motion-enter-duration) var(--tx-chart-motion-easing) both;
+    animation-delay: calc(var(--tx-waterfall-chart-order, 0) * var(--tx-chart-motion-stagger) * 2);
+  }
+
+  .tx-waterfall-chart__connectors,
+  .tx-waterfall-chart__labels {
+    animation: tx-waterfall-chart-fade var(--tx-chart-motion-enter-duration) ease both;
+  }
+}
+
+@keyframes tx-waterfall-chart-grow {
+  from {
+    transform: scaleY(0);
+  }
+
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes tx-waterfall-chart-fade {
+  0%,
+  60% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) .tx-waterfall-chart__bar,
+  :host([data-styled]) .tx-waterfall-chart__connectors,
+  :host([data-styled]) .tx-waterfall-chart__labels {
+    transition: none;
+    animation: none;
+  }
+}
