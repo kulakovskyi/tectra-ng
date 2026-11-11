@@ -41,6 +41,7 @@ export const INSTALL_PACKAGES: InstallPackage[] = [
   { name: '@tectra-ng/utils', title: 'Utilities', text: 'Date, relative time, plural and file size pipes; debounced input, copy, in view and drag scroll directives; validators, filter state, HTTP params, retries and polling.' },
   { name: '@tectra-ng/qr', title: 'QR codes', text: 'Own encoder in plain TypeScript, no dependencies.' },
   { name: '@tectra-ng/editor', title: 'Rich text editor', text: 'Its own package — tectra-ng does not include it.', separate: true },
+  { name: '@tectra-ng/code-editor', title: 'Code editor', text: 'Code editor, diff and highlighted code. Its own package — tectra-ng does not include it.', separate: true },
 ];
 
 export const INSTALL_REQUIREMENTS: InstallNote[] = [
@@ -124,6 +125,22 @@ providers: [
 })
 export class NoteField {
   readonly text = signal('<p>Hello</p>');
+}`,
+  },
+  {
+    icon: 'code',
+    title: 'Code editor',
+    file: 'template-field.ts',
+    text: 'Install it next to the kit; it works with forms and renders highlighted code on the server.',
+    language: 'typescript',
+    code: `import { TxCodeEditor } from '@tectra-ng/code-editor';
+
+@Component({
+  imports: [TxCodeEditor, ReactiveFormsModule],
+  template: \`<tx-code-editor language="html" [formControl]="markup" height="400px" />\`,
+})
+export class TemplateField {
+  readonly markup = new FormControl('<h1>Hello</h1>');
 }`,
   },
   {

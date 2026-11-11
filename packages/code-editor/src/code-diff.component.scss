@@ -1,0 +1,128 @@
+@use './code-surface' as surface;
+
+$syntax-types: comment, quote, keyword, literal, string, number, regexp, type, delimiter, tag, tag-delimiter, meta, attribute, attribute-value, value, key, heading, link, code;
+
+.tx-code-diff {
+  position: relative;
+  display: flex;
+  min-width: 0;
+}
+
+.tx-code-diff__pane {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100%;
+}
+
+.tx-code-diff[data-styled] {
+  @include surface.frame(code-diff);
+  @include surface.editor(code-diff, tx-code-diff--numbers);
+  @include surface.static(code-diff, tx-code-diff, tx-code-diff--numbers, tx-code-diff--wrap);
+
+  &.tx-code-diff--split .tx-code-diff__pane--original {
+    border-inline-end: 1px solid var(--tx-code-diff-split-border-color);
+  }
+
+  .tx-code-diff__signs .cm-gutterElement,
+  .tx-code-diff__static-sign {
+    box-sizing: border-box;
+    flex: none;
+    width: var(--tx-code-diff-gutter-marker-width);
+    text-align: center;
+    user-select: none;
+  }
+
+  .tx-code-diff__static-number {
+    padding-inline-end: 0;
+  }
+
+  .cm-editor .cm-lineNumbers .cm-gutterElement {
+    padding-inline-end: 0;
+  }
+
+  &,
+  &:not(.tx-code-diff--numbers) {
+    --tx-code-line-start: calc(var(--tx-code-diff-gutter-gap) - var(--tx-code-diff-gutter-marker-width));
+  }
+
+  .tx-code-diff__row {
+    padding-inline-start: var(--tx-code-line-start);
+  }
+
+  .tx-code-diff__row.tx-code-guides {
+    @include surface.guides;
+  }
+
+  &.tx-code-diff--wrap .tx-code-diff__row[style*='--tx-code-wrap-indent'] {
+    padding-inline-start: calc(var(--tx-code-line-start) + var(--tx-code-wrap-indent));
+    text-indent: calc(-1 * var(--tx-code-wrap-indent));
+  }
+
+  .tx-code-diff__sign--inserted {
+    color: var(--tx-code-diff-inserted-marker-color);
+  }
+
+  .tx-code-diff__sign--removed {
+    color: var(--tx-code-diff-removed-marker-color);
+  }
+
+  .tx-code-diff__static-line.tx-code-diff__line--inserted .tx-code-diff__static-sign {
+    color: var(--tx-code-diff-inserted-marker-color);
+  }
+
+  .tx-code-diff__static-line.tx-code-diff__line--removed .tx-code-diff__static-sign {
+    color: var(--tx-code-diff-removed-marker-color);
+  }
+
+  .cm-scroller .cm-content .tx-code-diff__line--inserted,
+  .tx-code-diff__static-line.tx-code-diff__line--inserted .tx-code-diff__static-text {
+    background-color: var(--tx-code-diff-inserted-line-background);
+  }
+
+  .cm-scroller .cm-content .tx-code-diff__line--removed,
+  .tx-code-diff__row.tx-code-diff__line--removed,
+  .tx-code-diff__static-line.tx-code-diff__line--removed .tx-code-diff__static-text {
+    background-color: var(--tx-code-diff-removed-line-background);
+  }
+
+  .tx-code-diff__line--inserted,
+  .tx-code-diff__line--removed {
+    @each $type in $syntax-types {
+      .tx-code-tok-#{$type} {
+        color: color-mix(in srgb, var(--tx-code-syntax-#{$type}) var(--tx-code-diff-syntax-mix), var(--tx-code-diff-syntax-shade));
+      }
+    }
+  }
+
+  .tx-code-diff__text--inserted {
+    background: var(--tx-code-diff-inserted-text-background);
+  }
+
+  .tx-code-diff__text--removed {
+    background: var(--tx-code-diff-removed-text-background);
+  }
+
+  .tx-code-diff__row {
+    min-height: var(--tx-code-diff-line-height);
+    padding-inline-end: var(--tx-code-diff-padding-inline-end);
+    white-space: pre;
+  }
+
+  &.tx-code-diff--wrap .tx-code-diff__row {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .tx-code-diff__filler,
+  .tx-code-diff__static-line--filler .tx-code-diff__static-text {
+    background-color: var(--tx-code-diff-filler-background);
+  }
+
+  .tx-code-diff__filler {
+    height: calc(var(--tx-code-diff-line-height) * var(--tx-code-diff-filler-lines, 1));
+  }
+
+  .cm-editor .cm-content .cm-activeLine.tx-code-diff__line--inserted {
+    background-color: var(--tx-code-diff-inserted-line-background);
+  }
+}

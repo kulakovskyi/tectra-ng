@@ -65,7 +65,7 @@ What it is, in one or two sentences.
 - `tokens` — registry keys from `COMPONENT_TOKENS` shown on the Theming tab.
 - `examples` — order on the page; title = id in title case (`more-presets` → "More presets").
 - `import` — optional: the name in the import line when it is not `Tx<Title>` (a service-only page: `import: TxConfirmService`).
-- `source` / `package` — optional, for components outside `packages/ui`: the folder whose `README.md` and `src/` are read (`source: packages/editor`) and the import path (`package: @tectra-ng/editor`).
+- `source` / `package` — optional, for components outside `packages/ui`: the folder whose `README.md` and `src/` are read (`source: packages/editor`) and the import path (`package: @tectra-ng/editor`). `readme` — optional: another README file for the API tables when two pages share one `source` (`readme: packages/code-editor/docs/code-diff.md`).
 
 ## 3. Examples
 

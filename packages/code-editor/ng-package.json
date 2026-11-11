@@ -1,0 +1,6 @@
+{
+  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../dist/packages/code-editor",
+  "lib": { "entryFile": "index.ts" },
+  "allowedNonPeerDependencies": ["@codemirror/state", "@codemirror/view"]
+}

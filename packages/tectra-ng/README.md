@@ -36,4 +36,10 @@ The rich text editor is not part of `tectra-ng` — it carries the ProseMirror e
 npm i @tectra-ng/editor
 ```
 
+The code editor is not part of `tectra-ng` either — it carries the CodeMirror core:
+
+```bash
+npm i @tectra-ng/code-editor
+```
+
 Docs and examples: [tectra-ng.com](https://tectra-ng.com).

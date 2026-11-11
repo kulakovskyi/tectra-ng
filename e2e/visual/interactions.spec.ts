@@ -18,6 +18,22 @@ test('select panel is opaque and selects with the keyboard', async ({ page }) =>
   await expect(trigger).toContainText('Lviv');
 });
 
+test('example anchors stay on the page and put the example in the address', async ({ page }) => {
+  await page.goto('/components/code-editor');
+  const title = page.locator('#form .example__anchor');
+  await expect(title).toHaveAttribute('href', '/components/code-editor#form');
+  await expect(page.locator('.toc__link', { hasText: 'Search' })).toHaveAttribute('href', '/components/code-editor#search');
+  await title.click();
+  await expect(page).toHaveURL(/\/components\/code-editor#form$/);
+  await expect(page.locator('main h1').first()).toHaveText('Code editor');
+  await page.locator('.toc__link', { hasText: 'Search' }).click();
+  await expect(page).toHaveURL(/\/components\/code-editor#search$/);
+  await expect.poll(() => page.locator('#search').evaluate((element) => Math.round(element.getBoundingClientRect().top))).toBeLessThan(450);
+  expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
+  await page.reload();
+  await expect(page.locator('main h1').first()).toHaveText('Code editor');
+});
+
 test('example code opens without moving the preview', async ({ page }) => {
   await page.goto('/components/button');
   const example = page.locator('docs-example-frame').first();

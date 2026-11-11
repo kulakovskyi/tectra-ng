@@ -64,6 +64,7 @@ export const INTRO_PACKAGES: IntroPackage[] = [
   { name: '@tectra-ng/charts', text: 'SVG charts without a chart library: line, column, combo, scatter, pie, radar, radial bar, gauge, funnel, waterfall, bullet, candlestick, box plot, range area, gantt, sankey, sunburst, bar list, segmented bar, heatmap, treemap, rank and org charts, rendered on the server.', path: '/components/line-chart' },
   { name: '@tectra-ng/qr', text: 'QR codes in plain TypeScript with no dependencies.', path: '/components/qr-code' },
   { name: '@tectra-ng/editor', text: 'The rich text editor. Installed on its own — it carries its engine core.', path: '/components/editor', own: true },
+  { name: '@tectra-ng/code-editor', text: 'The code editor, diff and highlighted code. Installed on its own — it carries its engine core.', path: '/components/code-editor', own: true },
 ];
 
 export const INTRO_PRINCIPLES: IntroPrinciple[] = [
@@ -72,5 +73,5 @@ export const INTRO_PRINCIPLES: IntroPrinciple[] = [
   { icon: 'sliders-h', title: 'dt · pt · unstyled', text: 'Restyle one instance, one part or the whole app — or drop our styles.' },
   { icon: 'server', title: 'Rendered on the server', text: 'Every component prerenders and hydrates without a jump.' },
   { icon: 'shield', title: 'Accessible by default', text: 'Keyboard maps, ARIA and focus rings, checked by axe in both themes.' },
-  { icon: 'box', title: 'Light on dependencies', text: 'Angular and its CDK only. The editor alone brings an engine core.' },
+  { icon: 'box', title: 'Light on dependencies', text: 'Angular and its CDK only. The two editors alone bring an engine core.' },
 ];

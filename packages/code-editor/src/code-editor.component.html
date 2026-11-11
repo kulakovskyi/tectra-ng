@@ -1,0 +1,180 @@
+@if (diffMode()) {
+  <tx-code-diff
+    class="tx-code-editor__diff"
+    [original]="originalValue()"
+    [value]="value()"
+    [language]="language()"
+    [view]="diffView()"
+    [readOnly]="readOnly() || isDisabled()"
+    [lineNumbers]="lineNumbers()"
+    [wordWrap]="wordWrap()"
+    [indentGuides]="indentGuides()"
+    [ariaLabel]="ariaLabel()"
+    [unstyled]="isUnstyled()"
+    height="100%"
+    (valueChange)="onDiffValue($event)"
+    (changed)="diffChanged.emit($event)"
+  />
+} @else {
+  <div #mount class="tx-code-editor__mount" [class]="passThrough().editor?.class" [style]="passThrough().editor?.style">
+    @if (!ready()) {
+      <div
+        class="tx-code-editor__static"
+        role="textbox"
+        aria-multiline="true"
+        aria-readonly="true"
+        [attr.aria-label]="ariaLabel() ?? (ariaLabelledBy() ? null : t().codeEditorLabel)"
+        [attr.aria-labelledby]="ariaLabelledBy() ?? null"
+      >
+        @for (line of staticLines(); track $index) {
+          <div class="tx-code-editor__static-line">
+            @if (lineNumbers()) {
+              <span class="tx-code-editor__static-number" aria-hidden="true">{{ line.number }}</span>
+            }
+            <span
+              class="tx-code-editor__static-text"
+              [class.tx-code-guides]="indentGuides() && line.guides > 0"
+              [style.--tx-code-guides]="indentGuides() && line.guides > 0 ? line.guides : null"
+              [style.--tx-code-guide-step]="indentGuides() ? staticTabSize() + 'ch' : null"
+              [style.--tx-code-wrap-indent]="wordWrap() ? line.indent : null"
+              >@for (segment of line.segments; track $index) {<span [class]="segment.className">{{ segment.text }}</span>}@if (
+                staticEmpty() && placeholder()
+              ) {<span class="tx-code-editor__static-placeholder">{{ placeholder() }}</span>}</span
+            >
+          </div>
+        }
+      </div>
+    }
+  </div>
+  @if (searchOpen()) {
+    <div class="tx-code-editor__search" role="search" [class]="passThrough().search?.class" [style]="passThrough().search?.style">
+      <button
+        txButton
+        type="button"
+        text
+        plain
+        size="small"
+        class="tx-code-editor__search-expand"
+        [icon]="replaceOpen() ? 'chevron-down' : 'chevron-right'"
+        [attr.aria-label]="t().codeSearchToggleReplace"
+        [attr.aria-expanded]="replaceOpen()"
+        (click)="toggleReplace()"
+      ></button>
+      <div class="tx-code-editor__search-rows">
+        <div class="tx-code-editor__search-row">
+          <div class="tx-code-editor__search-field">
+            <input
+              #findInput
+              txInput
+              size="small"
+              class="tx-code-editor__search-input"
+              [class]="passThrough().searchInput?.class"
+              [invalid]="!searchResult().valid"
+              [value]="query()"
+              [placeholder]="t().codeSearchFind"
+              [attr.aria-label]="t().codeSearchFind"
+              (input)="onQuery($any($event.target).value)"
+              (keydown)="onSearchKeydown($event, 'find')"
+            />
+            <div class="tx-code-editor__search-options">
+              <button
+                type="button"
+                class="tx-code-editor__search-option"
+                [attr.aria-pressed]="matchCase()"
+                [attr.aria-label]="t().codeSearchMatchCase"
+                [attr.title]="t().codeSearchMatchCase"
+                (click)="toggleOption('matchCase')"
+              >
+                Aa
+              </button>
+              <button
+                type="button"
+                class="tx-code-editor__search-option tx-code-editor__search-option--word"
+                [attr.aria-pressed]="wholeWord()"
+                [attr.aria-label]="t().codeSearchWholeWord"
+                [attr.title]="t().codeSearchWholeWord"
+                (click)="toggleOption('wholeWord')"
+              >
+                ab
+              </button>
+              <button
+                type="button"
+                class="tx-code-editor__search-option"
+                [attr.aria-pressed]="regexp()"
+                [attr.aria-label]="t().codeSearchRegexp"
+                [attr.title]="t().codeSearchRegexp"
+                (click)="toggleOption('regexp')"
+              >
+                .*
+              </button>
+            </div>
+          </div>
+          <span class="tx-code-editor__search-count" aria-live="polite">{{ countText() }}</span>
+          <button
+            txButton
+            type="button"
+            text
+            plain
+            size="small"
+            icon="arrow-up"
+            [disabled]="!searchResult().matches.length"
+            [attr.aria-label]="t().codeSearchPrevious"
+            (click)="findPrevious()"
+          ></button>
+          <button
+            txButton
+            type="button"
+            text
+            plain
+            size="small"
+            icon="arrow-down"
+            [disabled]="!searchResult().matches.length"
+            [attr.aria-label]="t().codeSearchNext"
+            (click)="findNext()"
+          ></button>
+          <button txButton type="button" text plain size="small" icon="times" [attr.aria-label]="t().codeSearchClose" (click)="closeSearch()"></button>
+        </div>
+        @if (replaceOpen()) {
+          <div class="tx-code-editor__search-row">
+            <div class="tx-code-editor__search-field">
+              <input
+                #replaceInput
+                txInput
+                size="small"
+                class="tx-code-editor__search-input"
+                [value]="replacement()"
+                [placeholder]="t().codeSearchReplace"
+                [attr.aria-label]="t().codeSearchReplace"
+                [readOnly]="readOnly() || isDisabled()"
+                (input)="replacement.set($any($event.target).value)"
+                (keydown)="onSearchKeydown($event, 'replace')"
+              />
+            </div>
+            <button
+              txButton
+              type="button"
+              text
+              plain
+              size="small"
+              icon="pen-line"
+              [disabled]="!searchResult().matches.length || readOnly() || isDisabled()"
+              [attr.aria-label]="t().codeSearchReplace"
+              (click)="replaceCurrent()"
+            ></button>
+            <button
+              txButton
+              type="button"
+              text
+              plain
+              size="small"
+              icon="list-check"
+              [disabled]="!searchResult().matches.length || readOnly() || isDisabled()"
+              [attr.aria-label]="t().codeSearchReplaceAll"
+              (click)="replaceAll()"
+            ></button>
+          </div>
+        }
+      </div>
+    </div>
+  }
+}

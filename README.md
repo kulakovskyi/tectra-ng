@@ -9,12 +9,15 @@ npm install tectra-ng          # everything at one version
 npm install @tectra-ng/ui      # or only the components: core, themes, tokens and icons come with them
 npm install @tectra-ng/blocks  # or only the ready page blocks (filters panel, page header, layouts …); part of tectra-ng
 npm install @tectra-ng/editor  # the rich text editor — its own package, not part of tectra-ng
+npm install @tectra-ng/code-editor  # the code editor and diff — its own package, not part of tectra-ng
 npm install @tectra-ng/qr      # QR codes without Angular or any other dependency; part of tectra-ng
 npm install @tectra-ng/charts  # SVG charts without a chart library; part of tectra-ng
 npm install @tectra-ng/utils   # pipes, directives, validators and helpers next to the components; part of tectra-ng
 ```
 
 The rich text editor (`@tectra-ng/editor`) is installed on its own, also next to `tectra-ng`: it brings the ProseMirror engine with it, and apps without an editor should not carry it.
+
+The code editor (`@tectra-ng/code-editor`) is installed on its own too: it brings the CodeMirror core (state and view). It edits HTML, CSS, JavaScript, TypeScript, JSON and Markdown with colours from the tokens, shows an inline or side by side diff, and `@tectra-ng/code-editor/highlight` renders highlighted code without the engine.
 
 The charts (`@tectra-ng/charts`) are drawn as SVG by the components themselves — no chart library, no dependencies — render on the server and take their colours from the tokens. One entry point per chart: `@tectra-ng/charts/line`, `/column`, `/combo`, `/scatter`, `/pie`, `/radar`, `/radial-bar`, `/gauge`, `/funnel`, `/waterfall`, `/bullet`, `/candlestick`, `/boxplot`, `/range-area`, `/gantt`, `/sankey`, `/sunburst`, `/bar-list`, `/segmented-bar`, `/heatmap`, `/treemap`, `/rank-line`, `/org-chart`, and `/core` for your own charts (with SVG / PNG / CSV export). `tectra-ng` includes them.
 
@@ -52,6 +55,7 @@ Plan of what moves in next and in which order: [ROADMAP.md](ROADMAP.md).
 | `packages/flags` | optional country flags as SVG, rectangle and circle, loaded one by one | npm `@tectra-ng/flags` |
 | `packages/ui` | components, one entry point each | npm `@tectra-ng/ui/<component>` |
 | `packages/editor` | rich text editor on the ProseMirror core (`@tectra-ng/editor`) and the renderer for saved text (`@tectra-ng/editor/content`); install it separately | npm `@tectra-ng/editor` |
+| `packages/code-editor` | code editor on the CodeMirror core (`@tectra-ng/code-editor`: editor, search, diff) and the static highlighter (`@tectra-ng/code-editor/highlight`); install it separately | npm `@tectra-ng/code-editor` |
 | `packages/charts` | SVG charts without a chart library: line and area, column and bar, combo, scatter and bubble, pie and donut, radar, radial bar, gauge, funnel, waterfall, bullet, candlestick, box plot, range area, gantt, sankey, sunburst, bar list, segmented bar, heatmap, treemap, rank chart and org chart on one core (scales, axes, legend, tooltip, export, accessibility), one entry point each; part of `tectra-ng` | npm `@tectra-ng/charts/<chart>` |
 | `packages/utils` | utilities next to the components: pipes, directives, validators, filter state, HTTP helpers, polling, clock; one entry point each; part of `tectra-ng` | npm `@tectra-ng/utils/<utility>` |
 | `packages/qr` | QR codes without a framework: encoder (versions 1–40, levels L–H), SVG paths, styled SVG and PNG output; part of `tectra-ng` | npm `@tectra-ng/qr` |
@@ -64,7 +68,7 @@ Plan of what moves in next and in which order: [ROADMAP.md](ROADMAP.md).
 ## Dependency direction
 
 ```
-tokens → themes → core → ui → editor, charts, utils → blocks ← qr
+tokens → themes → core → ui → editor, code-editor, charts, utils → blocks ← qr
                           ↓      ↓
                  apps/docs, apps/sandbox, e2e/visual
 ```

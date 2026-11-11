@@ -6,6 +6,7 @@ export const CATEGORY_ICONS: Record<string, TxIconName> = {
   Actions: 'bolt',
   Blocks: 'objects-column',
   Charts: 'chart-line',
+  Code: 'code',
   Data: 'table',
   Display: 'eye',
   Feedback: 'comment',

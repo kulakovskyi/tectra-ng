@@ -1,0 +1,8 @@
+<pre
+  class="tx-code-highlight__code"
+  tabindex="0"
+  role="region"
+  [attr.aria-label]="label()"
+  [class]="passThrough().content?.class"
+  [style]="passThrough().content?.style"
+><code>@for (line of lines(); track $index) {<span class="tx-code-highlight__line" [class]="passThrough().line?.class" [style]="passThrough().line?.style">@if (lineNumbers()) {<span class="tx-code-highlight__number" aria-hidden="true" [class]="passThrough().gutter?.class" [style]="passThrough().gutter?.style">{{ line.number }}</span>}<span class="tx-code-highlight__text" [class.tx-code-guides]="indentGuides() && line.guides > 0" [style.--tx-code-guides]="indentGuides() && line.guides > 0 ? line.guides : null" [style.--tx-code-guide-step]="tabSize() + 'ch'" [style.--tx-code-wrap-indent]="wordWrap() ? line.indent : null">@for (segment of line.segments; track $index) {<span [class]="segment.className">{{ segment.text }}</span>}{{ '\n' }}</span></span>}</code></pre>

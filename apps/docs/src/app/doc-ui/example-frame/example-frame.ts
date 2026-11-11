@@ -1,8 +1,10 @@
-import { NgComponentOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Type, computed, input, signal } from '@angular/core';
+import { DOCUMENT, NgComponentOutlet } from '@angular/common';
+import { ChangeDetectionStrategy, Component, Type, computed, inject, input, signal } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { TxButton } from '@tectra-ng/ui/button';
 import { DocsCopyButton } from '../copy/copy-button';
 import { DocExample } from '../../types/doc-component.interface';
+import { jumpToAnchor, routePath } from '../../page-scroll';
 
 @Component({
   selector: 'docs-example-frame',
@@ -20,6 +22,14 @@ export class ExampleFrame {
   isTemplateExpanded = signal(false);
   activeFile = computed(() => this.example().files[this.activeFileIndex()]);
   lineCount = computed(() => this.activeFile().source.split('\n').length);
+
+  private readonly document = inject(DOCUMENT);
+  private readonly path = routePath(inject(ActivatedRoute));
+  readonly anchorHref = computed(() => `${this.path}#${this.example().id}`);
+
+  jump(event: MouseEvent): void {
+    jumpToAnchor(event, this.document, this.anchorHref(), this.example().id);
+  }
 
   toggleCode(): void {
     this.isCodeVisible.update((visible) => !visible);

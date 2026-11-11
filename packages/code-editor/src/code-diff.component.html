@@ -1,0 +1,44 @@
+<ng-template #rowsTemplate let-rows>
+  <div class="tx-code-diff__static" role="presentation">
+    @for (row of rows; track $index) {
+      <div
+        class="tx-code-diff__static-line"
+        [class.tx-code-diff__line--inserted]="row.kind === 'inserted'"
+        [class.tx-code-diff__line--removed]="row.kind === 'removed'"
+        [class.tx-code-diff__static-line--filler]="row.kind === 'filler'"
+      >
+        @if (lineNumbers()) {
+          <span class="tx-code-diff__static-number" aria-hidden="true">{{ row.number }}</span>
+        }
+        <span class="tx-code-diff__static-sign" aria-hidden="true">{{ row.kind === 'inserted' ? '+' : row.kind === 'removed' ? '−' : '' }}</span>
+        <span
+          class="tx-code-diff__static-text"
+          [class.tx-code-guides]="indentGuides() && row.guides > 0"
+          [style.--tx-code-guides]="indentGuides() && row.guides > 0 ? row.guides : null"
+          [style.--tx-code-guide-step]="indentGuides() ? guideStep() : null"
+          [style.--tx-code-wrap-indent]="wordWrap() && view() === 'inline' ? row.indent : null"
+          >@for (segment of row.segments; track $index) {<span [class]="segment.className">{{ segment.text }}</span>}</span
+        >
+      </div>
+    }
+  </div>
+</ng-template>
+
+@if (view() === 'split') {
+  <div #originalMount class="tx-code-diff__pane tx-code-diff__pane--original" [class]="passThrough().original?.class" [style]="passThrough().original?.style">
+    @if (!ready()) {
+      <ng-container *ngTemplateOutlet="rowsTemplate; context: { $implicit: staticSplit().original }" />
+    }
+  </div>
+  <div #modifiedMount class="tx-code-diff__pane tx-code-diff__pane--modified" [class]="passThrough().modified?.class" [style]="passThrough().modified?.style">
+    @if (!ready()) {
+      <ng-container *ngTemplateOutlet="rowsTemplate; context: { $implicit: staticSplit().modified }" />
+    }
+  </div>
+} @else {
+  <div #modifiedMount class="tx-code-diff__pane" [class]="passThrough().modified?.class" [style]="passThrough().modified?.style">
+    @if (!ready()) {
+      <ng-container *ngTemplateOutlet="rowsTemplate; context: { $implicit: staticInline() }" />
+    }
+  </div>
+}

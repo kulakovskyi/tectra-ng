@@ -1,0 +1,159 @@
+@mixin guides {
+  background-image: repeating-linear-gradient(to right, var(--tx-code-syntax-indent-guide) 0 1px, transparent 1px var(--tx-code-guide-step));
+  background-position: var(--tx-code-line-start) 0;
+  background-repeat: no-repeat;
+  background-size: calc(var(--tx-code-guides) * var(--tx-code-guide-step)) 100%;
+}
+
+@mixin frame($p) {
+  box-sizing: border-box;
+  overflow: hidden;
+  border: var(--tx-#{$p}-border-width) solid var(--tx-#{$p}-border-color);
+  border-radius: var(--tx-#{$p}-border-radius);
+  background: var(--tx-#{$p}-background);
+  color: var(--tx-#{$p}-color);
+  font-family: var(--tx-#{$p}-font-family);
+  font-size: var(--tx-#{$p}-font-size);
+  line-height: var(--tx-#{$p}-line-height);
+}
+
+@mixin editor($p, $numbers-class) {
+  .cm-editor {
+    height: 100%;
+    background: transparent;
+    color: inherit;
+
+    &.cm-focused {
+      outline: none;
+    }
+  }
+
+  .cm-scroller {
+    font-family: inherit;
+    line-height: inherit;
+  }
+
+  .cm-content {
+    padding-block: var(--tx-#{$p}-padding-block);
+    caret-color: var(--tx-code-editor-cursor-color);
+    tab-size: var(--tx-#{$p}-tab-size);
+  }
+
+  --tx-code-line-start: 0px;
+
+  &:not(.#{$numbers-class}) {
+    --tx-code-line-start: var(--tx-#{$p}-padding-inline-end);
+  }
+
+  .cm-scroller .cm-content .cm-line {
+    padding: 0 var(--tx-#{$p}-padding-inline-end) 0 var(--tx-code-line-start);
+  }
+
+  .cm-editor .cm-gutters {
+    border: none;
+    background: var(--tx-#{$p}-gutter-background);
+    color: var(--tx-#{$p}-gutter-color);
+  }
+
+  .cm-editor .cm-lineNumbers .cm-gutterElement {
+    box-sizing: content-box;
+    min-width: var(--tx-#{$p}-gutter-min-digits);
+    padding: 0 var(--tx-#{$p}-gutter-gap) 0 var(--tx-#{$p}-gutter-padding-start);
+    text-align: right;
+  }
+
+  .cm-editor .cm-activeLineGutter {
+    background: transparent;
+    color: var(--tx-#{$p}-gutter-active-color);
+  }
+
+  .cm-editor .cm-content .cm-activeLine {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 var(--tx-code-editor-active-line-border-width) var(--tx-code-editor-active-line-border-color);
+  }
+
+  .cm-editor .cm-cursorLayer .cm-cursor {
+    border-left: var(--tx-code-editor-cursor-width) solid var(--tx-code-editor-cursor-color);
+  }
+
+  .cm-editor .cm-scroller .cm-selectionLayer .cm-selectionBackground {
+    background: var(--tx-code-editor-selection-inactive-background);
+  }
+
+  .cm-editor.cm-focused .cm-scroller .cm-selectionLayer .cm-selectionBackground {
+    background: var(--tx-code-editor-selection-background);
+  }
+
+  .cm-editor .cm-placeholder {
+    color: var(--tx-code-editor-placeholder-color);
+  }
+
+  .cm-scroller .cm-content .cm-line.tx-code-guides {
+    @include guides;
+  }
+
+  .cm-scroller .cm-content .cm-line.tx-code-wrap-indent {
+    padding-inline-start: calc(var(--tx-code-line-start) + var(--tx-code-wrap-indent));
+    text-indent: calc(-1 * var(--tx-code-wrap-indent));
+  }
+
+  .tx-code-editor__bracket {
+    border-radius: 1px;
+    background: var(--tx-code-editor-bracket-background);
+    outline: 1px solid var(--tx-code-editor-bracket-border-color);
+  }
+}
+
+@mixin static($p, $block, $numbers-class, $wrap-class) {
+  .#{$block}__static {
+    box-sizing: border-box;
+    min-height: 100%;
+    height: 100%;
+    padding-block: var(--tx-#{$p}-padding-block);
+    overflow: auto;
+    tab-size: var(--tx-#{$p}-tab-size);
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  .#{$block}__static-line {
+    display: flex;
+    min-height: var(--tx-#{$p}-line-height);
+  }
+
+  .#{$block}__static-number {
+    position: sticky;
+    left: 0;
+    flex: none;
+    box-sizing: content-box;
+    min-width: var(--tx-#{$p}-gutter-min-digits);
+    padding: 0 var(--tx-#{$p}-gutter-gap) 0 var(--tx-#{$p}-gutter-padding-start);
+    background: var(--tx-#{$p}-gutter-background);
+    color: var(--tx-#{$p}-gutter-color);
+    text-align: right;
+    user-select: none;
+  }
+
+  .#{$block}__static-text {
+    flex: 1 1 auto;
+    padding-inline: var(--tx-code-line-start) var(--tx-#{$p}-padding-inline-end);
+    white-space: pre;
+
+    &.tx-code-guides {
+      @include guides;
+    }
+  }
+
+  &.#{$wrap-class} .#{$block}__static-text {
+    min-width: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+
+    &[style*='--tx-code-wrap-indent'] {
+      padding-inline-start: calc(var(--tx-code-line-start) + var(--tx-code-wrap-indent));
+      text-indent: calc(-1 * var(--tx-code-wrap-indent));
+    }
+  }
+}

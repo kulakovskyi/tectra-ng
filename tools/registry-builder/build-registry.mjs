@@ -221,7 +221,8 @@ async function buildComponent(name) {
   const { meta, body } = parseFrontMatter(read(join(dir, 'overview.md')));
   const title = body.match(/^#\s+(.+)/m)?.[1] ?? titleCase(name);
   const packageDir = meta.source ? join(root, meta.source) : join(root, 'packages/ui', name);
-  const tables = parseReadmeTables(read(join(packageDir, 'README.md')));
+  const readmePath = meta.readme ? join(root, meta.readme) : join(packageDir, 'README.md');
+  const tables = parseReadmeTables(read(readmePath));
   const { members: ownMembers, tokens, selector } = readSource(packageDir);
   const members = { ...coreMembers, ...ownMembers };
   const withSource = (rows) =>
@@ -242,7 +243,7 @@ async function buildComponent(name) {
   return {
     name,
     title,
-    readme: join(packageDir, 'README.md').slice(root.length),
+    readme: readmePath.slice(root.length),
     category: meta.category ?? 'Other',
     summary: plainText(firstParagraph(body)),
     selector,
