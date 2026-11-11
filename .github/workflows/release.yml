@@ -26,6 +26,7 @@ jobs:
   release:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     environment:
       name: npm
       url: https://www.npmjs.com/package/tectra-ng
