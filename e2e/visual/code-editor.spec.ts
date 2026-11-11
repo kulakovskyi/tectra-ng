@@ -64,6 +64,20 @@ test.describe('code editor', () => {
     expect(await page.evaluate(() => window.scrollY)).toBe(0);
   });
 
+  test('the form saves without reloading the page and shows the JSON error', async ({ page }) => {
+    const root = example(page, 'code-editor', 'form');
+    const url = page.url();
+    await root.getByRole('button', { name: 'Save' }).click();
+    await expect(root.locator('.saved')).toHaveText('Saved: {"theme":"dark","pageSize":25}');
+    expect(page.url()).toBe(url);
+    await root.locator('.cm-content').click();
+    await page.keyboard.press('ControlOrMeta+a');
+    await page.keyboard.type('[1');
+    await root.getByRole('button', { name: 'Save' }).click();
+    await expect(root.locator('tx-code-editor')).toHaveClass(/tx-code-editor--invalid/);
+    await expect(root.getByText('Write a JSON object')).toBeVisible();
+  });
+
   test('Escape and then Tab moves focus out of the editor', async ({ page }) => {
     const root = example(page, 'code-editor', 'options');
     const content = root.locator('.cm-content');

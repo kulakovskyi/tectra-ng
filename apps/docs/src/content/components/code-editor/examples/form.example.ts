@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
+  FormGroup,
   ReactiveFormsModule,
   ValidationErrors,
   Validators,
@@ -23,7 +24,7 @@ function jsonObject(control: AbstractControl<string | null>): ValidationErrors |
   selector: 'code-editor-form-example',
   imports: [TxCodeEditor, TxButton, TxField, ReactiveFormsModule],
   template: `
-    <form class="wrap" (ngSubmit)="save()">
+    <form class="wrap" [formGroup]="form" (ngSubmit)="save()">
       <tx-field
         label="Settings"
         required
@@ -35,7 +36,7 @@ function jsonObject(control: AbstractControl<string | null>): ValidationErrors |
           language="json"
           height="200px"
           ariaLabel="Settings"
-          [formControl]="settings"
+          formControlName="settings"
         />
       </tx-field>
       <div class="actions">
@@ -75,6 +76,7 @@ export default class CodeEditorFormExample {
     Validators.required,
     jsonObject,
   ]);
+  readonly form = new FormGroup({ settings: this.settings });
   readonly saved = signal('');
 
   save(): void {
