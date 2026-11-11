@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://tectra-ng.com
+    about: Every component with examples and its API.
+  - name: Questions
+    url: https://github.com/kulakovskyi/tectra-ng/discussions
+    about: Ask how to do something with tectra.
+  - name: Security problem
+    url: https://github.com/kulakovskyi/tectra-ng/security/advisories/new
+    about: Report a vulnerability privately, not in a public issue.

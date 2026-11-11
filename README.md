@@ -1,5 +1,7 @@
 # tectra
 
+[![npm](https://img.shields.io/npm/v/tectra-ng)](https://www.npmjs.com/package/tectra-ng) [![ci](https://github.com/kulakovskyi/tectra-ng/actions/workflows/ci.yml/badge.svg)](https://github.com/kulakovskyi/tectra-ng/actions/workflows/ci.yml) [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/kulakovskyi/tectra-ng/badge)](https://scorecard.dev/viewer/?uri=github.com/kulakovskyi/tectra-ng)
+
 Open-source Angular UI kit: tokens, themes, ~70 components and ready blocks for consoles and admin apps.
 
 ## Install
