@@ -23,5 +23,11 @@ Part of `tectra-ng`. One entry point per utility, so you only bundle what you im
 | `@tectra-ng/utils/clock` | `TxClock` — a shared `now` signal, countdowns as signals, `isInFuture` |
 | `@tectra-ng/utils/go-back` | `txGoBack` — back in history, or a fallback route when the page was opened directly |
 | `@tectra-ng/utils/currency` | `txCurrencySymbol` — the sign, code or name of any ISO currency in the tectra locale |
+| `@tectra-ng/utils/in-view` | `txInView` (enter / leave classes, `entered` / `left`), `txVisibleOnScroll` (items seen in a scrolling list) |
+| `@tectra-ng/utils/file` | `txFileSize`, `formatFileSize`, `downloadFile`, `downloadBlob` |
+| `@tectra-ng/utils/title` | `provideTxTitle` — "Page · App" tab titles, a prefix for counters, translated keys |
+| `@tectra-ng/utils/breakpoint` | `TxBreakpoints` — `isMobile`, `isTablet` and any media query as signals |
+| `@tectra-ng/utils/selection` | `TxSelection` — checked rows by key with header checkbox state |
+| `@tectra-ng/utils/stop-propagation` | `txStopPropagation` — keeps clicks or other events inside an element |
 
 Docs and examples: [tectra-ng.com](https://tectra-ng.com/components/date).

@@ -82,32 +82,32 @@ Utilities live in `@tectra-ng/utils/<name>` — own package, one flat entry poin
 
 - [x] `txCurrencySymbol` pipe + `currencySymbol(code, locale?)` for any ISO currency through `Intl` (`narrowSymbol`), the code itself when unknown
 
-## 12.14 In view — `utils/in-view` (in-view 7, visible-on-scroll 1; PrimeNG `AnimateOnScroll`, `Defer`)
+## 12.14 In view — `utils/in-view` (in-view 7, visible-on-scroll 1; PrimeNG `AnimateOnScroll`, `Defer`) ✅
 
-- [ ] `txInView` directive: `isInView` signal (`exportAs`), `tx-in-view` class, `threshold`, `rootMargin`, `once`, `entered` / `left` outputs, `enterClass` / `leaveClass` for scroll animations; visible on the server
-- [ ] `*txDefer` — renders its content when it scrolls into view (`loaded` output)
-- [ ] `txVisibleOnScroll` directive: a list in a scrolling box reports each fully visible item id once (`ignore` items, ids forgotten when they leave the list)
+- [x] `txInView` directive: `isInView` signal (`exportAs`), `tx-in-view` class, `threshold`, `rootMargin`, `once`, `entered` / `left` outputs, `enterClass` / `leaveClass` for scroll animations; visible on the server
+- [x] Deferred rendering — not an own directive: Angular `@defer (on viewport)` renders a block when it comes into view and also loads its code lazily (named in the README)
+- [x] `txVisibleOnScroll` directive: a list in a scrolling box reports each fully visible item id once (`ignore` items, ids forgotten when they leave the list)
 
-## 12.15 Files — `utils/file` (file 5, file-size 6)
+## 12.15 Files — `utils/file` (file 5, file-size 6) ✅
 
-- [ ] `txFileSize` pipe + `formatFileSize(bytes, { decimals, base })`: B / KB / MB / GB / TB in the locale number format, `'-'` for no size
-- [ ] `downloadFile(url, name)`, `downloadBlob(blob, name)` (browser only)
+- [x] `txFileSize` pipe + `formatFileSize(bytes, { decimals, base })`: B / KB / MB / GB / TB in the locale number format, `'-'` for no size
+- [x] `downloadFile(url, name)`, `downloadBlob(blob, name)` (browser only)
 
-## 12.16 Page title — `utils/title` (app-title 5)
+## 12.16 Page title — `utils/title` (app-title 5) ✅
 
-- [ ] `provideTxTitle({ appName, separator, translate })` — route titles as "Page · App", `TxTitle.setPrefix('(3)')` for counters, a translation function for title keys
+- [x] `provideTxTitle({ appName, separator, translate })` — route titles as "Page · App", `TxTitle.setPrefix('(3)')` for counters, a translation function for title keys
 
-## 12.17 Breakpoints — `utils/breakpoint` (track-breakpoint 5)
+## 12.17 Breakpoints — `utils/breakpoint` (track-breakpoint 5) ✅
 
-- [ ] `TxBreakpoints` service: `isMobile` (≤ 640px), `isTablet` (≤ 768px) signals and `matches(query)` → signal; `false` on the server
+- [x] `TxBreakpoints` service: `isMobile` (≤ 640px), `isTablet` (≤ 768px) signals and `matches(query)` → signal; `false` on the server
 
-## 12.18 Selection — `utils/selection` (4)
+## 12.18 Selection — `utils/selection` (4) ✅
 
-- [ ] `TxSelection<T>` with the first app's API (`select(predicate, items, checked)`, `toggleOne`, `isSelected`, `clear`, `setSelected`, `areAllSelected`, `areAllSelectedWithPredicate`, `selectedIds`) + `count`, `toggleAll(items)`, `isPartial(items)` for a header checkbox
+- [x] `TxSelection<T>` with the first app's API (`select(predicate, items, checked)`, `toggleOne`, `isSelected`, `clear`, `setSelected`, `areAllSelected`, `areAllSelectedWithPredicate`, `selectedIds`) + `count`, `toggleAll(items)`, `isPartial(items)` for a header checkbox
 
-## 12.19 Stop propagation — `utils/stop-propagation` (4)
+## 12.19 Stop propagation — `utils/stop-propagation` (4) ✅
 
-- [ ] `txStopPropagation` directive: stops `click` (or the events listed), optional `preventDefault`
+- [x] `txStopPropagation` directive: stops `click` (or the events listed), optional `preventDefault`
 
 ## 12.20 Search filter — `utils/filter` (filter 4; PrimeNG `FilterService`)
 
