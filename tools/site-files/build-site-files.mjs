@@ -12,7 +12,7 @@ const { routes } = JSON.parse(read(join(root, 'dist/apps/docs/prerendered-routes
 const { version } = JSON.parse(read(join(root, 'packages/tectra-ng/package.json')));
 
 const description =
-  'Open-source Angular UI kit: standalone components on signals (zoneless, OnPush), its own design tokens as CSS variables, light and dark themes, an SVG icon set, brand logos, country flags and a rich text editor. Keyboard and screen reader friendly, MIT licensed.';
+  'Open-source Angular UI kit: standalone components on signals (zoneless, OnPush), its own design tokens as CSS variables, light and dark themes, an SVG icon set, brand logos, country flags, SVG charts and a rich text editor. Keyboard and screen reader friendly, MIT licensed.';
 
 const pages = [
   { title: 'tectra', path: '/', text: 'What tectra is: the kit at a glance' },
@@ -64,7 +64,7 @@ const llms = [
   '',
   `> ${description}`,
   '',
-  `Version ${version}. Packages: \`tectra-ng\` (everything), \`@tectra-ng/ui/<name>\` (one entry point per component), \`@tectra-ng/core\`, \`@tectra-ng/themes\`, \`@tectra-ng/tokens\`, \`@tectra-ng/icons\`, \`@tectra-ng/editor\`, \`@tectra-ng/charts/<chart>\` (SVG charts: line, column, pie), \`@tectra-ng/blocks/<name>\` (ready page blocks). Selectors start with \`tx-\`, CSS variables with \`--tx-\`. Every component has \`dt\` (design tokens), \`pt\` (pass-through) and \`unstyled\`.`,
+  `Version ${version}. Packages: \`tectra-ng\` (everything), \`@tectra-ng/ui/<name>\` (one entry point per component), \`@tectra-ng/core\`, \`@tectra-ng/themes\`, \`@tectra-ng/tokens\`, \`@tectra-ng/icons\`, \`@tectra-ng/editor\`, \`@tectra-ng/charts/<chart>\` (SVG charts: line, column, pie, bar list, segmented bar, heatmap, treemap, rank, org chart), \`@tectra-ng/blocks/<name>\` (ready page blocks). Selectors start with \`tx-\`, CSS variables with \`--tx-\`. Every component has \`dt\` (design tokens), \`pt\` (pass-through) and \`unstyled\`.`,
   '',
   '## Install',
   '',
