@@ -30,6 +30,14 @@ export const tagTokens = {
   danger: tone('red'),
   help: tone('purple'),
   contrast: { color: tokenRef('text-primary'), background: tokenRef('text-primary') },
+  list: {
+    gap: '4px',
+    popoverGap: '6px',
+    popoverPadding: '0',
+    popoverMaxWidth: '280px',
+    popoverMaxHeight: '280px',
+    emptyColor: tokenRef('text-muted'),
+  },
 };
 
 export const chipTokens = {
