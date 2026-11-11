@@ -13,7 +13,7 @@ import { TxRelativeTimePipe } from '@tectra-ng/utils/relative-time';
   selector: 'relative-time-live-example',
   imports: [TxButton, TxRelativeTimePipe],
   template: `
-    <div class="stack">
+    <div class="stack start">
       <button txButton label="Post a message" (click)="posted.set(now())"></button>
       <span class="hint">
         @if (posted(); as at) {
@@ -23,6 +23,11 @@ import { TxRelativeTimePipe } from '@tectra-ng/utils/relative-time';
         }
       </span>
     </div>
+  `,
+  styles: `
+    .start {
+      align-items: flex-start;
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

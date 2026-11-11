@@ -13,13 +13,15 @@ import { TxValidators } from '@tectra-ng/utils/validators';
       <tx-field label="Type DELETE to remove the project" [control]="confirm">
         <input txInput [formControl]="confirm" autocomplete="off" [fluid]="true" />
       </tx-field>
-      <button
-        txButton
-        label="Delete project"
-        severity="danger"
-        [disabled]="confirm.invalid"
-        (click)="deleted.set(true)"
-      ></button>
+      <div>
+        <button
+          txButton
+          label="Delete project"
+          severity="danger"
+          [disabled]="confirm.invalid"
+          (click)="deleted.set(true)"
+        ></button>
+      </div>
       @if (deleted()) {
         <span class="hint">Deleted (not really).</span>
       }

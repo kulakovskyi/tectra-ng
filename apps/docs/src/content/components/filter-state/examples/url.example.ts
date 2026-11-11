@@ -12,6 +12,7 @@ const INITIAL = { sort: 'newest', page: 1 };
   template: `
     <div class="stack">
       <tx-select
+        class="sort"
         ariaLabel="Sort"
         [options]="sorts"
         [ngModel]="filters.value().sort"
@@ -29,6 +30,10 @@ const INITIAL = { sort: 'newest', page: 1 };
   styles: `
     .stack {
       max-width: none;
+      align-items: flex-start;
+    }
+    .sort {
+      width: 220px;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

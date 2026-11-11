@@ -19,7 +19,7 @@ const TICKETS = [
   imports: [FormsModule, TxButton, TxInput, TxMultiselect, TxTable],
   template: `
     <div class="layout">
-      <div class="flex">
+      <div class="toolbar">
         <input
           txInput
           placeholder="Search tickets"
@@ -51,6 +51,12 @@ const TICKETS = [
       display: flex;
       flex-direction: column;
       gap: 12px;
+    }
+    .toolbar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 220px) auto;
+      gap: 8px;
+      align-items: center;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
