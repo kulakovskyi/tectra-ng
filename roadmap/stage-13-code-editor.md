@@ -1,4 +1,4 @@
-# Stage 14 — code editor, detailed checklist
+# Stage 13 — code editor, detailed checklist
 
 Part of [ROADMAP.md](../ROADMAP.md). One section per item, in the order we build them. Tick a box only when the code, the docs example and the test for it exist.
 

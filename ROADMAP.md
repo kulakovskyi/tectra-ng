@@ -260,21 +260,9 @@ Ideas for the editor on top of 9.8, no new engine dependencies. Already shipped:
 | Version history | Versions with highlighted changes | ⬜ |
 | Collaboration | Real-time co-editing (needs a backend, own stage) | ⬜ |
 
-## Stage 13 — own editor engine (`@tectra-ng/editor`, later)
+## Stage 13 — code editor (`@tectra-ng/code-editor`) ✅
 
-The editor runs on the ProseMirror core (`prosemirror-model`, `-state`, `-view`, `-transform`, ~12 800 lines, MIT); everything above it is already ours. Later the core becomes our own code too: start from a copy of those four packages inside `packages/editor` (keep the MIT notice), then rewrite it piece by piece behind the same `tx-editor` API, so apps do not change.
-
-| Step | What | Status |
-|---|---|---|
-| Vendor | Copy the four packages into `packages/editor/src/engine/core`, drop the npm dependencies, keep their tests running | ⬜ |
-| State | Own state, selection, transactions and plugin system | ⬜ |
-| Model | Own schema with content expressions, fragments, resolved positions, DOM parse / serialize | ⬜ |
-| Transform | Own steps, position mapping, inversion and the replace fitting algorithm | ⬜ |
-| View | Own `contenteditable` bridge: input, IME composition, selection sync, clipboard, drag and drop, browser workarounds (Chrome, Safari, Firefox, Android, iOS) | ⬜ |
-
-## Stage 14 — code editor (`@tectra-ng/code-editor`) ✅
-
-Detailed checklist: [roadmap/stage-14-code-editor.md](roadmap/stage-14-code-editor.md). Engine: the CodeMirror core (state + view) as a dependency, everything above it our code; an own engine can replace the core later behind the same API, like stage 13.
+Detailed checklist: [roadmap/stage-13-code-editor.md](roadmap/stage-13-code-editor.md). Engine: the CodeMirror core (state + view) as a dependency, everything above it our code.
 
 The first app edits HTML, CSS, JavaScript and other source text and shows the changes between two versions (16 uses).
 
@@ -283,3 +271,16 @@ The first app edits HTML, CSS, JavaScript and other source text and shows the ch
 | Editor: `value` / `valueChange`, `language` (HTML, CSS, JavaScript, TypeScript, JSON, Markdown, plain), `height`, `readOnly`, line numbers, indent guides, syntax colours from tokens (light / dark / styles), search, undo, works with forms | 16 | ✅ |
 | Diff: inline and side by side views of `original` → `value`, scroll to the first change, read-only or editable modified side | 1 | ✅ |
 | Docs, tests, server rendering (a static highlighted view on the server, the editor after hydration) | — | ✅ |
+
+## Stage 14 — developer experience
+
+Make the kit easy to try, keep its promises checked in CI and the repository ready for contributors.
+
+| Item | What | Status |
+|---|---|---|
+| `ng add tectra-ng` | One command installs the packages, adds `provideTectra` with a preset to `app.config.ts` and the fonts to `index.html` — the three manual steps of Getting started | ⬜ |
+| Open in StackBlitz | A button on every docs example opens it as a live, editable project — nothing to install locally | ⬜ |
+| Bundle size check | `size-limit` in CI: importing one component must not pull the whole kit, CI fails when a size budget grows — guards "tree-shakable" | ⬜ |
+| Test coverage | Coverage report from Vitest in CI with a README badge; a step toward the silver OpenSSF Best Practices level | ⬜ |
+| Link check | Weekly workflow that checks every link in the READMEs and the built docs site, so a broken link is caught before a user finds it | ⬜ |
+| Best Practices silver | The silver level of the OpenSSF Best Practices badge: `GOVERNANCE.md` (who decides, how to become a maintainer), roles and responsibilities, access continuity if the maintainer is away, test coverage from the item above | ⬜ |

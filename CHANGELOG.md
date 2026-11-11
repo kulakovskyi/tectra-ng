@@ -20,7 +20,7 @@ This was a version bump only, there were no code changes.
 
 ### 🚀 Features
 
-- **code-editor:** code editor, diff and highlighted code on the CodeMirror core; stage 14 done
+- **code-editor:** code editor, diff and highlighted code on the CodeMirror core; stage 13 done
 - **docs:** readme front matter for pages that share one source folder
 - **ui:** tx-avatar-editor picks, replaces or removes the photo with type and size checks, drop, loading and a confirm
 - **ui:** tx-tag-list shows the first tags and the rest behind +N in a popover
