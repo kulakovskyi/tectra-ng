@@ -1,6 +1,6 @@
 {
   "name": "@tectra-ng/qr",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "QR codes with no dependencies: an encoder for every version and error-correction level, and styled SVG or PNG output with shaped dots and eyes, colours, gradients and a logo. Works in any framework and on the server.",
   "license": "MIT",
   "homepage": "https://tectra-ng.com/components/qr-code",

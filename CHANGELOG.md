@@ -1,3 +1,17 @@
+## 0.2.3 (2026-11-11)
+
+### 🩹 Fixes
+
+- **ci:** separate the CI concurrency group per event so a stuck run cannot hold main ([17910ff](https://github.com/kulakovskyi/tectra-ng/commit/17910ff))
+- **ci:** time out stuck jobs after 15–45 minutes instead of six hours ([f20a7a3](https://github.com/kulakovskyi/tectra-ng/commit/f20a7a3))
+- **release:** rebase the release commit on new main commits so the bot never pushes workflow changes ([400af78](https://github.com/kulakovskyi/tectra-ng/commit/400af78))
+- **security:** resolve the CodeQL findings in the docs server, registry text, Markdown export, video links and the AI example ([7a84746](https://github.com/kulakovskyi/tectra-ng/commit/7a84746))
+- **security:** video links parsed with URL, docs server path check and plain text without tag-stripping regexes ([8d91c96](https://github.com/kulakovskyi/tectra-ng/commit/8d91c96))
+
+### ❤️ Thank You
+
+- tears @kulakovskyi
+
 ## 0.2.2 (2026-11-11)
 
 ### 🚀 Features
