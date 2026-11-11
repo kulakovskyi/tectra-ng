@@ -12,6 +12,11 @@ export interface DocSlot {
   description: string;
 }
 
+export interface DocApiSection {
+  title: string;
+  rows: DocSlot[];
+}
+
 export interface DocKeyboardRow {
   key: string;
   action: string;
@@ -55,7 +60,7 @@ export interface DocComponent {
   importPath: string;
   importName: string;
   descriptionHtml: string;
-  api: { inputs: DocApiMember[]; outputs: DocApiMember[]; slots: DocSlot[] };
+  api: { inputs: DocApiMember[]; outputs: DocApiMember[]; slots: DocSlot[]; sections: DocApiSection[] };
   keyboard: DocKeyboardRow[];
   tokens: DocToken[];
   examples: DocExample[];

@@ -53,6 +53,7 @@
     "carousel",
     "paginator",
     "charts",
+    "utils",
     "icons"
   ],
   "dependencies": {
@@ -65,6 +66,7 @@
     "@tectra-ng/qr": "^0.1.9",
     "@tectra-ng/ui": "^0.1.9",
     "@tectra-ng/charts": "^0.1.9",
+    "@tectra-ng/utils": "^0.1.9",
     "@tectra-ng/blocks": "^0.1.9"
   },
   "publishConfig": {

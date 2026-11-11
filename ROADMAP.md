@@ -221,13 +221,16 @@ Own SVG charts, no chart library: they render on the server like the rest of the
 
 ## Stage 12 — utils (`@tectra-ng/utils`)
 
-| Group | Items | Status |
-|---|---|---|
-| Directives | `copy-to-clipboard`, `debounce-input`, `drag-scroll`, `in-view`, `visible-on-scroll`, `scroll-to-bottom`, `stop-propagation` | ⬜ |
-| Pipes | `file-size`, `truncate`, `capitalize`, `highlight`, `plural-form`, `relative-time`, `date-range`, `http-status`, `currency-symbol`, `add-http-prefix` | ⬜ |
-| Services | `clock` (+ `remainingTime`), `polling` (`Poller`, `poll`, `refreshEvery`), `selection`, `track-breakpoint`, `form-change-tracker`, `form-validation` | ⬜ |
-| Functions | `validators`, `http-params`, `date`, `file`, `string`, `memory-storage` | ⬜ |
+Directives, pipes, services and helpers apps use next to the components — the first consumer app's utility library, reviewed: generic parts kept and extended, parts the kit already covers or that are app wiring left out (list in the checklist), PrimeNG utility directives added. Own package above `ui`, one entry point per utility. Detailed checklist: [roadmap/stage-12-utils.md](roadmap/stage-12-utils.md). Usage = files of the first app (2026-11-11).
 
+| Group | Items | Usage | Status |
+|---|---|---|---|
+| Package | `@tectra-ng/utils`, docs category `Utilities`, README API tables (pipes, functions, methods, options, constants, providers) on the docs API tab | — | ✅ |
+| Dates and text | `date` (`txDate`, functions, date range), `plural`, `relative-time`, `currency`, `text`, `file` (file size, download) | 318, 173, 48, 8, 7, 11 | 🟡 date |
+| Forms | `debounce-input`, `form-validation`, `validators`, `form-changes`, `auto-focus` | 79, 70, 45, 1, 6 | ⬜ |
+| Data | `filter-state` (local storage + URL), `http` (params, retry, status), `polling`, `selection`, `filter`, `stream`, `random` | 70, 98, 24, 4, 4, 3, 1 | ⬜ |
+| DOM | `clipboard`, `in-view` (+ defer, visible on scroll), `go-back`, `stop-propagation`, `drag-scroll`, `scroll-end`, `style-class` | 38, 8, 9, 4, 2, 0, 0 | ⬜ |
+| Services | `clock`, `title`, `breakpoint` | 18, 5, 5 | ⬜ |
 
 ## Editor backlog (`@tectra-ng/editor`, between stages)
 

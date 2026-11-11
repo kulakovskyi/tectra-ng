@@ -28,6 +28,8 @@
       "@tectra-ng/editor": ["./packages/editor/index.ts"],
       "@tectra-ng/charts": ["./packages/charts/index.ts"],
       "@tectra-ng/charts/*": ["./packages/charts/*/index.ts"],
+      "@tectra-ng/utils": ["./packages/utils/index.ts"],
+      "@tectra-ng/utils/*": ["./packages/utils/*/index.ts"],
       "@tectra-ng/editor/*": ["./packages/editor/*/index.ts"]
     }
   },
