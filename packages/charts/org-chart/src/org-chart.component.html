@@ -12,6 +12,8 @@
       [labels]="label"
       [intl]="intl()"
       [query]="query()"
+      [moreLabel]="label.more"
+      [unstyled]="isUnstyled()"
       (searchChange)="onSearch($event)"
       (zoomIn)="zoomIn()"
       (zoomOut)="zoomOut()"
@@ -24,7 +26,7 @@
   }
 </div>
 
-@if (fullscreen()) {
+@if (fullscreen() && !native() && !topLayer()) {
   <div class="tx-org-chart__backdrop" aria-hidden="true"></div>
 }
 <div
@@ -35,6 +37,8 @@
   [style.height]="fullscreen() ? null : height()"
   [class.tx-org-chart__canvas--busy]="busy()"
   [class.tx-org-chart__canvas--fullscreen]="fullscreen()"
+  [class.tx-org-chart__canvas--native]="native()"
+  [class.tx-org-chart__canvas--top-layer]="topLayer()"
   [class.tx-org-chart__canvas--dragging]="dragging()"
   [class.tx-org-chart__canvas--settled]="settled()"
   tabindex="0"
@@ -60,6 +64,8 @@
           [labels]="label"
           [intl]="intl()"
           [query]="query()"
+          [moreLabel]="label.more"
+          [unstyled]="isUnstyled()"
           (searchChange)="onSearch($event)"
           (zoomIn)="zoomIn()"
           (zoomOut)="zoomOut()"

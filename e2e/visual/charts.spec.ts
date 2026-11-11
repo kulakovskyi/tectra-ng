@@ -443,9 +443,84 @@ test.describe('charts', () => {
     expect(ring).toContain(line);
     await page.mouse.move(0, 0);
 
-    await chart.getByRole('button', { name: 'Full screen' }).click();
-    await expect(chart.getByRole('button', { name: 'Exit full screen' }).first()).toBeVisible();
+    await chart.locator('.tx-org-chart__bar .tx-org-chart__more').click();
+    await page.getByRole('button', { name: 'Full screen' }).click();
+    await expect(chart.locator('.tx-org-chart__canvas--native')).toHaveCount(1);
+    const full = await canvas.boundingBox();
+    const screen = await layoutViewport(page);
+    expect(Math.round(full?.x ?? -1)).toBe(0);
+    expect(Math.round(full?.y ?? -1)).toBe(0);
+    expect(Math.round(full?.width ?? 0)).toBeGreaterThanOrEqual(screen.width);
     await page.keyboard.press('Escape');
     await expect(chart.locator('.tx-org-chart__canvas--fullscreen')).toHaveCount(0);
+  });
+
+  test('org chart on a phone: actions fold into a menu, a smaller minimap', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/components/org-chart');
+    const chart = example(page, 'Basic').locator('tx-org-chart');
+    await chart.scrollIntoViewIfNeeded();
+    const bar = chart.locator('.tx-org-chart__bar');
+    await expect(bar.locator('.tx-org-chart__zoom-group')).toBeHidden();
+    await expect(bar.locator('.tx-org-chart__expand-group')).toBeHidden();
+    const more = bar.locator('.tx-org-chart__more');
+    await expect(more).toBeVisible();
+    const search = await bar.locator('input').boundingBox();
+    const moreBox = await more.boundingBox();
+    expect(Math.abs((search?.y ?? 0) - (moreBox?.y ?? 0))).toBeLessThan(8);
+    await more.click();
+    const menu = page.locator('.tx-org-chart__menu');
+    await expect(menu.locator('.tx-org-chart__menu-zoom')).toBeVisible();
+    await menu.getByRole('button', { name: 'Expand all' }).click();
+    await expect(menu).toBeHidden();
+    await expect(chart.locator('.tx-org-chart-card__title', { hasText: 'Gina Ives' })).toBeVisible();
+    const map = await chart.locator('.tx-org-chart__map').boundingBox();
+    expect(map?.width ?? 0).toBeLessThanOrEqual(141);
+  });
+
+  test('tooltip arrow stays inside the panel and points at the value near the screen edge', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/components/line-chart');
+    const plot = example(page, 'Basic').locator('tx-line-chart .tx-chart-frame__plot');
+    await plot.scrollIntoViewIfNeeded();
+    const box = await plot.boundingBox();
+    await page.mouse.move((box?.x ?? 0) + (box?.width ?? 0) * 0.97, (box?.y ?? 0) + (box?.height ?? 0) / 2);
+    const arrow = await page.locator('.tx-chart-frame__tooltip-arrow').boundingBox();
+    const panel = await tooltip(page).boundingBox();
+    const crosshair = await example(page, 'Basic').locator('.tx-chart-frame__anchor').boundingBox();
+    const tip = (arrow?.x ?? 0) + (arrow?.width ?? 0) / 2;
+    expect(Math.abs(tip - ((crosshair?.x ?? 0) + (crosshair?.width ?? 0) / 2))).toBeLessThanOrEqual(1.5);
+    expect(arrow?.x ?? 0).toBeGreaterThanOrEqual((panel?.x ?? 0) + 8);
+    expect((arrow?.x ?? 0) + (arrow?.width ?? 0)).toBeLessThanOrEqual((panel?.x ?? 0) + (panel?.width ?? 0) - 8);
+  });
+
+  test('org chart full screen without the Fullscreen API covers the page from the top layer', async ({ page }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(HTMLElement.prototype, 'requestFullscreen', { value: undefined, configurable: true });
+      Object.defineProperty(HTMLElement.prototype, 'webkitRequestFullscreen', { value: undefined, configurable: true });
+    });
+    await page.goto('/components/org-chart');
+    const chart = example(page, 'Basic').locator('tx-org-chart');
+    const canvas = chart.locator('.tx-org-chart__canvas');
+    await canvas.scrollIntoViewIfNeeded();
+    await chart.locator('.tx-org-chart__bar .tx-org-chart__more').click();
+    await page.getByRole('button', { name: 'Full screen' }).click();
+    await expect(canvas).toHaveClass(/tx-org-chart__canvas--top-layer/);
+    expect(await canvas.evaluate((element) => element.matches(':popover-open'))).toBe(true);
+    const box = await canvas.boundingBox();
+    const screen = await layoutViewport(page);
+    expect(box?.y ?? 0).toBeLessThan(16);
+    expect((box?.y ?? 0) + (box?.height ?? 0)).toBeGreaterThan(screen.height - 16);
+    const onTop = await page.evaluate(() => {
+      const element = document.elementFromPoint(innerWidth / 2, 24);
+      return !!element?.closest('.tx-org-chart__canvas');
+    });
+    expect(onTop).toBe(true);
+    expect(await page.evaluate(() => document.documentElement.style.overflow)).toBe('hidden');
+    await expect(chart.locator('.tx-org-chart__floating .tx-org-chart__fullscreen')).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(canvas).not.toHaveClass(/tx-org-chart__canvas--fullscreen/);
+    expect(await canvas.evaluate((element) => element.hasAttribute('popover'))).toBe(false);
+    expect(await page.evaluate(() => document.documentElement.style.overflow)).toBe('');
   });
 });

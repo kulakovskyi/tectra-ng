@@ -6,6 +6,8 @@ export const TX_ORG_CHART_WHEEL_SPEED = 0.0015;
 export const TX_ORG_CHART_WHEEL_MAX_DELTA = 120;
 export const TX_ORG_CHART_PADDING = 40;
 export const TX_ORG_CHART_MINIMAP = { width: 240, height: 170, minHeight: 56 } as const;
+export const TX_ORG_CHART_MINIMAP_COMPACT = { width: 140, height: 100, minHeight: 40 } as const;
+export const TX_ORG_CHART_COMPACT_WIDTH = 480;
 
 export function clampZoom(zoom: number): number {
   return Math.min(TX_ORG_CHART_ZOOM.max, Math.max(TX_ORG_CHART_ZOOM.min, zoom));

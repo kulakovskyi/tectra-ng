@@ -54,6 +54,7 @@ export interface TxOrgChartLabels {
   exitFullscreen: string;
   expand: string;
   collapse: string;
+  more: string;
 }
 
 export type TxOrgChartChildrenKind = 'none' | 'nodes' | 'loading' | 'empty';

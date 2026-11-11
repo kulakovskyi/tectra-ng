@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
-import { TX_ORG_CHART_MINIMAP } from './org-chart-view';
+import { TX_ORG_CHART_COMPACT_WIDTH, TX_ORG_CHART_MINIMAP, TX_ORG_CHART_MINIMAP_COMPACT } from './org-chart-view';
 import { TxOrgChartMinimapLayout, TxOrgChartPoint, TxOrgChartRect, TxOrgChartSize, TxOrgChartView } from './org-chart.types';
 
 @Component({
@@ -54,13 +54,14 @@ export class TxOrgChartMinimap {
 
   private pointerId: number | null = null;
 
+  readonly box = computed(() => (this.viewport().width && this.viewport().width < TX_ORG_CHART_COMPACT_WIDTH ? TX_ORG_CHART_MINIMAP_COMPACT : TX_ORG_CHART_MINIMAP));
   readonly scale = computed(() => {
     const layout = this.layout();
     if (!layout.width || !layout.height) return 0;
-    return Math.min(TX_ORG_CHART_MINIMAP.width / layout.width, TX_ORG_CHART_MINIMAP.height / layout.height);
+    return Math.min(this.box().width / layout.width, this.box().height / layout.height);
   });
   readonly mapWidth = computed(() => this.layout().width * this.scale());
-  readonly mapHeight = computed(() => Math.max(TX_ORG_CHART_MINIMAP.minHeight, this.layout().height * this.scale()));
+  readonly mapHeight = computed(() => Math.max(this.box().minHeight, this.layout().height * this.scale()));
   readonly offsetY = computed(() => (this.mapHeight() - this.layout().height * this.scale()) / 2);
   readonly viewportRect = computed<TxOrgChartRect>(() => {
     const scale = this.scale();

@@ -391,6 +391,7 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     orgChartExitFullscreen: 'Exit full screen',
     orgChartExpand: 'Expand',
     orgChartCollapse: 'Collapse',
+    orgChartMore: 'Chart actions',
   },
 };
 
@@ -785,6 +786,7 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     orgChartExitFullscreen: 'Вийти з повного екрана',
     orgChartExpand: 'Розгорнути',
     orgChartCollapse: 'Згорнути',
+    orgChartMore: 'Дії з графіком',
   },
 };
 

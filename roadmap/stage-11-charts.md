@@ -23,7 +23,7 @@ First app: a shared core for every chart — language (month names and toolbar t
 - [x] Axes and grid: x / y, top / bottom / left / right, label rotation or skipping when they collide, grid lines, zero line
 - [x] Series palette from tokens (`--tx-chart-…` from the primary and the severity palettes), per series `color` override, stable colours when a series is hidden
 - [x] Legend: position (top, bottom, side), toggles a series, keyboard, `txChartLegend` template
-- [x] Tooltip on the kit overlay: crosshair, shared (all series at a point) or single, `txChartTooltip` template, follows the keyboard focus
+- [x] Tooltip on the kit overlay: crosshair, shared (all series at a point) or single, `txChartTooltip` template, follows the keyboard focus; near a screen edge the panel moves aside and its arrow keeps pointing at the value
 - [x] "No data" through `empty-state` look, loading skeleton of the same size
 - [x] Motion: series grow in once, values morph on change; off with reduced motion
 - [x] Decimation for long series (largest-triangle) so tens of thousands of points stay fast
@@ -144,7 +144,7 @@ First app: a hierarchy as a tree of cards on a pan / zoom canvas (drag, wheel / 
 - [x] `<tx-org-chart>` with the first app's API and look on kit parts (button, input, pill, avatar, skeleton, tooltip); texts from the tectra locale, `labels` overrides them; `txOrgChartHeader` / `txOrgChartNode` instead of `[chartOrgHeader]` / `#node`; helpers `orgChartToggle`, `orgChartExpandAll`, `orgChartSearch`, `orgChartReveal`, `orgChartPathTo`
 - [x] Docs + tests; e2e
 
-Changed on purpose: hotkeys work while the chart has the focus (not on the whole page) and arrow keys move the canvas; cards take the focus (Enter / Space = click); a drag never selects text; the hover path follows the connectors with their rounded corners and joins the card outline in one colour (`pathColor` drives both); the canvas cannot be moved so far that the tree leaves it (64px stay in view); the minimap frame stays inside the map.
+Changed on purpose: hotkeys work while the chart has the focus (not on the whole page) and arrow keys move the canvas; cards take the focus (Enter / Space = click); a drag never selects text; the hover path follows the connectors with their rounded corners and joins the card outline in one colour (`pathColor` drives both); the canvas cannot be moved so far that the tree leaves it (64px stay in view); the minimap frame stays inside the map. On a narrow chart the toolbar folds expand / collapse / full screen (and under 30rem the zoom) into a menu button, the minimap shrinks to 140×100; full screen uses the Fullscreen API (with the WebKit prefix) and otherwise the top layer (`showPopover`), so it always covers the page header; in full screen a narrow toolbar shows icon buttons.
 
 ## 11.18 Interaction
 

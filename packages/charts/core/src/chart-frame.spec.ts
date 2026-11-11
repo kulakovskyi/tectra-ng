@@ -126,7 +126,8 @@ describe('TxChartFrame', () => {
     expect(panel.textContent).toContain('Visits');
     expect(panel.getAttribute('data-side')).toMatch(/^(top|bottom|left|right)$/);
     expect(panel.querySelector('.tx-chart-frame__tooltip-arrow')).not.toBeNull();
-    expect(el('.tx-chart-frame__anchor').style.transform).toBe('translate(40px, 20px)');
+    expect(el('.tx-chart-frame__anchor').style.transform).toBe('translate(24px, 20px)');
+    expect(el('.tx-chart-frame__anchor').style.width).toBe('32px');
     fixture.componentInstance.tooltip.set({ title: 'Tue', rows: [{ label: 'Visits', value: '15', color: 'red', raw: 15, seriesIndex: 0 }], index: 1, x: 80, y: 20, placement: 'right', total: '15' });
     await fixture.whenStable();
     const moved = document.querySelector('.tx-chart-frame__tooltip') as HTMLElement;

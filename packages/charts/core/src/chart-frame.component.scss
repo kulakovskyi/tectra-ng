@@ -223,13 +223,21 @@
 
 .tx-chart-frame__tooltip[data-styled][data-side='top'] .tx-chart-frame__tooltip-arrow,
 .tx-chart-frame__tooltip[data-styled][data-side='bottom'] .tx-chart-frame__tooltip-arrow {
-  left: var(--tx-chart-tooltip-arrow-offset);
+  left: clamp(
+    calc(var(--tx-chart-tooltip-border-radius) + var(--tx-chart-tooltip-arrow-size)),
+    var(--tx-chart-tooltip-arrow-offset),
+    calc(100% - var(--tx-chart-tooltip-border-radius) - var(--tx-chart-tooltip-arrow-size))
+  );
   margin-left: calc(var(--tx-chart-tooltip-arrow-size) * -1);
 }
 
 .tx-chart-frame__tooltip[data-styled][data-side='left'] .tx-chart-frame__tooltip-arrow,
 .tx-chart-frame__tooltip[data-styled][data-side='right'] .tx-chart-frame__tooltip-arrow {
-  top: var(--tx-chart-tooltip-arrow-offset);
+  top: clamp(
+    calc(var(--tx-chart-tooltip-border-radius) + var(--tx-chart-tooltip-arrow-size) / 2),
+    var(--tx-chart-tooltip-arrow-offset),
+    calc(100% - var(--tx-chart-tooltip-border-radius) - var(--tx-chart-tooltip-arrow-size) / 2)
+  );
   margin-top: calc(var(--tx-chart-tooltip-arrow-size) / -2);
 }
 

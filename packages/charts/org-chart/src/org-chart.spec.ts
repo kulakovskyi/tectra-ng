@@ -229,13 +229,15 @@ describe('TxOrgChart', () => {
 
   it('switches the overlay full screen and leaves it with Escape', () => {
     chart().exitOverlayFullscreen();
-    chart()['enterOverlayFullscreen']();
+    chart()['enterOverlay']();
     expect(chart().fullscreen()).toBe(true);
     fixture.detectChanges();
     expect(main().querySelector('.tx-org-chart__canvas--fullscreen')).not.toBeNull();
     expect(main().querySelector('.tx-org-chart__floating')).not.toBeNull();
+    expect(document.documentElement.style.overflow).toBe('hidden');
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
     expect(chart().fullscreen()).toBe(false);
+    expect(document.documentElement.style.overflow).toBe('');
   });
 
   it('draws own node content from the txOrgChartNode template', () => {
@@ -266,5 +268,9 @@ describe('TxOrgChartMinimap', () => {
     expect(rect.x + rect.width).toBeLessThanOrEqual(map.mapWidth());
     expect(rect.y + rect.height).toBeLessThanOrEqual(map.mapHeight());
     expect(fixture.nativeElement.querySelectorAll('.tx-org-chart__map-item')).toHaveLength(1);
+    expect(map.mapWidth()).toBe(240);
+    fixture.componentRef.setInput('viewport', { width: 360, height: 500 });
+    fixture.detectChanges();
+    expect(map.mapWidth()).toBe(140);
   });
 });

@@ -18,9 +18,9 @@ The chart does not change `nodes` itself: handle `nodeToggle`, `expandAll`, `col
 | nodes | `{ id, title, kind?, subtitle?, avatar?: { src?, name? }, icon?, pills?: { label, tone?, icon? }[], children?, collapsible?, expanded?, loading?, childrenEmptyText?, minimapTone?, data? }[]` — the roots of the tree |
 | highlightIds | Ids of the matching nodes; they get the match outline and their count shows next to the search |
 | focusId | Id of a node to centre and zoom to (at least 125%) after it renders |
-| labels | Own texts: `title`, `hint`, `search`, `matches` (`{count} found`), `noMatches`, `zoomIn`, `zoomOut`, `resetZoom`, `fit`, `expandAll`, `collapseAll`, `fullscreen`, `exitFullscreen`, `expand`, `collapse`; default — the tectra locale |
-| toolbar | Shows the toolbar |
-| minimap | Shows the minimap in the corner of the canvas |
+| labels | Own texts: `title`, `hint`, `search`, `matches` (`{count} found`), `noMatches`, `zoomIn`, `zoomOut`, `resetZoom`, `fit`, `expandAll`, `collapseAll`, `fullscreen`, `exitFullscreen`, `expand`, `collapse`, `more` (the button that holds the actions on a narrow toolbar); default — the tectra locale |
+| toolbar | Shows the toolbar; on a narrow chart (under 56rem) expand / collapse all and full screen move into a menu button, under 30rem the zoom buttons too |
+| minimap | Shows the minimap in the corner of the canvas (smaller on a canvas under 480px) |
 | height | Height of the canvas (`calc(100vh - 15rem)`) |
 | busy | Dims the canvas and blocks it while data loads |
 | pathKinds | Node `kind`s that draw the path to the root on hover; `null` — every node |

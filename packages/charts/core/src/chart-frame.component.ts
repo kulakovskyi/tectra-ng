@@ -43,6 +43,7 @@ import {
 import { chartBoxHeight } from './chart-size';
 
 const TOOLTIP_OFFSET = 10;
+const ARROW_ROOM = 16;
 
 @Component({
   selector: 'tx-chart-frame',
@@ -107,7 +108,7 @@ export class TxChartFrame {
   private openPlacement: TxPlacement | null = null;
   readonly activeRef = signal<TxOverlayRef | null>(null);
   readonly side = computed(() => parsePlacement(this.activeRef()?.placement() ?? this.openPlacement ?? this.tooltipPlacement()).side);
-  readonly arrowOffset = computed(() => txArrowOffset(this.activeRef()?.placement() ?? 'top', { width: 0, height: 0 }));
+  readonly arrowOffset = computed(() => txArrowOffset(this.activeRef()?.placement() ?? 'top', { width: ARROW_ROOM * 2, height: ARROW_ROOM * 2 }));
 
   readonly fills = computed(() => typeof this.height() === 'string');
   readonly cssHeight = computed(() => {
@@ -186,7 +187,12 @@ export class TxChartFrame {
       return;
     }
     const placement: TxPlacement = data.placement ?? this.tooltipPlacement();
-    anchor.style.transform = `translate(${Math.round(data.x)}px, ${Math.round(data.y)}px)`;
+    const vertical = parsePlacement(placement).side === 'top' || parsePlacement(placement).side === 'bottom';
+    const width = vertical ? ARROW_ROOM * 2 : 0;
+    const height = vertical ? 0 : ARROW_ROOM * 2;
+    anchor.style.width = `${width}px`;
+    anchor.style.height = `${height}px`;
+    anchor.style.transform = `translate(${Math.round(data.x - width / 2)}px, ${Math.round(data.y - height / 2)}px)`;
     if (this.ref && this.openPlacement !== placement) {
       this.closeTooltip();
     }

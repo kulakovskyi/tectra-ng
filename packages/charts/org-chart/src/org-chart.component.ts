@@ -41,6 +41,9 @@ import {
   TxOrgChartView,
 } from './org-chart.types';
 
+type TxFullscreenElement = HTMLElement & { webkitRequestFullscreen?: () => Promise<void> | void };
+type TxFullscreenDocument = Document & { webkitFullscreenElement?: Element | null; webkitExitFullscreen?: () => Promise<void> | void };
+
 const TYPING = ['INPUT', 'TEXTAREA', 'SELECT'];
 const DRAG_IGNORE = '[data-drag-ignore], button, a, input, textarea, select, [contenteditable="true"]';
 const DRAG_THRESHOLD = 4;
@@ -60,6 +63,7 @@ const DEFAULT_HEIGHT = 'calc(100vh - 15rem)';
     '[style]': 'hostStyle()',
     '[attr.data-styled]': '!isUnstyled() || null',
     '(document:fullscreenchange)': 'onFullscreenChange()',
+    '(document:webkitfullscreenchange)': 'onFullscreenChange()',
     '(document:keydown.escape)': 'exitOverlayFullscreen()',
   },
 })
@@ -101,6 +105,8 @@ export class TxOrgChart implements OnDestroy {
   readonly view = signal<TxOrgChartView>({ x: 0, y: 0, zoom: TX_ORG_CHART_ZOOM.initial });
   readonly viewport = signal<TxOrgChartSize>({ width: 0, height: 0 });
   readonly fullscreen = signal(false);
+  readonly native = signal(false);
+  readonly topLayer = signal(false);
   readonly dragging = signal(false);
   readonly settled = signal(false);
   readonly query = signal('');
@@ -128,6 +134,7 @@ export class TxOrgChart implements OnDestroy {
       exitFullscreen: t.orgChartExitFullscreen,
       expand: t.orgChartExpand,
       collapse: t.orgChartCollapse,
+      more: t.orgChartMore,
       ...this.labels(),
     };
   });
@@ -169,6 +176,7 @@ export class TxOrgChart implements OnDestroy {
   private moved = 0;
   private suppressClick = false;
   private lastFocusKey = '';
+  private pageOverflow = '';
 
   constructor() {
     afterNextRender(() => {
@@ -338,50 +346,118 @@ export class TxOrgChart implements OnDestroy {
 
   toggleFullscreen(): void {
     const element = this.canvas()?.nativeElement;
-    if (this.document.fullscreenElement) {
-      this.document.exitFullscreen();
+    if (!element) return;
+    if (this.nativeElement()) {
+      this.exitNative();
       return;
     }
     if (this.fullscreen()) {
-      this.fullscreen.set(false);
-      afterNextRender(() => this.fitToScreen(), { injector: this.injector });
+      this.leaveOverlay();
       return;
     }
-    if (element?.requestFullscreen) {
-      element.requestFullscreen().catch(() => this.enterOverlayFullscreen());
-    } else {
-      this.enterOverlayFullscreen();
+    const request = (element as TxFullscreenElement).requestFullscreen?.bind(element) ?? (element as TxFullscreenElement).webkitRequestFullscreen?.bind(element);
+    if (!request) {
+      this.enterOverlay();
+      return;
+    }
+    try {
+      const result = request();
+      if (result && typeof result.catch === 'function') {
+        result.catch(() => this.enterOverlay());
+      }
+    } catch {
+      this.enterOverlay();
     }
   }
 
   onFullscreenChange(): void {
-    const active = !!this.document.fullscreenElement && this.document.fullscreenElement === this.canvas()?.nativeElement;
-    if (active === this.fullscreen()) return;
-    this.fullscreen.set(active);
+    const native = this.nativeElement() === this.canvas()?.nativeElement;
+    this.native.set(native);
+    if (native === this.fullscreen()) return;
+    this.fullscreen.set(native);
     afterNextRender(() => this.fitToScreen(), { injector: this.injector });
   }
 
   exitOverlayFullscreen(): void {
-    if (this.document.fullscreenElement && this.document.fullscreenElement === this.canvas()?.nativeElement) {
-      this.document.exitFullscreen();
+    if (this.nativeElement() === this.canvas()?.nativeElement) {
+      this.exitNative();
       return;
     }
-    if (this.fullscreen() && !this.document.fullscreenElement) {
-      this.fullscreen.set(false);
-      afterNextRender(() => this.fitToScreen(), { injector: this.injector });
+    if (this.fullscreen() && !this.native()) {
+      this.leaveOverlay();
     }
   }
 
   ngOnDestroy(): void {
     this.observer?.disconnect();
-    if (this.document.fullscreenElement && this.document.fullscreenElement === this.canvas()?.nativeElement) {
-      this.document.exitFullscreen();
+    if (this.nativeElement() === this.canvas()?.nativeElement) {
+      this.exitNative();
+    }
+    if (this.fullscreen() && !this.native()) {
+      this.unlockPage();
     }
   }
 
-  private enterOverlayFullscreen(): void {
+  private nativeElement(): Element | null {
+    const document = this.document as TxFullscreenDocument;
+    return document.fullscreenElement ?? document.webkitFullscreenElement ?? null;
+  }
+
+  private exitNative(): void {
+    const document = this.document as TxFullscreenDocument;
+    const exit = document.exitFullscreen?.bind(document) ?? document.webkitExitFullscreen?.bind(document);
+    const result = exit?.();
+    if (result && typeof result.catch === 'function') {
+      result.catch(() => undefined);
+    }
+  }
+
+  private enterOverlay(): void {
+    this.native.set(false);
     this.fullscreen.set(true);
+    this.lockPage();
+    afterNextRender(
+      () => {
+        const element = this.canvas()?.nativeElement as (HTMLElement & { showPopover?: () => void }) | undefined;
+        if (element?.showPopover && this.fullscreen()) {
+          element.setAttribute('popover', 'manual');
+          try {
+            element.showPopover();
+            this.topLayer.set(true);
+          } catch {
+            element.removeAttribute('popover');
+          }
+        }
+        this.fitToScreen();
+      },
+      { injector: this.injector },
+    );
+  }
+
+  private leaveOverlay(): void {
+    const element = this.canvas()?.nativeElement as (HTMLElement & { hidePopover?: () => void }) | undefined;
+    if (this.topLayer() && element) {
+      try {
+        element.hidePopover?.();
+      } catch {
+        this.topLayer.set(false);
+      }
+      element.removeAttribute('popover');
+    }
+    this.topLayer.set(false);
+    this.fullscreen.set(false);
+    this.unlockPage();
     afterNextRender(() => this.fitToScreen(), { injector: this.injector });
+  }
+
+  private lockPage(): void {
+    const root = this.document.documentElement;
+    this.pageOverflow = root.style.overflow;
+    root.style.overflow = 'hidden';
+  }
+
+  private unlockPage(): void {
+    this.document.documentElement.style.overflow = this.pageOverflow;
   }
 
   private panBy(dx: number, dy: number): void {

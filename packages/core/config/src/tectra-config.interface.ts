@@ -389,6 +389,7 @@ export interface TxTranslations {
   orgChartExitFullscreen: string;
   orgChartExpand: string;
   orgChartCollapse: string;
+  orgChartMore: string;
 }
 
 export type TxValidationMessage = string | ((error: unknown) => string);
