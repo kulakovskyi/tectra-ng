@@ -17,5 +17,6 @@ Part of `tectra-ng`. One entry point per utility, so you only bundle what you im
 | `@tectra-ng/utils/filter-state` | `txFilterState` — filters in local storage and the URL; `TxUrlFilters` / `TxSaveFilters` base classes; `injectStorage`, `TxMemoryStorage` |
 | `@tectra-ng/utils/http` | `buildHttpParams`, `retryHttpReads` (back-off, `Retry-After`), `txHttpStatusTone` / `txHttpStatusLabel` pipes |
 | `@tectra-ng/utils/relative-time` | `txRelativeTime` — "5 minutes ago", "yesterday", "in 3 days" in the tectra locale |
+| `@tectra-ng/utils/validators` | `TxValidators` — code, date, link, password, match, IP, domain, duplicate, time, JSON, price and more, with translated messages in `tx-field-error` |
 
 Docs and examples: [tectra-ng.com](https://tectra-ng.com/components/date).

@@ -55,10 +55,10 @@ Utilities live in `@tectra-ng/utils/<name>` — own package, one flat entry poin
 
 - [x] `txRelativeTime` pipe: "just now", "5 minutes ago", "yesterday", "in 3 days", months, years through `Intl.RelativeTimeFormat` in the tectra locale; `granularity: 'time' | 'day'`, `largestUnit: 'day'`, `now`; `relativeTime()` function; live update with `TxClock`
 
-## 12.8 Validators — `utils/validators` (validators 39, price 6)
+## 12.8 Validators — `utils/validators` (validators 39, price 6) ✅
 
-- [ ] Generic validators with the first app's error keys: `numericCode(length)`, `isoDate`, `futureDate`, `url({ https, host })`, `strongPassword({ minLength, upper, lower, digit, symbol })`, `matchFields(a, b)` (password confirm), `distinctFields(a, b)`, `ip({ cidr, ipv6 })`, `domain`, `duplicate(taken, options)`, `time24`, `noUnsafeChars`, `jsonObject`, `exactValue`, `cssSelector`, `requiredWhen(field, predicate)`, `arraySumMax(field, max)`, `price` + `parsePrice`
-- [ ] Each error key has a translated message in `tx-field-error` (every locale)
+- [x] Generic validators with the first app's error keys: `numericCode(length)`, `isoDate`, `futureDate`, `url({ https, host })`, `strongPassword({ minLength, upper, lower, digit, symbol })`, `matchFields(a, b)` (password confirm), `distinctFields(a, b)`, `ip({ cidr, ipv6 })`, `domain`, `duplicate(taken, options)`, `time24`, `noUnsafeChars`, `jsonObject`, `exactValue`, `cssSelector`, `requiredWhen(field, predicate)`, `arraySumMax(field, max)`, `price` + `parsePrice`
+- [x] Each error key has a translated message in `tx-field-error` (every locale)
 
 ## 12.9 Copy to clipboard — `utils/clipboard` (38)
 
