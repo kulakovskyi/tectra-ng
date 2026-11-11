@@ -39,6 +39,10 @@ jobs:
           cache: npm
           registry-url: https://registry.npmjs.org
       - run: npm ci --legacy-peer-deps
+      - run: npx nx show projects > /dev/null
+        env:
+          NX_DAEMON: 'false'
+          NX_NO_CLOUD: 'true'
       - run: npm run lint
       - run: npm run test
         env:
