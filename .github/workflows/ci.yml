@@ -93,14 +93,6 @@ jobs:
           key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
       - if: steps.browsers.outputs.cache-hit != 'true'
         run: npx playwright install chromium
-      - name: Browser system dependencies
-        run: |
-          for attempt in 1 2 3; do
-            npx playwright install-deps chromium && exit 0
-            echo "Attempt $attempt to install the browser dependencies failed"
-            sleep 30
-          done
-          echo "::warning::The apt mirrors are unreachable; running with the libraries already on the runner"
       - uses: actions/download-artifact@v8
         with:
           name: docs-site
