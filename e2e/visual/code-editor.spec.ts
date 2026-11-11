@@ -25,7 +25,7 @@ test.describe('code editor', () => {
     await expect(root.locator('.tx-code-tok-tag').first()).toHaveText('div');
     await page.keyboard.press('ControlOrMeta+z');
     expect(await lines(root)).toEqual(['<div class="box">', '  ', '</div>']);
-    await page.keyboard.press('ControlOrMeta+Shift+z');
+    await page.keyboard.press('ControlOrMeta+Shift+KeyZ');
     expect(await lines(root)).toEqual(['<div class="box">', '  f(a)', '</div>']);
     await page.keyboard.press('ControlOrMeta+/');
     expect(await lines(root)).toEqual(['<div class="box">', '  <!-- f(a) -->', '</div>']);
