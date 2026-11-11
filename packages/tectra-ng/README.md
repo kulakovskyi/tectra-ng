@@ -1,18 +1,72 @@
-# tectra-ng
+<p align="center">
+  <a href="https://tectra-ng.com">
+    <img src="https://tectra-ng.com/images/social-preview.png" alt="tectra — Angular UI component library" width="100%" />
+  </a>
+</p>
 
-The whole tectra Angular UI kit in one install.
+<p align="center">
+  <b>Open-source Angular UI kit for consoles and admin apps.</b><br />
+  Design tokens, themes, 80+ components, charts and ready page blocks — built on signals, rendered on the server.
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/tectra-ng"><img src="https://img.shields.io/npm/v/tectra-ng?color=2560e4&label=npm" alt="npm version" /></a>
+  <a href="https://www.npmjs.com/package/tectra-ng"><img src="https://img.shields.io/npm/dm/tectra-ng?color=2560e4" alt="npm downloads" /></a>
+  <a href="https://github.com/kulakovskyi/tectra-ng/actions/workflows/ci.yml"><img src="https://github.com/kulakovskyi/tectra-ng/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
+  <a href="https://github.com/kulakovskyi/tectra-ng/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-2560e4" alt="MIT license" /></a>
+  <a href="https://angular.dev"><img src="https://img.shields.io/badge/Angular-22-dd0031?logo=angular&logoColor=white" alt="Angular 22" /></a>
+  <a href="https://www.bestpractices.dev/projects/16576"><img src="https://www.bestpractices.dev/projects/16576/badge" alt="OpenSSF Best Practices" /></a>
+</p>
+
+<p align="center">
+  <a href="https://tectra-ng.com"><b>Documentation</b></a>
+  &nbsp;·&nbsp;
+  <a href="https://tectra-ng.com/getting-started">Getting started</a>
+  &nbsp;·&nbsp;
+  <a href="https://tectra-ng.com/theming">Theming</a>
+  &nbsp;·&nbsp;
+  <a href="https://github.com/kulakovskyi/tectra-ng">GitHub</a>
+</p>
+
+## Why tectra
+
+- **Everything in one kit** — 80+ components, 22 page blocks, 23 SVG charts, 334 icons, brand logos and country flags.
+- **Modern Angular only** — standalone, signal inputs and models, OnPush, zoneless.
+- **Server rendering out of the box** — every component prerenders and hydrates without a layout jump.
+- **Your design, from tokens** — light and dark mode, 4 styles, 17 primary colours and 13 surfaces; `dt`, `pt` and `unstyled` on every component.
+- **Accessible** — WAI-ARIA patterns, full keyboard support, axe-checked in light and dark.
+- **Tree-shakable** — one entry point per component, chart and utility.
+
+## Install
 
 ```bash
 npm i tectra-ng
 ```
 
-It installs every tectra package at the same version. Import from the packages themselves:
+It installs every tectra package at the same version. Provide a theme and import components from the packages themselves:
 
 ```ts
 import { provideTectra } from '@tectra-ng/core/config';
-import { TxButton } from '@tectra-ng/ui/button';
-import { Tectra } from '@tectra-ng/themes';
+import { createTectraPreset } from '@tectra-ng/themes';
+
+export const appConfig: ApplicationConfig = {
+  providers: [provideTectra({ preset: createTectraPreset({ primary: 'blue' }) })],
+};
 ```
+
+```ts
+import { TxButton } from '@tectra-ng/ui/button';
+
+@Component({
+  imports: [TxButton],
+  template: `<button txButton label="Save" (click)="save()"></button>`,
+})
+export class SaveAction {
+  save(): void {}
+}
+```
+
+## Packages
 
 | Package | What it holds |
 |---|---|
@@ -42,4 +96,4 @@ The code editor is not part of `tectra-ng` either — it carries the CodeMirror 
 npm i @tectra-ng/code-editor
 ```
 
-Docs and examples: [tectra-ng.com](https://tectra-ng.com).
+Docs and examples: [tectra-ng.com](https://tectra-ng.com) · MIT license.
