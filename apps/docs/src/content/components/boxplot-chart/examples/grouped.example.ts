@@ -1,11 +1,18 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TxBoxplotSeries, TxBoxplotChart } from '@tectra-ng/charts/boxplot';
 
+function noise(index: number, seed: number): number {
+  const wave = Math.sin((index + 1) * 12.9898 + seed * 78.233) * 43758.5453;
+  return wave - Math.floor(wave) - 0.5;
+}
+
 function sample(count: number, centre: number, spread: number, seed: number): number[] {
   return Array.from({ length: count }, (_, index) => {
-    const wave = Math.sin((index + 1) * 12.9898 + seed * 78.233) * 43758.5453;
-    const noise = wave - Math.floor(wave) - 0.5;
-    return Math.round(centre + noise * spread * 2 + (index % 17 === 0 ? spread * 3 : 0));
+    const bell = (noise(index, seed) + noise(index, seed + 0.31) + noise(index, seed + 0.67)) / 1.5;
+    if (seed % 3 && index === count - 1)
+      return Math.round(centre + spread * (2.4 + (seed % 4) * 0.5));
+    if (seed % 2 && index === count - 2) return Math.round(centre - spread * 2.2);
+    return Math.round(centre + bell * spread);
   });
 }
 
