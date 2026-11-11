@@ -1,3 +1,46 @@
+## 0.2.1 (2026-11-11)
+
+### 🚀 Features
+
+- **utils:** @tectra-ng/utils package, stage 12 checklist and README API tables on the docs API tab ([f7aac84](https://github.com/kulakovskyi/tectra-ng/commit/f7aac84))
+- **utils:** txDate and txDateRange pipes, provideTxDateFormat, calendar functions, date presets and time constants ([30fd598](https://github.com/kulakovskyi/tectra-ng/commit/30fd598))
+- **utils:** txPluralForm and txPlural pipes in the tectra locale, plural functions ([c5858ec](https://github.com/kulakovskyi/tectra-ng/commit/c5858ec))
+- **utils:** txDebounceInput directive with distinct, minimum length, flush and cancel ([eacfce1](https://github.com/kulakovskyi/tectra-ng/commit/eacfce1))
+- **utils:** scroll to and focus the first invalid field, txScrollToInvalid on a form, markAllTouched ([10790d2](https://github.com/kulakovskyi/tectra-ng/commit/10790d2))
+- **utils:** txFilterState in local storage and the URL with back and forward, TxUrlFilters and TxSaveFilters base classes, server safe storage ([63b1e8e](https://github.com/kulakovskyi/tectra-ng/commit/63b1e8e))
+- **utils:** buildHttpParams, retryHttpReads with back-off and Retry-After, HTTP status tone and translated label pipes ([06c6b8c](https://github.com/kulakovskyi/tectra-ng/commit/06c6b8c))
+- **utils:** txRelativeTime pipe in the tectra locale with granularity, largest unit, numeric and style options ([6bae50b](https://github.com/kulakovskyi/tectra-ng/commit/6bae50b))
+- **utils:** TxValidators for codes, dates, links, passwords, matching fields, IP, domains, duplicates, JSON and prices, with messages in tx-field-error ([fad741a](https://github.com/kulakovskyi/tectra-ng/commit/fad741a))
+- **utils:** txCopy directive and TxClipboard with a translated kit toast, a fallback outside a secure context and keyboard access ([b404041](https://github.com/kulakovskyi/tectra-ng/commit/b404041))
+- **utils:** poll until a job is done with back-off and a hidden-tab pause, refreshEvery, TxPoller with signals ([de4d1c4](https://github.com/kulakovskyi/tectra-ng/commit/de4d1c4))
+- **utils:** TxClock with a shared now signal, countdowns as signals, no timer on the server ([4995acf](https://github.com/kulakovskyi/tectra-ng/commit/4995acf))
+- **utils:** txGoBack goes back in history or to a fallback route when the page was opened directly ([13a8a36](https://github.com/kulakovskyi/tectra-ng/commit/13a8a36))
+- **utils:** txCurrencySymbol for any ISO currency in the tectra locale ([c35b692](https://github.com/kulakovskyi/tectra-ng/commit/c35b692))
+- **utils:** txInView with enter and leave classes and txVisibleOnScroll for items seen in a scrolling list ([583e727](https://github.com/kulakovskyi/tectra-ng/commit/583e727))
+- **utils:** txFileSize in the locale number format, downloadFile and downloadBlob ([90c6d07](https://github.com/kulakovskyi/tectra-ng/commit/90c6d07))
+- **utils:** provideTxTitle with Page · App titles, a prefix for counters and translated keys ([27a1f88](https://github.com/kulakovskyi/tectra-ng/commit/27a1f88))
+- **utils:** TxBreakpoints with mobile, tablet and any media query as signals ([66edf08](https://github.com/kulakovskyi/tectra-ng/commit/66edf08))
+- **utils:** TxSelection with header checkbox state, toggle all and selected items ([43faefd](https://github.com/kulakovskyi/tectra-ng/commit/43faefd))
+- **utils:** txStopPropagation for clicks or a list of events, with preventDefault ([cbce550](https://github.com/kulakovskyi/tectra-ng/commit/cbce550))
+- **utils:** txSearch and txFilterBy with the table match modes, accent and case insensitive ([b9642ef](https://github.com/kulakovskyi/tectra-ng/commit/b9642ef))
+- **utils:** txTruncate at the end or in the middle, txCapitalize, txHttpPrefix, slugify, transliterate and escapeHtml ([575b699](https://github.com/kulakovskyi/tectra-ng/commit/575b699))
+- **utils:** readTextStream and textChunks for streamed text answers ([efe4b08](https://github.com/kulakovskyi/tectra-ng/commit/efe4b08))
+- **utils:** pickRandom, pickRandomN and shuffle ([7547946](https://github.com/kulakovskyi/tectra-ng/commit/7547946))
+- **utils:** txDragScroll to scroll a box by dragging or pan a canvas ([2691d80](https://github.com/kulakovskyi/tectra-ng/commit/2691d80))
+- **utils:** trackFormChanges with a changed signal, commit and revert, and TxFormChangeTracker ([324d36a](https://github.com/kulakovskyi/tectra-ng/commit/324d36a))
+- **utils:** txScrollEnd for infinite scrolling, once per page and up to a limit ([9161962](https://github.com/kulakovskyi/tectra-ng/commit/9161962))
+- **utils:** txAutoFocus on a field or the first field inside, with select ([22e1ff6](https://github.com/kulakovskyi/tectra-ng/commit/22e1ff6))
+- **utils:** txStyleClass shows, hides or toggles an element by classes with enter and leave animations; stage 12 done ([a38c2a3](https://github.com/kulakovskyi/tectra-ng/commit/a38c2a3))
+
+### 🩹 Fixes
+
+- **docs:** filter toolbar in one row, buttons keep their width in the utility examples ([f1c1b48](https://github.com/kulakovskyi/tectra-ng/commit/f1c1b48))
+- **ui:** tx-field keeps its label and control at the top when a grid row stretches it; tidy the validators list example ([88f01dc](https://github.com/kulakovskyi/tectra-ng/commit/88f01dc))
+
+### ❤️ Thank You
+
+- tears @kulakovskyi
+
 ## 0.2.0 (2026-11-11)
 
 ### 🚀 Features
