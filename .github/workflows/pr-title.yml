@@ -1,0 +1,28 @@
+name: pr-title
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+permissions: {}
+
+concurrency:
+  group: pr-title-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  conventional:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Check the title
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          pattern='^(feat|fix|perf|refactor|docs|test|build|ci|chore|style|revert)(\([a-z0-9-]+\))?!?: [^ ].+$'
+          if [[ "$TITLE" =~ $pattern ]]; then
+            echo "Conventional title: $TITLE"
+          else
+            echo "::error::The PR title becomes the squash commit, and the release reads versions and the changelog from it. Use a conventional title like 'feat(ui): …' or 'fix(docs): …' — types: feat, fix, perf, refactor, docs, test, build, ci, chore, style, revert."
+            exit 1
+          fi
