@@ -62,7 +62,7 @@ export function printPageCss(options: TxExportPrintOptions, columns: number): st
 }
 
 export function writeMarkdown(table: TxExportTable, options: TxExportMarkdownOptions = {}, context: TxExportTextContext): string {
-  const clean = (text: string) => text.replace(/\|/g, '\\|').replace(/\r?\n/g, '<br>');
+  const clean = (text: string) => text.replace(/\\/g, '\\\\').replace(/\|/g, '\\|').replace(/\r?\n/g, '<br>');
   const lines: string[] = [];
   if (options.title) lines.push(`# ${options.title}`, '');
   const titles = table.columns.map((column) => clean(column.title) || ' ');

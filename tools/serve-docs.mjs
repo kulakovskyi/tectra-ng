@@ -1,6 +1,6 @@
 import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
-import { extname, join, resolve } from 'node:path';
+import { extname, isAbsolute, join, relative, resolve } from 'node:path';
 
 const root = resolve(process.argv[2] ?? 'dist/apps/docs/browser');
 const port = Number(process.argv[3] ?? 4310);
@@ -19,10 +19,14 @@ const types = {
   '.xml': 'application/xml',
 };
 
-const isFile = async (file) => file.startsWith(root) && (await stat(file).catch(() => null))?.isFile();
+const inRoot = (file) => {
+  const path = relative(root, file);
+  return path === '' || (!path.startsWith('..') && !isAbsolute(path));
+};
+const isFile = async (file) => inRoot(file) && (await stat(file).catch(() => null))?.isFile();
 
 async function resolveFile(path) {
-  const file = join(root, path.replace(/\/+$/, '') || '/');
+  const file = resolve(root, `.${path.replace(/\/+$/, '') || '/'}`);
   for (const candidate of [file, join(file, 'index.html')]) {
     if (await isFile(candidate)) {
       return { file: candidate, status: 200 };

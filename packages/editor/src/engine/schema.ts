@@ -48,7 +48,7 @@ const blockAttrs = { align: { default: null }, indent: { default: 0 }, dir: { de
 
 export function toVideoEmbed(value: string): string | null {
   const url = value.trim();
-  const youtube = url.match(/(?:youtube(?:-nocookie)?\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{6,})/i);
+  const youtube = url.match(/(?:youtube(?:-nocookie)?\.com\/(?:watch\?(?:[^&#]*&)*v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{6,})/i);
   if (youtube) {
     return `https://www.youtube.com/embed/${youtube[1]}`;
   }
