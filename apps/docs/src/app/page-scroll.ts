@@ -1,6 +1,6 @@
 import { ViewportScroller } from '@angular/common';
 import { inject } from '@angular/core';
-import { ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 
 export function pagePath(url: string): string {
@@ -15,6 +15,19 @@ export function snapshotPath(snapshot: ActivatedRouteSnapshot): string {
     current = current.firstChild;
   }
   return segments.join('/');
+}
+
+export function routePath(route: ActivatedRoute): string {
+  return `/${route.snapshot.pathFromRoot.flatMap((item) => item.url.map((segment) => segment.path)).join('/')}`;
+}
+
+export function jumpToAnchor(event: MouseEvent, document: Document, href: string, id: string): void {
+  if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+    return;
+  }
+  event.preventDefault();
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.defaultView?.history.replaceState(document.defaultView.history.state, '', href);
 }
 
 export function scrollToTopOnPageChange(): void {

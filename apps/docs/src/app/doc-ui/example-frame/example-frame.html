@@ -2,7 +2,7 @@
   <header class="example__head">
     <div class="example__titles">
       <h3 class="example__title">
-        <a class="example__anchor" [href]="'#' + example().id">{{ example().title }}</a>
+        <a class="example__anchor" [href]="anchorHref()" (click)="jump($event)">{{ example().title }}</a>
       </h3>
       <div class="example__description" [innerHTML]="example().descriptionHtml"></div>
     </div>

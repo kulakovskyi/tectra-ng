@@ -13,7 +13,7 @@
         class="toc__link"
         [class.toc__link--active]="activeId() === example.id"
         [attr.aria-current]="activeId() === example.id ? 'location' : null"
-        [href]="'#' + example.id"
+        [href]="anchorHref(example.id)"
         (click)="scrollTo($event, example.id)"
         >{{ example.title }}</a
       >

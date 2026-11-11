@@ -3,6 +3,8 @@ import { ChangeDetectionStrategy, Component, DestroyRef, Type, effect, inject, i
 import { ExampleFrame } from '../../../../doc-ui/example-frame/example-frame';
 import { ExampleLoader } from '../../../../doc-ui/example-loader.service';
 import { DocComponent } from '../../../../types/doc-component.interface';
+import { ActivatedRoute } from '@angular/router';
+import { jumpToAnchor, routePath } from '../../../../page-scroll';
 
 const ACTIVE_OFFSET = 160;
 
@@ -17,6 +19,7 @@ const ACTIVE_OFFSET = 160;
 export class FeaturesTab {
   private exampleLoader = inject(ExampleLoader);
   private document = inject(DOCUMENT);
+  private readonly path = routePath(inject(ActivatedRoute));
   private frame = 0;
 
   doc = input.required<DocComponent>();
@@ -48,10 +51,12 @@ export class FeaturesTab {
     this.frame = view.requestAnimationFrame(() => this.updateActive());
   }
 
-  scrollTo(event: Event, id: string): void {
-    event.preventDefault();
-    this.document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    history.replaceState(null, '', `#${id}`);
+  anchorHref(id: string): string {
+    return `${this.path}#${id}`;
+  }
+
+  scrollTo(event: MouseEvent, id: string): void {
+    jumpToAnchor(event, this.document, this.anchorHref(id), id);
   }
 
   private updateActive(): void {
