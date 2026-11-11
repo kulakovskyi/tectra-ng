@@ -452,7 +452,10 @@ test.describe('charts', () => {
     expect(Math.round(full?.x ?? -1)).toBe(0);
     expect(Math.round(full?.y ?? -1)).toBe(0);
     expect(Math.round(full?.width ?? 0)).toBeGreaterThanOrEqual(screen.width);
+    expect(await page.evaluate(() => [document.documentElement.style.overflow, document.documentElement.style.getPropertyValue('scrollbar-gutter')])).toEqual(['hidden', 'auto']);
     await page.keyboard.press('Escape');
+    await expect.poll(() => page.evaluate(() => document.documentElement.style.overflow)).toBe('');
+    expect(await page.evaluate(() => document.documentElement.style.getPropertyValue('scrollbar-gutter'))).toBe('');
     await expect(chart.locator('.tx-org-chart__canvas--fullscreen')).toHaveCount(0);
   });
 

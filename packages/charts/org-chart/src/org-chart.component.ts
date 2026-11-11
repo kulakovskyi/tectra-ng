@@ -177,6 +177,8 @@ export class TxOrgChart implements OnDestroy {
   private suppressClick = false;
   private lastFocusKey = '';
   private pageOverflow = '';
+  private pageLocked = false;
+  private pageGutter = '';
 
   constructor() {
     afterNextRender(() => {
@@ -372,6 +374,11 @@ export class TxOrgChart implements OnDestroy {
 
   onFullscreenChange(): void {
     const native = this.nativeElement() === this.canvas()?.nativeElement;
+    if (native) {
+      this.lockPage(true);
+    } else if (this.native()) {
+      this.unlockPage();
+    }
     this.native.set(native);
     if (native === this.fullscreen()) return;
     this.fullscreen.set(native);
@@ -393,9 +400,7 @@ export class TxOrgChart implements OnDestroy {
     if (this.nativeElement() === this.canvas()?.nativeElement) {
       this.exitNative();
     }
-    if (this.fullscreen() && !this.native()) {
-      this.unlockPage();
-    }
+    this.unlockPage();
   }
 
   private nativeElement(): Element | null {
@@ -450,14 +455,28 @@ export class TxOrgChart implements OnDestroy {
     afterNextRender(() => this.fitToScreen(), { injector: this.injector });
   }
 
-  private lockPage(): void {
+  private lockPage(gutter = false): void {
+    if (this.pageLocked) return;
     const root = this.document.documentElement;
     this.pageOverflow = root.style.overflow;
+    this.pageGutter = root.style.getPropertyValue('scrollbar-gutter');
     root.style.overflow = 'hidden';
+    if (gutter) {
+      root.style.setProperty('scrollbar-gutter', 'auto');
+    }
+    this.pageLocked = true;
   }
 
   private unlockPage(): void {
-    this.document.documentElement.style.overflow = this.pageOverflow;
+    if (!this.pageLocked) return;
+    const root = this.document.documentElement;
+    root.style.overflow = this.pageOverflow;
+    if (this.pageGutter) {
+      root.style.setProperty('scrollbar-gutter', this.pageGutter);
+    } else {
+      root.style.removeProperty('scrollbar-gutter');
+    }
+    this.pageLocked = false;
   }
 
   private panBy(dx: number, dy: number): void {
