@@ -63,6 +63,7 @@ export const appLayoutTokens = {
     pinHoverBackground: tokenRef('surface-hover'),
     pinSwapDuration: '0.2s',
     menuPadding: '7px 0 28px',
+    menuItemInset: '10.5px',
     scrollbarColor: tokenRef('surface-border'),
   },
   mask: {

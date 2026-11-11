@@ -145,4 +145,46 @@ test.describe('app layout', () => {
     expect(frames.length).toBeGreaterThan(5);
     expect(frames.every(Boolean)).toBe(true);
   });
+
+  test('menu icons stand on the logo axis and stay put while the rail opens and folds', async ({ page }) => {
+    const root = example(page, 'rail');
+    await root.scrollIntoViewIfNeeded();
+    const sidebar = root.locator('aside');
+    const menu = root.locator('tx-panel-menu');
+    await expect(menu).toHaveClass(/tx-panel-menu--collapsed/);
+    const logo = await box(root.locator('.tx-app-layout__brand .tx-app-layout__logo'));
+    const axis = logo.x + logo.width / 2;
+    const centres = await menu.locator('.tx-panel-menu__icon').evaluateAll((icons) =>
+      icons.filter((icon) => (icon as HTMLElement).offsetParent).map((icon) => icon.getBoundingClientRect().left + icon.getBoundingClientRect().width / 2),
+    );
+    expect(centres.length).toBeGreaterThan(3);
+    for (const centre of centres) {
+      expect(Math.abs(centre - axis)).toBeLessThanOrEqual(0.5);
+    }
+    const watch = () =>
+      page.evaluate(
+        () =>
+          new Promise<number>((resolve) => {
+            const icon = document.querySelector('app-layout-rail-example .tx-panel-menu__icon') as HTMLElement;
+            const start = icon.getBoundingClientRect().left;
+            let drift = 0;
+            const began = performance.now();
+            const tick = () => {
+              drift = Math.max(drift, Math.abs(icon.getBoundingClientRect().left - start));
+              if (performance.now() - began < 600) requestAnimationFrame(tick);
+              else resolve(drift);
+            };
+            requestAnimationFrame(tick);
+          }),
+      );
+    const rail = await box(sidebar);
+    const opening = watch();
+    await page.mouse.move(rail.x + 30, rail.y + 200);
+    expect(await opening).toBeLessThanOrEqual(0.5);
+    await expect(menu).not.toHaveClass(/tx-panel-menu--collapsed/);
+    const folding = watch();
+    await page.mouse.move(5, 5);
+    expect(await folding).toBeLessThanOrEqual(0.5);
+    await expect(menu).toHaveClass(/tx-panel-menu--collapsed/);
+  });
 });

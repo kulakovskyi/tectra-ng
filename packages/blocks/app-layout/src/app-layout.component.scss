@@ -289,7 +289,24 @@
     rotate: 0deg;
   }
 
+  .tx-app-layout__sidebar {
+    --tx-app-layout-menu-indent1: var(--tx-panel-menu-sidebar-indent1);
+    --tx-app-layout-menu-indent2: var(--tx-panel-menu-sidebar-indent2);
+    --tx-app-layout-menu-indent3: var(--tx-panel-menu-sidebar-indent3);
+    --tx-app-layout-menu-badge-start: var(--tx-panel-menu-sidebar-collapsed-badge-start);
+    --tx-app-layout-menu-lock-start: var(--tx-panel-menu-sidebar-collapsed-lock-start);
+    --tx-app-layout-menu-shift: calc(
+      (var(--tx-app-layout-sidebar-rail-width) - var(--tx-panel-menu-sidebar-icon-size)) / 2 - var(--tx-app-layout-sidebar-menu-item-inset) -
+        var(--tx-panel-menu-sidebar-indent1)
+    );
+  }
+
   .tx-app-layout__menu {
+    --tx-panel-menu-sidebar-indent1: calc(var(--tx-app-layout-menu-indent1) + var(--tx-app-layout-menu-shift));
+    --tx-panel-menu-sidebar-indent2: calc(var(--tx-app-layout-menu-indent2) + var(--tx-app-layout-menu-shift));
+    --tx-panel-menu-sidebar-indent3: calc(var(--tx-app-layout-menu-indent3) + var(--tx-app-layout-menu-shift));
+    --tx-panel-menu-sidebar-collapsed-badge-start: calc(var(--tx-app-layout-menu-badge-start) + var(--tx-app-layout-menu-shift));
+    --tx-panel-menu-sidebar-collapsed-lock-start: calc(var(--tx-app-layout-menu-lock-start) + var(--tx-app-layout-menu-shift));
     padding: var(--tx-app-layout-sidebar-menu-padding);
     scrollbar-color: var(--tx-app-layout-sidebar-scrollbar-color) transparent;
     scrollbar-width: thin;
