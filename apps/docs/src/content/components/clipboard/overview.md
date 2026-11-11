@@ -8,3 +8,5 @@ examples: basic, plain-element, messages, service
 # Clipboard
 
 Copies a value on click and says so with a kit toast. Works outside a secure context too, and makes a plain element reachable from the keyboard.
+
+Part of `@tectra-ng/utils` (`npm install @tectra-ng/utils`, also included in `tectra-ng`).

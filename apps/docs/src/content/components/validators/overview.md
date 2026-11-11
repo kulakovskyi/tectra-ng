@@ -8,3 +8,5 @@ examples: account, links-and-network, lists, confirmation, formats
 # Validators
 
 Form validators apps write again and again: codes, dates, links, passwords, IP addresses, domains, duplicates, prices. Every error has a translated message in the kit fields.
+
+Part of `@tectra-ng/utils` (`npm install @tectra-ng/utils`, also included in `tectra-ng`).

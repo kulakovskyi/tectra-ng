@@ -8,3 +8,5 @@ examples: basic, options, live, locale
 # Relative Time
 
 "5 minutes ago", "yesterday", "in 3 days" — a date said relative to now in the tectra locale.
+
+Part of `@tectra-ng/utils` (`npm install @tectra-ng/utils`, also included in `tectra-ng`).

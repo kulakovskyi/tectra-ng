@@ -8,3 +8,5 @@ examples: basic, enter, distinct-and-min-length, icon-field
 # Debounce Input
 
 Waits until the user stops typing before it reports the value — one request per search instead of one per keystroke. Enter reports at once.
+
+Part of `@tectra-ng/utils` (`npm install @tectra-ng/utils`, also included in `tectra-ng`).
