@@ -20,7 +20,7 @@ export interface TxScatterSeries {
 
 export type TxScatterChartXType = 'linear' | 'time';
 
-export type TxScatterChartPart = TxChartPart | 'point' | 'trendLine' | 'guide';
+export type TxScatterChartPart = TxChartPart | 'annotation' | 'point' | 'trendLine' | 'guide';
 
 export interface TxScatterDatum {
   series: number;

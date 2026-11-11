@@ -52,6 +52,18 @@
   outline: none;
 }
 
+.tx-chart-frame__plot--zoomable {
+  touch-action: pan-y;
+}
+
+.tx-chart-frame__plot--zoomed {
+  cursor: grab;
+}
+
+.tx-chart-frame__plot--zoomed:active {
+  cursor: grabbing;
+}
+
 .tx-chart-frame__plot--fixed {
   flex: 0 0 auto;
 }

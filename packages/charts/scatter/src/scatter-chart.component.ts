@@ -49,6 +49,10 @@ import {
   timeInterval,
   timeTooltipFormatter,
   toggleKey,
+  TxChartAnnotation,
+  TxChartAnnotations,
+  chartAnnotationShapes,
+  toTime,
 } from '@tectra-ng/charts/core';
 import { uniqueId } from '@tectra-ng/core/a11y';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
@@ -74,7 +78,7 @@ const BUBBLE_PLOT_SHARE = 0.8;
 
 @Component({
   selector: 'tx-scatter-chart',
-  imports: [TxChartFrame, TxChartAxes],
+  imports: [TxChartFrame, TxChartAxes, TxChartAnnotations],
   templateUrl: './scatter-chart.component.html',
   styleUrl: './scatter-chart.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -98,6 +102,7 @@ export class TxScatterChart {
 
   readonly series = input<readonly TxScatterSeries[] | null | undefined>([]);
   readonly xType = input<TxScatterChartXType>('linear');
+  readonly annotations = input<readonly TxChartAnnotation[] | null | undefined>([]);
   readonly height = input<TxChartHeight>(350);
   readonly trendLine = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly showLegend = input<boolean, unknown>(true, { transform: booleanAttribute });
@@ -267,6 +272,18 @@ export class TxScatterChart {
       x: { x1: dot.cx, y1: bottom ? dot.cy + dot.r : plot.top, x2: dot.cx, y2: bottom ? plot.top + plot.height : dot.cy - dot.r },
       y: { x1: left ? plot.left : dot.cx + dot.r, y1: dot.cy, x2: left ? dot.cx - dot.r : plot.left + plot.width, y2: dot.cy },
     };
+  });
+
+  readonly annotationShapes = computed(() => {
+    const layout = this.layout();
+    return chartAnnotationShapes(this.annotations(), {
+      plot: layout.plot,
+      x: (value) => {
+        const x = this.xType() === 'time' ? toTime(value) : typeof value === 'number' ? value : Number(value);
+        return x === null || !Number.isFinite(x) ? null : layout.categoryPosition(0, x);
+      },
+      y: (value) => layout.value.map(value),
+    });
   });
 
   readonly labels = computed(() => {

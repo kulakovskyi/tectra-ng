@@ -1,6 +1,19 @@
-@if (toolbar()) {
+@if (toolbar() || zoomedIn()) {
   <div class="tx-chart-frame__toolbar">
-    @if (canExport()) {
+    @if (zoomedIn()) {
+      <button
+        txButton
+        type="button"
+        class="tx-chart-frame__reset"
+        icon="search-minus"
+        size="small"
+        severity="secondary"
+        text
+        [label]="translations().chartResetZoom"
+        (click)="zoomReset.emit()"
+      ></button>
+    }
+    @if (toolbar() && canExport()) {
       <button
         txButton
         type="button"
@@ -52,10 +65,16 @@
   [attr.aria-label]="empty() || loading() ? null : summary()"
   [attr.aria-describedby]="interactive() && !empty() && !loading() ? hintId : null"
   [attr.tabindex]="interactive() && !empty() && !loading() ? 0 : null"
+  [class.tx-chart-frame__plot--zoomable]="zoomable()"
+  [class.tx-chart-frame__plot--zoomed]="zoomedIn()"
   (pointermove)="onPointer($event, 'move')"
-  (pointerdown)="onPointer($event, 'move')"
+  (pointerdown)="onPointer($event, 'down')"
+  (pointerup)="onPointer($event, 'up')"
+  (pointercancel)="onPointer($event, 'up')"
   (pointerleave)="onPointer($event, 'leave')"
   (click)="onPointer($event, 'click')"
+  (wheel)="onWheel($event)"
+  (dblclick)="onDoubleClick()"
   (keydown)="onKeydown($event)"
   (blur)="pointer.emit({ x: 0, y: 0, type: 'leave', target: null })"
 >
@@ -93,7 +112,7 @@
   }
 </div>
 @if (interactive() && !empty() && !loading()) {
-  <span class="cdk-visually-hidden" [id]="hintId">{{ translations().chartNavigateHint }}</span>
+  <span class="cdk-visually-hidden" [id]="hintId">{{ translations().chartNavigateHint }}{{ zoomable() ? '. ' + translations().chartZoomHint : '' }}</span>
 }
 @if (table(); as data) {
   @if (!empty() && !loading()) {

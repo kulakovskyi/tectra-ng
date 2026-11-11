@@ -200,8 +200,19 @@ export type TxChartHeight = number | string;
 export interface TxChartPointerEvent {
   x: number;
   y: number;
-  type: 'move' | 'leave' | 'click';
+  type: 'move' | 'leave' | 'click' | 'down' | 'up';
   target: Element | null;
+  buttons?: number;
+  pointerType?: string;
+}
+
+export interface TxChartZoomEvent {
+  x: number;
+  factor: number;
+}
+
+export interface TxChartPanEvent {
+  dx: number;
 }
 
 export interface TxChartKeyEvent {

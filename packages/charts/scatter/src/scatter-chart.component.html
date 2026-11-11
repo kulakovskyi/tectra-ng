@@ -26,6 +26,7 @@
   (tooltipClosed)="active.set(null)"
 >
   <svg:g [tx-chart-axes]="layout().axes" [gridPart]="passThrough().grid" [axisPart]="passThrough().axis" />
+  <svg:g [tx-chart-annotations]="annotationShapes()" layer="back" [part]="passThrough().annotation" />
   @if (guides(); as guide) {
     <svg:g class="tx-scatter-chart__guides" [class]="passThrough().guide?.class" [style]="passThrough().guide?.style">
       <svg:line class="tx-scatter-chart__guide" [attr.x1]="guide.x.x1" [attr.y1]="guide.x.y1" [attr.x2]="guide.x.x2" [attr.y2]="guide.x.y2" />
@@ -64,4 +65,5 @@
       [style.stroke]="trend.color"
     />
   }
+  <svg:g [tx-chart-annotations]="annotationShapes()" layer="front" [part]="passThrough().annotation" />
 </tx-chart-frame>

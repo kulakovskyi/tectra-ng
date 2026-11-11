@@ -55,6 +55,10 @@ import {
   stackValues,
   stepIndex,
   toggleKey,
+  TxChartAnnotation,
+  TxChartAnnotations,
+  chartAnnotationShapes,
+  chartCategoryIndex,
 } from '@tectra-ng/charts/core';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
 import { TxLocaleService, formatMessage, injectTranslations } from '@tectra-ng/core/i18n';
@@ -71,7 +75,7 @@ const EDGE_SLACK = 8;
 
 @Component({
   selector: 'tx-column-chart',
-  imports: [TxChartFrame, TxChartAxes, TxChartHoverBand],
+  imports: [TxChartFrame, TxChartAxes, TxChartHoverBand, TxChartAnnotations],
   templateUrl: './column-chart.component.html',
   styleUrl: './column-chart.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -96,6 +100,7 @@ export class TxColumnChart {
 
   readonly series = input<readonly TxChartSeries[] | null | undefined>([]);
   readonly categories = input<readonly (string | number | Date)[] | null | undefined>([]);
+  readonly annotations = input<readonly TxChartAnnotation[] | null | undefined>([]);
   readonly stacked = input<boolean, unknown>(true, { transform: booleanAttribute });
   readonly stackType = input<TxColumnChartStackType>('normal');
   readonly height = input<TxChartHeight>(350);
@@ -267,6 +272,25 @@ export class TxColumnChart {
   readonly hoverBand = computed(() => {
     const active = this.active();
     return active ? chartBandRect(this.band(), active.index, this.layout().plot, this.horizontal()) : null;
+  });
+
+  readonly annotationShapes = computed(() => {
+    const layout = this.layout();
+    const band = this.band();
+    const labels = this.table().labels;
+    return chartAnnotationShapes(this.annotations(), {
+      plot: layout.plot,
+      horizontal: this.horizontal(),
+      x: (value) => {
+        const index = chartCategoryIndex(value, labels);
+        return index < 0 ? null : band.center(index);
+      },
+      xSpan: (value) => {
+        const index = chartCategoryIndex(value, labels);
+        return index < 0 ? null : [band.start(index) - (band.step - band.bandwidth) / 2, band.start(index) + band.step - (band.step - band.bandwidth) / 2];
+      },
+      y: (value) => layout.value.map(value),
+    });
   });
 
   readonly legendItems = computed<TxChartLegendItem[]>(() => {

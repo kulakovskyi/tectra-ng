@@ -4,7 +4,7 @@ tokens: chart
 source: packages/charts/combo
 package: @tectra-ng/charts/combo
 import: TxComboChart
-examples: basic, second-axis, area, stacked, axes, tooltip, events, loading-and-empty, live, accessibility, design-tokens, pass-through, unstyled
+examples: basic, second-axis, area, stacked, axes, annotations, tooltip, events, loading-and-empty, live, accessibility, design-tokens, pass-through, unstyled
 ---
 # Combo Chart
 

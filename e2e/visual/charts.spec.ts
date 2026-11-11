@@ -408,6 +408,43 @@ test.describe('charts', () => {
     await expect(sunburst.locator('.tx-sunburst-chart__center')).toContainText('GB used');
   });
 
+  test('line chart: annotations sit on their data, Ctrl + wheel zooms at the pointer, the brush moves the window', async ({ page }) => {
+    await page.goto('/components/line-chart');
+    const annotated = example(page, 'Annotations').locator('tx-line-chart');
+    await annotated.scrollIntoViewIfNeeded();
+    await expect(annotated.locator('.tx-chart-annotation__label')).toHaveText(['Campaign', 'New pricing', 'Goal', 'Record']);
+    const marker = await annotated.locator('.tx-chart-annotation__point').boundingBox();
+    const svg = await annotated.locator('svg.tx-chart-frame__svg').boundingBox();
+    expect(marker && svg && marker.x + marker.width <= svg.x + svg.width + 1).toBeTruthy();
+
+    const zoomed = example(page, 'Zoom').locator('tx-line-chart');
+    await zoomed.scrollIntoViewIfNeeded();
+    const plot = zoomed.locator('.tx-chart-frame__plot');
+    const box = await plot.boundingBox();
+    if (!box) throw new Error('no plot');
+    const first = await zoomed.locator('.tx-chart-axes__axis[data-position="bottom"] .tx-chart-axes__label').first().textContent();
+    await page.mouse.move(box.x + box.width * 0.6, box.y + box.height / 2);
+    await page.keyboard.down('Control');
+    await page.mouse.wheel(0, -500);
+    await page.keyboard.up('Control');
+    await expect(zoomed.locator('.tx-chart-frame__reset')).toBeVisible();
+    await expect(example(page, 'Zoom').locator('.log')).toHaveText('Zoomed in');
+    expect(await zoomed.locator('.tx-chart-axes__axis[data-position="bottom"] .tx-chart-axes__label').first().textContent()).not.toBe(first);
+    await zoomed.locator('.tx-chart-frame__reset').click();
+    await expect(example(page, 'Zoom').locator('.log')).toHaveText('Whole range');
+
+    const brushed = example(page, 'Brush').locator('tx-line-chart');
+    await brushed.scrollIntoViewIfNeeded();
+    const windowRect = brushed.locator('.tx-line-chart__overview-window');
+    const before = await windowRect.boundingBox();
+    if (!before) throw new Error('no window');
+    await page.mouse.move(before.x + before.width / 2, before.y + before.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(before.x + before.width / 2 - 120, before.y + before.height / 2, { steps: 6 });
+    await page.mouse.up();
+    await expect.poll(async () => (await windowRect.boundingBox())?.x ?? 0).toBeLessThan(before.x - 60);
+  });
+
   test('column chart: hover anywhere in a category lays a band, the tooltip follows the cursor, horizontal bars fit', async ({ page }) => {
     await page.goto('/components/column-chart');
     const chart = example(page, 'Basic').locator('tx-column-chart');

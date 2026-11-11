@@ -4,7 +4,7 @@ tokens: chart
 source: packages/charts/scatter
 package: @tectra-ng/charts/scatter
 import: TxScatterChart
-examples: basic, bubble, trend-line, point-colors-and-labels, time-axis, axes, tooltip-template, events, loading-and-empty, live, accessibility, design-tokens, pass-through, unstyled
+examples: basic, bubble, trend-line, point-colors-and-labels, time-axis, axes, annotations, tooltip-template, events, loading-and-empty, live, accessibility, design-tokens, pass-through, unstyled
 ---
 # Scatter Chart
 

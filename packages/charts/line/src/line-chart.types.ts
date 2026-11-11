@@ -4,7 +4,7 @@ export type TxLineChartCurve = TxChartCurve;
 
 export type TxLineChartStackType = 'normal' | '100%';
 
-export type TxLineChartPart = TxChartPart | 'line' | 'area' | 'marker' | 'crosshair';
+export type TxLineChartPart = TxChartPart | 'annotation' | 'brush' | 'line' | 'area' | 'marker' | 'crosshair';
 
 export interface TxLineChartPointEvent {
   seriesIndex: number;

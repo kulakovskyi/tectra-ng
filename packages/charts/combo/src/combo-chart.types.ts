@@ -11,7 +11,7 @@ export interface TxComboChartSeries extends TxChartSeries {
 
 export type TxComboChartCurve = TxChartCurve;
 
-export type TxComboChartPart = TxChartPart | 'bar' | 'line' | 'area' | 'marker';
+export type TxComboChartPart = TxChartPart | 'annotation' | 'bar' | 'line' | 'area' | 'marker';
 
 export interface TxComboChartBar {
   key: string;

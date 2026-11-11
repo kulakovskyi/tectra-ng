@@ -58,6 +58,10 @@ import {
   stackValues,
   stepIndex,
   toggleKey,
+  TxChartAnnotation,
+  TxChartAnnotations,
+  chartAnnotationShapes,
+  chartCategoryIndex,
 } from '@tectra-ng/charts/core';
 import { uniqueId } from '@tectra-ng/core/a11y';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
@@ -81,7 +85,7 @@ const EDGE_SLACK = 8;
 
 @Component({
   selector: 'tx-combo-chart',
-  imports: [TxChartFrame, TxChartAxes, TxChartHoverBand],
+  imports: [TxChartFrame, TxChartAxes, TxChartHoverBand, TxChartAnnotations],
   templateUrl: './combo-chart.component.html',
   styleUrl: './combo-chart.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -105,6 +109,7 @@ export class TxComboChart {
 
   readonly series = input<readonly TxComboChartSeries[] | null | undefined>([]);
   readonly categories = input<readonly (string | number | Date)[] | null | undefined>([]);
+  readonly annotations = input<readonly TxChartAnnotation[] | null | undefined>([]);
   readonly height = input<TxChartHeight>(350);
   readonly stacked = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly curve = input<TxComboChartCurve>('smooth');
@@ -311,6 +316,23 @@ export class TxComboChart {
   readonly hoverBand = computed(() => {
     const active = this.active();
     return active ? chartBandRect(this.band(), active.index, this.layout().plot) : null;
+  });
+
+  readonly annotationShapes = computed(() => {
+    const band = this.band();
+    const labels = this.table().labels;
+    return chartAnnotationShapes(this.annotations(), {
+      plot: this.layout().plot,
+      x: (value) => {
+        const index = chartCategoryIndex(value, labels);
+        return index < 0 ? null : band.center(index);
+      },
+      xSpan: (value) => {
+        const index = chartCategoryIndex(value, labels);
+        return index < 0 ? null : [band.start(index), band.start(index) + band.step];
+      },
+      y: (value, axis) => this.scales()[axis === 'secondary' ? 1 : 0].map(value),
+    });
   });
 
   readonly legendItems = computed<TxChartLegendItem[]>(() => {

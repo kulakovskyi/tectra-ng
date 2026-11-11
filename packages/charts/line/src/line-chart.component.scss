@@ -13,6 +13,40 @@
   stroke-linejoin: round;
 }
 
+.tx-line-chart__overview {
+  cursor: pointer;
+}
+
+.tx-line-chart__overview-track {
+  fill: transparent;
+}
+
+.tx-line-chart__overview-area {
+  fill: var(--tx-line-chart-color);
+  fill-opacity: 0.2;
+}
+
+.tx-line-chart__overview-line {
+  fill: none;
+  stroke: var(--tx-line-chart-color);
+}
+
+.tx-line-chart__overview-mask {
+  fill: currentColor;
+  fill-opacity: 0.08;
+}
+
+.tx-line-chart__overview-window {
+  fill: none;
+  stroke: currentColor;
+  cursor: grab;
+}
+
+.tx-line-chart__overview-handle {
+  fill: currentColor;
+  cursor: ew-resize;
+}
+
 .tx-line-chart__crosshair {
   pointer-events: none;
   shape-rendering: crispEdges;
@@ -98,6 +132,46 @@
 
   to {
     clip-path: inset(0 0 0 0);
+  }
+}
+
+:host([data-styled]) {
+  .tx-line-chart__overview-track {
+    fill: var(--tx-chart-brush-track-background);
+    rx: var(--tx-chart-brush-radius);
+  }
+
+  .tx-line-chart__overview-area {
+    fill-opacity: var(--tx-chart-brush-area-opacity);
+  }
+
+  .tx-line-chart__overview-line {
+    stroke-width: var(--tx-chart-brush-line-width);
+  }
+
+  .tx-line-chart__overview-mask {
+    fill: var(--tx-chart-brush-mask-color);
+    fill-opacity: 1;
+  }
+
+  .tx-line-chart__overview-window {
+    stroke: var(--tx-chart-brush-window-border-color);
+    stroke-width: var(--tx-chart-brush-window-border-width);
+    rx: var(--tx-chart-brush-radius);
+  }
+
+  .tx-line-chart__overview-handle {
+    fill: var(--tx-chart-brush-handle-color);
+    stroke: var(--tx-chart-brush-handle-border-color);
+    rx: var(--tx-chart-brush-handle-radius);
+  }
+}
+
+:host([data-styled].tx-line-chart--live) {
+  .tx-line-chart__line,
+  .tx-line-chart__area,
+  .tx-line-chart__point {
+    transition: none;
   }
 }
 

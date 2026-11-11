@@ -13,6 +13,8 @@ export * from './src/chart-templates.directive';
 export * from './src/chart-legend.component';
 export * from './src/chart-axes.component';
 export * from './src/chart-hover-band.component';
+export * from './src/chart-annotations';
+export * from './src/chart-annotations.component';
 export * from './src/chart-frame.component';
 export * from './src/series-data';
 export * from './src/chart-interaction';

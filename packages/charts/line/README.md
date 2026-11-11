@@ -16,6 +16,12 @@ import { TxLineChart } from '@tectra-ng/charts/line';
 | series | `{ name, data, color? }[]`. `data` holds one number (or `null` for a gap) per category, or `{ x, y }` points. An empty list or only `null` values show "No data" |
 | categories | X labels, one per value. Empty = the 12 month names of the active locale. With `xType="time"` these are dates |
 | xType | `category` (labels at even steps), `time` (dates with real gaps, calendar ticks) or `linear` (numbers) |
+| annotations | Marks on the plot: `{ type: 'x-line', x }`, `{ type: 'y-line', y }`, `{ type: 'x-band', from, to }`, `{ type: 'y-band', from, to }`, `{ type: 'point', x, y }`, each with an optional `label`, `tone` (`neutral`, `primary`, `success`, `info`, `warn`, `danger`) or `color`; `x` is a category label (or index), a date or a number, as the x axis takes them; bands and lines sit behind the series, points and labels on top |
+| zoom | Zooms and pans along the x axis: Ctrl (⌘) and the wheel or a pinch zoom at the pointer, a drag or a sideways trackpad swipe moves, a double click or the "Reset zoom" button resets |
+| brush | Adds an overview of the whole series under the chart with the visible window: drag the window to move, its edges to resize, click elsewhere to jump there (turns `zoom` on) |
+| xRange | Two-way: the visible x window `[from, to]` — category indexes, timestamps or numbers; `null` shows everything |
+| maxPoints | Keeps only the last N values — a sliding window for live data |
+| live | New values slide the series to the left instead of morphing it; use with `maxPoints` for a stream |
 | height | Height in px (450), or a CSS size such as `'100%'` of a parent with a definite height |
 | curve | `smooth` (monotone, never overshoots), `straight` or `step` |
 | area | Fills the area under each line with a fading gradient of its colour |
@@ -45,7 +51,7 @@ import { TxLineChart } from '@tectra-ng/charts/line';
 | loading | Shows a skeleton of the same size |
 | ariaLabel | What the chart shows; starts the summary read by screen readers |
 | dt | Design tokens of this chart (`chart`) |
-| pt | Classes and styles of the parts: `root`, `legend`, `legendItem`, `plot`, `svg`, `grid`, `axis`, `series`, `line`, `area`, `marker`, `crosshair`, `tooltip`, `empty`, `skeleton` |
+| pt | Classes and styles of the parts: `root`, `legend`, `legendItem`, `plot`, `svg`, `grid`, `axis`, `series`, `line`, `area`, `marker`, `crosshair`, `annotation`, `brush`, `tooltip`, `empty`, `skeleton` |
 | ptOptions | How `pt` merges with the global pass-through |
 | unstyled | Removes the tectra styles and keeps the behaviour |
 
@@ -54,6 +60,7 @@ import { TxLineChart } from '@tectra-ng/charts/line';
 |---|---|
 | pointClick | A value was clicked: `seriesIndex`, `dataPointIndex`, `value`, `category` |
 | seriesToggle | A legend item hid or showed a series: `seriesIndex`, `name`, `hidden` |
+| xRangeChange | The visible x window changed by zoom, pan, the brush or a reset (`null` = everything) |
 
 ## Slots
 | Name | Description |
@@ -69,6 +76,9 @@ import { TxLineChart } from '@tectra-ng/charts/line';
 | ↑ / ↓ | Previous / next visible series |
 | Home / End | First / last value |
 | Escape | Closes the tooltip |
+| + / − | Zoom in / out around the focused value (with `zoom` or `brush`) |
+| 0 | Resets the zoom |
+| Shift + ← / → | Moves a zoomed window |
 | ← / → in the legend | Moves between legend items; Enter or Space toggles the series |
 
 ## Notes

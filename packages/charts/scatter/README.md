@@ -15,6 +15,7 @@ import { TxScatterChart } from '@tectra-ng/charts/scatter';
 |---|---|
 | series | `{ name, data, color? }[]`; `data` holds points `{ x, y, size?, color?, label? }` or tuples `[x, y]` / `[x, y, size]`. A point with `size` turns the chart into bubbles; a `null` y is skipped. An empty list shows "No data" |
 | xType | `linear` (numbers, default) or `time` (dates, timestamps or ISO strings) |
+| annotations | Marks on the plot: `{ type: 'x-line', x }`, `{ type: 'y-line', y }`, `{ type: 'x-band', from, to }`, `{ type: 'y-band', from, to }`, `{ type: 'point', x, y }`, each with an optional `label`, `tone` (`neutral`, `primary`, `success`, `info`, `warn`, `danger`) or `color`; `x` is a number or a date like the points |
 | height | Height in px (350), or a CSS size such as `'100%'` of a parent with a definite height |
 | trendLine | Draws a dashed least-squares line through each series |
 | showLegend | Shows the legend; a single series never has one |
@@ -40,7 +41,7 @@ import { TxScatterChart } from '@tectra-ng/charts/scatter';
 | loading | Shows a skeleton of the same size |
 | ariaLabel | What the chart shows; starts the summary read by screen readers |
 | dt | Design tokens of this chart (`chart`) — point and bubble radius, fill opacity, trend line, palette |
-| pt | Classes and styles of the parts: `root`, `legend`, `legendItem`, `plot`, `svg`, `grid`, `axis`, `point`, `trendLine`, `guide`, `tooltip`, `empty`, `skeleton` |
+| pt | Classes and styles of the parts: `root`, `legend`, `legendItem`, `plot`, `svg`, `grid`, `axis`, `annotation`, `point`, `trendLine`, `guide`, `tooltip`, `empty`, `skeleton` |
 | ptOptions | How `pt` merges with the global pass-through |
 | unstyled | Removes the tectra styles and keeps the behaviour |
 

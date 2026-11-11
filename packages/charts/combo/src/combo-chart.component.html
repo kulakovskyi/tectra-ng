@@ -26,6 +26,7 @@
   (tooltipClosed)="active.set(null)"
 >
   <svg:g [tx-chart-hover-band]="hoverBand()" [part]="passThrough().hoverBand" />
+  <svg:g [tx-chart-annotations]="annotationShapes()" layer="back" [part]="passThrough().annotation" />
   <svg:g [tx-chart-axes]="layout().axes" [gridPart]="passThrough().grid" [axisPart]="passThrough().axis" />
   <svg:g class="tx-combo-chart__bars">
     @for (bar of bars(); track bar.key) {
@@ -95,4 +96,5 @@
     <svg:circle class="tx-combo-chart__halo" [attr.cx]="point.x" [attr.cy]="point.y" [style.fill]="point.color" />
     <svg:circle class="tx-combo-chart__marker" [class]="passThrough().marker?.class" [attr.cx]="point.x" [attr.cy]="point.y" [style.fill]="point.color" />
   }
+  <svg:g [tx-chart-annotations]="annotationShapes()" layer="front" [part]="passThrough().annotation" />
 </tx-chart-frame>

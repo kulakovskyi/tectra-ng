@@ -22,6 +22,7 @@ import { TxComboChart } from '@tectra-ng/charts/combo';
 |---|---|
 | series | `{ name, data, color?, type?, axis? }[]` — one number (or `null`) per category; `type` is `column` (default), `line` or `area`, `axis` is `primary` (default) or `secondary`. An empty list shows "No data" |
 | categories | Labels of the category axis, one per value |
+| annotations | Marks on the plot: `{ type: 'x-line', x }`, `{ type: 'y-line', y }`, `{ type: 'x-band', from, to }`, `{ type: 'y-band', from, to }`, `{ type: 'point', x, y }`, each with an optional `label`, `tone` (`neutral`, `primary`, `success`, `info`, `warn`, `danger`) or `color`; `x` is a category label or index; `axis: 'secondary'` puts a `y-line`, `y-band` or `point` on the second value axis |
 | height | Height in px (350), or a CSS size such as `'100%'` of a parent with a definite height |
 | stacked | Stacks the column series of each axis; by default they stand side by side |
 | curve | Shape of the lines: `smooth` (default), `straight` or `step` |
@@ -52,7 +53,7 @@ import { TxComboChart } from '@tectra-ng/charts/combo';
 | loading | Shows a skeleton of the same size |
 | ariaLabel | What the chart shows; starts the summary read by screen readers |
 | dt | Design tokens of this chart (`chart`) — bar radius, width and gap, line width, markers, palette |
-| pt | Classes and styles of the parts: `root`, `hoverBand`, `legend`, `legendItem`, `plot`, `svg`, `grid`, `axis`, `bar`, `series`, `line`, `area`, `marker`, `tooltip`, `empty`, `skeleton` |
+| pt | Classes and styles of the parts: `root`, `hoverBand`, `annotation`, `legend`, `legendItem`, `plot`, `svg`, `grid`, `axis`, `bar`, `series`, `line`, `area`, `marker`, `tooltip`, `empty`, `skeleton` |
 | ptOptions | How `pt` merges with the global pass-through |
 | unstyled | Removes the tectra styles and keeps the behaviour |
 

@@ -26,6 +26,7 @@
   (tooltipClosed)="active.set(null)"
 >
   <svg:g [tx-chart-hover-band]="hoverBand()" [part]="passThrough().hoverBand" />
+  <svg:g [tx-chart-annotations]="annotationShapes()" layer="back" [part]="passThrough().annotation" />
   <svg:g [tx-chart-axes]="layout().axes" [gridPart]="passThrough().grid" [axisPart]="passThrough().axis" />
   <svg:g class="tx-column-chart__bars">
     @for (bar of bars(); track bar.key) {
@@ -68,4 +69,5 @@
       }
     </svg:g>
   }
+  <svg:g [tx-chart-annotations]="annotationShapes()" layer="front" [part]="passThrough().annotation" />
 </tx-chart-frame>

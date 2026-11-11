@@ -1,0 +1,60 @@
+.tx-chart-annotation {
+  pointer-events: none;
+}
+
+.tx-chart-annotation__band {
+  fill: var(--tx-chart-annotation-color);
+  fill-opacity: 0.1;
+}
+
+.tx-chart-annotation__line {
+  stroke: var(--tx-chart-annotation-color);
+  stroke-dasharray: 4 4;
+  shape-rendering: crispEdges;
+}
+
+.tx-chart-annotation__point {
+  r: 5px;
+  fill: var(--tx-chart-annotation-color);
+}
+
+.tx-chart-annotation__pill {
+  fill: var(--tx-chart-annotation-color);
+  fill-opacity: 0.15;
+}
+
+.tx-chart-annotation__label {
+  font-size: 11px;
+}
+
+:host-context([data-styled]) {
+  .tx-chart-annotation__band {
+    fill: color-mix(in srgb, var(--tx-chart-annotation-color) var(--tx-chart-annotation-band-strength), transparent);
+    fill-opacity: 1;
+  }
+
+  .tx-chart-annotation__line {
+    stroke-width: var(--tx-chart-annotation-line-width);
+    stroke-dasharray: var(--tx-chart-annotation-line-dash);
+  }
+
+  .tx-chart-annotation__point {
+    r: var(--tx-chart-annotation-point-radius);
+    stroke: var(--tx-chart-marker-stroke-color);
+    stroke-width: var(--tx-chart-marker-stroke-width);
+  }
+
+  .tx-chart-annotation__pill {
+    rx: var(--tx-chart-annotation-label-radius);
+    fill: color-mix(in srgb, var(--tx-chart-annotation-color) var(--tx-chart-annotation-label-strength), var(--tx-chart-annotation-label-base));
+    fill-opacity: 1;
+    stroke: var(--tx-chart-annotation-color);
+    stroke-width: var(--tx-chart-annotation-label-border-width);
+  }
+
+  .tx-chart-annotation__label {
+    fill: var(--tx-chart-annotation-label-color);
+    font-size: var(--tx-chart-annotation-label-font-size);
+    font-weight: var(--tx-chart-annotation-label-font-weight);
+  }
+}

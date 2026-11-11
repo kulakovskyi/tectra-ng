@@ -1,0 +1,1 @@
+`annotations` mark events on the plot: `x-line` and `x-band` for moments and periods, `y-line` and `y-band` for targets and ranges, `point` for a single value — each with a label pill and a `tone` or `color`. Bands sit behind the series, lines and points on top.

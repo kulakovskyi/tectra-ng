@@ -8,7 +8,13 @@ import { TxSankeyChart, TxSankeyLink } from '@tectra-ng/charts/sankey';
     [links]="links"
     [height]="280"
     [dt]="{
-      sankey: { nodeWidth: '22', nodePadding: '24', nodeRadius: '6px', linkStrength: '45%', linkEdgeWidth: '2' },
+      sankey: {
+        nodeWidth: '22',
+        nodePadding: '24',
+        nodeRadius: '6px',
+        linkStrength: '45%',
+        linkEdgeWidth: '2',
+      },
     }"
     ariaLabel="Energy use"
   />`,

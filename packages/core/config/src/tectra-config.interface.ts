@@ -420,6 +420,8 @@ export interface TxTranslations {
   chartOfTotal: string;
   chartDrillUp: string;
   chartFlows: string;
+  chartResetZoom: string;
+  chartZoomHint: string;
   chartGanttHint: string;
   chartGaugeValue: string;
   chartPie: string;

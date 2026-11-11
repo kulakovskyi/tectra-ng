@@ -154,12 +154,12 @@ First app: a hierarchy as a tree of cards on a pan / zoom canvas (drag, wheel / 
 
 Changed on purpose: hotkeys work while the chart has the focus (not on the whole page) and arrow keys move the canvas; cards take the focus (Enter / Space = click); a drag never selects text; the hover path follows the connectors with their rounded corners and joins the card outline in one colour (`pathColor` drives both); the canvas cannot be moved so far that the tree leaves it (64px stay in view); the minimap frame stays inside the map. On a narrow chart the toolbar folds expand / collapse / full screen (and under 30rem the zoom) into a menu button, the minimap shrinks to 140×100; full screen uses the Fullscreen API (with the WebKit prefix) and otherwise the top layer (`showPopover`), so it always covers the page header; in full screen a narrow toolbar shows icon buttons.
 
-## 11.18 Interaction
+## 11.18 Interaction ✅
 
 First app: a download toolbar (SVG / PNG / CSV) on its spline, column and pie charts, on by default. Zoom is switched off in all of its charts (checked 2026-11-11) — the zoom item below is for the catalogue, not for the switch.
 
-- [ ] Zoom and pan on an axis (wheel, drag, pinch, keyboard), brush with an overview chart, reset
-- [ ] Annotations: x / y lines, bands and points with labels
+- [x] Zoom and pan on an axis (wheel, drag, pinch, keyboard), brush with an overview chart, reset — on the line chart: `zoom`, `brush`, two-way `xRange`; Ctrl / ⌘ + wheel and pinch zoom at the pointer, drag and sideways swipes pan, + / − / 0 and Shift + arrows on the keyboard, a "Reset zoom" button and a double click
+- [x] Annotations: x / y lines, bands and points with labels — `annotations` on line, column (also horizontal), combo (both value axes) and scatter, tones from tokens, bands behind the series and labels in pills on top
 - [x] Export PNG / SVG / CSV: `toolbar` menu on line, column and pie (`chartSvgString`, `chartPngBlob`, `chartCsv` in `charts/core` — the SVG gets its computed styles inlined, so the file looks the same outside the page; PNG at 2×; CSV from the screen-reader data table)
-- [ ] Live updates: append points with a sliding window, smooth shift
-- [ ] Docs + tests; e2e
+- [x] Live updates: append points with a sliding window, smooth shift — `maxPoints` keeps the last values, `live` slides the line left when a value arrives
+- [x] Docs + tests; e2e

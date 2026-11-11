@@ -1,0 +1,1 @@
+`zoom` lets you look closer along the x axis: Ctrl (⌘) and the wheel or a pinch zoom at the pointer, a drag or a sideways swipe moves, a double click or "Reset zoom" resets; on the keyboard + / − zoom, Shift + arrows move and 0 resets. `xRange` is two-way.

@@ -4,7 +4,7 @@ tokens: chart
 source: packages/charts/column
 package: @tectra-ng/charts/column
 import: TxColumnChart
-examples: basic, legend-variants, grouped, percent, horizontal, data-labels, negative, axes, legend, tooltip-formatter, loading-and-empty, live, fill-parent, accessibility, design-tokens, pass-through, unstyled
+examples: basic, legend-variants, grouped, percent, horizontal, data-labels, negative, axes, annotations, legend, tooltip-formatter, loading-and-empty, live, fill-parent, accessibility, design-tokens, pass-through, unstyled
 ---
 # Column Chart
 

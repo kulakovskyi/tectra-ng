@@ -2,7 +2,7 @@ import { TxChartPart } from '@tectra-ng/charts/core';
 
 export type TxColumnChartStackType = 'normal' | '100%';
 
-export type TxColumnChartPart = TxChartPart | 'bar' | 'dataLabel';
+export type TxColumnChartPart = TxChartPart | 'annotation' | 'bar' | 'dataLabel';
 
 export interface TxColumnChartBar {
   key: string;

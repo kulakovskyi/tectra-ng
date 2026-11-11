@@ -39,6 +39,8 @@ import {
   TxChartTable,
   TxChartTooltipData,
   TxChartTooltipTemplateContext,
+  TxChartPanEvent,
+  TxChartZoomEvent,
 } from './chart.types';
 import { chartBoxHeight } from './chart-size';
 import { TxChartExportFormat, chartCsv, chartFileName, chartPngBlob, chartSvgString, downloadChartFile } from './chart-export';
@@ -50,6 +52,8 @@ const TOOLTIP_OFFSET = 10;
 const ARROW_ROOM = 16;
 const NAVIGATION_KEYS = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End', 'Escape'];
 const ACTION_KEYS = ['Enter', ' ', 'Backspace'];
+const ZOOM_KEYS = ['+', '=', '-', '_', '0'];
+const WHEEL_ZOOM = 0.0025;
 const FOLLOW_PLACEMENT: TxPlacement = 'right';
 const FOLLOW_OFFSET = 14;
 
@@ -99,6 +103,8 @@ export class TxChartFrame {
   readonly styled = input<boolean, unknown>(true, { transform: booleanAttribute });
   readonly interactive = input<boolean, unknown>(true, { transform: booleanAttribute });
   readonly actionKeys = input<boolean, unknown>(false, { transform: booleanAttribute });
+  readonly zoomable = input<boolean, unknown>(false, { transform: booleanAttribute });
+  readonly zoomedIn = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly plotHeight = input<number | null>(null);
   readonly toolbar = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly exportName = input('');
@@ -108,6 +114,9 @@ export class TxChartFrame {
   readonly legendToggled = output<string>();
   readonly legendHovered = output<string | null>();
   readonly tooltipClosed = output<void>();
+  readonly zoomed = output<TxChartZoomEvent>();
+  readonly panned = output<TxChartPanEvent>();
+  readonly zoomReset = output<void>();
 
   protected readonly plotRef = viewChild<ElementRef<HTMLElement>>('plot');
   protected readonly anchorRef = viewChild<ElementRef<HTMLElement>>('anchor');
@@ -118,6 +127,7 @@ export class TxChartFrame {
   readonly shown = signal<TxChartTooltipData | null>(null);
   readonly following = signal(false);
   private cursor: { x: number; y: number } | null = null;
+  private readonly touches = new Map<number, { x: number; y: number }>();
   readonly measured = signal(false);
   private ref: TxOverlayRef | null = null;
   private openPlacement: TxPlacement | null = null;
@@ -166,8 +176,9 @@ export class TxChartFrame {
     const box = plot.getBoundingClientRect();
     const x = event.clientX - box.left;
     const y = event.clientY - box.top;
+    if (this.zoomable() && this.pinch(event, type, x, y)) return;
     this.cursor = type !== 'leave' && followsPointer(event) ? { x, y } : null;
-    this.pointer.emit({ x, y, type, target: event.target as Element | null });
+    this.pointer.emit({ x, y, type, target: event.target as Element | null, buttons: event.buttons, pointerType: 'pointerType' in event ? event.pointerType : 'mouse' });
     if (this.cursor && this.ref && this.following()) {
       this.placeAnchor(this.cursor.x, this.cursor.y - ARROW_ROOM, 0, ARROW_ROOM * 2);
       this.ref.updatePosition();
@@ -179,10 +190,49 @@ export class TxChartFrame {
       return;
     }
     this.cursor = null;
-    if (NAVIGATION_KEYS.includes(event.key) || (this.actionKeys() && ACTION_KEYS.includes(event.key))) {
+    if (NAVIGATION_KEYS.includes(event.key) || (this.actionKeys() && ACTION_KEYS.includes(event.key)) || (this.zoomable() && ZOOM_KEYS.includes(event.key))) {
       event.preventDefault();
       this.navigate.emit(event);
     }
+  }
+
+  onWheel(event: WheelEvent): void {
+    const plot = this.plotRef()?.nativeElement;
+    if (!plot || !this.zoomable() || !this.interactive()) return;
+    const box = plot.getBoundingClientRect();
+    if (event.ctrlKey || event.metaKey) {
+      event.preventDefault();
+      this.zoomed.emit({ x: event.clientX - box.left, factor: Math.exp(event.deltaY * WHEEL_ZOOM) });
+    } else if (this.zoomedIn() && Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
+      event.preventDefault();
+      this.panned.emit({ dx: -event.deltaX });
+    }
+  }
+
+  onDoubleClick(): void {
+    if (this.zoomable() && this.zoomedIn()) this.zoomReset.emit();
+  }
+
+  private pinch(event: PointerEvent | MouseEvent, type: TxChartPointerEvent['type'], x: number, y: number): boolean {
+    if (!('pointerType' in event) || event.pointerType !== 'touch') return false;
+    const before = [...this.touches.values()];
+    if (type === 'up' || type === 'leave') {
+      this.touches.delete(event.pointerId);
+      return before.length > 1;
+    }
+    if (type === 'down' || this.touches.has(event.pointerId)) this.touches.set(event.pointerId, { x, y });
+    const after = [...this.touches.values()];
+    if (after.length < 2) return false;
+    if (before.length >= 2 && type === 'move') {
+      const spread = (points: { x: number; y: number }[]) => Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y);
+      const middle = (points: { x: number; y: number }[]) => (points[0].x + points[1].x) / 2;
+      const factor = spread(before) / Math.max(1, spread(after));
+      if (Math.abs(factor - 1) > 0.002) this.zoomed.emit({ x: middle(after), factor });
+      const dx = middle(after) - middle(before);
+      if (dx) this.panned.emit({ dx });
+    }
+    this.pointer.emit({ x: 0, y: 0, type: 'leave', target: null });
+    return true;
   }
 
   private observe(): void {

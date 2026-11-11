@@ -4,7 +4,7 @@ tokens: chart
 source: packages/charts/line
 package: @tectra-ng/charts/line
 import: TxLineChart
-examples: basic, legend-variants, line-only, curves, stacked, time-axis, gaps, scales-and-formats, axes, legend, legend-template, tooltip, download, loading-and-empty, live, large-data, fill-parent, events, accessibility, design-tokens, pass-through
+examples: basic, legend-variants, line-only, curves, stacked, time-axis, gaps, scales-and-formats, axes, annotations, zoom, brush, live-stream, legend, legend-template, tooltip, download, loading-and-empty, live, large-data, fill-parent, events, accessibility, design-tokens, pass-through
 ---
 # Line Chart
 
