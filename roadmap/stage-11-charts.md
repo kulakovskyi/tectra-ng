@@ -39,7 +39,7 @@ First app (`spline`, 18): smooth area / line chart for trends over time — `ser
 - [x] Time x axis with real gaps between dates
 - [x] Docs + tests; e2e
 
-The first app's `toolbar` (download) input comes with export in 11.18; until then the chart has no download menu.
+`toolbar` (download menu, on by default as in the first app) — done with export in 11.18.
 
 ## 11.3 Column and bar — `charts/column` (18) ✅
 
@@ -49,7 +49,7 @@ First app (`column`, 18): always stacked, `series`, `categories`, `stackType` `n
 - [x] Negative values around the zero line
 - [x] Docs + tests; e2e
 
-`toolbar` (download) — with export in 11.18.
+`toolbar` (download menu) — done with export in 11.18.
 
 ## 11.4 Combo — `charts/combo`
 
@@ -64,7 +64,7 @@ First app (`pie`, 9): donut with `pieData` (`{ series, labels }`), `chartWidth` 
 - [x] Legend beside the chart with value and percent; the same palette exported for own legends
 - [x] Docs + tests; e2e
 
-The hole is `donutSize` (the first app's name, `'0%'` = pie). `toolbar` (download) — with export in 11.18.
+The hole is `donutSize` (the first app's name, `'0%'` = pie). `toolbar` (download menu) — done with export in 11.18.
 
 ## 11.6 Scatter and bubble — `charts/scatter`
 
@@ -148,10 +148,10 @@ Changed on purpose: hotkeys work while the chart has the focus (not on the whole
 
 ## 11.18 Interaction
 
-First app: zoom on a time axis in its traffic charts (2), a download toolbar on most charts.
+First app: a download toolbar (SVG / PNG / CSV) on its spline, column and pie charts, on by default. Zoom is switched off in all of its charts (checked 2026-11-11) — the zoom item below is for the catalogue, not for the switch.
 
 - [ ] Zoom and pan on an axis (wheel, drag, pinch, keyboard), brush with an overview chart, reset
 - [ ] Annotations: x / y lines, bands and points with labels
-- [ ] Export PNG / SVG / CSV through `ui/export`
+- [x] Export PNG / SVG / CSV: `toolbar` menu on line, column and pie (`chartSvgString`, `chartPngBlob`, `chartCsv` in `charts/core` — the SVG gets its computed styles inlined, so the file looks the same outside the page; PNG at 2×; CSV from the screen-reader data table)
 - [ ] Live updates: append points with a sliding window, smooth shift
 - [ ] Docs + tests; e2e

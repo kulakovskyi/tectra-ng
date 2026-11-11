@@ -118,6 +118,7 @@ export class TxColumnChart {
   readonly yAxisPosition = input<TxChartYAxisPosition>('left');
   readonly labelMode = input<TxChartLabelMode>('auto');
   readonly maxLabelWidth = input(220);
+  readonly toolbar = input<boolean, unknown>(true, { transform: booleanAttribute });
   readonly loading = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly ariaLabel = input('');
   readonly dt = input<TectraDeepPartial<TectraChartTokens> | undefined>(undefined);
@@ -153,7 +154,7 @@ export class TxColumnChart {
   readonly isEmpty = computed(() => !this.list().length || !hasChartData(this.table().values));
   readonly isStacked = computed(() => this.stacked() || this.stackType() === '100%');
   readonly legendShown = computed(() => this.showLegend() && this.list().length > 1);
-  readonly size = linkedSignal(() => initialChartSize(this.height(), this.legendShown() ? this.legendPosition() : null));
+  readonly size = linkedSignal(() => initialChartSize(this.height(), this.legendShown() ? this.legendPosition() : null, undefined, this.toolbar()));
 
   readonly stackedValues = computed(() => {
     const visible = new Set(this.visibleIndexes());

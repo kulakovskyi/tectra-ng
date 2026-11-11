@@ -15,3 +15,4 @@ export * from './src/chart-frame.component';
 export * from './src/series-data';
 export * from './src/chart-interaction';
 export * from './src/chart-token';
+export * from './src/chart-export';

@@ -26,6 +26,24 @@
   overflow: auto;
 }
 
+.tx-chart-frame__toolbar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+:host([data-toolbar='own']) {
+  padding-top: var(--tx-chart-toolbar-row-height);
+}
+
+:host([data-toolbar='legend']) .tx-chart-frame__legend {
+  padding-inline-end: var(--tx-chart-toolbar-reserve);
+}
+
 .tx-chart-frame__plot {
   position: relative;
   flex: 1 1 auto;

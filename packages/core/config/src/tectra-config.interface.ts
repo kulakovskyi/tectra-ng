@@ -370,6 +370,10 @@ export interface TxTranslations {
   chartBar: string;
   chartPie: string;
   chartDonut: string;
+  chartMenu: string;
+  chartDownloadSvg: string;
+  chartDownloadPng: string;
+  chartDownloadCsv: string;
   chartHeatmap: string;
   chartTreemap: string;
   chartRank: string;

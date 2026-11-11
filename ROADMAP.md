@@ -217,7 +217,7 @@ Own SVG charts, no chart library: they render on the server like the rest of the
 | 3. Lists and grids | bar-list, segmented-bar, heatmap (grid with sticky headers, calendar), treemap, rank-line (positions over time, rank 1 on top, gaps) | 11, 6, 4, 1, 1 | ✅ |
 | 4. More shapes | radar, radial bar and gauge, funnel, waterfall, bullet | 0 | ⬜ |
 | 5. Special | candlestick (OHLC), boxplot, range area, timeline and gantt, sankey, sunburst, org-chart (pan / zoom canvas, minimap, search) — org-chart done | 2 (org-chart) | 🟡 |
-| 6. Interaction | zoom, pan and brush on an axis, annotations (lines, bands, points), export PNG / SVG / CSV, live updates | 2 (zoom) | ⬜ |
+| 6. Interaction | zoom, pan and brush on an axis, annotations (lines, bands, points), export PNG / SVG / CSV, live updates — export done (the first app's download toolbar) | 0 (zoom is off in the first app) | 🟡 |
 
 ## Stage 12 — utils (`@tectra-ng/utils`)
 

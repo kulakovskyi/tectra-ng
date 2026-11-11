@@ -41,6 +41,7 @@ import { TxLineChart } from '@tectra-ng/charts/line';
 | labelMode | X labels that do not fit: `auto`, `rotate` or `skip` |
 | maxLabels | At most this many x labels (10) |
 | decimation | Thins long series with the largest-triangle method before drawing |
+| toolbar | Shows the chart menu in the top right corner: download SVG, PNG or CSV (the file is named after `ariaLabel`); a row is kept for it when the legend is not on top |
 | loading | Shows a skeleton of the same size |
 | ariaLabel | What the chart shows; starts the summary read by screen readers |
 | dt | Design tokens of this chart (`chart`) |

@@ -13,14 +13,15 @@ export function chartHeightValue(height: TxChartHeight, fallback = TX_CHART_FALL
   return pixels ? Number(pixels[1]) : fallback;
 }
 
-export function chartBoxHeight(height: TxChartHeight, legend: TxChartLegendPosition | null): number {
+export function chartBoxHeight(height: TxChartHeight, legend: TxChartLegendPosition | null, toolbar = false): number {
   const total = chartHeightValue(height);
-  return legend === 'top' || legend === 'bottom' ? Math.max(1, total - TX_CHART_LEGEND_ROW) : total;
+  const rows = (legend === 'top' || legend === 'bottom' ? 1 : 0) + (toolbar && legend !== 'top' ? 1 : 0);
+  return Math.max(1, total - rows * TX_CHART_LEGEND_ROW);
 }
 
-export function initialChartSize(height: TxChartHeight, legend: TxChartLegendPosition | null, width = TX_CHART_FALLBACK_WIDTH): TxChartSize {
+export function initialChartSize(height: TxChartHeight, legend: TxChartLegendPosition | null, width = TX_CHART_FALLBACK_WIDTH, toolbar = false): TxChartSize {
   return {
     width: legend === 'left' || legend === 'right' ? width - TX_CHART_LEGEND_SIDE : width,
-    height: chartBoxHeight(height, legend),
+    height: chartBoxHeight(height, legend, toolbar),
   };
 }

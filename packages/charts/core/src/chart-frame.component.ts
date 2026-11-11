@@ -41,19 +41,23 @@ import {
   TxChartTooltipTemplateContext,
 } from './chart.types';
 import { chartBoxHeight } from './chart-size';
+import { TxChartExportFormat, chartCsv, chartFileName, chartPngBlob, chartSvgString, downloadChartFile } from './chart-export';
+import { TxButton } from '@tectra-ng/ui/button';
+import { TxMenu, TxMenuItem, TxMenuTrigger } from '@tectra-ng/ui/menu';
 
 const TOOLTIP_OFFSET = 10;
 const ARROW_ROOM = 16;
 
 @Component({
   selector: 'tx-chart-frame',
-  imports: [NgTemplateOutlet, TxChartLegend, TxIcon, TxSkeleton],
+  imports: [NgTemplateOutlet, TxChartLegend, TxIcon, TxSkeleton, TxButton, TxMenu, TxMenuTrigger],
   templateUrl: './chart-frame.component.html',
   styleUrl: './chart-frame.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'tx-chart-frame',
     '[attr.data-legend]': 'legendVisible() ? legendPosition() : null',
+    '[attr.data-toolbar]': 'toolbarRow()',
     '[attr.data-styled]': 'styled() || null',
     '[class.tx-chart-frame--fill]': 'fills()',
     '[class.tx-chart-frame--interactive]': 'interactive()',
@@ -90,6 +94,8 @@ export class TxChartFrame {
   readonly styled = input<boolean, unknown>(true, { transform: booleanAttribute });
   readonly interactive = input<boolean, unknown>(true, { transform: booleanAttribute });
   readonly plotHeight = input<number | null>(null);
+  readonly toolbar = input<boolean, unknown>(false, { transform: booleanAttribute });
+  readonly exportName = input('');
 
   readonly pointer = output<TxChartPointerEvent>();
   readonly navigate = output<KeyboardEvent>();
@@ -99,6 +105,7 @@ export class TxChartFrame {
 
   protected readonly plotRef = viewChild<ElementRef<HTMLElement>>('plot');
   protected readonly anchorRef = viewChild<ElementRef<HTMLElement>>('anchor');
+  protected readonly svgRef = viewChild<ElementRef<SVGSVGElement>>('chartSvg');
   protected readonly tooltipPanel = viewChild<TemplateRef<unknown>>('tooltipPanel');
 
   readonly hintId = uniqueId('tx-chart-hint');
@@ -117,7 +124,17 @@ export class TxChartFrame {
   });
   readonly legendVisible = computed(() => this.showLegend() && !this.empty() && !this.loading() && this.legendItems().length > 0);
   readonly viewBox = computed(() => `0 0 ${this.size().width} ${this.size().height}`);
-  readonly placeholderHeight = computed(() => chartBoxHeight(this.height(), this.legendVisible() ? this.legendPosition() : null));
+  readonly placeholderHeight = computed(() => chartBoxHeight(this.height(), this.legendVisible() ? this.legendPosition() : null, this.toolbar()));
+  readonly toolbarRow = computed(() => (!this.toolbar() ? null : this.legendVisible() && this.legendPosition() === 'top' ? 'legend' : 'own'));
+  readonly canExport = computed(() => !this.empty() && !this.loading());
+  readonly exportItems = computed<TxMenuItem[]>(() => {
+    const t = this.translations();
+    return [
+      { label: t.chartDownloadSvg, icon: 'image', command: () => this.download('svg') },
+      { label: t.chartDownloadPng, icon: 'image', command: () => this.download('png') },
+      { label: t.chartDownloadCsv, icon: 'file', command: () => this.download('csv') },
+    ];
+  });
 
   constructor() {
     afterNextRender(() => this.observe());
@@ -224,6 +241,46 @@ export class TxChartFrame {
     this.ref = ref;
     this.openPlacement = placement;
     this.activeRef.set(ref);
+  }
+
+  download(format: TxChartExportFormat): void {
+    const document = this.host.nativeElement.ownerDocument;
+    const name = chartFileName(this.exportName() || this.translations().chartDataTable, format);
+    if (format === 'csv') {
+      const table = this.table();
+      if (table) {
+        downloadChartFile(document, new Blob([chartCsv(table, this.translations().chartCategory)], { type: 'text/csv;charset=utf-8' }), name);
+      }
+      return;
+    }
+    const svg = this.svgRef()?.nativeElement;
+    if (!svg) return;
+    const style = document.defaultView?.getComputedStyle(this.host.nativeElement);
+    const markup = chartSvgString(svg, {
+      legend: this.showLegend() ? this.legendItems().map((item) => ({ ...item, color: this.resolveColor(item.color) })) : [],
+      background: style?.getPropertyValue('--tx-surface-card').trim() || '#ffffff',
+      textColor: style?.color,
+      fontFamily: style?.fontFamily,
+    });
+    if (format === 'svg') {
+      downloadChartFile(document, new Blob([markup], { type: 'image/svg+xml;charset=utf-8' }), name);
+      return;
+    }
+    chartPngBlob(document, markup)
+      .then((blob) => downloadChartFile(document, blob, name))
+      .catch(() => undefined);
+  }
+
+  private resolveColor(color: string): string {
+    const host = this.host.nativeElement;
+    const view = host.ownerDocument.defaultView;
+    if (!view || !color.includes('var(')) return color;
+    const probe = host.ownerDocument.createElement('span');
+    probe.style.color = color;
+    host.appendChild(probe);
+    const resolved = view.getComputedStyle(probe).color;
+    probe.remove();
+    return resolved || color;
   }
 
   private closeTooltip(): void {

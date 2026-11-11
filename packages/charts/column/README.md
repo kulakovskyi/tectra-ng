@@ -38,6 +38,7 @@ import { TxColumnChart } from '@tectra-ng/charts/column';
 | yAxisPosition | Side of the vertical axis: `left` or `right` |
 | labelMode | Category labels that do not fit: `auto`, `rotate` or `skip` |
 | maxLabelWidth | Longer category labels are cut with an ellipsis (220px) |
+| toolbar | Shows the chart menu in the top right corner: download SVG, PNG or CSV (the file is named after `ariaLabel`); a row is kept for it when the legend is not on top |
 | loading | Shows a skeleton of the same size |
 | ariaLabel | What the chart shows; starts the summary read by screen readers |
 | dt | Design tokens of this chart (`chart`) — bar radius, width and gap, palette, labels |

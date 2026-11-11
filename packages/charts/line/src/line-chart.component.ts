@@ -123,6 +123,7 @@ export class TxLineChart {
   readonly labelMode = input<TxChartLabelMode>('auto');
   readonly maxLabels = input(10);
   readonly decimation = input<boolean, unknown>(true, { transform: booleanAttribute });
+  readonly toolbar = input<boolean, unknown>(true, { transform: booleanAttribute });
   readonly loading = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly ariaLabel = input('');
   readonly dt = input<TectraDeepPartial<TectraChartTokens> | undefined>(undefined);
@@ -148,7 +149,7 @@ export class TxLineChart {
   readonly hidden = signal<ReadonlySet<string>>(new Set());
   readonly focusedSeries = signal<number | null>(null);
   readonly active = signal<TxChartActive | null>(null);
-  readonly size = linkedSignal(() => initialChartSize(this.height(), this.legendShown() ? this.legendPosition() : null));
+  readonly size = linkedSignal(() => initialChartSize(this.height(), this.legendShown() ? this.legendPosition() : null, undefined, this.toolbar()));
 
   private readonly intl = computed(() => this.locale.locale().intl);
   private readonly list = computed(() => this.series() ?? []);

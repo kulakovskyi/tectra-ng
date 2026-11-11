@@ -32,6 +32,7 @@ import { TxPieChart, TxPieLegendPipe } from '@tectra-ng/charts/pie';
 | segmentRadius | Rounding of the segment corners in px; default — the `chart.pie.segmentRadius` token (4px). It shrinks on narrow segments and thin rings so the shape never breaks; `0` keeps sharp corners |
 | startAngle | Where the first segment starts, degrees clockwise from the top (0) |
 | endAngle | Where the last one ends (360); `-90` to `90` is a half donut |
+| toolbar | Shows the chart menu in the top right corner: download SVG, PNG or CSV (the file is named after `ariaLabel`); a row is kept for it when the legend is not on top |
 | loading | Shows a skeleton of the same size |
 | ariaLabel | What the chart shows; starts the summary read by screen readers |
 | dt | Design tokens of this chart (`chart`) |

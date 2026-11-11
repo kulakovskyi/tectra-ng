@@ -1,3 +1,22 @@
+@if (toolbar()) {
+  <div class="tx-chart-frame__toolbar">
+    @if (canExport()) {
+      <button
+        txButton
+        type="button"
+        class="tx-chart-frame__menu-button"
+        icon="bars"
+        size="small"
+        severity="secondary"
+        text
+        aria-haspopup="menu"
+        [attr.aria-label]="translations().chartMenu"
+        [txMenuTrigger]="exportMenu"
+      ></button>
+      <tx-menu #exportMenu popup placement="bottom-end" [model]="exportItems()" [ariaLabel]="translations().chartMenu" [unstyled]="!styled()" />
+    }
+  </div>
+}
 @if (legendVisible()) {
   <tx-chart-legend
     class="tx-chart-frame__legend"
@@ -51,6 +70,7 @@
     </div>
   } @else {
     <svg
+      #chartSvg
       class="tx-chart-frame__svg"
       [class]="parts().svg?.class"
       [style]="parts().svg?.style"

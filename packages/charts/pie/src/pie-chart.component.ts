@@ -55,6 +55,9 @@ const LEGEND_ITEM_WIDTH = 34;
 const DEFAULT_SEGMENT_RADIUS = 4;
 const STAT_ITEM_WIDTH = 116;
 const STAT_ROW = 66;
+const LEGEND_LINE = 25;
+const LEGEND_ROW_GAP = 3;
+const LEGEND_GAP = 10.5;
 
 @Component({
   selector: 'tx-pie-chart',
@@ -97,6 +100,7 @@ export class TxPieChart {
   readonly segmentRadius = input<number | undefined>(undefined);
   readonly startAngle = input(0);
   readonly endAngle = input(360);
+  readonly toolbar = input<boolean, unknown>(true, { transform: booleanAttribute });
   readonly loading = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly ariaLabel = input('');
   readonly dt = input<TectraDeepPartial<TectraChartTokens> | undefined>(undefined);
@@ -151,7 +155,8 @@ export class TxPieChart {
     if (typeof height === 'string' && !/px$/.test(height.trim())) {
       return Math.round(width);
     }
-    const available = chartHeightValue(height) - (this.legendShown() && !this.sideLegend() ? this.legendReserve() : 0);
+    const toolbarRow = this.toolbar() && !(this.legendShown() && this.legendPosition() === 'top') ? TX_CHART_LEGEND_ROW : 0;
+    const available = chartHeightValue(height) - (this.legendShown() && !this.sideLegend() ? this.legendReserve() : 0) - toolbarRow;
     return Math.max(40, Math.round(Math.min(width, available)));
   });
 
@@ -175,7 +180,7 @@ export class TxPieChart {
       }
       line += next;
     }
-    return rows * (TX_CHART_LEGEND_ROW - 7) + 7;
+    return rows * LEGEND_LINE + (rows - 1) * LEGEND_ROW_GAP + LEGEND_GAP;
   });
 
   readonly inner = computed(() => Math.min(0.95, Math.max(0, parseRatio(this.donutSize(), 0.65))));

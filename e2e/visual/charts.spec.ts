@@ -523,4 +523,37 @@ test.describe('charts', () => {
     expect(await canvas.evaluate((element) => element.hasAttribute('popover'))).toBe(false);
     expect(await page.evaluate(() => document.documentElement.style.overflow)).toBe('');
   });
+
+  test('chart menu downloads SVG, PNG and CSV; the toolbar row keeps the pie legend inside', async ({ page }) => {
+    await page.goto('/components/line-chart');
+    const chart = example(page, 'Download').locator('tx-line-chart');
+    await chart.scrollIntoViewIfNeeded();
+    const button = chart.locator('.tx-chart-frame__menu-button');
+    const legend = await chart.locator('tx-chart-legend').boundingBox();
+    const buttonBox = await button.boundingBox();
+    expect(Math.abs((buttonBox?.y ?? 0) + (buttonBox?.height ?? 0) / 2 - ((legend?.y ?? 0) + (legend?.height ?? 0) / 2))).toBeLessThan(6);
+    const files: Record<string, string> = {};
+    for (const label of ['Download SVG', 'Download PNG', 'Download CSV']) {
+      await button.click();
+      const [download] = await Promise.all([page.waitForEvent('download'), page.getByRole('menuitem', { name: label }).click()]);
+      const stream = await download.createReadStream();
+      const chunks: Buffer[] = [];
+      for await (const chunk of stream) chunks.push(chunk as Buffer);
+      files[download.suggestedFilename()] = Buffer.concat(chunks).toString(label === 'Download PNG' ? 'base64' : 'utf8');
+    }
+    expect(Object.keys(files).sort()).toEqual(['weekly-orders.csv', 'weekly-orders.png', 'weekly-orders.svg']);
+    expect(files['weekly-orders.csv']).toContain('W1,320,24');
+    expect(files['weekly-orders.svg']).toContain('>Orders<');
+    expect(files['weekly-orders.svg']).not.toContain('var(--');
+    expect(files['weekly-orders.png'].startsWith('iVBORw0KGgo')).toBe(true);
+
+    await example(page, 'Download').getByRole('switch', { name: 'Chart menu' }).click();
+    await expect(button).toHaveCount(0);
+
+    await page.goto('/components/pie-chart');
+    for (const pie of await page.locator('tx-pie-chart').all()) {
+      const sizes = await pie.evaluate((element) => ({ host: element.getBoundingClientRect().bottom, frame: element.querySelector('tx-chart-frame')?.getBoundingClientRect().bottom ?? 0 }));
+      expect(sizes.frame).toBeLessThanOrEqual(sizes.host + 1);
+    }
+  });
 });
