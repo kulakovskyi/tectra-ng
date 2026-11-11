@@ -1,0 +1,69 @@
+<tx-chart-frame
+  [height]="height()"
+  [(size)]="size"
+  [legendItems]="legendItems()"
+  [showLegend]="legendShown()"
+  [legendPosition]="legendPosition()"
+  [legendAlign]="legendAlign()"
+  [legendVariant]="legendVariant()"
+  [legendTemplate]="legendTemplate()?.template"
+  [empty]="isEmpty()"
+  [loading]="loading()"
+  [toolbar]="toolbar()"
+  [exportName]="ariaLabel()"
+  emptyIcon="chart-line"
+  [summary]="summary()"
+  [table]="dataTable()"
+  [tooltip]="tooltip()"
+  [tooltipTemplate]="tooltipTemplate()?.template"
+  [panelStyle]="tokenStyle()"
+  [parts]="passThrough()"
+  [styled]="!isUnstyled()"
+  (pointer)="onPointer($event)"
+  (navigate)="onNavigate($event)"
+  (legendToggled)="onLegendToggle($event)"
+  (legendHovered)="onLegendHover($event)"
+  (tooltipClosed)="active.set(null)"
+>
+  <svg:g [tx-chart-axes]="layout().axes" [gridPart]="passThrough().grid" [axisPart]="passThrough().axis" />
+  @if (crosshair(); as line) {
+    <svg:line
+      class="tx-range-area-chart__crosshair"
+      [class]="passThrough().crosshair?.class"
+      [style]="passThrough().crosshair?.style"
+      [attr.x1]="line.x"
+      [attr.x2]="line.x"
+      [attr.y1]="line.y1"
+      [attr.y2]="line.y2"
+    />
+  }
+  @for (path of paths(); track path.key) {
+    <svg:g
+      class="tx-range-area-chart__series"
+      [class.tx-range-area-chart__series--focused]="focusedSeries() === path.index"
+      [class]="passThrough().series?.class"
+      [style]="passThrough().series?.style"
+      [style.--tx-range-area-chart-color]="path.color"
+      [attr.data-series]="path.index"
+    >
+      <svg:path class="tx-range-area-chart__band" [class]="passThrough().band?.class" [style]="passThrough().band?.style" [attr.d]="path.band" />
+      @if (edges()) {
+        <svg:path class="tx-range-area-chart__edge" [class]="passThrough().edge?.class" [style]="passThrough().edge?.style" [attr.d]="path.high" />
+        <svg:path class="tx-range-area-chart__edge" [class]="passThrough().edge?.class" [style]="passThrough().edge?.style" [attr.d]="path.low" />
+      }
+      @if (path.line) {
+        <svg:path class="tx-range-area-chart__line" [class]="passThrough().line?.class" [style]="passThrough().line?.style" [attr.d]="path.line" />
+      }
+    </svg:g>
+  }
+  @for (point of activePoints(); track point.key) {
+    <svg:circle
+      class="tx-range-area-chart__marker"
+      [class.tx-range-area-chart__marker--edge]="!point.main"
+      [class]="passThrough().marker?.class"
+      [attr.cx]="point.x"
+      [attr.cy]="point.y"
+      [style.fill]="point.color"
+    />
+  }
+</tx-chart-frame>

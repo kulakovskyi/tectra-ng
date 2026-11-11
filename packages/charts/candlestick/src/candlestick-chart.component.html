@@ -1,0 +1,88 @@
+<tx-chart-frame
+  [height]="height()"
+  [(size)]="size"
+  [showLegend]="false"
+  [empty]="isEmpty()"
+  [loading]="loading()"
+  [toolbar]="toolbar()"
+  [exportName]="ariaLabel()"
+  emptyIcon="chart-bar"
+  [summary]="summary()"
+  [table]="dataTable()"
+  [tooltip]="tooltip()"
+  [tooltipTemplate]="tooltipTemplate()?.template"
+  [panelStyle]="tokenStyle()"
+  [parts]="passThrough()"
+  [styled]="!isUnstyled()"
+  (pointer)="onPointer($event)"
+  (navigate)="onNavigate($event)"
+  (tooltipClosed)="active.set(null)"
+>
+  <svg:g [tx-chart-axes]="layout().axes" [gridPart]="passThrough().grid" [axisPart]="passThrough().axis" />
+  @if (hasVolume()) {
+    <svg:g class="tx-candlestick-chart__volumes">
+      @for (candle of candles(); track candle.key) {
+        @if (candle.volumeY !== null) {
+          <svg:rect
+            class="tx-candlestick-chart__volume"
+            [class]="passThrough().volume?.class"
+            [style]="passThrough().volume?.style"
+            [attr.data-dir]="candle.up ? 'up' : 'down'"
+            [attr.x]="candle.center - candle.width / 2"
+            [attr.y]="candle.volumeY"
+            [attr.width]="candle.width"
+            [attr.height]="candle.volumeHeight"
+          />
+        }
+      }
+    </svg:g>
+  }
+  @if (crosshair(); as line) {
+    <svg:line
+      class="tx-candlestick-chart__crosshair"
+      [class]="passThrough().crosshair?.class"
+      [style]="passThrough().crosshair?.style"
+      [attr.x1]="line.x"
+      [attr.x2]="line.x"
+      [attr.y1]="line.y1"
+      [attr.y2]="line.y2"
+    />
+  }
+  <svg:g class="tx-candlestick-chart__candles">
+    @for (candle of candles(); track candle.key) {
+      <svg:g
+        class="tx-candlestick-chart__candle"
+        [class.tx-candlestick-chart__candle--active]="active() === candle.index"
+        [class]="passThrough().candle?.class"
+        [style]="passThrough().candle?.style"
+        [attr.data-dir]="candle.up ? 'up' : 'down'"
+        [attr.data-index]="candle.index"
+        [style.--tx-candlestick-chart-order]="candle.index"
+      >
+        <svg:line
+          class="tx-candlestick-chart__wick"
+          [class]="passThrough().wick?.class"
+          [style]="passThrough().wick?.style"
+          [attr.x1]="candle.center"
+          [attr.x2]="candle.center"
+          [attr.y1]="candle.high"
+          [attr.y2]="candle.low"
+        />
+        @if (variant() === 'candle') {
+          <svg:rect
+            class="tx-candlestick-chart__body"
+            [class]="passThrough().body?.class"
+            [style]="passThrough().body?.style"
+            [attr.x]="candle.center - candle.width / 2"
+            [attr.y]="candle.bodyY"
+            [attr.width]="candle.width"
+            [attr.height]="candle.bodyHeight"
+          />
+        } @else {
+          <svg:line class="tx-candlestick-chart__tick" [attr.x1]="candle.center - candle.width / 2" [attr.x2]="candle.center" [attr.y1]="candle.open" [attr.y2]="candle.open" />
+          <svg:line class="tx-candlestick-chart__tick" [attr.x1]="candle.center" [attr.x2]="candle.center + candle.width / 2" [attr.y1]="candle.close" [attr.y2]="candle.close" />
+        }
+      </svg:g>
+    }
+  </svg:g>
+</tx-chart-frame>

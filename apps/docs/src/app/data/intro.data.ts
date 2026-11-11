@@ -61,7 +61,7 @@ export const INTRO_PACKAGES: IntroPackage[] = [
   { name: '@tectra-ng/icons', text: 'The icon set and the TxIcon component.', path: '/icons' },
   { name: '@tectra-ng/brand-icons', text: 'Brand logos for TxIcon.', path: '/icons' },
   { name: '@tectra-ng/flags', text: 'Country flags, loaded one by one.', path: '/components/country' },
-  { name: '@tectra-ng/charts', text: 'SVG charts without a chart library: line, column, combo, scatter, pie, radar, radial bar, gauge, funnel, waterfall, bullet, bar list, segmented bar, heatmap, treemap, rank and org charts, rendered on the server.', path: '/components/line-chart' },
+  { name: '@tectra-ng/charts', text: 'SVG charts without a chart library: line, column, combo, scatter, pie, radar, radial bar, gauge, funnel, waterfall, bullet, candlestick, box plot, range area, bar list, segmented bar, heatmap, treemap, rank and org charts, rendered on the server.', path: '/components/line-chart' },
   { name: '@tectra-ng/qr', text: 'QR codes in plain TypeScript with no dependencies.', path: '/components/qr-code' },
   { name: '@tectra-ng/editor', text: 'The rich text editor. Installed on its own — it carries its engine core.', path: '/components/editor', own: true },
 ];

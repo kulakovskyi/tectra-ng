@@ -1,0 +1,106 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+:host(.tx-range-area-chart--fill) {
+  height: 100%;
+}
+
+.tx-range-area-chart__band {
+  fill: var(--tx-range-area-chart-color);
+  fill-opacity: 0.2;
+}
+
+.tx-range-area-chart__edge,
+.tx-range-area-chart__line {
+  fill: none;
+  stroke: var(--tx-range-area-chart-color);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.tx-range-area-chart__edge {
+  stroke-opacity: 0.5;
+}
+
+.tx-range-area-chart__marker {
+  r: 4px;
+}
+
+.tx-range-area-chart__series,
+.tx-range-area-chart__marker,
+.tx-range-area-chart__crosshair {
+  pointer-events: none;
+}
+
+:host([data-styled]) {
+  .tx-range-area-chart__band {
+    fill-opacity: var(--tx-chart-range-area-fill-opacity);
+  }
+
+  .tx-range-area-chart__edge {
+    stroke-width: var(--tx-chart-range-area-edge-width);
+    stroke-opacity: var(--tx-chart-range-area-edge-opacity);
+  }
+
+  .tx-range-area-chart__line {
+    stroke-width: var(--tx-chart-range-area-line-width);
+  }
+
+  .tx-range-area-chart__marker {
+    r: var(--tx-chart-marker-radius);
+    stroke: var(--tx-chart-marker-stroke-color);
+    stroke-width: var(--tx-chart-marker-stroke-width);
+  }
+
+  .tx-range-area-chart__marker--edge {
+    r: var(--tx-chart-line-point-radius);
+  }
+
+  .tx-range-area-chart__crosshair {
+    stroke: var(--tx-chart-crosshair-color);
+    stroke-width: var(--tx-chart-crosshair-width);
+    stroke-dasharray: var(--tx-chart-crosshair-dash);
+  }
+
+  .tx-range-area-chart__series {
+    transition: opacity var(--tx-chart-motion-update-duration) ease;
+  }
+}
+
+:host([data-styled].tx-range-area-chart--focused) .tx-range-area-chart__series:not(.tx-range-area-chart__series--focused) {
+  opacity: var(--tx-chart-range-area-dimmed-opacity);
+}
+
+:host([data-styled].tx-range-area-chart--morph) {
+  .tx-range-area-chart__band,
+  .tx-range-area-chart__edge,
+  .tx-range-area-chart__line {
+    transition: d var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing);
+  }
+}
+
+:host([data-styled].tx-range-area-chart--entering) .tx-range-area-chart__series {
+  animation: tx-range-area-chart-reveal var(--tx-chart-motion-enter-duration) var(--tx-chart-motion-easing) both;
+}
+
+@keyframes tx-range-area-chart-reveal {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) .tx-range-area-chart__series,
+  :host([data-styled].tx-range-area-chart--morph) .tx-range-area-chart__band,
+  :host([data-styled].tx-range-area-chart--morph) .tx-range-area-chart__edge,
+  :host([data-styled].tx-range-area-chart--morph) .tx-range-area-chart__line {
+    transition: none;
+    animation: none;
+  }
+}

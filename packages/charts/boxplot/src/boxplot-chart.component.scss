@@ -1,0 +1,95 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+:host(.tx-boxplot-chart--fill) {
+  height: 100%;
+}
+
+.tx-boxplot-chart__item {
+  pointer-events: none;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+.tx-boxplot-chart__box {
+  fill: var(--tx-boxplot-chart-color);
+  fill-opacity: 0.2;
+  stroke: var(--tx-boxplot-chart-color);
+}
+
+.tx-boxplot-chart__whisker,
+.tx-boxplot-chart__cap,
+.tx-boxplot-chart__median {
+  stroke: var(--tx-boxplot-chart-color);
+}
+
+.tx-boxplot-chart__outlier {
+  r: 3px;
+  fill: none;
+  stroke: var(--tx-boxplot-chart-color);
+}
+
+:host([data-styled]) {
+  .tx-boxplot-chart__box {
+    fill-opacity: var(--tx-chart-boxplot-fill-opacity);
+    stroke-width: var(--tx-chart-boxplot-stroke-width);
+    rx: var(--tx-chart-boxplot-radius);
+    transition: fill-opacity var(--tx-chart-motion-hover-duration) ease;
+  }
+
+  .tx-boxplot-chart__whisker,
+  .tx-boxplot-chart__cap {
+    stroke-width: var(--tx-chart-boxplot-stroke-width);
+    stroke-linecap: round;
+  }
+
+  .tx-boxplot-chart__median {
+    stroke-width: var(--tx-chart-boxplot-median-width);
+    stroke-linecap: round;
+  }
+
+  .tx-boxplot-chart__outlier {
+    r: var(--tx-chart-boxplot-outlier-radius);
+    stroke-width: var(--tx-chart-boxplot-stroke-width);
+  }
+
+  .tx-boxplot-chart__item {
+    transition: opacity var(--tx-chart-motion-hover-duration) ease;
+  }
+
+  .tx-boxplot-chart__item--active .tx-boxplot-chart__box {
+    fill-opacity: calc(var(--tx-chart-boxplot-fill-opacity) * 2);
+  }
+}
+
+:host([data-styled].tx-boxplot-chart--active) .tx-boxplot-chart__item:not(.tx-boxplot-chart__item--active),
+:host([data-styled].tx-boxplot-chart--focused) .tx-boxplot-chart__item:not(.tx-boxplot-chart__item--focused) {
+  opacity: var(--tx-chart-boxplot-dimmed-opacity);
+}
+
+:host([data-styled].tx-boxplot-chart--entering) .tx-boxplot-chart__item {
+  animation: tx-boxplot-chart-grow var(--tx-chart-motion-enter-duration) var(--tx-chart-motion-easing) both;
+  animation-delay: calc(var(--tx-boxplot-chart-order, 0) * var(--tx-chart-motion-stagger) * 2);
+}
+
+@keyframes tx-boxplot-chart-grow {
+  from {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+
+  to {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([data-styled]) .tx-boxplot-chart__item,
+  :host([data-styled]) .tx-boxplot-chart__box {
+    transition: none;
+    animation: none;
+  }
+}

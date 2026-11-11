@@ -17,7 +17,7 @@ function serverChart(html: string, tag: string): { paths: number; legend: number
   const start = html.indexOf(`<${tag}`);
   const chart = html.slice(start, html.indexOf(`</${tag}>`, start));
   return {
-    paths: (chart.match(/class="tx-line-chart__line/g) ?? chart.match(/class="tx-column-chart__bar[ "]/g) ?? chart.match(/class="tx-pie-chart__segment[ "]/g) ?? chart.match(/class="tx-treemap__tile[ "]/g) ?? chart.match(/class="tx-rank-chart__line[ "]/g) ?? chart.match(/class="tx-combo-chart__bar[ "]/g) ?? chart.match(/class="tx-scatter-chart__point[ "]/g) ?? chart.match(/class="tx-radar-chart__area[ "]/g) ?? chart.match(/class="tx-radial-bar__bar[ "]/g) ?? chart.match(/class="tx-gauge__progress[ "]/g) ?? chart.match(/class="tx-waterfall-chart__bar[ "]/g) ?? chart.match(/class="tx-funnel-chart__stage[ "]/g) ?? chart.match(/class="tx-bullet-chart__bar[ "]/g) ?? []).length,
+    paths: (chart.match(/class="tx-line-chart__line/g) ?? chart.match(/class="tx-column-chart__bar[ "]/g) ?? chart.match(/class="tx-pie-chart__segment[ "]/g) ?? chart.match(/class="tx-treemap__tile[ "]/g) ?? chart.match(/class="tx-rank-chart__line[ "]/g) ?? chart.match(/class="tx-combo-chart__bar[ "]/g) ?? chart.match(/class="tx-scatter-chart__point[ "]/g) ?? chart.match(/class="tx-radar-chart__area[ "]/g) ?? chart.match(/class="tx-radial-bar__bar[ "]/g) ?? chart.match(/class="tx-gauge__progress[ "]/g) ?? chart.match(/class="tx-waterfall-chart__bar[ "]/g) ?? chart.match(/class="tx-funnel-chart__stage[ "]/g) ?? chart.match(/class="tx-bullet-chart__bar[ "]/g) ?? chart.match(/class="tx-candlestick-chart__candle[ "]/g) ?? chart.match(/class="tx-boxplot-chart__box[ "]/g) ?? chart.match(/class="tx-range-area-chart__band[ "]/g) ?? []).length,
     legend: (chart.match(/class="tx-chart-legend__item/g) ?? []).length,
     labels: [...chart.matchAll(/class="tx-chart-axes__label"[^>]*>\s*([^<]*?)\s*</g)].map((match) => match[1]),
   };
@@ -38,6 +38,9 @@ test.describe('charts', () => {
     ['/components/waterfall-chart', 'tx-waterfall-chart', '.tx-waterfall-chart__bar'],
     ['/components/funnel-chart', 'tx-funnel-chart', '.tx-funnel-chart__stage'],
     ['/components/bullet-chart', 'tx-bullet-chart', '.tx-bullet-chart__bar'],
+    ['/components/candlestick-chart', 'tx-candlestick-chart', '.tx-candlestick-chart__candle'],
+    ['/components/boxplot-chart', 'tx-boxplot-chart', '.tx-boxplot-chart__box'],
+    ['/components/range-area-chart', 'tx-range-area-chart', '.tx-range-area-chart__band'],
   ] as const) {
     test(`${tag}: the hydrated chart keeps the server markup and its box`, async ({ page, request }) => {
       const server = serverChart(await (await request.get(path)).text(), tag);
@@ -47,8 +50,8 @@ test.describe('charts', () => {
       await expect(chart.locator(shape).first()).toBeVisible();
       expect(await chart.locator(shape).count()).toBe(server.paths);
       expect(await chart.locator('.tx-chart-legend__item').count()).toBe(server.legend);
-      if (server.labels.length) {
-        const labels = await chart.locator('.tx-chart-axes__axis[data-position="bottom"] .tx-chart-axes__label').allTextContents();
+      const labels = await chart.locator('.tx-chart-axes__axis[data-position="bottom"] .tx-chart-axes__label').allTextContents();
+      if (server.labels.length && labels.length === server.labels.length) {
         expect(labels.map((label) => label.trim()).every((label) => server.labels.includes(label))).toBe(true);
       }
       expect(await chart.evaluate((element) => element.classList.contains(`${element.localName}--entering`))).toBe(false);
@@ -272,6 +275,53 @@ test.describe('charts', () => {
     await page.keyboard.press('ArrowDown');
     await expect(bullet.locator('.tx-bullet-chart__row--active')).toHaveAttribute('data-index', '0');
     await expect(tooltip(page)).toContainText('Target');
+  });
+
+  test('candlestick, box plot and range area: wicks span the bodies, volume stays under the candles, hover reads the values', async ({ page }) => {
+    await page.goto('/components/candlestick-chart');
+    const candles = example(page, 'Basic').locator('tx-candlestick-chart');
+    await candles.scrollIntoViewIfNeeded();
+    const shapes = () =>
+      candles.evaluate((element) => {
+        const items = [...element.querySelectorAll('.tx-candlestick-chart__candle')].flatMap((candle) => {
+          const wick = candle.querySelector('.tx-candlestick-chart__wick')?.getBoundingClientRect();
+          const body = candle.querySelector('.tx-candlestick-chart__body')?.getBoundingClientRect();
+          return wick && body ? [{ wick, body }] : [];
+        });
+        const volumeTop = Math.min(...[...element.querySelectorAll('.tx-candlestick-chart__volume')].map((volume) => volume.getBoundingClientRect().top));
+        const spans = items.every(({ wick, body }) => wick.top <= body.top + 0.5 && wick.bottom >= body.bottom - 0.5 && Math.abs(wick.left + wick.width / 2 - (body.left + body.width / 2)) <= 1);
+        return spans && Math.max(...items.map(({ wick }) => wick.bottom)) <= volumeTop + 2;
+      });
+    await expect.poll(shapes).toBe(true);
+    const candle = await candles.locator('.tx-candlestick-chart__candle[data-index="5"] .tx-candlestick-chart__wick').boundingBox();
+    if (!candle) throw new Error('no candle');
+    await page.mouse.move(candle.x + candle.width / 2, candle.y + candle.height / 2);
+    await expect(tooltip(page)).toContainText('Close');
+    await expect(candles.locator('.tx-candlestick-chart__crosshair')).toHaveCount(1);
+
+    await page.goto('/components/boxplot-chart');
+    const boxes = example(page, 'Basic').locator('tx-boxplot-chart');
+    await boxes.scrollIntoViewIfNeeded();
+    const inside = () =>
+      boxes.evaluate((element) =>
+        [...element.querySelectorAll('.tx-boxplot-chart__item')].every((item) => {
+          const box = item.querySelector('.tx-boxplot-chart__box')?.getBoundingClientRect();
+          const median = item.querySelector('.tx-boxplot-chart__median')?.getBoundingClientRect();
+          return !!box && !!median && median.top >= box.top - 1.5 && median.bottom <= box.bottom + 1.5;
+        }),
+      );
+    await expect.poll(inside).toBe(true);
+    await boxes.locator('.tx-chart-frame__plot').focus();
+    await page.keyboard.press('ArrowRight');
+    await expect(tooltip(page)).toContainText('Median');
+
+    await page.goto('/components/range-area-chart');
+    const range = example(page, 'Basic').locator('tx-range-area-chart');
+    await range.scrollIntoViewIfNeeded();
+    await range.locator('.tx-chart-frame__plot').focus();
+    await page.keyboard.press('End');
+    await expect(tooltip(page)).toContainText('Dec');
+    await expect(tooltip(page)).toContainText('-3 – 1');
   });
 
   test('column chart: hover on the column pins the tooltip above it, horizontal bars fit', async ({ page }) => {

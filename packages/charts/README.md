@@ -21,6 +21,9 @@ Part of `tectra-ng`. One entry point per chart, so you only bundle what you impo
 | `@tectra-ng/charts/funnel` | `<tx-funnel-chart>` — steps of a process as centred bars with connectors and the conversion between them |
 | `@tectra-ng/charts/waterfall` | `<tx-waterfall-chart>` — a running total built step by step, increases and decreases in their own colours, total bars |
 | `@tectra-ng/charts/bullet` | `<tx-bullet-chart>` — a value against a target over qualitative ranges, one row per measure on a shared scale |
+| `@tectra-ng/charts/candlestick` | `<tx-candlestick-chart>` — candles or OHLC bars with the volume under them, no gaps for days off |
+| `@tectra-ng/charts/boxplot` | `<tx-boxplot-chart>` — quartiles, median, whiskers and outliers from raw values or ready numbers, series side by side |
+| `@tectra-ng/charts/range-area` | `<tx-range-area-chart>` — a low–high band with a line inside, category or time axis |
 | `@tectra-ng/charts/bar-list` | `<tx-bar-list>` — a top-N ranking: label over a share bar, value and percent of the total, router links |
 | `@tectra-ng/charts/segmented-bar` | `<tx-segmented-bar>` — parts of one whole in one bar with tones, a small or a large bar, legend with values and shares |
 | `@tectra-ng/charts/heatmap` | `<tx-heatmap>` — rows × grouped columns coloured by tones or a value scale, sticky headers, cell tooltips and clicks, `heatmapCalendar()` |

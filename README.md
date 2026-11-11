@@ -15,7 +15,7 @@ npm install @tectra-ng/charts  # SVG charts without a chart library; part of tec
 
 The rich text editor (`@tectra-ng/editor`) is installed on its own, also next to `tectra-ng`: it brings the ProseMirror engine with it, and apps without an editor should not carry it.
 
-The charts (`@tectra-ng/charts`) are drawn as SVG by the components themselves — no chart library, no dependencies — render on the server and take their colours from the tokens. One entry point per chart: `@tectra-ng/charts/line`, `/column`, `/combo`, `/scatter`, `/pie`, `/radar`, `/radial-bar`, `/gauge`, `/funnel`, `/waterfall`, `/bullet`, `/bar-list`, `/segmented-bar`, `/heatmap`, `/treemap`, `/rank-line`, `/org-chart`, and `/core` for your own charts (with SVG / PNG / CSV export). `tectra-ng` includes them.
+The charts (`@tectra-ng/charts`) are drawn as SVG by the components themselves — no chart library, no dependencies — render on the server and take their colours from the tokens. One entry point per chart: `@tectra-ng/charts/line`, `/column`, `/combo`, `/scatter`, `/pie`, `/radar`, `/radial-bar`, `/gauge`, `/funnel`, `/waterfall`, `/bullet`, `/candlestick`, `/boxplot`, `/range-area`, `/bar-list`, `/segmented-bar`, `/heatmap`, `/treemap`, `/rank-line`, `/org-chart`, and `/core` for your own charts (with SVG / PNG / CSV export). `tectra-ng` includes them.
 
 The QR code generator (`@tectra-ng/qr`) is plain TypeScript with no dependencies — it works in any framework, in Node and on the server. `tectra-ng` includes it; the `<tx-qr-code>` block in `@tectra-ng/blocks/qr-code` is built on it.
 
@@ -49,7 +49,7 @@ Plan of what moves in next and in which order: [ROADMAP.md](ROADMAP.md).
 | `packages/flags` | optional country flags as SVG, rectangle and circle, loaded one by one | npm `@tectra-ng/flags` |
 | `packages/ui` | components, one entry point each | npm `@tectra-ng/ui/<component>` |
 | `packages/editor` | rich text editor on the ProseMirror core (`@tectra-ng/editor`) and the renderer for saved text (`@tectra-ng/editor/content`); install it separately | npm `@tectra-ng/editor` |
-| `packages/charts` | SVG charts without a chart library: line and area, column and bar, combo, scatter and bubble, pie and donut, radar, radial bar, gauge, funnel, waterfall, bullet, bar list, segmented bar, heatmap, treemap, rank chart and org chart on one core (scales, axes, legend, tooltip, export, accessibility), one entry point each; part of `tectra-ng` | npm `@tectra-ng/charts/<chart>` |
+| `packages/charts` | SVG charts without a chart library: line and area, column and bar, combo, scatter and bubble, pie and donut, radar, radial bar, gauge, funnel, waterfall, bullet, candlestick, box plot, range area, bar list, segmented bar, heatmap, treemap, rank chart and org chart on one core (scales, axes, legend, tooltip, export, accessibility), one entry point each; part of `tectra-ng` | npm `@tectra-ng/charts/<chart>` |
 | `packages/qr` | QR codes without a framework: encoder (versions 1–40, levels L–H), SVG paths, styled SVG and PNG output; part of `tectra-ng` | npm `@tectra-ng/qr` |
 | `packages/blocks` | ready page blocks built from the components: filters panel, page header, empty state, layouts … one entry point each; part of `tectra-ng` | npm `@tectra-ng/blocks/<block>` |
 | `apps/docs` | the documentation site | Cloudflare Pages |

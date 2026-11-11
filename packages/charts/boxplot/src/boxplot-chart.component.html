@@ -1,0 +1,65 @@
+<tx-chart-frame
+  [height]="height()"
+  [(size)]="size"
+  [legendItems]="legendItems()"
+  [showLegend]="legendShown()"
+  [legendPosition]="legendPosition()"
+  [legendAlign]="legendAlign()"
+  [legendTemplate]="legendTemplate()?.template"
+  [empty]="isEmpty()"
+  [loading]="loading()"
+  [toolbar]="toolbar()"
+  [exportName]="ariaLabel()"
+  emptyIcon="chart-bar"
+  [summary]="summary()"
+  [table]="dataTable()"
+  [tooltip]="tooltip()"
+  [tooltipTemplate]="tooltipTemplate()?.template"
+  [panelStyle]="tokenStyle()"
+  [parts]="passThrough()"
+  [styled]="!isUnstyled()"
+  (pointer)="onPointer($event)"
+  (navigate)="onNavigate($event)"
+  (legendToggled)="onLegendToggle($event)"
+  (legendHovered)="onLegendHover($event)"
+  (tooltipClosed)="active.set(null)"
+>
+  <svg:g [tx-chart-axes]="layout().axes" [gridPart]="passThrough().grid" [axisPart]="passThrough().axis" />
+  @for (box of boxes(); track box.key) {
+    <svg:g
+      class="tx-boxplot-chart__item"
+      [class.tx-boxplot-chart__item--active]="isActive(box)"
+      [class.tx-boxplot-chart__item--focused]="focusedSeries() === box.series"
+      [attr.data-series]="box.series"
+      [attr.data-index]="box.index"
+      [style.--tx-boxplot-chart-color]="box.color"
+      [style.--tx-boxplot-chart-order]="box.index"
+    >
+      <svg:line class="tx-boxplot-chart__whisker" [class]="passThrough().whisker?.class" [style]="passThrough().whisker?.style" [attr.x1]="box.center" [attr.x2]="box.center" [attr.y1]="box.max" [attr.y2]="box.q3" />
+      <svg:line class="tx-boxplot-chart__whisker" [class]="passThrough().whisker?.class" [style]="passThrough().whisker?.style" [attr.x1]="box.center" [attr.x2]="box.center" [attr.y1]="box.q1" [attr.y2]="box.min" />
+      <svg:line class="tx-boxplot-chart__cap" [attr.x1]="box.center - box.capWidth / 2" [attr.x2]="box.center + box.capWidth / 2" [attr.y1]="box.max" [attr.y2]="box.max" />
+      <svg:line class="tx-boxplot-chart__cap" [attr.x1]="box.center - box.capWidth / 2" [attr.x2]="box.center + box.capWidth / 2" [attr.y1]="box.min" [attr.y2]="box.min" />
+      <svg:rect
+        class="tx-boxplot-chart__box"
+        [class]="passThrough().box?.class"
+        [style]="passThrough().box?.style"
+        [attr.x]="box.x"
+        [attr.y]="box.q3"
+        [attr.width]="box.width"
+        [attr.height]="box.q1 - box.q3"
+      />
+      <svg:line
+        class="tx-boxplot-chart__median"
+        [class]="passThrough().median?.class"
+        [style]="passThrough().median?.style"
+        [attr.x1]="box.x"
+        [attr.x2]="box.x + box.width"
+        [attr.y1]="box.median"
+        [attr.y2]="box.median"
+      />
+      @for (point of box.outliers; track point.key) {
+        <svg:circle class="tx-boxplot-chart__outlier" [class]="passThrough().outlier?.class" [style]="passThrough().outlier?.style" [attr.cx]="box.center" [attr.cy]="point.y" />
+      }
+    </svg:g>
+  }
+</tx-chart-frame>

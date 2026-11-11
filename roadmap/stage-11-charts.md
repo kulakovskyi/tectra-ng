@@ -126,10 +126,10 @@ Arc helpers (`polar`, `arcPath`, `strokeArc`, `fitArc`) moved from `charts/pie` 
 - [x] `<tx-funnel-chart>` (`charts/funnel`: centred bars, connectors, conversion from the step before and share of the first, one colour or `colorful`), `<tx-waterfall-chart>` (`charts/waterfall`: running total, up / down colours, total bars that close a section, signed labels, dashed connectors, a non-toggling legend), `<tx-bullet-chart>` (`charts/bullet`: value, target, qualitative ranges shared or per row, one row per measure on a shared scale, height from the rows)
 - [x] Docs + tests; e2e
 
-## 11.14 Financial and statistical
+## 11.14 Financial and statistical ✅
 
-- [ ] `<tx-candlestick-chart>` (OHLC, volume), `<tx-boxplot-chart>`, range area (min–max band with a line)
-- [ ] Docs + tests; e2e
+- [x] `<tx-candlestick-chart>` (`charts/candlestick`: candles or OHLC bars, volume along the bottom on its own scale, periods side by side so days off leave no gaps, dates or any labels, crosshair), `<tx-boxplot-chart>` (`charts/boxplot`: five numbers from raw values with 1.5 × IQR whiskers or given ready, outliers, series side by side), `<tx-range-area-chart>` (`charts/range-area`: min–max band with an optional line, gaps, category or time axis)
+- [x] Docs + tests; e2e
 
 ## 11.15 Timeline and gantt
 
