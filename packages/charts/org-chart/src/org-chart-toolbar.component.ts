@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, ElementRef, booleanAttribute, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, ElementRef, booleanAttribute, computed, inject, input, output, signal } from '@angular/core';
+import { TxChartMenu, TxChartMenuItem } from '@tectra-ng/charts/core';
 import { formatMessage } from '@tectra-ng/core/i18n';
 import { TxButton } from '@tectra-ng/ui/button';
 import { TxIconField, TxInputIcon } from '@tectra-ng/ui/icon-field';
@@ -13,7 +14,7 @@ const NARROW_REM = 30;
 
 @Component({
   selector: 'tx-org-chart-toolbar',
-  imports: [TxButton, TxIconField, TxInputIcon, TxInput, TxPill, TxPopover, TxPopoverTrigger, TxTooltip],
+  imports: [TxButton, TxChartMenu, TxIconField, TxInputIcon, TxInput, TxPill, TxPopover, TxPopoverTrigger, TxTooltip],
   templateUrl: './org-chart-toolbar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -32,6 +33,16 @@ export class TxOrgChartToolbar {
   private host = inject<ElementRef<HTMLElement>>(ElementRef);
   private document = inject(DOCUMENT);
   readonly narrow = signal(false);
+  readonly popoverTokens = { content: { padding: '0' } };
+  readonly menuItems = computed<TxChartMenuItem[]>(() => {
+    const state = this.state();
+    const text = this.labels();
+    return [
+      { id: 'expand', label: text.expandAll, icon: 'angle-double-down', disabled: !state.hasContent || state.allExpanded },
+      { id: 'collapse', label: text.collapseAll, icon: 'angle-double-up', disabled: state.noneExpanded },
+      { id: 'fullscreen', label: state.isFullscreen ? text.exitFullscreen : text.fullscreen, icon: state.isFullscreen ? 'window-minimize' : 'window-maximize' },
+    ];
+  });
 
   readonly searchChange = output<string>();
   readonly zoomIn = output<void>();
@@ -53,6 +64,12 @@ export class TxOrgChartToolbar {
     const root = this.document.defaultView?.getComputedStyle(this.document.documentElement);
     const rem = parseFloat(root?.fontSize ?? '') || 16;
     this.narrow.set(box.clientWidth < NARROW_REM * rem);
+  }
+
+  onMenu(id: string): void {
+    if (id === 'expand') this.expandAll.emit();
+    else if (id === 'collapse') this.collapseAll.emit();
+    else if (id === 'fullscreen') this.fullscreen.emit();
   }
 
   matches(count: number): string {

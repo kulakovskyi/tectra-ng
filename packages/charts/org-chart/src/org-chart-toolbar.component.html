@@ -106,84 +106,51 @@
     (keydown.enter)="measure()"
     (keydown.space)="measure()"
   ></button>
-  <tx-popover #more placement="bottom-end" [offset]="8" [arrow]="false" [ariaLabel]="moreLabel()" [unstyled]="unstyled()">
-    <div class="tx-org-chart__menu" [attr.data-styled]="!unstyled() || null">
-      @if (narrow()) {
-        <div class="tx-org-chart__menu-zoom">
-          <button
-            txButton
-            type="button"
-            icon="search-minus"
-            severity="secondary"
-            outlined
-            [attr.aria-label]="text.zoomOut"
-            [disabled]="!current.canZoomOut"
-            (click)="zoomOut.emit()"
-          ></button>
-          <button
-            txButton
-            type="button"
-            class="tx-org-chart__menu-percent"
-            [label]="current.zoomPercent + '%'"
-            severity="secondary"
-            outlined
-            [attr.aria-label]="text.resetZoom + ', ' + current.zoomPercent + '%'"
-            (click)="resetZoom.emit()"
-          ></button>
-          <button
-            txButton
-            type="button"
-            icon="search-plus"
-            severity="secondary"
-            outlined
-            [attr.aria-label]="text.zoomIn"
-            [disabled]="!current.canZoomIn"
-            (click)="zoomIn.emit()"
-          ></button>
-          <button
-            txButton
-            type="button"
-            icon="expand"
-            severity="secondary"
-            outlined
-            [attr.aria-label]="text.fit"
-            [disabled]="!current.hasContent"
-            (click)="fit.emit()"
-          ></button>
-        </div>
-      }
-      <button
-        txButton
-        type="button"
-        class="tx-org-chart__menu-item"
-        icon="angle-double-down"
-        [label]="text.expandAll"
-        severity="secondary"
-        text
-        [disabled]="!current.hasContent || current.allExpanded"
-        (click)="expandAll.emit(); more.hide()"
-      ></button>
-      <button
-        txButton
-        type="button"
-        class="tx-org-chart__menu-item"
-        icon="angle-double-up"
-        [label]="text.collapseAll"
-        severity="secondary"
-        text
-        [disabled]="current.noneExpanded"
-        (click)="collapseAll.emit(); more.hide()"
-      ></button>
-      <button
-        txButton
-        type="button"
-        class="tx-org-chart__menu-item"
-        [icon]="current.isFullscreen ? 'window-minimize' : 'window-maximize'"
-        [label]="current.isFullscreen ? text.exitFullscreen : text.fullscreen"
-        severity="secondary"
-        text
-        (click)="fullscreen.emit(); more.hide()"
-      ></button>
-    </div>
+  <tx-popover #more placement="bottom-end" [dt]="popoverTokens" [ariaLabel]="moreLabel()" [unstyled]="unstyled()">
+    @if (narrow()) {
+      <div class="tx-org-chart__menu-zoom" [attr.data-styled]="!unstyled() || null">
+        <button
+          txButton
+          type="button"
+          icon="search-minus"
+          severity="secondary"
+          outlined
+          [attr.aria-label]="text.zoomOut"
+          [disabled]="!current.canZoomOut"
+          (click)="zoomOut.emit()"
+        ></button>
+        <button
+          txButton
+          type="button"
+          class="tx-org-chart__menu-percent"
+          [label]="current.zoomPercent + '%'"
+          severity="secondary"
+          outlined
+          [attr.aria-label]="text.resetZoom + ', ' + current.zoomPercent + '%'"
+          (click)="resetZoom.emit()"
+        ></button>
+        <button
+          txButton
+          type="button"
+          icon="search-plus"
+          severity="secondary"
+          outlined
+          [attr.aria-label]="text.zoomIn"
+          [disabled]="!current.canZoomIn"
+          (click)="zoomIn.emit()"
+        ></button>
+        <button
+          txButton
+          type="button"
+          icon="expand"
+          severity="secondary"
+          outlined
+          [attr.aria-label]="text.fit"
+          [disabled]="!current.hasContent"
+          (click)="fit.emit()"
+        ></button>
+      </div>
+    }
+    <tx-chart-menu [items]="menuItems()" [ariaLabel]="moreLabel()" [unstyled]="unstyled()" (selected)="more.hide(); onMenu($event)" />
   </tx-popover>
 </div>

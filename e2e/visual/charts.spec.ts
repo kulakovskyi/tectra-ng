@@ -444,7 +444,8 @@ test.describe('charts', () => {
     await page.mouse.move(0, 0);
 
     await chart.locator('.tx-org-chart__bar .tx-org-chart__more').click();
-    await page.getByRole('button', { name: 'Full screen' }).click();
+    await expect(page.locator('.tx-popover__arrow')).toBeVisible();
+    await page.getByRole('menuitem', { name: 'Full screen' }).click();
     await expect(chart.locator('.tx-org-chart__canvas--native')).toHaveCount(1);
     const full = await canvas.boundingBox();
     const screen = await layoutViewport(page);
@@ -469,10 +470,11 @@ test.describe('charts', () => {
     const moreBox = await more.boundingBox();
     expect(Math.abs((search?.y ?? 0) - (moreBox?.y ?? 0))).toBeLessThan(8);
     await more.click();
-    const menu = page.locator('.tx-org-chart__menu');
-    await expect(menu.locator('.tx-org-chart__menu-zoom')).toBeVisible();
-    await menu.getByRole('button', { name: 'Expand all' }).click();
-    await expect(menu).toBeHidden();
+    await expect(page.locator('.tx-org-chart__menu-zoom')).toBeVisible();
+    await expect(page.locator('.tx-popover__arrow')).toBeVisible();
+    const expand = page.getByRole('menuitem', { name: 'Expand all' });
+    await expand.click();
+    await expect(expand).toBeHidden();
     await expect(chart.locator('.tx-org-chart-card__title', { hasText: 'Gina Ives' })).toBeVisible();
     const map = await chart.locator('.tx-org-chart__map').boundingBox();
     expect(map?.width ?? 0).toBeLessThanOrEqual(141);
@@ -504,7 +506,7 @@ test.describe('charts', () => {
     const canvas = chart.locator('.tx-org-chart__canvas');
     await canvas.scrollIntoViewIfNeeded();
     await chart.locator('.tx-org-chart__bar .tx-org-chart__more').click();
-    await page.getByRole('button', { name: 'Full screen' }).click();
+    await page.getByRole('menuitem', { name: 'Full screen' }).click();
     await expect(canvas).toHaveClass(/tx-org-chart__canvas--top-layer/);
     expect(await canvas.evaluate((element) => element.matches(':popover-open'))).toBe(true);
     const box = await canvas.boundingBox();
@@ -535,6 +537,7 @@ test.describe('charts', () => {
     const files: Record<string, string> = {};
     for (const label of ['Download SVG', 'Download PNG', 'Download CSV']) {
       await button.click();
+      await expect(page.locator('.tx-popover__arrow')).toBeVisible();
       const [download] = await Promise.all([page.waitForEvent('download'), page.getByRole('menuitem', { name: label }).click()]);
       const stream = await download.createReadStream();
       const chunks: Buffer[] = [];

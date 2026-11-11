@@ -16,3 +16,4 @@ export * from './src/series-data';
 export * from './src/chart-interaction';
 export * from './src/chart-token';
 export * from './src/chart-export';
+export * from './src/chart-menu.component';

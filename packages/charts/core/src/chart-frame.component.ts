@@ -43,14 +43,15 @@ import {
 import { chartBoxHeight } from './chart-size';
 import { TxChartExportFormat, chartCsv, chartFileName, chartPngBlob, chartSvgString, downloadChartFile } from './chart-export';
 import { TxButton } from '@tectra-ng/ui/button';
-import { TxMenu, TxMenuItem, TxMenuTrigger } from '@tectra-ng/ui/menu';
+import { TxPopover, TxPopoverTrigger } from '@tectra-ng/ui/popover';
+import { TxChartMenu, TxChartMenuItem } from './chart-menu.component';
 
 const TOOLTIP_OFFSET = 10;
 const ARROW_ROOM = 16;
 
 @Component({
   selector: 'tx-chart-frame',
-  imports: [NgTemplateOutlet, TxChartLegend, TxIcon, TxSkeleton, TxButton, TxMenu, TxMenuTrigger],
+  imports: [NgTemplateOutlet, TxChartLegend, TxIcon, TxSkeleton, TxButton, TxPopover, TxPopoverTrigger, TxChartMenu],
   templateUrl: './chart-frame.component.html',
   styleUrl: './chart-frame.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -127,12 +128,13 @@ export class TxChartFrame {
   readonly placeholderHeight = computed(() => chartBoxHeight(this.height(), this.legendVisible() ? this.legendPosition() : null, this.toolbar()));
   readonly toolbarRow = computed(() => (!this.toolbar() ? null : this.legendVisible() && this.legendPosition() === 'top' ? 'legend' : 'own'));
   readonly canExport = computed(() => !this.empty() && !this.loading());
-  readonly exportItems = computed<TxMenuItem[]>(() => {
+  readonly popoverTokens = { content: { padding: '0' } };
+  readonly exportItems = computed<TxChartMenuItem[]>(() => {
     const t = this.translations();
     return [
-      { label: t.chartDownloadSvg, icon: 'image', command: () => this.download('svg') },
-      { label: t.chartDownloadPng, icon: 'image', command: () => this.download('png') },
-      { label: t.chartDownloadCsv, icon: 'file', command: () => this.download('csv') },
+      { id: 'svg', label: t.chartDownloadSvg, icon: 'image' },
+      { id: 'png', label: t.chartDownloadPng, icon: 'image' },
+      { id: 'csv', label: t.chartDownloadCsv, icon: 'file' },
     ];
   });
 
@@ -241,6 +243,12 @@ export class TxChartFrame {
     this.ref = ref;
     this.openPlacement = placement;
     this.activeRef.set(ref);
+  }
+
+  onExport(id: string): void {
+    if (id === 'svg' || id === 'png' || id === 'csv') {
+      this.download(id);
+    }
   }
 
   download(format: TxChartExportFormat): void {

@@ -11,9 +11,16 @@
         text
         aria-haspopup="menu"
         [attr.aria-label]="translations().chartMenu"
-        [txMenuTrigger]="exportMenu"
+        [txPopoverTrigger]="exportPopover"
       ></button>
-      <tx-menu #exportMenu popup placement="bottom-end" [model]="exportItems()" [ariaLabel]="translations().chartMenu" [unstyled]="!styled()" />
+      <tx-popover #exportPopover placement="bottom-end" [dt]="popoverTokens" [ariaLabel]="translations().chartMenu" [unstyled]="!styled()">
+        <tx-chart-menu
+          [items]="exportItems()"
+          [ariaLabel]="translations().chartMenu"
+          [unstyled]="!styled()"
+          (selected)="exportPopover.hide(); onExport($event)"
+        />
+      </tx-popover>
     }
   </div>
 }

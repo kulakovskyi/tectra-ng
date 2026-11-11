@@ -18,6 +18,7 @@ export const chartTokens = {
   toolbar: {
     rowHeight: '31px',
     reserve: '32px',
+    disabledOpacity: '0.5',
   },
   grid: {
     color: lightDark(fade(tokenRef('surface-300'), '45%'), fade(tokenRef('surface-600'), '45%')),
