@@ -33,7 +33,7 @@ const COPIED_FOR = 1500;
         [title]="isCopied() ? translations().copied : translations().copy"
         (click)="copy()"
       >
-        <tx-icon [name]="isCopied() ? 'check' : 'copy'" />
+        <span class="tx-copy-swap" [class.tx-copy-swap--done]="isCopied()"><tx-icon class="tx-copy-swap__icon tx-copy-swap__icon--idle" name="copy" /><tx-icon class="tx-copy-swap__icon tx-copy-swap__icon--done" name="check" /></span>
       </button>
     }
     @if (removable()) {
