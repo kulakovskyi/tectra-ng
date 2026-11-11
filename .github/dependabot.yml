@@ -1,0 +1,45 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    versioning-strategy: increase
+    commit-message:
+      prefix: chore(deps)
+    ignore:
+      - dependency-name: '@angular/*'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@angular-devkit/*'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@schematics/angular'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'nx'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@nx/*'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
+    groups:
+      angular:
+        patterns: ['@angular/*', '@angular-devkit/*', '@schematics/angular', 'ng-packagr']
+      nx:
+        patterns: ['nx', '@nx/*']
+      engines:
+        patterns: ['prosemirror-*', '@codemirror/*']
+      lint:
+        patterns: ['eslint*', '@eslint/*', 'typescript-eslint', '@typescript-eslint/*', 'angular-eslint', '@angular-eslint/*', 'prettier']
+      test:
+        patterns: ['vitest', '@vitest/*', 'jsdom', '@playwright/*', 'playwright', '@axe-core/*']
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    commit-message:
+      prefix: chore(ci)
+    groups:
+      actions:
+        patterns: ['*']
