@@ -1,3 +1,39 @@
+## 0.2.0 (2026-11-11)
+
+### 🚀 Features
+
+- **charts:** bar list — top-N ranking with share bars, percent of the total and router links ([243aea0](https://github.com/kulakovskyi/tectra-ng/commit/243aea0))
+- **charts:** segmented bar — parts of a whole in one bar with tones, small and large sizes, legend ([28ef521](https://github.com/kulakovskyi/tectra-ng/commit/28ef521))
+- **charts:** heatmap — tone and value-scale cells, sticky headers, row templates, calendar layout; the page scrolls past the grid ([d546819](https://github.com/kulakovskyi/tectra-ng/commit/d546819))
+- **charts:** treemap — squarified tiles, labels that fit, nested groups, tooltip and keyboard ([9cc4e2c](https://github.com/kulakovskyi/tectra-ng/commit/9cc4e2c))
+- **charts:** rank chart — positions over time with rank 1 on top, gaps, notes, legend and keyboard ([79be796](https://github.com/kulakovskyi/tectra-ng/commit/79be796))
+- **charts:** org chart — tree of cards on a pan / zoom canvas with search, minimap, full screen and hotkeys ([2b56857](https://github.com/kulakovskyi/tectra-ng/commit/2b56857))
+- **charts:** chart menu downloads SVG, PNG and CSV on line, column and pie charts ([21b12bb](https://github.com/kulakovskyi/tectra-ng/commit/21b12bb))
+- **charts:** combo chart with columns, lines and areas on a second value axis aligned to the grid ([6db389d](https://github.com/kulakovskyi/tectra-ng/commit/6db389d))
+- **charts:** scatter and bubble chart with trend lines, per point colours and labels, a time x axis ([216ddd3](https://github.com/kulakovskyi/tectra-ng/commit/216ddd3))
+- **charts:** radar chart, radial bar and gauge on shared arc helpers in the chart core ([f4e05ee](https://github.com/kulakovskyi/tectra-ng/commit/f4e05ee))
+- **charts:** funnel, waterfall and bullet charts ([e308f64](https://github.com/kulakovskyi/tectra-ng/commit/e308f64))
+- **charts:** candlestick, box plot and range area charts ([c4df9aa](https://github.com/kulakovskyi/tectra-ng/commit/c4df9aa))
+- **charts:** the tooltip follows the mouse with its arrow at the cursor, bar-like charts lay a hover band under the whole category ([f4b4c94](https://github.com/kulakovskyi/tectra-ng/commit/f4b4c94))
+- **charts:** gantt chart with groups, progress, milestones, a today line, zoom from days to quarters and a timeline layout ([96ad1bc](https://github.com/kulakovskyi/tectra-ng/commit/96ad1bc))
+- **charts:** sankey diagram and sunburst chart with drill down ([95dca46](https://github.com/kulakovskyi/tectra-ng/commit/95dca46))
+- **charts:** annotations on cartesian charts, zoom, pan and brush on the line chart, live updates with a sliding window ([5cc6824](https://github.com/kulakovskyi/tectra-ng/commit/5cc6824))
+
+### 🩹 Fixes
+
+- **blocks:** app layout rail menu icons stand on the logo axis and stay put while the rail opens and folds ([76ccea2](https://github.com/kulakovskyi/tectra-ng/commit/76ccea2))
+- **charts:** treemap labels stay inside their tile with an ellipsis; txTreemapTile template for own tile content ([5892e3f](https://github.com/kulakovskyi/tectra-ng/commit/5892e3f))
+- **charts:** org chart keeps the tree in view while panning, hides an off-map minimap frame, outlines the path in the path colour ([9bbbeed](https://github.com/kulakovskyi/tectra-ng/commit/9bbbeed))
+- **charts:** tooltip arrow points at the value near the screen edge; org chart toolbar and minimap fit narrow screens, full screen covers the page in every browser ([090ca94](https://github.com/kulakovskyi/tectra-ng/commit/090ca94))
+- **charts:** chart and org chart menus open as popovers with an arrow, in the kit's action menu look ([6ba0ee7](https://github.com/kulakovskyi/tectra-ng/commit/6ba0ee7))
+- **charts:** native org chart full screen drops the page scrollbar gutter so it covers the whole screen ([1e977c9](https://github.com/kulakovskyi/tectra-ng/commit/1e977c9))
+- **charts:** gantt rows tint the name column on hover and groups fold smoothly like an accordion ([65f9f0f](https://github.com/kulakovskyi/tectra-ng/commit/65f9f0f))
+- **docs:** box plot examples use realistic sample data with a few outliers ([9f654a9](https://github.com/kulakovskyi/tectra-ng/commit/9f654a9))
+
+### ❤️ Thank You
+
+- tears @kulakovskyi
+
 ## 0.1.9 (2026-11-10)
 
 ### 🚀 Features
