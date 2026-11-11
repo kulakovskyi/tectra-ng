@@ -452,6 +452,13 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     orgChartExpand: 'Expand',
     orgChartCollapse: 'Collapse',
     orgChartMore: 'Chart actions',
+    httpStatusOk: 'OK',
+    httpStatusRedirect: 'Redirect',
+    httpStatusClientError: 'Client error',
+    httpStatusServerError: 'Server error',
+    httpStatusWarning: 'Warning',
+    httpStatusNoResponse: 'No response',
+    httpStatusUnknown: 'Unknown',
   },
 };
 
@@ -907,6 +914,13 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     orgChartExpand: 'Розгорнути',
     orgChartCollapse: 'Згорнути',
     orgChartMore: 'Дії з графіком',
+    httpStatusOk: 'OK',
+    httpStatusRedirect: 'Переадресація',
+    httpStatusClientError: 'Помилка клієнта',
+    httpStatusServerError: 'Помилка сервера',
+    httpStatusWarning: 'Попередження',
+    httpStatusNoResponse: 'Немає відповіді',
+    httpStatusUnknown: 'Невідомо',
   },
 };
 

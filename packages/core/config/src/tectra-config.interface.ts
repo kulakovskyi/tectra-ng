@@ -450,6 +450,13 @@ export interface TxTranslations {
   orgChartExpand: string;
   orgChartCollapse: string;
   orgChartMore: string;
+  httpStatusOk: string;
+  httpStatusRedirect: string;
+  httpStatusClientError: string;
+  httpStatusServerError: string;
+  httpStatusWarning: string;
+  httpStatusNoResponse: string;
+  httpStatusUnknown: string;
 }
 
 export type TxValidationMessage = string | ((error: unknown) => string);
