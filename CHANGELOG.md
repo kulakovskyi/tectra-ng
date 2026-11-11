@@ -1,3 +1,25 @@
+## 0.2.2 (2026-11-11)
+
+### 🚀 Features
+
+- **code-editor:** code editor, diff and highlighted code on the CodeMirror core; stage 14 done
+- **docs:** readme front matter for pages that share one source folder
+- **ui:** tx-avatar-editor picks, replaces or removes the photo with type and size checks, drop, loading and a confirm
+- **ui:** tx-tag-list shows the first tags and the rest behind +N in a popover
+- **ui:** copy buttons turn the copy icon into a check with a short animation
+
+### 🩹 Fixes
+
+- **ci:** build the Nx project graph before lint in the release workflow
+- **docs:** code editor form example submits through a form group instead of reloading the page
+- **docs:** example anchors link to the current page instead of the home page
+- **docs:** API tab shows the selector of the page's own component
+- **e2e:** press redo as Shift+KeyZ so Linux sends an uppercase key
+
+### ❤️ Thank You
+
+- tears
+
 ## 0.2.1 (2026-11-11)
 
 ### 🚀 Features
