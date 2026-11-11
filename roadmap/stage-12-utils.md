@@ -45,15 +45,15 @@ Utilities live in `@tectra-ng/utils/<name>` — own package, one flat entry poin
 - [x] Pure functions: `filtersToQueryParams`, `queryParamsToFilters`, `encodeUrlFilterValue`, `decodeUrlFilterValue`
 - [x] Storage on the server and with blocked storage: `TxMemoryStorage`, `injectStorage('local' | 'session')`
 
-## 12.6 HTTP — `utils/http` (http-params 53, http-status 41, http-retry 4)
+## 12.6 HTTP — `utils/http` (http-params 53, http-status 41, http-retry 4) ✅
 
-- [ ] `buildHttpParams(query)` — skips `null` / `undefined` / `''` / empty arrays, repeats array keys, dates as ISO, objects as JSON
-- [ ] `retryHttpReads(options)` operator: retries 429 / 502 / 503 / 504 and network errors with exponential back-off, honours `Retry-After`; `parseRetryAfter`, `httpRetryDelay`
-- [ ] `txHttpStatusTone` pipe → kit severity (`success`, `info`, `warn`, `danger`, `secondary`) for `tx-tag` / `tx-status-icon`; `txHttpStatusLabel` pipe → translated text (OK, Redirect, Client error, Server error, No response); extra warn codes as an option
+- [x] `buildHttpParams(query)` — skips `null` / `undefined` / `''` / empty arrays, repeats array keys, dates as ISO, objects as JSON
+- [x] `retryHttpReads(options)` operator: retries 429 / 502 / 503 / 504 and network errors with exponential back-off, honours `Retry-After`; `parseRetryAfter`, `httpRetryDelay`
+- [x] `txHttpStatusTone` pipe → kit severity (`success`, `info`, `warn`, `danger`, `secondary`) for `tx-tag` / `tx-status-icon`; `txHttpStatusLabel` pipe → translated text (OK, Redirect, Client error, Server error, No response); extra warn codes as an option
 
-## 12.7 Relative time — `utils/relative-time` (48)
+## 12.7 Relative time — `utils/relative-time` (48) ✅
 
-- [ ] `txRelativeTime` pipe: "just now", "5 minutes ago", "yesterday", "in 3 days", months, years through `Intl.RelativeTimeFormat` in the tectra locale; `granularity: 'time' | 'day'`, `largestUnit: 'day'`, `now`; `relativeTime()` function; live update with `TxClock`
+- [x] `txRelativeTime` pipe: "just now", "5 minutes ago", "yesterday", "in 3 days", months, years through `Intl.RelativeTimeFormat` in the tectra locale; `granularity: 'time' | 'day'`, `largestUnit: 'day'`, `now`; `relativeTime()` function; live update with `TxClock`
 
 ## 12.8 Validators — `utils/validators` (validators 39, price 6)
 
