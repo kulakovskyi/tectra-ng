@@ -7,6 +7,7 @@ updates:
       day: monday
     open-pull-requests-limit: 3
     versioning-strategy: increase
+    rebase-strategy: auto
     commit-message:
       prefix: chore(deps)
     ignore:
