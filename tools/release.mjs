@@ -1,5 +1,6 @@
-import { execSync } from 'node:child_process';
+import { execFileSync, execSync } from 'node:child_process';
 import { appendFileSync, mkdirSync, readdirSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { releaseChangelog, releasePublish, releaseVersion } from 'nx/release';
 
 const flags = new Set(process.argv.slice(2).filter((arg) => arg.startsWith('--')));
@@ -42,23 +43,26 @@ if (dryRun) {
 }
 
 const tagName = `v${workspaceVersion}`;
-execSync('git pull --rebase origin main', { stdio: 'inherit' });
-execSync(`git tag -f ${tagName}`, { stdio: 'inherit' });
-execSync(`git push --atomic origin HEAD:main ${tagName}`, { stdio: 'inherit' });
+const run = (command, args) => execFileSync(command, args, { stdio: 'inherit' });
+run('git', ['pull', '--rebase', 'origin', 'main']);
+run('git', ['tag', '-f', tagName]);
+run('git', ['push', '--atomic', 'origin', 'HEAD:main', tagName]);
 writeFileSync('release-notes.md', workspaceChangelog?.contents ?? '');
 
 mkdirSync('release-assets', { recursive: true });
 for (const name of readdirSync('dist/packages')) {
-  execSync(`npm pack ./dist/packages/${name} --pack-destination release-assets`, { stdio: 'inherit' });
+  run('npm', ['pack', `./dist/packages/${name}`, '--pack-destination', 'release-assets']);
 }
-execSync(`npm pkg set version=${workspaceVersion}`, { stdio: 'inherit' });
-execSync(`npm sbom --sbom-format cyclonedx --omit dev --package-lock-only > release-assets/tectra-ng-${workspaceVersion}.cdx.json`, { stdio: 'inherit' });
-execSync('git checkout package.json', { stdio: 'inherit' });
+run('npm', ['pkg', 'set', `version=${workspaceVersion}`]);
+const sbom = execFileSync('npm', ['sbom', '--sbom-format', 'cyclonedx', '--omit', 'dev', '--package-lock-only'], { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
+writeFileSync(join('release-assets', `tectra-ng-${workspaceVersion}.cdx.json`), sbom);
+run('git', ['checkout', 'package.json']);
 
 if (process.env.GITHUB_OUTPUT) {
   appendFileSync(process.env.GITHUB_OUTPUT, `tag=${tagName}\nversion=${workspaceVersion}\n`);
 } else {
-  execSync(`gh release create ${tagName} --title ${tagName} --notes-file release-notes.md --verify-tag release-assets/*`, { stdio: 'inherit' });
+  const assets = readdirSync('release-assets').map((file) => join('release-assets', file));
+  run('gh', ['release', 'create', tagName, '--title', tagName, '--notes-file', 'release-notes.md', '--verify-tag', ...assets]);
 }
 
 process.exit(0);
