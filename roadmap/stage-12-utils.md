@@ -33,17 +33,17 @@ Utilities live in `@tectra-ng/utils/<name>` — own package, one flat entry poin
 
 - [x] `txDebounceInput` directive: `debounceTime` (1000 by default), `debounceInput` output with the event, Enter emits at once, cancels on destroy; works on `txInput`, textarea and kit fields with a native input inside; `distinct` (skip the same value), `minLength`
 
-## 12.4 Form validation — `utils/form-validation` (70)
+## 12.4 Form validation — `utils/form-validation` (70) ✅
 
-- [ ] `TxFormValidation.scrollToFirstInvalid(form)`: marks every control touched and dirty, scrolls the first invalid field into the middle (smooth, instant with reduced motion, above a sticky header), focuses the kit field's own input (select, datepicker, multiselect …)
-- [ ] `markAllTouched(form)` function for nested groups and arrays
+- [x] `TxFormValidation.scrollToFirstInvalid(form)`: marks every control touched and dirty, scrolls the first invalid field into the middle (smooth, instant with reduced motion, above a sticky header), focuses the kit field's own input (select, datepicker, multiselect …)
+- [x] `markAllTouched(form)` function for nested groups and arrays; `txScrollToInvalid` on a `<form>` (`validSubmit` / `invalidSubmit`)
 
-## 12.5 Filter state — `utils/filter-state` (save-filters-base 65, url-filters-base 5, memory-storage 1)
+## 12.5 Filter state — `utils/filter-state` (save-filters-base 65, url-filters-base 5, memory-storage 1) ✅
 
-- [ ] `txFilterState({ key, initial, url, storage })` — a signal of the filters, saved in local storage and (optionally) in the query string only with the values that differ from `initial`, restored on load and on back / forward, `set`, `patch`, `reset`
-- [ ] `TxSaveFilters` / `TxUrlFilters` base classes with the first app's protected API (`storeFilters`, `getStoredFilters`, `applyUrlFilters`, `localStorageKey`, `initialFilters`) for a drop-in switch
-- [ ] Pure functions: `filtersToQueryParams`, `queryParamsToFilters`, `encodeUrlFilterValue`, `decodeUrlFilterValue`
-- [ ] Storage on the server and with blocked storage: `TxMemoryStorage`, `injectStorage('local' | 'session')`
+- [x] `txFilterState({ key, initial, url, storage })` — a signal of the filters, saved in local storage and (optionally) in the query string only with the values that differ from `initial`, restored on load and on back / forward, `set`, `patch`, `reset`
+- [x] `TxSaveFilters` / `TxUrlFilters` base classes with the first app's protected API (`storeFilters`, `getStoredFilters`, `applyUrlFilters`, `localStorageKey`, `initialFilters`) for a drop-in switch
+- [x] Pure functions: `filtersToQueryParams`, `queryParamsToFilters`, `encodeUrlFilterValue`, `decodeUrlFilterValue`
+- [x] Storage on the server and with blocked storage: `TxMemoryStorage`, `injectStorage('local' | 'session')`
 
 ## 12.6 HTTP — `utils/http` (http-params 53, http-status 41, http-retry 4)
 

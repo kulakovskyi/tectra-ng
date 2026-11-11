@@ -13,5 +13,7 @@ Part of `tectra-ng`. One entry point per utility, so you only bundle what you im
 | `@tectra-ng/utils/date` | `txDate` and `txDateRange` pipes, `provideTxDateFormat`, calendar functions (`addDays`, `startOfWeek`, `calendarDaysBetween` …), format presets and time constants |
 | `@tectra-ng/utils/plural` | `txPluralForm` (`one` / `few` / `many` for translation keys) and `txPlural` pipes in the tectra locale |
 | `@tectra-ng/utils/debounce-input` | `txDebounceInput` — reports a field's value after a pause, at once on Enter |
+| `@tectra-ng/utils/form-validation` | `TxFormValidation.scrollToFirstInvalid`, `txScrollToInvalid` on a form, `markAllTouched` |
+| `@tectra-ng/utils/filter-state` | `txFilterState` — filters in local storage and the URL; `TxUrlFilters` / `TxSaveFilters` base classes; `injectStorage`, `TxMemoryStorage` |
 
 Docs and examples: [tectra-ng.com](https://tectra-ng.com/components/date).
