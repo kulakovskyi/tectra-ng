@@ -33,7 +33,7 @@ import { TxWaterfallChart } from '@tectra-ng/charts/waterfall';
 | loading | Shows a skeleton of the same size |
 | ariaLabel | What the chart shows; starts the summary read by screen readers |
 | dt | Design tokens of this chart (`chart`) — increase, decrease and total colours, connectors, bar radius and width |
-| pt | Classes and styles of the parts: `root`, `legend`, `legendItem`, `plot`, `svg`, `grid`, `axis`, `bar`, `connector`, `dataLabel`, `tooltip`, `empty`, `skeleton` |
+| pt | Classes and styles of the parts: `root`, `hoverBand`, `legend`, `legendItem`, `plot`, `svg`, `grid`, `axis`, `bar`, `connector`, `dataLabel`, `tooltip`, `empty`, `skeleton` |
 | ptOptions | How `pt` merges with the global pass-through |
 | unstyled | Removes the tectra styles and keeps the behaviour |
 
@@ -57,4 +57,4 @@ import { TxWaterfallChart } from '@tectra-ng/charts/waterfall';
 
 ## Notes
 
-The legend only names the colours, so it does not hide anything. Hovering a step fades the others. Bars grow one after another from their start once and slide to new values; both are off with reduced motion.
+The legend only names the colours, so it does not hide anything. Hovering anywhere in a step's column lays a soft band under it and fades the others. Bars grow one after another from their start once and slide to new values; both are off with reduced motion.

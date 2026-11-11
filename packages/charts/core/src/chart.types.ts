@@ -186,7 +186,14 @@ export interface TxChartTable {
   rows: { label: string; cells: string[] }[];
 }
 
-export type TxChartPart = 'root' | 'legend' | 'legendItem' | 'plot' | 'svg' | 'grid' | 'axis' | 'series' | 'tooltip' | 'empty' | 'skeleton';
+export type TxChartPart = 'root' | 'legend' | 'legendItem' | 'plot' | 'svg' | 'grid' | 'axis' | 'series' | 'hoverBand' | 'tooltip' | 'empty' | 'skeleton';
+
+export interface TxChartRect {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
 
 export type TxChartHeight = number | string;
 

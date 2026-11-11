@@ -153,14 +153,23 @@ describe('TxColumnChart', () => {
     expect(el('#main').classList).not.toContain('tx-column-chart--active');
   });
 
-  it('reacts to the column itself, not to the empty space around it', async () => {
+  it('reacts anywhere in the category and lays a band under it', async () => {
     plot().dispatchEvent(new MouseEvent('pointermove', { clientX: 5, clientY: 20, bubbles: true }));
     await fixture.whenStable();
     expect(el('#main').classList).not.toContain('tx-column-chart--active');
-    const bar = el('#main .tx-column-chart__bar');
-    plot().dispatchEvent(new MouseEvent('pointermove', { clientX: Number(bar.getAttribute('x')) + 3, clientY: Number(bar.getAttribute('y')) + 3, bubbles: true }));
+    expect(el('#main .tx-chart-hover-band')).toBeNull();
+    const bar = all('#main .tx-column-chart__bar').find((item) => item.getAttribute('data-index') === '1') as HTMLElement;
+    const center = Number(bar.getAttribute('x')) + Number(bar.getAttribute('width')) / 2;
+    plot().dispatchEvent(new MouseEvent('pointermove', { clientX: center, clientY: Number(bar.getAttribute('y')) - 30, bubbles: true }));
     await fixture.whenStable();
     expect(el('#main').classList).toContain('tx-column-chart--active');
+    const band = el('#main .tx-chart-hover-band');
+    expect(band.classList).toContain('tx-chart-hover-band--on');
+    expect(Number(band.getAttribute('x'))).toBeLessThan(Number(bar.getAttribute('x')));
+    expect(Number(band.getAttribute('x')) + Number(band.getAttribute('width'))).toBeGreaterThan(Number(bar.getAttribute('x')) + Number(bar.getAttribute('width')));
+    plot().dispatchEvent(new MouseEvent('pointerleave'));
+    await fixture.whenStable();
+    expect(el('#main .tx-chart-hover-band').classList).not.toContain('tx-chart-hover-band--on');
   });
 
   it('reports the clicked bar', async () => {

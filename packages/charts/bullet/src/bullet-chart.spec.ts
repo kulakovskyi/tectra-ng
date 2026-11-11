@@ -69,6 +69,7 @@ describe('TxBulletChart', () => {
     plot().dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
     await fixture.whenStable();
     expect(el('#main .tx-bullet-chart__row--active').getAttribute('data-index')).toBe('1');
+    expect(el('#main .tx-chart-hover-band--on')).not.toBeNull();
     const panel = document.querySelector('.tx-chart-frame__tooltip') as HTMLElement;
     expect(panel.textContent).toContain('Profit');
     expect(panel.textContent).toContain('Target');

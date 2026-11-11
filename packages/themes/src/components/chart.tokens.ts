@@ -96,6 +96,10 @@ export const chartTokens = {
     totalBorderColor: tokenRef('surface-border'),
     noteColor: lightDark(tokenRef('orange-600'), tokenRef('orange-400')),
   },
+  hoverBand: {
+    color: lightDark(mix(tokenRef('surface-400'), '16%', 'transparent'), mix(tokenRef('surface-300'), '9%', 'transparent')),
+    radius: tokenRef('radius-md'),
+  },
   crosshair: {
     color: lightDark(tokenRef('surface-400'), tokenRef('surface-500')),
     width: '1px',

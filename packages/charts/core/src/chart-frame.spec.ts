@@ -104,6 +104,36 @@ describe('TxChartFrame', () => {
     expect(fixture.componentInstance.keys).toEqual(['ArrowLeft']);
   });
 
+  it('follows the mouse with the tooltip and pins it to the point for a touch or a key', async () => {
+    const plot = el('.tx-chart-frame__plot');
+    const data: TxChartTooltipData = { title: 'Mon', rows: [{ label: 'Visits', value: '12', color: 'red', raw: 12, seriesIndex: 0 }], index: 0, x: 40, y: 20 };
+    const move = (x: number, y: number, pointerType: string) =>
+      plot.dispatchEvent(Object.assign(new MouseEvent('pointermove', { clientX: x, clientY: y, bubbles: true }), { pointerType }));
+    move(120, 60, 'mouse');
+    fixture.componentInstance.tooltip.set(data);
+    await fixture.whenStable();
+    const panel = () => document.querySelector('.tx-chart-frame__tooltip') as HTMLElement;
+    expect(panel().getAttribute('data-follow')).toBe('true');
+    expect(panel().querySelector('.tx-chart-frame__tooltip-arrow')).not.toBeNull();
+    expect(el('.tx-chart-frame__anchor').style.transform).toBe('translate(120px, 44px)');
+    expect(el('.tx-chart-frame__anchor').style.width).toBe('0px');
+    expect(el('.tx-chart-frame__anchor').style.height).toBe('32px');
+    move(150, 90, 'mouse');
+    expect(el('.tx-chart-frame__anchor').style.transform).toBe('translate(150px, 74px)');
+    move(150, 90, 'touch');
+    fixture.componentInstance.tooltip.set({ ...data, x: 41 });
+    await fixture.whenStable();
+    expect(panel().getAttribute('data-follow')).toBeNull();
+    expect(panel().querySelector('.tx-chart-frame__tooltip-arrow')).not.toBeNull();
+    expect(el('.tx-chart-frame__anchor').style.transform).toBe('translate(25px, 20px)');
+    move(150, 90, 'mouse');
+    plot.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+    fixture.componentInstance.tooltip.set({ ...data, x: 42 });
+    await fixture.whenStable();
+    expect(panel().getAttribute('data-follow')).toBeNull();
+    expect(el('.tx-chart-frame__anchor').style.transform).toBe('translate(26px, 20px)');
+  });
+
   it('shows "No data" and a skeleton instead of the plot', async () => {
     fixture.componentInstance.empty.set(true);
     await fixture.whenStable();

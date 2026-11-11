@@ -19,6 +19,7 @@ import {
   TxChartActive,
   TxChartAxes,
   TxChartFrame,
+  TxChartHoverBand,
   TxChartGridMode,
   TxChartHeight,
   TxChartLabelMode,
@@ -38,6 +39,7 @@ import {
   TxChartYAxisPosition,
   TxValueScaleKind,
   cartesianLayout,
+  chartBandRect,
   chartNumberFormatter,
   chartSummary,
   chartTable,
@@ -65,12 +67,11 @@ const DEFAULT_WIDTH = 0.56;
 const DEFAULT_HORIZONTAL_WIDTH = 0.64;
 const DEFAULT_GROUP_GAP = 3;
 const LABEL_FONT_SIZE = 11;
-const HIT_SLACK = 4;
-const MIN_HIT = 16;
+const EDGE_SLACK = 8;
 
 @Component({
   selector: 'tx-column-chart',
-  imports: [TxChartFrame, TxChartAxes],
+  imports: [TxChartFrame, TxChartAxes, TxChartHoverBand],
   templateUrl: './column-chart.component.html',
   styleUrl: './column-chart.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -263,6 +264,11 @@ export class TxColumnChart {
     return boxes;
   });
 
+  readonly hoverBand = computed(() => {
+    const active = this.active();
+    return active ? chartBandRect(this.band(), active.index, this.layout().plot, this.horizontal()) : null;
+  });
+
   readonly legendItems = computed<TxChartLegendItem[]>(() => {
     const stat = this.legendVariant() === 'stat';
     const active = this.active();
@@ -355,7 +361,7 @@ export class TxColumnChart {
       this.active.set(null);
       return;
     }
-    const index = this.columnAt(event.x, event.y);
+    const index = this.categoryAt(event.x, event.y);
     if (index < 0) {
       this.active.set(null);
       return;
@@ -367,20 +373,10 @@ export class TxColumnChart {
     }
   }
 
-  private columnAt(x: number, y: number): number {
-    const slack = HIT_SLACK;
-    for (const [index, box] of this.columns()) {
-      const minSize = this.horizontal() ? box.x2 - box.x1 : box.y2 - box.y1;
-      const grow = Math.max(0, MIN_HIT - minSize) / 2;
-      const x1 = box.x1 - slack - (this.horizontal() ? grow : 0);
-      const x2 = box.x2 + slack + (this.horizontal() ? grow : 0);
-      const y1 = box.y1 - slack - (this.horizontal() ? 0 : grow);
-      const y2 = box.y2 + slack + (this.horizontal() ? 0 : grow);
-      if (x >= x1 && x <= x2 && y >= y1 && y <= y2) {
-        return index;
-      }
-    }
-    return -1;
+  private categoryAt(x: number, y: number): number {
+    const plot = this.layout().plot;
+    const inside = x >= plot.left - EDGE_SLACK && x <= plot.left + plot.width + EDGE_SLACK && y >= plot.top - EDGE_SLACK && y <= plot.top + plot.height + EDGE_SLACK;
+    return inside && this.table().labels.length ? this.band().indexAt(this.horizontal() ? y : x) : -1;
   }
 
   onNavigate(event: KeyboardEvent): void {
@@ -428,6 +424,10 @@ export class TxColumnChart {
     const hit = this.bars().find((bar) => bar.index === index && x >= bar.x && x <= bar.x + bar.width && y >= bar.y && y <= bar.y + bar.height);
     if (hit) return hit.series;
     const candidates = this.bars().filter((bar) => bar.index === index);
+    if (!this.isStacked() && candidates.length) {
+      const along = (bar: (typeof candidates)[number]) => (this.horizontal() ? Math.abs(y - bar.y - bar.height / 2) : Math.abs(x - bar.x - bar.width / 2));
+      return candidates.reduce((best, bar) => (along(bar) < along(best) ? bar : best)).series;
+    }
     return candidates[candidates.length - 1]?.series ?? this.visibleIndexes()[0] ?? -1;
   }
 

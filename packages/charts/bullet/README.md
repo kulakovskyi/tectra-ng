@@ -26,7 +26,7 @@ import { TxBulletChart } from '@tectra-ng/charts/bullet';
 | loading | Shows a skeleton of the same size |
 | ariaLabel | What the chart shows; starts the summary read by screen readers |
 | dt | Design tokens of this chart (`chart`) — row height, range shades, bar and target size and colour |
-| pt | Classes and styles of the parts: `root`, `plot`, `svg`, `grid`, `axis`, `range`, `bar`, `target`, `tooltip`, `empty`, `skeleton` |
+| pt | Classes and styles of the parts: `root`, `hoverBand`, `plot`, `svg`, `grid`, `axis`, `range`, `bar`, `target`, `tooltip`, `empty`, `skeleton` |
 | ptOptions | How `pt` merges with the global pass-through |
 | unstyled | Removes the tectra styles and keeps the behaviour |
 
@@ -50,4 +50,4 @@ import { TxBulletChart } from '@tectra-ng/charts/bullet';
 
 ## Notes
 
-Rows share one scale so they compare at a glance; use separate charts for measures in different units. Hovering a row fades the others. Value bars grow once and slide to new values; both are off with reduced motion.
+Rows share one scale so they compare at a glance; use separate charts for measures in different units. Hovering a row lays a soft band under it and fades the others. Value bars grow once and slide to new values; both are off with reduced motion.

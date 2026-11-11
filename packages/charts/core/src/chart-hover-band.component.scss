@@ -1,0 +1,36 @@
+.tx-chart-hover-band {
+  fill: currentColor;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tx-chart-hover-band--on {
+  opacity: 0.08;
+}
+
+:host-context([data-styled]) {
+  .tx-chart-hover-band {
+    fill: var(--tx-chart-hover-band-color);
+    rx: var(--tx-chart-hover-band-radius);
+    transition: opacity var(--tx-chart-motion-hover-duration) ease;
+  }
+
+  .tx-chart-hover-band--on {
+    opacity: 1;
+  }
+
+  .tx-chart-hover-band--slide {
+    transition:
+      opacity var(--tx-chart-motion-hover-duration) ease,
+      x var(--tx-chart-motion-hover-duration) var(--tx-chart-motion-easing),
+      y var(--tx-chart-motion-hover-duration) var(--tx-chart-motion-easing),
+      width var(--tx-chart-motion-hover-duration) var(--tx-chart-motion-easing),
+      height var(--tx-chart-motion-hover-duration) var(--tx-chart-motion-easing);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host-context([data-styled]) .tx-chart-hover-band {
+    transition: none;
+  }
+}

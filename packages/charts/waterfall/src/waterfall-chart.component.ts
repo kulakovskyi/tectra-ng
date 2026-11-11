@@ -18,6 +18,7 @@ import {
   TxBandScale,
   TxChartAxes,
   TxChartFrame,
+  TxChartHoverBand,
   TxChartGridMode,
   TxChartHeight,
   TxChartLabelMode,
@@ -29,6 +30,7 @@ import {
   TxChartTooltipTemplate,
   TxChartValueFormat,
   cartesianLayout,
+  chartBandRect,
   chartNumberFormatter,
   chartSummary,
   initialChartSize,
@@ -48,7 +50,7 @@ const LABEL_GAP = 4;
 
 @Component({
   selector: 'tx-waterfall-chart',
-  imports: [TxChartFrame, TxChartAxes],
+  imports: [TxChartFrame, TxChartAxes, TxChartHoverBand],
   templateUrl: './waterfall-chart.component.html',
   styleUrl: './waterfall-chart.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -170,6 +172,11 @@ export class TxWaterfallChart {
         above,
       };
     });
+  });
+
+  readonly hoverBand = computed(() => {
+    const index = this.active();
+    return index === null ? null : chartBandRect(this.layout().category as TxBandScale, index, this.layout().plot);
   });
 
   readonly connectorLines = computed<TxWaterfallConnector[]>(() => {

@@ -72,6 +72,7 @@ describe('TxWaterfallChart', () => {
     plot().dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
     await fixture.whenStable();
     expect(el('#main .tx-waterfall-chart__bar--active').getAttribute('data-index')).toBe('2');
+    expect(el('#main .tx-chart-hover-band--on')).not.toBeNull();
     const panel = document.querySelector('.tx-chart-frame__tooltip') as HTMLElement;
     expect(panel.textContent).toContain('Refunds');
     expect(panel.textContent).toContain('−25');

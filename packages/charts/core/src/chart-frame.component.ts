@@ -48,6 +48,8 @@ import { TxChartMenu, TxChartMenuItem } from './chart-menu.component';
 
 const TOOLTIP_OFFSET = 10;
 const ARROW_ROOM = 16;
+const FOLLOW_PLACEMENT: TxPlacement = 'right';
+const FOLLOW_OFFSET = 14;
 
 @Component({
   selector: 'tx-chart-frame',
@@ -111,6 +113,8 @@ export class TxChartFrame {
 
   readonly hintId = uniqueId('tx-chart-hint');
   readonly shown = signal<TxChartTooltipData | null>(null);
+  readonly following = signal(false);
+  private cursor: { x: number; y: number } | null = null;
   readonly measured = signal(false);
   private ref: TxOverlayRef | null = null;
   private openPlacement: TxPlacement | null = null;
@@ -157,13 +161,21 @@ export class TxChartFrame {
       return;
     }
     const box = plot.getBoundingClientRect();
-    this.pointer.emit({ x: event.clientX - box.left, y: event.clientY - box.top, type, target: event.target as Element | null });
+    const x = event.clientX - box.left;
+    const y = event.clientY - box.top;
+    this.cursor = type !== 'leave' && followsPointer(event) ? { x, y } : null;
+    this.pointer.emit({ x, y, type, target: event.target as Element | null });
+    if (this.cursor && this.ref && this.following()) {
+      this.placeAnchor(this.cursor.x, this.cursor.y - ARROW_ROOM, 0, ARROW_ROOM * 2);
+      this.ref.updatePosition();
+    }
   }
 
   onKeydown(event: KeyboardEvent): void {
     if (!this.interactive()) {
       return;
     }
+    this.cursor = null;
     if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End', 'Escape'].includes(event.key)) {
       event.preventDefault();
       this.navigate.emit(event);
@@ -205,16 +217,20 @@ export class TxChartFrame {
     if (!anchor || !template) {
       return;
     }
-    const placement: TxPlacement = data.placement ?? this.tooltipPlacement();
-    const vertical = parsePlacement(placement).side === 'top' || parsePlacement(placement).side === 'bottom';
-    const width = vertical ? ARROW_ROOM * 2 : 0;
-    const height = vertical ? 0 : ARROW_ROOM * 2;
-    anchor.style.width = `${width}px`;
-    anchor.style.height = `${height}px`;
-    anchor.style.transform = `translate(${Math.round(data.x - width / 2)}px, ${Math.round(data.y - height / 2)}px)`;
-    if (this.ref && this.openPlacement !== placement) {
+    const cursor = this.cursor;
+    const placement: TxPlacement = cursor ? FOLLOW_PLACEMENT : (data.placement ?? this.tooltipPlacement());
+    if (cursor) {
+      this.placeAnchor(cursor.x, cursor.y - ARROW_ROOM, 0, ARROW_ROOM * 2);
+    } else {
+      const vertical = parsePlacement(placement).side === 'top' || parsePlacement(placement).side === 'bottom';
+      const width = vertical ? ARROW_ROOM * 2 : 0;
+      const height = vertical ? 0 : ARROW_ROOM * 2;
+      this.placeAnchor(data.x - width / 2, data.y - height / 2, width, height);
+    }
+    if (this.ref && (this.openPlacement !== placement || this.following() !== !!cursor)) {
       this.closeTooltip();
     }
+    this.following.set(!!cursor);
     this.shown.set(data);
     if (this.ref) {
       this.ref.updatePosition();
@@ -224,7 +240,7 @@ export class TxChartFrame {
       origin: anchor,
       viewContainerRef: this.viewContainerRef,
       placement,
-      offset: TOOLTIP_OFFSET,
+      offset: cursor ? FOLLOW_OFFSET : TOOLTIP_OFFSET,
       layer: 'tooltip',
       closeOnOutsideClick: false,
       restoreFocus: false,
@@ -291,6 +307,14 @@ export class TxChartFrame {
     return resolved || color;
   }
 
+  private placeAnchor(x: number, y: number, width: number, height: number): void {
+    const anchor = this.anchorRef()?.nativeElement;
+    if (!anchor) return;
+    anchor.style.width = `${width}px`;
+    anchor.style.height = `${height}px`;
+    anchor.style.transform = `translate(${Math.round(x)}px, ${Math.round(y)}px)`;
+  }
+
   private closeTooltip(): void {
     if (this.ref) {
       const ref = this.ref;
@@ -299,4 +323,8 @@ export class TxChartFrame {
       ref.close('api');
     }
   }
+}
+
+function followsPointer(event: PointerEvent | MouseEvent): boolean {
+  return 'pointerType' in event && (event.pointerType === 'mouse' || event.pointerType === 'pen');
 }

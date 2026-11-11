@@ -13,6 +13,21 @@ async function hoverAt(page: Page, target: Locator, x: number, y: number): Promi
   await page.mouse.move(box.x + box.width * x, box.y + box.height * y);
 }
 
+async function expectBesideCursor(page: Page, x: number, y: number): Promise<void> {
+  await expect(tooltip(page)).toHaveAttribute('data-follow', 'true');
+  await expect(tooltip(page)).toHaveAttribute('data-side', /^(left|right)$/);
+  await expect
+    .poll(async () => {
+      const tip = await tooltip(page).boundingBox();
+      const arrow = await tooltip(page).locator('.tx-chart-frame__tooltip-arrow').boundingBox();
+      if (!tip || !arrow) return false;
+      const beside = tip.x >= x + 8 || tip.x + tip.width <= x - 8;
+      const pointsAtCursor = Math.abs(arrow.y + arrow.height / 2 - y) <= 1.5 && (Math.abs(arrow.x - x) <= 24 || Math.abs(arrow.x + arrow.width - x) <= 24);
+      return beside && pointsAtCursor;
+    })
+    .toBe(true);
+}
+
 function serverChart(html: string, tag: string): { paths: number; legend: number; labels: string[] } {
   const start = html.indexOf(`<${tag}`);
   const chart = html.slice(start, html.indexOf(`</${tag}>`, start));
@@ -75,22 +90,28 @@ test.describe('charts', () => {
     const chart = example(page, 'Basic').locator('tx-line-chart');
     const plot = chart.locator('.tx-chart-frame__plot');
     await plot.scrollIntoViewIfNeeded();
+    const area = await plot.boundingBox();
+    if (!area) throw new Error('no plot');
     await hoverAt(page, plot, 0.5, 0.5);
     await expect(tooltip(page)).toBeVisible();
     await expect(tooltip(page)).toContainText('Visits');
     const rule = chart.locator('.tx-line-chart__crosshair');
     await expect(rule).toHaveCount(1);
-    await expect(tooltip(page)).toHaveAttribute('data-side', 'top');
-    const tip = await tooltip(page).boundingBox();
-    const line = await rule.boundingBox();
-    expect(tip && line && tip.y + tip.height <= line.y + 1).toBeTruthy();
-    expect(tip && line && Math.abs(tip.x + tip.width / 2 - (line.x + line.width / 2))).toBeLessThanOrEqual(2);
+    await expectBesideCursor(page, area.x + area.width * 0.5, area.y + area.height * 0.5);
+    await hoverAt(page, plot, 0.3, 0.7);
+    await expectBesideCursor(page, area.x + area.width * 0.3, area.y + area.height * 0.7);
     await page.mouse.move(0, 0);
     await expect(tooltip(page)).toHaveCount(0);
 
     await plot.focus();
     await page.keyboard.press('ArrowRight');
     await expect(tooltip(page)).toContainText('Jan');
+    await expect(tooltip(page)).toHaveAttribute('data-side', 'top');
+    await expect(tooltip(page)).not.toHaveAttribute('data-follow');
+    const tip = await tooltip(page).boundingBox();
+    const line = await rule.boundingBox();
+    expect(tip && line && tip.y + tip.height <= line.y + 1).toBeTruthy();
+    expect(tip && line && Math.abs(tip.x + tip.width / 2 - (line.x + line.width / 2))).toBeLessThanOrEqual(2);
     await page.keyboard.press('End');
     await expect(tooltip(page)).toContainText('Dec');
     await expect(page.locator('.cdk-live-announcer-element')).toContainText('Dec');
@@ -148,10 +169,7 @@ test.describe('charts', () => {
     await expect(chart.locator('.tx-combo-chart__marker')).toHaveCount(1);
     await expect(tooltip(page)).toContainText('Q4 2025');
     await expect(tooltip(page)).toContainText('Margin');
-    const tip = await tooltip(page).boundingBox();
-    const marker = await chart.locator('.tx-combo-chart__marker').boundingBox();
-    const top = Math.min(box.y, marker?.y ?? box.y);
-    expect(tip && tip.y + tip.height <= top + 1).toBeTruthy();
+    await expectBesideCursor(page, box.x + box.width / 2, box.y + box.height - 4);
     await page.mouse.move(0, 0);
     await expect(tooltip(page)).toHaveCount(0);
   });
@@ -167,8 +185,7 @@ test.describe('charts', () => {
     await expect(dot).toHaveClass(/tx-scatter-chart__point--active/);
     await expect(chart.locator('.tx-scatter-chart__guide')).toHaveCount(2);
     await expect(tooltip(page)).toContainText('Session length, min');
-    const tip = await tooltip(page).boundingBox();
-    expect(tip && tip.y + tip.height <= box.y + 1).toBeTruthy();
+    await expectBesideCursor(page, box.x + box.width + 3, box.y + box.height / 2);
     await page.mouse.move(0, 0);
     await expect(tooltip(page)).toHaveCount(0);
 
@@ -324,7 +341,7 @@ test.describe('charts', () => {
     await expect(tooltip(page)).toContainText('-3 – 1');
   });
 
-  test('column chart: hover on the column pins the tooltip above it, horizontal bars fit', async ({ page }) => {
+  test('column chart: hover anywhere in a category lays a band, the tooltip follows the cursor, horizontal bars fit', async ({ page }) => {
     await page.goto('/components/column-chart');
     const chart = example(page, 'Basic').locator('tx-column-chart');
     const plot = chart.locator('.tx-chart-frame__plot');
@@ -336,12 +353,20 @@ test.describe('charts', () => {
     await expect(tooltip(page)).toContainText('Thu');
     await expect(tooltip(page)).toContainText('Total');
     await expect(chart).toHaveClass(/tx-column-chart--active/);
-    const tip = await tooltip(page).boundingBox();
-    expect(tip && tip.y + tip.height <= barBox.y + 1).toBeTruthy();
-    expect(tip && Math.abs(tip.x + tip.width / 2 - (barBox.x + barBox.width / 2))).toBeLessThanOrEqual(2);
+    await expectBesideCursor(page, barBox.x + barBox.width / 2, barBox.y + barBox.height / 2);
+    const plotBox = await plot.boundingBox();
+    if (!plotBox) throw new Error('no plot');
+    await page.mouse.move(barBox.x + barBox.width / 2, plotBox.y + 12);
+    await expect(tooltip(page)).toContainText('Thu');
+    const band = chart.locator('.tx-chart-hover-band--on');
+    await expect(band).toHaveCount(1);
+    const bandBox = await band.boundingBox();
+    expect(bandBox && bandBox.x < barBox.x && bandBox.x + bandBox.width > barBox.x + barBox.width && bandBox.height > barBox.height).toBeTruthy();
     const next = await chart.locator('.tx-column-chart__bar[data-index="4"]').first().boundingBox();
-    await page.mouse.move((barBox.x + barBox.width + (next?.x ?? barBox.x + barBox.width + 40)) / 2, barBox.y + barBox.height / 2);
-    await expect(tooltip(page)).toHaveCount(0);
+    if (!next) throw new Error('no bar');
+    await page.mouse.move(next.x + next.width / 2, plotBox.y + 12);
+    await expect(tooltip(page)).toContainText('Fri');
+    await expect.poll(async () => ((await band.boundingBox())?.x ?? 0) > barBox.x + barBox.width).toBe(true);
     await page.mouse.move(0, 0);
 
     const horizontal = example(page, 'Horizontal').locator('tx-column-chart');
@@ -694,20 +719,36 @@ test.describe('charts', () => {
     expect(map?.width ?? 0).toBeLessThanOrEqual(141);
   });
 
-  test('tooltip arrow stays inside the panel and points at the value near the screen edge', async ({ page }) => {
+  test('tooltip arrow stays inside the panel and points at the cursor or the value near the screen edge', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/components/line-chart');
     const plot = example(page, 'Basic').locator('tx-line-chart .tx-chart-frame__plot');
     await plot.scrollIntoViewIfNeeded();
     const box = await plot.boundingBox();
-    await page.mouse.move((box?.x ?? 0) + (box?.width ?? 0) * 0.97, (box?.y ?? 0) + (box?.height ?? 0) / 2);
-    const arrow = await page.locator('.tx-chart-frame__tooltip-arrow').boundingBox();
-    const panel = await tooltip(page).boundingBox();
-    const crosshair = await example(page, 'Basic').locator('.tx-chart-frame__anchor').boundingBox();
-    const tip = (arrow?.x ?? 0) + (arrow?.width ?? 0) / 2;
-    expect(Math.abs(tip - ((crosshair?.x ?? 0) + (crosshair?.width ?? 0) / 2))).toBeLessThanOrEqual(1.5);
-    expect(arrow?.x ?? 0).toBeGreaterThanOrEqual((panel?.x ?? 0) + 8);
-    expect((arrow?.x ?? 0) + (arrow?.width ?? 0)).toBeLessThanOrEqual((panel?.x ?? 0) + (panel?.width ?? 0) - 8);
+    if (!box) throw new Error('no plot');
+    const x = box.x + box.width * 0.97;
+    const y = box.y + box.height / 2;
+    await page.mouse.move(x, y);
+    await expect(tooltip(page)).toHaveAttribute('data-side', 'left');
+    await expectBesideCursor(page, x, y);
+    const flipped = await tooltip(page).boundingBox();
+    expect((flipped?.x ?? 0) + (flipped?.width ?? 0)).toBeLessThanOrEqual(x);
+    await page.mouse.move(0, 0);
+    await expect(tooltip(page)).toHaveCount(0);
+
+    await plot.focus();
+    await page.keyboard.press('End');
+    await expect(tooltip(page)).toHaveAttribute('data-side', 'top');
+    await expect
+      .poll(async () => {
+        const arrow = await page.locator('.tx-chart-frame__tooltip-arrow').boundingBox();
+        const panel = await tooltip(page).boundingBox();
+        const anchor = await example(page, 'Basic').locator('.tx-chart-frame__anchor').boundingBox();
+        if (!arrow || !panel || !anchor) return false;
+        const tip = arrow.x + arrow.width / 2;
+        return Math.abs(tip - (anchor.x + anchor.width / 2)) <= 1.5 && arrow.x >= panel.x + 8 && arrow.x + arrow.width <= panel.x + panel.width - 8;
+      })
+      .toBe(true);
   });
 
   test('org chart full screen without the Fullscreen API covers the page from the top layer', async ({ page }) => {
@@ -772,5 +813,25 @@ test.describe('charts', () => {
       const sizes = await pie.evaluate((element) => ({ host: element.getBoundingClientRect().bottom, frame: element.querySelector('tx-chart-frame')?.getBoundingClientRect().bottom ?? 0 }));
       expect(sizes.frame).toBeLessThanOrEqual(sizes.host + 1);
     }
+  });
+});
+
+test.describe('chart tooltip on a touch screen', () => {
+  test.use({ hasTouch: true });
+
+  test('a tap pins the tooltip above the column, the keyboard too', async ({ page }) => {
+    await page.goto('/components/column-chart');
+    const chart = example(page, 'Basic').locator('tx-column-chart');
+    await chart.scrollIntoViewIfNeeded();
+    const bar = chart.locator('.tx-column-chart__bar[data-index="3"][data-end="top"]');
+    const box = await bar.boundingBox();
+    if (!box) throw new Error('no bar');
+    await page.touchscreen.tap(box.x + box.width / 2, box.y + box.height / 2);
+    await expect(tooltip(page)).toContainText('Thu');
+    await expect(tooltip(page)).toHaveAttribute('data-side', 'top');
+    await expect(tooltip(page)).not.toHaveAttribute('data-follow');
+    const tip = await tooltip(page).boundingBox();
+    expect(tip && tip.y + tip.height <= box.y + 1).toBeTruthy();
+    expect(tip && Math.abs(tip.x + tip.width / 2 - (box.x + box.width / 2))).toBeLessThanOrEqual(2);
   });
 });

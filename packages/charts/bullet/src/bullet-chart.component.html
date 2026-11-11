@@ -18,6 +18,7 @@
   (navigate)="onNavigate($event)"
   (tooltipClosed)="active.set(null)"
 >
+  <svg:g [tx-chart-hover-band]="hoverBand()" [part]="passThrough().hoverBand" />
   <svg:g [tx-chart-axes]="layout().axes" [gridPart]="passThrough().grid" [axisPart]="passThrough().axis" />
   @for (row of rows(); track row.key) {
     <svg:g

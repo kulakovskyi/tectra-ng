@@ -18,6 +18,7 @@ import {
   TxBandScale,
   TxChartAxes,
   TxChartFrame,
+  TxChartHoverBand,
   TxChartGridMode,
   TxChartHeight,
   TxChartPointerEvent,
@@ -25,6 +26,7 @@ import {
   TxChartTooltipTemplate,
   TxChartValueFormat,
   cartesianLayout,
+  chartBandRect,
   chartNumberFormatter,
   chartSummary,
   initialChartSize,
@@ -45,7 +47,7 @@ const AXIS_ROOM = 30;
 
 @Component({
   selector: 'tx-bullet-chart',
-  imports: [TxChartFrame, TxChartAxes],
+  imports: [TxChartFrame, TxChartAxes, TxChartHoverBand],
   templateUrl: './bullet-chart.component.html',
   styleUrl: './bullet-chart.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -165,6 +167,11 @@ export class TxBulletChart {
         center,
       };
     });
+  });
+
+  readonly hoverBand = computed(() => {
+    const index = this.active();
+    return index === null ? null : chartBandRect(this.layout().category as TxBandScale, index, this.layout().plot, true);
   });
 
   readonly tooltip = computed<TxChartTooltipData | null>(() => {

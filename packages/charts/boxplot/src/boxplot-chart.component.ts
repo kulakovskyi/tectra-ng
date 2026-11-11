@@ -19,6 +19,7 @@ import {
   TxChartActive,
   TxChartAxes,
   TxChartFrame,
+  TxChartHoverBand,
   TxChartGridMode,
   TxChartHeight,
   TxChartLabelMode,
@@ -31,6 +32,7 @@ import {
   TxChartTooltipTemplate,
   TxChartValueFormat,
   cartesianLayout,
+  chartBandRect,
   chartNumberFormatter,
   chartSummary,
   cycleIndex,
@@ -54,7 +56,7 @@ const EDGE_SLACK = 8;
 
 @Component({
   selector: 'tx-boxplot-chart',
-  imports: [TxChartFrame, TxChartAxes],
+  imports: [TxChartFrame, TxChartAxes, TxChartHoverBand],
   templateUrl: './boxplot-chart.component.html',
   styleUrl: './boxplot-chart.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -180,6 +182,11 @@ export class TxBoxplotChart {
         ];
       }),
     );
+  });
+
+  readonly hoverBand = computed(() => {
+    const active = this.active();
+    return active ? chartBandRect(this.layout().category as TxBandScale, active.index, this.layout().plot) : null;
   });
 
   readonly legendItems = computed<TxChartLegendItem[]>(() =>

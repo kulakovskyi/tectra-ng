@@ -132,6 +132,7 @@
       [style]="panelStyle()"
       [style.--tx-chart-tooltip-arrow-offset]="arrowOffset()"
       [attr.data-side]="side()"
+      [attr.data-follow]="following() || null"
       [attr.data-styled]="styled() || null"
     >
       @if (styled()) {

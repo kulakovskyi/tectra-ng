@@ -113,6 +113,7 @@ describe('TxComboChart', () => {
     await fixture.whenStable();
     expect(el('#main').classList).toContain('tx-combo-chart--active');
     expect(all('#main .tx-combo-chart__bar--active')).toHaveLength(2);
+    expect(el('#main .tx-chart-hover-band--on')).not.toBeNull();
     expect(all('#main .tx-combo-chart__marker')).toHaveLength(1);
     const panel = document.querySelector('.tx-chart-frame__tooltip') as HTMLElement;
     expect(panel.textContent).toContain('Jan');

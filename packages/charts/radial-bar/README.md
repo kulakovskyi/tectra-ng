@@ -59,4 +59,4 @@ import { TxRadialBar } from '@tectra-ng/charts/radial-bar';
 
 ## Notes
 
-Rings have round ends; values above the max fill the ring. Hovering a ring (or its legend item) fades the others and puts its label and share in the centre; the tooltip stands at the end of the ring. Rings draw in once, one after another, and slide to new values; both are off with reduced motion.
+Rings have round ends; values above the max fill the ring. Hovering a ring (or its legend item) fades the others and puts its label and share in the centre; the tooltip follows the mouse, or stands at the end of the ring for a tap and the keyboard. Rings draw in once, one after another, and slide to new values; both are off with reduced motion.

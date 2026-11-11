@@ -42,7 +42,7 @@ import { TxColumnChart } from '@tectra-ng/charts/column';
 | loading | Shows a skeleton of the same size |
 | ariaLabel | What the chart shows; starts the summary read by screen readers |
 | dt | Design tokens of this chart (`chart`) — bar radius, width and gap, palette, labels |
-| pt | Classes and styles of the parts: `root`, `legend`, `legendItem`, `plot`, `svg`, `grid`, `axis`, `bar`, `dataLabel`, `tooltip`, `empty`, `skeleton` |
+| pt | Classes and styles of the parts: `root`, `hoverBand`, `legend`, `legendItem`, `plot`, `svg`, `grid`, `axis`, `bar`, `dataLabel`, `tooltip`, `empty`, `skeleton` |
 | ptOptions | How `pt` merges with the global pass-through |
 | unstyled | Removes the tectra styles and keeps the behaviour |
 
@@ -69,4 +69,4 @@ import { TxColumnChart } from '@tectra-ng/charts/column';
 
 ## Notes
 
-Hovering a column (not the empty space around it) highlights it, fades the others and pins the tooltip above it with an arrow; a stack also shows its total. Only the outer end of a stack is rounded and the segments are split by a thin card-coloured gap. Bars grow from the zero line once when the chart appears and slide to new values on change; both are off with reduced motion. The bar width, the gap between grouped bars and the radius come from the `chart.bar` tokens.
+Hovering anywhere in a category lays a soft band under it, highlights its columns, fades the others and shows the tooltip beside the cursor (a tap or the keyboard pins it above the column with an arrow); a stack also shows its total. Only the outer end of a stack is rounded and the segments are split by a thin card-coloured gap. Bars grow from the zero line once when the chart appears and slide to new values on change; both are off with reduced motion. The bar width, the gap between grouped bars and the radius come from the `chart.bar` tokens.

@@ -32,7 +32,7 @@ import { TxBoxplotChart } from '@tectra-ng/charts/boxplot';
 | loading | Shows a skeleton of the same size |
 | ariaLabel | What the chart shows; starts the summary read by screen readers |
 | dt | Design tokens of this chart (`chart`) — box width and radius, fill, line widths, whisker caps, outliers, palette |
-| pt | Classes and styles of the parts: `root`, `legend`, `legendItem`, `plot`, `svg`, `grid`, `axis`, `box`, `median`, `whisker`, `outlier`, `tooltip`, `empty`, `skeleton` |
+| pt | Classes and styles of the parts: `root`, `hoverBand`, `legend`, `legendItem`, `plot`, `svg`, `grid`, `axis`, `box`, `median`, `whisker`, `outlier`, `tooltip`, `empty`, `skeleton` |
 | ptOptions | How `pt` merges with the global pass-through |
 | unstyled | Removes the tectra styles and keeps the behaviour |
 
@@ -59,4 +59,4 @@ import { TxBoxplotChart } from '@tectra-ng/charts/boxplot';
 
 ## Notes
 
-Quartiles are interpolated between values (the method of most spreadsheets). Hovering a category picks the nearest box and fades the others. Boxes grow once; off with reduced motion.
+Quartiles are interpolated between values (the method of most spreadsheets). Hovering a category lays a soft band under it, picks the nearest box and fades the others. Boxes grow once; off with reduced motion.

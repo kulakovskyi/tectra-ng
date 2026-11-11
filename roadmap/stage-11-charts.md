@@ -23,7 +23,7 @@ First app: a shared core for every chart — language (month names and toolbar t
 - [x] Axes and grid: x / y, top / bottom / left / right, label rotation or skipping when they collide, grid lines, zero line
 - [x] Series palette from tokens (`--tx-chart-…` from the primary and the severity palettes), per series `color` override, stable colours when a series is hidden
 - [x] Legend: position (top, bottom, side), toggles a series, keyboard, `txChartLegend` template
-- [x] Tooltip on the kit overlay: crosshair, shared (all series at a point) or single, `txChartTooltip` template, follows the keyboard focus; near a screen edge the panel moves aside and its arrow keeps pointing at the value
+- [x] Tooltip on the kit overlay: crosshair, shared (all series at a point) or single, `txChartTooltip` template, follows the mouse cursor (beside it with the arrow at the cursor, flipping at the screen edge), and is pinned to the value with an arrow for the keyboard focus and a tap on a touch screen; near a screen edge the panel moves aside and its arrow keeps pointing at the value; bar-like charts (column, combo, waterfall, box plot, bullet) lay a soft hover band under the whole category, so the empty space above a column reacts too
 - [x] "No data" through `empty-state` look, loading skeleton of the same size
 - [x] Motion: series grow in once, values morph on change; off with reduced motion
 - [x] Decimation for long series (largest-triangle) so tens of thousands of points stay fast

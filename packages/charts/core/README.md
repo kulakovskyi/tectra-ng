@@ -45,9 +45,10 @@ import { linearScale, niceDomain, chartNumberFormatter, TxChartSeries } from '@t
 
 | Name | What it is |
 |---|---|
-| `TxChartFrame` (`tx-chart-frame`) | The box of a chart: measures itself after hydration, places the legend, shows the tooltip on the kit overlay (pinned to the data with an arrow, on the side the data gives), "No data", the skeleton, the summary and the hidden data table, and forwards pointer and arrow-key events |
+| `TxChartFrame` (`tx-chart-frame`) | The box of a chart: measures itself after hydration, places the legend, shows the tooltip on the kit overlay (beside the mouse cursor with the arrow at it, following it; for a touch or the keyboard pinned to the data with an arrow, on the side the data gives), "No data", the skeleton, the summary and the hidden data table, and forwards pointer and arrow-key events |
 | `TxChartAxes` (`g[tx-chart-axes]`) | Grid, zero line, tick labels and titles from `cartesianLayout().axes` |
 | `TxChartLegend` (`tx-chart-legend`) | Legend items that toggle series; arrow keys move between them; variants `dot`, `line`, `pill` and `stat` (a value in large type) |
+| `TxChartHoverBand` (`g[tx-chart-hover-band]`), `chartBandRect(band, index, plot, horizontal?)` | The soft band under the hovered category of a bar-like chart; it fades in and slides between categories (`chart.hoverBand` tokens) |
 | `TxChartTooltipTemplate` (`ng-template[txChartTooltip]`) | Own tooltip content in any chart |
 | `TxChartLegendTemplate` (`ng-template[txChartLegend]`) | Own legend item in any chart |
 

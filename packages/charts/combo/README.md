@@ -52,7 +52,7 @@ import { TxComboChart } from '@tectra-ng/charts/combo';
 | loading | Shows a skeleton of the same size |
 | ariaLabel | What the chart shows; starts the summary read by screen readers |
 | dt | Design tokens of this chart (`chart`) — bar radius, width and gap, line width, markers, palette |
-| pt | Classes and styles of the parts: `root`, `legend`, `legendItem`, `plot`, `svg`, `grid`, `axis`, `bar`, `series`, `line`, `area`, `marker`, `tooltip`, `empty`, `skeleton` |
+| pt | Classes and styles of the parts: `root`, `hoverBand`, `legend`, `legendItem`, `plot`, `svg`, `grid`, `axis`, `bar`, `series`, `line`, `area`, `marker`, `tooltip`, `empty`, `skeleton` |
 | ptOptions | How `pt` merges with the global pass-through |
 | unstyled | Removes the tectra styles and keeps the behaviour |
 
@@ -79,4 +79,4 @@ import { TxComboChart } from '@tectra-ng/charts/combo';
 
 ## Notes
 
-The ticks of the second axis stand on the grid lines of the main one, and zero sits on one line for both, so there is one grid and no double lines; with `y2Min` / `y2Max` the second axis keeps its own ticks. Hovering anywhere in a category highlights its columns, fades the others and marks the line values; the tooltip stands above the highest of them. Columns grow once when the chart appears and lines draw in from the left; both slide to new values on change and are off with reduced motion.
+The ticks of the second axis stand on the grid lines of the main one, and zero sits on one line for both, so there is one grid and no double lines; with `y2Min` / `y2Max` the second axis keeps its own ticks. Hovering anywhere in a category lays a soft band under it, highlights its columns, fades the others and marks the line values; the tooltip follows the mouse (with the keyboard or a tap it stands above the highest of them). Columns grow once when the chart appears and lines draw in from the left; both slide to new values on change and are off with reduced motion.

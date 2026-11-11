@@ -19,6 +19,7 @@ import {
   TxChartActive,
   TxChartAxes,
   TxChartFrame,
+  TxChartHoverBand,
   TxChartGridMode,
   TxChartHeight,
   TxChartLabelMode,
@@ -40,6 +41,7 @@ import {
   TxValueScaleKind,
   areaPath,
   cartesianLayout,
+  chartBandRect,
   chartNumberFormatter,
   chartSummary,
   chartTable,
@@ -79,7 +81,7 @@ const EDGE_SLACK = 8;
 
 @Component({
   selector: 'tx-combo-chart',
-  imports: [TxChartFrame, TxChartAxes],
+  imports: [TxChartFrame, TxChartAxes, TxChartHoverBand],
   templateUrl: './combo-chart.component.html',
   styleUrl: './combo-chart.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -304,6 +306,11 @@ export class TxComboChart {
       if (value === null || (this.tooltipMode() === 'single' && seriesIndex !== active.series)) return [];
       return [{ x, y: this.scales()[this.axes()[seriesIndex]].map(value), color: seriesColor(this.list()[seriesIndex].color, seriesIndex), series: seriesIndex }];
     });
+  });
+
+  readonly hoverBand = computed(() => {
+    const active = this.active();
+    return active ? chartBandRect(this.band(), active.index, this.layout().plot) : null;
   });
 
   readonly legendItems = computed<TxChartLegendItem[]>(() => {
