@@ -36,6 +36,43 @@
   line-height: 1.45;
 }
 
+.quick {
+  margin-bottom: 44px;
+}
+
+.quick__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.quick__icon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: var(--tx-primary-soft);
+  color: var(--tx-primary-base);
+}
+
+.quick__title {
+  margin: 0;
+  font-size: 20px;
+}
+
+.quick__text,
+.quick__hint {
+  max-width: 72ch;
+  margin: 0;
+  color: var(--tx-text-muted);
+  line-height: 1.55;
+}
+
+.quick__hint {
+  font-size: var(--tx-font-size-sm);
+}
+
 .steps {
   margin: 0;
   padding: 0;

@@ -14,13 +14,14 @@ const DEPENDENCY_RULES = [
   { sourceTag: 'pkg:charts', onlyDependOnLibsWithTags: ['pkg:ui', 'pkg:core', 'pkg:icons', 'pkg:themes', 'pkg:tokens'] },
   { sourceTag: 'pkg:utils', onlyDependOnLibsWithTags: ['pkg:ui', 'pkg:core', 'pkg:icons', 'pkg:themes', 'pkg:tokens'] },
   { sourceTag: 'pkg:blocks', onlyDependOnLibsWithTags: ['pkg:utils', 'pkg:code-editor', 'pkg:ui', 'pkg:core', 'pkg:icons', 'pkg:themes', 'pkg:tokens', 'pkg:qr'] },
+  { sourceTag: 'pkg:umbrella', onlyDependOnLibsWithTags: ['pkg:themes', 'pkg:tokens'] },
   { sourceTag: 'type:app', onlyDependOnLibsWithTags: ['*'] },
   { sourceTag: 'type:e2e', onlyDependOnLibsWithTags: ['*'] },
 ];
 
 export default [
   {
-    ignores: ['**/dist', '**/node_modules', '**/.nx', '**/.angular', 'apps/docs/src/generated', 'test-results', 'playwright-report', '.wrangler'],
+    ignores: ['**/dist', '**/coverage', '**/node_modules', '**/.nx', '**/.angular', 'apps/docs/src/generated', 'test-results', 'playwright-report', '.wrangler'],
   },
   ...nx.configs['flat/base'],
   ...nx.configs['flat/typescript'],

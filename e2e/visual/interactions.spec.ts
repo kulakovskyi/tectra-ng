@@ -1053,6 +1053,16 @@ test('labels name their fields', async ({ page }) => {
   await expect(page.getByRole('combobox', { name: 'City' })).toBeVisible();
 });
 
+test('getting started offers ng add as one command and copies it', async ({ page, context, browserName }) => {
+  test.skip(browserName !== 'chromium', 'clipboard permissions');
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto('/getting-started');
+  const quick = page.getByRole('region', { name: 'One command' });
+  await expect(quick.locator('.command__text')).toHaveText('ng add tectra-ng');
+  await quick.getByRole('button', { name: 'Copy the ng add command' }).click();
+  await expect.poll(() => page.evaluate(() => navigator.clipboard.readText())).toBe('ng add tectra-ng');
+});
+
 test('theme picker in the header swaps primary, surface and theme, remembers them and switches the ripple', async ({ page }) => {
   await page.goto('/getting-started');
   const variable = (name: string) => page.evaluate((key) => getComputedStyle(document.documentElement).getPropertyValue(key).trim(), name);

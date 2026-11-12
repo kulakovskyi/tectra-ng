@@ -32,6 +32,8 @@ export const INSTALL_MANAGERS: { value: InstallManager; label: string; add: stri
 
 export const INSTALL_ALL = 'tectra-ng';
 
+export const INSTALL_NG_ADD = 'ng add tectra-ng';
+
 export const INSTALL_PACKAGES: InstallPackage[] = [
   { name: '@tectra-ng/ui', title: 'Components', text: 'Every component, one entry point each. Core, themes, tokens and icons come with it.', required: true },
   { name: '@tectra-ng/blocks', title: 'Blocks', text: 'Layouts, filters, kanban, wizard, command palette and more.' },

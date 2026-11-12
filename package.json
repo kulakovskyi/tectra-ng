@@ -12,8 +12,9 @@
     "flags": "node tools/flags/build-flags.mjs",
     "export-font": "node tools/export-font/build-export-font.mjs",
     "brand": "node tools/brand/build-brand-images.mjs",
-    "test": "nx run-many -t test -p themes core icons flags qr ui editor code-editor charts utils blocks",
+    "test": "nx run-many -t test -p themes core icons flags qr ui editor code-editor charts utils blocks tectra-ng",
     "e2e": "nx e2e visual",
+    "e2e:ng-add": "node e2e/ng-add/prepare.mjs && playwright test -c e2e/ng-add/playwright.config.ts",
     "lint": "eslint .",
     "format:examples": "prettier --write \"apps/docs/src/content/**/*.example.ts\""
   },
@@ -52,6 +53,7 @@
     "@nx/workspace": "23.3.1",
     "@playwright/test": "^1.65.0",
     "@schematics/angular": "22.2.6",
+    "@vitest/coverage-v8": "^4.1.12",
     "angular-eslint": "^22.6.0",
     "esbuild": "^0.28.2",
     "eslint": "^9.39.5",

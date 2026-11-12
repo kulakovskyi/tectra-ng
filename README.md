@@ -47,6 +47,16 @@
 
 ## Quick start
 
+In an Angular CLI app one command does the whole setup:
+
+```bash
+ng add tectra-ng
+```
+
+It installs the kit and its Angular peers, adds `provideTectra` with the style, primary colour and surface you pick to `app.config.ts`, and the fonts to `index.html`. Pass `--style`, `--primary` and `--surface` to skip the questions; running it again changes nothing.
+
+Or set it up by hand:
+
 ```bash
 npm install tectra-ng
 ```

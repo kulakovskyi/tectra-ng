@@ -41,10 +41,18 @@
 ## Install
 
 ```bash
+ng add tectra-ng
+```
+
+It installs every tectra package at the same version with the Angular peers, adds `provideTectra` with the preset you pick (`--style`, `--primary`, `--surface`) to `app.config.ts` and the fonts to `index.html`.
+
+Without the Angular CLI, install it and provide a theme by hand:
+
+```bash
 npm i tectra-ng
 ```
 
-It installs every tectra package at the same version. Provide a theme and import components from the packages themselves:
+Then import components from the packages themselves:
 
 ```ts
 import { provideTectra } from '@tectra-ng/core/config';

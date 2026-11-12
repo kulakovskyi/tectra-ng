@@ -9,7 +9,20 @@
       "executor": "nx:run-commands",
       "outputs": ["{workspaceRoot}/dist/packages/tectra-ng"],
       "options": {
-        "command": "mkdir -p dist/packages/tectra-ng && cp packages/tectra-ng/package.json packages/tectra-ng/README.md LICENSE dist/packages/tectra-ng/"
+        "parallel": false,
+        "commands": [
+          "rm -rf dist/packages/tectra-ng && mkdir -p dist/packages/tectra-ng/schematics/ng-add",
+          "cp packages/tectra-ng/package.json packages/tectra-ng/README.md LICENSE dist/packages/tectra-ng/",
+          "cp packages/tectra-ng/schematics/collection.json dist/packages/tectra-ng/schematics/ && cp packages/tectra-ng/schematics/ng-add/schema.json dist/packages/tectra-ng/schematics/ng-add/",
+          "tsc -p packages/tectra-ng/tsconfig.schematics.json"
+        ]
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/coverage/packages/tectra-ng"],
+      "options": {
+        "command": "vitest run -c packages/tectra-ng/vitest.config.mts"
       }
     }
   }

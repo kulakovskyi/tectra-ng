@@ -32,9 +32,11 @@ packages/
   utils/<entry> @tectra-ng/utils/<entry>  utilities next to the components: pipes, directives, validators, filter state, HTTP helpers, polling, clock; one entry point per utility
   qr/           @tectra-ng/qr            QR codes without a framework: encoder, SVG paths, styled SVG / PNG (no dependencies; blocks/qr-code is the Angular block on it)
   blocks/<name> @tectra-ng/blocks/<name> composed blocks
+  tectra-ng/    tectra-ng                meta package: every package at one version + the `ng add` schematic (schematics/, Vitest in node)
 apps/docs       docs site (port 4300), content in apps/docs/src/content/components/<name>; every route prerendered (SSG + hydration), so docs code must run on the server (no bare window / requestAnimationFrame); SEO meta per page in src/app/seo + data/seo.data.ts
 apps/sandbox    playground (port 4301)
 e2e/visual      Playwright checks of the built docs (port 4310)
+e2e/ng-add      `ng new` + `ng add tectra-ng` from the packed packages, built and checked with Playwright (port 4330, `TX_NG_ADD_PORT` to change)
 tools/          registry-builder (docs registry), site-files (sitemap, robots, llms.txt, component .md, 404 after the docs build), brand (favicons, social preview), icons, flags, export-font, serve-docs
 ```
 
@@ -57,6 +59,7 @@ Prefix Nx commands with `NX_DAEMON=false NX_NO_CLOUD=true`.
 | Lint (must be clean, also warnings) | `npm run lint` |
 | Unit tests | `npm run test` |
 | e2e (builds docs, serves on 4310, `TX_E2E_PORT` to change) | `npm run e2e` |
+| e2e of `ng add tectra-ng` (after `build:packages`; `ng new` + `ng add` from the packed packages in the OS temp folder, `TX_NG_ADD_DIR` to change) | `npm run e2e:ng-add` |
 | e2e of the soft / edge / paper styles on every page (CI checks a subset) | `cd e2e/visual && TX_E2E_ALL_STYLES=1 npx playwright test themes.spec.ts` |
 | Build all packages | `npm run build:packages` |
 | Docs dev server (4300) | `npm run docs` |

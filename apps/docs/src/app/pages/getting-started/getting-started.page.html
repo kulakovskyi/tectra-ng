@@ -12,6 +12,23 @@
   }
 </div>
 
+<section class="quick panel" aria-labelledby="install-quick">
+  <div class="quick__head">
+    <span class="quick__icon"><tx-icon name="sparkles" /></span>
+    <h2 class="quick__title" id="install-quick">One command</h2>
+  </div>
+  <p class="quick__text">
+    In an Angular CLI app, <code>ng add</code> does steps 1 and 2 and adds the fonts: it installs the kit with its Angular peers, provides a theme with the
+    style, primary colour and surface you pick, and links the fonts in <code>index.html</code>. Running it again changes nothing.
+  </p>
+  <div class="command">
+    <span class="command__prompt" aria-hidden="true">$</span>
+    <code class="command__text">{{ ngAdd }}</code>
+    <docs-copy-button label="Copy the ng add command" [text]="ngAdd" />
+  </div>
+  <p class="quick__hint">Prefer to see each step? Set it up by hand below.</p>
+</section>
+
 <ol class="steps">
   <li class="step">
     <span class="step__number">1</span>

@@ -15,6 +15,7 @@ import {
   INSTALL_EXTRAS,
   INSTALL_MANAGERS,
   INSTALL_NEXT,
+  INSTALL_NG_ADD,
   INSTALL_PACKAGES,
   INSTALL_REQUIREMENTS,
   INSTALL_USE_CODE,
@@ -40,6 +41,7 @@ export default class GettingStartedPage {
   readonly extras = INSTALL_EXTRAS;
   readonly next = INSTALL_NEXT;
   readonly useCode = INSTALL_USE_CODE;
+  readonly ngAdd = INSTALL_NG_ADD;
   readonly managers: TxTabItem[] = INSTALL_MANAGERS.map(({ value, label }) => ({ value, label }));
   readonly modes: TxTabItem[] = [
     { value: 'all', label: 'Everything' },
