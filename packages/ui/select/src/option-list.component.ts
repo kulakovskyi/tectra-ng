@@ -15,9 +15,10 @@ import {
   viewChild,
 } from '@angular/core';
 import { TxResolvedPassThrough } from '@tectra-ng/core/config';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TxSkeleton } from '@tectra-ng/ui/skeleton';
 import { TxSelectGroupRow, TxSelectItem, TxSelectOptionContext, TxSelectPart, TxSelectRow } from './select.types';
+import { SELECT_ICON_DEFAULTS } from './select.icons';
 
 interface TxOptionSection {
   group: TxSelectGroupRow | null;
@@ -41,6 +42,7 @@ const DEFAULT_LIST_HEIGHT = 200;
     class: 'tx-option-list',
     '[attr.data-styled]': 'unstyled() ? null : true',
   },
+  viewProviders: [provideTxIconDefaults(SELECT_ICON_DEFAULTS)],
 })
 export class TxOptionList {
   readonly rows = input.required<readonly TxSelectRow[]>();

@@ -5,6 +5,8 @@ import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraAmountTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TxAmountCurrencyDisplay, TxAmountNotation, TxAmountPart, TxAmountSign } from './amount.types';
 import { formatAmount } from './format-amount';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { AMOUNT_ICON_DEFAULTS } from './amount.icons';
 
 @Component({
   selector: 'tx-amount',
@@ -33,6 +35,7 @@ import { formatAmount } from './format-amount';
     '[class.tx-amount--zero]': 'sign() === "zero"',
     '[class.tx-amount--empty]': 'isEmpty()',
   },
+  viewProviders: [provideTxIconDefaults(AMOUNT_ICON_DEFAULTS)],
 })
 export class TxAmount {
   private localeService = inject(TxLocaleService);

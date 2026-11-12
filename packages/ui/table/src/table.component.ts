@@ -83,6 +83,8 @@ import {
   TxTableStateStorage,
 } from './table.types';
 import { columnLabel, mergeColumnOrder, nextSortOrder, pxOf, resolveField, rowKeyOf, sortRows, writeField } from './table.utils';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { TABLE_ICON_DEFAULTS } from './table.icons';
 
 export const TX_TABLE_SELECT_FIELD = '__select';
 export const TX_TABLE_EXPAND_FIELD = '__expand';
@@ -160,6 +162,7 @@ const EDITOR_FOCUS_TARGET = 'input:not(.tx-table__editor-pending), textarea, but
     '[class.tx-table--resizing]': 'resizing() !== null',
     '[class.tx-table--loading]': 'loading()',
   },
+  viewProviders: [provideTxIconDefaults(TABLE_ICON_DEFAULTS)],
 })
 export class TxTable<T = unknown> implements TxTableContext {
   private document = inject(DOCUMENT);

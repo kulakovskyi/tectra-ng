@@ -18,7 +18,7 @@ import { uniqueId } from '@tectra-ng/core/a11y';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
 import { TxLocaleService, formatMessage, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TxButton } from '@tectra-ng/ui/button';
 import { TxButtonGroup } from '@tectra-ng/ui/button-group';
@@ -26,6 +26,7 @@ import { TxSkeleton } from '@tectra-ng/ui/skeleton';
 import { TxTooltip } from '@tectra-ng/ui/tooltip';
 import { TX_GANTT_DAY, TX_GANTT_DAY_WIDTH, ganttDays, ganttFolds, ganttRange, ganttRows, ganttTicks, ganttTime, ganttX } from './gantt-layout';
 import { TxGanttDate, TxGanttGroupToggle, TxGanttLayout, TxGanttPart, TxGanttSpan, TxGanttTask, TxGanttTaskEvent, TxGanttZoom } from './gantt-chart.types';
+import { GANTT_ICON_DEFAULTS } from './gantt.icons';
 
 const ZOOMS: readonly TxGanttZoom[] = ['quarter', 'month', 'week', 'day'];
 const MIN_BAR = 6;
@@ -50,6 +51,7 @@ export type TxGanttBarLabels = 'auto' | 'outside' | 'inside' | 'none';
     '[attr.data-layout]': 'layout()',
     '[attr.aria-busy]': 'loading() || null',
   },
+  viewProviders: [provideTxIconDefaults(GANTT_ICON_DEFAULTS)],
 })
 export class TxGanttChart {
   private locale = inject(TxLocaleService);

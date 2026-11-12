@@ -128,6 +128,7 @@ import { provideRouter } from '@angular/router';
 import { provideTxBrandIcons } from '@tectra-ng/brand-icons';
 import { provideTectra } from '@tectra-ng/core/config';
 import { loadTxFlag } from '@tectra-ng/flags';
+import { TX_ICONS, provideTxIcons } from '@tectra-ng/icons';
 import { createTectraPreset } from '@tectra-ng/themes';
 import { provideTxFlags, txFlagImages } from '@tectra-ng/ui/country';
 
@@ -135,6 +136,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter([{ path: '**', children: [] }]),
     provideTectra({ ${options.join(', ')} }),
+    provideTxIcons(TX_ICONS),
     provideTxBrandIcons(),
     provideTxFlags(txFlagImages(loadTxFlag)),
   ],

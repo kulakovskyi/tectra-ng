@@ -3,6 +3,8 @@ import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled 
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraSkeletonTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxSkeletonAnimation, TxSkeletonPart, TxSkeletonShape } from './skeleton.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { SKELETON_ICON_DEFAULTS } from './skeleton.icons';
 
 @Component({
   selector: 'tx-skeleton',
@@ -25,6 +27,7 @@ import { TxSkeletonAnimation, TxSkeletonPart, TxSkeletonShape } from './skeleton
     '[attr.data-animation]': 'animation()',
     '[class.tx-skeleton--lines]': 'lineList().length > 0',
   },
+  viewProviders: [provideTxIconDefaults(SKELETON_ICON_DEFAULTS)],
 })
 export class TxSkeleton {
   readonly shape = input<TxSkeletonShape>('rectangle');

@@ -3,6 +3,8 @@ import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled 
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraCardTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TxCardPart } from './card.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { CARD_ICON_DEFAULTS } from './card.icons';
 
 @Component({
   selector: 'tx-card',
@@ -28,6 +30,7 @@ import { TxCardPart } from './card.types';
     '[style]': 'hostStyle()',
     '[attr.data-styled]': '!isUnstyled() || null',
   },
+  viewProviders: [provideTxIconDefaults(CARD_ICON_DEFAULTS)],
 })
 export class TxCard {
   readonly title = input<string | undefined>(undefined);

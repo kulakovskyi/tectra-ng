@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, input } from '@angular/core';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
+import { LABEL_ICON_DEFAULTS } from './label.icons';
 
 @Component({
   selector: 'tx-label',
@@ -18,6 +19,7 @@ import { TxIcon } from '@tectra-ng/icons';
   styleUrl: './label.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'tx-label', '[class.tx-label--subtle]': 'subtle()' },
+  viewProviders: [provideTxIconDefaults(LABEL_ICON_DEFAULTS)],
 })
 export class TxLabel {
   readonly for = input<string | undefined>(undefined);

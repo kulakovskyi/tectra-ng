@@ -17,6 +17,8 @@ import {
   TxMonthCalendarPart,
   TxMonthCalendarWeek,
 } from './month-calendar.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { MONTH_CALENDAR_ICON_DEFAULTS } from './month-calendar.icons';
 
 const KEY_STEPS: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 };
 
@@ -32,6 +34,7 @@ const KEY_STEPS: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1, ArrowU
     '[style]': 'hostStyle()',
     '[attr.data-styled]': '!isUnstyled() || null',
   },
+  viewProviders: [provideTxIconDefaults(MONTH_CALENDAR_ICON_DEFAULTS)],
 })
 export class TxMonthCalendar {
   private host = inject<ElementRef<HTMLElement>>(ElementRef);

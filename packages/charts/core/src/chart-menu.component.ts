@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component, ElementRef, input, output, viewChil
 import { nextListIndex } from '@tectra-ng/core/a11y';
 import { injectUnstyled } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
+import { CORE_ICON_DEFAULTS } from './core.icons';
 
 export interface TxChartMenuItem {
   id: string;
@@ -31,6 +32,7 @@ const MENU_KEYS = new Set(['ArrowDown', 'ArrowUp', 'Home', 'End']);
   styleUrl: './chart-menu.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'tx-chart-menu' },
+  viewProviders: [provideTxIconDefaults(CORE_ICON_DEFAULTS)],
 })
 export class TxChartMenu {
   readonly items = input<readonly TxChartMenuItem[]>([]);

@@ -4,6 +4,8 @@ import { TxStepItem } from './step-item.component';
 import { TxStepperRef } from './stepper.context';
 import { TxStepPanelContent } from './stepper.templates';
 import { TxStepPanelContext, TxStepValue } from './stepper.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { STEPPER_ICON_DEFAULTS } from './stepper.icons';
 
 @Component({
   selector: 'tx-step-panel',
@@ -21,6 +23,7 @@ import { TxStepPanelContext, TxStepValue } from './stepper.types';
     '[attr.hidden]': '!inItem && !active() ? "" : null',
     '[attr.inert]': 'inItem && !active() ? "" : null',
   },
+  viewProviders: [provideTxIconDefaults(STEPPER_ICON_DEFAULTS)],
 })
 export class TxStepPanel {
   protected readonly stepper = inject(TxStepperRef);

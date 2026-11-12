@@ -25,7 +25,7 @@ import { TxTypeahead, uniqueId } from '@tectra-ng/core/a11y';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon, TxIconName } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraTreeTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxIconField, TxInputIcon } from '@tectra-ng/ui/icon-field';
 import { TxInput } from '@tectra-ng/ui/input';
@@ -62,6 +62,7 @@ import {
   siblingsOf,
   walkTree,
 } from './tree.utils';
+import { TREE_ICON_DEFAULTS } from './tree.icons';
 
 export interface TxTreeRow<T = unknown> {
   id: string;
@@ -101,6 +102,7 @@ interface TxTreeDropTarget {
     '[class.tx-tree--loading]': 'loading()',
     '[class.tx-tree--scrollable]': 'scrollHeight() === "flex"',
   },
+  viewProviders: [provideTxIconDefaults(TREE_ICON_DEFAULTS)],
 })
 export class TxTree<T = unknown> implements TxTreeDragSource {
   readonly value = model<TxTreeNode<T>[]>([]);

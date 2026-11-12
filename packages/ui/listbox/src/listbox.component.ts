@@ -4,10 +4,11 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
 import { injectFieldInvalid } from '@tectra-ng/core/forms';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraListboxTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxOptionList, TxOptionsBase, TxSelectItem, isSelectableRow } from '@tectra-ng/ui/select';
 import { TxListboxChangeEvent, TxListboxPart } from './listbox.types';
+import { LISTBOX_ICON_DEFAULTS } from './listbox.icons';
 
 @Component({
   selector: 'tx-listbox',
@@ -27,6 +28,7 @@ import { TxListboxChangeEvent, TxListboxPart } from './listbox.types';
     '[class.tx-listbox--readonly]': 'readonly()',
     '(mousedown)': 'onPointer($event)',
   },
+  viewProviders: [provideTxIconDefaults(LISTBOX_ICON_DEFAULTS)],
 })
 export class TxListbox extends TxOptionsBase<unknown> {
   readonly options = input<readonly unknown[]>([]);

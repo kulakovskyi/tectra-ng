@@ -19,11 +19,12 @@ import { uniqueId } from '@tectra-ng/core/a11y';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
 import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
 import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
-import { TxIcon, TxIconName, TxIconRegistry } from '@tectra-ng/icons';
+import { injectTxIcons, provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraCheckboxTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TX_CHECKBOX_GROUP } from './checkbox-group.token';
 import { TxCheckboxIconTemplate } from './checkbox-templates.directive';
 import { TxCheckboxChangeEvent, TxCheckboxPart, TxCheckboxSize, TxCheckboxVariant } from './checkbox.types';
+import { CHECKBOX_ICON_DEFAULTS } from './checkbox.icons';
 
 @Component({
   selector: 'tx-checkbox',
@@ -47,9 +48,10 @@ import { TxCheckboxChangeEvent, TxCheckboxPart, TxCheckboxSize, TxCheckboxVarian
     '[class.tx-checkbox--tile]': 'tile()',
     '(click)': 'onHostClick($event)',
   },
+  viewProviders: [provideTxIconDefaults(CHECKBOX_ICON_DEFAULTS)],
 })
 export class TxCheckbox extends TxFormControlBase<unknown> {
-  private txIconRegistry = inject(TxIconRegistry);
+  private txIconRegistry = injectTxIcons();
   private group = inject(TX_CHECKBOX_GROUP, { optional: true });
   private generatedId = uniqueId('tx-checkbox');
 

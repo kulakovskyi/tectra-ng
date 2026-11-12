@@ -10,6 +10,7 @@ import { TxFieldHint } from './field-hint.component';
 import { TxMessageCloseIconTemplate, TxMessageIconTemplate } from './message-templates.directive';
 import { TxMessage } from './message.component';
 import { TxMessageSeverity } from './message.types';
+import { TX_ICONS, provideTxIcons } from '@tectra-ng/icons';
 
 @Component({
   imports: [TxMessage, TxMessageIconTemplate, TxMessageCloseIconTemplate],
@@ -59,6 +60,8 @@ class FieldHost {
   readonly code = new FormControl('', (control) => (control.value === 'taken' ? { duplicate: { message: 'Already taken' } } : { format: true }));
   readonly messages = signal<Record<string, string | ((error: unknown) => string)> | undefined>(undefined);
 }
+
+beforeEach(() => TestBed.configureTestingModule({ providers: [provideTxIcons(TX_ICONS)] }));
 
 describe('TxMessage', () => {
   let fixture: ComponentFixture<MessageHost>;

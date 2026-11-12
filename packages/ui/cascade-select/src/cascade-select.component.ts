@@ -33,10 +33,11 @@ import {
   txScrollStrategy,
 } from '@tectra-ng/core/overlay';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraCascadeSelectTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TxFieldVariant, TxSelectSize, readOptionField, sameOptionValue } from '@tectra-ng/ui/select';
 import { TxCascadeItem, TxCascadeSelectChangeEvent, TxCascadeSelectPart } from './cascade-select.types';
+import { CASCADE_SELECT_ICON_DEFAULTS } from './cascade-select.icons';
 
 @Component({
   selector: 'tx-cascade-select',
@@ -58,6 +59,7 @@ import { TxCascadeItem, TxCascadeSelectChangeEvent, TxCascadeSelectPart } from '
     '[class.tx-cascade-select--readonly]': 'readonly()',
     '[class.tx-cascade-select--filled]': 'hasValue()',
   },
+  viewProviders: [provideTxIconDefaults(CASCADE_SELECT_ICON_DEFAULTS)],
 })
 export class TxCascadeSelect extends TxFormControlBase<unknown> {
   readonly options = input<readonly unknown[]>([]);

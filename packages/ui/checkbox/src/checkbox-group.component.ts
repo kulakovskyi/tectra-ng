@@ -18,6 +18,8 @@ import { TectraCheckboxTokens, TectraDeepPartial, toStyleObject } from '@tectra-
 import { TX_CHECKBOX_GROUP, TxCheckboxGroupContext } from './checkbox-group.token';
 import { TxCheckbox } from './checkbox.component';
 import { TxCheckboxGroupOrientation, TxCheckboxGroupPart, TxCheckboxSize, TxCheckboxVariant } from './checkbox.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { CHECKBOX_ICON_DEFAULTS } from './checkbox.icons';
 
 @Component({
   selector: 'tx-checkbox-group',
@@ -82,6 +84,7 @@ import { TxCheckboxGroupOrientation, TxCheckboxGroupPart, TxCheckboxSize, TxChec
     '[attr.aria-labelledby]': 'ariaLabelledBy() ?? null',
     '[attr.aria-invalid]': 'isInvalid() || null',
   },
+  viewProviders: [provideTxIconDefaults(CHECKBOX_ICON_DEFAULTS)],
 })
 export class TxCheckboxGroup extends TxFormControlBase<unknown[]> {
   private readonly registered = signal<unknown[]>([]);

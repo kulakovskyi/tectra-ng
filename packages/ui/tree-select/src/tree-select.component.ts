@@ -34,11 +34,12 @@ import {
   txScrollStrategy,
 } from '@tectra-ng/core/overlay';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraSelectTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxFieldVariant, TxSelectSize, foldText } from '@tectra-ng/ui/select';
 import { TxTreeNode, TxTreeSelectionMode, descendantKeys, findNode, normalizeChecked, parentMap } from '@tectra-ng/ui/tree';
 import { TxTreeBranch, TxTreeRow, TxTreeSelectChangeEvent, TxTreeSelectDisplay, TxTreeSelectPart } from './tree-select.types';
+import { TREE_SELECT_ICON_DEFAULTS } from './tree-select.icons';
 
 @Component({
   selector: 'tx-tree-select',
@@ -60,6 +61,7 @@ import { TxTreeBranch, TxTreeRow, TxTreeSelectChangeEvent, TxTreeSelectDisplay, 
     '[class.tx-tree-select--readonly]': 'readonly()',
     '[class.tx-tree-select--filled]': 'selectedKeys().length > 0',
   },
+  viewProviders: [provideTxIconDefaults(TREE_SELECT_ICON_DEFAULTS)],
 })
 export class TxTreeSelect extends TxFormControlBase<string | string[]> {
   readonly options = input<readonly TxTreeNode[]>([]);

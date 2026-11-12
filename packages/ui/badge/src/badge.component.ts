@@ -3,6 +3,8 @@ import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled 
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraBadgeTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TxBadgePart, TxBadgeSeverity, TxBadgeSize } from './badge.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { BADGE_ICON_DEFAULTS } from './badge.icons';
 
 @Component({
   selector: 'tx-badge',
@@ -18,6 +20,7 @@ import { TxBadgePart, TxBadgeSeverity, TxBadgeSize } from './badge.types';
     '[attr.data-size]': 'size()',
     '[class.tx-badge--dot]': 'isDot()',
   },
+  viewProviders: [provideTxIconDefaults(BADGE_ICON_DEFAULTS)],
 })
 export class TxBadge {
   readonly value = input<string | number | undefined>(undefined);

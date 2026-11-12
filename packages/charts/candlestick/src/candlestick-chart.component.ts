@@ -39,6 +39,8 @@ import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { candleExtent, candleLabels, isUp } from './candlestick-layout';
 import { TxCandle, TxCandleEvent, TxCandleShape, TxCandlestickChartPart, TxCandlestickVariant } from './candlestick-chart.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { CANDLESTICK_ICON_DEFAULTS } from './candlestick.icons';
 
 const DEFAULTS = { bodyWidth: 0.68, volumeHeight: 0.22 };
 const EDGE_SLACK = 8;
@@ -60,6 +62,7 @@ const EDGE_SLACK = 8;
     '[class.tx-candlestick-chart--morph]': 'morph()',
     '[class.tx-candlestick-chart--active]': 'active() !== null',
   },
+  viewProviders: [provideTxIconDefaults(CANDLESTICK_ICON_DEFAULTS)],
 })
 export class TxCandlestickChart {
   private locale = inject(TxLocaleService);

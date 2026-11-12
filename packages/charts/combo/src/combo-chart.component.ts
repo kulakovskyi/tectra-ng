@@ -78,6 +78,8 @@ import {
   TxComboChartSeriesToggle,
   TxComboChartSeriesType,
 } from './combo-chart.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { COMBO_ICON_DEFAULTS } from './combo.icons';
 
 const DEFAULT_WIDTH = 0.56;
 const DEFAULT_GROUP_GAP = 3;
@@ -101,6 +103,7 @@ const EDGE_SLACK = 8;
     '[class.tx-combo-chart--stacked]': 'stacked()',
     '[class.tx-combo-chart--active]': 'active() !== null',
   },
+  viewProviders: [provideTxIconDefaults(COMBO_ICON_DEFAULTS)],
 })
 export class TxComboChart {
   private locale = inject(TxLocaleService);

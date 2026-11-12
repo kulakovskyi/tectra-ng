@@ -19,6 +19,8 @@ import {
   inlineSvgImages,
 } from '@tectra-ng/qr';
 import { TxQrCodePart } from './qr-code.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { QR_CODE_ICON_DEFAULTS } from './qr-code.icons';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const PAINTED = '.tx-qr-code__background, .tx-qr-code__dots, .tx-qr-code__eye-frames, .tx-qr-code__eye-balls';
@@ -34,6 +36,7 @@ const PAINTED = '.tx-qr-code__background, .tx-qr-code__dots, .tx-qr-code__eye-fr
     '[style]': 'hostStyle()',
     '[attr.data-styled]': '!isUnstyled() || null',
   },
+  viewProviders: [provideTxIconDefaults(QR_CODE_ICON_DEFAULTS)],
 })
 export class TxQrCode {
   private readonly document = inject(DOCUMENT);

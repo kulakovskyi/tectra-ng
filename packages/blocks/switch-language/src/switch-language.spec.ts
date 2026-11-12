@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { TxLocaleService } from '@tectra-ng/core/i18n';
 import { TxSwitchLanguage } from './switch-language.component';
+import { TX_ICONS, provideTxIcons } from '@tectra-ng/icons';
 
 @Component({
   imports: [TxSwitchLanguage],
@@ -12,6 +13,8 @@ class Host {
   readonly sync = signal(true);
   readonly value = signal<string | undefined>(undefined);
 }
+
+beforeEach(() => TestBed.configureTestingModule({ providers: [provideTxIcons(TX_ICONS)] }));
 
 describe('TxSwitchLanguage', () => {
   afterEach(() => TestBed.inject(TxLocaleService).setLocale('us'));
@@ -32,7 +35,7 @@ describe('TxSwitchLanguage', () => {
 
     options()[1].click();
     await fixture.whenStable();
-    expect(TestBed.inject(TxLocaleService).locale().code).toBe('ua');
+    await vi.waitFor(() => expect(TestBed.inject(TxLocaleService).locale().code).toBe('ua'));
     expect(fixture.componentInstance.value()).toBe('ua');
     expect(options()[1].getAttribute('aria-checked')).toBe('true');
     expect(group.style.getPropertyValue('--tx-switch-language-index')).toBe('1');

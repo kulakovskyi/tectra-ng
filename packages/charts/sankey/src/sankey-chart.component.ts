@@ -33,6 +33,8 @@ import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { sankeyLayout, sankeyLinkY } from './sankey-layout';
 import { TxSankeyAlign, TxSankeyChartPart, TxSankeyLayoutLink, TxSankeyLayoutNode, TxSankeyLink, TxSankeyLinkEvent, TxSankeyNode, TxSankeyNodeEvent } from './sankey-chart.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { SANKEY_ICON_DEFAULTS } from './sankey.icons';
 
 const DEFAULTS = { nodeWidth: 12, nodePadding: 14, labelGap: 8, fontSize: 12 };
 const PADDING = 4;
@@ -56,6 +58,7 @@ type TxSankeyActive = { kind: 'node'; index: number } | { kind: 'link'; index: n
     '[class.tx-sankey-chart--morph]': 'morph()',
     '[class.tx-sankey-chart--active]': 'active() !== null',
   },
+  viewProviders: [provideTxIconDefaults(SANKEY_ICON_DEFAULTS)],
 })
 export class TxSankeyChart {
   private locale = inject(TxLocaleService);

@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input, output } from '@angular/core';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon, TxIconName } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraActionTileTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TxActionTilePart } from './action-tile.types';
+import { ACTION_TILE_ICON_DEFAULTS } from './action-tile.icons';
 
 @Component({
   selector: 'tx-action-tile',
@@ -44,6 +45,7 @@ import { TxActionTilePart } from './action-tile.types';
     '[class.tx-action-tile--loading]': 'loading()',
     '[class.tx-action-tile--disabled]': 'disabled()',
   },
+  viewProviders: [provideTxIconDefaults(ACTION_TILE_ICON_DEFAULTS)],
 })
 export class TxActionTile {
   readonly icon = input<TxIconName | (string & {}) | undefined>(undefined);

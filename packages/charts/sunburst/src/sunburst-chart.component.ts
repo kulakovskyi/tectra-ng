@@ -35,6 +35,8 @@ import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { sunburstArcAt, sunburstArcs, sunburstFocus, sunburstValue } from './sunburst-layout';
 import { TxSunburstArc, TxSunburstChartPart, TxSunburstEvent, TxSunburstItem } from './sunburst-chart.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { SUNBURST_ICON_DEFAULTS } from './sunburst.icons';
 
 const DEFAULTS = { hole: 0.3, corner: 3, fontSize: 11 };
 const PADDING = 6;
@@ -55,6 +57,7 @@ const CENTER = 'center';
     '[class.tx-sunburst-chart--entering]': 'entrance.active()',
     '[class.tx-sunburst-chart--active]': 'activeArc() !== null',
   },
+  viewProviders: [provideTxIconDefaults(SUNBURST_ICON_DEFAULTS)],
 })
 export class TxSunburstChart {
   private locale = inject(TxLocaleService);

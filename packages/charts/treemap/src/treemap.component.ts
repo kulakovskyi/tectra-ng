@@ -33,6 +33,8 @@ import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/
 import { insetRect, squarify, treemapValue } from './treemap-layout';
 import { TxTreemapTileTemplate } from './treemap-tile.directive';
 import { TxTreemapGroup, TxTreemapItem, TxTreemapPart, TxTreemapTile, TxTreemapTileContext, TxTreemapTileEvent } from './treemap.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { TREEMAP_ICON_DEFAULTS } from './treemap.icons';
 
 const LABEL_SIZE = 13;
 const VALUE_SIZE = 12;
@@ -55,6 +57,7 @@ const GROUP_PADDING = 3;
     '[class.tx-treemap--entering]': 'entrance.active()',
     '[class.tx-treemap--hovering]': 'hovered() !== null',
   },
+  viewProviders: [provideTxIconDefaults(TREEMAP_ICON_DEFAULTS)],
 })
 export class TxTreemap {
   private locale = inject(TxLocaleService);

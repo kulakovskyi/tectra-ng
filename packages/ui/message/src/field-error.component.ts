@@ -12,9 +12,10 @@ import {
 } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraFieldMessageTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxFieldMessagePart } from './message.types';
+import { MESSAGE_ICON_DEFAULTS } from './message.icons';
 
 const BUILT_IN_MESSAGES: Record<string, keyof TxTranslations> = {
   required: 'validationRequired',
@@ -58,6 +59,7 @@ const BUILT_IN_MESSAGES: Record<string, keyof TxTranslations> = {
     '[attr.data-state]': 'state()',
     'aria-live': 'polite',
   },
+  viewProviders: [provideTxIconDefaults(MESSAGE_ICON_DEFAULTS)],
 })
 export class TxFieldError {
   private generatedId = uniqueId('tx-field-error');

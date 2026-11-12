@@ -50,6 +50,8 @@ import { TxLocaleService, formatMessage, injectTranslations } from '@tectra-ng/c
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TxRangeAreaChartPart, TxRangeAreaPath, TxRangeAreaPointEvent, TxRangeAreaSeriesToggle, TxRangeAreaXType, TxRangeSeries } from './range-area-chart.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { RANGE_AREA_ICON_DEFAULTS } from './range-area.icons';
 
 const EDGE_SLACK = 8;
 
@@ -69,6 +71,7 @@ const EDGE_SLACK = 8;
     '[class.tx-range-area-chart--morph]': 'morph()',
     '[class.tx-range-area-chart--focused]': 'focusedSeries() !== null',
   },
+  viewProviders: [provideTxIconDefaults(RANGE_AREA_ICON_DEFAULTS)],
 })
 export class TxRangeAreaChart {
   private locale = inject(TxLocaleService);

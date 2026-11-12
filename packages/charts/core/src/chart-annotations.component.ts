@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { TxPassThroughPart } from '@tectra-ng/core/config';
 import { TxChartAnnotationShape } from './chart-annotations';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { CORE_ICON_DEFAULTS } from './core.icons';
 
 @Component({
   selector: 'g[tx-chart-annotations]',
@@ -30,6 +32,7 @@ import { TxChartAnnotationShape } from './chart-annotations';
   styleUrl: './chart-annotations.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'tx-chart-annotations', 'aria-hidden': 'true' },
+  viewProviders: [provideTxIconDefaults(CORE_ICON_DEFAULTS)],
 })
 export class TxChartAnnotations {
   readonly shapes = input.required<readonly TxChartAnnotationShape[]>({ alias: 'tx-chart-annotations' });

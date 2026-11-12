@@ -35,6 +35,7 @@ export function ngAdd(options: TectraNgAddOptions): Rule {
     return chain([
       addPeers(tree, angularRange, options.skipInstall === true),
       addProvider(tree, projectName, project, options),
+      options.icons === false ? noop() : addIcons(tree, projectName, project),
       options.fonts === false ? noop() : addFonts(project),
     ]);
   };
@@ -110,10 +111,25 @@ function addProvider(tree: Tree, projectName: string, project: ProjectDefinition
   ]);
 }
 
-function findProvider(tree: Tree, root: string): string | undefined {
+function addIcons(tree: Tree, projectName: string, project: ProjectDefinition): Rule {
+  const existing = findProvider(tree, sourceRoot(project), 'provideTxIcons(');
+  if (existing) {
+    return (_tree: Tree, context: SchematicContext) => {
+      context.logger.info(`provideTxIcons is already set up in ${existing}; left as it is.`);
+    };
+  }
+  return chain([
+    addRootProvider(projectName, ({ code, external }) => code`${external('provideTxIcons', '@tectra-ng/icons')}(${external('TX_ICONS', '@tectra-ng/icons')})`),
+    (_tree: Tree, context: SchematicContext) => {
+      context.logger.info('All 334 icons are registered with provideTxIcons(TX_ICONS). To ship only the icons you use, list them instead: provideTxIcons({ plus: txIconPlus }).');
+    },
+  ]);
+}
+
+function findProvider(tree: Tree, root: string, call = 'provideTectra('): string | undefined {
   let found: string | undefined;
   tree.getDir(root).visit((path) => {
-    if (!found && path.endsWith('.ts') && !path.endsWith('.spec.ts') && tree.readText(path).includes('provideTectra(')) {
+    if (!found && path.endsWith('.ts') && !path.endsWith('.spec.ts') && tree.readText(path).includes(call)) {
       found = path;
     }
   });

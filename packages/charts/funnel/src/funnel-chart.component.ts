@@ -37,6 +37,8 @@ import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { funnelBoxes, funnelConnectorPath, funnelIndexAt, funnelRate } from './funnel-layout';
 import { TxFunnelChartPart, TxFunnelConnector, TxFunnelItem, TxFunnelStage, TxFunnelStageEvent } from './funnel-chart.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { FUNNEL_ICON_DEFAULTS } from './funnel.icons';
 
 const DEFAULTS = { gap: 0.32, labelWidth: 0.3, labelFontSize: 12.25, valueFontSize: 12, conversionFontSize: 11 };
 const PADDING = 4;
@@ -59,6 +61,7 @@ const MIN_WIDTH = 4;
     '[class.tx-funnel-chart--morph]': 'morph()',
     '[class.tx-funnel-chart--active]': 'active() !== null',
   },
+  viewProviders: [provideTxIconDefaults(FUNNEL_ICON_DEFAULTS)],
 })
 export class TxFunnelChart {
   private locale = inject(TxLocaleService);

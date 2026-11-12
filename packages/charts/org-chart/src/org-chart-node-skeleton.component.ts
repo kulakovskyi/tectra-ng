@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { injectUnstyled } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TxSkeleton } from '@tectra-ng/ui/skeleton';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { ORG_CHART_ICON_DEFAULTS } from './org-chart.icons';
 
 @Component({
   selector: 'tx-org-chart-node-skeleton',
@@ -43,6 +45,7 @@ import { TxSkeleton } from '@tectra-ng/ui/skeleton';
     class: 'tx-org-chart-node-skeleton',
     '[attr.data-styled]': '!isUnstyled() || null',
   },
+  viewProviders: [provideTxIconDefaults(ORG_CHART_ICON_DEFAULTS)],
 })
 export class TxOrgChartNodeSkeleton {
   readonly unstyled = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });

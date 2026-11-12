@@ -3,6 +3,8 @@ import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled 
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraStatTilesTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxStatTilesPart } from './stat-tiles.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { STAT_TILES_ICON_DEFAULTS } from './stat-tiles.icons';
 
 @Component({
   selector: 'tx-stat-tiles',
@@ -19,6 +21,7 @@ import { TxStatTilesPart } from './stat-tiles.types';
     '[attr.aria-label]': 'ariaLabel() || null',
     '[attr.aria-labelledby]': 'ariaLabelledBy() || null',
   },
+  viewProviders: [provideTxIconDefaults(STAT_TILES_ICON_DEFAULTS)],
 })
 export class TxStatTiles {
   readonly minWidth = input<string | undefined>(undefined);

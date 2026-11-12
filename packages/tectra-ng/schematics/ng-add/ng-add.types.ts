@@ -27,5 +27,6 @@ export interface TectraNgAddOptions {
   primary?: TectraNgAddPrimary;
   surface?: TectraNgAddSurface;
   fonts?: boolean;
+  icons?: boolean;
   skipInstall?: boolean;
 }

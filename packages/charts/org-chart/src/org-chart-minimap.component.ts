@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { TX_ORG_CHART_COMPACT_WIDTH, TX_ORG_CHART_MINIMAP, TX_ORG_CHART_MINIMAP_COMPACT } from './org-chart-view';
 import { TxOrgChartMinimapLayout, TxOrgChartPoint, TxOrgChartRect, TxOrgChartSize, TxOrgChartView } from './org-chart.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { ORG_CHART_ICON_DEFAULTS } from './org-chart.icons';
 
 @Component({
   selector: 'tx-org-chart-minimap',
@@ -44,6 +46,7 @@ import { TxOrgChartMinimapLayout, TxOrgChartPoint, TxOrgChartRect, TxOrgChartSiz
     'data-drag-ignore': '',
     'aria-hidden': 'true',
   },
+  viewProviders: [provideTxIconDefaults(ORG_CHART_ICON_DEFAULTS)],
 })
 export class TxOrgChartMinimap {
   readonly layout = input.required<TxOrgChartMinimapLayout>();

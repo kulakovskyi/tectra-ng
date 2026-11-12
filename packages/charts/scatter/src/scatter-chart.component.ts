@@ -70,6 +70,8 @@ import {
   TxScatterDatum,
   TxScatterSeries,
 } from './scatter-chart.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { SCATTER_ICON_DEFAULTS } from './scatter.icons';
 
 const DEFAULT_RADIUS = { point: 5, min: 4, max: 26 };
 const HIT_SLACK = 8;
@@ -94,6 +96,7 @@ const BUBBLE_PLOT_SHARE = 0.8;
     '[class.tx-scatter-chart--focused]': 'focusedSeries() !== null',
     '[class.tx-scatter-chart--active]': 'active() !== null',
   },
+  viewProviders: [provideTxIconDefaults(SCATTER_ICON_DEFAULTS)],
 })
 export class TxScatterChart {
   private locale = inject(TxLocaleService);

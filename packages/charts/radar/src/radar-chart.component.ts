@@ -55,6 +55,8 @@ import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { radarAngle, radarAxes, radarAxisAt, radarFit, radarPoints, radarPolygonPath, radarRadius, radarShapePath } from './radar-layout';
 import { TxRadarChartPart, TxRadarChartPointEvent, TxRadarChartSeriesToggle, TxRadarChartShape, TxRadarPolygon, TxRadarRing } from './radar-chart.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { RADAR_ICON_DEFAULTS } from './radar.icons';
 
 const DEFAULT_LABEL = { fontSize: 11.5, gap: 10 };
 const TICK_GAP = 4;
@@ -77,6 +79,7 @@ const TICK_GAP = 4;
     '[class.tx-radar-chart--focused]': 'focusedSeries() !== null',
     '[class.tx-radar-chart--active]': 'active() !== null',
   },
+  viewProviders: [provideTxIconDefaults(RADAR_ICON_DEFAULTS)],
 })
 export class TxRadarChart {
   private locale = inject(TxLocaleService);

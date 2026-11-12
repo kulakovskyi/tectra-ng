@@ -3,6 +3,8 @@ import { ChangeDetectionStrategy, Component, ElementRef, TemplateRef, booleanAtt
 import { TxPassThroughPart } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { TxChartLegendAlign, TxChartLegendContext, TxChartLegendItem, TxChartLegendPosition, TxChartLegendVariant } from './chart.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { CORE_ICON_DEFAULTS } from './core.icons';
 
 @Component({
   selector: 'tx-chart-legend',
@@ -80,6 +82,7 @@ import { TxChartLegendAlign, TxChartLegendContext, TxChartLegendItem, TxChartLeg
     '[attr.data-variant]': 'variant()',
     '[class.tx-chart-legend--values]': 'hasValues()',
   },
+  viewProviders: [provideTxIconDefaults(CORE_ICON_DEFAULTS)],
 })
 export class TxChartLegend {
   private host = inject<ElementRef<HTMLElement>>(ElementRef);

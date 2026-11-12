@@ -4,6 +4,8 @@ import { TxButton } from '@tectra-ng/ui/button';
 import { TxTooltip } from '@tectra-ng/ui/tooltip';
 import { TX_EXPORT_ICONS, TxExportAction } from './export-action.directive';
 import { TxExportFormat, TxExportPart, TxExportRow } from './export.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { EXPORT_ICON_DEFAULTS } from './export.icons';
 
 const TEMPLATE = `
   <button
@@ -50,6 +52,7 @@ abstract class TxExportButtonBase<T = TxExportRow> extends TxExportAction<T> {
   template: TEMPLATE,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'tx-export tx-export-button', ...HOST },
+  viewProviders: [provideTxIconDefaults(EXPORT_ICON_DEFAULTS)],
 })
 export class TxExportButton<T = TxExportRow> extends TxExportButtonBase<T> {
   readonly format = input<TxExportFormat>('csv');
@@ -62,6 +65,7 @@ export class TxExportButton<T = TxExportRow> extends TxExportButtonBase<T> {
   template: TEMPLATE,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'tx-export tx-export-csv', ...HOST },
+  viewProviders: [provideTxIconDefaults(EXPORT_ICON_DEFAULTS)],
 })
 export class TxExportCsv<T = TxExportRow> extends TxExportButtonBase<T> {
   readonly resolvedFormat = () => 'csv' as const;
@@ -73,6 +77,7 @@ export class TxExportCsv<T = TxExportRow> extends TxExportButtonBase<T> {
   template: TEMPLATE,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'tx-export tx-export-excel', ...HOST },
+  viewProviders: [provideTxIconDefaults(EXPORT_ICON_DEFAULTS)],
 })
 export class TxExportExcel<T = TxExportRow> extends TxExportButtonBase<T> {
   readonly resolvedFormat = () => 'excel' as const;
@@ -84,6 +89,7 @@ export class TxExportExcel<T = TxExportRow> extends TxExportButtonBase<T> {
   template: TEMPLATE,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'tx-export tx-export-word', ...HOST },
+  viewProviders: [provideTxIconDefaults(EXPORT_ICON_DEFAULTS)],
 })
 export class TxExportWord<T = TxExportRow> extends TxExportButtonBase<T> {
   readonly resolvedFormat = () => 'word' as const;
@@ -95,6 +101,7 @@ export class TxExportWord<T = TxExportRow> extends TxExportButtonBase<T> {
   template: TEMPLATE,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'tx-export tx-export-pdf', ...HOST },
+  viewProviders: [provideTxIconDefaults(EXPORT_ICON_DEFAULTS)],
 })
 export class TxExportPdf<T = TxExportRow> extends TxExportButtonBase<T> {
   readonly resolvedFormat = () => 'pdf' as const;

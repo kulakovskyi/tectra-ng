@@ -17,11 +17,12 @@ import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled 
 import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraChipsInputTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TxChip } from '@tectra-ng/ui/chip';
 import { TxChipsInputItemTemplate } from './chips-input-item.directive';
 import { TxChipsInputEvent, TxChipsInputPart, TxChipsInputSize, TxChipsInputVariant } from './chips-input.types';
+import { CHIPS_INPUT_ICON_DEFAULTS } from './chips-input.icons';
 
 @Component({
   selector: 'tx-chips-input',
@@ -44,6 +45,7 @@ import { TxChipsInputEvent, TxChipsInputPart, TxChipsInputSize, TxChipsInputVari
     '[class.tx-chips-input--full]': 'isFull()',
     '(click)': 'onHostClick($event)',
   },
+  viewProviders: [provideTxIconDefaults(CHIPS_INPUT_ICON_DEFAULTS)],
 })
 export class TxChipsInput extends TxFormControlBase<string[]> {
   readonly placeholder = input<string>('');

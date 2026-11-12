@@ -7,6 +7,8 @@ import { TectraCodeHighlightTokens, TectraCodeSyntaxTokens, TectraDeepPartial, t
 import { TxCodeHighlightPart, TxCodeLanguage } from './code-highlight.types';
 import { codeLines } from './code-lines';
 import { TxCodeSyntaxStyles } from './code-syntax-styles.component';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { HIGHLIGHT_ICON_DEFAULTS } from './highlight.icons';
 
 export type TxCodeHighlightTokens = TectraCodeHighlightTokens & { syntax: TectraCodeSyntaxTokens };
 
@@ -24,6 +26,7 @@ export type TxCodeHighlightTokens = TectraCodeHighlightTokens & { syntax: Tectra
     '[class.tx-code-highlight--wrap]': 'wordWrap()',
     '[class.tx-code-highlight--numbers]': 'lineNumbers()',
   },
+  viewProviders: [provideTxIconDefaults(HIGHLIGHT_ICON_DEFAULTS)],
 })
 export class TxCodeHighlight {
   readonly code = input<string | null | undefined>('');

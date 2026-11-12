@@ -21,6 +21,8 @@ import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { gaugeAngle, gaugeNeedle } from './gauge-layout';
 import { TxGaugeArc, TxGaugeBand, TxGaugePart, TxGaugeTick, TxGaugeTone } from './gauge.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { GAUGE_ICON_DEFAULTS } from './gauge.icons';
 
 const DEFAULTS = { thickness: 0.16, bandGap: 2, needleWidth: 6, hubRadius: 6, tickLength: 6, tickFontSize: 11 };
 const PADDING = 6;
@@ -45,6 +47,7 @@ const LABEL_GAP = 6;
     '[class.tx-gauge--entering]': 'entrance.active()',
     '[class.tx-gauge--morph]': 'morph()',
   },
+  viewProviders: [provideTxIconDefaults(GAUGE_ICON_DEFAULTS)],
 })
 export class TxGauge {
   private locale = inject(TxLocaleService);

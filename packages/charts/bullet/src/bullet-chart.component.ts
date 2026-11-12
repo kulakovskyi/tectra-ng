@@ -40,6 +40,8 @@ import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { bulletMax, bulletSegments } from './bullet-layout';
 import { TxBulletChartPart, TxBulletEvent, TxBulletItem, TxBulletRow } from './bullet-chart.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { BULLET_ICON_DEFAULTS } from './bullet.icons';
 
 const DEFAULTS = { rowHeight: 44, trackHeight: 0.5, barHeight: 0.34, targetHeight: 0.72 };
 const LEVELS = 3;
@@ -61,6 +63,7 @@ const AXIS_ROOM = 30;
     '[class.tx-bullet-chart--morph]': 'morph()',
     '[class.tx-bullet-chart--active]': 'active() !== null',
   },
+  viewProviders: [provideTxIconDefaults(BULLET_ICON_DEFAULTS)],
 })
 export class TxBulletChart {
   private locale = inject(TxLocaleService);

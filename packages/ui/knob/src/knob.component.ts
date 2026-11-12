@@ -8,6 +8,8 @@ import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraKnobTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxKnobValueTemplate } from './knob-templates.directive';
 import { TxKnobArc, TxKnobChangeEvent, TxKnobPart } from './knob.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { KNOB_ICON_DEFAULTS } from './knob.icons';
 
 const CENTER = 50;
 
@@ -29,6 +31,7 @@ const CENTER = 50;
     '[class.tx-knob--readonly]': 'readonly()',
     '[class.tx-knob--invalid]': 'isInvalid()',
   },
+  viewProviders: [provideTxIconDefaults(KNOB_ICON_DEFAULTS)],
 })
 export class TxKnob extends TxFormControlBase<number> {
   private localeService = inject(TxLocaleService);

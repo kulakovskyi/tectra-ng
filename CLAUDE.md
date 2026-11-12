@@ -66,7 +66,7 @@ Prefix Nx commands with `NX_DAEMON=false NX_NO_CLOUD=true`.
 | Docs dev server (4300) | `npm run docs` |
 | Regenerate docs registry | `npm run registry` |
 | Format docs examples | `npm run format:examples` |
-| Rebuild icons | `npm run icons` |
+| Rebuild icons (and the icon lists of the entry points) | `npm run icons` |
 | Rebuild flags | `npm run flags` |
 | Rebuild favicons and the social preview (`tools/brand/social-preview.html`) | `npm run brand` |
 | Rebuild the PDF export font | `npm run export-font -- <folder of an Onest release>` |
@@ -83,6 +83,7 @@ Install packages with `npm i …`; `.npmrc` sets `legacy-peer-deps=true` (npm ar
 - Every themable component has `dt`, `pt`, `ptOptions`, `unstyled` (skill `new-component`).
 - No comments in code or SCSS — names explain. No `any`.
 - Types in `<name>.types.ts`, one public barrel per entry point: `packages/ui/<name>/index.ts`.
+- Icons drawn by a component come from its entry point's generated `<name>.icons.ts` (`npm run icons:defaults`, CI checks it); apps register the names they use with `provideTxIcons(TX_ICONS)` or `provideTxIcons({ plus: txIconPlus })`.
 - Styles: tokens through `var(--tx-…)` only — no hard-coded colours, sizes come from tokens. Motion respects `prefers-reduced-motion`.
 - Accessibility is part of done: keyboard map in the README, ARIA roles/states, axe clean in light and dark.
 - Server rendering: every component renders on the server exactly as in the browser — the docs pages are prerendered and hydrated, and apps may use SSR. No `window`, `document`, `DOMParser`, `requestAnimationFrame` or `ResizeObserver` outside the browser: take `DOCUMENT`, put browser-only work in `afterNextRender`. Anything that changes the first paint (classes, insets, label checks) is decided from inputs or in `ngAfterViewInit`, not only after `afterNextRender`, or the page jumps after hydration. The server DOM has no `append` / `replaceWith` / `replaceChildren`: use `appendChild` / `insertBefore` / `replaceChild`.

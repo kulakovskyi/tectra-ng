@@ -5,6 +5,8 @@ import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TxButton, TxButtonSize } from '@tectra-ng/ui/button';
 import { TxButtonGroup } from '@tectra-ng/ui/button-group';
 import { TxDataViewLayout } from './data-view.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { DATA_VIEW_ICON_DEFAULTS } from './data-view.icons';
 
 @Component({
   selector: 'tx-data-view-layout',
@@ -39,6 +41,7 @@ import { TxDataViewLayout } from './data-view.types';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'tx-data-view-layout' },
+  viewProviders: [provideTxIconDefaults(DATA_VIEW_ICON_DEFAULTS)],
 })
 export class TxDataViewLayoutSwitch {
   readonly layout = model<TxDataViewLayout>('list');

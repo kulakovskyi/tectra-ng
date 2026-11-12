@@ -37,6 +37,8 @@ import { detectTabSize } from './engine/commands';
 import { historyAction, redo, undo } from './engine/history';
 import { TxCodeSearchQuery, findMatches, replacementFor, setSearchMarks } from './engine/search';
 import { TxCodeCompartmentName, TxCodeEditorCompartments, codeEditorBase, tabKeys } from './engine/setup';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { CODE_EDITOR_ICON_DEFAULTS } from './code-editor.icons';
 
 export type TxCodeEditorTokens = TectraCodeEditorTokens & { syntax: TectraCodeSyntaxTokens };
 
@@ -64,6 +66,7 @@ const isMac = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigat
     '[class.tx-code-editor--numbers]': 'lineNumbers()',
     '[class.tx-code-editor--diff]': 'diffMode()',
   },
+  viewProviders: [provideTxIconDefaults(CODE_EDITOR_ICON_DEFAULTS)],
 })
 export class TxCodeEditor implements ControlValueAccessor {
   readonly value = model<string | null>('');

@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, DOCUMENT, booleanAttribute, compute
 import { FormsModule } from '@angular/forms';
 import { uniqueId } from '@tectra-ng/core/a11y';
 import { injectTranslations } from '@tectra-ng/core/i18n';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TxButton } from '@tectra-ng/ui/button';
 import { TxCheckbox } from '@tectra-ng/ui/checkbox';
 import { TxPopover, TxPopoverTrigger } from '@tectra-ng/ui/popover';
@@ -11,6 +11,7 @@ import { TxTooltip } from '@tectra-ng/ui/tooltip';
 import { TX_TABLE } from './table.context';
 import { TxTableColumn } from './table.types';
 import { columnLabel } from './table.utils';
+import { TABLE_ICON_DEFAULTS } from './table.icons';
 
 type TxTableSettingsTab = 'columns' | 'actions';
 
@@ -129,6 +130,7 @@ type TxTableSettingsTab = 'columns' | 'actions';
   styleUrl: './table-settings.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'tx-table-settings' },
+  viewProviders: [provideTxIconDefaults(TABLE_ICON_DEFAULTS)],
 })
 export class TxTableSettings {
   private readonly table = inject(TX_TABLE);

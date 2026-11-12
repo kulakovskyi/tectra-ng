@@ -23,7 +23,7 @@ import { TxResolvedPassThrough } from '@tectra-ng/core/config';
 import { TxAnnouncer, uniqueId } from '@tectra-ng/core/a11y';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { TxOverlay, TxOverlayRef, TxPlacement, parsePlacement, txArrowOffset } from '@tectra-ng/core/overlay';
-import { TxIcon, TxIconName } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TxSkeleton } from '@tectra-ng/ui/skeleton';
 import { TxChartLegend } from './chart-legend.component';
 import {
@@ -47,6 +47,7 @@ import { TxChartExportFormat, chartCsv, chartFileName, chartPngBlob, chartSvgStr
 import { TxButton } from '@tectra-ng/ui/button';
 import { TxPopover, TxPopoverTrigger } from '@tectra-ng/ui/popover';
 import { TxChartMenu, TxChartMenuItem } from './chart-menu.component';
+import { CORE_ICON_DEFAULTS } from './core.icons';
 
 const TOOLTIP_OFFSET = 10;
 const ARROW_ROOM = 16;
@@ -72,6 +73,7 @@ const FOLLOW_OFFSET = 14;
     '[class.tx-chart-frame--interactive]': 'interactive()',
     '[style.height]': 'cssHeight()',
   },
+  viewProviders: [provideTxIconDefaults(CORE_ICON_DEFAULTS)],
 })
 export class TxChartFrame {
   private host = inject<ElementRef<HTMLElement>>(ElementRef);

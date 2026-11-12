@@ -2,9 +2,10 @@ import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, ElementRef, b
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon, TxIconName, TxIconRegistry } from '@tectra-ng/icons';
+import { injectTxIcons, provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraTagTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxTagPart, TxTagSeverity, TxTagSize } from './tag.types';
+import { TAG_ICON_DEFAULTS } from './tag.icons';
 
 const COPIED_FOR = 1500;
 
@@ -63,9 +64,10 @@ const COPIED_FOR = 1500;
     '[attr.data-size]': 'resolvedSize()',
     '[class.tx-tag--rounded]': 'rounded()',
   },
+  viewProviders: [provideTxIconDefaults(TAG_ICON_DEFAULTS)],
 })
 export class TxTag {
-  private txIconRegistry = inject(TxIconRegistry);
+  private txIconRegistry = injectTxIcons();
   private document = inject(DOCUMENT);
   private timer: ReturnType<typeof setTimeout> | null = null;
 

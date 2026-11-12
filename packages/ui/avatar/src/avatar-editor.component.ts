@@ -10,6 +10,8 @@ import { TxProgressSpinner } from '@tectra-ng/ui/progress-spinner';
 import { TxTooltip } from '@tectra-ng/ui/tooltip';
 import { TxAvatar } from './avatar.component';
 import { TxAvatarEditorPart, TxAvatarEditorRejection } from './avatar.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { AVATAR_ICON_DEFAULTS } from './avatar.icons';
 
 export function acceptsFile(file: File, accept: string): boolean {
   const rules = accept
@@ -47,6 +49,7 @@ export function acceptsFile(file: File, accept: string): boolean {
     '[class.tx-avatar-editor--dragover]': 'dragOver()',
     '[attr.aria-busy]': 'loading() || null',
   },
+  viewProviders: [provideTxIconDefaults(AVATAR_ICON_DEFAULTS)],
 })
 export class TxAvatarEditor {
   readonly image = model<string | null | undefined>(undefined);

@@ -32,7 +32,7 @@ import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
 import { TxOverlayAnchor, TxOverlayInsets, TxPlacement, placementFromPosition, txAnimateEnter, txAnimateLeave, txPositions, txScrollStrategy, watchOrigin } from '@tectra-ng/core/overlay';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon, TxIconName } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraDatePickerTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TxButton } from '@tectra-ng/ui/button';
 import { TxInput } from '@tectra-ng/ui/input';
@@ -60,6 +60,7 @@ import {
   TxDatePickerVariant,
   TxDatePickerView,
 } from './datepicker.types';
+import { DATEPICKER_ICON_DEFAULTS } from './datepicker.icons';
 
 type TimeUnit = 'hour' | 'minute' | 'second';
 
@@ -92,6 +93,7 @@ function isoDay(date: Date): string {
     '[class.tx-datepicker--fluid]': 'isFluid()',
     '[class.tx-datepicker--button]': 'showIcon() && iconDisplay() === "button" && !inline()',
   },
+  viewProviders: [provideTxIconDefaults(DATEPICKER_ICON_DEFAULTS)],
 })
 export class TxDatePicker extends TxFormControlBase<TxDatePickerValue> {
   readonly selectionMode = input<TxDatePickerSelectionMode>('single');

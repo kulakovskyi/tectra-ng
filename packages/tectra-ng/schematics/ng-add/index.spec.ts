@@ -64,6 +64,7 @@ describe('ng add tectra-ng', () => {
     it('defaults to the default preset', () => {
       expect([properties.style.default, properties.primary.default, properties.surface.default]).toEqual(['tectra', 'blue', 'ink']);
       expect(properties.fonts.default).toBe(true);
+      expect(properties.icons.default).toBe(true);
     });
 
     it('is the ng-add entry of the collection', () => {
@@ -86,7 +87,10 @@ describe('ng add tectra-ng', () => {
       expect(config).toContain("import { provideTectra } from '@tectra-ng/core/config';");
       expect(config).toContain("import { createTectraPreset } from '@tectra-ng/themes';");
       expect(config).toContain("provideTectra({ preset: createTectraPreset({ primary: 'blue' }) })");
+      expect(config).toContain("import { provideTxIcons, TX_ICONS } from '@tectra-ng/icons';");
+      expect(config).toContain('provideTxIcons(TX_ICONS)');
       expect(messages(logs, 'info').join('\n')).toContain("createTectraPreset({ primary: 'blue' })");
+      expect(messages(logs, 'info').join('\n')).toContain('provideTxIcons({ plus: txIconPlus })');
     });
 
     it('writes the chosen style, primary colour and surface', async () => {
@@ -123,6 +127,7 @@ describe('ng add tectra-ng', () => {
       expect(count(html, 'family=Onest')).toBe(1);
       const info = messages(second.logs, 'info').join('\n');
       expect(info).toContain('provideTectra is already set up in /projects/app/src/app/app.config.ts');
+      expect(info).toContain('provideTxIcons is already set up in /projects/app/src/app/app.config.ts');
       expect(info).toContain('The fonts are already in projects/app/src/index.html');
       expect(info).not.toContain('tectra is set up');
     });
@@ -132,6 +137,21 @@ describe('ng add tectra-ng', () => {
       app.create('/projects/app/src/app/theme.spec.ts', 'provideTectra({});');
       const { tree } = await run(app);
       expect(tree.readContent('/projects/app/src/app/app.config.ts')).toContain('provideTectra(');
+    });
+  });
+
+  describe('icons', () => {
+    it('leaves the icons to the app with icons: false', async () => {
+      const { tree } = await run(await application(), { icons: false });
+      expect(tree.readContent('/projects/app/src/app/app.config.ts')).not.toContain('provideTxIcons');
+    });
+
+    it('adds the icons to an app that has provideTectra but no icons yet', async () => {
+      const first = await run(await application(), { icons: false });
+      const { tree } = await run(first.tree);
+      const config = tree.readContent('/projects/app/src/app/app.config.ts');
+      expect(config.split('provideTectra(').length - 1).toBe(1);
+      expect(config).toContain('provideTxIcons(TX_ICONS)');
     });
   });
 

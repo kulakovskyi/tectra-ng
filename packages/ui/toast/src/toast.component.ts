@@ -18,12 +18,13 @@ import {
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon, TxIconRegistry } from '@tectra-ng/icons';
+import { injectTxIcons, provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraToastTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxProgressSpinner } from '@tectra-ng/ui/progress-spinner';
 import { TxToastTemplate } from './toast-template.directive';
 import { TxToastService } from './toast.service';
 import { TxToastAction, TxToastContext, TxToastMessage, TxToastPart, TxToastPosition, TxToastSeverity } from './toast.types';
+import { TOAST_ICON_DEFAULTS } from './toast.icons';
 
 const ICONS: Record<TxToastSeverity, string> = {
   success: 'check',
@@ -65,10 +66,11 @@ interface TxToastSwipe {
     '(focusin)': 'onFocusIn()',
     '(focusout)': 'onFocusOut($event)',
   },
+  viewProviders: [provideTxIconDefaults(TOAST_ICON_DEFAULTS)],
 })
 export class TxToast {
   private service = inject(TxToastService);
-  private iconRegistry = inject(TxIconRegistry);
+  private iconRegistry = injectTxIcons();
   private host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private document = inject(DOCUMENT);
   private swipe: TxToastSwipe | null = null;

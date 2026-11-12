@@ -25,10 +25,11 @@ import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled 
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { TxOverlay, TxOverlayRef, TxOverlayScroll, TxPlacement, parsePlacement, txArrowOffset } from '@tectra-ng/core/overlay';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraPopoverTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxPopoverContent, TxPopoverFooter, TxPopoverHeader } from './popover-slots.directive';
 import { TxPopoverAutoFocus, TxPopoverCloseReason, TxPopoverContentContext, TxPopoverPart, TxPopoverTarget } from './popover.types';
+import { POPOVER_ICON_DEFAULTS } from './popover.icons';
 
 @Component({
   selector: 'tx-popover',
@@ -39,6 +40,7 @@ import { TxPopoverAutoFocus, TxPopoverCloseReason, TxPopoverContentContext, TxPo
   host: {
     class: 'tx-popover-host',
   },
+  viewProviders: [provideTxIconDefaults(POPOVER_ICON_DEFAULTS)],
 })
 export class TxPopover {
   private overlay = inject(TxOverlay);

@@ -8,6 +8,8 @@ import { TxPopover, TxPopoverContent, TxPopoverTrigger } from '@tectra-ng/ui/pop
 import { TxTooltip } from '@tectra-ng/ui/tooltip';
 import { TxTag } from './tag.component';
 import { TxTagListItem, TxTagListPart, TxTagSeverity, TxTagSize } from './tag.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { TAG_ICON_DEFAULTS } from './tag.icons';
 
 @Component({
   selector: 'tx-tag-list',
@@ -24,6 +26,7 @@ import { TxTagListItem, TxTagListPart, TxTagSeverity, TxTagSize } from './tag.ty
     '[attr.aria-label]': 'ariaLabel() ?? null',
     '[class.tx-tag-list--empty]': '!all().length',
   },
+  viewProviders: [provideTxIconDefaults(TAG_ICON_DEFAULTS)],
 })
 export class TxTagList {
   readonly tags = input<readonly TxTagListItem[] | null | undefined>([]);

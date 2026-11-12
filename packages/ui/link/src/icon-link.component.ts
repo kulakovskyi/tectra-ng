@@ -1,12 +1,13 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, booleanAttribute, computed, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon, TxIconName, TxIconRegistry } from '@tectra-ng/icons';
+import { injectTxIcons, provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraIconLinkTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxIconLinkPart, TxLinkCommands } from './link.types';
+import { LINK_ICON_DEFAULTS } from './link.icons';
 
 @Component({
   selector: 'tx-icon-link',
@@ -20,9 +21,10 @@ import { TxIconLinkPart, TxLinkCommands } from './link.types';
     '[style]': 'hostStyle()',
     '[attr.data-styled]': '!isUnstyled() || null',
   },
+  viewProviders: [provideTxIconDefaults(LINK_ICON_DEFAULTS)],
 })
 export class TxIconLink {
-  private txIconRegistry = inject(TxIconRegistry);
+  private txIconRegistry = injectTxIcons();
 
   readonly icon = input<TxIconName | (string & {}) | undefined>(undefined);
   readonly text = input<string>('');

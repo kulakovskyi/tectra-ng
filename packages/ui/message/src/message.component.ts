@@ -1,12 +1,13 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, booleanAttribute, computed, contentChild, effect, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, booleanAttribute, computed, contentChild, effect, input, output, signal } from '@angular/core';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
-import { TxIcon, TxIconName, TxIconRegistry } from '@tectra-ng/icons';
+import { injectTxIcons, provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraMessageTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxMessageCloseIconTemplate, TxMessageIconTemplate } from './message-templates.directive';
 import { TxMessagePart, TxMessageSeverity, TxMessageSize, TxMessageVariant } from './message.types';
+import { MESSAGE_ICON_DEFAULTS } from './message.icons';
 
 @Component({
   selector: 'tx-message',
@@ -26,9 +27,10 @@ import { TxMessagePart, TxMessageSeverity, TxMessageSize, TxMessageVariant } fro
     '[class.tx-message--closing]': 'isClosing()',
     '(animationend)': 'onAnimationEnd($event)',
   },
+  viewProviders: [provideTxIconDefaults(MESSAGE_ICON_DEFAULTS)],
 })
 export class TxMessage {
-  private txIconRegistry = inject(TxIconRegistry);
+  private txIconRegistry = injectTxIcons();
 
   readonly severity = input<TxMessageSeverity>('info');
   readonly text = input<string | undefined>(undefined);

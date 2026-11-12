@@ -4,10 +4,11 @@ import { Router, RouterLink } from '@angular/router';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon, TxIconRegistry } from '@tectra-ng/icons';
+import { injectTxIcons, provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraBreadcrumbTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TxBreadcrumbItemTemplate, TxBreadcrumbSeparatorTemplate } from './breadcrumb.templates';
 import { TxBreadcrumbItem, TxBreadcrumbItemEvent, TxBreadcrumbPart, TxBreadcrumbSeparator } from './breadcrumb.types';
+import { BREADCRUMB_ICON_DEFAULTS } from './breadcrumb.icons';
 
 type TxBreadcrumbKind = 'current' | 'router' | 'url' | 'command' | 'text';
 
@@ -32,9 +33,10 @@ interface TxBreadcrumbEntry {
     '[attr.data-styled]': '!isUnstyled() || null',
     '[attr.data-separator]': 'separator()',
   },
+  viewProviders: [provideTxIconDefaults(BREADCRUMB_ICON_DEFAULTS)],
 })
 export class TxBreadcrumb {
-  private txIconRegistry = inject(TxIconRegistry);
+  private txIconRegistry = injectTxIcons();
   private hasRouter = inject(Router, { optional: true }) !== null;
 
   readonly model = input<readonly TxBreadcrumbItem[]>([]);

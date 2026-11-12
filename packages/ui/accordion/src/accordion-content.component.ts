@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, computed, contentChild, inject, lin
 import { NgTemplateOutlet } from '@angular/common';
 import { TX_ACCORDION, TX_ACCORDION_PANEL } from './accordion.context';
 import { TxAccordionContentTemplate } from './accordion.templates';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { ACCORDION_ICON_DEFAULTS } from './accordion.icons';
 
 @Component({
   selector: 'tx-accordion-content',
@@ -28,6 +30,7 @@ import { TxAccordionContentTemplate } from './accordion.templates';
     '[attr.aria-labelledby]': 'panel.headerId',
     '[attr.inert]': 'panel.active() ? null : ""',
   },
+  viewProviders: [provideTxIconDefaults(ACCORDION_ICON_DEFAULTS)],
 })
 export class TxAccordionContent {
   protected readonly accordion = inject(TX_ACCORDION);

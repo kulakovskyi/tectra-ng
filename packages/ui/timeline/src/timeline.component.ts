@@ -5,6 +5,8 @@ import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraTimelineTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxTimelineConnector, TxTimelineContent, TxTimelineMarker, TxTimelineOpposite } from './timeline.templates';
 import { TxTimelineAlign, TxTimelineEventContext, TxTimelineLayout, TxTimelinePart } from './timeline.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { TIMELINE_ICON_DEFAULTS } from './timeline.icons';
 
 @Component({
   selector: 'tx-timeline',
@@ -20,6 +22,7 @@ import { TxTimelineAlign, TxTimelineEventContext, TxTimelineLayout, TxTimelinePa
     '[attr.data-layout]': 'layout()',
     '[attr.data-align]': 'resolvedAlign()',
   },
+  viewProviders: [provideTxIconDefaults(TIMELINE_ICON_DEFAULTS)],
 })
 export class TxTimeline<T = unknown> {
   readonly value = input<readonly T[] | null | undefined>([]);

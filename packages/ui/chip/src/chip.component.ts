@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, booleanAttribute, computed, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input, output } from '@angular/core';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon, TxIconName, TxIconRegistry } from '@tectra-ng/icons';
+import { injectTxIcons, provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraChipTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TxChipPart } from './chip.types';
+import { CHIP_ICON_DEFAULTS } from './chip.icons';
 
 @Component({
   selector: 'tx-chip',
@@ -52,9 +53,10 @@ import { TxChipPart } from './chip.types';
     '[class.tx-chip--image]': '!!image()',
     '[class.tx-chip--removable]': 'removable()',
   },
+  viewProviders: [provideTxIconDefaults(CHIP_ICON_DEFAULTS)],
 })
 export class TxChip {
-  private txIconRegistry = inject(TxIconRegistry);
+  private txIconRegistry = injectTxIcons();
 
   readonly label = input<string | undefined>(undefined);
   readonly icon = input<TxIconName | (string & {}) | undefined>(undefined);

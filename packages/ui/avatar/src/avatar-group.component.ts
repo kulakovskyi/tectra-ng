@@ -3,12 +3,13 @@ import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled 
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
 import { TectraAvatarTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TxPopover, TxPopoverContent, TxPopoverTrigger } from '@tectra-ng/ui/popover';
 import { TxTooltip } from '@tectra-ng/ui/tooltip';
 import { TX_AVATAR_GROUP, TxAvatarGroupContext } from './avatar-group.token';
 import { TxAvatar } from './avatar.component';
 import { TxAvatarGroupPart, TxAvatarShape, TxAvatarSize } from './avatar.types';
+import { AVATAR_ICON_DEFAULTS } from './avatar.icons';
 
 @Component({
   selector: 'tx-avatar-group',
@@ -27,6 +28,7 @@ import { TxAvatarGroupPart, TxAvatarShape, TxAvatarSize } from './avatar.types';
     '[attr.data-shape]': 'shape() ?? null',
     '[attr.aria-label]': 'ariaLabel() ?? null',
   },
+  viewProviders: [provideTxIconDefaults(AVATAR_ICON_DEFAULTS)],
 })
 export class TxAvatarGroup {
   readonly max = input<number | undefined, unknown>(undefined, { transform: optionalNumber });

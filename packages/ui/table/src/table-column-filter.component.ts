@@ -15,6 +15,8 @@ import { TX_TABLE } from './table.context';
 import { TX_FILTER_MATCH_MODES, defaultMatchMode, isFilterActive } from './table.filter';
 import { TxColumnFilter, TxFilterMatchMode, TxFilterOperator, TxFilterRule, TxTableColumn, TxTableFilterDisplay } from './table.types';
 import { columnLabel } from './table.utils';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { TABLE_ICON_DEFAULTS } from './table.icons';
 
 const MAX_RULES = 2;
 
@@ -263,6 +265,7 @@ function toDate(value: unknown): Date | null {
     class: 'tx-table-column-filter',
     '[class.tx-table-column-filter--row]': "display() === 'row'",
   },
+  viewProviders: [provideTxIconDefaults(TABLE_ICON_DEFAULTS)],
 })
 export class TxTableColumnFilter {
   private readonly table = inject(TX_TABLE);

@@ -9,6 +9,8 @@ import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/
 import { TxSkeleton } from '@tectra-ng/ui/skeleton';
 import { barListRows } from './bar-list-rows';
 import { TxBarListItem, TxBarListPart } from './bar-list.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { BAR_LIST_ICON_DEFAULTS } from './bar-list.icons';
 
 const SKELETON_ROWS = 5;
 
@@ -25,6 +27,7 @@ const SKELETON_ROWS = 5;
     '[attr.data-styled]': '!isUnstyled() || null',
     '[attr.aria-busy]': 'loading() || null',
   },
+  viewProviders: [provideTxIconDefaults(BAR_LIST_ICON_DEFAULTS)],
 })
 export class TxBarList {
   private locale = inject(TxLocaleService);

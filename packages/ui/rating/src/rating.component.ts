@@ -5,10 +5,11 @@ import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled 
 import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
-import { TxIcon, TxIconName, TxIconRegistry } from '@tectra-ng/icons';
+import { injectTxIcons, provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraRatingTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxRatingOffIconTemplate, TxRatingOnIconTemplate } from './rating-templates.directive';
 import { TxRatingChangeEvent, TxRatingPart, TxRatingSize } from './rating.types';
+import { RATING_ICON_DEFAULTS } from './rating.icons';
 
 @Component({
   selector: 'tx-rating',
@@ -28,9 +29,10 @@ import { TxRatingChangeEvent, TxRatingPart, TxRatingSize } from './rating.types'
     '[class.tx-rating--invalid]': 'isInvalid()',
     '[class.tx-rating--preview]': 'preview() !== null',
   },
+  viewProviders: [provideTxIconDefaults(RATING_ICON_DEFAULTS)],
 })
 export class TxRating extends TxFormControlBase<number> {
-  private txIconRegistry = inject(TxIconRegistry);
+  private txIconRegistry = injectTxIcons();
   private localeService = inject(TxLocaleService);
 
   readonly stars = input<number, unknown>(5, { transform: numberAttribute });

@@ -2,11 +2,12 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIconName } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIconName } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraEmailSuggestionTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxButton } from '@tectra-ng/ui/button';
 import { TxEmailSuggestionPart, TxEmailSuggestionResult } from './email-suggestion.types';
 import { TX_COMMON_EMAIL_DOMAINS, suggestEmail } from './suggest-email';
+import { EMAIL_SUGGESTION_ICON_DEFAULTS } from './email-suggestion.icons';
 
 @Component({
   selector: 'tx-email-suggestion',
@@ -62,6 +63,7 @@ import { TX_COMMON_EMAIL_DOMAINS, suggestEmail } from './suggest-email';
       }
     }
   `,
+  viewProviders: [provideTxIconDefaults(EMAIL_SUGGESTION_ICON_DEFAULTS)],
 })
 export class TxEmailSuggestion {
   readonly value = input<string | null | undefined>('');

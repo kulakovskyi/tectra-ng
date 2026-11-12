@@ -19,7 +19,7 @@ import { FormsModule } from '@angular/forms';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraPaginatorTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxInput } from '@tectra-ng/ui/input';
 import { TxSelect } from '@tectra-ng/ui/select';
@@ -27,6 +27,7 @@ import { map, of, switchMap } from 'rxjs';
 import { TxPaginatorEnd, TxPaginatorStart } from './paginator.templates';
 import { TxPageState, TxPaginatorPart, TxRowsPerPageItem, TxRowsPerPageOption } from './paginator.types';
 import { firstToPage, pageCountOf, pageLinksOf, pageToFirst } from './paginator.utils';
+import { PAGINATOR_ICON_DEFAULTS } from './paginator.icons';
 
 @Component({
   selector: 'tx-paginator',
@@ -43,6 +44,7 @@ import { firstToPage, pageCountOf, pageLinksOf, pageToFirst } from './paginator.
     '[class.tx-paginator--with-total]': 'showTotal()',
     '[attr.hidden]': '!visible() || null',
   },
+  viewProviders: [provideTxIconDefaults(PAGINATOR_ICON_DEFAULTS)],
 })
 export class TxPaginator {
   private localeService = inject(TxLocaleService);

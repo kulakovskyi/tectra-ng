@@ -23,6 +23,8 @@ import { TxButton, TxButtonSeverity, TxButtonSize } from '@tectra-ng/ui/button';
 import { TxMenuItem, TxMenuItemEvent } from '@tectra-ng/ui/menu';
 import { TxTooltip } from '@tectra-ng/ui/tooltip';
 import { TxSpeedDialDirection, TxSpeedDialPart, TxSpeedDialType } from './speed-dial.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { SPEED_DIAL_ICON_DEFAULTS } from './speed-dial.icons';
 
 const ARCS: Record<string, [number, number]> = {
   'semi-circle up': [180, 360],
@@ -62,6 +64,7 @@ const LINEAR: Record<string, [number, number]> = {
     '[class.tx-speed-dial--open]': 'visible()',
     '[class.tx-speed-dial--rotate]': '!hideIcon()',
   },
+  viewProviders: [provideTxIconDefaults(SPEED_DIAL_ICON_DEFAULTS)],
 })
 export class TxSpeedDial {
   private host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;

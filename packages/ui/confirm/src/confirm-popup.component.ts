@@ -1,10 +1,11 @@
 import { FocusTrapFactory } from '@angular/cdk/a11y';
 import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, InjectionToken, Signal, computed, inject } from '@angular/core';
 import { TxOverlayRef, TxPlacement, parsePlacement, txArrowOffset } from '@tectra-ng/core/overlay';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TxButton } from '@tectra-ng/ui/button';
 import { confirmView } from './confirm-content';
 import { TxConfirmState } from './confirm.types';
+import { CONFIRM_ICON_DEFAULTS } from './confirm.icons';
 
 export interface TxConfirmPopupData {
   state: TxConfirmState;
@@ -69,6 +70,7 @@ export const TX_CONFIRM_POPUP = new InjectionToken<TxConfirmPopupData>('TX_CONFI
     '[attr.data-side]': 'side()',
     '[style]': 'hostStyle()',
   },
+  viewProviders: [provideTxIconDefaults(CONFIRM_ICON_DEFAULTS)],
 })
 export class TxConfirmPopup {
   readonly data = inject(TX_CONFIRM_POPUP);

@@ -19,6 +19,8 @@ import {
   TxHeatmapRow,
   TxHeatmapRowContext,
 } from './heatmap.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { HEATMAP_ICON_DEFAULTS } from './heatmap.icons';
 
 @Component({
   selector: 'tx-heatmap',
@@ -32,6 +34,7 @@ import {
     '[style]': 'hostStyle()',
     '[attr.data-styled]': '!isUnstyled() || null',
   },
+  viewProviders: [provideTxIconDefaults(HEATMAP_ICON_DEFAULTS)],
 })
 export class TxHeatmap {
   readonly translations = injectTranslations();

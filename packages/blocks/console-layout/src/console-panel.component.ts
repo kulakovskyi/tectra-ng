@@ -6,11 +6,12 @@ import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled 
 import { uniqueId } from '@tectra-ng/core/a11y';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraConsoleLayoutTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { filter } from 'rxjs';
 import { TxConsoleLayout } from './console-layout.component';
 import { TxConsolePanelPart } from './console-layout.types';
+import { CONSOLE_LAYOUT_ICON_DEFAULTS } from './console-layout.icons';
 
 @Component({
   selector: 'tx-console-panel',
@@ -69,6 +70,7 @@ import { TxConsolePanelPart } from './console-layout.types';
     '(click)': 'closeOnLink($event)',
     '(keydown.escape)': 'closeFromKeyboard($event)',
   },
+  viewProviders: [provideTxIconDefaults(CONSOLE_LAYOUT_ICON_DEFAULTS)],
 })
 export class TxConsolePanel {
   private readonly layout = inject(TxConsoleLayout, { optional: true });

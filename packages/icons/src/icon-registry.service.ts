@@ -1,24 +1,31 @@
 import { Injectable, signal } from '@angular/core';
 import { TxIconPath, TxIconSet } from './icon.types';
-import { TX_ICONS } from './icons';
 
 @Injectable({ providedIn: 'root' })
 export class TxIconRegistry {
-  private readonly icons = signal<TxIconSet>(TX_ICONS);
+  private readonly icons = signal<TxIconSet>({});
+  private readonly warned = new Set<string>();
 
   register(set: TxIconSet): void {
     this.icons.update((current) => ({ ...current, ...set }));
   }
 
   get(name: string): TxIconPath[] | undefined {
-    return this.icons()[name] ?? this.icons()[withoutPrefix(name)];
+    const icons = this.icons();
+    return icons[name] ?? icons[name.replace(/^pi-/, '')];
   }
 
   has(name: string | undefined): boolean {
-    return !!name && (name in this.icons() || withoutPrefix(name) in this.icons());
+    return !!name && !!this.get(name);
   }
-}
 
-function withoutPrefix(name: string): string {
-  return name.replace(/^pi-/, '');
+  warnMissing(name: string): void {
+    if (this.warned.has(name)) {
+      return;
+    }
+    this.warned.add(name);
+    console.warn(
+      `tectra: no icon named "${name}" is registered. Register the whole set with provideTxIcons(TX_ICONS) or only what you use, for example provideTxIcons({ '${name.replace(/^pi-/, '')}': txIcon… }) from @tectra-ng/icons.`,
+    );
+  }
 }

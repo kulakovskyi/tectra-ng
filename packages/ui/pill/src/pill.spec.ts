@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TxPill } from './pill.component';
 import { TxPillSize, TxPillTone } from './pill.types';
+import { TX_ICONS, provideTxIcons } from '@tectra-ng/icons';
 
 @Component({
   imports: [TxPill],
@@ -17,6 +18,8 @@ class Host {
   readonly size = signal<TxPillSize>('normal');
   removed = 0;
 }
+
+beforeEach(() => TestBed.configureTestingModule({ providers: [provideTxIcons(TX_ICONS)] }));
 
 describe('TxPill', () => {
   let fixture: ComponentFixture<Host>;

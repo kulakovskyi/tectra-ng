@@ -22,12 +22,13 @@ import { TX_FIELD_STATE, TxFormControlBase, injectFieldInvalid } from '@tectra-n
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { TxOverlayInsets, TxPlacement, placementFromPosition, txAnimateEnter, txAnimateLeave, txPositions, watchOrigin, TxOverlayAnchor, txScrollStrategy } from '@tectra-ng/core/overlay';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraColorPickerTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TxInput } from '@tectra-ng/ui/input';
 import { hsbToRgb, parseHex, rgbToHex, rgbToHsb, toHsb } from './color';
 import { txColorHexValidator } from './color-validator';
 import { TxColorFormat, TxColorPickerPart, TxColorPickerSize, TxColorValue, TxHsb } from './color-picker.types';
+import { COLOR_PICKER_ICON_DEFAULTS } from './color-picker.icons';
 
 const clamp = (value: number, min: number, max: number): number => Math.min(max, Math.max(min, value));
 
@@ -55,6 +56,7 @@ const clamp = (value: number, min: number, max: number): number => Math.min(max,
     '[class.tx-color-picker--readonly]': 'readonly()',
     '[class.tx-color-picker--filled]': 'hasColor()',
   },
+  viewProviders: [provideTxIconDefaults(COLOR_PICKER_ICON_DEFAULTS)],
 })
 export class TxColorPicker extends TxFormControlBase<TxColorValue> implements Validator {
   readonly format = input<TxColorFormat>('hex');

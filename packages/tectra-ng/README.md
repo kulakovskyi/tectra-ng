@@ -56,10 +56,11 @@ Then import components from the packages themselves:
 
 ```ts
 import { provideTectra } from '@tectra-ng/core/config';
+import { TX_ICONS, provideTxIcons } from '@tectra-ng/icons';
 import { createTectraPreset } from '@tectra-ng/themes';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideTectra({ preset: createTectraPreset({ primary: 'blue' }) })],
+  providers: [provideTectra({ preset: createTectraPreset({ primary: 'blue' }) }), provideTxIcons(TX_ICONS)],
 };
 ```
 

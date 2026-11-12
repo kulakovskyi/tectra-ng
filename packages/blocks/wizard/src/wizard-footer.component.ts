@@ -2,10 +2,11 @@ import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input, 
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIconName } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIconName } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraWizardTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxButton } from '@tectra-ng/ui/button';
 import { TxWizardFooterPart } from './wizard.types';
+import { WIZARD_ICON_DEFAULTS } from './wizard.icons';
 
 @Component({
   selector: 'tx-wizard-footer',
@@ -67,6 +68,7 @@ import { TxWizardFooterPart } from './wizard.types';
     '[style]': 'hostStyle()',
     '[attr.data-styled]': '!isUnstyled() || null',
   },
+  viewProviders: [provideTxIconDefaults(WIZARD_ICON_DEFAULTS)],
 })
 export class TxWizardFooter {
   readonly nextLabel = input<string | undefined>(undefined);

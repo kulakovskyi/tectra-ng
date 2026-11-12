@@ -26,6 +26,8 @@ import { TxOptionList, TxOptionsBase, TxSelectItem, isSelectableRow } from '@tec
 import { TxTextarea } from '@tectra-ng/ui/textarea';
 import { caretPoint } from './caret';
 import { TxMentionItem, TxMentionTextareaPart } from './mention-textarea.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { MENTION_TEXTAREA_ICON_DEFAULTS } from './mention-textarea.icons';
 
 @Component({
   selector: 'tx-mention-textarea',
@@ -41,6 +43,7 @@ import { TxMentionItem, TxMentionTextareaPart } from './mention-textarea.types';
     '[attr.data-styled]': '!isUnstyled() || null',
     '[class.tx-mention-textarea--open]': 'isOpen()',
   },
+  viewProviders: [provideTxIconDefaults(MENTION_TEXTAREA_ICON_DEFAULTS)],
 })
 export class TxMentionTextarea extends TxOptionsBase<string> {
   readonly suggestions = input<readonly TxMentionItem[]>([]);

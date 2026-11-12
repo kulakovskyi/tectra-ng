@@ -6,6 +6,8 @@ import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TxButton } from '@tectra-ng/ui/button';
 import { injectCurrentDialog } from './dialog-ref';
 import { TxDialogPart } from './dialog.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { DIALOG_ICON_DEFAULTS } from './dialog.icons';
 
 function injectPartStyling() {
   const ref = injectCurrentDialog();
@@ -15,6 +17,7 @@ function injectPartStyling() {
 @Directive({
   selector: '[txDialogTitle]',
   host: { class: 'tx-dialog-header__title', '[id]': 'id' },
+  providers: [provideTxIconDefaults(DIALOG_ICON_DEFAULTS)],
 })
 export class TxDialogTitle {
   private ref = injectCurrentDialog();
@@ -92,6 +95,7 @@ export class TxDialogTitle {
     '[class.tx-dialog-header--drawer]': 'inDrawer()',
     '(pointerdown)': 'ref()?.dragFrom($event)',
   },
+  viewProviders: [provideTxIconDefaults(DIALOG_ICON_DEFAULTS)],
 })
 export class TxDialogHeader {
   readonly ref = injectCurrentDialog();
@@ -132,6 +136,7 @@ export class TxDialogHeader {
     '[style]': 'passThrough().content?.style',
     '[attr.data-styled]': '!isUnstyled() || null',
   },
+  viewProviders: [provideTxIconDefaults(DIALOG_ICON_DEFAULTS)],
 })
 export class TxDialogContent {
   private readonly ref = injectCurrentDialog();
@@ -152,6 +157,7 @@ export class TxDialogContent {
     '[style]': 'passThrough().footer?.style',
     '[attr.data-styled]': '!isUnstyled() || null',
   },
+  viewProviders: [provideTxIconDefaults(DIALOG_ICON_DEFAULTS)],
 })
 export class TxDialogFooter {
   private readonly ref = injectCurrentDialog();
@@ -163,6 +169,7 @@ export class TxDialogFooter {
 @Directive({
   selector: '[txDialogClose]',
   host: { '(click)': 'close()' },
+  providers: [provideTxIconDefaults(DIALOG_ICON_DEFAULTS)],
 })
 export class TxDialogClose {
   private ref = injectCurrentDialog();

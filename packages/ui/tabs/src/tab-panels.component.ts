@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TX_TABS } from './tabs.context';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { TABS_ICON_DEFAULTS } from './tabs.icons';
 
 @Component({
   selector: 'tx-tab-panels',
@@ -29,6 +31,7 @@ import { TX_TABS } from './tabs.context';
     '[attr.data-styled]': '!tabs.isUnstyled() || null',
     '[attr.data-variant]': 'tabs.variant()',
   },
+  viewProviders: [provideTxIconDefaults(TABS_ICON_DEFAULTS)],
 })
 export class TxTabPanels {
   protected readonly tabs = inject(TX_TABS);

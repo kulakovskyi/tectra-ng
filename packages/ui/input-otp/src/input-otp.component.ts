@@ -21,6 +21,8 @@ import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraInputOtpTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxInput } from '@tectra-ng/ui/input';
 import { TxInputOtpPart, TxInputOtpSize, TxInputOtpVariant } from './input-otp.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { INPUT_OTP_ICON_DEFAULTS } from './input-otp.icons';
 
 @Component({
   selector: 'tx-input-otp',
@@ -41,6 +43,7 @@ import { TxInputOtpPart, TxInputOtpSize, TxInputOtpVariant } from './input-otp.t
     '[class.tx-input-otp--invalid]': 'isInvalid()',
     '[class.tx-input-otp--filled]': 'isComplete()',
   },
+  viewProviders: [provideTxIconDefaults(INPUT_OTP_ICON_DEFAULTS)],
 })
 export class TxInputOtp extends TxFormControlBase<string> {
   private generatedId = uniqueId('tx-input-otp');

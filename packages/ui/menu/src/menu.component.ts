@@ -24,6 +24,8 @@ import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraMenuTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxMenuFocus, TxMenuList, TxMenuVariant } from './menu-list.component';
 import { TxMenuItem, TxMenuItemContext, TxMenuItemEvent, TxMenuPart } from './menu.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { MENU_ICON_DEFAULTS } from './menu.icons';
 
 @Directive({ selector: 'ng-template[txMenuItem]' })
 export class TxMenuItemTemplate {
@@ -73,6 +75,7 @@ export class TxMenuItemTemplate {
     '[style]': 'tokens()',
     '[style.display]': 'popup() ? "contents" : null',
   },
+  viewProviders: [provideTxIconDefaults(MENU_ICON_DEFAULTS)],
 })
 export class TxMenu {
   private overlay = inject(TxOverlay);
@@ -217,6 +220,7 @@ export class TxMenu {
     '(keydown.arrowdown)': 'open($event, "first")',
     '(keydown.arrowup)': 'open($event, "last")',
   },
+  providers: [provideTxIconDefaults(MENU_ICON_DEFAULTS)],
 })
 export class TxMenuTrigger {
   readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;

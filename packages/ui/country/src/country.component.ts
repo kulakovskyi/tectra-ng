@@ -6,6 +6,8 @@ import { TectraCountryTokens, TectraDeepPartial, toStyleObject } from '@tectra-n
 import { countryEmoji, countryName, isCountryCode } from './countries';
 import { TxCountryPart, TxCountrySize, TxFlag, TxFlagShape } from './country.types';
 import { TX_FLAG_RESOLVER } from './flags';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { COUNTRY_ICON_DEFAULTS } from './country.icons';
 
 @Component({
   selector: 'tx-country',
@@ -42,6 +44,7 @@ import { TX_FLAG_RESOLVER } from './flags';
     '[attr.aria-label]': 'showName() || !code() ? null : label()',
     '[attr.title]': 'showName() ? null : label()',
   },
+  viewProviders: [provideTxIconDefaults(COUNTRY_ICON_DEFAULTS)],
 })
 export class TxCountry {
   private locale = inject(TxLocaleService);

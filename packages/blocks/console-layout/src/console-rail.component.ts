@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, input } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TxConsoleRailItem } from './console-layout.types';
 import { TX_CONSOLE_RAIL_EXACT_MATCH } from './console-rail-match';
+import { CONSOLE_LAYOUT_ICON_DEFAULTS } from './console-layout.icons';
 
 @Component({
   selector: 'tx-console-rail',
@@ -53,6 +54,7 @@ import { TX_CONSOLE_RAIL_EXACT_MATCH } from './console-rail-match';
   styleUrl: './console-rail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'tx-console-rail', '[attr.data-styled]': '!unstyled() || null' },
+  viewProviders: [provideTxIconDefaults(CONSOLE_LAYOUT_ICON_DEFAULTS)],
 })
 export class TxConsoleRail {
   readonly items = input.required<readonly TxConsoleRailItem[]>();

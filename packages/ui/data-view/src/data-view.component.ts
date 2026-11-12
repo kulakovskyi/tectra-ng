@@ -40,6 +40,8 @@ import {
   TxDataViewSortEvent,
   TxDataViewSortOrder,
 } from './data-view.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { DATA_VIEW_ICON_DEFAULTS } from './data-view.icons';
 
 @Component({
   selector: 'tx-data-view',
@@ -56,6 +58,7 @@ import {
     '[class.tx-data-view--loading]': 'loading()',
     '[attr.aria-busy]': 'loading() || null',
   },
+  viewProviders: [provideTxIconDefaults(DATA_VIEW_ICON_DEFAULTS)],
 })
 export class TxDataView<T = unknown> {
   readonly value = input<readonly T[] | null | undefined>(undefined);

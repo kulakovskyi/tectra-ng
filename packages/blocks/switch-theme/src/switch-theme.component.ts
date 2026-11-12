@@ -2,10 +2,11 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, numberAttr
 import { TxPassThrough, TxPassThroughOptions, TxThemeMode, TxThemeService, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraSwitchThemeTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxSwitchThemePart } from './switch-theme.types';
 import { TX_THEME_REVEAL_EASING, TxThemeReveal } from './theme-reveal.directive';
+import { SWITCH_THEME_ICON_DEFAULTS } from './switch-theme.icons';
 
 @Component({
   selector: 'tx-switch-theme',
@@ -50,6 +51,7 @@ import { TX_THEME_REVEAL_EASING, TxThemeReveal } from './theme-reveal.directive'
     '[attr.data-styled]': '!isUnstyled() || null',
     '[attr.data-mode]': 'theme.mode()',
   },
+  viewProviders: [provideTxIconDefaults(SWITCH_THEME_ICON_DEFAULTS)],
 })
 export class TxSwitchTheme {
   protected readonly theme = inject(TxThemeService);

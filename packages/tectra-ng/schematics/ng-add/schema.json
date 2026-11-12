@@ -36,6 +36,11 @@
       "description": "Add the Onest and JetBrains Mono fonts to index.html.",
       "default": true
     },
+    "icons": {
+      "type": "boolean",
+      "description": "Register all tectra icons with provideTxIcons(TX_ICONS). Turn off to register only the icons the app uses.",
+      "default": true
+    },
     "skipInstall": {
       "type": "boolean",
       "description": "Do not run the package manager after adding missing peer packages.",

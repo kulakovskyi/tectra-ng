@@ -5,6 +5,8 @@ import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraAppFooterTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TxAppFooterLink, TxAppFooterPart, TxAppFooterVariant } from './app-footer.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { APP_FOOTER_ICON_DEFAULTS } from './app-footer.icons';
 
 @Component({
   selector: 'tx-app-footer',
@@ -36,6 +38,7 @@ import { TxAppFooterLink, TxAppFooterPart, TxAppFooterVariant } from './app-foot
     '[attr.data-styled]': '!isUnstyled() || null',
     '[attr.data-variant]': 'variant()',
   },
+  viewProviders: [provideTxIconDefaults(APP_FOOTER_ICON_DEFAULTS)],
 })
 export class TxAppFooter {
   readonly name = input.required<string>();

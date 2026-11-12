@@ -32,6 +32,8 @@ import { TxDiffSide, buildDiffDecorations, diffField, diffGutter, setDiffDecorat
 import { detectTabSize } from './engine/commands';
 import { historyAction } from './engine/history';
 import { TxCodeEditorCompartments, codeEditorBase, tabKeys } from './engine/setup';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { CODE_EDITOR_ICON_DEFAULTS } from './code-editor.icons';
 
 export type TxCodeDiffTokens = TectraCodeDiffTokens & { syntax: TectraCodeSyntaxTokens };
 
@@ -56,6 +58,7 @@ const RECOMPUTE_DELAY = 150;
     role: 'group',
     '[attr.aria-label]': 'ariaLabel() ?? t().codeDiffLabel',
   },
+  viewProviders: [provideTxIconDefaults(CODE_EDITOR_ICON_DEFAULTS)],
 })
 export class TxCodeDiff {
   readonly original = input<string | null>('');

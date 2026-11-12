@@ -4,6 +4,8 @@ import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TxHeatmapCellView } from './heatmap-cell.component';
 import { TxHeatmapLegendItem, TxHeatmapScale } from './heatmap.types';
 import { heatmapLevel } from './heatmap-layout';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { HEATMAP_ICON_DEFAULTS } from './heatmap.icons';
 
 @Component({
   selector: 'tx-heatmap-legend',
@@ -30,6 +32,7 @@ import { heatmapLevel } from './heatmap-layout';
     class: 'tx-heatmap-legend',
     '[attr.data-styled]': '!isUnstyled() || null',
   },
+  viewProviders: [provideTxIconDefaults(HEATMAP_ICON_DEFAULTS)],
 })
 export class TxHeatmapLegend {
   readonly items = input<readonly TxHeatmapLegendItem[]>([]);

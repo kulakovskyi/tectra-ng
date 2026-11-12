@@ -80,6 +80,8 @@ import {
   TxLineChartSeriesToggle,
   TxLineChartStackType,
 } from './line-chart.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { LINE_ICON_DEFAULTS } from './line.icons';
 
 const DECIMATE_RATIO = 1.5;
 const OVERVIEW = 44;
@@ -115,6 +117,7 @@ const SLIDE_EASING = 'cubic-bezier(0.22, 1, 0.36, 1)';
     '[class.tx-line-chart--focused]': 'focusedSeries() !== null',
     '[class.tx-line-chart--live]': 'live()',
   },
+  viewProviders: [provideTxIconDefaults(LINE_ICON_DEFAULTS)],
 })
 export class TxLineChart {
   private locale = inject(TxLocaleService);

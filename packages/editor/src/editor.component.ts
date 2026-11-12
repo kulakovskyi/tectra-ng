@@ -30,7 +30,7 @@ import { TxOverlayAnchor, txPositions, txScrollStrategy } from '@tectra-ng/core/
 import { TxStyleLoader } from '@tectra-ng/core/styles';
 import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
 import { TxEditorFormat, TxEditorProseStyles, formatEditorHtml, fromQuillHtml } from '@tectra-ng/editor/content';
-import { TxIcon, TxIconRegistry } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon, TxIconRegistry } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraEditorTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxButton } from '@tectra-ng/ui/button';
 import { TxDialog } from '@tectra-ng/ui/dialog';
@@ -81,6 +81,7 @@ import { TX_EDITOR_EMOJI, TxEditorEmoji, matchEmoji } from './editor.emoji';
 import { TX_EDITOR_SLASH_ITEMS, TxEditorSlashItem, matchSlashItems } from './editor.slash';
 import { editorPlugins } from './engine/setup';
 import { toVideoEmbed, txEditorSchema as schema } from './engine/schema';
+import { EDITOR_ICON_DEFAULTS } from './editor.icons';
 
 export interface TxEditorSuggestionOption {
   id: string;
@@ -128,6 +129,7 @@ const NO_BOX: TxAnchorBox = { left: 0, top: 0, width: 0, height: 0 };
     '[class.tx-editor--full]': 'fullView()',
     '[style.min-height.px]': 'placeholderHeight()',
   },
+  viewProviders: [provideTxIconDefaults(EDITOR_ICON_DEFAULTS)],
 })
 export class TxEditor extends TxFormControlBase<string> {
   private document = inject(DOCUMENT);

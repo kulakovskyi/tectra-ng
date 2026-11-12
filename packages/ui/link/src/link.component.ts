@@ -4,10 +4,11 @@ import { RouterLink } from '@angular/router';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraLinkTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxHighlightTerms, TxHighlightText } from '@tectra-ng/ui/highlight-text';
 import { TxLinkCommands, TxLinkPart, TxLinkType } from './link.types';
+import { LINK_ICON_DEFAULTS } from './link.icons';
 
 const COPIED_FOR = 1600;
 const PROTOCOL = /^[a-z][a-z\d+.-]*:/i;
@@ -25,6 +26,7 @@ const PROTOCOL = /^[a-z][a-z\d+.-]*:/i;
     '[attr.data-styled]': '!isUnstyled() || null',
     '[attr.data-type]': 'type()',
   },
+  viewProviders: [provideTxIconDefaults(LINK_ICON_DEFAULTS)],
 })
 export class TxLink {
   private document = inject(DOCUMENT);

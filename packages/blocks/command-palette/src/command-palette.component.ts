@@ -24,10 +24,11 @@ import { TxFocusTrap, uniqueId } from '@tectra-ng/core/a11y';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon, TxIconName } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraCommandPaletteTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { filterPaletteItems } from './command-palette.pipes';
 import { TxCommandPaletteItem, TxCommandPalettePart } from './command-palette.types';
+import { COMMAND_PALETTE_ICON_DEFAULTS } from './command-palette.icons';
 
 const MAC = /mac|iphone|ipad/i;
 
@@ -45,6 +46,7 @@ const MAC = /mac|iphone|ipad/i;
     '[class.tx-command-palette--compact]': 'compact()',
     '(document:keydown)': 'onDocumentKeydown($event)',
   },
+  viewProviders: [provideTxIconDefaults(COMMAND_PALETTE_ICON_DEFAULTS)],
 })
 export class TxCommandPalette {
   private readonly document = inject(DOCUMENT);

@@ -6,6 +6,7 @@ import { TxAccordionPanel } from './accordion-panel.component';
 import { TxAccordion } from './accordion.component';
 import { TxAccordionContentTemplate, TxAccordionHeaderTemplate, TxAccordionToggleIconTemplate } from './accordion.templates';
 import { TxAccordionItem, TxAccordionToggleEvent, TxAccordionValue } from './accordion.types';
+import { TX_ICONS, provideTxIcons } from '@tectra-ng/icons';
 
 @Component({
   imports: [TxAccordion, TxAccordionPanel, TxAccordionHeader, TxAccordionContent, TxAccordionContentTemplate],
@@ -73,6 +74,8 @@ class ItemsHost {
 function keydown(target: HTMLElement, key: string): void {
   target.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
 }
+
+beforeEach(() => TestBed.configureTestingModule({ providers: [provideTxIcons(TX_ICONS)] }));
 
 describe('TxAccordion from parts', () => {
   let fixture: ComponentFixture<PartsHost>;

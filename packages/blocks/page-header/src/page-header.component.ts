@@ -4,6 +4,8 @@ import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled 
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraPageHeaderTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxPageHeaderLevel, TxPageHeaderPart } from './page-header.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { PAGE_HEADER_ICON_DEFAULTS } from './page-header.icons';
 
 @Component({
   selector: 'tx-page-header',
@@ -17,6 +19,7 @@ import { TxPageHeaderLevel, TxPageHeaderPart } from './page-header.types';
     '[style]': 'hostStyle()',
     '[attr.data-styled]': '!isUnstyled() || null',
   },
+  viewProviders: [provideTxIconDefaults(PAGE_HEADER_ICON_DEFAULTS)],
 })
 export class TxPageHeader {
   readonly title = input.required<string>();

@@ -4,6 +4,8 @@ import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TxTooltip } from '@tectra-ng/ui/tooltip';
 import { heatmapCellLabel } from './heatmap-layout';
 import { TxHeatmapCell } from './heatmap.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { HEATMAP_ICON_DEFAULTS } from './heatmap.icons';
 
 @Component({
   selector: 'tx-heatmap-cell',
@@ -15,6 +17,7 @@ import { TxHeatmapCell } from './heatmap.types';
     class: 'tx-heatmap-cell',
     '[attr.data-styled]': '!isUnstyled() || null',
   },
+  viewProviders: [provideTxIconDefaults(HEATMAP_ICON_DEFAULTS)],
 })
 export class TxHeatmapCellView {
   readonly cell = input<TxHeatmapCell | null>(null);

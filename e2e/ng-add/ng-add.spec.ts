@@ -26,6 +26,7 @@ test.describe('ng add tectra-ng in a new Angular app', () => {
     expect(config).toMatch(/provideTectra\(\{\s*preset: createTectraPreset\(/);
     expect(config).toContain(`createTectraPreset({ style: '${answers.style}', primary: '${answers.primary}', surface: '${answers.surface}' })`);
     expect(occurrences(config, 'provideTectra(')).toBe(1);
+    expect(occurrences(config, 'provideTxIcons(TX_ICONS)')).toBe(1);
   });
 
   test('adds the fonts to index.html once', () => {
@@ -45,6 +46,8 @@ test.describe('ng add tectra-ng in a new Angular app', () => {
     const preset = createTectraPreset({ style: 'soft', primary: 'violet', surface: 'slate' } as const);
     await expect(button).toHaveCSS('background-color', rgb(preset.light.primary.base));
     expect(await page.evaluate(() => [...document.fonts].some((font) => font.family.includes('Onest')))).toBe(true);
+
+    expect(await page.locator('tx-select .tx-icon path').count()).toBeGreaterThan(0);
 
     await button.click();
     await page.getByRole('combobox', { name: 'City' }).click();

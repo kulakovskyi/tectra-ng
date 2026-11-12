@@ -7,6 +7,8 @@ import { TxButton, TxButtonSeverity, TxButtonSize } from '@tectra-ng/ui/button';
 import { TxButtonGroup } from '@tectra-ng/ui/button-group';
 import { TxMenu, TxMenuFocus, TxMenuItem, TxMenuItemEvent } from '@tectra-ng/ui/menu';
 import { TxSplitButtonPart } from './split-button.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { SPLIT_BUTTON_ICON_DEFAULTS } from './split-button.icons';
 
 @Component({
   selector: 'tx-split-button',
@@ -78,6 +80,7 @@ import { TxSplitButtonPart } from './split-button.types';
     '[attr.data-styled]': '!isUnstyled() || null',
     '[attr.data-filled]': '!outlined() && !text() || null',
   },
+  viewProviders: [provideTxIconDefaults(SPLIT_BUTTON_ICON_DEFAULTS)],
 })
 export class TxSplitButton {
   readonly label = input<string | undefined>(undefined);

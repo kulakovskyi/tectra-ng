@@ -13,9 +13,10 @@ import {
   untracked,
   viewChild,
 } from '@angular/core';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TxTab } from './tab.component';
 import { TX_TABS } from './tabs.context';
+import { TABS_ICON_DEFAULTS } from './tabs.icons';
 
 const SCROLL_GAP = 8;
 
@@ -36,6 +37,7 @@ const SCROLL_GAP = 8;
     '[class.tx-tab-list--raised]': 'tabs.raised()',
     '[class.tx-tab-list--scrollable]': 'tabs.scrollable()',
   },
+  viewProviders: [provideTxIconDefaults(TABS_ICON_DEFAULTS)],
 })
 export class TxTabList {
   protected readonly tabs = inject(TX_TABS);

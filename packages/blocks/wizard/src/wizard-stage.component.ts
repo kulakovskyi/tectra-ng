@@ -5,6 +5,8 @@ import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraWizardTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxWizardLayout } from './wizard-layout.component';
 import { TxWizardDirection, TxWizardStagePart } from './wizard.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { WIZARD_ICON_DEFAULTS } from './wizard.icons';
 
 @Component({
   selector: 'tx-wizard-stage',
@@ -35,6 +37,7 @@ import { TxWizardDirection, TxWizardStagePart } from './wizard.types';
     '[attr.data-direction]': 'direction()',
     '[attr.data-responsive]': 'responsive()',
   },
+  viewProviders: [provideTxIconDefaults(WIZARD_ICON_DEFAULTS)],
 })
 export class TxWizardStage {
   private readonly layout = inject(TxWizardLayout, { optional: true });

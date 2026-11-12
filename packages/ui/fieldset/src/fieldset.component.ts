@@ -2,9 +2,10 @@ import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input, 
 import { uniqueId } from '@tectra-ng/core/a11y';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraFieldsetTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxFieldsetPart } from './fieldset.types';
+import { FIELDSET_ICON_DEFAULTS } from './fieldset.icons';
 
 @Component({
   selector: 'tx-fieldset',
@@ -46,6 +47,7 @@ import { TxFieldsetPart } from './fieldset.types';
     '[class.tx-fieldset--collapsed]': 'toggleable() && collapsed()',
     '[class.tx-fieldset--toggleable]': 'toggleable()',
   },
+  viewProviders: [provideTxIconDefaults(FIELDSET_ICON_DEFAULTS)],
 })
 export class TxFieldset {
   readonly legend = input<string | undefined>(undefined);

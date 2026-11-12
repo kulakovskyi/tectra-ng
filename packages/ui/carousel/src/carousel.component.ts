@@ -22,11 +22,12 @@ import {
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { TxSwapEffect, optionalBoolean, txCanAnimate, txCssTime, txSwapMotion } from '@tectra-ng/core/utils';
-import { TxIconName } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIconName } from '@tectra-ng/icons';
 import { TectraCarouselTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TxButton } from '@tectra-ng/ui/button';
 import { TxCarouselFooter, TxCarouselHeader, TxCarouselIndicatorTemplate, TxCarouselItemTemplate } from './carousel.templates';
 import { TxCarouselOrientation, TxCarouselPart, TxCarouselResponsiveOption } from './carousel.types';
+import { CAROUSEL_ICON_DEFAULTS } from './carousel.icons';
 
 const DRAG_START = 6;
 const SWIPE_RATIO = 0.2;
@@ -71,6 +72,7 @@ interface TxCarouselDrag {
     '(focusin)': 'focused.set(true)',
     '(focusout)': 'onFocusOut($event)',
   },
+  viewProviders: [provideTxIconDefaults(CAROUSEL_ICON_DEFAULTS)],
 })
 export class TxCarousel {
   private document = inject(DOCUMENT);

@@ -28,6 +28,8 @@ import {
   TxAccordionToggleEvent,
   TxAccordionValue,
 } from './accordion.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { ACCORDION_ICON_DEFAULTS } from './accordion.icons';
 
 @Component({
   selector: 'tx-accordion',
@@ -43,6 +45,7 @@ import {
     '[style]': 'hostStyle()',
     '[attr.data-styled]': '!isUnstyled() || null',
   },
+  viewProviders: [provideTxIconDefaults(ACCORDION_ICON_DEFAULTS)],
 })
 export class TxAccordion implements TxAccordionContext {
   readonly element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;

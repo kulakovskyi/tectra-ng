@@ -18,13 +18,14 @@ import { TxPassThrough, TxPassThroughOptions, TxTranslations, injectPassThrough,
 import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
 import { TxLocaleService } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIconName } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIconName } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraListInputTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxButton } from '@tectra-ng/ui/button';
 import { TxPill } from '@tectra-ng/ui/pill';
 import { TxTooltip } from '@tectra-ng/ui/tooltip';
 import { TX_LIST_INPUT_LINES, TX_LIST_INPUT_PARSERS, TX_LIST_INPUT_WORDS, txParseList } from './list-input.parsers';
 import { TxListInputParser, TxListInputPart, TxListInputResult, TxListInputType } from './list-input.types';
+import { LIST_INPUT_ICON_DEFAULTS } from './list-input.icons';
 
 const LINE_BREAK = '\n';
 
@@ -55,6 +56,7 @@ const TEXTS: Record<TxListInputType, { placeholder: keyof TxTranslations; hint: 
     '[class.tx-list-input--invalid]': 'isInvalid()',
     '[class.tx-list-input--filled]': '!!text()',
   },
+  viewProviders: [provideTxIconDefaults(LIST_INPUT_ICON_DEFAULTS)],
 })
 export class TxListInput extends TxFormControlBase<string[]> {
   private locale = inject(TxLocaleService);

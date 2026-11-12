@@ -50,6 +50,8 @@ import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { toBoxStats } from './boxplot-stats';
 import { TxBoxShape, TxBoxStats, TxBoxplotChartPart, TxBoxplotEvent, TxBoxplotSeries, TxBoxplotSeriesToggle } from './boxplot-chart.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { BOXPLOT_ICON_DEFAULTS } from './boxplot.icons';
 
 const DEFAULTS = { boxWidth: 0.5, groupGap: 6, whiskerWidth: 0.5 };
 const EDGE_SLACK = 8;
@@ -71,6 +73,7 @@ const EDGE_SLACK = 8;
     '[class.tx-boxplot-chart--active]': 'active() !== null',
     '[class.tx-boxplot-chart--focused]': 'focusedSeries() !== null',
   },
+  viewProviders: [provideTxIconDefaults(BOXPLOT_ICON_DEFAULTS)],
 })
 export class TxBoxplotChart {
   private locale = inject(TxLocaleService);

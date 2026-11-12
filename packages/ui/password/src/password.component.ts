@@ -25,11 +25,12 @@ import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { TxOverlay, TxOverlayRef } from '@tectra-ng/core/overlay';
 import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraPasswordTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxInput } from '@tectra-ng/ui/input';
 import { TxPasswordContentTemplate, TxPasswordFooterTemplate, TxPasswordHeaderTemplate } from './password-templates.directive';
 import { TxPasswordPart, TxPasswordSize, TxPasswordStrength, TxPasswordVariant } from './password.types';
+import { PASSWORD_ICON_DEFAULTS } from './password.icons';
 
 const MEDIUM = '^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})';
 const STRONG = '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})';
@@ -51,6 +52,7 @@ const STRONG = '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})';
     '[class.tx-password--invalid]': 'isInvalid()',
     '[class.tx-password--disabled]': 'isDisabled()',
   },
+  viewProviders: [provideTxIconDefaults(PASSWORD_ICON_DEFAULTS)],
 })
 export class TxPassword extends TxFormControlBase<string> {
   private overlay = inject(TxOverlay);

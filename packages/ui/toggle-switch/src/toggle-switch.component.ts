@@ -7,7 +7,6 @@ import {
   computed,
   contentChild,
   forwardRef,
-  inject,
   input,
   output,
   viewChild,
@@ -17,7 +16,7 @@ import { uniqueId } from '@tectra-ng/core/a11y';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
 import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
 import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
-import { TxIcon, TxIconName, TxIconRegistry } from '@tectra-ng/icons';
+import { injectTxIcons, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraToggleSwitchTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxToggleSwitchHandleTemplate } from './toggle-switch-templates.directive';
 import { TxToggleSwitchChangeEvent, TxToggleSwitchLabelPosition, TxToggleSwitchPart, TxToggleSwitchSize } from './toggle-switch.types';
@@ -43,7 +42,7 @@ import { TxToggleSwitchChangeEvent, TxToggleSwitchLabelPosition, TxToggleSwitchP
   },
 })
 export class TxToggleSwitch extends TxFormControlBase<unknown> {
-  private txIconRegistry = inject(TxIconRegistry);
+  private txIconRegistry = injectTxIcons();
   private generatedId = uniqueId('tx-toggle-switch');
 
   readonly label = input<string | undefined>(undefined);

@@ -2,6 +2,7 @@ import { ApplicationConfig, inject, provideAppInitializer, provideZonelessChange
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideRouter, Router, TitleStrategy, withComponentInputBinding, withInMemoryScrolling, withViewTransitions } from '@angular/router';
 import { provideTxBrandIcons } from '@tectra-ng/brand-icons';
+import { TX_ICONS, provideTxIcons } from '@tectra-ng/icons';
 import { loadTxFlag } from '@tectra-ng/flags';
 import { provideTxFlags, txFlagImages } from '@tectra-ng/ui/country';
 import { provideTectra } from '@tectra-ng/core/config';
@@ -33,6 +34,7 @@ export const appConfig: ApplicationConfig = {
     ),
     { provide: TitleStrategy, useExisting: DocsSeo },
     provideTectra({ preset: Tectra, ripple: true }),
+    provideTxIcons(TX_ICONS),
     provideTxBrandIcons(),
     provideTxFlags(txFlagImages(loadTxFlag)),
   ],

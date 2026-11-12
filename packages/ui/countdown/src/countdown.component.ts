@@ -6,6 +6,8 @@ import { TectraCountdownTokens, TectraDeepPartial, toStyleObject } from '@tectra
 import { TxCountdownValue } from './countdown.templates';
 import { TxCountdownContext, TxCountdownFormat, TxCountdownPart, TxCountdownTarget, TxCountdownUnit } from './countdown.types';
 import { TX_COUNTDOWN_UNIT_MS, formatRemaining, splitRemaining, targetTime } from './countdown.utils';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { COUNTDOWN_ICON_DEFAULTS } from './countdown.icons';
 
 @Component({
   selector: 'tx-countdown',
@@ -31,6 +33,7 @@ import { TX_COUNTDOWN_UNIT_MS, formatRemaining, splitRemaining, targetTime } fro
     '[class.tx-countdown--expired]': 'isExpired()',
     '[class.tx-countdown--paused]': 'paused()',
   },
+  viewProviders: [provideTxIconDefaults(COUNTDOWN_ICON_DEFAULTS)],
 })
 export class TxCountdown {
   readonly value = input<number | undefined, unknown>(undefined, { transform: optionalNumber });

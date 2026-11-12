@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, output } from '@angular/core';
 import { injectTranslations } from '@tectra-ng/core/i18n';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TxIconField } from './icon-field.component';
+import { ICON_FIELD_ICON_DEFAULTS } from './icon-field.icons';
 
 @Component({
   selector: 'tx-input-clear',
@@ -16,6 +17,7 @@ import { TxIconField } from './icon-field.component';
   styleUrl: './input-action.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'tx-input-clear' },
+  viewProviders: [provideTxIconDefaults(ICON_FIELD_ICON_DEFAULTS)],
 })
 export class TxInputClear {
   readonly field = inject(TxIconField);

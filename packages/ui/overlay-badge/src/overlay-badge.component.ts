@@ -5,6 +5,8 @@ import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraOverlayBadgeTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxBadge, TxBadgeSeverity, TxBadgeSize } from '@tectra-ng/ui/badge';
 import { TxOverlayBadgePart, TxOverlayBadgeShape } from './overlay-badge.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { OVERLAY_BADGE_ICON_DEFAULTS } from './overlay-badge.icons';
 
 const FOCUSABLE = 'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
@@ -36,6 +38,7 @@ const FOCUSABLE = 'a[href], button, input, select, textarea, [tabindex]:not([tab
     '[attr.data-styled]': '!isUnstyled() || null',
     '[attr.data-shape]': 'shape()',
   },
+  viewProviders: [provideTxIconDefaults(OVERLAY_BADGE_ICON_DEFAULTS)],
 })
 export class TxOverlayBadge {
   private host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;

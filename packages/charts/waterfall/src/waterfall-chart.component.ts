@@ -44,6 +44,8 @@ import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { waterfallExtent, waterfallSteps } from './waterfall-layout';
 import { TxWaterfallBarEvent, TxWaterfallChartBar, TxWaterfallChartPart, TxWaterfallConnector, TxWaterfallItem, TxWaterfallKind } from './waterfall-chart.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { WATERFALL_ICON_DEFAULTS } from './waterfall.icons';
 
 const DEFAULT_WIDTH = 0.56;
 const LABEL_GAP = 4;
@@ -64,6 +66,7 @@ const LABEL_GAP = 4;
     '[class.tx-waterfall-chart--morph]': 'morph()',
     '[class.tx-waterfall-chart--active]': 'active() !== null',
   },
+  viewProviders: [provideTxIconDefaults(WATERFALL_ICON_DEFAULTS)],
 })
 export class TxWaterfallChart {
   private locale = inject(TxLocaleService);

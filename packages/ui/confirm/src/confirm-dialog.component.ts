@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TxButton } from '@tectra-ng/ui/button';
 import { TxDialogContent, TxDialogFooter, TxDialogHeader, injectDialogData, injectDialogRef } from '@tectra-ng/ui/dialog';
 import { confirmView } from './confirm-content';
 import { TxConfirmState } from './confirm.types';
+import { CONFIRM_ICON_DEFAULTS } from './confirm.icons';
 
 @Component({
   selector: 'tx-confirm-dialog',
@@ -38,6 +39,7 @@ import { TxConfirmState } from './confirm.types';
   `,
   styleUrl: './confirm.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  viewProviders: [provideTxIconDefaults(CONFIRM_ICON_DEFAULTS)],
 })
 export class TxConfirmDialog {
   private ref = injectDialogRef<boolean>();

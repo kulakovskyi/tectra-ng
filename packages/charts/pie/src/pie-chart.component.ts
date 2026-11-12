@@ -49,6 +49,8 @@ import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/
 import { TxPieCenter } from './pie-center.directive';
 import { TxPieCenterData, TxPieChartPart, TxPieData, TxPieSegmentEvent, TxPieSegmentToggle, TxPieTotalFormatter } from './pie-chart.types';
 import { arcAt, pieArcs } from './pie-layout';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { PIE_ICON_DEFAULTS } from './pie.icons';
 
 const MIN_LABEL_ANGLE = (10 * Math.PI) / 180;
 const LEGEND_ITEM_WIDTH = 34;
@@ -75,6 +77,7 @@ const LEGEND_GAP = 10.5;
     '[class.tx-pie-chart--morph]': 'morph()',
     '[class.tx-pie-chart--hovering]': 'hovered() !== null',
   },
+  viewProviders: [provideTxIconDefaults(PIE_ICON_DEFAULTS)],
 })
 export class TxPieChart {
   private locale = inject(TxLocaleService);

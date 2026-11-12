@@ -1,5 +1,7 @@
 import { Directive, ElementRef, effect, inject, input } from '@angular/core';
 import { TxPopover } from './popover.component';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { POPOVER_ICON_DEFAULTS } from './popover.icons';
 
 @Directive({
   selector: '[txPopoverTrigger]',
@@ -9,6 +11,7 @@ import { TxPopover } from './popover.component';
     '[attr.aria-controls]': 'txPopoverTrigger().isOpenFor(host) ? txPopoverTrigger().id : null',
     '(click)': 'txPopoverTrigger().toggle(host)',
   },
+  providers: [provideTxIconDefaults(POPOVER_ICON_DEFAULTS)],
 })
 export class TxPopoverTrigger {
   readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;

@@ -5,13 +5,14 @@ import { ChangeDetectionStrategy, Component, booleanAttribute, computed, content
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon, TxIconName } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraSelectTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxOptionList } from './option-list.component';
 import { TxSelectBase } from './select-base';
 import { TxSelectValueTemplate } from './select-option-template.directive';
 import { foldText, isSelectableRow } from './select-options';
 import { TxSelectChangeEvent, TxSelectItem, TxSelectPart } from './select.types';
+import { SELECT_ICON_DEFAULTS } from './select.icons';
 
 @Component({
   selector: 'tx-select',
@@ -34,6 +35,7 @@ import { TxSelectChangeEvent, TxSelectItem, TxSelectPart } from './select.types'
     '[class.tx-select--filled]': 'hasValue()',
     '[class.tx-select--editable]': 'editable()',
   },
+  viewProviders: [provideTxIconDefaults(SELECT_ICON_DEFAULTS)],
 })
 export class TxSelect extends TxSelectBase<unknown> {
   readonly options = input<readonly unknown[]>([]);

@@ -1,5 +1,7 @@
 import { Directive, ElementRef, InjectionToken, Signal, booleanAttribute, computed, inject, input } from '@angular/core';
 import { TxFluid } from '@tectra-ng/core/fluid';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { FILTERS_PANEL_ICON_DEFAULTS } from './filters-panel.icons';
 
 export interface TxFiltersPanelContext {
   isFieldHidden(key: string): boolean;
@@ -10,7 +12,7 @@ export const TX_FILTERS_PANEL = new InjectionToken<TxFiltersPanelContext>('TX_FI
 
 @Directive({
   selector: '[txFilterField]',
-  providers: [{ provide: TxFluid, useFactory: () => new TxFluid() }],
+  providers: [provideTxIconDefaults(FILTERS_PANEL_ICON_DEFAULTS), { provide: TxFluid, useFactory: () => new TxFluid() }],
   host: {
     class: 'tx-filter-field',
     '[attr.hidden]': 'hidden() ? "" : null',
@@ -32,6 +34,7 @@ export class TxFilterField {
 @Directive({
   selector: '[txFiltersReset]',
   host: { class: 'tx-filters-panel__reset' },
+  providers: [provideTxIconDefaults(FILTERS_PANEL_ICON_DEFAULTS)],
 })
 export class TxFiltersReset {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);

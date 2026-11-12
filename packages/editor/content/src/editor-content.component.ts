@@ -10,6 +10,8 @@ import { TxEditorContentPart, TxEditorImageClickEvent } from './editor-content.t
 import { fromQuillHtml } from './editor-html';
 import { TxEditorProseStyles } from './editor-prose-styles.component';
 import { sanitizeEditorHtml } from './editor-sanitizer';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { CONTENT_ICON_DEFAULTS } from './content.icons';
 
 @Component({
   selector: 'tx-editor-content',
@@ -48,6 +50,7 @@ import { sanitizeEditorHtml } from './editor-sanitizer';
     '[attr.data-styled]': '!isUnstyled() || null',
     '[class.tx-editor-content--zoom]': 'previewImages()',
   },
+  viewProviders: [provideTxIconDefaults(CONTENT_ICON_DEFAULTS)],
 })
 export class TxEditorContent {
   private sanitizer = inject(DomSanitizer);

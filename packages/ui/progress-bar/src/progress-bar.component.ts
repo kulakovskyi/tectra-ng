@@ -6,6 +6,8 @@ import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraProgressBarTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxProgressBarValueTemplate } from './progress-bar-templates.directive';
 import { TxProgressBarMode, TxProgressBarPart, TxProgressBarSeverity, TxProgressBarSize } from './progress-bar.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { PROGRESS_BAR_ICON_DEFAULTS } from './progress-bar.icons';
 
 @Component({
   selector: 'tx-progress-bar',
@@ -43,6 +45,7 @@ import { TxProgressBarMode, TxProgressBarPart, TxProgressBarSeverity, TxProgress
     '[attr.aria-valuetext]': 'mode() === "determinate" ? text() : null',
     '[attr.aria-busy]': 'mode() === "indeterminate" || null',
   },
+  viewProviders: [provideTxIconDefaults(PROGRESS_BAR_ICON_DEFAULTS)],
 })
 export class TxProgressBar {
   private localeService = inject(TxLocaleService);

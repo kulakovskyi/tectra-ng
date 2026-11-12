@@ -20,7 +20,7 @@ import { IsActiveMatchOptions, NavigationEnd, Router, RouterLink, containsTree }
 import { uniqueId } from '@tectra-ng/core/a11y';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon, TxIconRegistry } from '@tectra-ng/icons';
+import { injectTxIcons, provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraPanelMenuTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxBadge } from '@tectra-ng/ui/badge';
 import { filter, map } from 'rxjs';
@@ -33,6 +33,7 @@ import {
   TxPanelMenuPart,
   TxPanelMenuVariant,
 } from './panel-menu.types';
+import { PANEL_MENU_ICON_DEFAULTS } from './panel-menu.icons';
 
 export interface TxPanelMenuNode {
   item: TxPanelMenuItem;
@@ -72,11 +73,12 @@ const EXACT_MATCH: IsActiveMatchOptions = { paths: 'exact', queryParams: 'exact'
     '[attr.role]': 'ariaLabel() ? "navigation" : null',
     '[attr.aria-label]': 'ariaLabel() ?? null',
   },
+  viewProviders: [provideTxIconDefaults(PANEL_MENU_ICON_DEFAULTS)],
 })
 export class TxPanelMenu {
   private readonly router = inject(Router, { optional: true });
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
-  private readonly txIconRegistry = inject(TxIconRegistry);
+  private readonly txIconRegistry = injectTxIcons();
   private readonly baseId = uniqueId('tx-panel-menu');
 
   readonly model = input<TxPanelMenuItem[]>([]);

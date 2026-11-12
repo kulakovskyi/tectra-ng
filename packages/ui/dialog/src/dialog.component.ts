@@ -21,6 +21,8 @@ import { TX_DIALOG_CURRENT, TxDialogRef } from './dialog-ref';
 import { TxDialogContent, TxDialogHeader } from './dialog-parts.component';
 import { TxDialogService } from './dialog.service';
 import { TxDialogAutoFocus, TxDialogPosition, TxDialogRole, TxDialogSize, TxDialogTemplateContext, TxDrawerPosition, TxDrawerSize } from './dialog.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { DIALOG_ICON_DEFAULTS } from './dialog.icons';
 
 @Component({
   selector: 'tx-dialog',
@@ -40,6 +42,7 @@ import { TxDialogAutoFocus, TxDialogPosition, TxDialogRole, TxDialogSize, TxDial
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{ provide: TX_DIALOG_CURRENT, useFactory: () => signal<TxDialogRef | null>(null) }],
   host: { class: 'tx-dialog-host', style: 'display: contents' },
+  viewProviders: [provideTxIconDefaults(DIALOG_ICON_DEFAULTS)],
 })
 export class TxDialog {
   private dialogs = inject(TxDialogService);

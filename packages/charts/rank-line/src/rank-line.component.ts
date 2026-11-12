@@ -38,6 +38,8 @@ import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { rankLineColor, rankTickStep, rankTimeExtent, rankY } from './rank-line-layout';
 import { TxRankLineEvent, TxRankLinePart, TxRankMarker, TxRankSeries } from './rank-line.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { RANK_LINE_ICON_DEFAULTS } from './rank-line.icons';
 
 const HIT_DISTANCE = 24;
 
@@ -55,6 +57,7 @@ const HIT_DISTANCE = 24;
     '[class.tx-rank-chart--entering]': 'entrance.active()',
     '[class.tx-rank-chart--hovering]': 'active() !== null',
   },
+  viewProviders: [provideTxIconDefaults(RANK_LINE_ICON_DEFAULTS)],
 })
 export class TxRankChart {
   private locale = inject(TxLocaleService);

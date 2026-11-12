@@ -8,6 +8,8 @@ import { TxTab } from './tab.component';
 import { TxTabList } from './tab-list.component';
 import { TX_TABS, TxTabRegistration, TxTabsContext } from './tabs.context';
 import { TxTabItem, TxTabValue, TxTabsOrientation, TxTabsPart, TxTabsSize, TxTabsVariant } from './tabs.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { TABS_ICON_DEFAULTS } from './tabs.icons';
 
 @Component({
   selector: 'tx-tabs',
@@ -50,6 +52,7 @@ import { TxTabItem, TxTabValue, TxTabsOrientation, TxTabsPart, TxTabsSize, TxTab
     '[attr.data-orientation]': 'orientation()',
     '[class.tx-tabs--raised]': 'raised()',
   },
+  viewProviders: [provideTxIconDefaults(TABS_ICON_DEFAULTS)],
 })
 export class TxTabs implements TxTabsContext {
   private baseId = uniqueId('tx-tabs');

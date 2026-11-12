@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
-import { TxIcon, TxIconRegistry } from '@tectra-ng/icons';
+import { injectTxIcons, provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TX_ACCORDION, TX_ACCORDION_PANEL } from './accordion.context';
+import { ACCORDION_ICON_DEFAULTS } from './accordion.icons';
 
 @Component({
   selector: 'tx-accordion-header',
@@ -48,11 +49,12 @@ import { TX_ACCORDION, TX_ACCORDION_PANEL } from './accordion.context';
     '[attr.role]': 'headingLevel() ? "heading" : null',
     '[attr.aria-level]': 'headingLevel() ?? null',
   },
+  viewProviders: [provideTxIconDefaults(ACCORDION_ICON_DEFAULTS)],
 })
 export class TxAccordionHeader {
   protected readonly accordion = inject(TX_ACCORDION);
   protected readonly panel = inject(TX_ACCORDION_PANEL);
-  private txIconRegistry = inject(TxIconRegistry);
+  private txIconRegistry = injectTxIcons();
 
   readonly headingLevel = input<number | undefined>(undefined);
 

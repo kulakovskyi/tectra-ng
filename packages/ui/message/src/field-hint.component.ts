@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { injectDescribedBy, uniqueId } from '@tectra-ng/core/a11y';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon, TxIconName, TxIconRegistry } from '@tectra-ng/icons';
+import { injectTxIcons, provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraFieldMessageTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxFieldHintSeverity, TxFieldMessagePart } from './message.types';
+import { MESSAGE_ICON_DEFAULTS } from './message.icons';
 
 @Component({
   selector: 'tx-field-hint',
@@ -31,9 +32,10 @@ import { TxFieldHintSeverity, TxFieldMessagePart } from './message.types';
     '[attr.data-styled]': '!isUnstyled() || null',
     '[attr.data-severity]': 'severity()',
   },
+  viewProviders: [provideTxIconDefaults(MESSAGE_ICON_DEFAULTS)],
 })
 export class TxFieldHint {
-  private txIconRegistry = inject(TxIconRegistry);
+  private txIconRegistry = injectTxIcons();
   private generatedId = uniqueId('tx-field-hint');
 
   readonly for = input<string | undefined>(undefined);

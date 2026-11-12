@@ -3,6 +3,8 @@ import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled 
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraSparklineTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxSparklinePart, TxSparklinePoint, TxSparklineTone } from './sparkline.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { SPARKLINE_ICON_DEFAULTS } from './sparkline.icons';
 
 const WIDTH = 120;
 const HEIGHT = 36;
@@ -50,6 +52,7 @@ export function sparklinePoints(values: readonly number[]): TxSparklinePoint[] {
     '[attr.aria-label]': 'ariaLabel() || null',
     '[attr.aria-hidden]': 'ariaLabel() ? null : "true"',
   },
+  viewProviders: [provideTxIconDefaults(SPARKLINE_ICON_DEFAULTS)],
 })
 export class TxSparkline {
   readonly values = input<readonly number[] | null | undefined>([]);

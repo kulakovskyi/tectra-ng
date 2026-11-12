@@ -9,6 +9,7 @@ import { TxStepper } from './stepper.component';
 import { TxStepContent, TxStepPanelContent, TxStepsItemTemplate } from './stepper.templates';
 import { TxSteps } from './steps.component';
 import { TxStepValue, TxStepsCommandEvent, TxStepsItem, TxStepsVariant } from './stepper.types';
+import { TX_ICONS, provideTxIcons } from '@tectra-ng/icons';
 
 @Component({
   imports: [TxStepper, TxStepList, TxStep, TxStepPanels, TxStepPanel, TxStepPanelContent],
@@ -122,6 +123,8 @@ function setup<T>(component: new () => T): ComponentFixture<T> {
   fixture.autoDetectChanges();
   return fixture;
 }
+
+beforeEach(() => TestBed.configureTestingModule({ providers: [provideTxIcons(TX_ICONS)] }));
 
 describe('TxStepper', () => {
   let fixture: ComponentFixture<StepperHost>;

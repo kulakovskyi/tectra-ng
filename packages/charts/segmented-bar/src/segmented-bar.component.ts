@@ -6,6 +6,8 @@ import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { segmentedBarSegments } from './segmented-bar-segments';
 import { TxSegmentedBarItem, TxSegmentedBarPart, TxSegmentedBarSize } from './segmented-bar.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { SEGMENTED_BAR_ICON_DEFAULTS } from './segmented-bar.icons';
 
 @Component({
   selector: 'tx-segmented-bar',
@@ -20,6 +22,7 @@ import { TxSegmentedBarItem, TxSegmentedBarPart, TxSegmentedBarSize } from './se
     '[attr.data-size]': 'size()',
     '[class.tx-segmented-bar--mono]': 'monoLabels()',
   },
+  viewProviders: [provideTxIconDefaults(SEGMENTED_BAR_ICON_DEFAULTS)],
 })
 export class TxSegmentedBar {
   private locale = inject(TxLocaleService);

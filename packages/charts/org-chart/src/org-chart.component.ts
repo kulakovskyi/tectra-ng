@@ -40,6 +40,8 @@ import {
   TxOrgChartTreeState,
   TxOrgChartView,
 } from './org-chart.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { ORG_CHART_ICON_DEFAULTS } from './org-chart.icons';
 
 type TxFullscreenElement = HTMLElement & { webkitRequestFullscreen?: () => Promise<void> | void };
 type TxFullscreenDocument = Document & { webkitFullscreenElement?: Element | null; webkitExitFullscreen?: () => Promise<void> | void };
@@ -66,6 +68,7 @@ const DEFAULT_HEIGHT = 'calc(100vh - 15rem)';
     '(document:webkitfullscreenchange)': 'onFullscreenChange()',
     '(document:keydown.escape)': 'exitOverlayFullscreen()',
   },
+  viewProviders: [provideTxIconDefaults(ORG_CHART_ICON_DEFAULTS)],
 })
 export class TxOrgChart implements OnDestroy {
   private document = inject(DOCUMENT);

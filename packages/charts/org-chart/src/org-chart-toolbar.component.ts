@@ -8,6 +8,8 @@ import { TxPill } from '@tectra-ng/ui/pill';
 import { TxPopover, TxPopoverTrigger } from '@tectra-ng/ui/popover';
 import { TxTooltip } from '@tectra-ng/ui/tooltip';
 import { TxOrgChartLabels, TxOrgChartToolbarState } from './org-chart.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { ORG_CHART_ICON_DEFAULTS } from './org-chart.icons';
 
 const SEARCH_DELAY = 400;
 const NARROW_REM = 30;
@@ -21,6 +23,7 @@ const NARROW_REM = 30;
     class: 'tx-org-chart-toolbar',
     'data-drag-ignore': '',
   },
+  viewProviders: [provideTxIconDefaults(ORG_CHART_ICON_DEFAULTS)],
 })
 export class TxOrgChartToolbar {
   readonly state = input.required<TxOrgChartToolbarState>();

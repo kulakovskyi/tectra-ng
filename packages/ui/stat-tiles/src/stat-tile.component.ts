@@ -3,10 +3,11 @@ import { ChangeDetectionStrategy, Component, booleanAttribute, computed, inject,
 import { Params, RouterLink } from '@angular/router';
 import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon, TxIconName } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraStatTileTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxStatTiles } from './stat-tiles.component';
 import { TxStatTileCommands, TxStatTilePart, TxStatTileTone } from './stat-tiles.types';
+import { STAT_TILES_ICON_DEFAULTS } from './stat-tiles.icons';
 
 @Component({
   selector: 'tx-stat-tile',
@@ -26,6 +27,7 @@ import { TxStatTileCommands, TxStatTilePart, TxStatTileTone } from './stat-tiles
     '[attr.data-styled]': '!isUnstyled() || null',
     '[attr.data-tone]': 'tone()',
   },
+  viewProviders: [provideTxIconDefaults(STAT_TILES_ICON_DEFAULTS)],
 })
 export class TxStatTile {
   private tiles = inject(TxStatTiles, { optional: true });

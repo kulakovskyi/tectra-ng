@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, ElementRef, booleanAttribute, compu
 import { uniqueId } from '@tectra-ng/core/a11y';
 import { TX_ACCORDION, TX_ACCORDION_PANEL, TxAccordionPanelContext } from './accordion.context';
 import { TxAccordionItem, TxAccordionPanelValue, TxAccordionTone } from './accordion.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { ACCORDION_ICON_DEFAULTS } from './accordion.icons';
 
 @Component({
   selector: 'tx-accordion-panel',
@@ -17,6 +19,7 @@ import { TxAccordionItem, TxAccordionPanelValue, TxAccordionTone } from './accor
     '[attr.data-tone]': 'tone() ?? null',
     '[attr.data-value]': 'value()',
   },
+  viewProviders: [provideTxIconDefaults(ACCORDION_ICON_DEFAULTS)],
 })
 export class TxAccordionPanel implements TxAccordionPanelContext {
   protected readonly accordion = inject(TX_ACCORDION);

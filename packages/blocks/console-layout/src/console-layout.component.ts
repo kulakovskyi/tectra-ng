@@ -11,6 +11,8 @@ import { filter, of } from 'rxjs';
 import { TxConsoleDocument } from './console-document.service';
 import { TxConsoleLayoutPart, TxConsoleRailItem, TxConsoleResponsive, TxConsoleTranslate } from './console-layout.types';
 import { TxConsoleRail } from './console-rail.component';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { CONSOLE_LAYOUT_ICON_DEFAULTS } from './console-layout.icons';
 
 @Component({
   selector: 'tx-console-layout',
@@ -26,6 +28,7 @@ import { TxConsoleRail } from './console-rail.component';
     '[attr.data-styled]': '!isUnstyled() || null',
     '[attr.data-responsive]': 'responsive()',
   },
+  viewProviders: [provideTxIconDefaults(CONSOLE_LAYOUT_ICON_DEFAULTS)],
 })
 export class TxConsoleLayout {
   private readonly router = inject(Router, { optional: true });

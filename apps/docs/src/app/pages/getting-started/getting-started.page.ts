@@ -77,11 +77,13 @@ export default class GettingStartedPage {
       this.surface() !== 'ink' ? `surface: '${this.surface()}'` : '',
     ].filter(Boolean);
     return `import { provideTectra } from '@tectra-ng/core/config';
+import { TX_ICONS, provideTxIcons } from '@tectra-ng/icons';
 import { createTectraPreset } from '@tectra-ng/themes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideTectra({ preset: createTectraPreset({ ${options.join(', ')} }) }),
+    provideTxIcons(TX_ICONS),
   ],
 };`;
   });

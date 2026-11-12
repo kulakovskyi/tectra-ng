@@ -3,6 +3,8 @@ import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled 
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraWizardTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxWizardLayoutPart, TxWizardResponsive } from './wizard.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { WIZARD_ICON_DEFAULTS } from './wizard.icons';
 
 @Component({
   selector: 'tx-wizard-layout',
@@ -37,6 +39,7 @@ import { TxWizardLayoutPart, TxWizardResponsive } from './wizard.types';
     '[attr.data-styled]': '!isUnstyled() || null',
     '[attr.data-responsive]': 'responsive()',
   },
+  viewProviders: [provideTxIconDefaults(WIZARD_ICON_DEFAULTS)],
 })
 export class TxWizardLayout {
   readonly responsive = input<TxWizardResponsive>('viewport');

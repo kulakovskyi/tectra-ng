@@ -4,6 +4,8 @@ import { TxMenuItem } from '@tectra-ng/ui/menu';
 import { TxSplitButton } from '@tectra-ng/ui/split-button';
 import { TX_EXPORT_ICONS, TxExportAction } from './export-action.directive';
 import { TxExportFormat, TxExportRow } from './export.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { EXPORT_ICON_DEFAULTS } from './export.icons';
 
 export type TxExportMenuPart = 'root' | 'button';
 
@@ -46,6 +48,7 @@ export const TX_EXPORT_FORMATS: readonly TxExportFormat[] = ['excel', 'csv', 'wo
     '[class]': 'passThrough().root?.class',
     '[style]': 'passThrough().root?.style',
   },
+  viewProviders: [provideTxIconDefaults(EXPORT_ICON_DEFAULTS)],
 })
 export class TxExport<T = TxExportRow> extends TxExportAction<T> {
   readonly formats = input<readonly TxExportFormat[]>(TX_EXPORT_FORMATS);

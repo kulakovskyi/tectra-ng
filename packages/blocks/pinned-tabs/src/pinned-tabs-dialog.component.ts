@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TxButton } from '@tectra-ng/ui/button';
 import { TxDialogContent, TxDialogFooter, TxDialogHeader, injectDialogData, injectDialogRef } from '@tectra-ng/ui/dialog';
 import { TxMessage } from '@tectra-ng/ui/message';
 import { TxPinnedTabsDialogData } from './pinned-tabs.types';
+import { PINNED_TABS_ICON_DEFAULTS } from './pinned-tabs.icons';
 
 @Component({
   selector: 'tx-pinned-tabs-dialog',
@@ -44,6 +45,7 @@ import { TxPinnedTabsDialogData } from './pinned-tabs.types';
   `,
   styleUrl: './pinned-tabs-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  viewProviders: [provideTxIconDefaults(PINNED_TABS_ICON_DEFAULTS)],
 })
 export class TxPinnedTabsDialog {
   private readonly locale = inject(TxLocaleService);

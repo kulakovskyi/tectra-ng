@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, OnInit, booleanAttribute, computed, inject, input } from '@angular/core';
-import { TxIcon, TxIconName, TxIconRegistry } from '@tectra-ng/icons';
+import { injectTxIcons, provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TX_TABS } from './tabs.context';
 import { TxTabValue } from './tabs.types';
+import { TABS_ICON_DEFAULTS } from './tabs.icons';
 
 @Component({
   selector: 'tx-tab, a[txTab], button[txTab]',
@@ -44,10 +45,11 @@ import { TxTabValue } from './tabs.types';
     '[attr.data-value]': 'value()',
     '(click)': 'onClick($event)',
   },
+  viewProviders: [provideTxIconDefaults(TABS_ICON_DEFAULTS)],
 })
 export class TxTab implements OnInit {
   protected readonly tabs = inject(TX_TABS);
-  private txIconRegistry = inject(TxIconRegistry);
+  private txIconRegistry = injectTxIcons();
   readonly element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   protected readonly isButton = this.element.tagName === 'BUTTON';
 

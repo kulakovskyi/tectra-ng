@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TxPanel } from './panel.component';
 import { TxPanelVariant } from './panel.types';
+import { TX_ICONS, provideTxIcons } from '@tectra-ng/icons';
 
 @Component({
   imports: [TxPanel],
@@ -18,6 +19,8 @@ class Host {
   readonly variant = signal<TxPanelVariant>('card');
   collapsed = false;
 }
+
+beforeEach(() => TestBed.configureTestingModule({ providers: [provideTxIcons(TX_ICONS)] }));
 
 describe('TxPanel', () => {
   let fixture: ComponentFixture<Host>;
