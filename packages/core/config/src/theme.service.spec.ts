@@ -5,10 +5,11 @@ import { TxThemeService, injectTokens } from './theme.service';
 
 const tokenStyles = () => [...document.querySelectorAll<HTMLStyleElement>('style[id^="tectra-tokens-"]')];
 
+const clearStyles = () => document.querySelectorAll('#tectra-theme, style[id^="tectra-tokens-"]').forEach((style) => style.remove());
+
 describe('TxThemeService component tokens', () => {
-  afterEach(() => {
-    document.querySelectorAll('#tectra-theme, style[id^="tectra-tokens-"]').forEach((style) => style.remove());
-  });
+  beforeEach(clearStyles);
+  afterEach(clearStyles);
 
   it('writes the preset without component tokens and each registered group once', () => {
     TestBed.configureTestingModule({ providers: [provideTectra({ preset: Tectra })] });
