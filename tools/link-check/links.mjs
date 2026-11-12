@@ -63,10 +63,24 @@ export function htmlLinks(html) {
   return collect(visible, [/<(?:a|link|img|script|source|iframe|area)\b[^>]*?\s(?:href|src)="([^"]*)"/g]);
 }
 
+function textOutsideTags(value) {
+  let text = '';
+  let tag = null;
+  for (const char of value) {
+    if (char === '<') {
+      text += tag ?? '';
+      tag = char;
+    } else if (tag !== null) {
+      tag = char === '>' ? null : tag + char;
+    } else {
+      text += char;
+    }
+  }
+  return text + (tag ?? '');
+}
+
 export function slugify(heading) {
-  return heading
-    .replace(/!?\[([^\]]*)\]\([^)]*\)/g, '$1')
-    .replace(/<[^>]+>/g, '')
+  return textOutsideTags(heading.replace(/!?\[([^\]]*)\]\([^)]*\)/g, '$1'))
     .trim()
     .toLowerCase()
     .replace(/[^\p{L}\p{N}\p{M}\s_-]/gu, '')
@@ -147,7 +161,7 @@ export function sitePathCandidates(path) {
 export function probeUrl(url) {
   const npm = url.match(/^https:\/\/(?:www\.)?npmjs\.com\/package\/((?:@[^/]+\/)?[^/?#]+)(?:\/v\/([^/?#]+))?\/?(?:[?#].*)?$/);
   if (npm) {
-    return `https://registry.npmjs.org/${npm[1].replace('/', '%2F')}${npm[2] ? `/${npm[2]}` : ''}`;
+    return `https://registry.npmjs.org/${npm[1].replaceAll('/', '%2F')}${npm[2] ? `/${npm[2]}` : ''}`;
   }
   return url;
 }

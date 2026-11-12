@@ -62,6 +62,8 @@ describe('anchors', () => {
     assert.equal(slugify('Quick start'), 'quick-start');
     assert.equal(slugify('`provideTectra()` & [links](x.md)'), 'providetectra--links');
     assert.equal(slugify('Ünïcode Wörds'), 'ünïcode-wörds');
+    assert.equal(slugify('Install <code>tectra</code> <img src="x.svg"> now'), 'install-tectra--now');
+    assert.equal(slugify('a < b'), 'a--b');
   });
 
   it('numbers repeated headings and adds explicit ids, not headings in code', () => {
