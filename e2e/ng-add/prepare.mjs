@@ -38,12 +38,12 @@ const manifestPath = join(appDir, 'package.json');
 const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
 manifest.overrides = Object.fromEntries(Object.entries(packed).filter(([name]) => !['tectra-ng', '@tectra-ng/editor', '@tectra-ng/code-editor'].includes(name)).map(([name, file]) => [name, `file:${file}`]));
 writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
-run('npm', ['install', '--no-audit', '--no-fund'], appDir);
+run('npm', ['install', '--no-audit', '--no-fund', packed['tectra-ng'], packed['@tectra-ng/editor'], packed['@tectra-ng/code-editor']], appDir);
 
+const { version } = JSON.parse(readFileSync(join(dist, 'tectra-ng/package.json'), 'utf8'));
 const options = Object.entries(answers).map(([key, value]) => `--${key}=${value}`);
-run('npx', ['ng', 'add', packed['tectra-ng'], '--skip-confirmation', ...options], appDir);
+run('npx', ['ng', 'add', `tectra-ng@${version}`, '--skip-confirmation', ...options], appDir);
 run('npx', ['ng', 'generate', 'tectra-ng:ng-add', '--primary=teal'], appDir);
-run('npm', ['install', '--no-audit', '--no-fund', packed['@tectra-ng/editor'], packed['@tectra-ng/code-editor']], appDir);
 
 writeFileSync(
   join(appDir, 'src/app/app.ts'),
