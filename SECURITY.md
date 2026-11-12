@@ -9,6 +9,29 @@
 
 Security fixes go into the latest minor release of every `@tectra-ng/*` package and `tectra-ng`. A minor release is supported until the next minor release is published; from that day it is end of life and gets no further security updates. Each release's notes on [GitHub Releases](https://github.com/kulakovskyi/tectra-ng/releases) say which version it replaces.
 
+## What you can and cannot expect
+
+tectra is a client-side UI library. It runs inside your application and has the security your application gives it.
+
+**You can expect:**
+
+- Components render text from inputs as text: Angular escapes it, and nothing outside the rich text renderer writes HTML.
+- `tx-editor-content` and the editor sanitize HTML with an allow list — no scripts, event handlers, `javascript:` URLs or frames other than HTTPS and YouTube / Vimeo players.
+- No component sends data anywhere on its own: network calls happen only to URLs your application passes (file upload, a QR code logo image).
+- Nothing is stored in the browser unless you pass a state or draft key.
+- Components work under a Content Security Policy without `unsafe-eval`; no `eval` or `new Function`.
+- Published packages are built only by the release workflow, signed with npm provenance and attestations ([Verifying a release](#verifying-a-release)).
+- Security fixes for the latest minor release within the times below.
+
+**You cannot expect:**
+
+- Protection when your application binds untrusted HTML itself (`[innerHTML]`, `bypassSecurityTrust…`) or turns sanitizing off.
+- Authentication, authorization or server-side validation — form validators and input masks improve input, they do not make it trusted. Validate everything again on your server.
+- Secrecy of data you put into remembered state or editor drafts on a shared device.
+- Fixes for versions older than the latest minor release.
+
+See [THREAT_MODEL.md](THREAT_MODEL.md) for the threats and how they are handled.
+
 ## Reporting a vulnerability
 
 Please do not open a public issue, discussion or pull request for a security problem.

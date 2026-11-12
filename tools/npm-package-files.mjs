@@ -35,7 +35,18 @@ function header(name) {
 `;
 }
 
+function sortIgnoreFile(path) {
+  if (!existsSync(path)) {
+    return;
+  }
+  const lines = readFileSync(path, 'utf8').split('\n').filter(Boolean);
+  const comments = lines.filter((line) => line.startsWith('#'));
+  const entries = lines.filter((line) => !line.startsWith('#')).sort();
+  writeFileSync(path, [...comments, ...entries].join('\n') + '\n');
+}
+
 for (const folder of readdirSync(dist)) {
+  sortIgnoreFile(join(dist, folder, '.npmignore'));
   const readmePath = join(dist, folder, 'README.md');
   const packagePath = join(dist, folder, 'package.json');
   if (!existsSync(readmePath) || !existsSync(packagePath)) {
