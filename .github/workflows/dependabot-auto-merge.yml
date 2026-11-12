@@ -20,8 +20,11 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      actions: write
     steps:
-      - run: gh pr merge "$BRANCH" --squash --repo "$REPO" --match-head-commit "$SHA"
+      - run: |
+          gh pr merge "$BRANCH" --squash --repo "$REPO" --match-head-commit "$SHA"
+          gh workflow run ci.yml --ref main --repo "$REPO"
         env:
           BRANCH: ${{ github.event.workflow_run.head_branch }}
           SHA: ${{ github.event.workflow_run.head_sha }}
