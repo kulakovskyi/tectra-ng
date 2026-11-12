@@ -1,3 +1,13 @@
+## 0.3.2 (2026-11-12)
+
+### 🩹 Fixes
+
+- require Angular 22.2, the lowest version the kit builds on, and test it in CI ([#26](https://github.com/kulakovskyi/tectra-ng/pull/26))
+
+### ❤️ Thank You
+
+- Andriy @kulakovskyi
+
 ## 0.3.1 (2026-11-12)
 
 ### 🩹 Fixes
