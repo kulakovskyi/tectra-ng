@@ -26,7 +26,7 @@ async function openInStackblitz(page: Page, context: BrowserContext, exampleId: 
   });
   const example = page.locator(`section#${exampleId}`);
   await example.scrollIntoViewIfNeeded();
-  await example.getByRole('button', { name: /in StackBlitz$/ }).click();
+  await example.getByRole('button', { name: 'Open in StackBlitz', exact: true }).click();
   return sent;
 }
 
@@ -95,7 +95,7 @@ test.describe('Open in StackBlitz', () => {
 
   test('is a labelled button reached with the keyboard', async ({ page, context }) => {
     await page.goto('/components/button');
-    const button = page.locator('section#severity').getByRole('button', { name: 'Open Severity in StackBlitz' });
+    const button = page.locator('section#severity').getByRole('button', { name: 'Open in StackBlitz', exact: true });
     await expect(button).toHaveAttribute('title', 'Open in StackBlitz');
     await button.focus();
     const sent = new Promise<string>((resolve) => {
