@@ -17,10 +17,12 @@ import {
   renderFilled,
   unmaskedValue,
 } from './mask-engine';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { INPUT_MASK_ICON_DEFAULTS } from './input-mask.icons';
 
 @Directive({
   selector: 'input[txInputMask]',
-  providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => TxInputMask), multi: true }],
+  providers: [provideTxIconDefaults(INPUT_MASK_ICON_DEFAULTS), { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => TxInputMask), multi: true }],
   host: {
     class: 'tx-input-mask',
     '[attr.data-mask]': 'mask()',

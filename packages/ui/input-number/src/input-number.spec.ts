@@ -132,7 +132,7 @@ describe('TxInputNumber', () => {
   });
 
   it('follows the locale separators', async () => {
-    TestBed.inject(TxLocaleService).setLocale('ua');
+    await TestBed.inject(TxLocaleService).setLocale('ua');
     await fixture.whenStable();
     expect(input('price').value).toMatch(/^1\s234,50\sUSD$/);
     await type('1234.5', 'amount');

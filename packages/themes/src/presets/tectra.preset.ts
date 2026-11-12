@@ -1,17 +1,21 @@
 import { ACCENT_PALETTES, SURFACE_PALETTES, TectraColorScale, TectraPrimary, TectraSurface, TectraSurfaceScale } from '@tectra-ng/tokens';
-import { COMPONENT_TOKENS } from '../components/component-tokens';
 import { deepMerge } from '../define-preset';
 import { createDarkSemantic } from '../semantic/dark.semantic';
 import { createLightSemantic } from '../semantic/light.semantic';
-import { TECTRA_STYLES, TectraStyleName } from '../styles/styles';
+import { edgeStyle } from '../styles/edge/edge.style';
+import { paperStyle } from '../styles/paper/paper.style';
+import { softStyle } from '../styles/soft/soft.style';
+import { tectraStyle } from '../styles/tectra.style';
+import { TectraStyle } from '../types/style.interface';
 import { TectraPreset } from '../types/preset.interface';
 
 export interface TectraPresetOptions {
-  style?: TectraStyleName;
+  style?: TectraStyle;
   primary?: TectraPrimary;
   surface?: TectraSurface;
 }
 
+/* @__NO_SIDE_EFFECTS__ */
 export function noirScale(surface: TectraSurfaceScale): TectraColorScale {
   return {
     50: surface[50],
@@ -28,21 +32,25 @@ export function noirScale(surface: TectraSurfaceScale): TectraColorScale {
   };
 }
 
-export function createTectraPreset({ style = 'tectra', primary = 'blue', surface = 'ink' }: TectraPresetOptions = {}): TectraPreset {
+/* @__NO_SIDE_EFFECTS__ */
+export function createTectraPreset({ style = tectraStyle, primary = 'blue', surface = 'ink' }: TectraPresetOptions = {}): TectraPreset {
+  if (typeof style === 'string') {
+    throw new Error(`createTectraPreset takes the style itself, not its name: import { ${String(style)}Style } from '@tectra-ng/themes' and pass { style: ${String(style)}Style }, or TECTRA_STYLES['${String(style)}'] to pick one by name.`);
+  }
   const surfaceScale = SURFACE_PALETTES[surface];
   const palettes = { accent: primary === 'noir' ? noirScale(surfaceScale) : ACCENT_PALETTES[primary], surface: surfaceScale };
-  const definition = TECTRA_STYLES[style];
+  const definition = style;
   return {
-    name: `${style}-${primary}-${surface}`,
+    name: `${definition.name}-${primary}-${surface}`,
     palettes,
     light: deepMerge(createLightSemantic(palettes), definition.light?.(palettes)),
     dark: deepMerge(createDarkSemantic(palettes), definition.dark?.(palettes)),
-    components: deepMerge(COMPONENT_TOKENS, definition.components),
+    components: definition.components ?? {},
     css: definition.css,
   };
 }
 
 export const Tectra = createTectraPreset();
-export const Soft = createTectraPreset({ style: 'soft' });
-export const Edge = createTectraPreset({ style: 'edge' });
-export const Paper = createTectraPreset({ style: 'paper' });
+export const Soft = createTectraPreset({ style: softStyle });
+export const Edge = createTectraPreset({ style: edgeStyle });
+export const Paper = createTectraPreset({ style: paperStyle });

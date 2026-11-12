@@ -4,6 +4,7 @@ import { provideRouter } from '@angular/router';
 import { TxIconLink } from './icon-link.component';
 import { TxLink } from './link.component';
 import { TxLinkType } from './link.types';
+import { TX_ICONS, provideTxIcons } from '@tectra-ng/icons';
 
 @Component({ template: '', changeDetection: ChangeDetectionStrategy.OnPush })
 class Page {}
@@ -24,6 +25,8 @@ class Host {
   readonly type = signal<TxLinkType>('url');
   copiedText = '';
 }
+
+beforeEach(() => TestBed.configureTestingModule({ providers: [provideTxIcons(TX_ICONS)] }));
 
 describe('TxLink and TxIconLink', () => {
   let fixture: ComponentFixture<Host>;

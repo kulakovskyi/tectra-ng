@@ -22,7 +22,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { TxPassThrough, TxPassThroughOptions, TxTranslations, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions, TxTranslations } from '@tectra-ng/core/config';
 import { uniqueId } from '@tectra-ng/core/a11y';
 import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
@@ -30,7 +30,7 @@ import { TxOverlayAnchor, txPositions, txScrollStrategy } from '@tectra-ng/core/
 import { TxStyleLoader } from '@tectra-ng/core/styles';
 import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
 import { TxEditorFormat, TxEditorProseStyles, formatEditorHtml, fromQuillHtml } from '@tectra-ng/editor/content';
-import { TxIcon, TxIconRegistry } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon, TxIconRegistry } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraEditorTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxButton } from '@tectra-ng/ui/button';
 import { TxDialog } from '@tectra-ng/ui/dialog';
@@ -81,6 +81,8 @@ import { TX_EDITOR_EMOJI, TxEditorEmoji, matchEmoji } from './editor.emoji';
 import { TX_EDITOR_SLASH_ITEMS, TxEditorSlashItem, matchSlashItems } from './editor.slash';
 import { editorPlugins } from './engine/setup';
 import { toVideoEmbed, txEditorSchema as schema } from './engine/schema';
+import { EDITOR_ICON_DEFAULTS } from './editor.icons';
+import { EDITOR_THEME } from './editor.theme';
 
 export interface TxEditorSuggestionOption {
   id: string;
@@ -128,8 +130,11 @@ const NO_BOX: TxAnchorBox = { left: 0, top: 0, width: 0, height: 0 };
     '[class.tx-editor--full]': 'fullView()',
     '[style.min-height.px]': 'placeholderHeight()',
   },
+  viewProviders: [provideTxIconDefaults(EDITOR_ICON_DEFAULTS)],
 })
 export class TxEditor extends TxFormControlBase<string> {
+  private readonly editorTheme = injectTokens(EDITOR_THEME);
+
   private document = inject(DOCUMENT);
   private host = inject<ElementRef<HTMLElement>>(ElementRef);
   private destroyRef = inject(DestroyRef);

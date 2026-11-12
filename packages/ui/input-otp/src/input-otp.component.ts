@@ -14,13 +14,16 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraInputOtpTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxInput } from '@tectra-ng/ui/input';
 import { TxInputOtpPart, TxInputOtpSize, TxInputOtpVariant } from './input-otp.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { INPUT_OTP_ICON_DEFAULTS } from './input-otp.icons';
+import { INPUT_OTP_THEME } from './input-otp.theme';
 
 @Component({
   selector: 'tx-input-otp',
@@ -41,8 +44,11 @@ import { TxInputOtpPart, TxInputOtpSize, TxInputOtpVariant } from './input-otp.t
     '[class.tx-input-otp--invalid]': 'isInvalid()',
     '[class.tx-input-otp--filled]': 'isComplete()',
   },
+  viewProviders: [provideTxIconDefaults(INPUT_OTP_ICON_DEFAULTS)],
 })
 export class TxInputOtp extends TxFormControlBase<string> {
+  private readonly inputOtpTheme = injectTokens(INPUT_OTP_THEME);
+
   private generatedId = uniqueId('tx-input-otp');
 
   readonly length = input<number, unknown>(6, { transform: numberAttribute });

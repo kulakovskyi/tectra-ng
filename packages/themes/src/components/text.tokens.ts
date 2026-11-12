@@ -16,7 +16,7 @@ export const amountTokens = {
     fontWeight: tokenRef('font-weight-semibold'),
     strongFontWeight: tokenRef('font-weight-bold'),
     mutedColor: tokenRef('text-muted'),
-    mutedFontWeight: tokenRef('font-weight-normal'),
+    mutedFontWeight: tokenRef('font-weight-regular'),
     positiveColor: lightDark(tokenRef('green-700'), tokenRef('green-400')),
     negativeColor: lightDark(tokenRef('red-700'), tokenRef('red-400')),
   },

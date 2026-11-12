@@ -1,4 +1,4 @@
-import { mix, tokenRef } from './token-helpers';
+import { joinCss, mix, tokenRef } from './token-helpers';
 
 export const pinnedTabsTokens = {
   root: {
@@ -30,7 +30,7 @@ export const pinnedTabsTokens = {
     selectedHoverBackground: mix(tokenRef('primary-base'), '18%', 'transparent'),
     selectedHoverRingColor: tokenRef('primary-base'),
     activeScale: '0.985',
-    focusRingShadow: `0 0 0 2px ${tokenRef('surface-card')}, 0 0 0 4px ${tokenRef('focus-ring-color')}`,
+    focusRingShadow: joinCss('0 0 0 2px ', tokenRef('surface-card'), ', 0 0 0 4px ', tokenRef('focus-ring-color')),
     duration: '150ms',
   },
   check: {

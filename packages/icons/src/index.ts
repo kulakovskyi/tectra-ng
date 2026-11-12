@@ -4,3 +4,4 @@ export * from './is-icon-name';
 export * from './icon-registry.service';
 export * from './provide-icons';
 export * from './icon.component';
+export * from './icon-defaults';

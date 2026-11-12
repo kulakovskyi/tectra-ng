@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "rootDir": "schematics",
+    "outDir": "../../dist/packages/tectra-ng/schematics",
+    "target": "ES2022",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "lib": ["ES2022"],
+    "types": [],
+    "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "skipLibCheck": true,
+    "declaration": false,
+    "sourceMap": false
+  },
+  "include": ["schematics/**/*.ts"],
+  "exclude": ["schematics/**/*.spec.ts"]
+}

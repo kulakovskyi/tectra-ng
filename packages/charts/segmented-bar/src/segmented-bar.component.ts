@@ -1,11 +1,14 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, inject, input } from '@angular/core';
 import { TxChartValueFormat, chartNumberFormatter } from '@tectra-ng/charts/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { segmentedBarSegments } from './segmented-bar-segments';
 import { TxSegmentedBarItem, TxSegmentedBarPart, TxSegmentedBarSize } from './segmented-bar.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { SEGMENTED_BAR_ICON_DEFAULTS } from './segmented-bar.icons';
+import { SEGMENTED_BAR_THEME } from './segmented-bar.theme';
 
 @Component({
   selector: 'tx-segmented-bar',
@@ -20,8 +23,11 @@ import { TxSegmentedBarItem, TxSegmentedBarPart, TxSegmentedBarSize } from './se
     '[attr.data-size]': 'size()',
     '[class.tx-segmented-bar--mono]': 'monoLabels()',
   },
+  viewProviders: [provideTxIconDefaults(SEGMENTED_BAR_ICON_DEFAULTS)],
 })
 export class TxSegmentedBar {
+  private readonly segmentedBarTheme = injectTokens(SEGMENTED_BAR_THEME);
+
   private locale = inject(TxLocaleService);
 
   readonly items = input<readonly TxSegmentedBarItem[] | null | undefined>([]);

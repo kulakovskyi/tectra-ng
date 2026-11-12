@@ -1,5 +1,8 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, input } from '@angular/core';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
+import { LABEL_ICON_DEFAULTS } from './label.icons';
+import { injectTokens } from '@tectra-ng/core/config';
+import { LABEL_THEME } from './label.theme';
 
 @Component({
   selector: 'tx-label',
@@ -18,8 +21,11 @@ import { TxIcon } from '@tectra-ng/icons';
   styleUrl: './label.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'tx-label', '[class.tx-label--subtle]': 'subtle()' },
+  viewProviders: [provideTxIconDefaults(LABEL_ICON_DEFAULTS)],
 })
 export class TxLabel {
+  private readonly labelTheme = injectTokens(LABEL_THEME);
+
   readonly for = input<string | undefined>(undefined);
   readonly required = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly colon = input<boolean, unknown>(false, { transform: booleanAttribute });

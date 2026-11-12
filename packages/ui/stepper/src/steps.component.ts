@@ -1,12 +1,14 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, booleanAttribute, computed, contentChild, inject, input, model } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon, TxIconRegistry } from '@tectra-ng/icons';
+import { injectTxIcons, provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraStepsTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxStepsItemTemplate } from './stepper.templates';
 import { TxStepsItem, TxStepsItemContext, TxStepsPart, TxStepsVariant } from './stepper.types';
+import { STEPPER_ICON_DEFAULTS } from './stepper.icons';
+import { STEPPER_THEME } from './stepper.theme';
 
 interface TxStepsEntry {
   item: TxStepsItem;
@@ -36,9 +38,12 @@ const PREVIOUS_KEYS = ['ArrowLeft', 'ArrowUp'];
     '[attr.data-variant]': 'variant()',
     '[class.tx-steps--readonly]': 'readonly()',
   },
+  viewProviders: [provideTxIconDefaults(STEPPER_ICON_DEFAULTS)],
 })
 export class TxSteps {
-  private readonly txIconRegistry = inject(TxIconRegistry);
+  private readonly stepperTheme = injectTokens(STEPPER_THEME);
+
+  private readonly txIconRegistry = injectTxIcons();
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
   readonly items = input<readonly TxStepsItem[] | null | undefined>([]);

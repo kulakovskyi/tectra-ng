@@ -15,6 +15,7 @@ import {
   INSTALL_EXTRAS,
   INSTALL_MANAGERS,
   INSTALL_NEXT,
+  INSTALL_NG_ADD,
   INSTALL_PACKAGES,
   INSTALL_REQUIREMENTS,
   INSTALL_USE_CODE,
@@ -40,6 +41,7 @@ export default class GettingStartedPage {
   readonly extras = INSTALL_EXTRAS;
   readonly next = INSTALL_NEXT;
   readonly useCode = INSTALL_USE_CODE;
+  readonly ngAdd = INSTALL_NG_ADD;
   readonly managers: TxTabItem[] = INSTALL_MANAGERS.map(({ value, label }) => ({ value, label }));
   readonly modes: TxTabItem[] = [
     { value: 'all', label: 'Everything' },
@@ -70,16 +72,18 @@ export default class GettingStartedPage {
 
   readonly themeCode = computed(() => {
     const options = [
-      this.style() !== 'tectra' ? `style: '${this.style()}'` : '',
+      this.style() !== 'tectra' ? `style: ${this.style()}Style` : '',
       `primary: '${this.primary()}'`,
       this.surface() !== 'ink' ? `surface: '${this.surface()}'` : '',
     ].filter(Boolean);
     return `import { provideTectra } from '@tectra-ng/core/config';
-import { createTectraPreset } from '@tectra-ng/themes';
+import { TX_ICONS, provideTxIcons } from '@tectra-ng/icons';
+import { ${['createTectraPreset', this.style() !== 'tectra' ? `${this.style()}Style` : ''].filter(Boolean).join(', ')} } from '@tectra-ng/themes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideTectra({ preset: createTectraPreset({ ${options.join(', ')} }) }),
+    provideTxIcons(TX_ICONS),
   ],
 };`;
   });

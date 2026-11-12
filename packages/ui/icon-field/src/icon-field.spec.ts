@@ -6,6 +6,7 @@ import { TxIconField } from './icon-field.component';
 import { TxInputClear } from './input-clear.component';
 import { TxInputCopy } from './input-copy.component';
 import { TxInputIcon } from './input-icon.component';
+import { TX_ICONS, provideTxIcons } from '@tectra-ng/icons';
 
 @Component({
   imports: [TxIconField, TxInputIcon, TxInputClear, TxInputCopy, TxInput, ReactiveFormsModule],
@@ -25,6 +26,8 @@ class Host {
   cleared = 0;
   copied = '';
 }
+
+beforeEach(() => TestBed.configureTestingModule({ providers: [provideTxIcons(TX_ICONS)] }));
 
 describe('TxIconField', () => {
   let fixture: ComponentFixture<Host>;

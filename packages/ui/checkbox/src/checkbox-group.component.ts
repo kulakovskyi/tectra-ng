@@ -10,7 +10,7 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
@@ -18,6 +18,9 @@ import { TectraCheckboxTokens, TectraDeepPartial, toStyleObject } from '@tectra-
 import { TX_CHECKBOX_GROUP, TxCheckboxGroupContext } from './checkbox-group.token';
 import { TxCheckbox } from './checkbox.component';
 import { TxCheckboxGroupOrientation, TxCheckboxGroupPart, TxCheckboxSize, TxCheckboxVariant } from './checkbox.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { CHECKBOX_ICON_DEFAULTS } from './checkbox.icons';
+import { CHECKBOX_THEME } from './checkbox.theme';
 
 @Component({
   selector: 'tx-checkbox-group',
@@ -82,8 +85,11 @@ import { TxCheckboxGroupOrientation, TxCheckboxGroupPart, TxCheckboxSize, TxChec
     '[attr.aria-labelledby]': 'ariaLabelledBy() ?? null',
     '[attr.aria-invalid]': 'isInvalid() || null',
   },
+  viewProviders: [provideTxIconDefaults(CHECKBOX_ICON_DEFAULTS)],
 })
 export class TxCheckboxGroup extends TxFormControlBase<unknown[]> {
+  private readonly checkboxTheme = injectTokens(CHECKBOX_THEME);
+
   private readonly registered = signal<unknown[]>([]);
 
   readonly selectAll = input<boolean, unknown>(false, { transform: booleanAttribute });

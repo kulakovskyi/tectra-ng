@@ -4,7 +4,7 @@ import { TxPublicHeader, TxPublicHeaderBrand } from '@tectra-ng/blocks/public-he
 import { TxThemeReveal } from '@tectra-ng/blocks/switch-theme';
 import { TX_FLAG_CODES } from '@tectra-ng/flags';
 import { TX_ICONS, TxIcon } from '@tectra-ng/icons';
-import { Tectra, toCssVariables } from '@tectra-ng/themes';
+import { COMPONENT_TOKENS, Tectra, toCssVariables } from '@tectra-ng/themes';
 import { TxButton } from '@tectra-ng/ui/button';
 import { DOC_COMPONENTS } from '../../generated/registry';
 import { INSTALL_COMMAND } from '../data/home.data';
@@ -59,7 +59,7 @@ export default class LandingPage {
     { value: DOC_COMPONENTS.length, suffix: '+', label: 'components and blocks' },
     { value: Object.keys(TX_ICONS).length, suffix: '', label: 'icons in one style' },
     { value: TX_FLAG_CODES.length, suffix: '', label: 'country flags' },
-    { value: toCssVariables(Tectra.light).length + toCssVariables(Tectra.components).length, suffix: '+', label: 'design tokens' },
+    { value: toCssVariables(Tectra.light).length + toCssVariables(COMPONENT_TOKENS).length, suffix: '+', label: 'design tokens' },
   ];
 
   protected readonly dark = computed(() => this.settings.mode() === 'dark');

@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, input, numberAttribute, signal } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraConfettiTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TX_CONFETTI_PIECES, TxConfettiPart, TxConfettiPiece } from './confetti.types';
+import { CONFETTI_THEME } from './confetti.theme';
 
 @Component({
   selector: 'tx-confetti',
@@ -34,6 +35,8 @@ import { TX_CONFETTI_PIECES, TxConfettiPart, TxConfettiPiece } from './confetti.
   },
 })
 export class TxConfetti {
+  private readonly confettiTheme = injectTokens(CONFETTI_THEME);
+
   readonly pieces = input<readonly TxConfettiPiece[]>(TX_CONFETTI_PIECES);
   readonly delay = input<number, unknown>(0, { transform: numberAttribute });
   readonly dt = input<TectraDeepPartial<TectraConfettiTokens> | undefined>(undefined);

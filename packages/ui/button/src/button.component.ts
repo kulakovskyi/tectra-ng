@@ -14,15 +14,17 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectFluid } from '@tectra-ng/core/fluid';
 import { TxRipple } from '@tectra-ng/core/ripple';
 import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
-import { TxIcon, TxIconName, TxIconRegistry } from '@tectra-ng/icons';
+import { injectTxIcons, provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraButtonTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TxBadge, TxBadgeSeverity } from '@tectra-ng/ui/badge';
 import { TxButtonIconTemplate, TxButtonLoadingIconTemplate } from './button-templates.directive';
 import { TxButtonIconPosition, TxButtonPart, TxButtonSeverity, TxButtonSize, TxButtonVariant } from './button.types';
+import { BUTTON_ICON_DEFAULTS } from './button.icons';
+import { BUTTON_THEME } from './button.theme';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector -- an attribute on native button / a keeps native behaviour
@@ -54,10 +56,13 @@ import { TxButtonIconPosition, TxButtonPart, TxButtonSeverity, TxButtonSize, TxB
     '[attr.tabindex]': '!isNativeButton && isDisabled() ? -1 : (tabindex() ?? null)',
     '[attr.aria-busy]': 'loading() || null',
   },
+  viewProviders: [provideTxIconDefaults(BUTTON_ICON_DEFAULTS)],
 })
 export class TxButton implements AfterViewInit {
+  private readonly buttonTheme = injectTokens(BUTTON_THEME);
+
   private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-  private txIconRegistry = inject(TxIconRegistry);
+  private txIconRegistry = injectTxIcons();
 
   readonly label = input<string | number | undefined>(undefined);
   readonly severity = input<TxButtonSeverity>('primary');

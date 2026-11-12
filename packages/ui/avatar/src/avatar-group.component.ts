@@ -1,14 +1,16 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, contentChildren, inject, input, output } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
 import { TectraAvatarTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TxPopover, TxPopoverContent, TxPopoverTrigger } from '@tectra-ng/ui/popover';
 import { TxTooltip } from '@tectra-ng/ui/tooltip';
 import { TX_AVATAR_GROUP, TxAvatarGroupContext } from './avatar-group.token';
 import { TxAvatar } from './avatar.component';
 import { TxAvatarGroupPart, TxAvatarShape, TxAvatarSize } from './avatar.types';
+import { AVATAR_ICON_DEFAULTS } from './avatar.icons';
+import { AVATAR_THEME } from './avatar.theme';
 
 @Component({
   selector: 'tx-avatar-group',
@@ -27,8 +29,11 @@ import { TxAvatarGroupPart, TxAvatarShape, TxAvatarSize } from './avatar.types';
     '[attr.data-shape]': 'shape() ?? null',
     '[attr.aria-label]': 'ariaLabel() ?? null',
   },
+  viewProviders: [provideTxIconDefaults(AVATAR_ICON_DEFAULTS)],
 })
 export class TxAvatarGroup {
+  private readonly avatarTheme = injectTokens(AVATAR_THEME);
+
   readonly max = input<number | undefined, unknown>(undefined, { transform: optionalNumber });
   readonly size = input<TxAvatarSize | number | undefined>(undefined);
   readonly shape = input<TxAvatarShape | undefined>(undefined);

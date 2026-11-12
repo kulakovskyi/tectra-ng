@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, isDevMode } from '@angular/core';
+import { injectTxIcons } from './icon-defaults';
 import { TxIconRegistry } from './icon-registry.service';
 import { TxIconName } from './icons';
 
@@ -35,14 +36,22 @@ import { TxIconName } from './icons';
 })
 export class TxIcon {
   private txIconRegistry = inject(TxIconRegistry);
+  private icons = injectTxIcons();
 
   readonly name = input.required<TxIconName | (string & {})>();
   readonly paths = computed(() =>
-    (this.txIconRegistry.get(this.name()) ?? []).map((path) => (typeof path === 'string' ? { d: path } : path)) as {
+    (this.icons.get(this.name()) ?? this.missing(this.name())).map((path) => (typeof path === 'string' ? { d: path } : path)) as {
       d: string;
       fill?: true;
       stroke?: false;
       transform?: string;
     }[],
   );
+
+  private missing(name: string): [] {
+    if (isDevMode() && name) {
+      this.txIconRegistry.warnMissing(name);
+    }
+    return [];
+  }
 }

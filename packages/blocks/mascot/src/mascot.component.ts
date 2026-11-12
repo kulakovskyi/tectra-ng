@@ -1,9 +1,12 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, afterNextRender, booleanAttribute, computed, inject, input, signal } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraMascotTokens, toStyleObject } from '@tectra-ng/themes';
 import { TX_MASCOT_LEG_LAYERS, TX_MASCOT_SPRITE, TX_MASCOT_TRICKS, TX_MASCOT_TRICK_EVERY_SLOTS, TX_MASCOT_TRICK_SLOT_MS, TX_MASCOT_UPPER_LAYERS } from './mascot.data';
 import { TxMascotPart, TxMascotState } from './mascot.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { MASCOT_ICON_DEFAULTS } from './mascot.icons';
+import { MASCOT_THEME } from './mascot.theme';
 
 @Component({
   selector: 'tx-mascot',
@@ -20,8 +23,11 @@ import { TxMascotPart, TxMascotState } from './mascot.types';
     '[attr.aria-label]': 'label() || null',
     '[attr.aria-hidden]': 'label() ? null : "true"',
   },
+  viewProviders: [provideTxIconDefaults(MASCOT_ICON_DEFAULTS)],
 })
 export class TxMascot {
+  private readonly mascotTheme = injectTokens(MASCOT_THEME);
+
   readonly state = input<TxMascotState>('idle');
   readonly label = input<string>('');
   readonly playful = input<boolean, unknown>(true, { transform: booleanAttribute });

@@ -1,4 +1,8 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { SWITCH_THEME_ICON_DEFAULTS } from './switch-theme.icons';
+import { injectTokens } from '@tectra-ng/core/config';
+import { SWITCH_THEME_THEME } from './switch-theme.theme';
 
 @Component({
   selector: 'tx-theme-reveal-styles',
@@ -19,5 +23,8 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
   `,
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  viewProviders: [provideTxIconDefaults(SWITCH_THEME_ICON_DEFAULTS)],
 })
-export class TxThemeRevealStyles {}
+export class TxThemeRevealStyles {
+  private readonly switchThemeTheme = injectTokens(SWITCH_THEME_THEME);
+}

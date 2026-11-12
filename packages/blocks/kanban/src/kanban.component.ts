@@ -23,15 +23,10 @@ import {
   signal,
 } from '@angular/core';
 import { TxAnnouncer, uniqueId } from '@tectra-ng/core/a11y';
-import {
-  TxPassThrough,
-  TxPassThroughOptions,
-  injectPassThrough,
-  injectUnstyled,
-} from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraKanbanTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxButton } from '@tectra-ng/ui/button';
 import { TxPill } from '@tectra-ng/ui/pill';
@@ -50,6 +45,8 @@ import {
   TxKanbanItemId,
   TxKanbanPart,
 } from './kanban.types';
+import { KANBAN_ICON_DEFAULTS } from './kanban.icons';
+import { KANBAN_THEME } from './kanban.theme';
 
 const DRAG_SCROLL_IGNORE =
   '[data-drag-ignore], button, a, input, textarea, select, [contenteditable="true"]';
@@ -76,8 +73,11 @@ const DRAG_SCROLL_IGNORE =
     '[attr.data-styled]': '!isUnstyled() || null',
     '[class.tx-kanban--fixed]': '!!height()',
   },
+  viewProviders: [provideTxIconDefaults(KANBAN_ICON_DEFAULTS)],
 })
 export class TxKanban<T> {
+  private readonly kanbanTheme = injectTokens(KANBAN_THEME);
+
   private readonly document = inject(DOCUMENT);
   private readonly injector = inject(Injector);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);

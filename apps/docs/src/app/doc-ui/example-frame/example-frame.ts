@@ -5,6 +5,7 @@ import { TxButton } from '@tectra-ng/ui/button';
 import { DocsCopyButton } from '../copy/copy-button';
 import { DocExample } from '../../types/doc-component.interface';
 import { jumpToAnchor, routePath } from '../../page-scroll';
+import { DocsStackblitz } from '../stackblitz/stackblitz';
 
 @Component({
   selector: 'docs-example-frame',
@@ -16,6 +17,7 @@ import { jumpToAnchor, routePath } from '../../page-scroll';
 export class ExampleFrame {
   example = input.required<DocExample>();
   component = input<Type<unknown> | null>(null);
+  page = input('');
 
   isCodeVisible = signal(false);
   activeFileIndex = signal(0);
@@ -24,11 +26,18 @@ export class ExampleFrame {
   lineCount = computed(() => this.activeFile().source.split('\n').length);
 
   private readonly document = inject(DOCUMENT);
+  private readonly stackblitz = inject(DocsStackblitz);
   private readonly path = routePath(inject(ActivatedRoute));
   readonly anchorHref = computed(() => `${this.path}#${this.example().id}`);
 
   jump(event: MouseEvent): void {
     jumpToAnchor(event, this.document, this.anchorHref(), this.example().id);
+  }
+
+  openInStackblitz(): void {
+    const { id, title, files } = this.example();
+    const source = files.find((file) => file.label === 'TypeScript')?.source ?? files[0].source;
+    void this.stackblitz.open({ id, title, page: this.page(), source });
   }
 
   toggleCode(): void {

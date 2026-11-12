@@ -6,6 +6,7 @@ import { TxTabPanel, TxTabPanelContent } from './tab-panel.component';
 import { TxTabPanels } from './tab-panels.component';
 import { TxTabs } from './tabs.component';
 import { TxTabItem, TxTabValue, TxTabsVariant } from './tabs.types';
+import { TX_ICONS, provideTxIcons } from '@tectra-ng/icons';
 
 @Component({
   imports: [TxTabs],
@@ -67,6 +68,8 @@ class PartsHost {
 function keydown(target: HTMLElement, key: string): void {
   target.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
 }
+
+beforeEach(() => TestBed.configureTestingModule({ providers: [provideTxIcons(TX_ICONS)] }));
 
 describe('TxTabs with items', () => {
   let fixture: ComponentFixture<ItemsHost>;

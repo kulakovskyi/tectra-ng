@@ -1,9 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon, TxIconName } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraEmptyStateTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxEmptyStatePart, TxEmptyStateSize, TxEmptyStateTone, TxEmptyStateVariant } from './empty-state.types';
+import { EMPTY_STATE_ICON_DEFAULTS } from './empty-state.icons';
+import { EMPTY_STATE_THEME } from './empty-state.theme';
 
 @Component({
   selector: 'tx-empty-state',
@@ -36,8 +38,11 @@ import { TxEmptyStatePart, TxEmptyStateSize, TxEmptyStateTone, TxEmptyStateVaria
     '[attr.data-size]': 'size()',
     '[attr.data-tone]': 'tone()',
   },
+  viewProviders: [provideTxIconDefaults(EMPTY_STATE_ICON_DEFAULTS)],
 })
 export class TxEmptyState {
+  private readonly emptyStateTheme = injectTokens(EMPTY_STATE_THEME);
+
   readonly icon = input<TxIconName | (string & {})>('inbox');
   readonly title = input<string | undefined>(undefined);
   readonly text = input<string | undefined>(undefined);

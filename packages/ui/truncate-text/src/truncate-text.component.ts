@@ -1,14 +1,16 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, booleanAttribute, computed, inject, input, numberAttribute, output, signal } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { TxPlacement } from '@tectra-ng/core/overlay';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraTruncateTextTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxHighlightTerms, TxHighlightText } from '@tectra-ng/ui/highlight-text';
 import { TxTooltip } from '@tectra-ng/ui/tooltip';
 import { TxTruncateTextPart } from './truncate-text.types';
+import { TRUNCATE_TEXT_ICON_DEFAULTS } from './truncate-text.icons';
+import { TRUNCATE_TEXT_THEME } from './truncate-text.theme';
 
 const COPIED_FOR = 1600;
 
@@ -25,8 +27,11 @@ const COPIED_FOR = 1600;
     '[attr.data-styled]': '!isUnstyled() || null',
     '[class.tx-truncate-text--truncated]': 'isTruncated()',
   },
+  viewProviders: [provideTxIconDefaults(TRUNCATE_TEXT_ICON_DEFAULTS)],
 })
 export class TxTruncateText {
+  private readonly truncateTextTheme = injectTokens(TRUNCATE_TEXT_THEME);
+
   private document = inject(DOCUMENT);
   private timer: ReturnType<typeof setTimeout> | null = null;
 

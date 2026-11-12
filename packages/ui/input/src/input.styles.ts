@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { injectTokens } from '@tectra-ng/core/config';
+import { INPUT_THEME } from './input.theme';
 
 @Component({
   selector: 'tx-input-styles',
@@ -7,4 +9,6 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TxInputStyles {}
+export class TxInputStyles {
+  private readonly inputTheme = injectTokens(INPUT_THEME);
+}

@@ -1,11 +1,13 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon, TxIconName, TxIconRegistry } from '@tectra-ng/icons';
+import { injectTxIcons, provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraStatusIconTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxStatusIconPart, TxStatusIconSeverity, TxStatusIconSize } from './status-icon.types';
+import { STATUS_ICON_ICON_DEFAULTS } from './status-icon.icons';
+import { STATUS_ICON_THEME } from './status-icon.theme';
 
 const SEVERITY_ICONS: Record<TxStatusIconSeverity, TxIconName> = {
   success: 'check-circle',
@@ -39,9 +41,12 @@ const SEVERITY_ICONS: Record<TxStatusIconSeverity, TxIconName> = {
     '[attr.aria-hidden]': 'resolvedLabel() ? null : "true"',
     '[attr.title]': 'resolvedLabel() || null',
   },
+  viewProviders: [provideTxIconDefaults(STATUS_ICON_ICON_DEFAULTS)],
 })
 export class TxStatusIcon {
-  private txIconRegistry = inject(TxIconRegistry);
+  private readonly statusIconTheme = injectTokens(STATUS_ICON_THEME);
+
+  private txIconRegistry = injectTxIcons();
 
   readonly status = input<boolean | null | undefined, unknown>(undefined, { transform: optionalBoolean });
   readonly severity = input<TxStatusIconSeverity | undefined>(undefined);

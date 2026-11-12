@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, ElementRef, booleanAttribute, computed, inject, input, model, viewChild } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraSwitchLanguageTokens, toStyleObject } from '@tectra-ng/themes';
 import { TX_LANGUAGES, TxLanguageOption, TxSwitchLanguagePart } from './switch-language.types';
+import { SWITCH_LANGUAGE_THEME } from './switch-language.theme';
 
 const NEXT_KEYS = new Set(['ArrowRight', 'ArrowDown']);
 const PREVIOUS_KEYS = new Set(['ArrowLeft', 'ArrowUp']);
@@ -53,6 +54,8 @@ const PREVIOUS_KEYS = new Set(['ArrowLeft', 'ArrowUp']);
   },
 })
 export class TxSwitchLanguage {
+  private readonly switchLanguageTheme = injectTokens(SWITCH_LANGUAGE_THEME);
+
   private readonly locale = inject(TxLocaleService);
   private readonly group = viewChild.required<ElementRef<HTMLElement>>('group');
 

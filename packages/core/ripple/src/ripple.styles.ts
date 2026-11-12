@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { injectTokens } from '@tectra-ng/core/config';
+import { RIPPLE_THEME } from './ripple.theme';
 
 @Component({
   selector: 'tx-ripple-styles',
@@ -32,4 +34,6 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TxRippleStyles {}
+export class TxRippleStyles {
+  private readonly rippleTheme = injectTokens(RIPPLE_THEME);
+}

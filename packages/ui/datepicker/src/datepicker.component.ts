@@ -26,13 +26,13 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TxAnnouncer, uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectFluid } from '@tectra-ng/core/fluid';
 import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
 import { TxOverlayAnchor, TxOverlayInsets, TxPlacement, placementFromPosition, txAnimateEnter, txAnimateLeave, txPositions, txScrollStrategy, watchOrigin } from '@tectra-ng/core/overlay';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon, TxIconName } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraDatePickerTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TxButton } from '@tectra-ng/ui/button';
 import { TxInput } from '@tectra-ng/ui/input';
@@ -60,6 +60,8 @@ import {
   TxDatePickerVariant,
   TxDatePickerView,
 } from './datepicker.types';
+import { DATEPICKER_ICON_DEFAULTS } from './datepicker.icons';
+import { DATEPICKER_THEME } from './datepicker.theme';
 
 type TimeUnit = 'hour' | 'minute' | 'second';
 
@@ -92,8 +94,11 @@ function isoDay(date: Date): string {
     '[class.tx-datepicker--fluid]': 'isFluid()',
     '[class.tx-datepicker--button]': 'showIcon() && iconDisplay() === "button" && !inline()',
   },
+  viewProviders: [provideTxIconDefaults(DATEPICKER_ICON_DEFAULTS)],
 })
 export class TxDatePicker extends TxFormControlBase<TxDatePickerValue> {
+  private readonly datepickerTheme = injectTokens(DATEPICKER_THEME);
+
   readonly selectionMode = input<TxDatePickerSelectionMode>('single');
   readonly dateFormat = input<string | undefined>(undefined);
   readonly placeholder = input<string | undefined>(undefined);

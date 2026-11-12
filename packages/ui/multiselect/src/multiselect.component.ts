@@ -3,12 +3,14 @@ import { TxOverlayAnchor } from '@tectra-ng/core/overlay';
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, contentChild, forwardRef, input, output, signal } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon, TxIconName } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraSelectTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxOptionList, TxSelectBase, TxSelectItem, TxSelectValueTemplate, isSelectableRow } from '@tectra-ng/ui/select';
 import { TxMultiselectChangeEvent, TxMultiselectDisplay, TxMultiselectPart } from './multiselect.types';
+import { MULTISELECT_ICON_DEFAULTS } from './multiselect.icons';
+import { MULTISELECT_THEME } from './multiselect.theme';
 
 @Component({
   selector: 'tx-multiselect',
@@ -31,8 +33,11 @@ import { TxMultiselectChangeEvent, TxMultiselectDisplay, TxMultiselectPart } fro
     '[class.tx-multiselect--readonly]': 'readonly()',
     '[class.tx-multiselect--filled]': 'hasValue()',
   },
+  viewProviders: [provideTxIconDefaults(MULTISELECT_ICON_DEFAULTS)],
 })
 export class TxMultiselect extends TxSelectBase<unknown[]> {
+  private readonly multiselectTheme = injectTokens(MULTISELECT_THEME);
+
   readonly options = input<readonly unknown[]>([]);
   readonly display = input<TxMultiselectDisplay>('comma');
   readonly maxSelectedLabels = input<number>(3);

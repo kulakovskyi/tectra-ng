@@ -17,6 +17,7 @@ export interface TxTableContext {
   applyFilter(field: string, filter: TxColumnFilter | null): void;
   registerRowActions(row: Element, source: TxTableRowActionsSource): void;
   unregisterRowActions(row: Element, source: TxTableRowActionsSource): void;
+  editorLoaded(editor: HTMLElement): void;
 }
 
 export const TX_TABLE = new InjectionToken<TxTableContext>('TX_TABLE');

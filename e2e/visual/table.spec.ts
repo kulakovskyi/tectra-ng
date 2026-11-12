@@ -246,7 +246,7 @@ test('a tooltip inside a popover stays on its button while the page scrolls', as
 
 test('row action buttons work from the keyboard', async ({ page }) => {
   const frame = example(page, 'Row actions');
-  const open = frame.getByRole('button', { name: 'Open' }).first();
+  const open = frame.getByRole('button', { name: 'Open', exact: true }).first();
   await open.focus();
   await page.keyboard.press('Enter');
   await expect(page.locator('body > tx-toast')).toContainText('Opened INV-1042');

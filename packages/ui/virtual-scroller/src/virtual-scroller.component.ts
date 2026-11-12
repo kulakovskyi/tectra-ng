@@ -16,10 +16,10 @@ import {
   signal,
   untracked,
 } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraVirtualScrollerTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxVirtualScrollerContent, TxVirtualScrollerItem, TxVirtualScrollerLoader, TxVirtualScrollerLoadingIcon } from './virtual-scroller.templates';
 import {
@@ -32,6 +32,8 @@ import {
   TxVirtualScrollerRenderedRange,
   TxVirtualScrollerScrollEvent,
 } from './virtual-scroller.types';
+import { VIRTUAL_SCROLLER_ICON_DEFAULTS } from './virtual-scroller.icons';
+import { VIRTUAL_SCROLLER_THEME } from './virtual-scroller.theme';
 
 interface TxAxisRange {
   first: number;
@@ -71,8 +73,11 @@ interface TxRenderedRow<T> {
     '[attr.aria-busy]': 'loading() || null',
     '(scroll)': 'onScroll($event)',
   },
+  viewProviders: [provideTxIconDefaults(VIRTUAL_SCROLLER_ICON_DEFAULTS)],
 })
 export class TxVirtualScroller<T = unknown> {
+  private readonly virtualScrollerTheme = injectTokens(VIRTUAL_SCROLLER_THEME);
+
   readonly items = input<readonly (T | undefined)[] | readonly (readonly (T | undefined)[])[] | null | undefined>(undefined);
   readonly itemSize = input<number | readonly [number, number]>(40);
   readonly scrollHeight = input<string | undefined>(undefined);

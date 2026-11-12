@@ -1,0 +1,193 @@
+{
+  "angular": {
+    "what": "An empty Angular app, for reference",
+    "kitBytes": 0,
+    "entryPoints": []
+  },
+  "provider": {
+    "what": "provideTectra with a preset, no component",
+    "kitBytes": 16000,
+    "entryPoints": [
+      "core-config",
+      "themes",
+      "tokens"
+    ]
+  },
+  "button": {
+    "what": "TxButton",
+    "kitBytes": 93000,
+    "entryPoints": [
+      "core-config",
+      "core-fluid",
+      "core-ripple",
+      "core-styles",
+      "core-utils",
+      "icons",
+      "themes",
+      "tokens",
+      "ui-badge",
+      "ui-button"
+    ]
+  },
+  "select": {
+    "what": "TxSelect",
+    "kitBytes": 263000,
+    "entryPoints": [
+      "core-a11y",
+      "core-config",
+      "core-forms",
+      "core-i18n",
+      "core-overlay",
+      "core-utils",
+      "icons",
+      "themes",
+      "tokens",
+      "ui-select",
+      "ui-skeleton"
+    ]
+  },
+  "table": {
+    "what": "TxTable",
+    "kitBytes": 785000,
+    "entryPoints": [
+      "core-a11y",
+      "core-config",
+      "core-fluid",
+      "core-forms",
+      "core-i18n",
+      "core-overlay",
+      "core-ripple",
+      "core-styles",
+      "core-utils",
+      "icons",
+      "themes",
+      "tokens",
+      "ui-badge",
+      "ui-button",
+      "ui-checkbox",
+      "ui-export",
+      "ui-input",
+      "ui-menu",
+      "ui-paginator",
+      "ui-popover",
+      "ui-progress-spinner",
+      "ui-radio-button",
+      "ui-select",
+      "ui-skeleton",
+      "ui-table",
+      "ui-tooltip"
+    ]
+  },
+  "datepicker": {
+    "what": "TxDatePicker",
+    "kitBytes": 313000,
+    "entryPoints": [
+      "core-a11y",
+      "core-config",
+      "core-fluid",
+      "core-forms",
+      "core-i18n",
+      "core-overlay",
+      "core-ripple",
+      "core-styles",
+      "core-utils",
+      "icons",
+      "themes",
+      "tokens",
+      "ui-badge",
+      "ui-button",
+      "ui-datepicker",
+      "ui-input"
+    ]
+  },
+  "dialog": {
+    "what": "TxDialog",
+    "kitBytes": 197000,
+    "entryPoints": [
+      "core-a11y",
+      "core-config",
+      "core-fluid",
+      "core-i18n",
+      "core-ripple",
+      "core-styles",
+      "core-utils",
+      "icons",
+      "themes",
+      "tokens",
+      "ui-badge",
+      "ui-button",
+      "ui-dialog"
+    ]
+  },
+  "line-chart": {
+    "what": "TxLineChart",
+    "kitBytes": 346000,
+    "entryPoints": [
+      "charts-core",
+      "charts-line",
+      "core-a11y",
+      "core-config",
+      "core-fluid",
+      "core-i18n",
+      "core-overlay",
+      "core-ripple",
+      "core-styles",
+      "core-utils",
+      "icons",
+      "themes",
+      "tokens",
+      "ui-badge",
+      "ui-button",
+      "ui-popover",
+      "ui-skeleton"
+    ]
+  },
+  "editor": {
+    "what": "TxEditor (rich text)",
+    "kitBytes": 759000,
+    "entryPoints": [
+      "core-a11y",
+      "core-config",
+      "core-fluid",
+      "core-forms",
+      "core-i18n",
+      "core-overlay",
+      "core-ripple",
+      "core-styles",
+      "core-utils",
+      "editor",
+      "editor-content",
+      "icons",
+      "themes",
+      "tokens",
+      "ui-badge",
+      "ui-button",
+      "ui-dialog",
+      "ui-input",
+      "ui-menu",
+      "ui-popover",
+      "ui-tooltip"
+    ]
+  },
+  "code-editor": {
+    "what": "TxCodeEditor",
+    "kitBytes": 465000,
+    "entryPoints": [
+      "code-editor",
+      "code-editor-highlight",
+      "core-config",
+      "core-fluid",
+      "core-forms",
+      "core-i18n",
+      "core-ripple",
+      "core-styles",
+      "core-utils",
+      "icons",
+      "themes",
+      "tokens",
+      "ui-badge",
+      "ui-button",
+      "ui-input"
+    ]
+  }
+}

@@ -7,7 +7,7 @@ Thanks for helping. Questions go to [Discussions](https://github.com/kulakovskyi
 Nobody pushes to `main`, maintainers included — a repository ruleset blocks it. Every change goes through a pull request:
 
 1. Branch from the latest `main`, commit with `git commit --signoff`, push the branch and open a pull request.
-2. CI runs on the pull request. The required check **`ci-ok`** passes only when lint, unit tests, the package build, the docs build, the e2e suite, CodeQL, the dependency review and the sign-off check all pass.
+2. CI runs on the pull request. The required check **`ci-ok`** passes only when lint, unit tests, the package build, the docs build, the e2e suite, the checks on a new Angular app built from the same packages (`ng add`, the StackBlitz projects of the docs examples and the bundle size budgets), CodeQL, the dependency review and the sign-off check all pass.
 3. The pull request is squash-merged once `ci-ok` is green — the title becomes the commit on `main`.
 
 The release workflow follows the same rule: it publishes from a tagged `release/vX.Y.Z` branch and merges the version bump through a pull request after CI passes.
@@ -18,8 +18,9 @@ The release workflow follows the same rule: it publishes from a tagged `release/
 2. Component in `packages/ui/<name>`, tokens in `packages/themes/src/components/<name>.tokens.ts`, README with Inputs / Outputs / Slots / Keyboard, docs content in `apps/docs/src/content/components/<name>`.
 3. A `*.spec.ts` next to every component, directive and service. `npm run lint` must be clean, without warnings.
 4. `npm run e2e` must stay green — no console errors, no layout shift, no serious axe violations in light and dark.
-5. The pull request title is a conventional commit (`feat(ui): …`, `fix(docs): …`) — it becomes the squash commit, and the release reads the next version and the changelog from it. CI checks it.
-6. Every commit is signed off (see below).
+5. Bundle size stays within [`tools/bundle-size/budgets.json`](tools/bundle-size/budgets.json): CI builds a new Angular app per scenario (one component each) and fails when the kit code loaded at start grows past its budget or a scenario starts to pull in another entry point. When the growth is intended, run `npm run size:update` (after `npm run build:packages` and `npm run e2e:ng-add`) and say why in the pull request.
+6. The pull request title is a conventional commit (`feat(ui): …`, `fix(docs): …`) — it becomes the squash commit, and the release reads the next version and the changelog from it. CI checks it.
+7. Every commit is signed off (see below).
 
 ## Coding standards
 

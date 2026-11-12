@@ -13,7 +13,7 @@ import {
   output,
   untracked,
 } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraDataViewTokens, toStyleObject } from '@tectra-ng/themes';
@@ -40,6 +40,9 @@ import {
   TxDataViewSortEvent,
   TxDataViewSortOrder,
 } from './data-view.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { DATA_VIEW_ICON_DEFAULTS } from './data-view.icons';
+import { DATA_VIEW_THEME } from './data-view.theme';
 
 @Component({
   selector: 'tx-data-view',
@@ -56,8 +59,11 @@ import {
     '[class.tx-data-view--loading]': 'loading()',
     '[attr.aria-busy]': 'loading() || null',
   },
+  viewProviders: [provideTxIconDefaults(DATA_VIEW_ICON_DEFAULTS)],
 })
 export class TxDataView<T = unknown> {
+  private readonly dataViewTheme = injectTokens(DATA_VIEW_THEME);
+
   readonly value = input<readonly T[] | null | undefined>(undefined);
   readonly layout = model<TxDataViewLayout>('list');
   readonly paginator = input<boolean, unknown>(false, { transform: booleanAttribute });

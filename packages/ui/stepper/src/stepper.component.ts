@@ -9,7 +9,7 @@ import {
   model,
 } from '@angular/core';
 import { uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraStepperTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxStepItem } from './step-item.component';
@@ -17,6 +17,9 @@ import { TxStepPanel } from './step-panel.component';
 import { TxStep } from './step.component';
 import { TxStepperRef } from './stepper.context';
 import { TxStepperPart, TxStepValue } from './stepper.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { STEPPER_ICON_DEFAULTS } from './stepper.icons';
+import { STEPPER_THEME } from './stepper.theme';
 
 const NEXT_KEYS = ['ArrowRight', 'ArrowDown'];
 const PREVIOUS_KEYS = ['ArrowLeft', 'ArrowUp'];
@@ -36,8 +39,11 @@ const PREVIOUS_KEYS = ['ArrowLeft', 'ArrowUp'];
     '[class.tx-stepper--vertical]': 'vertical()',
     '[class.tx-stepper--linear]': 'linear()',
   },
+  viewProviders: [provideTxIconDefaults(STEPPER_ICON_DEFAULTS)],
 })
 export class TxStepper extends TxStepperRef {
+  private readonly stepperTheme = injectTokens(STEPPER_THEME);
+
   private readonly id = uniqueId('tx-stepper');
 
   readonly value = model<TxStepValue | undefined>(undefined);

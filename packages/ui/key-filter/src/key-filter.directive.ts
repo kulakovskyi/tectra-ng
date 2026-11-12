@@ -2,10 +2,12 @@ import { Directive, ElementRef, booleanAttribute, computed, forwardRef, inject, 
 import { AbstractControl, NG_VALIDATORS, ValidationErrors, Validator } from '@angular/forms';
 import { txKeyFilterAccepts, txKeyFilterRule } from './key-filter.presets';
 import { TxKeyFilterPreset } from './key-filter.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { KEY_FILTER_ICON_DEFAULTS } from './key-filter.icons';
 
 @Directive({
   selector: 'input[txKeyFilter], textarea[txKeyFilter]',
-  providers: [{ provide: NG_VALIDATORS, useExisting: forwardRef(() => TxKeyFilter), multi: true }],
+  providers: [provideTxIconDefaults(KEY_FILTER_ICON_DEFAULTS), { provide: NG_VALIDATORS, useExisting: forwardRef(() => TxKeyFilter), multi: true }],
   host: {
     '(beforeinput)': 'onBeforeInput($event)',
     '(paste)': 'onPaste($event)',

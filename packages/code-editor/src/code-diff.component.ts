@@ -19,7 +19,7 @@ import {
 } from '@angular/core';
 import { EditorSelection, EditorState, Extension, Transaction } from '@codemirror/state';
 import { EditorView, keymap } from '@codemirror/view';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { TxStyleLoader } from '@tectra-ng/core/styles';
 import { optionalBoolean } from '@tectra-ng/core/utils';
@@ -32,6 +32,9 @@ import { TxDiffSide, buildDiffDecorations, diffField, diffGutter, setDiffDecorat
 import { detectTabSize } from './engine/commands';
 import { historyAction } from './engine/history';
 import { TxCodeEditorCompartments, codeEditorBase, tabKeys } from './engine/setup';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { CODE_EDITOR_ICON_DEFAULTS } from './code-editor.icons';
+import { CODE_EDITOR_THEME } from './code-editor.theme';
 
 export type TxCodeDiffTokens = TectraCodeDiffTokens & { syntax: TectraCodeSyntaxTokens };
 
@@ -56,8 +59,11 @@ const RECOMPUTE_DELAY = 150;
     role: 'group',
     '[attr.aria-label]': 'ariaLabel() ?? t().codeDiffLabel',
   },
+  viewProviders: [provideTxIconDefaults(CODE_EDITOR_ICON_DEFAULTS)],
 })
 export class TxCodeDiff {
+  private readonly codeEditorTheme = injectTokens(CODE_EDITOR_THEME);
+
   readonly original = input<string | null>('');
   readonly value = model<string | null>('');
   readonly language = input<TxCodeLanguage | string>('html');

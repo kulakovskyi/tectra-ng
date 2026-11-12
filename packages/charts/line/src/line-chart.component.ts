@@ -68,7 +68,7 @@ import {
   readTokenNumber,
 } from '@tectra-ng/charts/core';
 import { uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService, formatMessage, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
@@ -80,6 +80,9 @@ import {
   TxLineChartSeriesToggle,
   TxLineChartStackType,
 } from './line-chart.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { LINE_ICON_DEFAULTS } from './line.icons';
+import { LINE_THEME } from './line.theme';
 
 const DECIMATE_RATIO = 1.5;
 const OVERVIEW = 44;
@@ -115,8 +118,11 @@ const SLIDE_EASING = 'cubic-bezier(0.22, 1, 0.36, 1)';
     '[class.tx-line-chart--focused]': 'focusedSeries() !== null',
     '[class.tx-line-chart--live]': 'live()',
   },
+  viewProviders: [provideTxIconDefaults(LINE_ICON_DEFAULTS)],
 })
 export class TxLineChart {
+  private readonly lineTheme = injectTokens(LINE_THEME);
+
   private locale = inject(TxLocaleService);
   readonly translations = injectTranslations();
 

@@ -3,6 +3,20 @@ import { InstallExtra } from './install.data';
 
 export const ICON_RECIPES: InstallExtra[] = [
   {
+    icon: 'check-square',
+    title: 'Register the icons',
+    file: 'app.config.ts',
+    text: 'Components bring the icons they draw themselves. Names you use in your own templates are registered once: the whole set, or only what the app needs — then only those land in the bundle.',
+    language: 'typescript',
+    code: `import { TX_ICONS, provideTxIcons } from '@tectra-ng/icons';
+
+provideTxIcons(TX_ICONS);
+
+import { txIconPlus, txIconTrash } from '@tectra-ng/icons';
+
+provideTxIcons({ plus: txIconPlus, trash: txIconTrash });`,
+  },
+  {
     icon: 'code',
     title: 'In a template',
     file: 'template.html',

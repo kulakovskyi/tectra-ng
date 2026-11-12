@@ -1,5 +1,6 @@
-import { lightDark, mix, tokenRef } from './token-helpers';
+import { joinCss, lightDark, mix, tokenRef } from './token-helpers';
 
+/* @__NO_SIDE_EFFECTS__ */
 const tint = (amount: string) => mix(tokenRef('primary-base'), amount, 'transparent');
 
 export const kanbanTokens = {
@@ -15,7 +16,7 @@ export const kanbanTokens = {
     padding: '10.5px',
     borderRadius: tokenRef('radius-lg'),
     background: tokenRef('surface-card'),
-    shadow: `0 0 0 1px ${lightDark(tokenRef('surface-200'), tokenRef('surface-800'))}`,
+    shadow: joinCss('0 0 0 1px ', lightDark(tokenRef('surface-200'), tokenRef('surface-800'))),
     headerGap: '7px',
     headerMinHeight: '28px',
     titleColor: tokenRef('text-primary'),
@@ -52,7 +53,7 @@ export const kanbanTokens = {
   card: {
     borderRadius: tokenRef('radius-lg'),
     dragShadow: tokenRef('shadow-overlay'),
-    focusRingShadow: `0 0 0 2px ${tokenRef('surface-card')}, 0 0 0 4px ${tokenRef('focus-ring-color')}`,
+    focusRingShadow: joinCss('0 0 0 2px ', tokenRef('surface-card'), ', 0 0 0 4px ', tokenRef('focus-ring-color')),
   },
   motion: {
     duration: '200ms',

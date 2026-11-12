@@ -24,10 +24,13 @@ import {
   viewChild,
 } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraTableTokens, toStyleObject } from '@tectra-ng/themes';
+import { TxDatePicker } from '@tectra-ng/ui/datepicker';
+import { TxTableEditorFocus } from './table-editor-focus.directive';
+import { TxInputNumber } from '@tectra-ng/ui/input-number';
 import { TxMenu, TxMenuItem } from '@tectra-ng/ui/menu';
 import { TxPageState, TxRowsPerPageOption } from '@tectra-ng/ui/paginator';
 import { map, of, switchMap } from 'rxjs';
@@ -80,6 +83,9 @@ import {
   TxTableStateStorage,
 } from './table.types';
 import { columnLabel, mergeColumnOrder, nextSortOrder, pxOf, resolveField, rowKeyOf, sortRows, writeField } from './table.utils';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { TABLE_ICON_DEFAULTS } from './table.icons';
+import { TABLE_THEME } from './table.theme';
 
 export const TX_TABLE_SELECT_FIELD = '__select';
 export const TX_TABLE_EXPAND_FIELD = '__expand';
@@ -135,9 +141,11 @@ export interface TxTableRenderGroup {
   collapsed: boolean;
 }
 
+const EDITOR_FOCUS_TARGET = 'input:not(.tx-table__editor-pending), textarea, button, [tabindex]:not([tabindex="-1"])';
+
 @Component({
   selector: 'tx-table',
-  imports: TX_TABLE_IMPORTS,
+  imports: [...TX_TABLE_IMPORTS, TxTableEditorFocus, TxDatePicker, TxInputNumber],
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -155,8 +163,11 @@ export interface TxTableRenderGroup {
     '[class.tx-table--resizing]': 'resizing() !== null',
     '[class.tx-table--loading]': 'loading()',
   },
+  viewProviders: [provideTxIconDefaults(TABLE_ICON_DEFAULTS)],
 })
 export class TxTable<T = unknown> implements TxTableContext {
+  private readonly tableTheme = injectTokens(TABLE_THEME);
+
   private document = inject(DOCUMENT);
   protected host = inject<ElementRef<HTMLElement>>(ElementRef);
   protected injector = inject(Injector);
@@ -1085,15 +1096,26 @@ export class TxTable<T = unknown> implements TxTableContext {
     this.editingRowKeys.set(this.editingRowKeys().filter((other) => other !== key));
   }
 
+  private pendingEditorFocus: HTMLElement | null = null;
+
   private focusEditor(rowKey?: unknown): void {
     afterNextRender(
       () => {
         const editors = [...this.host.nativeElement.querySelectorAll<HTMLElement>('.tx-table__editor')];
         const editor = rowKey === undefined ? editors[0] : editors.find((element) => element.closest('tr')?.dataset['key'] === String(rowKey));
-        editor?.querySelector<HTMLElement>('input, textarea, button, [tabindex]:not([tabindex="-1"])')?.focus();
+        const target = editor?.querySelector<HTMLElement>(EDITOR_FOCUS_TARGET);
+        this.pendingEditorFocus = !target && editor?.querySelector('.tx-table__editor-pending') ? editor : null;
+        target?.focus();
       },
       { injector: this.injector },
     );
+  }
+
+  editorLoaded(control: HTMLElement): void {
+    if (this.pendingEditorFocus?.contains(control)) {
+      this.pendingEditorFocus = null;
+      control.querySelector<HTMLElement>(EDITOR_FOCUS_TARGET)?.focus();
+    }
   }
 
   dateDraft(value: unknown): Date | null {

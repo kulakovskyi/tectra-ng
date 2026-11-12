@@ -19,6 +19,8 @@ import { TectraDeepPartial, TectraTextareaTokens, toStyleObject } from '@tectra-
 import { TxInput } from '@tectra-ng/ui/input';
 import { TxTextareaStyles } from './textarea.styles';
 import { TxTextareaResize } from './textarea.types';
+import { injectTokens } from '@tectra-ng/core/config';
+import { TEXTAREA_THEME } from './textarea.theme';
 
 @Directive({
   selector: 'textarea[txTextarea]',
@@ -34,6 +36,8 @@ import { TxTextareaResize } from './textarea.types';
   },
 })
 export class TxTextarea {
+  private readonly textareaTheme = injectTokens(TEXTAREA_THEME);
+
   private elementRef = inject<ElementRef<HTMLTextAreaElement>>(ElementRef);
   private document = inject(DOCUMENT);
   private ngControl = inject(NgControl, { self: true, optional: true });

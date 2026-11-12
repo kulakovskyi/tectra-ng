@@ -1,8 +1,9 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, InjectionToken, Signal, TemplateRef, afterRenderEffect, computed, inject, signal } from '@angular/core';
-import { TxResolvedPassThrough } from '@tectra-ng/core/config';
+import { injectTokens, TxResolvedPassThrough } from '@tectra-ng/core/config';
 import { TxPlacement, parsePlacement, txArrowOffset } from '@tectra-ng/core/overlay';
 import { TxTooltipContent, TxTooltipContext, TxTooltipPart } from './tooltip.types';
+import { TOOLTIP_THEME } from './tooltip.theme';
 
 export interface TxTooltipPanelState {
   id: string;
@@ -58,6 +59,8 @@ export const TX_TOOLTIP_PANEL = new InjectionToken<TxTooltipPanelState>('TX_TOOL
   },
 })
 export class TxTooltipPanel {
+  private readonly tooltipTheme = injectTokens(TOOLTIP_THEME);
+
   readonly state = inject(TX_TOOLTIP_PANEL);
 
   private readonly originSize = signal({ width: 0, height: 0 });

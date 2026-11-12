@@ -10,36 +10,42 @@ interface FilledField {
 const input = ".tx-input[data-styled][data-variant='filled']";
 const chips = ".tx-chips-input[data-styled][data-variant='filled']";
 
-const filledFields: FilledField[] = [
-  {
-    field: input,
-    hover: `${input}:enabled:not([readonly], .tx-input--invalid):hover`,
-    focus: `${input}:enabled:not([readonly]):focus`,
-    invalid: `${input}.tx-input--invalid`,
-  },
-  ...selectHosts.map((host) => {
-    const root = `.${host}[data-styled][data-variant='filled']`;
-    return {
-      field: `${root} .tx-select__box`,
-      hover: `${root}:not(.${host}--disabled, .${host}--readonly, .${host}--invalid) .tx-select__box:hover`,
-      focus: `${root} .tx-select__box:has(.tx-select__trigger:focus)`,
-      invalid: `${root}.${host}--invalid .tx-select__box`,
-    };
-  }),
-  {
-    field: `${chips} .tx-chips-input__box`,
-    hover: `${chips}:not(.tx-chips-input--disabled, .tx-chips-input--readonly, .tx-chips-input--invalid) .tx-chips-input__box:hover`,
-    focus: `${chips} .tx-chips-input__box:focus-within`,
-    invalid: `${chips}.tx-chips-input--invalid .tx-chips-input__box`,
-  },
-];
+/* @__NO_SIDE_EFFECTS__ */
+function filledFields(): FilledField[] {
+  return [
+    {
+      field: input,
+      hover: `${input}:enabled:not([readonly], .tx-input--invalid):hover`,
+      focus: `${input}:enabled:not([readonly]):focus`,
+      invalid: `${input}.tx-input--invalid`,
+    },
+    ...selectHosts.map((host) => {
+      const root = `.${host}[data-styled][data-variant='filled']`;
+      return {
+        field: `${root} .tx-select__box`,
+        hover: `${root}:not(.${host}--disabled, .${host}--readonly, .${host}--invalid) .tx-select__box:hover`,
+        focus: `${root} .tx-select__box:has(.tx-select__trigger:focus)`,
+        invalid: `${root}.${host}--invalid .tx-select__box`,
+      };
+    }),
+    {
+      field: `${chips} .tx-chips-input__box`,
+      hover: `${chips}:not(.tx-chips-input--disabled, .tx-chips-input--readonly, .tx-chips-input--invalid) .tx-chips-input__box:hover`,
+      focus: `${chips} .tx-chips-input__box:focus-within`,
+      invalid: `${chips}.tx-chips-input--invalid .tx-chips-input__box`,
+    },
+  ];
+}
 
-const list = (key: keyof FilledField, prefix = '') => filledFields.map((field) => `${prefix}${field[key]}`).join(',\n');
+/* @__NO_SIDE_EFFECTS__ */
+const list = (key: keyof FilledField, prefix = '') => filledFields().map((field) => `${prefix}${field[key]}`).join(',\n');
 
 const filledInputGroup = ".tx-input-group:has([data-variant='filled']) > .tx-input-group-addon";
 const filledInputNumber = ".tx-input-number[data-styled]:has(.tx-input[data-variant='filled'])";
 
-export const paperFormsCss = `
+/* @__NO_SIDE_EFFECTS__ */
+function formsCss(): string {
+  return `
 :root {
   --_paper-field-line: var(--tx-form-field-border-color);
   --_paper-field-hover-line: var(--tx-form-field-hover-border-color);
@@ -131,3 +137,6 @@ ${list('invalid')} {
   color: var(--tx-select-dropdown-button-hover-color);
 }
 `;
+}
+
+export const paperFormsCss = formsCss();

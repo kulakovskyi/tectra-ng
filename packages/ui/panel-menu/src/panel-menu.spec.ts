@@ -4,6 +4,7 @@ import { Router, provideRouter } from '@angular/router';
 import { TxPanelMenu } from './panel-menu.component';
 import { TxPanelMenuItemTemplate } from './panel-menu.templates';
 import { TxPanelMenuExpandedKeys, TxPanelMenuItem, TxPanelMenuItemEvent, TxPanelMenuVariant } from './panel-menu.types';
+import { TX_ICONS, provideTxIcons } from '@tectra-ng/icons';
 
 @Component({ template: '', changeDetection: ChangeDetectionStrategy.OnPush })
 class Blank {}
@@ -82,6 +83,8 @@ class SidebarHost {
 function keydown(target: HTMLElement, key: string): void {
   target.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
 }
+
+beforeEach(() => TestBed.configureTestingModule({ providers: [provideTxIcons(TX_ICONS)] }));
 
 describe('TxPanelMenu panel', () => {
   let fixture: ComponentFixture<Host>;

@@ -34,12 +34,15 @@ import {
   readTokenNumber,
   stepIndex,
 } from '@tectra-ng/charts/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { bulletMax, bulletSegments } from './bullet-layout';
 import { TxBulletChartPart, TxBulletEvent, TxBulletItem, TxBulletRow } from './bullet-chart.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { BULLET_ICON_DEFAULTS } from './bullet.icons';
+import { BULLET_THEME } from './bullet.theme';
 
 const DEFAULTS = { rowHeight: 44, trackHeight: 0.5, barHeight: 0.34, targetHeight: 0.72 };
 const LEVELS = 3;
@@ -61,8 +64,11 @@ const AXIS_ROOM = 30;
     '[class.tx-bullet-chart--morph]': 'morph()',
     '[class.tx-bullet-chart--active]': 'active() !== null',
   },
+  viewProviders: [provideTxIconDefaults(BULLET_ICON_DEFAULTS)],
 })
 export class TxBulletChart {
+  private readonly bulletTheme = injectTokens(BULLET_THEME);
+
   private locale = inject(TxLocaleService);
   private host = inject<ElementRef<HTMLElement>>(ElementRef);
   readonly translations = injectTranslations();

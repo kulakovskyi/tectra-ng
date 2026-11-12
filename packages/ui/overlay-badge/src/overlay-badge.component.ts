@@ -1,10 +1,13 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, afterEveryRender, booleanAttribute, computed, inject, input } from '@angular/core';
 import { linkDescribedBy, uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraOverlayBadgeTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxBadge, TxBadgeSeverity, TxBadgeSize } from '@tectra-ng/ui/badge';
 import { TxOverlayBadgePart, TxOverlayBadgeShape } from './overlay-badge.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { OVERLAY_BADGE_ICON_DEFAULTS } from './overlay-badge.icons';
+import { OVERLAY_BADGE_THEME } from './overlay-badge.theme';
 
 const FOCUSABLE = 'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
@@ -36,8 +39,11 @@ const FOCUSABLE = 'a[href], button, input, select, textarea, [tabindex]:not([tab
     '[attr.data-styled]': '!isUnstyled() || null',
     '[attr.data-shape]': 'shape()',
   },
+  viewProviders: [provideTxIconDefaults(OVERLAY_BADGE_ICON_DEFAULTS)],
 })
 export class TxOverlayBadge {
+  private readonly overlayBadgeTheme = injectTokens(OVERLAY_BADGE_THEME);
+
   private host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private linked: HTMLElement | null = null;
   private unlink: (() => void) | null = null;

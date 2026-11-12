@@ -1,10 +1,13 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, contentChild, input } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraTimelineTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxTimelineConnector, TxTimelineContent, TxTimelineMarker, TxTimelineOpposite } from './timeline.templates';
 import { TxTimelineAlign, TxTimelineEventContext, TxTimelineLayout, TxTimelinePart } from './timeline.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { TIMELINE_ICON_DEFAULTS } from './timeline.icons';
+import { TIMELINE_THEME } from './timeline.theme';
 
 @Component({
   selector: 'tx-timeline',
@@ -20,8 +23,11 @@ import { TxTimelineAlign, TxTimelineEventContext, TxTimelineLayout, TxTimelinePa
     '[attr.data-layout]': 'layout()',
     '[attr.data-align]': 'resolvedAlign()',
   },
+  viewProviders: [provideTxIconDefaults(TIMELINE_ICON_DEFAULTS)],
 })
 export class TxTimeline<T = unknown> {
+  private readonly timelineTheme = injectTokens(TIMELINE_THEME);
+
   readonly value = input<readonly T[] | null | undefined>([]);
   readonly layout = input<TxTimelineLayout>('vertical');
   readonly align = input<TxTimelineAlign | undefined>(undefined);

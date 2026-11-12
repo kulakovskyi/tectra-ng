@@ -1,6 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from './fixtures';
-import { setDarkMode, trackPage } from './helpers';
+import { setDarkMode, trackPage, unresolvedVariables } from './helpers';
 import { PAGES } from './pages';
 
 for (const path of PAGES) {
@@ -17,6 +17,7 @@ for (const path of PAGES) {
       const { errors, layoutShift } = await report();
       expect(errors, 'console errors').toEqual([]);
       expect(layoutShift, 'cumulative layout shift').toBeLessThan(0.02);
+      expect(await unresolvedVariables(page), 'CSS variables of the kit without a value').toEqual([]);
 
       const axe = await new AxeBuilder({ page }).include('main').analyze();
       const serious = axe.violations.filter((violation) => violation.impact === 'serious' || violation.impact === 'critical');

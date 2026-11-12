@@ -16,6 +16,10 @@ import {
 import { NgTemplateOutlet } from '@angular/common';
 import { TX_TABS } from './tabs.context';
 import { TxTabPanelContentContext, TxTabValue } from './tabs.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { TABS_ICON_DEFAULTS } from './tabs.icons';
+import { injectTokens } from '@tectra-ng/core/config';
+import { TABS_THEME } from './tabs.theme';
 
 @Directive({ selector: 'ng-template[txTabPanelContent]' })
 export class TxTabPanelContent {
@@ -66,8 +70,11 @@ export class TxTabPanelContent {
     '[attr.hidden]': 'active() ? null : ""',
     '[class.tx-tab-panel--active]': 'active()',
   },
+  viewProviders: [provideTxIconDefaults(TABS_ICON_DEFAULTS)],
 })
 export class TxTabPanel implements OnInit {
+  private readonly tabsTheme = injectTokens(TABS_THEME);
+
   protected readonly tabs = inject(TX_TABS);
 
   readonly value = input.required<TxTabValue>();

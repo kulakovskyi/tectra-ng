@@ -13,10 +13,11 @@ import {
   viewChild,
 } from '@angular/core';
 import { uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraScrollPanelTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxScrollPanelAxis, TxScrollPanelBar, TxScrollPanelPart } from './scroll-panel.types';
+import { SCROLL_PANEL_THEME } from './scroll-panel.theme';
 
 const MIN_BAR_RATIO = 0.1;
 const HIDDEN_BAR: TxScrollPanelBar = { visible: false, length: 0, offset: 0, value: 0 };
@@ -42,6 +43,8 @@ interface TxScrollPanelGrab {
   },
 })
 export class TxScrollPanel {
+  private readonly scrollPanelTheme = injectTokens(SCROLL_PANEL_THEME);
+
   private document = inject(DOCUMENT);
   private destroyRef = inject(DestroyRef);
 

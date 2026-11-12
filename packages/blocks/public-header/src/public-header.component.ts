@@ -16,14 +16,16 @@ import {
 import { NgTemplateOutlet } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraPublicHeaderTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxTopbarPreferences } from '@tectra-ng/blocks/topbar-preferences';
 import { TxPublicHeaderBrand } from './public-header-brand.directive';
 import { TxPublicHeaderPart, TxPublicHeaderResponsive } from './public-header.types';
+import { PUBLIC_HEADER_ICON_DEFAULTS } from './public-header.icons';
+import { PUBLIC_HEADER_THEME } from './public-header.theme';
 
 const COMPACT_WIDTH = 768;
 const CLOSE_FALLBACK_MS = 600;
@@ -44,8 +46,11 @@ const CLOSE_FALLBACK_MS = 600;
     '[class.tx-public-header--closing]': 'closing()',
     '(document:keydown.escape)': 'onEscape()',
   },
+  viewProviders: [provideTxIconDefaults(PUBLIC_HEADER_ICON_DEFAULTS)],
 })
 export class TxPublicHeader {
+  private readonly publicHeaderTheme = injectTokens(PUBLIC_HEADER_THEME);
+
   private readonly document = inject(DOCUMENT);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly toggleButton = viewChild<ElementRef<HTMLButtonElement>>('menuButton');

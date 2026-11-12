@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input, model, output, signal, Signal } from '@angular/core';
 import { uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraTabsTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxTooltip } from '@tectra-ng/ui/tooltip';
@@ -8,6 +8,9 @@ import { TxTab } from './tab.component';
 import { TxTabList } from './tab-list.component';
 import { TX_TABS, TxTabRegistration, TxTabsContext } from './tabs.context';
 import { TxTabItem, TxTabValue, TxTabsOrientation, TxTabsPart, TxTabsSize, TxTabsVariant } from './tabs.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { TABS_ICON_DEFAULTS } from './tabs.icons';
+import { TABS_THEME } from './tabs.theme';
 
 @Component({
   selector: 'tx-tabs',
@@ -50,8 +53,11 @@ import { TxTabItem, TxTabValue, TxTabsOrientation, TxTabsPart, TxTabsSize, TxTab
     '[attr.data-orientation]': 'orientation()',
     '[class.tx-tabs--raised]': 'raised()',
   },
+  viewProviders: [provideTxIconDefaults(TABS_ICON_DEFAULTS)],
 })
 export class TxTabs implements TxTabsContext {
+  private readonly tabsTheme = injectTokens(TABS_THEME);
+
   private baseId = uniqueId('tx-tabs');
   private readonly tabRegistrations = signal<TxTabRegistration[]>([]);
   private readonly panelValues = signal<Signal<TxTabValue>[]>([]);

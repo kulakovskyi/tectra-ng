@@ -81,7 +81,7 @@ export class DocsThemeSettings {
   }
 
   private apply(): void {
-    const preset = createTectraPreset({ style: this.style(), primary: this.primary(), surface: this.surface() });
+    const preset = createTectraPreset({ style: TECTRA_STYLES[this.style()], primary: this.primary(), surface: this.surface() });
     this.txThemeService.applyPreset(preset);
     const { base, contrast } = preset.light.primary;
     const svg = logoSvg({ tile: base, contrast, soft: mixHex(contrast, base, 0.72), accent: SEVERITY_PALETTES.orange[300] });

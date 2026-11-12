@@ -30,12 +30,12 @@ describe('TxCountry', () => {
   };
   const root = (fixture: ComponentFixture<Host>) => fixture.nativeElement.querySelector('tx-country') as HTMLElement;
 
-  it('shows an emoji flag and the localized name', () => {
+  it('shows an emoji flag and the localized name', async () => {
     const fixture = create();
     expect(root(fixture).querySelector('.tx-country__flag--emoji')?.textContent?.trim()).toBe('🇺🇦');
     expect(root(fixture).textContent).toContain('Ukraine');
     expect(root(fixture).style.getPropertyValue('--tx-country-gap')).toBe('2px');
-    TestBed.inject(TxLocaleService).setLocale('ua');
+    await TestBed.inject(TxLocaleService).setLocale('ua');
     fixture.detectChanges();
     expect(root(fixture).textContent).toContain('Україна');
   });

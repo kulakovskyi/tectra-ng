@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, inject, input, numberAttribute } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { TxStyleLoader } from '@tectra-ng/core/styles';
 import { optionalBoolean } from '@tectra-ng/core/utils';
@@ -7,6 +7,9 @@ import { TectraCodeHighlightTokens, TectraCodeSyntaxTokens, TectraDeepPartial, t
 import { TxCodeHighlightPart, TxCodeLanguage } from './code-highlight.types';
 import { codeLines } from './code-lines';
 import { TxCodeSyntaxStyles } from './code-syntax-styles.component';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { HIGHLIGHT_ICON_DEFAULTS } from './highlight.icons';
+import { HIGHLIGHT_THEME } from './highlight.theme';
 
 export type TxCodeHighlightTokens = TectraCodeHighlightTokens & { syntax: TectraCodeSyntaxTokens };
 
@@ -24,8 +27,11 @@ export type TxCodeHighlightTokens = TectraCodeHighlightTokens & { syntax: Tectra
     '[class.tx-code-highlight--wrap]': 'wordWrap()',
     '[class.tx-code-highlight--numbers]': 'lineNumbers()',
   },
+  viewProviders: [provideTxIconDefaults(HIGHLIGHT_ICON_DEFAULTS)],
 })
 export class TxCodeHighlight {
+  private readonly highlightTheme = injectTokens(HIGHLIGHT_THEME);
+
   readonly code = input<string | null | undefined>('');
   readonly language = input<TxCodeLanguage | string>('html');
   readonly lineNumbers = input(true, { transform: booleanAttribute });

@@ -17,7 +17,7 @@ import {
   viewChildren,
 } from '@angular/core';
 import { uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraSplitterTokens, toStyleObject } from '@tectra-ng/themes';
@@ -32,6 +32,7 @@ import {
   TxSplitterResizeEvent,
   TxSplitterStateStorage,
 } from './splitter.types';
+import { SPLITTER_THEME } from './splitter.theme';
 
 interface TxSplitterDrag {
   gutter: number;
@@ -58,6 +59,8 @@ interface TxSplitterDrag {
   },
 })
 export class TxSplitter {
+  private readonly splitterTheme = injectTokens(SPLITTER_THEME);
+
   private host = inject<ElementRef<HTMLElement>>(ElementRef);
   private document = inject(DOCUMENT);
   protected readonly nested = inject(TxSplitter, { optional: true, skipSelf: true }) !== null;

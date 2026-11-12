@@ -1,10 +1,12 @@
-import { ChangeDetectionStrategy, Component, booleanAttribute, computed, inject, input, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input, model } from '@angular/core';
 import { uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon, TxIconName, TxIconRegistry } from '@tectra-ng/icons';
+import { injectTxIcons, provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraPanelTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxPanelAlign, TxPanelPart, TxPanelVariant } from './panel.types';
+import { PANEL_ICON_DEFAULTS } from './panel.icons';
+import { PANEL_THEME } from './panel.theme';
 
 @Component({
   selector: 'tx-panel',
@@ -23,9 +25,12 @@ import { TxPanelAlign, TxPanelPart, TxPanelVariant } from './panel.types';
     '[attr.role]': 'title() ? "region" : null',
     '[attr.aria-labelledby]': 'title() ? titleId : null',
   },
+  viewProviders: [provideTxIconDefaults(PANEL_ICON_DEFAULTS)],
 })
 export class TxPanel {
-  private txIconRegistry = inject(TxIconRegistry);
+  private readonly panelTheme = injectTokens(PANEL_THEME);
+
+  private txIconRegistry = injectTxIcons();
   private id = uniqueId('tx-panel');
 
   readonly title = input<string | undefined>(undefined);

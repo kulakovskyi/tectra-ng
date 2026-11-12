@@ -17,10 +17,13 @@ import {
   viewChild,
 } from '@angular/core';
 import { tabbableElements } from '@tectra-ng/core/a11y';
-import { injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled } from '@tectra-ng/core/config';
 import { toStyleObject } from '@tectra-ng/themes';
 import { TxDialogRef } from './dialog-ref';
 import { TxDialogPart, TxDialogTemplateContext } from './dialog.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { DIALOG_ICON_DEFAULTS } from './dialog.icons';
+import { DIALOG_THEME } from './dialog.theme';
 
 const FIELDS = ['.tx-dialog-content', '.tx-dialog-footer', '.tx-dialog-header'];
 const LEAVE_LIMIT = 400;
@@ -42,8 +45,11 @@ const DEFAULT_BREAKPOINTS: Record<string, string> = { '960px': '500px', '640px':
     '[class.tx-dialog-container--leaving]': 'leaving()',
     '[class.tx-dialog-container--maximized]': 'ref.maximized()',
   },
+  viewProviders: [provideTxIconDefaults(DIALOG_ICON_DEFAULTS)],
 })
 export class TxDialogContainer {
+  private readonly dialogTheme = injectTokens(DIALOG_THEME);
+
   readonly ref = inject(TxDialogRef);
   private document = inject(DOCUMENT);
   private checker = inject(InteractivityChecker);

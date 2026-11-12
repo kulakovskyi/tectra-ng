@@ -93,14 +93,14 @@ describe('http status', () => {
     expect(httpStatusTone(undefined)).toBe('secondary');
   });
 
-  it('shows translated labels', () => {
+  it('shows translated labels', async () => {
     const fixture = TestBed.createComponent(StatusHost);
     fixture.detectChanges();
     const text = (selector: string) => (fixture.nativeElement as HTMLElement).querySelector(selector)?.textContent;
     expect(text('.label')).toBe('Client error');
     expect(text('.tone')).toBe('danger');
     fixture.componentInstance.status.set(270);
-    TestBed.inject(TxLocaleService).setLocale('ua');
+    await TestBed.inject(TxLocaleService).setLocale('ua');
     fixture.detectChanges();
     expect(text('.label')).toBe('OK');
     expect(text('.tone')).toBe('warn');

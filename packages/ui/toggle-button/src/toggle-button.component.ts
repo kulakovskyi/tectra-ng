@@ -4,17 +4,16 @@ import {
   booleanAttribute,
   computed,
   forwardRef,
-  inject,
   input,
   output,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectFluid } from '@tectra-ng/core/fluid';
 import { TxRipple } from '@tectra-ng/core/ripple';
 import { TxFormControlBase } from '@tectra-ng/core/forms';
 import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
-import { TxIcon, TxIconName, TxIconRegistry } from '@tectra-ng/icons';
+import { injectTxIcons, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraToggleButtonTokens, toStyleObject } from '@tectra-ng/themes';
 import {
   TxToggleButtonChangeEvent,
@@ -22,6 +21,7 @@ import {
   TxToggleButtonPart,
   TxToggleButtonSize,
 } from './toggle-button.types';
+import { TOGGLE_BUTTON_THEME } from './toggle-button.theme';
 
 @Component({
   selector: 'tx-toggle-button',
@@ -44,7 +44,9 @@ import {
   },
 })
 export class TxToggleButton extends TxFormControlBase<boolean> {
-  private txIconRegistry = inject(TxIconRegistry);
+  private readonly toggleButtonTheme = injectTokens(TOGGLE_BUTTON_THEME);
+
+  private txIconRegistry = injectTxIcons();
 
   readonly onLabel = input<string>('Yes');
   readonly offLabel = input<string>('No');

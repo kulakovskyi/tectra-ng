@@ -1,5 +1,6 @@
 import { lightDark, tokenRef } from './token-helpers';
 
+/* @__NO_SIDE_EFFECTS__ */
 function tone(palette: string) {
   const color = lightDark(tokenRef(`${palette}-800`), tokenRef(`${palette}-300`));
   return { color, background: color };

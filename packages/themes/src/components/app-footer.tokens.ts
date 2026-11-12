@@ -1,4 +1,4 @@
-import { tokenRef } from './token-helpers';
+import { joinCss, tokenRef } from './token-helpers';
 
 export const appFooterTokens = {
   root: {
@@ -29,7 +29,7 @@ export const appFooterTokens = {
     separatorHeight: '10.5px',
     separatorColor: tokenRef('surface-border'),
     borderRadius: tokenRef('radius-xs'),
-    focusRingShadow: `0 0 0 2px ${tokenRef('surface-card')}, 0 0 0 4px ${tokenRef('focus-ring-color')}`,
+    focusRingShadow: joinCss('0 0 0 2px ', tokenRef('surface-card'), ', 0 0 0 4px ', tokenRef('focus-ring-color')),
     transitionDuration: '150ms',
   },
 };

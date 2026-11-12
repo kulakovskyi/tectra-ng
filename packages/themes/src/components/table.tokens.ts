@@ -1,4 +1,4 @@
-import { lightDark, mix, tokenRef } from './token-helpers';
+import { joinCss, lightDark, mix, tokenRef } from './token-helpers';
 
 const borderColor = tokenRef('surface-border');
 
@@ -103,7 +103,7 @@ export const tableTokens = {
     paddingBlock: '0',
   },
   expansion: {
-    duration: `calc(${tokenRef('motion-duration')} * 1.6)`,
+    duration: joinCss('calc(', tokenRef('motion-duration'), ' * 1.6)'),
     easing: 'cubic-bezier(0.2, 0, 0, 1)',
   },
   grip: {

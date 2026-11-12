@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraHighlightTextTokens, toStyleObject } from '@tectra-ng/themes';
 import { highlightParts } from './highlight-parts';
 import { TxHighlightTerms, TxHighlightTextPart } from './highlight-text.types';
+import { HIGHLIGHT_TEXT_THEME } from './highlight-text.theme';
 
 @Component({
   selector: 'tx-highlight-text',
@@ -24,6 +25,8 @@ import { TxHighlightTerms, TxHighlightTextPart } from './highlight-text.types';
   },
 })
 export class TxHighlightText {
+  private readonly highlightTextTheme = injectTokens(HIGHLIGHT_TEXT_THEME);
+
   readonly text = input<string | number | null | undefined>('');
   readonly highlight = input<TxHighlightTerms>('');
   readonly caseSensitive = input<boolean, unknown>(false, { transform: booleanAttribute });

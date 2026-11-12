@@ -31,12 +31,15 @@ import {
   textWidth,
   truncateText,
 } from '@tectra-ng/charts/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { funnelBoxes, funnelConnectorPath, funnelIndexAt, funnelRate } from './funnel-layout';
 import { TxFunnelChartPart, TxFunnelConnector, TxFunnelItem, TxFunnelStage, TxFunnelStageEvent } from './funnel-chart.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { FUNNEL_ICON_DEFAULTS } from './funnel.icons';
+import { FUNNEL_THEME } from './funnel.theme';
 
 const DEFAULTS = { gap: 0.32, labelWidth: 0.3, labelFontSize: 12.25, valueFontSize: 12, conversionFontSize: 11 };
 const PADDING = 4;
@@ -59,8 +62,11 @@ const MIN_WIDTH = 4;
     '[class.tx-funnel-chart--morph]': 'morph()',
     '[class.tx-funnel-chart--active]': 'active() !== null',
   },
+  viewProviders: [provideTxIconDefaults(FUNNEL_ICON_DEFAULTS)],
 })
 export class TxFunnelChart {
+  private readonly funnelTheme = injectTokens(FUNNEL_THEME);
+
   private locale = inject(TxLocaleService);
   private host = inject<ElementRef<HTMLElement>>(ElementRef);
   readonly translations = injectTranslations();

@@ -281,11 +281,14 @@ The first app edits HTML, CSS, JavaScript and other source text and shows the ch
 
 Make the kit easy to try, keep its promises checked in CI and the repository ready for contributors.
 
+Detailed checklist: [roadmap/stage-14-dx.md](roadmap/stage-14-dx.md).
+
 | Item | What | Status |
 |---|---|---|
-| `ng add tectra-ng` | One command installs the packages, adds `provideTectra` with a preset to `app.config.ts` and the fonts to `index.html` — the three manual steps of Getting started | ⬜ |
-| Open in StackBlitz | A button on every docs example opens it as a live, editable project — nothing to install locally | ⬜ |
-| Bundle size check | `size-limit` in CI: importing one component must not pull the whole kit, CI fails when a size budget grows — guards "tree-shakable" | ⬜ |
+| `ng add tectra-ng` | One command installs the packages, adds `provideTectra` with a preset to `app.config.ts` and the fonts to `index.html` — the three manual steps of Getting started | ✅ |
+| Open in StackBlitz | A button on every docs example opens it as a live, editable project — nothing to install locally | ✅ |
+| Bundle size check | Size budgets in CI (`npm run size`, own script on a production `ng build`, no `size-limit`): importing one component must not pull the whole kit, CI fails when a size budget grows or a new entry point is pulled in — guards "tree-shakable" | ✅ |
 | Test coverage 95% | The same setup as the UI kit of the first consumer app, on our Vitest runner: coverage always on in the `test` target of every package with tests (`coverage: true`, include `src/**/*.ts`, exclude specs, `index.ts` and test setup), `coverageThresholds` statements, branches, functions and lines ≥ 95% (`@vitest/coverage-v8` as the only new dev dependency), so `npm run test` and CI fail below it; coverage report in CI with a README badge; a step toward the silver OpenSSF Best Practices level. Raise the packages below 95% first (lines / branches of each package's own files on 2026-11-12; all packages together: 87% of statements): themes 100 / 94, core 96 / 86, icons 100 / 96, qr 99 / 98, utils 96 / 88, charts 93 / 76, ui 90 / 82, blocks 90 / 79, code-editor 86 / 73, editor 64 / 57 | ⬜ |
 | Link check | Weekly workflow that checks every link in the READMEs and the built docs site, so a broken link is caught before a user finds it | ⬜ |
 | Best Practices silver | The silver level of the OpenSSF Best Practices badge: `GOVERNANCE.md` (who decides, how to become a maintainer), roles and responsibilities, access continuity if the maintainer is away, test coverage from the item above | ⬜ |
+| Smaller base bundle | The base the first size check found: theme tokens, locale texts and icons of the whole kit came with the first component, the table loaded its editors at start. Now each component brings its own tokens and icons, only English ships, the table loads its editors on first use — each app ships only its own style — `provideTectra` alone 159 → 15 kB, a button 276 → 90 kB at start. Details in the checklist | ✅ |

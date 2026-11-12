@@ -1,4 +1,4 @@
-import { fade, tokenRef } from './token-helpers';
+import { fade, joinCss, tokenRef } from './token-helpers';
 
 const tint = fade(tokenRef('primary-base'), '91%');
 
@@ -14,7 +14,7 @@ export const filtersPanelTokens = {
   skeleton: {
     labelWidth: '40%',
     labelOffset: '3px',
-    controlHeight: `calc(${tokenRef('form-field-line-height')} + 2 * ${tokenRef('form-field-padding-y')} + 2px)`,
+    controlHeight: joinCss('calc(', tokenRef('form-field-line-height'), ' + 2 * ', tokenRef('form-field-padding-y'), ' + 2px)'),
     controlBorderRadius: tokenRef('form-field-border-radius'),
   },
   fields: {
@@ -39,7 +39,7 @@ export const filtersPanelTokens = {
     fontSize: '12.25px',
     fontWeight: tokenRef('font-weight-medium'),
     iconSize: '14px',
-    focusRingShadow: `0 0 0 2px ${tokenRef('surface-card')}, 0 0 0 4px ${tokenRef('focus-ring-color')}`,
+    focusRingShadow: joinCss('0 0 0 2px ', tokenRef('surface-card'), ', 0 0 0 4px ', tokenRef('focus-ring-color')),
     transitionDuration: '150ms',
   },
   count: {

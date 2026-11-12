@@ -44,12 +44,15 @@ import {
   stepIndex,
   toggleKey,
 } from '@tectra-ng/charts/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { toBoxStats } from './boxplot-stats';
 import { TxBoxShape, TxBoxStats, TxBoxplotChartPart, TxBoxplotEvent, TxBoxplotSeries, TxBoxplotSeriesToggle } from './boxplot-chart.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { BOXPLOT_ICON_DEFAULTS } from './boxplot.icons';
+import { BOXPLOT_THEME } from './boxplot.theme';
 
 const DEFAULTS = { boxWidth: 0.5, groupGap: 6, whiskerWidth: 0.5 };
 const EDGE_SLACK = 8;
@@ -71,8 +74,11 @@ const EDGE_SLACK = 8;
     '[class.tx-boxplot-chart--active]': 'active() !== null',
     '[class.tx-boxplot-chart--focused]': 'focusedSeries() !== null',
   },
+  viewProviders: [provideTxIconDefaults(BOXPLOT_ICON_DEFAULTS)],
 })
 export class TxBoxplotChart {
+  private readonly boxplotTheme = injectTokens(BOXPLOT_THEME);
+
   private locale = inject(TxLocaleService);
   private host = inject<ElementRef<HTMLElement>>(ElementRef);
   readonly translations = injectTranslations();

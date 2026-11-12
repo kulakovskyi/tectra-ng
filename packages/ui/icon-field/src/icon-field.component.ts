@@ -16,6 +16,10 @@ import { injectFluid } from '@tectra-ng/core/fluid';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TxInput } from '@tectra-ng/ui/input';
 import { TxIconFieldSlotContent } from './icon-field.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { ICON_FIELD_ICON_DEFAULTS } from './icon-field.icons';
+import { injectTokens } from '@tectra-ng/core/config';
+import { ICON_FIELD_THEME } from './icon-field.theme';
 
 @Component({
   selector: 'tx-icon-field',
@@ -31,8 +35,11 @@ import { TxIconFieldSlotContent } from './icon-field.types';
     '[style.--tx-field-inset-start]': 'startInset() === null ? null : startInset() + "px"',
     '[style.--tx-field-inset-end]': 'endInset() === null ? null : endInset() + "px"',
   },
+  viewProviders: [provideTxIconDefaults(ICON_FIELD_ICON_DEFAULTS)],
 })
 export class TxIconField implements AfterViewInit {
+  private readonly iconFieldTheme = injectTokens(ICON_FIELD_THEME);
+
   private destroyRef = inject(DestroyRef);
 
   readonly fluid = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });

@@ -4,6 +4,7 @@ import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angu
 import { TxToggleSwitchHandleTemplate } from './toggle-switch-templates.directive';
 import { TxToggleSwitch } from './toggle-switch.component';
 import { TxToggleSwitchChangeEvent } from './toggle-switch.types';
+import { TX_ICONS, provideTxIcons } from '@tectra-ng/icons';
 
 @Component({
   imports: [TxToggleSwitch, TxToggleSwitchHandleTemplate, ReactiveFormsModule, FormsModule],
@@ -22,6 +23,8 @@ class Host {
   readonly readonly = signal(false);
   events: TxToggleSwitchChangeEvent[] = [];
 }
+
+beforeEach(() => TestBed.configureTestingModule({ providers: [provideTxIcons(TX_ICONS)] }));
 
 describe('TxToggleSwitch', () => {
   let fixture: ComponentFixture<Host>;

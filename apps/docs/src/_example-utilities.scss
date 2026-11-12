@@ -1,0 +1,31 @@
+.flex {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--tx-space-3);
+}
+
+tx-fluid.stack,
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tx-space-3);
+  max-width: 360px;
+}
+
+.hint {
+  color: var(--tx-text-muted);
+  font-size: var(--tx-font-size-sm);
+}
+
+.reveal {
+  animation: docs-reveal 0.6s cubic-bezier(0.2, 0, 0, 1) both;
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+
+@keyframes docs-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}

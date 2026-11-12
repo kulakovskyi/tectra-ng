@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, Component, ElementRef, input, output, viewChild } from '@angular/core';
 import { nextListIndex } from '@tectra-ng/core/a11y';
-import { injectUnstyled } from '@tectra-ng/core/config';
+import { injectTokens, injectUnstyled } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
+import { CORE_ICON_DEFAULTS } from './core.icons';
+import { CORE_THEME } from './core.theme';
 
 export interface TxChartMenuItem {
   id: string;
@@ -31,8 +33,11 @@ const MENU_KEYS = new Set(['ArrowDown', 'ArrowUp', 'Home', 'End']);
   styleUrl: './chart-menu.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'tx-chart-menu' },
+  viewProviders: [provideTxIconDefaults(CORE_ICON_DEFAULTS)],
 })
 export class TxChartMenu {
+  private readonly coreTheme = injectTokens(CORE_THEME);
+
   readonly items = input<readonly TxChartMenuItem[]>([]);
   readonly ariaLabel = input('');
   readonly unstyled = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });

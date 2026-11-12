@@ -1,4 +1,4 @@
-import { mix, tokenRef } from './token-helpers';
+import { joinCss, mix, tokenRef } from './token-helpers';
 
 export const cookieNoticeTokens = {
   root: {
@@ -41,7 +41,7 @@ export const cookieNoticeTokens = {
     fontSize: '11.375px',
     fontWeight: tokenRef('font-weight-medium'),
     color: tokenRef('primary-base'),
-    focusRingShadow: `0 0 0 2px ${tokenRef('surface-card')}, 0 0 0 4px ${tokenRef('focus-ring-color')}`,
+    focusRingShadow: joinCss('0 0 0 2px ', tokenRef('surface-card'), ', 0 0 0 4px ', tokenRef('focus-ring-color')),
   },
   motion: {
     enterDuration: '500ms',

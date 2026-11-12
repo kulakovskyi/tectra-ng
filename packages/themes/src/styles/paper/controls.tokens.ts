@@ -1,7 +1,8 @@
 import { TectraComponentTokens } from '../../components/component-tokens';
-import { fade, lightDark, tokenRef } from '../../components/token-helpers';
+import { fade, joinCss, lightDark, mergeTokens, tokenRef } from '../../components/token-helpers';
 import { TectraDeepPartial } from '../../types/deep-partial.type';
 
+/* @__NO_SIDE_EFFECTS__ */
 const steps = (palette: string, light: number, dark: number) => lightDark(tokenRef(`${palette}-${light}`), tokenRef(`${palette}-${dark}`));
 const elevation = '0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12)';
 const noFocusRing = { focusRingColor: 'transparent', focusRingWidth: '0', focusRingOffset: '0' };
@@ -65,40 +66,16 @@ export const paperControlsTokens: TectraDeepPartial<TectraComponentTokens> = {
     },
   },
   checkbox: {
-    root: {
-      borderRadius: tokenRef('radius-xs'),
-      borderWidth: '2px',
-      checkedHoverBackground: tokenRef('primary-base'),
-      checkedHoverBorderColor: tokenRef('primary-base'),
-      ...noFocusRing,
-    },
+    root: mergeTokens({ borderRadius: tokenRef('radius-xs'), borderWidth: '2px', checkedHoverBackground: tokenRef('primary-base'), checkedHoverBorderColor: tokenRef('primary-base') }, noFocusRing),
     sm: { size: '14px' },
   },
   radioButton: {
-    root: {
-      size: '20px',
-      borderWidth: '2px',
-      checkedBackground: tokenRef('primary-contrast'),
-      checkedHoverBackground: tokenRef('primary-contrast'),
-      checkedHoverBorderColor: tokenRef('primary-base'),
-      dotSize: '10px',
-      dotColor: tokenRef('primary-base'),
-      ...noFocusRing,
-    },
+    root: mergeTokens({ size: '20px', borderWidth: '2px', checkedBackground: tokenRef('primary-contrast'), checkedHoverBackground: tokenRef('primary-contrast'), checkedHoverBorderColor: tokenRef('primary-base'), dotSize: '10px', dotColor: tokenRef('primary-base') }, noFocusRing),
     sm: { dotSize: '8px' },
     lg: { size: '24px', dotSize: '12px' },
   },
   toggleSwitch: {
-    root: {
-      width: '33.25px',
-      height: '12.25px',
-      gutter: '0px',
-      hoverBackground: steps('surface', 300, 700),
-      checkedBackground: lightDark(tokenRef('primary-200'), tokenRef('primary-base')),
-      checkedHoverBackground: lightDark(tokenRef('primary-200'), tokenRef('primary-base')),
-      disabledBackground: steps('surface', 400, 600),
-      ...noFocusRing,
-    },
+    root: mergeTokens({ width: '33.25px', height: '12.25px', gutter: '0px', hoverBackground: steps('surface', 300, 700), checkedBackground: lightDark(tokenRef('primary-200'), tokenRef('primary-base')), checkedHoverBackground: lightDark(tokenRef('primary-200'), tokenRef('primary-base')), disabledBackground: steps('surface', 400, 600) }, noFocusRing),
     handle: {
       size: '17.5px',
       checkedBackground: lightDark(tokenRef('primary-base'), tokenRef('primary-200')),
@@ -116,12 +93,6 @@ export const paperControlsTokens: TectraDeepPartial<TectraComponentTokens> = {
   },
   slider: {
     root: { trackSize: '2px', trackBorderRadius: tokenRef('radius-xs') },
-    handle: {
-      background: tokenRef('primary-base'),
-      borderWidth: '0px',
-      shadow: '0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12)',
-      hoverRing: `0 0 1px 10px ${fade(tokenRef('primary-base'), '92%')}`,
-      ...noFocusRing,
-    },
+    handle: mergeTokens({ background: tokenRef('primary-base'), borderWidth: '0px', shadow: '0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12)', hoverRing: joinCss('0 0 1px 10px ', fade(tokenRef('primary-base'), '92%')) }, noFocusRing),
   },
 };

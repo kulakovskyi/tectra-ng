@@ -1,3 +1,3 @@
 import { TectraStyle } from '../types/style.interface';
 
-export const tectraStyle: TectraStyle = { label: 'Tectra' };
+export const tectraStyle: TectraStyle = { name: 'tectra', label: 'Tectra' };

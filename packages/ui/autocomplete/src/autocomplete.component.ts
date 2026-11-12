@@ -14,12 +14,14 @@ import {
   signal,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon, TxIconName } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraSelectTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxOptionList, TxSelectBase, TxSelectItem, foldText, isSelectableRow, readOptionField } from '@tectra-ng/ui/select';
 import { TxAutocompleteChangeEvent, TxAutocompleteCompleteEvent, TxAutocompleteDropdownMode, TxAutocompletePart } from './autocomplete.types';
+import { AUTOCOMPLETE_ICON_DEFAULTS } from './autocomplete.icons';
+import { AUTOCOMPLETE_THEME } from './autocomplete.theme';
 
 @Component({
   selector: 'tx-autocomplete',
@@ -42,8 +44,11 @@ import { TxAutocompleteChangeEvent, TxAutocompleteCompleteEvent, TxAutocompleteD
     '[class.tx-autocomplete--filled]': 'hasValue() || !!query()',
     '[class.tx-autocomplete--multiple]': 'multiple()',
   },
+  viewProviders: [provideTxIconDefaults(AUTOCOMPLETE_ICON_DEFAULTS)],
 })
 export class TxAutocomplete extends TxSelectBase<unknown> {
+  private readonly autocompleteTheme = injectTokens(AUTOCOMPLETE_THEME);
+
   readonly suggestions = input<readonly unknown[]>([]);
   readonly multiple = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly dropdown = input<boolean, unknown>(false, { transform: booleanAttribute });

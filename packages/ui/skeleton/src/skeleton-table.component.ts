@@ -1,9 +1,12 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input, numberAttribute } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraSkeletonTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxSkeleton } from './skeleton.component';
 import { TxSkeletonAnimation, TxSkeletonTablePart } from './skeleton.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { SKELETON_ICON_DEFAULTS } from './skeleton.icons';
+import { SKELETON_THEME } from './skeleton.theme';
 
 const WIDTHS = ['72%', '48%', '86%', '60%', '38%', '66%'];
 
@@ -58,8 +61,11 @@ const WIDTHS = ['72%', '48%', '86%', '60%', '38%', '66%'];
     '[style]': 'hostStyle()',
     '[attr.data-styled]': '!isUnstyled() || null',
   },
+  viewProviders: [provideTxIconDefaults(SKELETON_ICON_DEFAULTS)],
 })
 export class TxSkeletonTable {
+  private readonly skeletonTheme = injectTokens(SKELETON_THEME);
+
   readonly rows = input<number, unknown>(5, { transform: numberAttribute });
   readonly columns = input<number, unknown>(4, { transform: numberAttribute });
   readonly header = input<boolean, unknown>(true, { transform: booleanAttribute });

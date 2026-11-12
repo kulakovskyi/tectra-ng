@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, booleanAttribute, computed, effect, inject, input, linkedSignal, signal } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraAnalogClockTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TxAnalogClockPart } from './analog-clock.types';
 import { clockHands, forwardAngle } from './analog-clock.utils';
+import { ANALOG_CLOCK_THEME } from './analog-clock.theme';
 
 @Component({
   selector: 'tx-analog-clock',
@@ -55,6 +56,8 @@ import { clockHands, forwardAngle } from './analog-clock.utils';
   },
 })
 export class TxAnalogClock {
+  private readonly analogClockTheme = injectTokens(ANALOG_CLOCK_THEME);
+
   readonly timezone = input<string | null | undefined>(undefined);
   readonly time = input<Date | number | null | undefined>(undefined);
   readonly showSeconds = input<boolean, unknown>(false, { transform: booleanAttribute });

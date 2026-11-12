@@ -24,10 +24,10 @@ import {
   viewChild,
 } from '@angular/core';
 import { uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraFiltersPanelTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxButton } from '@tectra-ng/ui/button';
 import { TxPopover, TxPopoverTrigger } from '@tectra-ng/ui/popover';
@@ -41,6 +41,8 @@ import {
   TxFiltersPanelStateStorage,
   TxFiltersPanelVariant,
 } from './filters-panel.types';
+import { FILTERS_PANEL_ICON_DEFAULTS } from './filters-panel.icons';
+import { FILTERS_PANEL_THEME } from './filters-panel.theme';
 
 const COLLAPSE_QUERY = '(width < 64rem)';
 const OVERLAY_CONTAINER = '.cdk-overlay-container';
@@ -70,8 +72,11 @@ const CLOSE_FALLBACK_MS = 400;
     '(document:click)': 'closeOnOutsideClick($event)',
     '(document:keydown.escape)': 'closeOnEscape($event)',
   },
+  viewProviders: [provideTxIconDefaults(FILTERS_PANEL_ICON_DEFAULTS)],
 })
 export class TxFiltersPanel implements TxFiltersPanelContext, AfterViewInit {
+  private readonly filtersPanelTheme = injectTokens(FILTERS_PANEL_THEME);
+
   private readonly document = inject(DOCUMENT);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly injector = inject(Injector);

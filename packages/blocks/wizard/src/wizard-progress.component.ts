@@ -1,9 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, input, numberAttribute } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraWizardTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxWizardProgressPart } from './wizard.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { WIZARD_ICON_DEFAULTS } from './wizard.icons';
+import { WIZARD_THEME } from './wizard.theme';
 
 @Component({
   selector: 'tx-wizard-progress',
@@ -35,8 +38,11 @@ import { TxWizardProgressPart } from './wizard.types';
     '[style]': 'hostStyle()',
     '[attr.data-styled]': '!isUnstyled() || null',
   },
+  viewProviders: [provideTxIconDefaults(WIZARD_ICON_DEFAULTS)],
 })
 export class TxWizardProgress {
+  private readonly wizardTheme = injectTokens(WIZARD_THEME);
+
   readonly total = input.required<number, unknown>({ transform: numberAttribute });
   readonly current = input.required<number, unknown>({ transform: numberAttribute });
   readonly label = input<string | undefined>(undefined);

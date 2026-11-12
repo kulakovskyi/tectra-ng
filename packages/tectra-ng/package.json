@@ -69,6 +69,10 @@
     "@tectra-ng/utils": "^0.2.6",
     "@tectra-ng/blocks": "^0.2.6"
   },
+  "schematics": "./schematics/collection.json",
+  "ng-add": {
+    "save": "dependencies"
+  },
   "publishConfig": {
     "access": "public"
   }

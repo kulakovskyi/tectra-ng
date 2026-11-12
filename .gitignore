@@ -10,3 +10,5 @@ playwright-report
 .wrangler
 release-assets
 release-notes.md
+coverage
+tmp

@@ -1,12 +1,14 @@
 import { ChangeDetectionStrategy, Component, DOCUMENT, afterNextRender, computed, inject, input, numberAttribute, output, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon, TxIconName } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraCookieNoticeTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TxButton } from '@tectra-ng/ui/button';
 import { TxCookieNoticePart } from './cookie-notice.types';
+import { COOKIE_NOTICE_ICON_DEFAULTS } from './cookie-notice.icons';
+import { COOKIE_NOTICE_THEME } from './cookie-notice.theme';
 
 const DAY_SECONDS = 86400;
 
@@ -22,8 +24,11 @@ const DAY_SECONDS = 86400;
     '[style]': 'hostStyle()',
     '[attr.data-styled]': '!isUnstyled() || null',
   },
+  viewProviders: [provideTxIconDefaults(COOKIE_NOTICE_ICON_DEFAULTS)],
 })
 export class TxCookieNotice {
+  private readonly cookieNoticeTheme = injectTokens(COOKIE_NOTICE_THEME);
+
   private readonly document = inject(DOCUMENT);
   protected readonly router = inject(Router, { optional: true });
 

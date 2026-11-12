@@ -1,5 +1,6 @@
-import { lightDark, tokenRef } from './token-helpers';
+import { joinCss, lightDark, tokenRef } from './token-helpers';
 
+/* @__NO_SIDE_EFFECTS__ */
 function tone(palette: string) {
   return { tone: lightDark(tokenRef(`${palette}-600`), tokenRef(`${palette}-400`)) };
 }
@@ -14,7 +15,7 @@ export const toastTokens = {
     duration: '0.3s',
   },
   item: {
-    background: `color-mix(in srgb, ${tokenRef('surface-card')} 88%, transparent)`,
+    background: joinCss('color-mix(in srgb, ', tokenRef('surface-card'), ' 88%, transparent)'),
     blur: '24px',
     ringColor: tokenRef('surface-border'),
     shadow: tokenRef('shadow-overlay'),
@@ -57,7 +58,7 @@ export const toastTokens = {
     hoverTint: '22%',
   },
   focusRing: {
-    shadow: `0 0 0 2px ${tokenRef('surface-card')}, 0 0 0 4px ${tokenRef('primary-base')}`,
+    shadow: joinCss('0 0 0 2px ', tokenRef('surface-card'), ', 0 0 0 4px ', tokenRef('primary-base')),
   },
   progress: {
     height: '2px',

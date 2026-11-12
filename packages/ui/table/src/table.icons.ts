@@ -1,0 +1,26 @@
+import { TxIconSet, txIconBars, txIconBolt, txIconCheck, txIconChevronRight, txIconCog, txIconDownload, txIconEllipsisH, txIconEquals, txIconExpand, txIconFilter, txIconFilterFill, txIconGripVertical, txIconKey, txIconList, txIconPencil, txIconPlus, txIconSortAmountDown, txIconSpinner, txIconTable, txIconText, txIconTimes, txIconTrash } from '@tectra-ng/icons';
+
+export const TABLE_ICON_DEFAULTS: TxIconSet = {
+  bars: txIconBars,
+  bolt: txIconBolt,
+  check: txIconCheck,
+  'chevron-right': txIconChevronRight,
+  cog: txIconCog,
+  download: txIconDownload,
+  'ellipsis-h': txIconEllipsisH,
+  equals: txIconEquals,
+  expand: txIconExpand,
+  filter: txIconFilter,
+  'filter-fill': txIconFilterFill,
+  'grip-vertical': txIconGripVertical,
+  key: txIconKey,
+  list: txIconList,
+  pencil: txIconPencil,
+  plus: txIconPlus,
+  'sort-amount-down': txIconSortAmountDown,
+  spinner: txIconSpinner,
+  table: txIconTable,
+  text: txIconText,
+  times: txIconTimes,
+  trash: txIconTrash,
+};

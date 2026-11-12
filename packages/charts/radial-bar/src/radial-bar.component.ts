@@ -41,12 +41,15 @@ import {
   strokeArc,
   toggleKey,
 } from '@tectra-ng/charts/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { radialRings, radialShare } from './radial-bar-layout';
 import { TxRadialBarCenter, TxRadialBarEvent, TxRadialBarItem, TxRadialBarPart, TxRadialBarRing, TxRadialBarToggle } from './radial-bar.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { RADIAL_BAR_ICON_DEFAULTS } from './radial-bar.icons';
+import { RADIAL_BAR_THEME } from './radial-bar.theme';
 
 const DEFAULT_THICKNESS = 0.62;
 const PADDING = 6;
@@ -68,8 +71,11 @@ const HIT_SLACK = 3;
     '[class.tx-radial-bar--morph]': 'morph()',
     '[class.tx-radial-bar--hovering]': 'hovered() !== null',
   },
+  viewProviders: [provideTxIconDefaults(RADIAL_BAR_ICON_DEFAULTS)],
 })
 export class TxRadialBar {
+  private readonly radialBarTheme = injectTokens(RADIAL_BAR_THEME);
+
   private locale = inject(TxLocaleService);
   private host = inject<ElementRef<HTMLElement>>(ElementRef);
   readonly translations = injectTranslations();

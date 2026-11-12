@@ -31,7 +31,7 @@ export const THEMING_LAYERS: ThemingLayer[] = [
   },
   {
     title: 'Component',
-    text: 'Every value of every component — size, padding, colour per severity and variant.',
+    text: 'Every value of every component — size, padding, colour per severity and variant. An app gets the variables of a component once it is on the page.',
     variable: '--tx-button-border-radius',
     file: 'preset.components',
   },
@@ -86,9 +86,11 @@ provideTectra({ preset: Brand });`,
     file: 'theme.ts',
     text: 'Swap the preset or the mode while the app runs; every component follows.',
     language: 'typescript',
-    code: `const theme = inject(TxThemeService);
+    code: `import { createTectraPreset, softStyle } from '@tectra-ng/themes';
 
-theme.applyPreset(createTectraPreset({ style: 'soft', primary: 'violet' }));
+const theme = inject(TxThemeService);
+
+theme.applyPreset(createTectraPreset({ style: softStyle, primary: 'violet' }));
 theme.setMode('dark');
 theme.toggleMode();`,
   },

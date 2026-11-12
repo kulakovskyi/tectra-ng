@@ -1,4 +1,4 @@
-import { fade, lightDark, mix, tokenRef } from './token-helpers';
+import { fade, joinCss, lightDark, mix, tokenRef } from './token-helpers';
 
 export const tabsTokens = {
   root: {
@@ -57,7 +57,7 @@ export const tabsTokens = {
       hoverColor: tokenRef('text-primary'),
       activeBackground: tokenRef('surface-card'),
       activeColor: tokenRef('text-primary'),
-      activeShadow: `0 1px 2px rgb(0 0 0 / 0.08), 0 0 0 1px ${tokenRef('surface-border')}`,
+      activeShadow: joinCss('0 1px 2px rgb(0 0 0 / 0.08), 0 0 0 1px ', tokenRef('surface-border')),
     },
   },
   raised: {
@@ -66,7 +66,7 @@ export const tabsTokens = {
     shadow: '0 1px 2px rgb(0 0 0 / 0.06)',
     pillsActiveBackground: mix(tokenRef('primary-base'), '12%', tokenRef('surface-card')),
     pillsActiveColor: tokenRef('primary-base'),
-    pillsActiveShadow: `inset 0 0 0 1px ${fade(tokenRef('primary-base'), '72%')}`,
+    pillsActiveShadow: joinCss('inset 0 0 0 1px ', fade(tokenRef('primary-base'), '72%')),
   },
   line: {
     background: tokenRef('surface-card'),

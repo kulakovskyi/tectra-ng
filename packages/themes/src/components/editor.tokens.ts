@@ -1,4 +1,4 @@
-import { lightDark, mix, tokenRef } from './token-helpers';
+import { joinCss, lightDark, mix, tokenRef } from './token-helpers';
 
 export const editorContentTokens = {
   root: {
@@ -68,7 +68,7 @@ export const editorContentTokens = {
   },
   image: {
     borderRadius: tokenRef('radius-lg'),
-    selectedOutline: `2px solid ${tokenRef('primary-base')}`,
+    selectedOutline: joinCss('2px solid ', tokenRef('primary-base')),
   },
   video: {
     borderRadius: tokenRef('radius-lg'),

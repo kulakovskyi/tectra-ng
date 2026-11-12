@@ -1,4 +1,4 @@
-import { lightDark, tokenRef } from './token-helpers';
+import { extendTokens, lightDark, tokenRef } from './token-helpers';
 
 export const codeSyntaxTokens = {
   comment: lightDark('#008000', '#6a9955'),
@@ -25,39 +25,42 @@ export const codeSyntaxTokens = {
   indentGuide: lightDark('#d3d3d3', '#404040'),
 };
 
+const highlightRoot = {
+  background: lightDark('#fffffe', '#1e1e1e'),
+  color: lightDark('#000000', '#d4d4d4'),
+  borderColor: tokenRef('surface-border'),
+  borderWidth: '1px',
+  borderRadius: tokenRef('radius-md'),
+  fontFamily: "Menlo, Monaco, Consolas, 'Droid Sans Mono', 'Courier New', monospace",
+  fontSize: '14px',
+  lineHeight: '21px',
+  tabSize: '4',
+  paddingBlock: '0',
+  paddingInlineEnd: '14px',
+};
+
+const highlightGutter = {
+  background: lightDark('#fffffe', '#1e1e1e'),
+  color: lightDark('#237893', '#858585'),
+  activeColor: lightDark('#0b216f', '#c6c6c6'),
+  minDigits: '5ch',
+  paddingStart: '18px',
+  gap: '26px',
+};
+
 export const codeHighlightTokens = {
-  root: {
-    background: lightDark('#fffffe', '#1e1e1e'),
-    color: lightDark('#000000', '#d4d4d4'),
-    borderColor: tokenRef('surface-border'),
-    borderWidth: '1px',
-    borderRadius: tokenRef('radius-md'),
-    fontFamily: "Menlo, Monaco, Consolas, 'Droid Sans Mono', 'Courier New', monospace",
-    fontSize: '14px',
-    lineHeight: '21px',
-    tabSize: '4',
-    paddingBlock: '0',
-    paddingInlineEnd: '14px',
-  },
-  gutter: {
-    background: lightDark('#fffffe', '#1e1e1e'),
-    color: lightDark('#237893', '#858585'),
-    activeColor: lightDark('#0b216f', '#c6c6c6'),
-    minDigits: '5ch',
-    paddingStart: '18px',
-    gap: '26px',
-  },
+  root: highlightRoot,
+  gutter: highlightGutter,
 };
 
 export const codeEditorTokens = {
-  root: {
-    ...codeHighlightTokens.root,
+  root: extendTokens(highlightRoot, {
     focusBorderColor: tokenRef('surface-border'),
     invalidBorderColor: tokenRef('danger-base'),
     disabledOpacity: '0.6',
     placeholderColor: tokenRef('form-field-placeholder-color'),
-  },
-  gutter: codeHighlightTokens.gutter,
+  }),
+  gutter: highlightGutter,
   cursor: {
     color: lightDark('#000000', '#aeafad'),
     width: '2px',
@@ -92,17 +95,15 @@ export const codeEditorTokens = {
 };
 
 export const codeDiffTokens = {
-  root: {
-    ...codeHighlightTokens.root,
+  root: extendTokens(highlightRoot, {
     splitGap: '0',
     splitBorderColor: tokenRef('surface-border'),
-  },
-  gutter: {
-    ...codeHighlightTokens.gutter,
+  }),
+  gutter: extendTokens(highlightGutter, {
     paddingStart: '8px',
     gap: '14px',
     markerWidth: '14px',
-  },
+  }),
   syntax: {
     mix: '40%',
     shade: lightDark('#000000', '#d4d4d4'),

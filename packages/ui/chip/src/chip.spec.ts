@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TxChip } from './chip.component';
+import { TX_ICONS, provideTxIcons } from '@tectra-ng/icons';
 
 @Component({
   imports: [TxChip],
@@ -13,6 +14,8 @@ import { TxChip } from './chip.component';
 class Host {
   removed = 0;
 }
+
+beforeEach(() => TestBed.configureTestingModule({ providers: [provideTxIcons(TX_ICONS)] }));
 
 describe('TxChip', () => {
   let fixture: ComponentFixture<Host>;

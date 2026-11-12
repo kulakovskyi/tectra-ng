@@ -680,14 +680,19 @@
       } @else {
         @switch (column.column.editType ?? 'text') {
           @case ('numeric') {
-            <tx-input-number
-              size="small"
-              class="tx-table__editor-control"
-              [ariaLabel]="label(column.column)"
-              [unstyled]="isUnstyled()"
-              [ngModel]="draftValue(item, column.column)"
-              (ngModelChange)="setDraft(item, column.column, $event)"
-            />
+            @defer (on immediate) {
+              <tx-input-number
+                txTableEditorFocus
+                size="small"
+                class="tx-table__editor-control"
+                [ariaLabel]="label(column.column)"
+                [unstyled]="isUnstyled()"
+                [ngModel]="draftValue(item, column.column)"
+                (ngModelChange)="setDraft(item, column.column, $event)"
+              />
+            } @placeholder {
+              <ng-container [ngTemplateOutlet]="pendingEditor" [ngTemplateOutletContext]="{ $implicit: draftValue(item, column.column) }" />
+            }
           }
           @case ('boolean') {
             <tx-checkbox
@@ -699,14 +704,19 @@
             />
           }
           @case ('date') {
-            <tx-datepicker
-              size="small"
-              class="tx-table__editor-control"
-              [ariaLabel]="label(column.column)"
-              [unstyled]="isUnstyled()"
-              [ngModel]="dateDraft(draftValue(item, column.column))"
-              (ngModelChange)="setDraft(item, column.column, $event)"
-            />
+            @defer (on immediate) {
+              <tx-datepicker
+                txTableEditorFocus
+                size="small"
+                class="tx-table__editor-control"
+                [ariaLabel]="label(column.column)"
+                [unstyled]="isUnstyled()"
+                [ngModel]="dateDraft(draftValue(item, column.column))"
+                (ngModelChange)="setDraft(item, column.column, $event)"
+              />
+            } @placeholder {
+              <ng-container [ngTemplateOutlet]="pendingEditor" [ngTemplateOutletContext]="{ $implicit: displayValue(item.row, column.column) }" />
+            }
           }
           @default {
             <input
@@ -742,4 +752,8 @@
   } @else {
     {{ displayValue(item.row, column.column) }}
   }
+</ng-template>
+
+<ng-template #pendingEditor let-value>
+  <input txInput type="text" size="small" class="tx-table__editor-control tx-table__editor-pending" readonly tabindex="-1" aria-hidden="true" [unstyled]="isUnstyled()" [value]="value ?? ''" />
 </ng-template>

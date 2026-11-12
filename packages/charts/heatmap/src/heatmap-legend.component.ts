@@ -1,9 +1,12 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { injectUnstyled } from '@tectra-ng/core/config';
+import { injectTokens, injectUnstyled } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TxHeatmapCellView } from './heatmap-cell.component';
 import { TxHeatmapLegendItem, TxHeatmapScale } from './heatmap.types';
 import { heatmapLevel } from './heatmap-layout';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { HEATMAP_ICON_DEFAULTS } from './heatmap.icons';
+import { HEATMAP_THEME } from './heatmap.theme';
 
 @Component({
   selector: 'tx-heatmap-legend',
@@ -30,8 +33,11 @@ import { heatmapLevel } from './heatmap-layout';
     class: 'tx-heatmap-legend',
     '[attr.data-styled]': '!isUnstyled() || null',
   },
+  viewProviders: [provideTxIconDefaults(HEATMAP_ICON_DEFAULTS)],
 })
 export class TxHeatmapLegend {
+  private readonly heatmapTheme = injectTokens(HEATMAP_THEME);
+
   readonly items = input<readonly TxHeatmapLegendItem[]>([]);
   readonly emptyLabel = input('');
   readonly scale = input<TxHeatmapScale | null>(null);

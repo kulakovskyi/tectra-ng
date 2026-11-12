@@ -47,6 +47,16 @@
 
 ## Quick start
 
+In an Angular CLI app one command does the whole setup:
+
+```bash
+ng add tectra-ng
+```
+
+It installs the kit and its Angular peers, adds `provideTectra` with the style, primary colour and surface you pick and `provideTxIcons(TX_ICONS)` to `app.config.ts`, and the fonts to `index.html`. Pass `--style`, `--primary` and `--surface` to skip the questions; running it again changes nothing.
+
+Or set it up by hand:
+
 ```bash
 npm install tectra-ng
 ```
@@ -55,10 +65,11 @@ Provide a theme in `app.config.ts`:
 
 ```ts
 import { provideTectra } from '@tectra-ng/core/config';
+import { TX_ICONS, provideTxIcons } from '@tectra-ng/icons';
 import { createTectraPreset } from '@tectra-ng/themes';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideTectra({ preset: createTectraPreset({ primary: 'blue' }) })],
+  providers: [provideTectra({ preset: createTectraPreset({ primary: 'blue' }) }), provideTxIcons(TX_ICONS)],
 };
 ```
 
@@ -77,7 +88,9 @@ export class CityField {
 }
 ```
 
-Fonts, dark mode, locales and the theme builder: [tectra-ng.com/getting-started](https://tectra-ng.com/getting-started).
+Fonts, dark mode, locales and the theme builder: [tectra-ng.com/getting-started](https://tectra-ng.com/getting-started). Upgrading from 0.2: [UPGRADING.md](UPGRADING.md).
+
+Try before installing: the bolt button on every example of [tectra-ng.com](https://tectra-ng.com) opens it in StackBlitz as a live, editable Angular CLI project with the theme you picked on the site.
 
 ## Packages
 

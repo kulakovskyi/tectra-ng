@@ -4,6 +4,7 @@ import { provideRouter } from '@angular/router';
 import { TxBreadcrumb } from './breadcrumb.component';
 import { TxBreadcrumbItemTemplate, TxBreadcrumbSeparatorTemplate } from './breadcrumb.templates';
 import { TxBreadcrumbItem, TxBreadcrumbItemEvent, TxBreadcrumbSeparator } from './breadcrumb.types';
+import { TX_ICONS, provideTxIcons } from '@tectra-ng/icons';
 
 @Component({ template: '', changeDetection: ChangeDetectionStrategy.OnPush })
 class Page {}
@@ -52,6 +53,8 @@ class Host {
 class TemplateHost {
   readonly items: TxBreadcrumbItem[] = [{ label: 'Team', url: '/team' }, { label: 'Members' }];
 }
+
+beforeEach(() => TestBed.configureTestingModule({ providers: [provideTxIcons(TX_ICONS)] }));
 
 describe('TxBreadcrumb', () => {
   let fixture: ComponentFixture<Host>;

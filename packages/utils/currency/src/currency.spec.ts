@@ -28,11 +28,11 @@ describe('currencySymbol', () => {
     expect(currencySymbol(null)).toBe('');
   });
 
-  it('names a currency in the tectra locale', () => {
+  it('names a currency in the tectra locale', async () => {
     const fixture = TestBed.createComponent(CurrencyHost);
     fixture.detectChanges();
     expect(fixture.nativeElement.textContent).toBe('Ukrainian Hryvnia');
-    TestBed.inject(TxLocaleService).setLocale('ua');
+    await TestBed.inject(TxLocaleService).setLocale('ua');
     fixture.detectChanges();
     expect(fixture.nativeElement.textContent).toBe('українська гривня');
   });

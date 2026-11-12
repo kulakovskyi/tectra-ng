@@ -1,6 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { TxStepperRef } from './stepper.context';
 import { TxStepValue } from './stepper.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { STEPPER_ICON_DEFAULTS } from './stepper.icons';
+import { injectTokens } from '@tectra-ng/core/config';
+import { STEPPER_THEME } from './stepper.theme';
 
 @Component({
   selector: 'tx-step-item',
@@ -14,8 +18,11 @@ import { TxStepValue } from './stepper.types';
     '[class.tx-step-item--completed]': 'completed()',
     '[class.tx-step-item--last]': 'last()',
   },
+  viewProviders: [provideTxIconDefaults(STEPPER_ICON_DEFAULTS)],
 })
 export class TxStepItem {
+  private readonly stepperTheme = injectTokens(STEPPER_THEME);
+
   protected readonly stepper = inject(TxStepperRef);
 
   readonly value = input.required<TxStepValue>();

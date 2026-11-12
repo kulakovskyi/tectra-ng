@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, DeferBlockBehavior, DeferBlockState, TestBed } from '@angular/core/testing';
 import { TxTable } from './table.component';
 import { filterRows, matchesFilter, matchesRule } from './table.filter';
 import { TxTableColumn, TxTableFilterDisplay, TxTableFilterEvent, TxTableFilters, TxTableLazyLoadEvent } from './table.types';
@@ -179,5 +179,29 @@ describe('TxTable filters', () => {
     await stable();
     expect(host.loads.at(-1)?.filters).toEqual({ tag: { operator: 'and', rules: [{ value: ['wood'], matchMode: 'in' }] } });
     expect(ids()).toHaveLength(4);
+  });
+});
+
+describe('TxTable filter editors before their code loads', () => {
+  it('holds the place of the number, options and date editors with a read-only input of the same size', async () => {
+    TestBed.configureTestingModule({ deferBlockBehavior: DeferBlockBehavior.Manual });
+    const fixture = TestBed.createComponent(Host);
+    fixture.componentInstance.display.set('row');
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const row = () => fixture.nativeElement.querySelector('.tx-table__filter-row') as HTMLElement;
+    const pending = () => [...row().querySelectorAll<HTMLInputElement>('input.tx-table-filter__value[readonly]')];
+
+    expect(pending()).toHaveLength(3);
+    expect(pending().every((input) => input.getAttribute('aria-hidden') === 'true' && input.tabIndex === -1)).toBe(true);
+    expect(row().querySelector('tx-datepicker, tx-input-number, tx-multiselect')).toBeNull();
+
+    for (const block of await fixture.getDeferBlocks()) {
+      await block.render(DeferBlockState.Complete);
+    }
+    fixture.detectChanges();
+    expect(pending()).toHaveLength(0);
+    expect(row().querySelectorAll('tx-datepicker, tx-input-number, tx-multiselect')).toHaveLength(3);
+    fixture.destroy();
   });
 });

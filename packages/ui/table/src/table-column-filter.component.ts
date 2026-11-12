@@ -2,7 +2,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, input, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { injectTranslations } from '@tectra-ng/core/i18n';
-import { TxTranslations } from '@tectra-ng/core/config';
+import { injectTokens, TxTranslations } from '@tectra-ng/core/config';
 import { TxButton } from '@tectra-ng/ui/button';
 import { TxDatePicker } from '@tectra-ng/ui/datepicker';
 import { TxInput } from '@tectra-ng/ui/input';
@@ -15,6 +15,9 @@ import { TX_TABLE } from './table.context';
 import { TX_FILTER_MATCH_MODES, defaultMatchMode, isFilterActive } from './table.filter';
 import { TxColumnFilter, TxFilterMatchMode, TxFilterOperator, TxFilterRule, TxTableColumn, TxTableFilterDisplay } from './table.types';
 import { columnLabel } from './table.utils';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { TABLE_ICON_DEFAULTS } from './table.icons';
+import { TABLE_THEME } from './table.theme';
 
 const MAX_RULES = 2;
 
@@ -26,28 +29,40 @@ function toDate(value: unknown): Date | null {
   selector: 'tx-table-column-filter',
   imports: [NgTemplateOutlet, FormsModule, TxButton, TxDatePicker, TxInput, TxInputNumber, TxSelect, TxMultiselect, TxPopover, TxPopoverTrigger, TxMenu, TxMenuTrigger],
   template: `
+    <ng-template #pending>
+      <input txInput type="text" size="small" class="tx-table-filter__value" readonly tabindex="-1" aria-hidden="true" [placeholder]="column().filterPlaceholder ?? ''" />
+    </ng-template>
+
     <ng-template #editor let-rule let-index="index" let-live="live">
       @switch (type()) {
         @case ('numeric') {
-          <tx-input-number
-            size="small"
-            class="tx-table-filter__value"
-            [ariaLabel]="valueLabel()"
-            [placeholder]="column().filterPlaceholder"
-            [ngModel]="rule.value"
-            (ngModelChange)="setValue(index, $event, live)"
-          />
+          @defer (on immediate) {
+            <tx-input-number
+              size="small"
+              class="tx-table-filter__value"
+              [ariaLabel]="valueLabel()"
+              [placeholder]="column().filterPlaceholder"
+              [ngModel]="rule.value"
+              (ngModelChange)="setValue(index, $event, live)"
+            />
+          } @placeholder {
+            <ng-container [ngTemplateOutlet]="pending" />
+          }
         }
         @case ('date') {
-          <tx-datepicker
-            size="small"
-            class="tx-table-filter__value"
-            [ariaLabel]="valueLabel()"
-            [placeholder]="column().filterPlaceholder"
-            [showClear]="true"
-            [ngModel]="dateValue(rule.value)"
-            (ngModelChange)="setValue(index, $event, live)"
-          />
+          @defer (on immediate) {
+            <tx-datepicker
+              size="small"
+              class="tx-table-filter__value"
+              [ariaLabel]="valueLabel()"
+              [placeholder]="column().filterPlaceholder"
+              [showClear]="true"
+              [ngModel]="dateValue(rule.value)"
+              (ngModelChange)="setValue(index, $event, live)"
+            />
+          } @placeholder {
+            <ng-container [ngTemplateOutlet]="pending" />
+          }
         }
         @case ('boolean') {
           <tx-select
@@ -62,18 +77,22 @@ function toDate(value: unknown): Date | null {
           />
         }
         @case ('options') {
-          <tx-multiselect
-            size="small"
-            class="tx-table-filter__value"
-            optionLabel="label"
-            optionValue="value"
-            [maxSelectedLabels]="2"
-            [options]="column().filterOptions ?? []"
-            [ariaLabel]="valueLabel()"
-            [placeholder]="column().filterPlaceholder ?? translations().filterAny"
-            [ngModel]="rule.value ?? []"
-            (ngModelChange)="setValue(index, $event, live)"
-          />
+          @defer (on immediate) {
+            <tx-multiselect
+              size="small"
+              class="tx-table-filter__value"
+              optionLabel="label"
+              optionValue="value"
+              [maxSelectedLabels]="2"
+              [options]="column().filterOptions ?? []"
+              [ariaLabel]="valueLabel()"
+              [placeholder]="column().filterPlaceholder ?? translations().filterAny"
+              [ngModel]="rule.value ?? []"
+              (ngModelChange)="setValue(index, $event, live)"
+            />
+          } @placeholder {
+            <ng-container [ngTemplateOutlet]="pending" />
+          }
         }
         @default {
           <input
@@ -247,8 +266,11 @@ function toDate(value: unknown): Date | null {
     class: 'tx-table-column-filter',
     '[class.tx-table-column-filter--row]': "display() === 'row'",
   },
+  viewProviders: [provideTxIconDefaults(TABLE_ICON_DEFAULTS)],
 })
 export class TxTableColumnFilter {
+  private readonly tableTheme = injectTokens(TABLE_THEME);
+
   private readonly table = inject(TX_TABLE);
   private readonly panel = viewChild<TxPopover>('panel');
   private timer: ReturnType<typeof setTimeout> | undefined;

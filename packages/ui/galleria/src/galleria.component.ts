@@ -21,14 +21,16 @@ import {
   untracked,
   viewChild,
 } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { TxSwapEffect, optionalBoolean, txCanAnimate, txCssTime, txSwapMotion } from '@tectra-ng/core/utils';
-import { TxIcon, TxIconName } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraGalleriaTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxImageLayer, openImageLayer } from '@tectra-ng/ui/image';
 import { TxGalleriaCaptionTemplate, TxGalleriaFooter, TxGalleriaHeader, TxGalleriaIndicatorTemplate, TxGalleriaItemTemplate, TxGalleriaThumbnailTemplate } from './galleria.templates';
 import { TxGalleriaImage, TxGalleriaPart, TxGalleriaPosition, TxGalleriaResponsiveOption } from './galleria.types';
+import { GALLERIA_ICON_DEFAULTS } from './galleria.icons';
+import { GALLERIA_THEME } from './galleria.theme';
 
 const SWIPE_MIN = 40;
 const SWAP_DURATION = 450;
@@ -52,8 +54,11 @@ export function galleriaImage(item: unknown): TxGalleriaImage | null {
     '[attr.data-styled]': '!isUnstyled() || null',
     '[class.tx-galleria--fullscreen]': 'fullScreen()',
   },
+  viewProviders: [provideTxIconDefaults(GALLERIA_ICON_DEFAULTS)],
 })
 export class TxGalleria {
+  private readonly galleriaTheme = injectTokens(GALLERIA_THEME);
+
   private injector = inject(Injector);
   private viewContainerRef = inject(ViewContainerRef);
   private document = inject(DOCUMENT);

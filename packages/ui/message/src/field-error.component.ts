@@ -1,20 +1,14 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, effect, inject, input, signal } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 import { injectDescribedBy, uniqueId } from '@tectra-ng/core/a11y';
-import {
-  TECTRA_CONFIG,
-  TxPassThrough,
-  TxPassThroughOptions,
-  TxTranslations,
-  TxValidationMessages,
-  injectPassThrough,
-  injectUnstyled,
-} from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TECTRA_CONFIG, TxPassThrough, TxPassThroughOptions, TxTranslations, TxValidationMessages } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraFieldMessageTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxFieldMessagePart } from './message.types';
+import { MESSAGE_ICON_DEFAULTS } from './message.icons';
+import { MESSAGE_THEME } from './message.theme';
 
 const BUILT_IN_MESSAGES: Record<string, keyof TxTranslations> = {
   required: 'validationRequired',
@@ -58,8 +52,11 @@ const BUILT_IN_MESSAGES: Record<string, keyof TxTranslations> = {
     '[attr.data-state]': 'state()',
     'aria-live': 'polite',
   },
+  viewProviders: [provideTxIconDefaults(MESSAGE_ICON_DEFAULTS)],
 })
 export class TxFieldError {
+  private readonly messageTheme = injectTokens(MESSAGE_THEME);
+
   private generatedId = uniqueId('tx-field-error');
   private globalMessages = inject(TECTRA_CONFIG, { optional: true })?.validationMessages;
   private translations = injectTranslations();

@@ -1,14 +1,16 @@
 import { ChangeDetectionStrategy, Component, ElementRef, computed, input, output, viewChild } from '@angular/core';
 import { nextListIndex } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraActionsMenuTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TxButton } from '@tectra-ng/ui/button';
 import { TxPopover, TxPopoverTrigger } from '@tectra-ng/ui/popover';
 import { TxTooltip } from '@tectra-ng/ui/tooltip';
 import { TxActionsMenuItem, TxActionsMenuPart, TxActionsMenuSize } from './actions-menu.types';
+import { ACTIONS_MENU_ICON_DEFAULTS } from './actions-menu.icons';
+import { ACTIONS_MENU_THEME } from './actions-menu.theme';
 
 const MENU_KEYS = new Set(['ArrowDown', 'ArrowUp', 'Home', 'End']);
 
@@ -25,8 +27,11 @@ const MENU_KEYS = new Set(['ArrowDown', 'ArrowUp', 'Home', 'End']);
     '[attr.data-styled]': '!isUnstyled() || null',
     '[attr.data-size]': 'size()',
   },
+  viewProviders: [provideTxIconDefaults(ACTIONS_MENU_ICON_DEFAULTS)],
 })
 export class TxActionsMenu {
+  private readonly actionsMenuTheme = injectTokens(ACTIONS_MENU_THEME);
+
   private readonly popover = viewChild(TxPopover);
   private readonly list = viewChild<ElementRef<HTMLElement>>('list');
   private pending: TxActionsMenuItem | null = null;

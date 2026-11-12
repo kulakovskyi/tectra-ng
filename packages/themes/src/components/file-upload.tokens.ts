@@ -1,4 +1,4 @@
-import { lightDark, mix, tokenRef } from './token-helpers';
+import { joinCss, lightDark, mix, tokenRef } from './token-helpers';
 
 export const fileUploadTokens = {
   root: {
@@ -34,7 +34,7 @@ export const fileUploadTokens = {
     borderRadius: tokenRef('radius-lg'),
     background: mix(tokenRef('primary-base'), '12%', tokenRef('surface-card')),
     color: tokenRef('primary-base'),
-    hoverShadow: `0 6px 14px -6px ${mix(tokenRef('primary-base'), '55%', 'transparent')}`,
+    hoverShadow: joinCss('0 6px 14px -6px ', mix(tokenRef('primary-base'), '55%', 'transparent')),
     lift: '-2px',
   },
   prompt: {

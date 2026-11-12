@@ -42,13 +42,16 @@ import {
   textWidth,
   toggleKey,
 } from '@tectra-ng/charts/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TxPieCenter } from './pie-center.directive';
 import { TxPieCenterData, TxPieChartPart, TxPieData, TxPieSegmentEvent, TxPieSegmentToggle, TxPieTotalFormatter } from './pie-chart.types';
 import { arcAt, pieArcs } from './pie-layout';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { PIE_ICON_DEFAULTS } from './pie.icons';
+import { PIE_THEME } from './pie.theme';
 
 const MIN_LABEL_ANGLE = (10 * Math.PI) / 180;
 const LEGEND_ITEM_WIDTH = 34;
@@ -75,8 +78,11 @@ const LEGEND_GAP = 10.5;
     '[class.tx-pie-chart--morph]': 'morph()',
     '[class.tx-pie-chart--hovering]': 'hovered() !== null',
   },
+  viewProviders: [provideTxIconDefaults(PIE_ICON_DEFAULTS)],
 })
 export class TxPieChart {
+  private readonly pieTheme = injectTokens(PIE_THEME);
+
   private locale = inject(TxLocaleService);
   private host = inject<ElementRef<HTMLElement>>(ElementRef);
   readonly translations = injectTranslations();

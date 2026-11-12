@@ -69,7 +69,7 @@ describe('TxAmount', () => {
   });
 
   it('follows the current locale', async () => {
-    TestBed.inject(TxLocaleService).setLocale('ua');
+    await TestBed.inject(TxLocaleService).setLocale('ua');
     fixture.componentInstance.currency.set('UAH');
     await fixture.whenStable();
     expect(text(el('#money'))).toBe('+1 234,50 ₴');

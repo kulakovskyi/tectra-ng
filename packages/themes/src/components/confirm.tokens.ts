@@ -1,7 +1,8 @@
-import { lightDark, tokenRef } from './token-helpers';
+import { joinCss, lightDark, tokenRef } from './token-helpers';
 
+/* @__NO_SIDE_EFFECTS__ */
 function badge(color: string, base: string, tint = '14%') {
-  return { color, background: `color-mix(in srgb, ${tokenRef(`${base}-500`)} ${tint}, transparent)` };
+  return { color, background: joinCss('color-mix(in srgb, ', tokenRef(`${base}-500`), ' ', tint, ', transparent)') };
 }
 
 export const confirmTokens = {
@@ -35,7 +36,7 @@ export const confirmTokens = {
     arrowSize: '14px',
     arrowInset: '15.75px',
   },
-  primary: { color: tokenRef('primary-base'), background: `color-mix(in srgb, ${tokenRef('primary-base')} 14%, transparent)` },
+  primary: { color: tokenRef('primary-base'), background: joinCss('color-mix(in srgb, ', tokenRef('primary-base'), ' 14%, transparent)') },
   info: badge(lightDark(tokenRef('blue-600'), tokenRef('blue-400')), 'blue'),
   success: badge(lightDark(tokenRef('green-700'), tokenRef('green-400')), 'green'),
   warn: badge(lightDark(tokenRef('amber-700'), tokenRef('amber-400')), 'amber', '16%'),

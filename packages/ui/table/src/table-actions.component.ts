@@ -18,6 +18,10 @@ import { TxPopover, TxPopoverTrigger } from '@tectra-ng/ui/popover';
 import { TxTooltip } from '@tectra-ng/ui/tooltip';
 import { TX_TABLE, TxTableRowActionsSource } from './table.context';
 import { TxTableAction } from './table.templates';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { TABLE_ICON_DEFAULTS } from './table.icons';
+import { injectTokens } from '@tectra-ng/core/config';
+import { TABLE_THEME } from './table.theme';
 
 @Component({
   selector: 'tx-table-actions',
@@ -62,8 +66,11 @@ import { TxTableAction } from './table.templates';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'tx-table-actions' },
+  viewProviders: [provideTxIconDefaults(TABLE_ICON_DEFAULTS)],
 })
 export class TxTableActions implements TxTableRowActionsSource {
+  private readonly tableTheme = injectTokens(TABLE_THEME);
+
   private table = inject(TX_TABLE, { optional: true });
   private host = inject<ElementRef<HTMLElement>>(ElementRef);
   private row: Element | null = null;

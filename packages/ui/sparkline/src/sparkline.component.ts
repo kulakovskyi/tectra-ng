@@ -1,8 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraSparklineTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxSparklinePart, TxSparklinePoint, TxSparklineTone } from './sparkline.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { SPARKLINE_ICON_DEFAULTS } from './sparkline.icons';
+import { SPARKLINE_THEME } from './sparkline.theme';
 
 const WIDTH = 120;
 const HEIGHT = 36;
@@ -50,8 +53,11 @@ export function sparklinePoints(values: readonly number[]): TxSparklinePoint[] {
     '[attr.aria-label]': 'ariaLabel() || null',
     '[attr.aria-hidden]': 'ariaLabel() ? null : "true"',
   },
+  viewProviders: [provideTxIconDefaults(SPARKLINE_ICON_DEFAULTS)],
 })
 export class TxSparkline {
+  private readonly sparklineTheme = injectTokens(SPARKLINE_THEME);
+
   readonly values = input<readonly number[] | null | undefined>([]);
   readonly tone = input<TxSparklineTone>('primary');
   readonly ariaLabel = input<string | undefined>(undefined);

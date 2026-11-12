@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input, output } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, TxThemeMode, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions, TxThemeMode } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraTopbarPreferencesTokens, toStyleObject } from '@tectra-ng/themes';
 import { TX_LANGUAGES, TxLanguageOption, TxSwitchLanguage } from '@tectra-ng/blocks/switch-language';
 import { TxSwitchTheme } from '@tectra-ng/blocks/switch-theme';
 import { TxTopbarPreferencesLayout, TxTopbarPreferencesPart } from './topbar-preferences.types';
+import { TOPBAR_PREFERENCES_THEME } from './topbar-preferences.theme';
 
 @Component({
   selector: 'tx-topbar-preferences',
@@ -23,6 +24,8 @@ import { TxTopbarPreferencesLayout, TxTopbarPreferencesPart } from './topbar-pre
   },
 })
 export class TxTopbarPreferences {
+  private readonly topbarPreferencesTheme = injectTokens(TOPBAR_PREFERENCES_THEME);
+
   readonly layout = input<TxTopbarPreferencesLayout>('inline');
   readonly raised = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly languages = input<readonly TxLanguageOption[]>(TX_LANGUAGES);

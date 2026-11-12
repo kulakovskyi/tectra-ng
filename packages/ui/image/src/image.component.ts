@@ -17,14 +17,16 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon, TxIconName } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraImageTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxImageLayer, openImageLayer } from './image-layer';
 import { TxImageIndicatorTemplate, TxImagePreviewTemplate } from './image.templates';
 import { TxImageLoading, TxImagePart, TxImagePreviewContext } from './image.types';
+import { IMAGE_ICON_DEFAULTS } from './image.icons';
+import { IMAGE_THEME } from './image.theme';
 
 const PAN_THRESHOLD = 3;
 
@@ -42,8 +44,11 @@ const PAN_THRESHOLD = 3;
     '[class.tx-image--preview]': 'preview()',
     '[class.tx-image--open]': 'visible()',
   },
+  viewProviders: [provideTxIconDefaults(IMAGE_ICON_DEFAULTS)],
 })
 export class TxImage {
+  private readonly imageTheme = injectTokens(IMAGE_THEME);
+
   private injector = inject(Injector);
   private viewContainerRef = inject(ViewContainerRef);
   private document = inject(DOCUMENT);

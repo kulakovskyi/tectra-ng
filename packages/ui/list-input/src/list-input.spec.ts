@@ -152,7 +152,7 @@ describe('TxListInput', () => {
     expect(field('ids').readOnly).toBe(true);
     expect(pills('ids')).toEqual(['2 ids', '1 duplicate', '1 not recognized']);
     expect(el('#ids .tx-list-input__actions')).toBeNull();
-    TestBed.inject(TxLocaleService).setLocale('ua');
+    await TestBed.inject(TxLocaleService).setLocale('ua');
     await fixture.whenStable();
     expect(pills('ids')[1]).toBe('1 дублікат');
     await type('domains', 'a.com b.com c.com d.com e.com');

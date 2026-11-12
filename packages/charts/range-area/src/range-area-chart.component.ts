@@ -45,11 +45,14 @@ import {
   toTime,
   toggleKey,
 } from '@tectra-ng/charts/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService, formatMessage, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TxRangeAreaChartPart, TxRangeAreaPath, TxRangeAreaPointEvent, TxRangeAreaSeriesToggle, TxRangeAreaXType, TxRangeSeries } from './range-area-chart.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { RANGE_AREA_ICON_DEFAULTS } from './range-area.icons';
+import { RANGE_AREA_THEME } from './range-area.theme';
 
 const EDGE_SLACK = 8;
 
@@ -69,8 +72,11 @@ const EDGE_SLACK = 8;
     '[class.tx-range-area-chart--morph]': 'morph()',
     '[class.tx-range-area-chart--focused]': 'focusedSeries() !== null',
   },
+  viewProviders: [provideTxIconDefaults(RANGE_AREA_ICON_DEFAULTS)],
 })
 export class TxRangeAreaChart {
+  private readonly rangeAreaTheme = injectTokens(RANGE_AREA_THEME);
+
   private locale = inject(TxLocaleService);
   readonly translations = injectTranslations();
 

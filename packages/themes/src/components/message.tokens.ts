@@ -1,5 +1,6 @@
 import { fade, lightDark, tokenRef } from './token-helpers';
 
+/* @__NO_SIDE_EFFECTS__ */
 function tone(palette: string) {
   return {
     tone: lightDark(tokenRef(`${palette}-600`), tokenRef(`${palette}-400`)),

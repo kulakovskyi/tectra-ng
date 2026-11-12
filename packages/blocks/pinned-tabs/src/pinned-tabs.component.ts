@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, computed, inject, input, linkedSignal, model } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraPinnedTabsTokens, toStyleObject } from '@tectra-ng/themes';
@@ -10,6 +10,9 @@ import { TxTabItem, TxTabValue, TxTabs } from '@tectra-ng/ui/tabs';
 import { TxTooltip } from '@tectra-ng/ui/tooltip';
 import { TxPinnedTabsDialog } from './pinned-tabs-dialog.component';
 import { TxPinnedTabOption, TxPinnedTabsDialogData, TxPinnedTabsPart } from './pinned-tabs.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { PINNED_TABS_ICON_DEFAULTS } from './pinned-tabs.icons';
+import { PINNED_TABS_THEME } from './pinned-tabs.theme';
 
 const ALL = '__all__';
 
@@ -61,8 +64,11 @@ const ALL = '__all__';
     '[attr.data-styled]': '!isUnstyled() || null',
     '[class.tx-pinned-tabs--empty]': '!tabs().length',
   },
+  viewProviders: [provideTxIconDefaults(PINNED_TABS_ICON_DEFAULTS)],
 })
 export class TxPinnedTabs {
+  private readonly pinnedTabsTheme = injectTokens(PINNED_TABS_THEME);
+
   private readonly document = inject(DOCUMENT);
   private readonly dialogs = inject(TxDialogService);
   private readonly destroyRef = inject(DestroyRef);

@@ -60,12 +60,15 @@ import {
   chartAnnotationShapes,
   chartCategoryIndex,
 } from '@tectra-ng/charts/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService, formatMessage, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { columnBars } from './column-layout';
 import { TxColumnChartPart, TxColumnChartPointEvent, TxColumnChartSeriesToggle, TxColumnChartStackType } from './column-chart.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { COLUMN_ICON_DEFAULTS } from './column.icons';
+import { COLUMN_THEME } from './column.theme';
 
 const DEFAULT_WIDTH = 0.56;
 const DEFAULT_HORIZONTAL_WIDTH = 0.64;
@@ -92,8 +95,11 @@ const EDGE_SLACK = 8;
     '[class.tx-column-chart--stacked]': 'isStacked()',
     '[class.tx-column-chart--active]': 'active() !== null',
   },
+  viewProviders: [provideTxIconDefaults(COLUMN_ICON_DEFAULTS)],
 })
 export class TxColumnChart {
+  private readonly columnTheme = injectTokens(COLUMN_THEME);
+
   private locale = inject(TxLocaleService);
   private host = inject<ElementRef<HTMLElement>>(ElementRef);
   readonly translations = injectTranslations();

@@ -19,11 +19,13 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TxTypeahead, nextListIndex, uniqueId } from '@tectra-ng/core/a11y';
-import { TxResolvedPassThrough } from '@tectra-ng/core/config';
+import { injectTokens, TxResolvedPassThrough } from '@tectra-ng/core/config';
 import { TxOverlay, TxOverlayRef } from '@tectra-ng/core/overlay';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TxBadge } from '@tectra-ng/ui/badge';
 import { TxMenuItem, TxMenuItemContext, TxMenuItemEvent, TxMenuPart } from './menu.types';
+import { MENU_ICON_DEFAULTS } from './menu.icons';
+import { MENU_THEME } from './menu.theme';
 
 const HOVER_DELAY = 120;
 
@@ -54,8 +56,11 @@ interface TxMenuEntry {
     '[class]': 'pt()?.root?.class',
     '[style]': 'pt()?.root?.style',
   },
+  viewProviders: [provideTxIconDefaults(MENU_ICON_DEFAULTS)],
 })
 export class TxMenuList {
+  private readonly menuTheme = injectTokens(MENU_THEME);
+
   private host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private document = inject(DOCUMENT);
   private overlay = inject(TxOverlay);

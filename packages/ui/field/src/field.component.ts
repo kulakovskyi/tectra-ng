@@ -13,13 +13,14 @@ import {
 } from '@angular/core';
 import { AbstractControl, NgControl } from '@angular/forms';
 import { linkDescribedBy, uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, TxValidationMessages, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions, TxValidationMessages } from '@tectra-ng/core/config';
 import { TX_FIELD_STATE } from '@tectra-ng/core/forms';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraFieldTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxLabel } from '@tectra-ng/ui/label';
 import { TxFieldError, TxFieldHint } from '@tectra-ng/ui/message';
 import { TxFieldLayout, TxFieldPart } from './field.types';
+import { FIELD_THEME } from './field.theme';
 
 const CONTROL_SELECTOR = [
   'input:not([type="hidden"])',
@@ -49,6 +50,8 @@ const CONTROL_SELECTOR = [
   },
 })
 export class TxField {
+  private readonly fieldTheme = injectTokens(FIELD_THEME);
+
   private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private generatedId = uniqueId('tx-field');
   private linkedElement: HTMLElement | null = null;

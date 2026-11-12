@@ -15,7 +15,7 @@ import { TxGoBack } from '@tectra-ng/utils/go-back';
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      color: var(--tx-link-color);
+      color: var(--tx-primary-soft-text);
       cursor: pointer;
       border-radius: var(--tx-radius-sm);
     }

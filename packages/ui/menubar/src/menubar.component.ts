@@ -21,15 +21,17 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TxTypeahead, uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { TxOverlay, TxOverlayRef } from '@tectra-ng/core/overlay';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { TxIcon } from '@tectra-ng/icons';
+import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraMenubarTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxBadge } from '@tectra-ng/ui/badge';
 import { TxMenuFocus, TxMenuItem, TxMenuItemContext, TxMenuItemEvent, TxMenuList } from '@tectra-ng/ui/menu';
 import { TxMenubarEntry, TxMenubarPart } from './menubar.types';
+import { MENUBAR_ICON_DEFAULTS } from './menubar.icons';
+import { MENUBAR_THEME } from './menubar.theme';
 
 @Directive({ selector: 'ng-template[txMenubarItem]' })
 export class TxMenubarItemTemplate {
@@ -56,8 +58,11 @@ export class TxMenubarItemTemplate {
     '(focusin)': 'onFocusIn($event)',
     '(focusout)': 'onFocusOut($event)',
   },
+  viewProviders: [provideTxIconDefaults(MENUBAR_ICON_DEFAULTS)],
 })
 export class TxMenubar {
+  private readonly menubarTheme = injectTokens(MENUBAR_THEME);
+
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private readonly document = inject(DOCUMENT);
   private readonly overlay = inject(TxOverlay);

@@ -1,11 +1,14 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, contentChild, inject, input, numberAttribute } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraProgressBarTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxProgressBarValueTemplate } from './progress-bar-templates.directive';
 import { TxProgressBarMode, TxProgressBarPart, TxProgressBarSeverity, TxProgressBarSize } from './progress-bar.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { PROGRESS_BAR_ICON_DEFAULTS } from './progress-bar.icons';
+import { PROGRESS_BAR_THEME } from './progress-bar.theme';
 
 @Component({
   selector: 'tx-progress-bar',
@@ -43,8 +46,11 @@ import { TxProgressBarMode, TxProgressBarPart, TxProgressBarSeverity, TxProgress
     '[attr.aria-valuetext]': 'mode() === "determinate" ? text() : null',
     '[attr.aria-busy]': 'mode() === "indeterminate" || null',
   },
+  viewProviders: [provideTxIconDefaults(PROGRESS_BAR_ICON_DEFAULTS)],
 })
 export class TxProgressBar {
+  private readonly progressBarTheme = injectTokens(PROGRESS_BAR_THEME);
+
   private localeService = inject(TxLocaleService);
 
   readonly value = input<number, unknown>(0, { transform: numberAttribute });

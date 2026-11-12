@@ -15,12 +15,15 @@ import {
   textWidth,
   tickFormatter,
 } from '@tectra-ng/charts/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService, formatMessage, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { gaugeAngle, gaugeNeedle } from './gauge-layout';
 import { TxGaugeArc, TxGaugeBand, TxGaugePart, TxGaugeTick, TxGaugeTone } from './gauge.types';
+import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { GAUGE_ICON_DEFAULTS } from './gauge.icons';
+import { GAUGE_THEME } from './gauge.theme';
 
 const DEFAULTS = { thickness: 0.16, bandGap: 2, needleWidth: 6, hubRadius: 6, tickLength: 6, tickFontSize: 11 };
 const PADDING = 6;
@@ -45,8 +48,11 @@ const LABEL_GAP = 6;
     '[class.tx-gauge--entering]': 'entrance.active()',
     '[class.tx-gauge--morph]': 'morph()',
   },
+  viewProviders: [provideTxIconDefaults(GAUGE_ICON_DEFAULTS)],
 })
 export class TxGauge {
+  private readonly gaugeTheme = injectTokens(GAUGE_THEME);
+
   private locale = inject(TxLocaleService);
   private host = inject<ElementRef<HTMLElement>>(ElementRef);
   readonly translations = injectTranslations();

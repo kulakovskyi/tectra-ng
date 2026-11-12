@@ -1,4 +1,4 @@
-import { lightDark, tokenRef } from './token-helpers';
+import { joinCss, lightDark, tokenRef } from './token-helpers';
 
 export const panelMenuTokens = {
   root: {
@@ -78,7 +78,7 @@ export const panelMenuTokens = {
     indentStep: '8.75px',
     togglerSize: '10.5px',
     disabledOpacity: '0.7',
-    focusShadow: `0 0 0 2px ${tokenRef('surface-card')}, 0 0 0 4px ${tokenRef('focus-ring-color')}`,
+    focusShadow: joinCss('0 0 0 2px ', tokenRef('surface-card'), ', 0 0 0 4px ', tokenRef('focus-ring-color')),
     badgeSize: '15.75px',
     badgePadding: '0 4.375px',
     badgeGap: '5.25px',

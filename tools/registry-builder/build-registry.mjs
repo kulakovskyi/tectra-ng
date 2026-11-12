@@ -191,7 +191,7 @@ function readSource(packageDir) {
 }
 
 const themesBundle = buildSync({
-  stdin: { contents: "export { Tectra, toCssVariables } from '@tectra-ng/themes';", resolveDir: root, loader: 'ts' },
+  stdin: { contents: "export { COMPONENT_TOKENS, Tectra, toCssVariables } from '@tectra-ng/themes';", resolveDir: root, loader: 'ts' },
   bundle: true,
   platform: 'node',
   format: 'esm',
@@ -204,8 +204,8 @@ const camel = (name) => name.replace(/-(\w)/g, (_, letter) => letter.toUpperCase
 
 function presetTokens(name, keys) {
   const kebab = (key) => key.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
-  const found = (keys ?? [camel(name)]).filter((key) => themes.Tectra.components[key]);
-  return found.length ? found.flatMap((key) => themes.toCssVariables(themes.Tectra.components[key], `--tx-${kebab(key)}`)) : null;
+  const found = (keys ?? [camel(name)]).filter((key) => themes.COMPONENT_TOKENS[key]);
+  return found.length ? found.flatMap((key) => themes.toCssVariables(themes.COMPONENT_TOKENS[key], `--tx-${kebab(key)}`)) : null;
 }
 
 const coreMembers = readdirSync(join(root, 'packages/core'), { withFileTypes: true })
@@ -329,4 +329,16 @@ writeFileSync(
 );
 const { version } = JSON.parse(readFileSync(join(root, 'packages/tectra-ng/package.json'), 'utf8'));
 writeFileSync(join(outDir, 'version.ts'), `export const TECTRA_VERSION = ${JSON.stringify(version)};\n`);
+const workspace = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
+const pick = (source, names) => Object.fromEntries(names.map((name) => [name, source[name]]));
+const stackblitzSetup = {
+  kitVersion: version,
+  dependencies: pick(workspace.dependencies, ['@angular/cdk', '@angular/common', '@angular/compiler', '@angular/core', '@angular/forms', '@angular/platform-browser', '@angular/router', 'rxjs', 'tslib']),
+  devDependencies: pick(workspace.devDependencies, ['@angular/build', '@angular/cli', '@angular/compiler-cli', 'typescript']),
+  styles: readFileSync(join(root, 'apps/docs/src/_example-utilities.scss'), 'utf8'),
+};
+writeFileSync(
+  join(outDir, 'stackblitz.ts'),
+  `import { StackblitzSetup } from '../app/doc-ui/stackblitz/stackblitz.types';\n\nexport const STACKBLITZ_SETUP: StackblitzSetup = ${JSON.stringify(stackblitzSetup, null, 2)};\n`,
+);
 console.log(`registry: ${components.length} components, ${components.reduce((sum, c) => sum + c.examples.length, 0)} examples`);
