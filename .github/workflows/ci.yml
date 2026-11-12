@@ -136,7 +136,7 @@ jobs:
           path: test-results
 
   ng-add:
-    needs: packages
+    needs: [packages, docs]
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -162,6 +162,10 @@ jobs:
         with:
           name: packages
           path: dist/packages
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: docs-site
+          path: dist/apps/docs/browser
       - run: npm run e2e:ng-add
         env:
           TX_NG_ADD_DIR: ${{ runner.temp }}/tectra-ng-add

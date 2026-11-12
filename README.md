@@ -89,6 +89,8 @@ export class CityField {
 
 Fonts, dark mode, locales and the theme builder: [tectra-ng.com/getting-started](https://tectra-ng.com/getting-started).
 
+Try before installing: the bolt button on every example of [tectra-ng.com](https://tectra-ng.com) opens it in StackBlitz as a live, editable Angular CLI project with the theme you picked on the site.
+
 ## Packages
 
 `tectra-ng` installs the whole kit at one version (the parts marked “Included”). Each part is also published on its own:

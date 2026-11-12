@@ -2,7 +2,7 @@
   <div class="features__list" [class.features__list--ready]="!!components()">
     @if (components(); as components) {
       @for (example of doc().examples; track example.id) {
-        <docs-example-frame [example]="example" [component]="components.get(example.id) ?? null" />
+        <docs-example-frame [example]="example" [page]="doc().title" [component]="components.get(example.id) ?? null" />
       }
     }
   </div>

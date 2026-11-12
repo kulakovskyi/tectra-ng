@@ -329,4 +329,16 @@ writeFileSync(
 );
 const { version } = JSON.parse(readFileSync(join(root, 'packages/tectra-ng/package.json'), 'utf8'));
 writeFileSync(join(outDir, 'version.ts'), `export const TECTRA_VERSION = ${JSON.stringify(version)};\n`);
+const workspace = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
+const pick = (source, names) => Object.fromEntries(names.map((name) => [name, source[name]]));
+const stackblitzSetup = {
+  kitVersion: version,
+  dependencies: pick(workspace.dependencies, ['@angular/cdk', '@angular/common', '@angular/compiler', '@angular/core', '@angular/forms', '@angular/platform-browser', '@angular/router', 'rxjs', 'tslib']),
+  devDependencies: pick(workspace.devDependencies, ['@angular/build', '@angular/cli', '@angular/compiler-cli', 'typescript']),
+  styles: readFileSync(join(root, 'apps/docs/src/_example-utilities.scss'), 'utf8'),
+};
+writeFileSync(
+  join(outDir, 'stackblitz.ts'),
+  `import { StackblitzSetup } from '../app/doc-ui/stackblitz/stackblitz.types';\n\nexport const STACKBLITZ_SETUP: StackblitzSetup = ${JSON.stringify(stackblitzSetup, null, 2)};\n`,
+);
 console.log(`registry: ${components.length} components, ${components.reduce((sum, c) => sum + c.examples.length, 0)} examples`);

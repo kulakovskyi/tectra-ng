@@ -7,6 +7,16 @@
       <div class="example__description" [innerHTML]="example().descriptionHtml"></div>
     </div>
     <div class="example__actions">
+      <button
+        txButton
+        [size]="'small'"
+        [text]="true"
+        [severity]="'secondary'"
+        [icon]="'bolt'"
+        [attr.aria-label]="'Open ' + example().title + ' in StackBlitz'"
+        [title]="'Open in StackBlitz'"
+        (click)="openInStackblitz()"
+      ></button>
       <docs-copy-button [label]="'Copy ' + activeFile().label" [text]="activeFile().source" />
       <button
         txButton

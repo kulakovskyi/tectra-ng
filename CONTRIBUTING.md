@@ -7,7 +7,7 @@ Thanks for helping. Questions go to [Discussions](https://github.com/kulakovskyi
 Nobody pushes to `main`, maintainers included — a repository ruleset blocks it. Every change goes through a pull request:
 
 1. Branch from the latest `main`, commit with `git commit --signoff`, push the branch and open a pull request.
-2. CI runs on the pull request. The required check **`ci-ok`** passes only when lint, unit tests, the package build, the docs build, the e2e suite, the `ng add` check on a new Angular app (built from the same packages), CodeQL, the dependency review and the sign-off check all pass.
+2. CI runs on the pull request. The required check **`ci-ok`** passes only when lint, unit tests, the package build, the docs build, the e2e suite, the checks on a new Angular app built from the same packages (`ng add`, and the StackBlitz projects of the docs examples), CodeQL, the dependency review and the sign-off check all pass.
 3. The pull request is squash-merged once `ci-ok` is green — the title becomes the commit on `main`.
 
 The release workflow follows the same rule: it publishes from a tagged `release/vX.Y.Z` branch and merges the version bump through a pull request after CI passes.
