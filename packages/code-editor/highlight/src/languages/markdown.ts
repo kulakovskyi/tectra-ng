@@ -35,7 +35,7 @@ function inline(stream: TxCodeStreamLike): TxCodeTokenType | null {
     return 'link';
   }
   if (char === '<') {
-    if (stream.match(/<!--.*?-->/)) {
+    if (stream.match(/<!--[\s\S]*?-->/)) {
       return 'comment';
     }
     if (stream.match(/<https?:[^>\s]+>/) ) {

@@ -136,7 +136,7 @@ What comes next and in which order: [ROADMAP.md](ROADMAP.md).
 
 ## Contributing
 
-Issues and pull requests are welcome — read [CONTRIBUTING.md](CONTRIBUTING.md) and the [code of conduct](CODE_OF_CONDUCT.md) first. Security issues go through the private process in [SECURITY.md](SECURITY.md).
+Issues and pull requests are welcome — read [CONTRIBUTING.md](CONTRIBUTING.md) and the [code of conduct](CODE_OF_CONDUCT.md) first. Security issues go through the private process in [SECURITY.md](SECURITY.md), which also explains how to verify a release. How the project is run: [GOVERNANCE.md](GOVERNANCE.md); how it is built: [ARCHITECTURE.md](ARCHITECTURE.md); its threat model: [THREAT_MODEL.md](THREAT_MODEL.md).
 
 ## License
 

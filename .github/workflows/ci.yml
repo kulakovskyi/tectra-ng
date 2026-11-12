@@ -9,11 +9,6 @@ on:
       - 'CLAUDE.md'
       - '.claude/**'
   pull_request:
-    paths-ignore:
-      - 'ROADMAP.md'
-      - 'roadmap/**'
-      - 'CLAUDE.md'
-      - '.claude/**'
   workflow_dispatch:
   schedule:
     - cron: '23 4 * * 1'
@@ -144,6 +139,63 @@ jobs:
       - uses: github/codeql-action/analyze@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
         with:
           category: /language:${{ matrix.language }}
+          output: codeql-results
+      - name: Block on findings
+        run: |
+          findings=$(jq -s '[.[].runs[].results[]? | select((.suppressions // []) | length == 0)]' codeql-results/*.sarif)
+          count=$(echo "$findings" | jq length)
+          if [ "$count" -gt 0 ]; then
+            echo "$findings" | jq -r '.[] | "::error file=\(.locations[0].physicalLocation.artifactLocation.uri // "")::\(.ruleId): \(.message.text)"'
+            echo "CodeQL found $count issue(s). Fix them, or declare a non-exploitable one in .github/codeql/codeql-config.yml as SECURITY.md describes."
+            exit 1
+          fi
+
+  dco:
+    if: github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - name: Every commit is signed off by its author
+        env:
+          BASE: ${{ github.event.pull_request.base.sha || 'origin/main' }}
+          HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          missing=0
+          for sha in $(git rev-list --no-merges "$BASE..$HEAD"); do
+            email=$(git log -1 --format=%ae "$sha")
+            case "$email" in
+              *'[bot]@users.noreply.github.com') continue ;;
+            esac
+            if ! git log -1 --format=%B "$sha" | grep -i '^Signed-off-by: ' | grep -qiF "<$email>"; then
+              echo "::error::Commit $sha by $email has no Signed-off-by line for its author."
+              missing=1
+            fi
+          done
+          if [ "$missing" -ne 0 ]; then
+            echo "Sign off every commit with git commit --signoff (Developer Certificate of Origin, see CONTRIBUTING.md)."
+            exit 1
+          fi
+
+  ci-ok:
+    if: always()
+    needs: [check, docs, e2e, dependency-review, codeql, dco]
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: All required jobs passed
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo "Job results: $RESULTS"
+          for result in $RESULTS; do
+            case "$result" in
+              success|skipped) ;;
+              *) exit 1 ;;
+            esac
+          done
 
   deploy-docs:
     needs: [check, e2e]

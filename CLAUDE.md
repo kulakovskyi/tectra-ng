@@ -7,7 +7,8 @@ tectra is an open-source Angular UI kit: full-featured components (the feature s
 - **tectra is a standalone product.** Never mention the apps that use it, their names, their wrappers or company internals — not in code, examples, READMEs, docs, ROADMAP, checklists or commit messages. When usage data matters, say "the first consumer app".
 - Never name PrimeNG, PrimeIcons or any other UI kit — not in docs, examples, READMEs, code, test names or package metadata. Only the internal roadmap (`ROADMAP.md`, `roadmap/`) may keep the comparison. Icon names stay as they are (a `pi-` prefix is still accepted), just never say where they come from.
 - Docs, READMEs, roadmap and code are English.
-- Commit only when the user asks; commit messages have **no** `Co-Authored-By` trailer. Conventional commits (`feat(ui): …`, `fix(docs): …`).
+- Commit only when the user asks; commit messages have **no** `Co-Authored-By` trailer. Conventional commits (`feat(ui): …`, `fix(docs): …`), always `git commit --signoff` (DCO — CI rejects commits without a matching `Signed-off-by`).
+- `main` is protected: nobody pushes to it. Every change goes on a branch from fresh `main` → push → `gh pr create` (conventional title) → `gh pr merge --squash --auto` (merges when the required `ci-ok` check passes). "Push" from the user means this flow. Never push while a release runs.
 - Work in roadmap order: [ROADMAP.md](ROADMAP.md) → the stage checklist (`roadmap/stage-3-forms.md`, …). Tick a box only when the code, the docs example and the test exist.
 
 ## Workspace
@@ -66,7 +67,7 @@ Prefix Nx commands with `NX_DAEMON=false NX_NO_CLOUD=true`.
 | Rebuild favicons and the social preview (`tools/brand/social-preview.html`) | `npm run brand` |
 | Rebuild the PDF export font | `npm run export-font -- <folder of an Onest release>` |
 | Retake the landing product shots (dev-only `/studio/:scene` page, own dev server on 4302) | `npm run landing-shots` |
-| Release (npm) | GitHub Actions → `release` → Run workflow; dry run locally: `node tools/release.mjs patch latest --dry-run` |
+| Release (npm) | GitHub Actions → `release` → Run workflow (publishes, tags `vX.Y.Z` on a `release/vX.Y.Z` branch, attaches signed assets, merges the version PR after CI); dry run locally: `node tools/release.mjs patch latest --dry-run` |
 
 Install packages with `npm i …`; `.npmrc` sets `legacy-peer-deps=true` (npm arborist bug otherwise, Dependabot needs it too). Do not start or stop the user's dev servers; start your own `node tools/serve-docs.mjs dist/apps/docs/browser 4310` for checks and stop it afterwards.
 

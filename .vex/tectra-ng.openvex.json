@@ -1,0 +1,179 @@
+{
+  "@context": "https://openvex.dev/ns/v0.2.0",
+  "@id": "https://github.com/kulakovskyi/tectra-ng/blob/main/.vex/tectra-ng.openvex.json",
+  "author": "tectra maintainers",
+  "role": "Project maintainers",
+  "timestamp": "2026-11-12T00:00:00Z",
+  "version": 1,
+  "statements": [
+    {
+      "vulnerability": {
+        "@id": "https://github.com/advisories/GHSA-g3hv-75wg-m249",
+        "name": "GHSA-g3hv-75wg-m249",
+        "aliases": [
+          "CVE-2026-118764"
+        ]
+      },
+      "products": [
+        {
+          "@id": "pkg:npm/tectra-ng",
+          "subcomponents": [
+            {
+              "@id": "pkg:npm/minimatch@10.2.5"
+            },
+            {
+              "@id": "pkg:npm/minimatch@10.2.6"
+            }
+          ]
+        },
+        {
+          "@id": "pkg:npm/%40tectra-ng/tokens",
+          "subcomponents": [
+            {
+              "@id": "pkg:npm/minimatch@10.2.5"
+            },
+            {
+              "@id": "pkg:npm/minimatch@10.2.6"
+            }
+          ]
+        },
+        {
+          "@id": "pkg:npm/%40tectra-ng/themes",
+          "subcomponents": [
+            {
+              "@id": "pkg:npm/minimatch@10.2.5"
+            },
+            {
+              "@id": "pkg:npm/minimatch@10.2.6"
+            }
+          ]
+        },
+        {
+          "@id": "pkg:npm/%40tectra-ng/core",
+          "subcomponents": [
+            {
+              "@id": "pkg:npm/minimatch@10.2.5"
+            },
+            {
+              "@id": "pkg:npm/minimatch@10.2.6"
+            }
+          ]
+        },
+        {
+          "@id": "pkg:npm/%40tectra-ng/icons",
+          "subcomponents": [
+            {
+              "@id": "pkg:npm/minimatch@10.2.5"
+            },
+            {
+              "@id": "pkg:npm/minimatch@10.2.6"
+            }
+          ]
+        },
+        {
+          "@id": "pkg:npm/%40tectra-ng/brand-icons",
+          "subcomponents": [
+            {
+              "@id": "pkg:npm/minimatch@10.2.5"
+            },
+            {
+              "@id": "pkg:npm/minimatch@10.2.6"
+            }
+          ]
+        },
+        {
+          "@id": "pkg:npm/%40tectra-ng/flags",
+          "subcomponents": [
+            {
+              "@id": "pkg:npm/minimatch@10.2.5"
+            },
+            {
+              "@id": "pkg:npm/minimatch@10.2.6"
+            }
+          ]
+        },
+        {
+          "@id": "pkg:npm/%40tectra-ng/qr",
+          "subcomponents": [
+            {
+              "@id": "pkg:npm/minimatch@10.2.5"
+            },
+            {
+              "@id": "pkg:npm/minimatch@10.2.6"
+            }
+          ]
+        },
+        {
+          "@id": "pkg:npm/%40tectra-ng/ui",
+          "subcomponents": [
+            {
+              "@id": "pkg:npm/minimatch@10.2.5"
+            },
+            {
+              "@id": "pkg:npm/minimatch@10.2.6"
+            }
+          ]
+        },
+        {
+          "@id": "pkg:npm/%40tectra-ng/editor",
+          "subcomponents": [
+            {
+              "@id": "pkg:npm/minimatch@10.2.5"
+            },
+            {
+              "@id": "pkg:npm/minimatch@10.2.6"
+            }
+          ]
+        },
+        {
+          "@id": "pkg:npm/%40tectra-ng/code-editor",
+          "subcomponents": [
+            {
+              "@id": "pkg:npm/minimatch@10.2.5"
+            },
+            {
+              "@id": "pkg:npm/minimatch@10.2.6"
+            }
+          ]
+        },
+        {
+          "@id": "pkg:npm/%40tectra-ng/charts",
+          "subcomponents": [
+            {
+              "@id": "pkg:npm/minimatch@10.2.5"
+            },
+            {
+              "@id": "pkg:npm/minimatch@10.2.6"
+            }
+          ]
+        },
+        {
+          "@id": "pkg:npm/%40tectra-ng/utils",
+          "subcomponents": [
+            {
+              "@id": "pkg:npm/minimatch@10.2.5"
+            },
+            {
+              "@id": "pkg:npm/minimatch@10.2.6"
+            }
+          ]
+        },
+        {
+          "@id": "pkg:npm/%40tectra-ng/blocks",
+          "subcomponents": [
+            {
+              "@id": "pkg:npm/minimatch@10.2.5"
+            },
+            {
+              "@id": "pkg:npm/minimatch@10.2.6"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "justification": "component_not_present",
+      "impact_statement": "minimatch is only a development dependency of the build tooling (nx, typescript-eslint). It is not a dependency of any published package and is not shipped to users. nx pins 10.2.5 exactly and no patched 10.x exists; it is upgraded when nx moves to minimatch 11.",
+      "timestamp": "2026-11-12T00:00:00Z"
+    }
+  ]
+}

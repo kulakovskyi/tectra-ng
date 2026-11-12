@@ -38,7 +38,8 @@
     "projects": ["tokens", "themes", "core", "icons", "brand-icons", "flags", "qr", "ui", "editor", "code-editor", "charts", "utils", "blocks", "tectra-ng"],
     "projectsRelationship": "fixed",
     "releaseTag": {
-      "pattern": "v{version}"
+      "pattern": "v{version}",
+      "checkAllBranchesWhen": true
     },
     "version": {
       "conventionalCommits": true,
