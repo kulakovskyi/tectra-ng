@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input, model } from '@angular/core';
 import { uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { injectTxIcons, provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraPanelTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxPanelAlign, TxPanelPart, TxPanelVariant } from './panel.types';
 import { PANEL_ICON_DEFAULTS } from './panel.icons';
+import { PANEL_THEME } from './panel.theme';
 
 @Component({
   selector: 'tx-panel',
@@ -27,6 +28,8 @@ import { PANEL_ICON_DEFAULTS } from './panel.icons';
   viewProviders: [provideTxIconDefaults(PANEL_ICON_DEFAULTS)],
 })
 export class TxPanel {
+  private readonly panelTheme = injectTokens(PANEL_THEME);
+
   private txIconRegistry = injectTxIcons();
   private id = uniqueId('tx-panel');
 

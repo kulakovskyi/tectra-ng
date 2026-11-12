@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, inject, input } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraAmountTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
@@ -7,6 +7,7 @@ import { TxAmountCurrencyDisplay, TxAmountNotation, TxAmountPart, TxAmountSign }
 import { formatAmount } from './format-amount';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { AMOUNT_ICON_DEFAULTS } from './amount.icons';
+import { AMOUNT_THEME } from './amount.theme';
 
 @Component({
   selector: 'tx-amount',
@@ -38,6 +39,8 @@ import { AMOUNT_ICON_DEFAULTS } from './amount.icons';
   viewProviders: [provideTxIconDefaults(AMOUNT_ICON_DEFAULTS)],
 })
 export class TxAmount {
+  private readonly amountTheme = injectTokens(AMOUNT_THEME);
+
   private localeService = inject(TxLocaleService);
 
   readonly amount = input<number | null | undefined>(null);

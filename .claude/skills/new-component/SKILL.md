@@ -61,6 +61,7 @@ export class Tx<Name> {
 - Inputs that inherit (form state, `<tx-fluid>`, config) are `boolean | undefined` + `optionalBoolean`; resolve with `injectFieldInvalid(this.invalid)`, `injectFluid(this.fluid)`, `injectUnstyled(this.unstyled)`.
 - Outputs are verbs in past tense or plain events (`opened`, `closed`, `valueChange`). Two-way values use `model()`.
 - Texts the component renders itself (aria labels, "No results", "Copy") come from `injectTranslations()` (`@tectra-ng/core/i18n`); add the key to every locale — `packages/core/i18n/src/locales.ts` (English) and `packages/core/i18n/<code>/src/*.locale.ts` — and the type in `packages/core/i18n/types`.
+- Token groups: after the SCSS is written run `npm run themes:groups` — it writes `<name>.theme.ts` and adds `injectTokens(<NAME>_THEME)` to the component, so its `--tx-<name>-…` variables exist when it is on the page.
 - Icons the component draws by name (`<tx-icon name="…">`, `icon="…"` on a child, names in TS) are not in the app's registry: run `npm run icons:defaults` — it writes `<name>.icons.ts` for the entry point and adds `viewProviders: [provideTxIconDefaults(…)]` (`providers` on a directive). Decide "is this a tectra icon or a CSS class" with `injectTxIcons().has(name)`, never with `TxIconRegistry` alone. CI fails when the list is out of date.
 - Ids for ARIA wiring: `uniqueId('tx-<name>')` from `@tectra-ng/core/a11y`.
 

@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraAppFooterTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TxAppFooterLink, TxAppFooterPart, TxAppFooterVariant } from './app-footer.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { APP_FOOTER_ICON_DEFAULTS } from './app-footer.icons';
+import { APP_FOOTER_THEME } from './app-footer.theme';
 
 @Component({
   selector: 'tx-app-footer',
@@ -41,6 +42,8 @@ import { APP_FOOTER_ICON_DEFAULTS } from './app-footer.icons';
   viewProviders: [provideTxIconDefaults(APP_FOOTER_ICON_DEFAULTS)],
 })
 export class TxAppFooter {
+  private readonly appFooterTheme = injectTokens(APP_FOOTER_THEME);
+
   readonly name = input.required<string>();
   readonly links = input<readonly TxAppFooterLink[]>([]);
   readonly variant = input<TxAppFooterVariant>('page');

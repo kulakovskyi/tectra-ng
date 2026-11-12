@@ -6,6 +6,8 @@ import { TxDialogContent, TxDialogFooter, TxDialogHeader, injectDialogData, inje
 import { TxMessage } from '@tectra-ng/ui/message';
 import { TxPinnedTabsDialogData } from './pinned-tabs.types';
 import { PINNED_TABS_ICON_DEFAULTS } from './pinned-tabs.icons';
+import { injectTokens } from '@tectra-ng/core/config';
+import { PINNED_TABS_THEME } from './pinned-tabs.theme';
 
 @Component({
   selector: 'tx-pinned-tabs-dialog',
@@ -48,6 +50,8 @@ import { PINNED_TABS_ICON_DEFAULTS } from './pinned-tabs.icons';
   viewProviders: [provideTxIconDefaults(PINNED_TABS_ICON_DEFAULTS)],
 })
 export class TxPinnedTabsDialog {
+  private readonly pinnedTabsTheme = injectTokens(PINNED_TABS_THEME);
+
   private readonly locale = inject(TxLocaleService);
   protected readonly data = injectDialogData<TxPinnedTabsDialogData>();
   protected readonly ref = injectDialogRef<string[]>();

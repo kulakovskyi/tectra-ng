@@ -1,4 +1,4 @@
-import { fade, lightDark, tokenRef } from './token-helpers';
+import { fade, joinCss, lightDark, tokenRef } from './token-helpers';
 
 export const dividerTokens = {
   root: {
@@ -17,7 +17,7 @@ export const cardTokens = {
     background: tokenRef('surface-card'),
     borderColor: tokenRef('surface-border'),
     borderRadius: '16px',
-    shadow: `0 1px 2px ${fade(tokenRef('surface-950'), '95%')}`,
+    shadow: joinCss('0 1px 2px ', fade(tokenRef('surface-950'), '95%')),
     padding: '20px',
     gap: '12px',
     color: tokenRef('text-primary'),

@@ -10,6 +10,8 @@ import { TxTooltip } from '@tectra-ng/ui/tooltip';
 import { TxOrgChartLabels, TxOrgChartToolbarState } from './org-chart.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { ORG_CHART_ICON_DEFAULTS } from './org-chart.icons';
+import { injectTokens } from '@tectra-ng/core/config';
+import { ORG_CHART_THEME } from './org-chart.theme';
 
 const SEARCH_DELAY = 400;
 const NARROW_REM = 30;
@@ -26,6 +28,8 @@ const NARROW_REM = 30;
   viewProviders: [provideTxIconDefaults(ORG_CHART_ICON_DEFAULTS)],
 })
 export class TxOrgChartToolbar {
+  private readonly orgChartTheme = injectTokens(ORG_CHART_THEME);
+
   readonly state = input.required<TxOrgChartToolbarState>();
   readonly labels = input.required<TxOrgChartLabels>();
   readonly intl = input('en-US');

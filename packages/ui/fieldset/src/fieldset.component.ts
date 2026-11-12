@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input, model } from '@angular/core';
 import { uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraFieldsetTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxFieldsetPart } from './fieldset.types';
 import { FIELDSET_ICON_DEFAULTS } from './fieldset.icons';
+import { FIELDSET_THEME } from './fieldset.theme';
 
 @Component({
   selector: 'tx-fieldset',
@@ -50,6 +51,8 @@ import { FIELDSET_ICON_DEFAULTS } from './fieldset.icons';
   viewProviders: [provideTxIconDefaults(FIELDSET_ICON_DEFAULTS)],
 })
 export class TxFieldset {
+  private readonly fieldsetTheme = injectTokens(FIELDSET_THEME);
+
   readonly legend = input<string | undefined>(undefined);
   readonly toggleable = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly collapsed = model<boolean>(false);

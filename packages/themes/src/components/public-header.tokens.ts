@@ -1,6 +1,6 @@
-import { mix, tokenRef } from './token-helpers';
+import { joinCss, mix, tokenRef } from './token-helpers';
 
-const focusRing = `0 0 0 2px ${tokenRef('surface-card')}, 0 0 0 4px ${tokenRef('focus-ring-color')}`;
+const focusRing = joinCss('0 0 0 2px ', tokenRef('surface-card'), ', 0 0 0 4px ', tokenRef('focus-ring-color'));
 
 export const publicHeaderTokens = {
   root: {

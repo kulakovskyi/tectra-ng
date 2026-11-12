@@ -2,7 +2,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TxChartValueFormat, chartNumberFormatter } from '@tectra-ng/charts/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
@@ -11,6 +11,7 @@ import { barListRows } from './bar-list-rows';
 import { TxBarListItem, TxBarListPart } from './bar-list.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { BAR_LIST_ICON_DEFAULTS } from './bar-list.icons';
+import { BAR_LIST_THEME } from './bar-list.theme';
 
 const SKELETON_ROWS = 5;
 
@@ -30,6 +31,8 @@ const SKELETON_ROWS = 5;
   viewProviders: [provideTxIconDefaults(BAR_LIST_ICON_DEFAULTS)],
 })
 export class TxBarList {
+  private readonly barListTheme = injectTokens(BAR_LIST_THEME);
+
   private locale = inject(TxLocaleService);
   readonly translations = injectTranslations();
 

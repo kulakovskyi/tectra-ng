@@ -17,7 +17,7 @@ import {
   untracked,
 } from '@angular/core';
 import { linkAriaReference, uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxOverlay, TxOverlayRef, TxPlacement } from '@tectra-ng/core/overlay';
 import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraTooltipTokens, toStyleObject } from '@tectra-ng/themes';
@@ -25,6 +25,7 @@ import { TX_TOOLTIP_DEFAULTS, TX_TOOLTIP_OPTIONS } from './tooltip.options';
 import { TX_TOOLTIP_PANEL, TxTooltipPanel, TxTooltipPanelState } from './tooltip-panel.component';
 import { TxTooltipHandle, TxTooltipRegistry } from './tooltip-registry.service';
 import { TxTooltipContent, TxTooltipContext, TxTooltipEvent, TxTooltipPart } from './tooltip.types';
+import { TOOLTIP_THEME } from './tooltip.theme';
 
 const FORM_CONTROL = 'input, select, textarea';
 const NAMED_CHILD = 'img[alt]:not([alt=""]), [aria-label]:not([aria-hidden="true"])';
@@ -50,6 +51,8 @@ function isFocusVisible(element: Element): boolean {
   },
 })
 export class TxTooltip implements TxTooltipHandle {
+  private readonly tooltipTheme = injectTokens(TOOLTIP_THEME);
+
   private host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private overlay = inject(TxOverlay);
   private injector = inject(Injector);

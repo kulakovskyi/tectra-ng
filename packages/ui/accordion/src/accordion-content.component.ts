@@ -4,6 +4,8 @@ import { TX_ACCORDION, TX_ACCORDION_PANEL } from './accordion.context';
 import { TxAccordionContentTemplate } from './accordion.templates';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { ACCORDION_ICON_DEFAULTS } from './accordion.icons';
+import { injectTokens } from '@tectra-ng/core/config';
+import { ACCORDION_THEME } from './accordion.theme';
 
 @Component({
   selector: 'tx-accordion-content',
@@ -33,6 +35,8 @@ import { ACCORDION_ICON_DEFAULTS } from './accordion.icons';
   viewProviders: [provideTxIconDefaults(ACCORDION_ICON_DEFAULTS)],
 })
 export class TxAccordionContent {
+  private readonly accordionTheme = injectTokens(ACCORDION_THEME);
+
   protected readonly accordion = inject(TX_ACCORDION);
   protected readonly panel = inject(TX_ACCORDION_PANEL);
 

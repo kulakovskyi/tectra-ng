@@ -15,7 +15,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxPlacement } from '@tectra-ng/core/overlay';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraSpeedDialTokens, toStyleObject } from '@tectra-ng/themes';
@@ -25,6 +25,7 @@ import { TxTooltip } from '@tectra-ng/ui/tooltip';
 import { TxSpeedDialDirection, TxSpeedDialPart, TxSpeedDialType } from './speed-dial.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { SPEED_DIAL_ICON_DEFAULTS } from './speed-dial.icons';
+import { SPEED_DIAL_THEME } from './speed-dial.theme';
 
 const ARCS: Record<string, [number, number]> = {
   'semi-circle up': [180, 360],
@@ -67,6 +68,8 @@ const LINEAR: Record<string, [number, number]> = {
   viewProviders: [provideTxIconDefaults(SPEED_DIAL_ICON_DEFAULTS)],
 })
 export class TxSpeedDial {
+  private readonly speedDialTheme = injectTokens(SPEED_DIAL_THEME);
+
   private host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private document = inject(DOCUMENT);
 

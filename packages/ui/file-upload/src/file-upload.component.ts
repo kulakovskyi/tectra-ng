@@ -21,7 +21,7 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TxAnnouncer, uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
@@ -50,6 +50,7 @@ import {
 } from './file-upload.types';
 import { acceptLabel, fileExtension, fileKind, fileMatchesAccept, fileSizeParts, sameFile } from './file-upload.utils';
 import { FILE_UPLOAD_ICON_DEFAULTS } from './file-upload.icons';
+import { FILE_UPLOAD_THEME } from './file-upload.theme';
 
 const KIND_ICONS: Record<TxFileKind, TxIconName> = {
   image: 'image',
@@ -84,6 +85,8 @@ type TxFileUploadValue = File | File[];
   viewProviders: [provideTxIconDefaults(FILE_UPLOAD_ICON_DEFAULTS)],
 })
 export class TxFileUpload extends TxFormControlBase<TxFileUploadValue> {
+  private readonly fileUploadTheme = injectTokens(FILE_UPLOAD_THEME);
+
   private document = inject(DOCUMENT);
   private http = inject(HttpClient, { optional: true });
   private announcer = inject(TxAnnouncer);

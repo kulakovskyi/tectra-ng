@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input, output } from '@angular/core';
-import { injectUnstyled } from '@tectra-ng/core/config';
+import { injectTokens, injectUnstyled } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
@@ -9,6 +9,7 @@ import { TxPill } from '@tectra-ng/ui/pill';
 import { TxTooltip } from '@tectra-ng/ui/tooltip';
 import { TxOrgChartNode } from './org-chart.types';
 import { ORG_CHART_ICON_DEFAULTS } from './org-chart.icons';
+import { ORG_CHART_THEME } from './org-chart.theme';
 
 @Component({
   selector: 'tx-org-chart-card',
@@ -23,6 +24,8 @@ import { ORG_CHART_ICON_DEFAULTS } from './org-chart.icons';
   viewProviders: [provideTxIconDefaults(ORG_CHART_ICON_DEFAULTS)],
 })
 export class TxOrgChartCard {
+  private readonly orgChartTheme = injectTokens(ORG_CHART_THEME);
+
   private readonly translations = injectTranslations();
 
   readonly node = input.required<TxOrgChartNode>();

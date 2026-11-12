@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, effect, inject, input, signal } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraCountryTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
@@ -8,6 +8,7 @@ import { TxCountryPart, TxCountrySize, TxFlag, TxFlagShape } from './country.typ
 import { TX_FLAG_RESOLVER } from './flags';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { COUNTRY_ICON_DEFAULTS } from './country.icons';
+import { COUNTRY_THEME } from './country.theme';
 
 @Component({
   selector: 'tx-country',
@@ -47,6 +48,8 @@ import { COUNTRY_ICON_DEFAULTS } from './country.icons';
   viewProviders: [provideTxIconDefaults(COUNTRY_ICON_DEFAULTS)],
 })
 export class TxCountry {
+  private readonly countryTheme = injectTokens(COUNTRY_THEME);
+
   private locale = inject(TxLocaleService);
   private resolver = inject(TX_FLAG_RESOLVER, { optional: true });
 

@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, input, numberAttribute } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraProgressSpinnerTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxProgressSpinnerPart, TxProgressSpinnerSize } from './progress-spinner.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { PROGRESS_SPINNER_ICON_DEFAULTS } from './progress-spinner.icons';
+import { PROGRESS_SPINNER_THEME } from './progress-spinner.theme';
 
 @Component({
   selector: 'tx-progress-spinner',
@@ -30,6 +31,8 @@ import { PROGRESS_SPINNER_ICON_DEFAULTS } from './progress-spinner.icons';
   viewProviders: [provideTxIconDefaults(PROGRESS_SPINNER_ICON_DEFAULTS)],
 })
 export class TxProgressSpinner {
+  private readonly progressSpinnerTheme = injectTokens(PROGRESS_SPINNER_THEME);
+
   readonly size = input<TxProgressSpinnerSize | number>('medium');
   readonly strokeWidth = input<number, unknown>(4, { transform: numberAttribute });
   readonly fill = input<string>('none');

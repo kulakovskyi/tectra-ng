@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input, output } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraActionTileTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TxActionTilePart } from './action-tile.types';
 import { ACTION_TILE_ICON_DEFAULTS } from './action-tile.icons';
+import { ACTION_TILE_THEME } from './action-tile.theme';
 
 @Component({
   selector: 'tx-action-tile',
@@ -48,6 +49,8 @@ import { ACTION_TILE_ICON_DEFAULTS } from './action-tile.icons';
   viewProviders: [provideTxIconDefaults(ACTION_TILE_ICON_DEFAULTS)],
 })
 export class TxActionTile {
+  private readonly actionTileTheme = injectTokens(ACTION_TILE_THEME);
+
   readonly icon = input<TxIconName | (string & {}) | undefined>(undefined);
   readonly title = input.required<string>();
   readonly text = input<string | undefined>(undefined);

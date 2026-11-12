@@ -2,7 +2,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, input, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { injectTranslations } from '@tectra-ng/core/i18n';
-import { TxTranslations } from '@tectra-ng/core/config';
+import { injectTokens, TxTranslations } from '@tectra-ng/core/config';
 import { TxButton } from '@tectra-ng/ui/button';
 import { TxDatePicker } from '@tectra-ng/ui/datepicker';
 import { TxInput } from '@tectra-ng/ui/input';
@@ -17,6 +17,7 @@ import { TxColumnFilter, TxFilterMatchMode, TxFilterOperator, TxFilterRule, TxTa
 import { columnLabel } from './table.utils';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { TABLE_ICON_DEFAULTS } from './table.icons';
+import { TABLE_THEME } from './table.theme';
 
 const MAX_RULES = 2;
 
@@ -268,6 +269,8 @@ function toDate(value: unknown): Date | null {
   viewProviders: [provideTxIconDefaults(TABLE_ICON_DEFAULTS)],
 })
 export class TxTableColumnFilter {
+  private readonly tableTheme = injectTokens(TABLE_THEME);
+
   private readonly table = inject(TX_TABLE);
   private readonly panel = viewChild<TxPopover>('panel');
   private timer: ReturnType<typeof setTimeout> | undefined;

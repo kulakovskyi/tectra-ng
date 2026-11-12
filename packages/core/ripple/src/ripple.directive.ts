@@ -1,9 +1,10 @@
 import { DOCUMENT, Directive, ElementRef, booleanAttribute, computed, inject, input } from '@angular/core';
-import { TxThemeService } from '@tectra-ng/core/config';
+import { injectTokens, TxThemeService } from '@tectra-ng/core/config';
 import { TxStyleLoader } from '@tectra-ng/core/styles';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TxRippleStyles } from './ripple.styles';
 import { TxRippleRef } from './ripple.types';
+import { RIPPLE_THEME } from './ripple.theme';
 
 @Directive({
   selector: '[txRipple]',
@@ -20,6 +21,8 @@ import { TxRippleRef } from './ripple.types';
   },
 })
 export class TxRipple {
+  private readonly rippleTheme = injectTokens(RIPPLE_THEME);
+
   private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private document = inject(DOCUMENT);
   private txThemeService = inject(TxThemeService);

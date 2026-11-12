@@ -4,6 +4,8 @@ import { TxThemeRevealOrigin } from './switch-theme.types';
 import { TxThemeRevealStyles } from './theme-reveal.styles';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { SWITCH_THEME_ICON_DEFAULTS } from './switch-theme.icons';
+import { injectTokens } from '@tectra-ng/core/config';
+import { SWITCH_THEME_THEME } from './switch-theme.theme';
 
 const REVEAL_CLASS = 'tx-theme-reveal';
 
@@ -15,6 +17,8 @@ export const TX_THEME_REVEAL_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
   providers: [provideTxIconDefaults(SWITCH_THEME_ICON_DEFAULTS)],
 })
 export class TxThemeReveal {
+  private readonly switchThemeTheme = injectTokens(SWITCH_THEME_THEME);
+
   private readonly document = inject(DOCUMENT);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 

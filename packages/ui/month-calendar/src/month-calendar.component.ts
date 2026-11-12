@@ -1,6 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, computed, contentChild, inject, input, linkedSignal, numberAttribute, output } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraMonthCalendarTokens, toStyleObject } from '@tectra-ng/themes';
@@ -19,6 +19,7 @@ import {
 } from './month-calendar.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { MONTH_CALENDAR_ICON_DEFAULTS } from './month-calendar.icons';
+import { MONTH_CALENDAR_THEME } from './month-calendar.theme';
 
 const KEY_STEPS: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 };
 
@@ -37,6 +38,8 @@ const KEY_STEPS: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1, ArrowU
   viewProviders: [provideTxIconDefaults(MONTH_CALENDAR_ICON_DEFAULTS)],
 })
 export class TxMonthCalendar {
+  private readonly monthCalendarTheme = injectTokens(MONTH_CALENDAR_THEME);
+
   private host = inject<ElementRef<HTMLElement>>(ElementRef);
   private localeService = inject(TxLocaleService);
   private readonly createdAt = new Date();

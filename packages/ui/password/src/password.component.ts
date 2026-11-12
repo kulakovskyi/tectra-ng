@@ -19,7 +19,7 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectFluid } from '@tectra-ng/core/fluid';
 import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
 import { injectTranslations } from '@tectra-ng/core/i18n';
@@ -31,6 +31,7 @@ import { TxInput } from '@tectra-ng/ui/input';
 import { TxPasswordContentTemplate, TxPasswordFooterTemplate, TxPasswordHeaderTemplate } from './password-templates.directive';
 import { TxPasswordPart, TxPasswordSize, TxPasswordStrength, TxPasswordVariant } from './password.types';
 import { PASSWORD_ICON_DEFAULTS } from './password.icons';
+import { PASSWORD_THEME } from './password.theme';
 
 const MEDIUM = '^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})';
 const STRONG = '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})';
@@ -55,6 +56,8 @@ const STRONG = '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})';
   viewProviders: [provideTxIconDefaults(PASSWORD_ICON_DEFAULTS)],
 })
 export class TxPassword extends TxFormControlBase<string> {
+  private readonly passwordTheme = injectTokens(PASSWORD_THEME);
+
   private overlay = inject(TxOverlay);
   private viewContainerRef = inject(ViewContainerRef);
   private generatedId = uniqueId('tx-password');

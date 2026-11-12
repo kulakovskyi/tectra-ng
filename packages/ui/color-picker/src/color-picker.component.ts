@@ -17,7 +17,7 @@ import {
 } from '@angular/core';
 import { AbstractControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator } from '@angular/forms';
 import { uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TX_FIELD_STATE, TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { TxOverlayInsets, TxPlacement, placementFromPosition, txAnimateEnter, txAnimateLeave, txPositions, watchOrigin, TxOverlayAnchor, txScrollStrategy } from '@tectra-ng/core/overlay';
@@ -29,6 +29,7 @@ import { hsbToRgb, parseHex, rgbToHex, rgbToHsb, toHsb } from './color';
 import { txColorHexValidator } from './color-validator';
 import { TxColorFormat, TxColorPickerPart, TxColorPickerSize, TxColorValue, TxHsb } from './color-picker.types';
 import { COLOR_PICKER_ICON_DEFAULTS } from './color-picker.icons';
+import { COLOR_PICKER_THEME } from './color-picker.theme';
 
 const clamp = (value: number, min: number, max: number): number => Math.min(max, Math.max(min, value));
 
@@ -59,6 +60,8 @@ const clamp = (value: number, min: number, max: number): number => Math.min(max,
   viewProviders: [provideTxIconDefaults(COLOR_PICKER_ICON_DEFAULTS)],
 })
 export class TxColorPicker extends TxFormControlBase<TxColorValue> implements Validator {
+  private readonly colorPickerTheme = injectTokens(COLOR_PICKER_THEME);
+
   readonly format = input<TxColorFormat>('hex');
   readonly inline = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly field = input<boolean, unknown>(false, { transform: booleanAttribute });

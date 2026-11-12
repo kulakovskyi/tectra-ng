@@ -1,7 +1,7 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, contentChild, inject, input, output } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { injectTxIcons, provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
@@ -9,6 +9,7 @@ import { TectraBreadcrumbTokens, TectraDeepPartial, toStyleObject } from '@tectr
 import { TxBreadcrumbItemTemplate, TxBreadcrumbSeparatorTemplate } from './breadcrumb.templates';
 import { TxBreadcrumbItem, TxBreadcrumbItemEvent, TxBreadcrumbPart, TxBreadcrumbSeparator } from './breadcrumb.types';
 import { BREADCRUMB_ICON_DEFAULTS } from './breadcrumb.icons';
+import { BREADCRUMB_THEME } from './breadcrumb.theme';
 
 type TxBreadcrumbKind = 'current' | 'router' | 'url' | 'command' | 'text';
 
@@ -36,6 +37,8 @@ interface TxBreadcrumbEntry {
   viewProviders: [provideTxIconDefaults(BREADCRUMB_ICON_DEFAULTS)],
 })
 export class TxBreadcrumb {
+  private readonly breadcrumbTheme = injectTokens(BREADCRUMB_THEME);
+
   private txIconRegistry = injectTxIcons();
   private hasRouter = inject(Router, { optional: true }) !== null;
 

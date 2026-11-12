@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ElementRef, booleanAttribute, computed, inject, input, model, output, signal, viewChild } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
 import { TectraAvatarTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
@@ -12,6 +12,7 @@ import { TxAvatar } from './avatar.component';
 import { TxAvatarEditorPart, TxAvatarEditorRejection } from './avatar.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { AVATAR_ICON_DEFAULTS } from './avatar.icons';
+import { AVATAR_THEME } from './avatar.theme';
 
 export function acceptsFile(file: File, accept: string): boolean {
   const rules = accept
@@ -52,6 +53,8 @@ export function acceptsFile(file: File, accept: string): boolean {
   viewProviders: [provideTxIconDefaults(AVATAR_ICON_DEFAULTS)],
 })
 export class TxAvatarEditor {
+  private readonly avatarTheme = injectTokens(AVATAR_THEME);
+
   readonly image = model<string | null | undefined>(undefined);
   readonly name = input<string | null | undefined>(undefined);
   readonly size = input<number | undefined, unknown>(undefined, { transform: optionalNumber });

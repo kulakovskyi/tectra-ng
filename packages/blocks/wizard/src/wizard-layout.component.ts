@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraWizardTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxWizardLayoutPart, TxWizardResponsive } from './wizard.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { WIZARD_ICON_DEFAULTS } from './wizard.icons';
+import { WIZARD_THEME } from './wizard.theme';
 
 @Component({
   selector: 'tx-wizard-layout',
@@ -42,6 +43,8 @@ import { WIZARD_ICON_DEFAULTS } from './wizard.icons';
   viewProviders: [provideTxIconDefaults(WIZARD_ICON_DEFAULTS)],
 })
 export class TxWizardLayout {
+  private readonly wizardTheme = injectTokens(WIZARD_THEME);
+
   readonly responsive = input<TxWizardResponsive>('viewport');
   readonly dt = input<TectraDeepPartial<TectraWizardTokens> | undefined>(undefined);
   readonly pt = input<TxPassThrough<TxWizardLayoutPart, TxWizardLayout> | undefined>(undefined);

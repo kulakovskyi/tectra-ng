@@ -33,7 +33,7 @@ import {
   readTokenNumber,
   stepIndex,
 } from '@tectra-ng/charts/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
@@ -41,6 +41,7 @@ import { candleExtent, candleLabels, isUp } from './candlestick-layout';
 import { TxCandle, TxCandleEvent, TxCandleShape, TxCandlestickChartPart, TxCandlestickVariant } from './candlestick-chart.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { CANDLESTICK_ICON_DEFAULTS } from './candlestick.icons';
+import { CANDLESTICK_THEME } from './candlestick.theme';
 
 const DEFAULTS = { bodyWidth: 0.68, volumeHeight: 0.22 };
 const EDGE_SLACK = 8;
@@ -65,6 +66,8 @@ const EDGE_SLACK = 8;
   viewProviders: [provideTxIconDefaults(CANDLESTICK_ICON_DEFAULTS)],
 })
 export class TxCandlestickChart {
+  private readonly candlestickTheme = injectTokens(CANDLESTICK_THEME);
+
   private locale = inject(TxLocaleService);
   private host = inject<ElementRef<HTMLElement>>(ElementRef);
   readonly translations = injectTranslations();

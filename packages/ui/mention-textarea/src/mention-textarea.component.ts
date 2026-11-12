@@ -16,7 +16,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectFieldInvalid } from '@tectra-ng/core/forms';
 import { TxOverlayInsets, txPositions, watchOrigin, TxOverlayAnchor, txScrollStrategy } from '@tectra-ng/core/overlay';
 import { optionalBoolean } from '@tectra-ng/core/utils';
@@ -28,6 +28,7 @@ import { caretPoint } from './caret';
 import { TxMentionItem, TxMentionTextareaPart } from './mention-textarea.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { MENTION_TEXTAREA_ICON_DEFAULTS } from './mention-textarea.icons';
+import { MENTION_TEXTAREA_THEME } from './mention-textarea.theme';
 
 @Component({
   selector: 'tx-mention-textarea',
@@ -46,6 +47,8 @@ import { MENTION_TEXTAREA_ICON_DEFAULTS } from './mention-textarea.icons';
   viewProviders: [provideTxIconDefaults(MENTION_TEXTAREA_ICON_DEFAULTS)],
 })
 export class TxMentionTextarea extends TxOptionsBase<string> {
+  private readonly mentionTextareaTheme = injectTokens(MENTION_TEXTAREA_THEME);
+
   readonly suggestions = input<readonly TxMentionItem[]>([]);
   readonly trigger = input<string>('@');
   readonly localSearch = input<boolean, unknown>(true, { transform: booleanAttribute });

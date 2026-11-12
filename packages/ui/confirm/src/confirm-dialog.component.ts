@@ -5,6 +5,8 @@ import { TxDialogContent, TxDialogFooter, TxDialogHeader, injectDialogData, inje
 import { confirmView } from './confirm-content';
 import { TxConfirmState } from './confirm.types';
 import { CONFIRM_ICON_DEFAULTS } from './confirm.icons';
+import { injectTokens } from '@tectra-ng/core/config';
+import { CONFIRM_THEME } from './confirm.theme';
 
 @Component({
   selector: 'tx-confirm-dialog',
@@ -42,6 +44,8 @@ import { CONFIRM_ICON_DEFAULTS } from './confirm.icons';
   viewProviders: [provideTxIconDefaults(CONFIRM_ICON_DEFAULTS)],
 })
 export class TxConfirmDialog {
+  private readonly confirmTheme = injectTokens(CONFIRM_THEME);
+
   private ref = injectDialogRef<boolean>();
   readonly state = injectDialogData<TxConfirmState>();
   readonly view = confirmView(this.state);

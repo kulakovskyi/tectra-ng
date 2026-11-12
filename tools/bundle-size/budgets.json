@@ -6,7 +6,7 @@
   },
   "provider": {
     "what": "provideTectra with a preset, no component",
-    "kitBytes": 163000,
+    "kitBytes": 48000,
     "entryPoints": [
       "core-config",
       "themes",
@@ -15,7 +15,7 @@
   },
   "button": {
     "what": "TxButton",
-    "kitBytes": 235000,
+    "kitBytes": 125000,
     "entryPoints": [
       "core-config",
       "core-fluid",
@@ -31,7 +31,7 @@
   },
   "select": {
     "what": "TxSelect",
-    "kitBytes": 406000,
+    "kitBytes": 296000,
     "entryPoints": [
       "core-a11y",
       "core-config",
@@ -48,7 +48,7 @@
   },
   "table": {
     "what": "TxTable",
-    "kitBytes": 910000,
+    "kitBytes": 819000,
     "entryPoints": [
       "core-a11y",
       "core-config",
@@ -80,7 +80,7 @@
   },
   "datepicker": {
     "what": "TxDatePicker",
-    "kitBytes": 451000,
+    "kitBytes": 345000,
     "entryPoints": [
       "core-a11y",
       "core-config",
@@ -102,7 +102,7 @@
   },
   "dialog": {
     "what": "TxDialog",
-    "kitBytes": 339000,
+    "kitBytes": 229000,
     "entryPoints": [
       "core-a11y",
       "core-config",
@@ -121,7 +121,7 @@
   },
   "line-chart": {
     "what": "TxLineChart",
-    "kitBytes": 471000,
+    "kitBytes": 379000,
     "entryPoints": [
       "charts-core",
       "charts-line",
@@ -144,7 +144,7 @@
   },
   "editor": {
     "what": "TxEditor (rich text)",
-    "kitBytes": 892000,
+    "kitBytes": 792000,
     "entryPoints": [
       "core-a11y",
       "core-config",
@@ -171,7 +171,7 @@
   },
   "code-editor": {
     "what": "TxCodeEditor",
-    "kitBytes": 604000,
+    "kitBytes": 498000,
     "entryPoints": [
       "code-editor",
       "code-editor-highlight",

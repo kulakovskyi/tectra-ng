@@ -1,8 +1,9 @@
-import { lightDark, tokenRef } from './token-helpers';
+import { joinCss, lightDark, tokenRef } from './token-helpers';
 
+/* @__NO_SIDE_EFFECTS__ */
 function tone(palette: string) {
   return {
-    background: lightDark(tokenRef(`${palette}-100`), `color-mix(in srgb, ${tokenRef(`${palette}-400`)} 22%, ${tokenRef('surface-900')})`),
+    background: lightDark(tokenRef(`${palette}-100`), joinCss('color-mix(in srgb, ', tokenRef(`${palette}-400`), ' 22%, ', tokenRef('surface-900'), ')')),
     color: lightDark(tokenRef(`${palette}-700`), tokenRef(`${palette}-200`)),
   };
 }
@@ -48,11 +49,11 @@ export const avatarTokens = {
     size: '112px',
     gap: '12px',
     ringWidth: '4px',
-    ringColor: `color-mix(in srgb, ${tokenRef('primary-base')} 14%, transparent)`,
+    ringColor: joinCss('color-mix(in srgb, ', tokenRef('primary-base'), ' 14%, transparent)'),
     badgeRingWidth: '4px',
     badgeRingColor: tokenRef('surface-card'),
     badgeSize: '30px',
-    loaderBackground: `color-mix(in srgb, ${tokenRef('surface-card')} 75%, transparent)`,
+    loaderBackground: joinCss('color-mix(in srgb, ', tokenRef('surface-card'), ' 75%, transparent)'),
     dropRingColor: tokenRef('primary-base'),
     hintMaxWidth: '240px',
     hintFontSize: tokenRef('font-size-xs'),

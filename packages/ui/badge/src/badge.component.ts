@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraBadgeTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TxBadgePart, TxBadgeSeverity, TxBadgeSize } from './badge.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { BADGE_ICON_DEFAULTS } from './badge.icons';
+import { BADGE_THEME } from './badge.theme';
 
 @Component({
   selector: 'tx-badge',
@@ -23,6 +24,8 @@ import { BADGE_ICON_DEFAULTS } from './badge.icons';
   viewProviders: [provideTxIconDefaults(BADGE_ICON_DEFAULTS)],
 })
 export class TxBadge {
+  private readonly badgeTheme = injectTokens(BADGE_THEME);
+
   readonly value = input<string | number | undefined>(undefined);
   readonly severity = input<TxBadgeSeverity>('primary');
   readonly size = input<TxBadgeSize>('medium');

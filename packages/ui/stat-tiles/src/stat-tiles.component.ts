@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraStatTilesTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxStatTilesPart } from './stat-tiles.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { STAT_TILES_ICON_DEFAULTS } from './stat-tiles.icons';
+import { STAT_TILES_THEME } from './stat-tiles.theme';
 
 @Component({
   selector: 'tx-stat-tiles',
@@ -24,6 +25,8 @@ import { STAT_TILES_ICON_DEFAULTS } from './stat-tiles.icons';
   viewProviders: [provideTxIconDefaults(STAT_TILES_ICON_DEFAULTS)],
 })
 export class TxStatTiles {
+  private readonly statTilesTheme = injectTokens(STAT_TILES_THEME);
+
   readonly minWidth = input<string | undefined>(undefined);
   readonly compact = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly ariaLabel = input<string | undefined>(undefined);

@@ -1,4 +1,4 @@
-import { lightDark, tokenRef } from './token-helpers';
+import { joinCss, lightDark, tokenRef } from './token-helpers';
 
 export const menuTokens = {
   root: {
@@ -25,7 +25,7 @@ export const menuTokens = {
     activeBackground: tokenRef('menu-item-focus-background'),
     disabledOpacity: '0.6',
     dangerColor: lightDark(tokenRef('red-600'), tokenRef('red-400')),
-    dangerFocusBackground: lightDark(tokenRef('red-50'), `color-mix(in srgb, ${tokenRef('red-400')}, transparent 96%)`),
+    dangerFocusBackground: lightDark(tokenRef('red-50'), joinCss('color-mix(in srgb, ', tokenRef('red-400'), ', transparent 96%)')),
   },
   icon: {
     color: lightDark(tokenRef('surface-400'), tokenRef('surface-500')),
@@ -63,7 +63,7 @@ export const menuTokens = {
     itemBorderWidth: '1px',
   },
   context: {
-    background: `color-mix(in srgb, ${tokenRef('surface-card')} 92%, transparent)`,
+    background: joinCss('color-mix(in srgb, ', tokenRef('surface-card'), ' 92%, transparent)'),
     borderColor: tokenRef('surface-border'),
     blur: '24px',
     padding: '3.5px',

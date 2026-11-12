@@ -8,7 +8,7 @@ import {
   output,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectFluid } from '@tectra-ng/core/fluid';
 import { TxRipple } from '@tectra-ng/core/ripple';
 import { TxFormControlBase } from '@tectra-ng/core/forms';
@@ -21,6 +21,7 @@ import {
   TxToggleButtonPart,
   TxToggleButtonSize,
 } from './toggle-button.types';
+import { TOGGLE_BUTTON_THEME } from './toggle-button.theme';
 
 @Component({
   selector: 'tx-toggle-button',
@@ -43,6 +44,8 @@ import {
   },
 })
 export class TxToggleButton extends TxFormControlBase<boolean> {
+  private readonly toggleButtonTheme = injectTokens(TOGGLE_BUTTON_THEME);
+
   private txIconRegistry = injectTxIcons();
 
   readonly onLabel = input<string>('Yes');

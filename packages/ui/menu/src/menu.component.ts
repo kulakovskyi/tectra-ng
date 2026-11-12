@@ -18,7 +18,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxOverlay, TxOverlayRef, TxPlacement } from '@tectra-ng/core/overlay';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraMenuTokens, toStyleObject } from '@tectra-ng/themes';
@@ -26,6 +26,7 @@ import { TxMenuFocus, TxMenuList, TxMenuVariant } from './menu-list.component';
 import { TxMenuItem, TxMenuItemContext, TxMenuItemEvent, TxMenuPart } from './menu.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { MENU_ICON_DEFAULTS } from './menu.icons';
+import { MENU_THEME } from './menu.theme';
 
 @Directive({ selector: 'ng-template[txMenuItem]' })
 export class TxMenuItemTemplate {
@@ -78,6 +79,8 @@ export class TxMenuItemTemplate {
   viewProviders: [provideTxIconDefaults(MENU_ICON_DEFAULTS)],
 })
 export class TxMenu {
+  private readonly menuTheme = injectTokens(MENU_THEME);
+
   private overlay = inject(TxOverlay);
   private viewContainerRef = inject(ViewContainerRef);
   private tagName = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement.tagName.toLowerCase();
@@ -223,6 +226,8 @@ export class TxMenu {
   providers: [provideTxIconDefaults(MENU_ICON_DEFAULTS)],
 })
 export class TxMenuTrigger {
+  private readonly menuTheme = injectTokens(MENU_THEME);
+
   readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
 
   readonly txMenuTrigger = input.required<TxMenu>();

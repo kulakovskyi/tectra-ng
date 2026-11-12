@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { HIGHLIGHT_ICON_DEFAULTS } from './highlight.icons';
+import { injectTokens } from '@tectra-ng/core/config';
+import { HIGHLIGHT_THEME } from './highlight.theme';
 
 @Component({
   selector: 'tx-code-syntax-styles',
@@ -10,4 +12,6 @@ import { HIGHLIGHT_ICON_DEFAULTS } from './highlight.icons';
   changeDetection: ChangeDetectionStrategy.OnPush,
   viewProviders: [provideTxIconDefaults(HIGHLIGHT_ICON_DEFAULTS)],
 })
-export class TxCodeSyntaxStyles {}
+export class TxCodeSyntaxStyles {
+  private readonly highlightTheme = injectTokens(HIGHLIGHT_THEME);
+}

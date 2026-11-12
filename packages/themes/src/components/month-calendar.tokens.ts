@@ -1,4 +1,4 @@
-import { lightDark, tokenRef } from './token-helpers';
+import { joinCss, lightDark, tokenRef } from './token-helpers';
 
 export const monthCalendarTokens = {
   root: {
@@ -26,14 +26,14 @@ export const monthCalendarTokens = {
   },
   cell: {
     borderColor: tokenRef('surface-border'),
-    weekendBackground: `color-mix(in srgb, ${tokenRef('surface-ground')} 70%, transparent)`,
-    selectedBackground: `color-mix(in srgb, ${tokenRef('primary-base')} 9%, transparent)`,
+    weekendBackground: joinCss('color-mix(in srgb, ', tokenRef('surface-ground'), ' 70%, transparent)'),
+    selectedBackground: joinCss('color-mix(in srgb, ', tokenRef('primary-base'), ' 9%, transparent)'),
   },
   day: {
     padding: '3.5px',
     widePaddingX: '5.25px',
     color: tokenRef('text-primary'),
-    hoverBackground: `color-mix(in srgb, ${tokenRef('primary-base')} 5%, transparent)`,
+    hoverBackground: joinCss('color-mix(in srgb, ', tokenRef('primary-base'), ' 5%, transparent)'),
     gap: '3.5px',
     focusRingWidth: '2px',
     focusRingColor: tokenRef('primary-base'),
@@ -73,7 +73,7 @@ export const monthCalendarTokens = {
     borderRadius: '5.25px',
     color: tokenRef('text-muted'),
     hoverColor: tokenRef('primary-base'),
-    hoverBackground: `color-mix(in srgb, ${tokenRef('primary-base')} 10%, transparent)`,
+    hoverBackground: joinCss('color-mix(in srgb, ', tokenRef('primary-base'), ' 10%, transparent)'),
     fontSize: '10.5px',
     fontWeight: tokenRef('font-weight-semibold'),
   },

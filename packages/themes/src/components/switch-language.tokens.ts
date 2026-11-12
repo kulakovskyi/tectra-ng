@@ -1,4 +1,4 @@
-import { mix, tokenRef } from './token-helpers';
+import { joinCss, mix, tokenRef } from './token-helpers';
 
 export const switchLanguageTokens = {
   root: {
@@ -11,7 +11,7 @@ export const switchLanguageTokens = {
   thumb: {
     background: tokenRef('surface-card'),
     ringColor: tokenRef('surface-border'),
-    shadow: `0 1px 3px ${mix(tokenRef('text-primary'), '18%', 'transparent')}`,
+    shadow: joinCss('0 1px 3px ', mix(tokenRef('text-primary'), '18%', 'transparent')),
     duration: '300ms',
     easing: 'cubic-bezier(0.34, 1.3, 0.64, 1)',
   },
@@ -24,7 +24,7 @@ export const switchLanguageTokens = {
     color: tokenRef('text-muted'),
     hoverColor: tokenRef('text-primary'),
     activeColor: tokenRef('text-primary'),
-    focusRingShadow: `0 0 0 2px ${tokenRef('surface-card')}, 0 0 0 4px ${tokenRef('focus-ring-color')}`,
+    focusRingShadow: joinCss('0 0 0 2px ', tokenRef('surface-card'), ', 0 0 0 4px ', tokenRef('focus-ring-color')),
     transitionDuration: '200ms',
   },
 };

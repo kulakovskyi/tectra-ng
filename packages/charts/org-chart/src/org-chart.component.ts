@@ -17,7 +17,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
@@ -42,6 +42,7 @@ import {
 } from './org-chart.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { ORG_CHART_ICON_DEFAULTS } from './org-chart.icons';
+import { ORG_CHART_THEME } from './org-chart.theme';
 
 type TxFullscreenElement = HTMLElement & { webkitRequestFullscreen?: () => Promise<void> | void };
 type TxFullscreenDocument = Document & { webkitFullscreenElement?: Element | null; webkitExitFullscreen?: () => Promise<void> | void };
@@ -71,6 +72,8 @@ const DEFAULT_HEIGHT = 'calc(100vh - 15rem)';
   viewProviders: [provideTxIconDefaults(ORG_CHART_ICON_DEFAULTS)],
 })
 export class TxOrgChart implements OnDestroy {
+  private readonly orgChartTheme = injectTokens(ORG_CHART_THEME);
+
   private document = inject(DOCUMENT);
   private injector = inject(Injector);
   private locale = inject(TxLocaleService);

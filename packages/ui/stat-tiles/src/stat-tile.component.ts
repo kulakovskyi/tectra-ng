@@ -1,13 +1,14 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, inject, input } from '@angular/core';
 import { Params, RouterLink } from '@angular/router';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraStatTileTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxStatTiles } from './stat-tiles.component';
 import { TxStatTileCommands, TxStatTilePart, TxStatTileTone } from './stat-tiles.types';
 import { STAT_TILES_ICON_DEFAULTS } from './stat-tiles.icons';
+import { STAT_TILES_THEME } from './stat-tiles.theme';
 
 @Component({
   selector: 'tx-stat-tile',
@@ -30,6 +31,8 @@ import { STAT_TILES_ICON_DEFAULTS } from './stat-tiles.icons';
   viewProviders: [provideTxIconDefaults(STAT_TILES_ICON_DEFAULTS)],
 })
 export class TxStatTile {
+  private readonly statTilesTheme = injectTokens(STAT_TILES_THEME);
+
   private tiles = inject(TxStatTiles, { optional: true });
 
   readonly label = input.required<string>();

@@ -18,7 +18,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
@@ -28,6 +28,7 @@ import { TxTooltip } from '@tectra-ng/ui/tooltip';
 import { filter } from 'rxjs';
 import { TxAppLayoutBackdrop, TxAppLayoutPart, TxAppLayoutResponsive } from './app-layout.types';
 import { APP_LAYOUT_ICON_DEFAULTS } from './app-layout.icons';
+import { APP_LAYOUT_THEME } from './app-layout.theme';
 
 const MOBILE_WIDTH = 1024;
 const PICKED = 'a[href], [role="treeitem"]:not([aria-expanded])';
@@ -53,6 +54,8 @@ const PICKED = 'a[href], [role="treeitem"]:not([aria-expanded])';
   viewProviders: [provideTxIconDefaults(APP_LAYOUT_ICON_DEFAULTS)],
 })
 export class TxAppLayout implements OnInit {
+  private readonly appLayoutTheme = injectTokens(APP_LAYOUT_THEME);
+
   private readonly document = inject(DOCUMENT);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly menuButton = viewChild<ElementRef<HTMLButtonElement>>('menuButton');

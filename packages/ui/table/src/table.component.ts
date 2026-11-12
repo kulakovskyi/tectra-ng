@@ -24,7 +24,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraTableTokens, toStyleObject } from '@tectra-ng/themes';
@@ -85,6 +85,7 @@ import {
 import { columnLabel, mergeColumnOrder, nextSortOrder, pxOf, resolveField, rowKeyOf, sortRows, writeField } from './table.utils';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { TABLE_ICON_DEFAULTS } from './table.icons';
+import { TABLE_THEME } from './table.theme';
 
 export const TX_TABLE_SELECT_FIELD = '__select';
 export const TX_TABLE_EXPAND_FIELD = '__expand';
@@ -165,6 +166,8 @@ const EDITOR_FOCUS_TARGET = 'input:not(.tx-table__editor-pending), textarea, but
   viewProviders: [provideTxIconDefaults(TABLE_ICON_DEFAULTS)],
 })
 export class TxTable<T = unknown> implements TxTableContext {
+  private readonly tableTheme = injectTokens(TABLE_THEME);
+
   private document = inject(DOCUMENT);
   protected host = inject<ElementRef<HTMLElement>>(ElementRef);
   protected injector = inject(Injector);

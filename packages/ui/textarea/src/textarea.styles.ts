@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { injectTokens } from '@tectra-ng/core/config';
+import { TEXTAREA_THEME } from './textarea.theme';
 
 @Component({
   selector: 'tx-textarea-styles',
@@ -7,4 +9,6 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TxTextareaStyles {}
+export class TxTextareaStyles {
+  private readonly textareaTheme = injectTokens(TEXTAREA_THEME);
+}

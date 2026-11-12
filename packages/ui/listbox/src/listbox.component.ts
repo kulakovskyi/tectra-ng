@@ -1,7 +1,7 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, forwardRef, input, output, signal } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectFieldInvalid } from '@tectra-ng/core/forms';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
@@ -9,6 +9,7 @@ import { TectraDeepPartial, TectraListboxTokens, toStyleObject } from '@tectra-n
 import { TxOptionList, TxOptionsBase, TxSelectItem, isSelectableRow } from '@tectra-ng/ui/select';
 import { TxListboxChangeEvent, TxListboxPart } from './listbox.types';
 import { LISTBOX_ICON_DEFAULTS } from './listbox.icons';
+import { LISTBOX_THEME } from './listbox.theme';
 
 @Component({
   selector: 'tx-listbox',
@@ -31,6 +32,8 @@ import { LISTBOX_ICON_DEFAULTS } from './listbox.icons';
   viewProviders: [provideTxIconDefaults(LISTBOX_ICON_DEFAULTS)],
 })
 export class TxListbox extends TxOptionsBase<unknown> {
+  private readonly listboxTheme = injectTokens(LISTBOX_THEME);
+
   readonly options = input<readonly unknown[]>([]);
   readonly multiple = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly checkbox = input<boolean, unknown>(false, { transform: booleanAttribute });

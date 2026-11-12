@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, Directive, computed, contentChild, input } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraToolbarTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxToolbarOrientation, TxToolbarPart } from './toolbar.types';
+import { TOOLBAR_THEME } from './toolbar.theme';
 
 @Directive({ selector: '[txToolbarStart]' })
 export class TxToolbarStart {}
@@ -47,6 +48,8 @@ export class TxToolbarEnd {}
   },
 })
 export class TxToolbar {
+  private readonly toolbarTheme = injectTokens(TOOLBAR_THEME);
+
   readonly ariaLabel = input<string | undefined>(undefined);
   readonly ariaLabelledBy = input<string | undefined>(undefined);
   readonly orientation = input<TxToolbarOrientation>('horizontal');

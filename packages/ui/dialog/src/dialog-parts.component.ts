@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Directive, ElementRef, computed, effect, inject, input, signal } from '@angular/core';
 import { uniqueId } from '@tectra-ng/core/a11y';
-import { injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TxButton } from '@tectra-ng/ui/button';
@@ -8,6 +8,7 @@ import { injectCurrentDialog } from './dialog-ref';
 import { TxDialogPart } from './dialog.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { DIALOG_ICON_DEFAULTS } from './dialog.icons';
+import { DIALOG_THEME } from './dialog.theme';
 
 function injectPartStyling() {
   const ref = injectCurrentDialog();
@@ -20,6 +21,8 @@ function injectPartStyling() {
   providers: [provideTxIconDefaults(DIALOG_ICON_DEFAULTS)],
 })
 export class TxDialogTitle {
+  private readonly dialogTheme = injectTokens(DIALOG_THEME);
+
   private ref = injectCurrentDialog();
   readonly id = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement.id || uniqueId('tx-dialog-title');
 
@@ -98,6 +101,8 @@ export class TxDialogTitle {
   viewProviders: [provideTxIconDefaults(DIALOG_ICON_DEFAULTS)],
 })
 export class TxDialogHeader {
+  private readonly dialogTheme = injectTokens(DIALOG_THEME);
+
   readonly ref = injectCurrentDialog();
 
   readonly title = input<string | undefined>(undefined);
@@ -139,6 +144,8 @@ export class TxDialogHeader {
   viewProviders: [provideTxIconDefaults(DIALOG_ICON_DEFAULTS)],
 })
 export class TxDialogContent {
+  private readonly dialogTheme = injectTokens(DIALOG_THEME);
+
   private readonly ref = injectCurrentDialog();
   readonly inDrawer = computed(() => Boolean(this.ref()?.config.drawer));
   readonly isUnstyled = injectPartStyling();
@@ -160,6 +167,8 @@ export class TxDialogContent {
   viewProviders: [provideTxIconDefaults(DIALOG_ICON_DEFAULTS)],
 })
 export class TxDialogFooter {
+  private readonly dialogTheme = injectTokens(DIALOG_THEME);
+
   private readonly ref = injectCurrentDialog();
   readonly inDrawer = computed(() => Boolean(this.ref()?.config.drawer));
   readonly isUnstyled = injectPartStyling();
@@ -172,6 +181,8 @@ export class TxDialogFooter {
   providers: [provideTxIconDefaults(DIALOG_ICON_DEFAULTS)],
 })
 export class TxDialogClose {
+  private readonly dialogTheme = injectTokens(DIALOG_THEME);
+
   private ref = injectCurrentDialog();
 
   readonly txDialogClose = input<unknown>(undefined);

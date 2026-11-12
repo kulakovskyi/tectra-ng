@@ -3,7 +3,7 @@ import { TxOverlayAnchor } from '@tectra-ng/core/overlay';
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, contentChild, forwardRef, input, output, signal } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraSelectTokens, toStyleObject } from '@tectra-ng/themes';
@@ -13,6 +13,7 @@ import { TxSelectValueTemplate } from './select-option-template.directive';
 import { foldText, isSelectableRow } from './select-options';
 import { TxSelectChangeEvent, TxSelectItem, TxSelectPart } from './select.types';
 import { SELECT_ICON_DEFAULTS } from './select.icons';
+import { SELECT_THEME } from './select.theme';
 
 @Component({
   selector: 'tx-select',
@@ -38,6 +39,8 @@ import { SELECT_ICON_DEFAULTS } from './select.icons';
   viewProviders: [provideTxIconDefaults(SELECT_ICON_DEFAULTS)],
 })
 export class TxSelect extends TxSelectBase<unknown> {
+  private readonly selectTheme = injectTokens(SELECT_THEME);
+
   readonly options = input<readonly unknown[]>([]);
   readonly editable = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly checkmark = input<boolean, unknown>(false, { transform: booleanAttribute });

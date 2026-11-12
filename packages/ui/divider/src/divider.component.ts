@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraDividerTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxDividerAlign, TxDividerLayout, TxDividerPart, TxDividerType } from './divider.types';
+import { DIVIDER_THEME } from './divider.theme';
 
 @Component({
   selector: 'tx-divider',
@@ -22,6 +23,8 @@ import { TxDividerAlign, TxDividerLayout, TxDividerPart, TxDividerType } from '.
   },
 })
 export class TxDivider {
+  private readonly dividerTheme = injectTokens(DIVIDER_THEME);
+
   readonly layout = input<TxDividerLayout>('horizontal');
   readonly type = input<TxDividerType>('solid');
   readonly align = input<TxDividerAlign>('center');

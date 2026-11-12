@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input, output } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { provideTxIconDefaults, TxIconName } from '@tectra-ng/icons';
@@ -7,6 +7,7 @@ import { TectraDeepPartial, TectraWizardTokens, toStyleObject } from '@tectra-ng
 import { TxButton } from '@tectra-ng/ui/button';
 import { TxWizardFooterPart } from './wizard.types';
 import { WIZARD_ICON_DEFAULTS } from './wizard.icons';
+import { WIZARD_THEME } from './wizard.theme';
 
 @Component({
   selector: 'tx-wizard-footer',
@@ -71,6 +72,8 @@ import { WIZARD_ICON_DEFAULTS } from './wizard.icons';
   viewProviders: [provideTxIconDefaults(WIZARD_ICON_DEFAULTS)],
 })
 export class TxWizardFooter {
+  private readonly wizardTheme = injectTokens(WIZARD_THEME);
+
   readonly nextLabel = input<string | undefined>(undefined);
   readonly nextIcon = input<TxIconName | (string & {})>('arrow-right');
   readonly backLabel = input<string | undefined>(undefined);

@@ -26,7 +26,7 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TxAnnouncer, uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectFluid } from '@tectra-ng/core/fluid';
 import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
@@ -61,6 +61,7 @@ import {
   TxDatePickerView,
 } from './datepicker.types';
 import { DATEPICKER_ICON_DEFAULTS } from './datepicker.icons';
+import { DATEPICKER_THEME } from './datepicker.theme';
 
 type TimeUnit = 'hour' | 'minute' | 'second';
 
@@ -96,6 +97,8 @@ function isoDay(date: Date): string {
   viewProviders: [provideTxIconDefaults(DATEPICKER_ICON_DEFAULTS)],
 })
 export class TxDatePicker extends TxFormControlBase<TxDatePickerValue> {
+  private readonly datepickerTheme = injectTokens(DATEPICKER_THEME);
+
   readonly selectionMode = input<TxDatePickerSelectionMode>('single');
   readonly dateFormat = input<string | undefined>(undefined);
   readonly placeholder = input<string | undefined>(undefined);

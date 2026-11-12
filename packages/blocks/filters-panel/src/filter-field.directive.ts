@@ -2,6 +2,8 @@ import { Directive, ElementRef, InjectionToken, Signal, booleanAttribute, comput
 import { TxFluid } from '@tectra-ng/core/fluid';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { FILTERS_PANEL_ICON_DEFAULTS } from './filters-panel.icons';
+import { injectTokens } from '@tectra-ng/core/config';
+import { FILTERS_PANEL_THEME } from './filters-panel.theme';
 
 export interface TxFiltersPanelContext {
   isFieldHidden(key: string): boolean;
@@ -21,6 +23,8 @@ export const TX_FILTERS_PANEL = new InjectionToken<TxFiltersPanelContext>('TX_FI
   },
 })
 export class TxFilterField {
+  private readonly filtersPanelTheme = injectTokens(FILTERS_PANEL_THEME);
+
   private readonly panel = inject(TX_FILTERS_PANEL, { optional: true });
 
   readonly txFilterField = input.required<string>();
@@ -37,6 +41,8 @@ export class TxFilterField {
   providers: [provideTxIconDefaults(FILTERS_PANEL_ICON_DEFAULTS)],
 })
 export class TxFiltersReset {
+  private readonly filtersPanelTheme = injectTokens(FILTERS_PANEL_THEME);
+
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
   trigger(): void {

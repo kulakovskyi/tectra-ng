@@ -31,7 +31,7 @@ export const THEMING_LAYERS: ThemingLayer[] = [
   },
   {
     title: 'Component',
-    text: 'Every value of every component — size, padding, colour per severity and variant.',
+    text: 'Every value of every component — size, padding, colour per severity and variant. An app gets the variables of a component once it is on the page.',
     variable: '--tx-button-border-radius',
     file: 'preset.components',
   },

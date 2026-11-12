@@ -1,7 +1,13 @@
 import { ACCENT_PALETTES } from '@tectra-ng/tokens';
-import { mix, tokenRef } from './token-helpers';
+import { joinCss, mix, tokenRef } from './token-helpers';
+
+/* @__NO_SIDE_EFFECTS__ */
+function cyan400(): string {
+  return ACCENT_PALETTES.cyan[400];
+}
 
 const ground = tokenRef('surface-ground');
+/* @__NO_SIDE_EFFECTS__ */
 const tint = (color: string, amount: string) => mix(color, amount, ground);
 
 export const appLayoutTokens = {
@@ -25,7 +31,7 @@ export const appLayoutTokens = {
     iconSize: '17.5px',
     color: tokenRef('text-primary'),
     hoverBackground: tokenRef('surface-hover'),
-    focusRingShadow: `0 0 0 2px ${tokenRef('surface-card')}, 0 0 0 4px ${tokenRef('focus-ring-color')}`,
+    focusRingShadow: joinCss('0 0 0 2px ', tokenRef('surface-card'), ', 0 0 0 4px ', tokenRef('focus-ring-color')),
     marginEnd: '21px',
   },
   plain: {
@@ -76,8 +82,8 @@ export const appLayoutTokens = {
     maxWidth: '1504px',
   },
   backdrop: {
-    spectrum: `linear-gradient(120deg, ${tint(tokenRef('primary-400'), '14%')} 0%, ${ground} 32%, ${tint(tokenRef('purple-400'), '11%')} 58%, ${ground} 78%, ${tint(ACCENT_PALETTES.cyan[400], '13%')} 100%)`,
-    accent: `linear-gradient(120deg, ${tint(tokenRef('primary-400'), '15%')} 0%, ${ground} 30%, ${tint(tokenRef('primary-300'), '12%')} 56%, ${ground} 78%, ${tint(tokenRef('primary-600'), '13%')} 100%)`,
+    spectrum: joinCss('linear-gradient(120deg, ', tint(tokenRef('primary-400'), '14%'), ' 0%, ', ground, ' 32%, ', tint(tokenRef('purple-400'), '11%'), ' 58%, ', ground, ' 78%, ', tint(cyan400(), '13%'), ' 100%)'),
+    accent: joinCss('linear-gradient(120deg, ', tint(tokenRef('primary-400'), '15%'), ' 0%, ', ground, ' 30%, ', tint(tokenRef('primary-300'), '12%'), ' 56%, ', ground, ' 78%, ', tint(tokenRef('primary-600'), '13%'), ' 100%)'),
     noiseOpacity: '0.4',
     noiseSize: '160px',
   },

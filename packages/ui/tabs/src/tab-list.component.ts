@@ -17,6 +17,8 @@ import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TxTab } from './tab.component';
 import { TX_TABS } from './tabs.context';
 import { TABS_ICON_DEFAULTS } from './tabs.icons';
+import { injectTokens } from '@tectra-ng/core/config';
+import { TABS_THEME } from './tabs.theme';
 
 const SCROLL_GAP = 8;
 
@@ -40,6 +42,8 @@ const SCROLL_GAP = 8;
   viewProviders: [provideTxIconDefaults(TABS_ICON_DEFAULTS)],
 })
 export class TxTabList {
+  private readonly tabsTheme = injectTokens(TABS_THEME);
+
   protected readonly tabs = inject(TX_TABS);
   private readonly items = contentChildren(TxTab, { descendants: true });
   private readonly destroyRef = inject(DestroyRef);

@@ -1,5 +1,6 @@
 import { fade, lightDark, mix, tokenRef } from './token-helpers';
 
+/* @__NO_SIDE_EFFECTS__ */
 function solid(group: string) {
   return {
     background: tokenRef(`${group}-base`),
@@ -15,6 +16,7 @@ function solid(group: string) {
   };
 }
 
+/* @__NO_SIDE_EFFECTS__ */
 function outlined(palette: string, color: string) {
   return {
     hoverBackground: lightDark(tokenRef(`${palette}-50`), mix(tokenRef(`${palette}-400`), '8%', tokenRef('surface-900'))),
@@ -24,6 +26,7 @@ function outlined(palette: string, color: string) {
   };
 }
 
+/* @__NO_SIDE_EFFECTS__ */
 function text(palette: string, color: string) {
   return {
     hoverBackground: lightDark(tokenRef(`${palette}-50`), fade(tokenRef(`${palette}-400`), '96%')),
@@ -32,6 +35,7 @@ function text(palette: string, color: string) {
   };
 }
 
+/* @__NO_SIDE_EFFECTS__ */
 const severityColor = (palette: string) => lightDark(tokenRef(`${palette}-600`), tokenRef(`${palette}-400`));
 
 export const buttonTokens = {

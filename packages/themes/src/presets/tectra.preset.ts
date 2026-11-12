@@ -1,5 +1,4 @@
 import { ACCENT_PALETTES, SURFACE_PALETTES, TectraColorScale, TectraPrimary, TectraSurface, TectraSurfaceScale } from '@tectra-ng/tokens';
-import { COMPONENT_TOKENS } from '../components/component-tokens';
 import { deepMerge } from '../define-preset';
 import { createDarkSemantic } from '../semantic/dark.semantic';
 import { createLightSemantic } from '../semantic/light.semantic';
@@ -12,6 +11,7 @@ export interface TectraPresetOptions {
   surface?: TectraSurface;
 }
 
+/* @__NO_SIDE_EFFECTS__ */
 export function noirScale(surface: TectraSurfaceScale): TectraColorScale {
   return {
     50: surface[50],
@@ -28,6 +28,7 @@ export function noirScale(surface: TectraSurfaceScale): TectraColorScale {
   };
 }
 
+/* @__NO_SIDE_EFFECTS__ */
 export function createTectraPreset({ style = 'tectra', primary = 'blue', surface = 'ink' }: TectraPresetOptions = {}): TectraPreset {
   const surfaceScale = SURFACE_PALETTES[surface];
   const palettes = { accent: primary === 'noir' ? noirScale(surfaceScale) : ACCENT_PALETTES[primary], surface: surfaceScale };
@@ -37,7 +38,7 @@ export function createTectraPreset({ style = 'tectra', primary = 'blue', surface
     palettes,
     light: deepMerge(createLightSemantic(palettes), definition.light?.(palettes)),
     dark: deepMerge(createDarkSemantic(palettes), definition.dark?.(palettes)),
-    components: deepMerge(COMPONENT_TOKENS, definition.components),
+    components: definition.components ?? {},
     css: definition.css,
   };
 }

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output, signal } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { injectTxIcons, provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TxTooltip } from '@tectra-ng/ui/tooltip';
@@ -7,6 +7,7 @@ import { TectraAvatarTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng
 import { TX_AVATAR_GROUP } from './avatar-group.token';
 import { TxAvatarPart, TxAvatarShape, TxAvatarSize, TxAvatarTone } from './avatar.types';
 import { AVATAR_ICON_DEFAULTS } from './avatar.icons';
+import { AVATAR_THEME } from './avatar.theme';
 
 const TONES: TxAvatarTone[] = ['blue', 'green', 'sky', 'orange', 'purple', 'red'];
 
@@ -49,6 +50,8 @@ const TONES: TxAvatarTone[] = ['blue', 'green', 'sky', 'orange', 'purple', 'red'
   viewProviders: [provideTxIconDefaults(AVATAR_ICON_DEFAULTS)],
 })
 export class TxAvatar {
+  private readonly avatarTheme = injectTokens(AVATAR_THEME);
+
   private txIconRegistry = injectTxIcons();
   private group = inject(TX_AVATAR_GROUP, { optional: true });
 

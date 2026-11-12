@@ -191,7 +191,7 @@ function readSource(packageDir) {
 }
 
 const themesBundle = buildSync({
-  stdin: { contents: "export { Tectra, toCssVariables } from '@tectra-ng/themes';", resolveDir: root, loader: 'ts' },
+  stdin: { contents: "export { COMPONENT_TOKENS, Tectra, toCssVariables } from '@tectra-ng/themes';", resolveDir: root, loader: 'ts' },
   bundle: true,
   platform: 'node',
   format: 'esm',
@@ -204,8 +204,8 @@ const camel = (name) => name.replace(/-(\w)/g, (_, letter) => letter.toUpperCase
 
 function presetTokens(name, keys) {
   const kebab = (key) => key.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
-  const found = (keys ?? [camel(name)]).filter((key) => themes.Tectra.components[key]);
-  return found.length ? found.flatMap((key) => themes.toCssVariables(themes.Tectra.components[key], `--tx-${kebab(key)}`)) : null;
+  const found = (keys ?? [camel(name)]).filter((key) => themes.COMPONENT_TOKENS[key]);
+  return found.length ? found.flatMap((key) => themes.toCssVariables(themes.COMPONENT_TOKENS[key], `--tx-${kebab(key)}`)) : null;
 }
 
 const coreMembers = readdirSync(join(root, 'packages/core'), { withFileTypes: true })

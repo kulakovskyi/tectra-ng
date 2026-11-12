@@ -1,7 +1,7 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, booleanAttribute, computed, contentChild, forwardRef, inject, input, numberAttribute, output, signal, viewChild } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
 import { TxLocaleService } from '@tectra-ng/core/i18n';
 import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
@@ -10,6 +10,7 @@ import { TxKnobValueTemplate } from './knob-templates.directive';
 import { TxKnobArc, TxKnobChangeEvent, TxKnobPart } from './knob.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { KNOB_ICON_DEFAULTS } from './knob.icons';
+import { KNOB_THEME } from './knob.theme';
 
 const CENTER = 50;
 
@@ -34,6 +35,8 @@ const CENTER = 50;
   viewProviders: [provideTxIconDefaults(KNOB_ICON_DEFAULTS)],
 })
 export class TxKnob extends TxFormControlBase<number> {
+  private readonly knobTheme = injectTokens(KNOB_THEME);
+
   private localeService = inject(TxLocaleService);
   private lastFraction = 0;
 

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, DOCUMENT, ElementRef, computed, inject, input, numberAttribute, viewChild } from '@angular/core';
 import { uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraQrCodeTokens, toStyleObject } from '@tectra-ng/themes';
@@ -21,6 +21,7 @@ import {
 import { TxQrCodePart } from './qr-code.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { QR_CODE_ICON_DEFAULTS } from './qr-code.icons';
+import { QR_CODE_THEME } from './qr-code.theme';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const PAINTED = '.tx-qr-code__background, .tx-qr-code__dots, .tx-qr-code__eye-frames, .tx-qr-code__eye-balls';
@@ -39,6 +40,8 @@ const PAINTED = '.tx-qr-code__background, .tx-qr-code__dots, .tx-qr-code__eye-fr
   viewProviders: [provideTxIconDefaults(QR_CODE_ICON_DEFAULTS)],
 })
 export class TxQrCode {
+  private readonly qrCodeTheme = injectTokens(QR_CODE_THEME);
+
   private readonly document = inject(DOCUMENT);
   private readonly svg = viewChild<ElementRef<SVGSVGElement>>('svg');
 

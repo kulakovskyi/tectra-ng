@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ElementRef, booleanAttribute, computed, input, output, viewChild } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraSplitButtonTokens, toStyleObject } from '@tectra-ng/themes';
@@ -9,6 +9,7 @@ import { TxMenu, TxMenuFocus, TxMenuItem, TxMenuItemEvent } from '@tectra-ng/ui/
 import { TxSplitButtonPart } from './split-button.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { SPLIT_BUTTON_ICON_DEFAULTS } from './split-button.icons';
+import { SPLIT_BUTTON_THEME } from './split-button.theme';
 
 @Component({
   selector: 'tx-split-button',
@@ -83,6 +84,8 @@ import { SPLIT_BUTTON_ICON_DEFAULTS } from './split-button.icons';
   viewProviders: [provideTxIconDefaults(SPLIT_BUTTON_ICON_DEFAULTS)],
 })
 export class TxSplitButton {
+  private readonly splitButtonTheme = injectTokens(SPLIT_BUTTON_THEME);
+
   readonly label = input<string | undefined>(undefined);
   readonly icon = input<string | undefined>(undefined);
   readonly model = input<TxMenuItem[]>([]);

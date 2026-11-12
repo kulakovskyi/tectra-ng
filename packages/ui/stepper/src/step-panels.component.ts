@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TxStepperRef } from './stepper.context';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { STEPPER_ICON_DEFAULTS } from './stepper.icons';
+import { injectTokens } from '@tectra-ng/core/config';
+import { STEPPER_THEME } from './stepper.theme';
 
 @Component({
   selector: 'tx-step-panels',
@@ -15,5 +17,7 @@ import { STEPPER_ICON_DEFAULTS } from './stepper.icons';
   viewProviders: [provideTxIconDefaults(STEPPER_ICON_DEFAULTS)],
 })
 export class TxStepPanels {
+  private readonly stepperTheme = injectTokens(STEPPER_THEME);
+
   protected readonly stepper = inject(TxStepperRef);
 }

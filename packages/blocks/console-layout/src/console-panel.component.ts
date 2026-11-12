@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, computed, i
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
 import { TxAppFooter } from '@tectra-ng/blocks/app-footer';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { uniqueId } from '@tectra-ng/core/a11y';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
@@ -12,6 +12,7 @@ import { filter } from 'rxjs';
 import { TxConsoleLayout } from './console-layout.component';
 import { TxConsolePanelPart } from './console-layout.types';
 import { CONSOLE_LAYOUT_ICON_DEFAULTS } from './console-layout.icons';
+import { CONSOLE_LAYOUT_THEME } from './console-layout.theme';
 
 @Component({
   selector: 'tx-console-panel',
@@ -73,6 +74,8 @@ import { CONSOLE_LAYOUT_ICON_DEFAULTS } from './console-layout.icons';
   viewProviders: [provideTxIconDefaults(CONSOLE_LAYOUT_ICON_DEFAULTS)],
 })
 export class TxConsolePanel {
+  private readonly consoleLayoutTheme = injectTokens(CONSOLE_LAYOUT_THEME);
+
   private readonly layout = inject(TxConsoleLayout, { optional: true });
   private readonly toggleButton = viewChild<ElementRef<HTMLButtonElement>>('toggleButton');
 

@@ -1,4 +1,4 @@
-import { fade, lightDark, tokenRef } from './token-helpers';
+import { fade, joinCss, lightDark, tokenRef } from './token-helpers';
 
 export const sliderTokens = {
   root: {
@@ -17,8 +17,8 @@ export const sliderTokens = {
     hoverBackground: tokenRef('slider-handle-background'),
     borderColor: tokenRef('primary-base'),
     borderWidth: '2px',
-    shadow: `0 1px 2px ${fade(tokenRef('surface-950'), '80%')}`,
-    hoverRing: `0 0 0 6px ${fade(tokenRef('primary-base'), '85%')}`,
+    shadow: joinCss('0 1px 2px ', fade(tokenRef('surface-950'), '80%')),
+    hoverRing: joinCss('0 0 0 6px ', fade(tokenRef('primary-base'), '85%')),
     focusRingColor: tokenRef('focus-ring-color'),
     focusRingWidth: '2px',
     focusRingOffset: '2px',

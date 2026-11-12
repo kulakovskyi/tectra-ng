@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input, output } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { injectTxIcons, provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraChipTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TxChipPart } from './chip.types';
 import { CHIP_ICON_DEFAULTS } from './chip.icons';
+import { CHIP_THEME } from './chip.theme';
 
 @Component({
   selector: 'tx-chip',
@@ -56,6 +57,8 @@ import { CHIP_ICON_DEFAULTS } from './chip.icons';
   viewProviders: [provideTxIconDefaults(CHIP_ICON_DEFAULTS)],
 })
 export class TxChip {
+  private readonly chipTheme = injectTokens(CHIP_THEME);
+
   private txIconRegistry = injectTxIcons();
 
   readonly label = input<string | undefined>(undefined);

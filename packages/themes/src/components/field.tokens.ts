@@ -1,4 +1,4 @@
-import { tokenRef } from './token-helpers';
+import { joinCss, tokenRef } from './token-helpers';
 
 export const fieldTokens = {
   root: {
@@ -7,7 +7,7 @@ export const fieldTokens = {
   horizontal: {
     columnGap: '16px',
     labelWidth: '180px',
-    labelPaddingTop: `calc(${tokenRef('form-field-padding-y')} + 1px)`,
+    labelPaddingTop: joinCss('calc(', tokenRef('form-field-padding-y'), ' + 1px)'),
   },
 };
 

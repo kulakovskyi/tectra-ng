@@ -64,7 +64,7 @@ import {
   chartCategoryIndex,
 } from '@tectra-ng/charts/core';
 import { uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService, formatMessage, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
@@ -80,6 +80,7 @@ import {
 } from './combo-chart.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { COMBO_ICON_DEFAULTS } from './combo.icons';
+import { COMBO_THEME } from './combo.theme';
 
 const DEFAULT_WIDTH = 0.56;
 const DEFAULT_GROUP_GAP = 3;
@@ -106,6 +107,8 @@ const EDGE_SLACK = 8;
   viewProviders: [provideTxIconDefaults(COMBO_ICON_DEFAULTS)],
 })
 export class TxComboChart {
+  private readonly comboTheme = injectTokens(COMBO_THEME);
+
   private locale = inject(TxLocaleService);
   private host = inject<ElementRef<HTMLElement>>(ElementRef);
   readonly translations = injectTranslations();

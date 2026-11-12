@@ -17,7 +17,7 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TxTypeahead, uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import {
@@ -38,6 +38,7 @@ import { TectraCascadeSelectTokens, TectraDeepPartial, toStyleObject } from '@te
 import { TxFieldVariant, TxSelectSize, readOptionField, sameOptionValue } from '@tectra-ng/ui/select';
 import { TxCascadeItem, TxCascadeSelectChangeEvent, TxCascadeSelectPart } from './cascade-select.types';
 import { CASCADE_SELECT_ICON_DEFAULTS } from './cascade-select.icons';
+import { CASCADE_SELECT_THEME } from './cascade-select.theme';
 
 @Component({
   selector: 'tx-cascade-select',
@@ -62,6 +63,8 @@ import { CASCADE_SELECT_ICON_DEFAULTS } from './cascade-select.icons';
   viewProviders: [provideTxIconDefaults(CASCADE_SELECT_ICON_DEFAULTS)],
 })
 export class TxCascadeSelect extends TxFormControlBase<unknown> {
+  private readonly cascadeSelectTheme = injectTokens(CASCADE_SELECT_THEME);
+
   readonly options = input<readonly unknown[]>([]);
   readonly optionLabel = input<string>('label');
   readonly optionValue = input<string>('value');

@@ -1,4 +1,4 @@
-import { mix, tokenRef } from './token-helpers';
+import { joinCss, mix, tokenRef } from './token-helpers';
 
 export const commandPaletteTokens = {
   trigger: {
@@ -15,7 +15,7 @@ export const commandPaletteTokens = {
     hoverShadow: '0 2px 10px rgb(15 23 42 / 0.12)',
     activeScale: '0.97',
     fontSize: '12.25px',
-    focusRingShadow: `0 0 0 2px ${tokenRef('surface-card')}, 0 0 0 4px ${tokenRef('focus-ring-color')}`,
+    focusRingShadow: joinCss('0 0 0 2px ', tokenRef('surface-card'), ', 0 0 0 4px ', tokenRef('focus-ring-color')),
     duration: '150ms',
     kbdMarginStart: '3.5px',
     kbdPadding: '5px 5.25px',

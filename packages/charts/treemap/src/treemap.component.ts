@@ -26,7 +26,7 @@ import {
   injectChartEntrance,
   seriesColor,
 } from '@tectra-ng/charts/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
@@ -35,6 +35,7 @@ import { TxTreemapTileTemplate } from './treemap-tile.directive';
 import { TxTreemapGroup, TxTreemapItem, TxTreemapPart, TxTreemapTile, TxTreemapTileContext, TxTreemapTileEvent } from './treemap.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { TREEMAP_ICON_DEFAULTS } from './treemap.icons';
+import { TREEMAP_THEME } from './treemap.theme';
 
 const LABEL_SIZE = 13;
 const VALUE_SIZE = 12;
@@ -60,6 +61,8 @@ const GROUP_PADDING = 3;
   viewProviders: [provideTxIconDefaults(TREEMAP_ICON_DEFAULTS)],
 })
 export class TxTreemap {
+  private readonly treemapTheme = injectTokens(TREEMAP_THEME);
+
   private locale = inject(TxLocaleService);
   readonly translations = injectTranslations();
 

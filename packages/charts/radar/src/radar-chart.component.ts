@@ -49,7 +49,7 @@ import {
   tickFormatter,
   toggleKey,
 } from '@tectra-ng/charts/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService, formatMessage, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
@@ -57,6 +57,7 @@ import { radarAngle, radarAxes, radarAxisAt, radarFit, radarPoints, radarPolygon
 import { TxRadarChartPart, TxRadarChartPointEvent, TxRadarChartSeriesToggle, TxRadarChartShape, TxRadarPolygon, TxRadarRing } from './radar-chart.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { RADAR_ICON_DEFAULTS } from './radar.icons';
+import { RADAR_THEME } from './radar.theme';
 
 const DEFAULT_LABEL = { fontSize: 11.5, gap: 10 };
 const TICK_GAP = 4;
@@ -82,6 +83,8 @@ const TICK_GAP = 4;
   viewProviders: [provideTxIconDefaults(RADAR_ICON_DEFAULTS)],
 })
 export class TxRadarChart {
+  private readonly radarTheme = injectTokens(RADAR_THEME);
+
   private locale = inject(TxLocaleService);
   private host = inject<ElementRef<HTMLElement>>(ElementRef);
   readonly translations = injectTranslations();

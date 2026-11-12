@@ -1,4 +1,4 @@
-import { lightDark, tokenRef } from './token-helpers';
+import { joinCss, lightDark, tokenRef } from './token-helpers';
 
 export const treeTokens = {
   root: {
@@ -53,7 +53,7 @@ export const treeTokens = {
     color: tokenRef('primary-base'),
   },
   expansion: {
-    duration: `calc(${tokenRef('motion-duration')} * 1.6)`,
+    duration: joinCss('calc(', tokenRef('motion-duration'), ' * 1.6)'),
     easing: 'cubic-bezier(0.2, 0, 0, 1)',
   },
 };

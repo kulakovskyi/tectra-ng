@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraTextareaTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxTextarea } from './textarea.directive';
 import { TxTextareaCounterPart } from './textarea.types';
+import { TEXTAREA_THEME } from './textarea.theme';
 
 @Component({
   selector: 'tx-textarea-counter',
@@ -37,6 +38,8 @@ import { TxTextareaCounterPart } from './textarea.types';
   },
 })
 export class TxTextareaCounter {
+  private readonly textareaTheme = injectTokens(TEXTAREA_THEME);
+
   readonly for = input.required<TxTextarea>();
   readonly dt = input<TectraDeepPartial<TectraTextareaTokens> | undefined>(undefined);
   readonly pt = input<TxPassThrough<TxTextareaCounterPart, TxTextareaCounter> | undefined>(undefined);

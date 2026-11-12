@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input, output } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { injectTxIcons, provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraPillTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxPillPart, TxPillSize, TxPillTone, TxPillVariant } from './pill.types';
 import { PILL_ICON_DEFAULTS } from './pill.icons';
+import { PILL_THEME } from './pill.theme';
 
 @Component({
   selector: 'tx-pill',
@@ -54,6 +55,8 @@ import { PILL_ICON_DEFAULTS } from './pill.icons';
   viewProviders: [provideTxIconDefaults(PILL_ICON_DEFAULTS)],
 })
 export class TxPill {
+  private readonly pillTheme = injectTokens(PILL_THEME);
+
   private txIconRegistry = injectTxIcons();
 
   readonly value = input<string | number | undefined>(undefined);

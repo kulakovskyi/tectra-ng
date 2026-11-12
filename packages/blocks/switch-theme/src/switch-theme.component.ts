@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, numberAttribute, output } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, TxThemeMode, TxThemeService, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions, TxThemeMode, TxThemeService } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
@@ -7,6 +7,7 @@ import { TectraDeepPartial, TectraSwitchThemeTokens, toStyleObject } from '@tect
 import { TxSwitchThemePart } from './switch-theme.types';
 import { TX_THEME_REVEAL_EASING, TxThemeReveal } from './theme-reveal.directive';
 import { SWITCH_THEME_ICON_DEFAULTS } from './switch-theme.icons';
+import { SWITCH_THEME_THEME } from './switch-theme.theme';
 
 @Component({
   selector: 'tx-switch-theme',
@@ -54,6 +55,8 @@ import { SWITCH_THEME_ICON_DEFAULTS } from './switch-theme.icons';
   viewProviders: [provideTxIconDefaults(SWITCH_THEME_ICON_DEFAULTS)],
 })
 export class TxSwitchTheme {
+  private readonly switchThemeTheme = injectTokens(SWITCH_THEME_THEME);
+
   protected readonly theme = inject(TxThemeService);
 
   readonly revealDuration = input<number, unknown>(550, { transform: numberAttribute });

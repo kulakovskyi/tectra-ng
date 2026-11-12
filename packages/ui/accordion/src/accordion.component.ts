@@ -12,7 +12,7 @@ import {
   output,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraAccordionTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TxAccordionContent } from './accordion-content.component';
@@ -30,6 +30,7 @@ import {
 } from './accordion.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { ACCORDION_ICON_DEFAULTS } from './accordion.icons';
+import { ACCORDION_THEME } from './accordion.theme';
 
 @Component({
   selector: 'tx-accordion',
@@ -48,6 +49,8 @@ import { ACCORDION_ICON_DEFAULTS } from './accordion.icons';
   viewProviders: [provideTxIconDefaults(ACCORDION_ICON_DEFAULTS)],
 })
 export class TxAccordion implements TxAccordionContext {
+  private readonly accordionTheme = injectTokens(ACCORDION_THEME);
+
   readonly element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   focusSelectPending = false;
 

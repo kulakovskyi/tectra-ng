@@ -67,6 +67,7 @@ Prefix Nx commands with `NX_DAEMON=false NX_NO_CLOUD=true`.
 | Regenerate docs registry | `npm run registry` |
 | Format docs examples | `npm run format:examples` |
 | Rebuild icons (and the icon lists of the entry points) | `npm run icons` |
+| Rebuild the token group lists of the entry points | `npm run themes:groups` |
 | Rebuild flags | `npm run flags` |
 | Rebuild favicons and the social preview (`tools/brand/social-preview.html`) | `npm run brand` |
 | Rebuild the PDF export font | `npm run export-font -- <folder of an Onest release>` |
@@ -83,6 +84,7 @@ Install packages with `npm i …`; `.npmrc` sets `legacy-peer-deps=true` (npm ar
 - Every themable component has `dt`, `pt`, `ptOptions`, `unstyled` (skill `new-component`).
 - No comments in code or SCSS — names explain. No `any`.
 - Types in `<name>.types.ts`, one public barrel per entry point: `packages/ui/<name>/index.ts`.
+- Component token groups: a component registers the groups its SCSS / TS use from its entry point's generated `<name>.theme.ts` (`npm run themes:groups`, CI checks it); only registered groups get CSS variables. Keep token files free of top-level side effects (skill `design-tokens`).
 - Icons drawn by a component come from its entry point's generated `<name>.icons.ts` (`npm run icons:defaults`, CI checks it); apps register the names they use with `provideTxIcons(TX_ICONS)` or `provideTxIcons({ plus: txIconPlus })`.
 - Styles: tokens through `var(--tx-…)` only — no hard-coded colours, sizes come from tokens. Motion respects `prefers-reduced-motion`.
 - Accessibility is part of done: keyboard map in the README, ARIA roles/states, axe clean in light and dark.

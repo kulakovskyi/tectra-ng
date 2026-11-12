@@ -14,7 +14,7 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, TxTranslations, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions, TxTranslations } from '@tectra-ng/core/config';
 import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
 import { TxLocaleService } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
@@ -26,6 +26,7 @@ import { TxTooltip } from '@tectra-ng/ui/tooltip';
 import { TX_LIST_INPUT_LINES, TX_LIST_INPUT_PARSERS, TX_LIST_INPUT_WORDS, txParseList } from './list-input.parsers';
 import { TxListInputParser, TxListInputPart, TxListInputResult, TxListInputType } from './list-input.types';
 import { LIST_INPUT_ICON_DEFAULTS } from './list-input.icons';
+import { LIST_INPUT_THEME } from './list-input.theme';
 
 const LINE_BREAK = '\n';
 
@@ -59,6 +60,8 @@ const TEXTS: Record<TxListInputType, { placeholder: keyof TxTranslations; hint: 
   viewProviders: [provideTxIconDefaults(LIST_INPUT_ICON_DEFAULTS)],
 })
 export class TxListInput extends TxFormControlBase<string[]> {
+  private readonly listInputTheme = injectTokens(LIST_INPUT_THEME);
+
   private locale = inject(TxLocaleService);
 
   readonly text = model<string>('');

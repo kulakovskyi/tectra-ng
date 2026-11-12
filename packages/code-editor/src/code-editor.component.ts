@@ -22,7 +22,7 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { EditorSelection, EditorState, Extension, Prec, Transaction } from '@codemirror/state';
 import { EditorView, KeyBinding, ViewUpdate, keymap } from '@codemirror/view';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectFieldInvalid } from '@tectra-ng/core/forms';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
 import { TxStyleLoader } from '@tectra-ng/core/styles';
@@ -39,6 +39,7 @@ import { TxCodeSearchQuery, findMatches, replacementFor, setSearchMarks } from '
 import { TxCodeCompartmentName, TxCodeEditorCompartments, codeEditorBase, tabKeys } from './engine/setup';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { CODE_EDITOR_ICON_DEFAULTS } from './code-editor.icons';
+import { CODE_EDITOR_THEME } from './code-editor.theme';
 
 export type TxCodeEditorTokens = TectraCodeEditorTokens & { syntax: TectraCodeSyntaxTokens };
 
@@ -69,6 +70,8 @@ const isMac = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigat
   viewProviders: [provideTxIconDefaults(CODE_EDITOR_ICON_DEFAULTS)],
 })
 export class TxCodeEditor implements ControlValueAccessor {
+  private readonly codeEditorTheme = injectTokens(CODE_EDITOR_THEME);
+
   readonly value = model<string | null>('');
   readonly language = input<TxCodeLanguage | string>('html');
   readonly height = input<string | undefined>('600px');

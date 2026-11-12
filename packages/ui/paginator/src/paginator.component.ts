@@ -16,7 +16,7 @@ import {
 } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
@@ -28,6 +28,7 @@ import { TxPaginatorEnd, TxPaginatorStart } from './paginator.templates';
 import { TxPageState, TxPaginatorPart, TxRowsPerPageItem, TxRowsPerPageOption } from './paginator.types';
 import { firstToPage, pageCountOf, pageLinksOf, pageToFirst } from './paginator.utils';
 import { PAGINATOR_ICON_DEFAULTS } from './paginator.icons';
+import { PAGINATOR_THEME } from './paginator.theme';
 
 @Component({
   selector: 'tx-paginator',
@@ -47,6 +48,8 @@ import { PAGINATOR_ICON_DEFAULTS } from './paginator.icons';
   viewProviders: [provideTxIconDefaults(PAGINATOR_ICON_DEFAULTS)],
 })
 export class TxPaginator {
+  private readonly paginatorTheme = injectTokens(PAGINATOR_THEME);
+
   private localeService = inject(TxLocaleService);
   private breakpointObserver = inject(BreakpointObserver);
 

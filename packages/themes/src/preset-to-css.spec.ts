@@ -1,5 +1,6 @@
-import { Tectra } from './presets/tectra.preset';
-import { presetToCss, toCssVariables, toStyleObject } from './preset-to-css';
+import { COMPONENT_TOKENS } from './components/component-tokens';
+import { Soft, Tectra } from './presets/tectra.preset';
+import { componentTokensCss, presetBaseCss, presetToCss, toCssVariables, toStyleObject } from './preset-to-css';
 
 describe('toCssVariables', () => {
   it('flattens nested keys into kebab-case variables', () => {
@@ -39,5 +40,26 @@ describe('presetToCss', () => {
     expect(css).toContain('--tx-red-500:');
     expect(css).toContain('--tx-button-primary-background:');
     expect(css).toContain('--tx-toggle-button-checked-color:');
+  });
+});
+
+describe('presets without component tokens', () => {
+  it('keep only the overrides of their style', () => {
+    expect(Tectra.components).toEqual({});
+    expect(Object.keys(Soft.components)).toContain('button');
+    expect(Soft.components.button).not.toEqual(COMPONENT_TOKENS.button);
+  });
+
+  it('write the base without components and every component with presetToCss', () => {
+    const base = presetBaseCss(Soft);
+    expect(base).toContain('--tx-primary-base:');
+    expect(base).not.toContain('--tx-button-');
+    const full = presetToCss(Soft);
+    expect(full).toContain(`--tx-button-padding-x: ${Soft.components.button?.root?.paddingX};`);
+    expect(full).toContain('--tx-toggle-button-checked-color:');
+  });
+
+  it('write one group as a :root block', () => {
+    expect(componentTokensCss('toggleButton', { root: { gap: '4px' } })).toBe(':root { --tx-toggle-button-gap: 4px; }');
   });
 });

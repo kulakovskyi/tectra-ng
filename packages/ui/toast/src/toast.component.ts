@@ -15,7 +15,7 @@ import {
   numberAttribute,
   signal,
 } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { injectTxIcons, provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
@@ -25,6 +25,7 @@ import { TxToastTemplate } from './toast-template.directive';
 import { TxToastService } from './toast.service';
 import { TxToastAction, TxToastContext, TxToastMessage, TxToastPart, TxToastPosition, TxToastSeverity } from './toast.types';
 import { TOAST_ICON_DEFAULTS } from './toast.icons';
+import { TOAST_THEME } from './toast.theme';
 
 const ICONS: Record<TxToastSeverity, string> = {
   success: 'check',
@@ -69,6 +70,8 @@ interface TxToastSwipe {
   viewProviders: [provideTxIconDefaults(TOAST_ICON_DEFAULTS)],
 })
 export class TxToast {
+  private readonly toastTheme = injectTokens(TOAST_THEME);
+
   private service = inject(TxToastService);
   private iconRegistry = injectTxIcons();
   private host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;

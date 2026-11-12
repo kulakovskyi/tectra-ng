@@ -23,6 +23,8 @@ import { TxDialogService } from './dialog.service';
 import { TxDialogAutoFocus, TxDialogPosition, TxDialogRole, TxDialogSize, TxDialogTemplateContext, TxDrawerPosition, TxDrawerSize } from './dialog.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { DIALOG_ICON_DEFAULTS } from './dialog.icons';
+import { injectTokens } from '@tectra-ng/core/config';
+import { DIALOG_THEME } from './dialog.theme';
 
 @Component({
   selector: 'tx-dialog',
@@ -45,6 +47,8 @@ import { DIALOG_ICON_DEFAULTS } from './dialog.icons';
   viewProviders: [provideTxIconDefaults(DIALOG_ICON_DEFAULTS)],
 })
 export class TxDialog {
+  private readonly dialogTheme = injectTokens(DIALOG_THEME);
+
   private dialogs = inject(TxDialogService);
   private injector = inject(Injector);
   private current = inject(TX_DIALOG_CURRENT) as WritableSignal<TxDialogRef | null>;

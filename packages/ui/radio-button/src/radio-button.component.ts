@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
 import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraRadioButtonTokens, toStyleObject } from '@tectra-ng/themes';
@@ -20,6 +20,7 @@ import { TX_RADIO_GROUP } from './radio-group.token';
 import { TxRadioButtonChangeEvent, TxRadioButtonPart, TxRadioButtonSize, TxRadioButtonVariant } from './radio-button.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { RADIO_BUTTON_ICON_DEFAULTS } from './radio-button.icons';
+import { RADIO_BUTTON_THEME } from './radio-button.theme';
 
 @Component({
   selector: 'tx-radio-button',
@@ -44,6 +45,8 @@ import { RADIO_BUTTON_ICON_DEFAULTS } from './radio-button.icons';
   viewProviders: [provideTxIconDefaults(RADIO_BUTTON_ICON_DEFAULTS)],
 })
 export class TxRadioButton extends TxFormControlBase<unknown> {
+  private readonly radioButtonTheme = injectTokens(RADIO_BUTTON_THEME);
+
   private group = inject(TX_RADIO_GROUP, { optional: true });
   private generatedId = uniqueId('tx-radio-button');
 

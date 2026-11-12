@@ -3,6 +3,8 @@ import { injectTranslations } from '@tectra-ng/core/i18n';
 import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TxIconField } from './icon-field.component';
 import { ICON_FIELD_ICON_DEFAULTS } from './icon-field.icons';
+import { injectTokens } from '@tectra-ng/core/config';
+import { ICON_FIELD_THEME } from './icon-field.theme';
 
 @Component({
   selector: 'tx-input-clear',
@@ -20,6 +22,8 @@ import { ICON_FIELD_ICON_DEFAULTS } from './icon-field.icons';
   viewProviders: [provideTxIconDefaults(ICON_FIELD_ICON_DEFAULTS)],
 })
 export class TxInputClear {
+  private readonly iconFieldTheme = injectTokens(ICON_FIELD_THEME);
+
   readonly field = inject(TxIconField);
   readonly translations = injectTranslations();
 

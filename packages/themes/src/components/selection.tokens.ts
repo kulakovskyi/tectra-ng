@@ -1,4 +1,4 @@
-import { tokenRef } from './token-helpers';
+import { joinCss, tokenRef } from './token-helpers';
 
 export const listboxTokens = {
   root: {
@@ -36,7 +36,7 @@ export const countryTokens = {
     mediumSize: '17.5px',
     largeSize: '28px',
     borderRadius: tokenRef('radius-xs'),
-    ring: `0 0 0 1px ${tokenRef('surface-border')}`,
+    ring: joinCss('0 0 0 1px ', tokenRef('surface-border')),
     ringGutter: '1px',
     loadingBackground: tokenRef('surface-hover'),
     nameColor: 'inherit',
@@ -53,11 +53,11 @@ export const colorPickerTokens = {
     gap: '8px',
     swatchSize: '20px',
     swatchBorderRadius: tokenRef('radius-sm'),
-    swatchRing: `inset 0 0 0 1px ${tokenRef('surface-border')}`,
+    swatchRing: joinCss('inset 0 0 0 1px ', tokenRef('surface-border')),
   },
   dot: {
     size: tokenRef('form-field-font-size'),
-    ringColor: `color-mix(in srgb, ${tokenRef('text-primary')} 30%, transparent)`,
+    ringColor: joinCss('color-mix(in srgb, ', tokenRef('text-primary'), ' 30%, transparent)'),
     emptyBorderColor: tokenRef('text-muted'),
     focusRingColor: tokenRef('focus-ring-color'),
   },
@@ -85,14 +85,14 @@ export const colorPickerTokens = {
   handle: {
     size: '16px',
     borderColor: tokenRef('surface-0'),
-    ring: `0 0 0 1px ${tokenRef('surface-900')}, ${tokenRef('shadow-overlay')}`,
-    focusRing: `0 0 0 2px ${tokenRef('surface-0')}, 0 0 0 4px ${tokenRef('focus-ring-color')}`,
+    ring: joinCss('0 0 0 1px ', tokenRef('surface-900'), ', ', tokenRef('shadow-overlay')),
+    focusRing: joinCss('0 0 0 2px ', tokenRef('surface-0'), ', 0 0 0 4px ', tokenRef('focus-ring-color')),
   },
   preset: {
     size: '22px',
     gap: '6px',
     borderRadius: tokenRef('radius-sm'),
-    selectedRing: `0 0 0 2px ${tokenRef('surface-overlay')}, 0 0 0 4px ${tokenRef('primary-base')}`,
+    selectedRing: joinCss('0 0 0 2px ', tokenRef('surface-overlay'), ', 0 0 0 4px ', tokenRef('primary-base')),
   },
 };
 

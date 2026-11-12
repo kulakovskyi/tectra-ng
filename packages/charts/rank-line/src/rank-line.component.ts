@@ -32,7 +32,7 @@ import {
   toTime,
   toggleKey,
 } from '@tectra-ng/charts/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
@@ -40,6 +40,7 @@ import { rankLineColor, rankTickStep, rankTimeExtent, rankY } from './rank-line-
 import { TxRankLineEvent, TxRankLinePart, TxRankMarker, TxRankSeries } from './rank-line.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { RANK_LINE_ICON_DEFAULTS } from './rank-line.icons';
+import { RANK_LINE_THEME } from './rank-line.theme';
 
 const HIT_DISTANCE = 24;
 
@@ -60,6 +61,8 @@ const HIT_DISTANCE = 24;
   viewProviders: [provideTxIconDefaults(RANK_LINE_ICON_DEFAULTS)],
 })
 export class TxRankChart {
+  private readonly rankLineTheme = injectTokens(RANK_LINE_THEME);
+
   private locale = inject(TxLocaleService);
   readonly translations = injectTranslations();
 

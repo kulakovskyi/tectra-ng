@@ -43,6 +43,7 @@ jobs:
           NX_NO_CLOUD: 'true'
       - run: npm run lint
       - run: node tools/icons/build-icon-defaults.mjs --check
+      - run: node tools/themes/build-token-groups.mjs --check
       - run: npm run test
 
   packages:

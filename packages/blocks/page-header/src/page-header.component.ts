@@ -1,11 +1,12 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraPageHeaderTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxPageHeaderLevel, TxPageHeaderPart } from './page-header.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { PAGE_HEADER_ICON_DEFAULTS } from './page-header.icons';
+import { PAGE_HEADER_THEME } from './page-header.theme';
 
 @Component({
   selector: 'tx-page-header',
@@ -22,6 +23,8 @@ import { PAGE_HEADER_ICON_DEFAULTS } from './page-header.icons';
   viewProviders: [provideTxIconDefaults(PAGE_HEADER_ICON_DEFAULTS)],
 })
 export class TxPageHeader {
+  private readonly pageHeaderTheme = injectTokens(PAGE_HEADER_THEME);
+
   readonly title = input.required<string>();
   readonly subtitle = input<string | undefined>(undefined);
   readonly headingLevel = input<TxPageHeaderLevel>(1);

@@ -6,6 +6,8 @@ import { orgChartChildren } from './org-chart-tree';
 import { TxOrgChartNode, TxOrgChartNodeContext, TxOrgChartTreeState } from './org-chart.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { ORG_CHART_ICON_DEFAULTS } from './org-chart.icons';
+import { injectTokens } from '@tectra-ng/core/config';
+import { ORG_CHART_THEME } from './org-chart.theme';
 
 @Component({
   selector: 'tx-org-chart-node',
@@ -22,6 +24,8 @@ import { ORG_CHART_ICON_DEFAULTS } from './org-chart.icons';
   viewProviders: [provideTxIconDefaults(ORG_CHART_ICON_DEFAULTS)],
 })
 export class TxOrgChartNodeView {
+  private readonly orgChartTheme = injectTokens(ORG_CHART_THEME);
+
   readonly node = input.required<TxOrgChartNode>();
   readonly state = input.required<TxOrgChartTreeState>();
   readonly template = input<TemplateRef<TxOrgChartNodeContext> | null>(null);

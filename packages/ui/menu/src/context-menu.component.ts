@@ -10,13 +10,14 @@ import {
   output,
   viewChild,
 } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
+import { injectTokens, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraMenuTokens } from '@tectra-ng/themes';
 import { TxMenu } from './menu.component';
 import { TxMenuItem, TxMenuItemEvent, TxMenuPart } from './menu.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { MENU_ICON_DEFAULTS } from './menu.icons';
+import { MENU_THEME } from './menu.theme';
 
 @Component({
   selector: 'tx-context-menu',
@@ -43,6 +44,8 @@ import { MENU_ICON_DEFAULTS } from './menu.icons';
   viewProviders: [provideTxIconDefaults(MENU_ICON_DEFAULTS)],
 })
 export class TxContextMenu {
+  private readonly menuTheme = injectTokens(MENU_THEME);
+
   private document = inject(DOCUMENT);
   private anchor: HTMLElement | null = null;
   private readonly menu = viewChild.required(TxMenu);

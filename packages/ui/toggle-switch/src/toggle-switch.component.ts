@@ -13,13 +13,14 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
 import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
 import { injectTxIcons, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraToggleSwitchTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxToggleSwitchHandleTemplate } from './toggle-switch-templates.directive';
 import { TxToggleSwitchChangeEvent, TxToggleSwitchLabelPosition, TxToggleSwitchPart, TxToggleSwitchSize } from './toggle-switch.types';
+import { TOGGLE_SWITCH_THEME } from './toggle-switch.theme';
 
 @Component({
   selector: 'tx-toggle-switch',
@@ -42,6 +43,8 @@ import { TxToggleSwitchChangeEvent, TxToggleSwitchLabelPosition, TxToggleSwitchP
   },
 })
 export class TxToggleSwitch extends TxFormControlBase<unknown> {
+  private readonly toggleSwitchTheme = injectTokens(TOGGLE_SWITCH_THEME);
+
   private txIconRegistry = injectTxIcons();
   private generatedId = uniqueId('tx-toggle-switch');
 

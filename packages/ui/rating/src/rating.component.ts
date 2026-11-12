@@ -1,7 +1,7 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, contentChild, forwardRef, inject, input, numberAttribute, output, signal } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
@@ -10,6 +10,7 @@ import { TectraDeepPartial, TectraRatingTokens, toStyleObject } from '@tectra-ng
 import { TxRatingOffIconTemplate, TxRatingOnIconTemplate } from './rating-templates.directive';
 import { TxRatingChangeEvent, TxRatingPart, TxRatingSize } from './rating.types';
 import { RATING_ICON_DEFAULTS } from './rating.icons';
+import { RATING_THEME } from './rating.theme';
 
 @Component({
   selector: 'tx-rating',
@@ -32,6 +33,8 @@ import { RATING_ICON_DEFAULTS } from './rating.icons';
   viewProviders: [provideTxIconDefaults(RATING_ICON_DEFAULTS)],
 })
 export class TxRating extends TxFormControlBase<number> {
+  private readonly ratingTheme = injectTokens(RATING_THEME);
+
   private txIconRegistry = injectTxIcons();
   private localeService = inject(TxLocaleService);
 

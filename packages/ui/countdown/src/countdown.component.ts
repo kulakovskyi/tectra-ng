@@ -1,6 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, booleanAttribute, computed, contentChild, effect, inject, input, numberAttribute, output, signal, untracked } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
 import { TectraCountdownTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TxCountdownValue } from './countdown.templates';
@@ -8,6 +8,7 @@ import { TxCountdownContext, TxCountdownFormat, TxCountdownPart, TxCountdownTarg
 import { TX_COUNTDOWN_UNIT_MS, formatRemaining, splitRemaining, targetTime } from './countdown.utils';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { COUNTDOWN_ICON_DEFAULTS } from './countdown.icons';
+import { COUNTDOWN_THEME } from './countdown.theme';
 
 @Component({
   selector: 'tx-countdown',
@@ -36,6 +37,8 @@ import { COUNTDOWN_ICON_DEFAULTS } from './countdown.icons';
   viewProviders: [provideTxIconDefaults(COUNTDOWN_ICON_DEFAULTS)],
 })
 export class TxCountdown {
+  private readonly countdownTheme = injectTokens(COUNTDOWN_THEME);
+
   readonly value = input<number | undefined, unknown>(undefined, { transform: optionalNumber });
   readonly unit = input<TxCountdownUnit>('seconds');
   readonly target = input<TxCountdownTarget>(undefined);

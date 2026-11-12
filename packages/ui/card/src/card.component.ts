@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraCardTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TxCardPart } from './card.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { CARD_ICON_DEFAULTS } from './card.icons';
+import { CARD_THEME } from './card.theme';
 
 @Component({
   selector: 'tx-card',
@@ -33,6 +34,8 @@ import { CARD_ICON_DEFAULTS } from './card.icons';
   viewProviders: [provideTxIconDefaults(CARD_ICON_DEFAULTS)],
 })
 export class TxCard {
+  private readonly cardTheme = injectTokens(CARD_THEME);
+
   readonly title = input<string | undefined>(undefined);
   readonly subtitle = input<string | undefined>(undefined);
   readonly headingLevel = input<number>(3);

@@ -1,5 +1,6 @@
 import { lightDark, tokenRef } from './token-helpers';
 
+/* @__NO_SIDE_EFFECTS__ */
 function severity(group: string) {
   return { background: tokenRef(`${group}-base`), color: tokenRef(`${group}-contrast`) };
 }

@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 import { dateFormat, toggleKey } from '@tectra-ng/charts/core';
 import { uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService, formatMessage, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
@@ -27,6 +27,7 @@ import { TxTooltip } from '@tectra-ng/ui/tooltip';
 import { TX_GANTT_DAY, TX_GANTT_DAY_WIDTH, ganttDays, ganttFolds, ganttRange, ganttRows, ganttTicks, ganttTime, ganttX } from './gantt-layout';
 import { TxGanttDate, TxGanttGroupToggle, TxGanttLayout, TxGanttPart, TxGanttSpan, TxGanttTask, TxGanttTaskEvent, TxGanttZoom } from './gantt-chart.types';
 import { GANTT_ICON_DEFAULTS } from './gantt.icons';
+import { GANTT_THEME } from './gantt.theme';
 
 const ZOOMS: readonly TxGanttZoom[] = ['quarter', 'month', 'week', 'day'];
 const MIN_BAR = 6;
@@ -54,6 +55,8 @@ export type TxGanttBarLabels = 'auto' | 'outside' | 'inside' | 'none';
   viewProviders: [provideTxIconDefaults(GANTT_ICON_DEFAULTS)],
 })
 export class TxGanttChart {
+  private readonly ganttTheme = injectTokens(GANTT_THEME);
+
   private locale = inject(TxLocaleService);
   private injector = inject(Injector);
   readonly translations = injectTranslations();

@@ -12,6 +12,8 @@ import { TX_TABLE } from './table.context';
 import { TxTableColumn } from './table.types';
 import { columnLabel } from './table.utils';
 import { TABLE_ICON_DEFAULTS } from './table.icons';
+import { injectTokens } from '@tectra-ng/core/config';
+import { TABLE_THEME } from './table.theme';
 
 type TxTableSettingsTab = 'columns' | 'actions';
 
@@ -133,6 +135,8 @@ type TxTableSettingsTab = 'columns' | 'actions';
   viewProviders: [provideTxIconDefaults(TABLE_ICON_DEFAULTS)],
 })
 export class TxTableSettings {
+  private readonly tableTheme = injectTokens(TABLE_THEME);
+
   private readonly table = inject(TX_TABLE);
   private readonly document = inject(DOCUMENT);
 

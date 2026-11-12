@@ -10,6 +10,7 @@
     "build:packages": "nx run-many -t build -p tokens themes core icons brand-icons flags qr ui editor code-editor charts utils blocks tectra-ng && node tools/npm-package-files.mjs",
     "icons": "node tools/icons/build-icons.mjs && node tools/icons/build-brand-icons.mjs && node tools/icons/build-icon-defaults.mjs",
     "icons:defaults": "node tools/icons/build-icon-defaults.mjs",
+    "themes:groups": "node tools/themes/build-token-groups.mjs",
     "flags": "node tools/flags/build-flags.mjs",
     "export-font": "node tools/export-font/build-export-font.mjs",
     "brand": "node tools/brand/build-brand-images.mjs",

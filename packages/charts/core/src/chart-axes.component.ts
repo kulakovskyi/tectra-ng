@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { TxPassThroughPart } from '@tectra-ng/core/config';
+import { injectTokens, TxPassThroughPart } from '@tectra-ng/core/config';
 import { TxChartAxesModel } from './chart.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { CORE_ICON_DEFAULTS } from './core.icons';
+import { CORE_THEME } from './core.theme';
 
 @Component({
   selector: 'g[tx-chart-axes]',
@@ -55,6 +56,8 @@ import { CORE_ICON_DEFAULTS } from './core.icons';
   viewProviders: [provideTxIconDefaults(CORE_ICON_DEFAULTS)],
 })
 export class TxChartAxes {
+  private readonly coreTheme = injectTokens(CORE_THEME);
+
   readonly model = input.required<TxChartAxesModel>({ alias: 'tx-chart-axes' });
   readonly gridPart = input<TxPassThroughPart | undefined>(undefined);
   readonly axisPart = input<TxPassThroughPart | undefined>(undefined);

@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input, output } from '@angular/core';
-import { injectUnstyled } from '@tectra-ng/core/config';
+import { injectTokens, injectUnstyled } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TxTooltip } from '@tectra-ng/ui/tooltip';
 import { heatmapCellLabel } from './heatmap-layout';
 import { TxHeatmapCell } from './heatmap.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { HEATMAP_ICON_DEFAULTS } from './heatmap.icons';
+import { HEATMAP_THEME } from './heatmap.theme';
 
 @Component({
   selector: 'tx-heatmap-cell',
@@ -20,6 +21,8 @@ import { HEATMAP_ICON_DEFAULTS } from './heatmap.icons';
   viewProviders: [provideTxIconDefaults(HEATMAP_ICON_DEFAULTS)],
 })
 export class TxHeatmapCellView {
+  private readonly heatmapTheme = injectTokens(HEATMAP_THEME);
+
   readonly cell = input<TxHeatmapCell | null>(null);
   readonly level = input<number | null>(null);
   readonly legend = input<boolean, unknown>(false, { transform: booleanAttribute });

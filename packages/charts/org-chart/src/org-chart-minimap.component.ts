@@ -3,6 +3,8 @@ import { TX_ORG_CHART_COMPACT_WIDTH, TX_ORG_CHART_MINIMAP, TX_ORG_CHART_MINIMAP_
 import { TxOrgChartMinimapLayout, TxOrgChartPoint, TxOrgChartRect, TxOrgChartSize, TxOrgChartView } from './org-chart.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { ORG_CHART_ICON_DEFAULTS } from './org-chart.icons';
+import { injectTokens } from '@tectra-ng/core/config';
+import { ORG_CHART_THEME } from './org-chart.theme';
 
 @Component({
   selector: 'tx-org-chart-minimap',
@@ -49,6 +51,8 @@ import { ORG_CHART_ICON_DEFAULTS } from './org-chart.icons';
   viewProviders: [provideTxIconDefaults(ORG_CHART_ICON_DEFAULTS)],
 })
 export class TxOrgChartMinimap {
+  private readonly orgChartTheme = injectTokens(ORG_CHART_THEME);
+
   readonly layout = input.required<TxOrgChartMinimapLayout>();
   readonly viewport = input.required<TxOrgChartSize>();
   readonly view = input.required<TxOrgChartView>();

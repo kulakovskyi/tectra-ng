@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, ElementRef, booleanAttribute, computed, inject, input, numberAttribute, signal, viewChild } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraHoverEffectTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxHoverEffectPart } from './hover-effect.types';
+import { HOVER_EFFECT_THEME } from './hover-effect.theme';
 
 @Component({
   selector: 'tx-hover-effect',
@@ -31,6 +32,8 @@ import { TxHoverEffectPart } from './hover-effect.types';
   },
 })
 export class TxHoverEffect {
+  private readonly hoverEffectTheme = injectTokens(HOVER_EFFECT_THEME);
+
   private readonly document = inject(DOCUMENT);
   private readonly layer = viewChild.required<ElementRef<HTMLElement>>('layer');
   private frame = 0;

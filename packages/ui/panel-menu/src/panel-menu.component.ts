@@ -18,7 +18,7 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { IsActiveMatchOptions, NavigationEnd, Router, RouterLink, containsTree } from '@angular/router';
 import { uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { injectTxIcons, provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraPanelMenuTokens, toStyleObject } from '@tectra-ng/themes';
@@ -34,6 +34,7 @@ import {
   TxPanelMenuVariant,
 } from './panel-menu.types';
 import { PANEL_MENU_ICON_DEFAULTS } from './panel-menu.icons';
+import { PANEL_MENU_THEME } from './panel-menu.theme';
 
 export interface TxPanelMenuNode {
   item: TxPanelMenuItem;
@@ -76,6 +77,8 @@ const EXACT_MATCH: IsActiveMatchOptions = { paths: 'exact', queryParams: 'exact'
   viewProviders: [provideTxIconDefaults(PANEL_MENU_ICON_DEFAULTS)],
 })
 export class TxPanelMenu {
+  private readonly panelMenuTheme = injectTokens(PANEL_MENU_THEME);
+
   private readonly router = inject(Router, { optional: true });
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private readonly txIconRegistry = injectTxIcons();

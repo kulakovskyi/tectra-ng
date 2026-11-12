@@ -3,7 +3,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { NgTemplateOutlet } from '@angular/common';
 import { ActivatedRouteSnapshot, NavigationEnd, Router, RouterLink } from '@angular/router';
 import { TxAppFooter, TxAppFooterLink } from '@tectra-ng/blocks/app-footer';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraConsoleLayoutTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
@@ -13,6 +13,7 @@ import { TxConsoleLayoutPart, TxConsoleRailItem, TxConsoleResponsive, TxConsoleT
 import { TxConsoleRail } from './console-rail.component';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { CONSOLE_LAYOUT_ICON_DEFAULTS } from './console-layout.icons';
+import { CONSOLE_LAYOUT_THEME } from './console-layout.theme';
 
 @Component({
   selector: 'tx-console-layout',
@@ -31,6 +32,8 @@ import { CONSOLE_LAYOUT_ICON_DEFAULTS } from './console-layout.icons';
   viewProviders: [provideTxIconDefaults(CONSOLE_LAYOUT_ICON_DEFAULTS)],
 })
 export class TxConsoleLayout {
+  private readonly consoleLayoutTheme = injectTokens(CONSOLE_LAYOUT_THEME);
+
   private readonly router = inject(Router, { optional: true });
   private readonly consoleDocument = inject(TxConsoleDocument);
 

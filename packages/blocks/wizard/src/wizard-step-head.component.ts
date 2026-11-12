@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraWizardTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxPill } from '@tectra-ng/ui/pill';
 import { TxWizardStepHeadPart } from './wizard.types';
 import { WIZARD_ICON_DEFAULTS } from './wizard.icons';
+import { WIZARD_THEME } from './wizard.theme';
 
 @Component({
   selector: 'tx-wizard-step-head',
@@ -37,6 +38,8 @@ import { WIZARD_ICON_DEFAULTS } from './wizard.icons';
   viewProviders: [provideTxIconDefaults(WIZARD_ICON_DEFAULTS)],
 })
 export class TxWizardStepHead {
+  private readonly wizardTheme = injectTokens(WIZARD_THEME);
+
   readonly title = input.required<string>();
   readonly icon = input<TxIconName | (string & {}) | undefined>(undefined);
   readonly lead = input<string | undefined>(undefined);

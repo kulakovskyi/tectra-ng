@@ -21,7 +21,7 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { TxFocusTrap, uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
@@ -29,6 +29,7 @@ import { TectraCommandPaletteTokens, TectraDeepPartial, toStyleObject } from '@t
 import { filterPaletteItems } from './command-palette.pipes';
 import { TxCommandPaletteItem, TxCommandPalettePart } from './command-palette.types';
 import { COMMAND_PALETTE_ICON_DEFAULTS } from './command-palette.icons';
+import { COMMAND_PALETTE_THEME } from './command-palette.theme';
 
 const MAC = /mac|iphone|ipad/i;
 
@@ -49,6 +50,8 @@ const MAC = /mac|iphone|ipad/i;
   viewProviders: [provideTxIconDefaults(COMMAND_PALETTE_ICON_DEFAULTS)],
 })
 export class TxCommandPalette {
+  private readonly commandPaletteTheme = injectTokens(COMMAND_PALETTE_THEME);
+
   private readonly document = inject(DOCUMENT);
   private readonly injector = inject(Injector);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);

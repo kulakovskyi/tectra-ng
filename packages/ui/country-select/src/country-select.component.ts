@@ -9,6 +9,8 @@ import { TX_COUNTRY_CODES, TxCountry, TxFlagShape, countryName } from '@tectra-n
 import { TxMultiselect } from '@tectra-ng/ui/multiselect';
 import { TxFieldVariant, TxSelect, TxSelectItem, TxSelectOptionTemplate, TxSelectSize, TxSelectValueTemplate } from '@tectra-ng/ui/select';
 import { TxCountryItem, TxCountryOption, TxCountrySort } from './country-select.types';
+import { injectTokens } from '@tectra-ng/core/config';
+import { COUNTRY_SELECT_THEME } from './country-select.theme';
 
 @Component({
   selector: 'tx-country-select',
@@ -23,6 +25,8 @@ import { TxCountryItem, TxCountryOption, TxCountrySort } from './country-select.
   },
 })
 export class TxCountrySelect extends TxFormControlBase<string | string[]> {
+  private readonly countrySelectTheme = injectTokens(COUNTRY_SELECT_THEME);
+
   private locale = inject(TxLocaleService);
 
   readonly options = input<readonly (string | TxCountryOption)[] | undefined>(undefined);

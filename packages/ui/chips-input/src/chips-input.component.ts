@@ -13,7 +13,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
@@ -23,6 +23,7 @@ import { TxChip } from '@tectra-ng/ui/chip';
 import { TxChipsInputItemTemplate } from './chips-input-item.directive';
 import { TxChipsInputEvent, TxChipsInputPart, TxChipsInputSize, TxChipsInputVariant } from './chips-input.types';
 import { CHIPS_INPUT_ICON_DEFAULTS } from './chips-input.icons';
+import { CHIPS_INPUT_THEME } from './chips-input.theme';
 
 @Component({
   selector: 'tx-chips-input',
@@ -48,6 +49,8 @@ import { CHIPS_INPUT_ICON_DEFAULTS } from './chips-input.icons';
   viewProviders: [provideTxIconDefaults(CHIPS_INPUT_ICON_DEFAULTS)],
 })
 export class TxChipsInput extends TxFormControlBase<string[]> {
+  private readonly chipsInputTheme = injectTokens(CHIPS_INPUT_THEME);
+
   readonly placeholder = input<string>('');
   readonly separator = input<string | RegExp>(',');
   readonly addOnBlur = input<boolean, unknown>(true, { transform: booleanAttribute });

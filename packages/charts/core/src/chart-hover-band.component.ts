@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, input, linkedSignal } from '@angular/core';
-import { TxPassThroughPart } from '@tectra-ng/core/config';
+import { injectTokens, TxPassThroughPart } from '@tectra-ng/core/config';
 import { TxBandScale, TxChartPlot, TxChartRect } from './chart.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { CORE_ICON_DEFAULTS } from './core.icons';
+import { CORE_THEME } from './core.theme';
 
 interface TxBandState {
   rect: TxChartRect | null;
@@ -39,6 +40,8 @@ export function chartBandRect(band: TxBandScale, index: number, plot: TxChartPlo
   viewProviders: [provideTxIconDefaults(CORE_ICON_DEFAULTS)],
 })
 export class TxChartHoverBand {
+  private readonly coreTheme = injectTokens(CORE_THEME);
+
   readonly rect = input<TxChartRect | null>(null, { alias: 'tx-chart-hover-band' });
   readonly part = input<TxPassThroughPart | undefined>(undefined);
 

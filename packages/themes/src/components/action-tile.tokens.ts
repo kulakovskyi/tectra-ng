@@ -1,4 +1,4 @@
-import { mix, tokenRef } from './token-helpers';
+import { joinCss, mix, tokenRef } from './token-helpers';
 
 export const actionTileTokens = {
   root: {
@@ -9,7 +9,7 @@ export const actionTileTokens = {
     borderColor: tokenRef('surface-border'),
     hoverBorderColor: tokenRef('primary-base'),
     hoverBackground: tokenRef('surface-hover'),
-    focusRingShadow: `0 0 0 2px ${tokenRef('surface-card')}, 0 0 0 4px ${tokenRef('focus-ring-color')}`,
+    focusRingShadow: joinCss('0 0 0 2px ', tokenRef('surface-card'), ', 0 0 0 4px ', tokenRef('focus-ring-color')),
     disabledOpacity: '0.6',
     transitionDuration: '150ms',
   },

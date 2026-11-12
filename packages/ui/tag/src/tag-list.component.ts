@@ -1,6 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraTagTokens, toStyleObject } from '@tectra-ng/themes';
@@ -10,6 +10,7 @@ import { TxTag } from './tag.component';
 import { TxTagListItem, TxTagListPart, TxTagSeverity, TxTagSize } from './tag.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { TAG_ICON_DEFAULTS } from './tag.icons';
+import { TAG_THEME } from './tag.theme';
 
 @Component({
   selector: 'tx-tag-list',
@@ -29,6 +30,8 @@ import { TAG_ICON_DEFAULTS } from './tag.icons';
   viewProviders: [provideTxIconDefaults(TAG_ICON_DEFAULTS)],
 })
 export class TxTagList {
+  private readonly tagTheme = injectTokens(TAG_THEME);
+
   readonly tags = input<readonly TxTagListItem[] | null | undefined>([]);
   readonly limit = input<number | undefined, unknown>(undefined, { transform: optionalNumber });
   readonly severity = input<TxTagSeverity>('secondary');

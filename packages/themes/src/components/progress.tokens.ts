@@ -1,5 +1,6 @@
 import { lightDark, tokenRef } from './token-helpers';
 
+/* @__NO_SIDE_EFFECTS__ */
 function fill(palette: string) {
   return lightDark(tokenRef(`${palette}-600`), tokenRef(`${palette}-400`));
 }

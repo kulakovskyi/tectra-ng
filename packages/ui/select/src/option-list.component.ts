@@ -14,11 +14,12 @@ import {
   output,
   viewChild,
 } from '@angular/core';
-import { TxResolvedPassThrough } from '@tectra-ng/core/config';
+import { injectTokens, TxResolvedPassThrough } from '@tectra-ng/core/config';
 import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TxSkeleton } from '@tectra-ng/ui/skeleton';
 import { TxSelectGroupRow, TxSelectItem, TxSelectOptionContext, TxSelectPart, TxSelectRow } from './select.types';
 import { SELECT_ICON_DEFAULTS } from './select.icons';
+import { SELECT_THEME } from './select.theme';
 
 interface TxOptionSection {
   group: TxSelectGroupRow | null;
@@ -45,6 +46,8 @@ const DEFAULT_LIST_HEIGHT = 200;
   viewProviders: [provideTxIconDefaults(SELECT_ICON_DEFAULTS)],
 })
 export class TxOptionList {
+  private readonly selectTheme = injectTokens(SELECT_THEME);
+
   readonly rows = input.required<readonly TxSelectRow[]>();
   readonly listboxId = input.required<string>();
   readonly activeIndex = input<number>(-1);

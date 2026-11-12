@@ -1,10 +1,11 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, TemplateRef, booleanAttribute, computed, inject, input, output } from '@angular/core';
-import { TxPassThroughPart } from '@tectra-ng/core/config';
+import { injectTokens, TxPassThroughPart } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { TxChartLegendAlign, TxChartLegendContext, TxChartLegendItem, TxChartLegendPosition, TxChartLegendVariant } from './chart.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { CORE_ICON_DEFAULTS } from './core.icons';
+import { CORE_THEME } from './core.theme';
 
 @Component({
   selector: 'tx-chart-legend',
@@ -85,6 +86,8 @@ import { CORE_ICON_DEFAULTS } from './core.icons';
   viewProviders: [provideTxIconDefaults(CORE_ICON_DEFAULTS)],
 })
 export class TxChartLegend {
+  private readonly coreTheme = injectTokens(CORE_THEME);
+
   private host = inject<ElementRef<HTMLElement>>(ElementRef);
   readonly translations = injectTranslations();
 

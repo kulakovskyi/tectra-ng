@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, DOCUMENT, ElementRef, afterRenderEffect, booleanAttribute, computed, inject, input, output, signal, viewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { TxStyleLoader } from '@tectra-ng/core/styles';
 import { optionalBoolean } from '@tectra-ng/core/utils';
@@ -12,6 +12,7 @@ import { TxEditorProseStyles } from './editor-prose-styles.component';
 import { sanitizeEditorHtml } from './editor-sanitizer';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { CONTENT_ICON_DEFAULTS } from './content.icons';
+import { CONTENT_THEME } from './content.theme';
 
 @Component({
   selector: 'tx-editor-content',
@@ -53,6 +54,8 @@ import { CONTENT_ICON_DEFAULTS } from './content.icons';
   viewProviders: [provideTxIconDefaults(CONTENT_ICON_DEFAULTS)],
 })
 export class TxEditorContent {
+  private readonly contentTheme = injectTokens(CONTENT_THEME);
+
   private sanitizer = inject(DomSanitizer);
   private document = inject(DOCUMENT);
 

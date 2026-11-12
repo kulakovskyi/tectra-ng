@@ -17,7 +17,7 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectFluid } from '@tectra-ng/core/fluid';
 import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
@@ -36,6 +36,7 @@ import {
 } from './input-number.types';
 import { TxNumberFormat } from './number-format';
 import { INPUT_NUMBER_ICON_DEFAULTS } from './input-number.icons';
+import { INPUT_NUMBER_THEME } from './input-number.theme';
 
 const REPEAT_DELAY = 400;
 const REPEAT_INTERVAL = 60;
@@ -62,6 +63,8 @@ const REPEAT_INTERVAL = 60;
   viewProviders: [provideTxIconDefaults(INPUT_NUMBER_ICON_DEFAULTS)],
 })
 export class TxInputNumber extends TxFormControlBase<number> {
+  private readonly inputNumberTheme = injectTokens(INPUT_NUMBER_THEME);
+
   private txIconRegistry = injectTxIcons();
   private localeService = inject(TxLocaleService);
   private generatedId = uniqueId('tx-input-number');

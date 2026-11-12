@@ -3,6 +3,8 @@ import { injectTxIcons, provideTxIconDefaults, TxIcon, TxIconName } from '@tectr
 import { TX_TABS } from './tabs.context';
 import { TxTabValue } from './tabs.types';
 import { TABS_ICON_DEFAULTS } from './tabs.icons';
+import { injectTokens } from '@tectra-ng/core/config';
+import { TABS_THEME } from './tabs.theme';
 
 @Component({
   selector: 'tx-tab, a[txTab], button[txTab]',
@@ -48,6 +50,8 @@ import { TABS_ICON_DEFAULTS } from './tabs.icons';
   viewProviders: [provideTxIconDefaults(TABS_ICON_DEFAULTS)],
 })
 export class TxTab implements OnInit {
+  private readonly tabsTheme = injectTokens(TABS_THEME);
+
   protected readonly tabs = inject(TX_TABS);
   private txIconRegistry = injectTxIcons();
   readonly element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;

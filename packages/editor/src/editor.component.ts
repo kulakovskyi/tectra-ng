@@ -22,7 +22,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { TxPassThrough, TxPassThroughOptions, TxTranslations, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions, TxTranslations } from '@tectra-ng/core/config';
 import { uniqueId } from '@tectra-ng/core/a11y';
 import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
@@ -82,6 +82,7 @@ import { TX_EDITOR_SLASH_ITEMS, TxEditorSlashItem, matchSlashItems } from './edi
 import { editorPlugins } from './engine/setup';
 import { toVideoEmbed, txEditorSchema as schema } from './engine/schema';
 import { EDITOR_ICON_DEFAULTS } from './editor.icons';
+import { EDITOR_THEME } from './editor.theme';
 
 export interface TxEditorSuggestionOption {
   id: string;
@@ -132,6 +133,8 @@ const NO_BOX: TxAnchorBox = { left: 0, top: 0, width: 0, height: 0 };
   viewProviders: [provideTxIconDefaults(EDITOR_ICON_DEFAULTS)],
 })
 export class TxEditor extends TxFormControlBase<string> {
+  private readonly editorTheme = injectTokens(EDITOR_THEME);
+
   private document = inject(DOCUMENT);
   private host = inject<ElementRef<HTMLElement>>(ElementRef);
   private destroyRef = inject(DestroyRef);

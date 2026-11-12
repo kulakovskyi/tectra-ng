@@ -55,7 +55,7 @@ import {
   toTime,
 } from '@tectra-ng/charts/core';
 import { uniqueId } from '@tectra-ng/core/a11y';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService, formatMessage, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
@@ -72,6 +72,7 @@ import {
 } from './scatter-chart.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { SCATTER_ICON_DEFAULTS } from './scatter.icons';
+import { SCATTER_THEME } from './scatter.theme';
 
 const DEFAULT_RADIUS = { point: 5, min: 4, max: 26 };
 const HIT_SLACK = 8;
@@ -99,6 +100,8 @@ const BUBBLE_PLOT_SHARE = 0.8;
   viewProviders: [provideTxIconDefaults(SCATTER_ICON_DEFAULTS)],
 })
 export class TxScatterChart {
+  private readonly scatterTheme = injectTokens(SCATTER_THEME);
+
   private locale = inject(TxLocaleService);
   private host = inject<ElementRef<HTMLElement>>(ElementRef);
   readonly translations = injectTranslations();

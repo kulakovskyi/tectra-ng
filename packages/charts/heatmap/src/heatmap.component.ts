@@ -1,6 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, contentChild, input, output, TemplateRef } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
@@ -21,6 +21,7 @@ import {
 } from './heatmap.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { HEATMAP_ICON_DEFAULTS } from './heatmap.icons';
+import { HEATMAP_THEME } from './heatmap.theme';
 
 @Component({
   selector: 'tx-heatmap',
@@ -37,6 +38,8 @@ import { HEATMAP_ICON_DEFAULTS } from './heatmap.icons';
   viewProviders: [provideTxIconDefaults(HEATMAP_ICON_DEFAULTS)],
 })
 export class TxHeatmap {
+  private readonly heatmapTheme = injectTokens(HEATMAP_THEME);
+
   readonly translations = injectTranslations();
 
   readonly groups = input<readonly TxHeatmapColumnGroup[]>([]);

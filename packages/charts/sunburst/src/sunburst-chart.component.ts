@@ -29,7 +29,7 @@ import {
   readTokenNumber,
   textWidth,
 } from '@tectra-ng/charts/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
@@ -37,6 +37,7 @@ import { sunburstArcAt, sunburstArcs, sunburstFocus, sunburstValue } from './sun
 import { TxSunburstArc, TxSunburstChartPart, TxSunburstEvent, TxSunburstItem } from './sunburst-chart.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { SUNBURST_ICON_DEFAULTS } from './sunburst.icons';
+import { SUNBURST_THEME } from './sunburst.theme';
 
 const DEFAULTS = { hole: 0.3, corner: 3, fontSize: 11 };
 const PADDING = 6;
@@ -60,6 +61,8 @@ const CENTER = 'center';
   viewProviders: [provideTxIconDefaults(SUNBURST_ICON_DEFAULTS)],
 })
 export class TxSunburstChart {
+  private readonly sunburstTheme = injectTokens(SUNBURST_THEME);
+
   private locale = inject(TxLocaleService);
   private host = inject<ElementRef<HTMLElement>>(ElementRef);
   readonly translations = injectTranslations();

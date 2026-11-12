@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, afterNextRender, computed, effect, inject, input, numberAttribute, output, signal } from '@angular/core';
-import { TxPassThrough, TxPassThroughOptions, injectPassThrough, injectUnstyled } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraNetworkStatusTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxNetworkState, TxNetworkStatusPart } from './network-status.types';
 import { NETWORK_STATUS_ICON_DEFAULTS } from './network-status.icons';
+import { NETWORK_STATUS_THEME } from './network-status.theme';
 
 @Component({
   selector: 'tx-network-status',
@@ -40,6 +41,8 @@ import { NETWORK_STATUS_ICON_DEFAULTS } from './network-status.icons';
   viewProviders: [provideTxIconDefaults(NETWORK_STATUS_ICON_DEFAULTS)],
 })
 export class TxNetworkStatus {
+  private readonly networkStatusTheme = injectTokens(NETWORK_STATUS_THEME);
+
   private readonly document = inject(DOCUMENT);
   private restoreTimer: ReturnType<typeof setTimeout> | undefined;
 

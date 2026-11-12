@@ -1,4 +1,4 @@
-import { fade, lightDark, tokenRef } from './token-helpers';
+import { fade, joinCss, lightDark, tokenRef } from './token-helpers';
 
 export const toggleSwitchTokens = {
   root: {
@@ -34,7 +34,7 @@ export const toggleSwitchTokens = {
     background: tokenRef('surface-0'),
     checkedBackground: tokenRef('surface-0'),
     disabledBackground: lightDark(tokenRef('surface-0'), tokenRef('surface-400')),
-    shadow: `0 1px 2px ${fade(tokenRef('surface-950'), '75%')}`,
+    shadow: joinCss('0 1px 2px ', fade(tokenRef('surface-950'), '75%')),
     iconColor: tokenRef('text-muted'),
     checkedIconColor: tokenRef('primary-base'),
     iconSize: '11px',
