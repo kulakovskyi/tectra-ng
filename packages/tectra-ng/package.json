@@ -1,6 +1,6 @@
 {
   "name": "tectra-ng",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Angular UI component library in one install: 80+ standalone components on signals (table, datepicker, select, dialog, toast, tree), design tokens, light and dark themes, charts, icons, brand logos and flags.",
   "license": "MIT",
   "homepage": "https://tectra-ng.com",
@@ -57,17 +57,17 @@
     "icons"
   ],
   "dependencies": {
-    "@tectra-ng/tokens": "^0.3.0",
-    "@tectra-ng/themes": "^0.3.0",
-    "@tectra-ng/core": "^0.3.0",
-    "@tectra-ng/icons": "^0.3.0",
-    "@tectra-ng/brand-icons": "^0.3.0",
-    "@tectra-ng/flags": "^0.3.0",
-    "@tectra-ng/qr": "^0.3.0",
-    "@tectra-ng/ui": "^0.3.0",
-    "@tectra-ng/charts": "^0.3.0",
-    "@tectra-ng/utils": "^0.3.0",
-    "@tectra-ng/blocks": "^0.3.0"
+    "@tectra-ng/tokens": "^0.3.1",
+    "@tectra-ng/themes": "^0.3.1",
+    "@tectra-ng/core": "^0.3.1",
+    "@tectra-ng/icons": "^0.3.1",
+    "@tectra-ng/brand-icons": "^0.3.1",
+    "@tectra-ng/flags": "^0.3.1",
+    "@tectra-ng/qr": "^0.3.1",
+    "@tectra-ng/ui": "^0.3.1",
+    "@tectra-ng/charts": "^0.3.1",
+    "@tectra-ng/utils": "^0.3.1",
+    "@tectra-ng/blocks": "^0.3.1"
   },
   "schematics": "./schematics/collection.json",
   "ng-add": {
