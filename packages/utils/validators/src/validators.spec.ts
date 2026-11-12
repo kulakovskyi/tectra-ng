@@ -124,4 +124,70 @@ describe('TxValidators', () => {
     expect(check(TxValidators.price(), '12.999')).toEqual({ priceFormat: true });
     expect(check(TxValidators.price(), 19.99)).toBeNull();
   });
+
+  it('treats an empty list as empty and rejects dates of the wrong shape', () => {
+    expect(check(TxValidators.numericCode(), [])).toBeNull();
+    expect(check(TxValidators.isoDate(), 20240101)).toEqual({ invalidDate: true });
+    expect(check(TxValidators.isoDate(), '01.02.2024')).toEqual({ invalidDate: true });
+    expect(check(TxValidators.futureDate(), 'someday')).toEqual({ invalidDate: true });
+  });
+
+  it('rejects text that only looks like an IPv6 address', () => {
+    expect(check(TxValidators.ip({ ipv6: true }), 'example')).toEqual({ invalidIp: { value: 'example' } });
+    expect(check(TxValidators.ip({ ipv6: true }), '1:2:3:4:5:6:7:8:9')).toEqual({ invalidIp: { value: '1:2:3:4:5:6:7:8:9' } });
+  });
+
+  it('lists missing lower case letters and digits', () => {
+    expect(check(TxValidators.strongPassword({ digit: true }), 'SECRET!')).toEqual({ weakPassword: { minLength: 6, missing: ['lower', 'digit'] } });
+  });
+
+  it('keeps other errors of the confirm field and skips a group without it', () => {
+    const form = new FormGroup(
+      { password: new FormControl('Secret!'), confirm: new FormControl('Secret!') },
+      { validators: TxValidators.matchFields('password', 'confirm') },
+    );
+    const confirm = form.get('confirm') as FormControl;
+    confirm.setErrors({ mismatch: true, server: true });
+    form.updateValueAndValidity();
+    expect(confirm.errors).toEqual({ server: true });
+
+    form.patchValue({ password: 'Other!' });
+    expect(confirm.errors).toEqual({ server: true, mismatch: true });
+    form.patchValue({ password: 'Secret!' });
+    expect(confirm.errors).toEqual({ server: true });
+    confirm.setErrors({ mismatch: true });
+    form.updateValueAndValidity();
+    expect(confirm.errors).toBeNull();
+
+    const lone = new FormGroup({ password: new FormControl('a') }, { validators: TxValidators.matchFields('password', 'confirm') });
+    expect(lone.errors).toBeNull();
+  });
+
+  it('accepts two different values as distinct', () => {
+    const pair = new FormGroup({ from: new FormControl('UAH'), to: new FormControl('USD') }, { validators: TxValidators.distinctFields('from', 'to') });
+    expect(pair.errors).toBeNull();
+  });
+
+  it('compares duplicates without trimming and with a message getter', () => {
+    expect(check(TxValidators.duplicate(['Kyiv'], { trim: false }), ' Kyiv ')).toBeNull();
+    expect(check(TxValidators.duplicate(['Kyiv'], { message: () => 'Already added' }), 'Kyiv')).toEqual({ duplicate: { message: 'Already added' } });
+  });
+
+  it('rejects broken JSON and selectors when no prefix is allowed', () => {
+    expect(check(TxValidators.jsonObject(), '{a:')).toEqual({ invalidJson: true });
+    expect(check(TxValidators.cssSelector({ allowClass: false }), '#main')).toBeNull();
+    expect(check(TxValidators.cssSelector({ allowClass: false, allowId: false }), '.card')).toEqual({ pattern: { requiredPattern: '^[][a-zA-Z_][a-zA-Z0-9_-]*$', actualValue: '.card' } });
+  });
+
+  it('accepts a filled field that a sibling requires', () => {
+    const form = new FormGroup({ notify: new FormControl(true), email: new FormControl('a@b.c', TxValidators.requiredWhen('notify')) });
+    form.get('email')?.updateValueAndValidity();
+    expect(form.get('email')?.errors).toBeNull();
+  });
+
+  it('sums only numbers inside an array and ignores other controls', () => {
+    const array = new FormArray([new FormControl({ share: 60 }), new FormControl(null), new FormControl({ other: 1 })], TxValidators.arraySumMax('share', 100));
+    expect(array.errors).toBeNull();
+    expect(check(TxValidators.arraySumMax('share', 1), { share: 5 })).toBeNull();
+  });
 });

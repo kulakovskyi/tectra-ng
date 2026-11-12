@@ -2,7 +2,9 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TxExportButton, TxExportCsv, TxExportExcel, TxExportPdf, TxExportWord } from './export-button.component';
 import { TxExport } from './export-menu.component';
-import { TX_EXPORT_OPTIONS, mergeExportOptions, provideTxExport } from './export.service';
+import { TX_EXPORT_FONT } from '@tectra-ng/ui/export-font';
+import { TX_EXPORT_OPTIONS, TxExportService, mergeExportOptions, provideTxExport } from './export.service';
+import { buildExportTable } from './export.utils';
 import { TxExportField, TxExportFormat, TxExportOptions } from './export.types';
 
 interface User {
@@ -179,6 +181,52 @@ describe('export components', () => {
     expect(names).toEqual(['ExportedData.json', 'ExportedData.csv']);
   });
 
+  it('ignores runs while disabled', async () => {
+    const disabled = TestBed.createComponent(TxExportCsv);
+    disabled.componentRef.setInput('disabled', true);
+    disabled.componentRef.setInput('fields', [{ field: 'name' }]);
+    disabled.componentRef.setInput('data', USERS);
+    const results: unknown[] = [];
+    disabled.componentInstance.exported.subscribe((result) => results.push(result));
+    await disabled.componentInstance.run('csv');
+    expect(results).toEqual([]);
+    expect(names).toEqual([]);
+    expect(disabled.componentInstance.exporting()).toBe(false);
+  });
+
+  it('keeps the copied state for a while after the last copy', async () => {
+    const copy = fixture.debugElement.children.find((child) => child.nativeElement.id === 'copy')?.componentInstance as TxExportButton<User>;
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    try {
+      await copy.run('copy');
+      expect(copy.copied()).toBe(true);
+      vi.advanceTimersByTime(1000);
+      await copy.run('copy');
+      vi.advanceTimersByTime(1000);
+      expect(copy.copied()).toBe(true);
+      expect(copy.icon()).toBe('check');
+      vi.advanceTimersByTime(600);
+      expect(copy.copied()).toBe(false);
+      expect(clipboard).toHaveLength(2);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('falls back to Excel without formats and shows the check after copying from the menu', async () => {
+    const menu = fixture.debugElement.children.find((child) => child.nativeElement.id === 'menu')?.componentInstance as TxExport;
+    fixture.componentInstance.formats.set([]);
+    await fixture.whenStable();
+    expect(menu.mainFormat()).toBe('excel');
+    expect(menu.items()).toEqual([]);
+    fixture.componentInstance.formats.set(['copy', 'print']);
+    await fixture.whenStable();
+    expect(menu.items().map((item) => item.label)).toEqual(['Copy table', 'Print']);
+    expect(menu.mainIcon()).toBe('download');
+    await menu.run('copy');
+    expect(menu.mainIcon()).toBe('check');
+  });
+
   it('merges global and local options per format', () => {
     expect(TestBed.inject(TX_EXPORT_OPTIONS)).toEqual({ showDate: false, csv: { separator: ';' } });
     expect(mergeExportOptions({ title: 'A', csv: { separator: ';', bom: false } }, { csv: { separator: ',' }, excel: { sheetName: 'S' } }, undefined)).toEqual({
@@ -186,5 +234,104 @@ describe('export components', () => {
       csv: { separator: ',', bom: false },
       excel: { sheetName: 'S' },
     });
+  });
+});
+
+describe('TxExportService', () => {
+  const table = buildExportTable(USERS, [
+    { field: 'name', title: 'Name' },
+    { field: 'email', title: 'Email' },
+  ]);
+  let service: TxExportService;
+
+  beforeEach(() => {
+    service = TestBed.inject(TxExportService);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    Reflect.deleteProperty(window.navigator, 'clipboard');
+    Reflect.deleteProperty(window, 'ClipboardItem');
+  });
+
+  it('starts from empty global options', () => {
+    expect(TestBed.inject(TX_EXPORT_OPTIONS)).toEqual({});
+  });
+
+  it('writes CSV without a BOM on request', async () => {
+    const file = await service.file('csv', table, { csv: { bom: false } });
+    expect(file.filename).toBe('ExportedData.csv');
+    expect(await readBlob(file.blob)).toBe('Name,Email\r\nAda,ada@example.com\r\nAlan,alan@example.com');
+  });
+
+  it('writes HTML in the option or app locale and Markdown with the title', async () => {
+    const own = await readBlob((await service.file('html', table, { locale: 'uk-UA', title: 'Users' })).blob);
+    expect(own).toContain('<html lang="uk-UA">');
+    expect(own).toContain('<h1>Users</h1>');
+    const app = await readBlob((await service.file('html', table)).blob);
+    expect(app).toContain('<html lang="en-US">');
+    const markdown = await service.file('markdown', table, { title: 'Users', filename: 'users' });
+    expect(markdown.filename).toBe('users.md');
+    expect((await readBlob(markdown.blob)).startsWith('# Users\n\n| Name | Email |')).toBe(true);
+  });
+
+  it('writes PDF with an own font or the bundled one', async () => {
+    const font = vi.fn(() => Promise.resolve({ regular: TX_EXPORT_FONT.regular }));
+    const own = await service.file('pdf', table, { title: 'Users', pdf: { font, compress: false } });
+    expect(font).toHaveBeenCalledTimes(1);
+    expect(own.blob.type).toBe('application/pdf');
+    expect(await readBlob(own.blob)).not.toContain('TXBOLD');
+    const bundled = await service.file('pdf', table, { pdf: { compress: false } });
+    expect(await readBlob(bundled.blob)).toContain('TXBOLD+Onest-SemiBold');
+  });
+
+  it('fails to copy without a clipboard', async () => {
+    await expect(service.export({ format: 'copy', rows: USERS, fields: [{ field: 'name' }] })).rejects.toThrow('Clipboard is not available');
+  });
+
+  it('copies text and an HTML table when the clipboard takes items', async () => {
+    const written: Record<string, Blob>[] = [];
+    const texts: string[] = [];
+    class Item {
+      constructor(readonly parts: Record<string, Blob>) {}
+    }
+    Object.defineProperty(window, 'ClipboardItem', { configurable: true, writable: true, value: Item });
+    Object.defineProperty(window.navigator, 'clipboard', {
+      configurable: true,
+      writable: true,
+      value: {
+        write: (items: Item[]) => Promise.resolve(void written.push(items[0].parts)),
+        writeText: (text: string) => Promise.resolve(void texts.push(text)),
+      },
+    });
+    const result = await service.export({ format: 'copy', rows: USERS, fields: [{ field: 'name', title: 'Name' }], options: { copy: { header: false } } });
+    expect(result).toEqual({ format: 'copy', filename: null, rows: 2 });
+    expect(await readBlob(written[0]['text/plain'])).toBe('Ada\nAlan');
+    expect(await readBlob(written[0]['text/html'])).toBe('<meta charset="utf-8"><table><tbody><tr><td>Ada</td></tr><tr><td>Alan</td></tr></tbody></table>');
+    await service.export({ format: 'copy', rows: USERS, fields: [{ field: 'name', title: 'Name' }], options: { copy: { html: false } } });
+    expect(written).toHaveLength(1);
+    expect(texts).toEqual(['Name\nAda\nAlan']);
+  });
+
+  it('prints from a hidden frame with the page size of the print options', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    try {
+      const frame = document.createElement('iframe');
+      const view = Object.assign(new EventTarget(), { focus: vi.fn(), print: vi.fn() });
+      Object.defineProperty(frame, 'contentWindow', { value: view });
+      const create = document.createElement.bind(document);
+      vi.spyOn(document, 'createElement').mockImplementation((tag: string) => (tag === 'iframe' ? frame : create(tag)));
+      const done = service.export({ format: 'print', rows: USERS, fields: [{ field: 'name', title: 'Name' }], options: { title: 'Users', locale: 'uk-UA', print: { pageSize: 'a5', margin: 10 } } });
+      expect(frame.srcdoc).toContain('<html lang="uk-UA">');
+      expect(frame.srcdoc).toContain('<h1>Users</h1>');
+      expect(frame.srcdoc).toContain('@page { size: 419.53pt 595.28pt; margin: 10pt 10pt 10pt 10pt; }');
+      frame.dispatchEvent(new Event('load'));
+      expect(await done).toEqual({ format: 'print', filename: null, rows: 2 });
+      expect(view.print).toHaveBeenCalled();
+      vi.advanceTimersByTime(60000);
+      expect(frame.isConnected).toBe(false);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

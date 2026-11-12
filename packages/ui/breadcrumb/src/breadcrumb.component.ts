@@ -1,6 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, contentChild, inject, input, output } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
@@ -40,7 +40,7 @@ export class TxBreadcrumb {
   private readonly breadcrumbTheme = injectTokens(BREADCRUMB_THEME);
 
   private txIconRegistry = injectTxIcons();
-  private hasRouter = inject(Router, { optional: true }) !== null;
+  private hasRouter = inject(ActivatedRoute, { optional: true }) !== null;
 
   readonly model = input<readonly TxBreadcrumbItem[]>([]);
   readonly home = input<TxBreadcrumbItem | undefined>(undefined);

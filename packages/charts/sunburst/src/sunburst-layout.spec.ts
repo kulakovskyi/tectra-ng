@@ -41,6 +41,16 @@ describe('sunburst layout', () => {
     expect(sunburstArcAt(arcs, 155, 100, 150, 150)?.key).toBe('0');
     expect(sunburstArcAt(arcs, 150, 150, 150, 150)).toBeNull();
   });
+
+  it('stops a focus path at a missing item, skips empty items and finds arcs left of the centre', () => {
+    expect(sunburstFocus(data, [5, 0]).trail).toEqual([]);
+    expect(sunburstFocus(data, [0, 0]).items).toEqual([]);
+    const arcs = sunburstArcs([{ label: 'None', value: 0 }, ...data], { levels: 1, radius: 100, hole: 0, focus: [] });
+    expect(arcs.map((arc) => arc.label)).toEqual(['Europe', 'Asia']);
+    expect(sunburstArcAt(arcs, -50, 0, 0, 0)?.label).toBe('Asia');
+    expect(sunburstArcAt(arcs, 50, 0, 0, 0)?.label).toBe('Europe');
+    expect(sunburstArcAt(arcs, 500, 0, 0, 0)).toBeNull();
+  });
 });
 
 function fail(name: string): never {

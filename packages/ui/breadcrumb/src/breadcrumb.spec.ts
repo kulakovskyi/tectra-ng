@@ -128,3 +128,79 @@ describe('TxBreadcrumb', () => {
     expect(root.querySelectorAll('.own-separator')).toHaveLength(1);
   });
 });
+
+@Component({
+  imports: [TxBreadcrumb],
+  template: `<tx-breadcrumb id="plain" [model]="items" (itemClick)="clicked.push($event)" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class PlainHost {
+  readonly items: TxBreadcrumbItem[] = [
+    { label: 'Root', icon: 'own-root-icon' },
+    { label: 'Team', routerLink: ['teams', 'core'] },
+    { label: 'Board', routerLink: '/board' },
+    { label: 'Now' },
+  ];
+  readonly clicked: TxBreadcrumbItemEvent[] = [];
+}
+
+describe('TxBreadcrumb without a router', () => {
+  let fixture: ComponentFixture<PlainHost>;
+  const items = () => Array.from(fixture.nativeElement.querySelectorAll('#plain ol > li')) as HTMLElement[];
+
+  beforeEach(async () => {
+    fixture = TestBed.createComponent(PlainHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+  });
+
+  it('renders router links as plain links and items without an action as text', () => {
+    const [root, team, board] = items();
+    expect(root.querySelector('.tx-breadcrumb__link')?.tagName).toBe('SPAN');
+    expect(root.querySelector('span.tx-breadcrumb__icon.own-root-icon')).not.toBeNull();
+    expect(team.querySelector('a')?.getAttribute('href')).toBe('teams/core');
+    expect(board.querySelector('a')?.getAttribute('href')).toBe('/board');
+  });
+
+  it('does not report a click on a disabled item', () => {
+    const breadcrumb = fixture.debugElement.query((node) => node.componentInstance instanceof TxBreadcrumb).componentInstance as TxBreadcrumb;
+    const event = new MouseEvent('click', { cancelable: true });
+    breadcrumb.select(event, { label: 'Off', disabled: true });
+    expect(event.defaultPrevented).toBe(true);
+    expect(fixture.componentInstance.clicked).toEqual([]);
+  });
+
+  it('narrows the item template context', () => {
+    expect(TxBreadcrumbItemTemplate.ngTemplateContextGuard({} as TxBreadcrumbItemTemplate, { $implicit: {}, current: false, index: 0 })).toBe(true);
+  });
+});
+
+describe('TxBreadcrumb recompiled by TestBed', () => {
+  it('still finds its templates when a test overrides the component', async () => {
+    TestBed.overrideComponent(TxBreadcrumb, { set: { styles: [] } });
+    const fixture = TestBed.createComponent(TemplateHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelectorAll('.own-item')).toHaveLength(2);
+    expect(fixture.nativeElement.querySelectorAll('.own-separator')).toHaveLength(1);
+  });
+});
+
+@Component({
+  imports: [TxBreadcrumb],
+  template: `<tx-breadcrumb id="tabs" [model]="[{ label: 'Reports', routerLink: '/reports', target: '_blank' }, { label: 'Today' }]" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class TargetHost {}
+
+describe('TxBreadcrumb router link target', () => {
+  it('opens a router link in the target of its item', async () => {
+    TestBed.configureTestingModule({ providers: [provideRouter([{ path: '**', component: Page }])] });
+    const fixture = TestBed.createComponent(TargetHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    const link = fixture.nativeElement.querySelector('#tabs a') as HTMLElement;
+    expect(link.getAttribute('href')).toBe('/reports');
+    expect(link.getAttribute('target')).toBe('_blank');
+  });
+});

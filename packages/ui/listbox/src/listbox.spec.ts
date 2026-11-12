@@ -141,4 +141,100 @@ describe('TxListbox', () => {
     list().dispatchEvent(new FocusEvent('blur'));
     expect(host.control.touched).toBe(true);
   });
+
+  it('activates the selected option on focus and keeps an active one on the next focus', () => {
+    host.control.setValue('odesa');
+    render();
+    focus();
+    expect(list().getAttribute('aria-activedescendant')).toBe(options()[2].id);
+    key(list(), 'ArrowDown');
+    list().dispatchEvent(new FocusEvent('blur'));
+    render();
+    focus();
+    expect(list().getAttribute('aria-activedescendant')).toBe(options()[3].id);
+  });
+
+  it('starts from the selection when an arrow key comes before focus', () => {
+    host.control.setValue('odesa');
+    render();
+    key(list(), 'ArrowDown');
+    focus();
+    expect(list().getAttribute('aria-activedescendant')).toBe(options()[3].id);
+  });
+
+  it('jumps to an option by its first letter and ignores modified letters', () => {
+    focus();
+    key(list(), 'd');
+    expect(list().getAttribute('aria-activedescendant')).toBe(options()[3].id);
+    key(list(), 'k', { altKey: true });
+    key(list(), 'k', { ctrlKey: true });
+    key(list(), 'k', { metaKey: true });
+    expect(list().getAttribute('aria-activedescendant')).toBe(options()[3].id);
+    key(list(), 'x');
+    expect(list().getAttribute('aria-activedescendant')).toBe(options()[3].id);
+    expect(host.control.value).toBeNull();
+  });
+
+  it('does not select all in single mode and keeps an already selected option', () => {
+    focus();
+    key(list(), 'a', { metaKey: true });
+    expect(host.control.value).toBeNull();
+    click(options()[0]);
+    click(options()[0]);
+    expect(host.changes).toHaveLength(1);
+    key(list(), ' ');
+    expect(host.changes).toHaveLength(1);
+  });
+
+  it('does not extend with Shift onto an option that is already selected', () => {
+    host.multiple.set(true);
+    host.control.setValue(['kyiv', 'odesa']);
+    render();
+    focus();
+    key(list(), 'ArrowDown', { shiftKey: true });
+    expect(host.control.value).toEqual(['kyiv', 'odesa']);
+    expect(host.changes).toHaveLength(0);
+  });
+
+  it('types a space into the filter and ignores Enter without matches', () => {
+    host.filter.set(true);
+    render();
+    const search = fixture.nativeElement.querySelector('.tx-listbox__filter-input') as HTMLInputElement;
+    search.dispatchEvent(new FocusEvent('focus'));
+    render();
+    search.dispatchEvent(new FocusEvent('focus'));
+    key(search, ' ');
+    key(search, 'Home');
+    key(search, 'a', { ctrlKey: true });
+    expect(host.control.value).toBeNull();
+    search.value = 'zzz';
+    search.dispatchEvent(new Event('input'));
+    render();
+    expect(options()).toHaveLength(0);
+    key(search, 'Enter');
+    expect(host.changes).toHaveLength(0);
+  });
+
+  it('does not select all when readonly', () => {
+    host.multiple.set(true);
+    host.readonly.set(true);
+    render();
+    focus();
+    key(list(), 'a', { metaKey: true });
+    key(list(), 'a', { ctrlKey: true });
+    expect(host.control.value).toBeNull();
+  });
 });
+
+describe('TxListbox recompiled by TestBed', () => {
+  it('still binds to a form control when a test overrides the component', () => {
+    TestBed.overrideComponent(TxListbox, { set: { styles: [] } });
+    const fixture = TestBed.createComponent(Host);
+    fixture.detectChanges();
+    const option = fixture.nativeElement.querySelector('[role="option"]') as HTMLElement;
+    option.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+    option.click();
+    expect(fixture.componentInstance.control.value).toBe('kyiv');
+  });
+});
+

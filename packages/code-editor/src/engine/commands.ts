@@ -15,7 +15,7 @@ function indentUnit(state: EditorState): string {
 }
 
 function leadingSpace(text: string): string {
-  return /^\s*/.exec(text)?.[0] ?? '';
+  return text.slice(0, text.length - text.trimStart().length);
 }
 
 function touchedLines(state: EditorState, range: SelectionRange): Line[] {

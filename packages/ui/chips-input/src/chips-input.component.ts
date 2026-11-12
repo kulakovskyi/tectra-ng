@@ -86,7 +86,10 @@ export class TxChipsInput extends TxFormControlBase<string[]> {
   readonly text = signal('');
 
   readonly values = computed(() => this.value() ?? []);
-  readonly isFull = computed(() => this.max() !== undefined && this.values().length >= (this.max() ?? 0));
+  readonly isFull = computed(() => {
+    const max = this.max();
+    return max !== undefined && this.values().length >= max;
+  });
   readonly canClear = computed(() => this.showClear() && this.values().length > 0 && !this.disabled() && !this.readonly());
   readonly hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-chips-input'), ...this.passThrough().root?.style }));
 
@@ -171,7 +174,8 @@ export class TxChipsInput extends TxFormControlBase<string[]> {
     for (const part of parts.map((item) => item.trim()).filter(Boolean)) {
       const value = this.maxLength() ? part.slice(0, this.maxLength()) : part;
       const duplicate = values.some((item) => (this.caseSensitive() ? item === value : item.toLowerCase() === value.toLowerCase()));
-      const full = this.max() !== undefined && values.length >= (this.max() ?? 0);
+      const max = this.max();
+      const full = max !== undefined && values.length >= max;
       const invalidPattern = !!this.itemPattern() && !this.itemPattern()?.test(value);
       if ((duplicate && !this.allowDuplicate()) || full || invalidPattern) {
         this.rejected.emit({ value, values });

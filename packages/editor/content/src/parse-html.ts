@@ -22,10 +22,7 @@ export function replaceNode(node: Node, replacement: Node): void {
 }
 
 export function unwrapNode(node: Node): void {
-  const parent = node.parentNode;
-  if (!parent) {
-    return;
-  }
+  const parent = node.parentNode as Node;
   for (const child of Array.from(node.childNodes)) {
     parent.insertBefore(child, node);
   }

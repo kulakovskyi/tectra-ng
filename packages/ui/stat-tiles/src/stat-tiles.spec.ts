@@ -135,3 +135,23 @@ describe('TxStatTiles', () => {
     expect(el('#alone').classList).not.toContain('tx-stat-tile--compact');
   });
 });
+
+@Component({
+  imports: [TxStatTile],
+  template: `<tx-stat-tile id="tab" label="Orders" [value]="5" [link]="['/orders']" target="_blank" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class TargetHost {}
+
+describe('TxStatTile router link target', () => {
+  it('opens a router link in the given target', async () => {
+    TestBed.configureTestingModule({ providers: [provideRouter([{ path: 'orders', component: Page }])] });
+    const fixture = TestBed.createComponent(TargetHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    const link = fixture.nativeElement.querySelector('#tab a') as HTMLElement;
+    expect(link.getAttribute('href')).toBe('/orders');
+    expect(link.getAttribute('target')).toBe('_blank');
+    expect(link.getAttribute('rel')).toBe('noopener noreferrer');
+  });
+});

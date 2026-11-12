@@ -1,9 +1,10 @@
+import { InteractivityChecker } from '@angular/cdk/a11y';
 import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TxPopover } from './popover.component';
-import { TxPopoverContent, TxPopoverFooter } from './popover-slots.directive';
+import { TxPopoverContent, TxPopoverFooter, TxPopoverHeader } from './popover-slots.directive';
 import { TxPopoverTrigger } from './popover-trigger.directive';
-import { TxPopoverCloseReason } from './popover.types';
+import { TxPopoverAutoFocus, TxPopoverCloseReason } from './popover.types';
 
 @Component({
   imports: [TxPopover, TxPopoverTrigger, TxPopoverFooter, TxPopoverContent],
@@ -148,5 +149,160 @@ describe('TxPopover', () => {
     (lazy?.querySelector('.lazy-close') as HTMLButtonElement).click();
     await settle();
     expect(panel()).toBeNull();
+  });
+});
+
+@Component({
+  imports: [TxPopover, TxPopoverTrigger, TxPopoverHeader, TxPopoverFooter, TxPopoverContent],
+  template: `
+    <button id="before">Before</button>
+    <button id="anchor" [txPopoverTrigger]="pop">Open</button>
+    <button id="after">After</button>
+    <tx-popover #pop panelClass="own-pane" closeButton [autoFocus]="autoFocus()" (closed)="reasons.push($event)">
+      <span txPopoverHeader>Custom title</span>
+      <button id="one">One</button>
+      <button id="two">Two</button>
+      <div txPopoverFooter><button id="three">Three</button></div>
+    </tx-popover>
+    <span id="spot-a">A</span>
+    <span id="spot-b">B</span>
+    <tx-popover #solo closeButton ariaLabel="Solo" [arrow]="false" (closed)="soloReasons.push($event)">
+      <ng-template txPopoverContent let-done="close">
+        <button class="solo-done" (click)="done()">Done</button>
+      </ng-template>
+    </tx-popover>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class FocusHost {
+  readonly autoFocus = signal<TxPopoverAutoFocus>('first');
+  readonly pop = viewChild.required<TxPopover>('pop');
+  readonly solo = viewChild.required<TxPopover>('solo');
+  readonly reasons: TxPopoverCloseReason[] = [];
+  readonly soloReasons: TxPopoverCloseReason[] = [];
+}
+
+const checker: Pick<InteractivityChecker, 'isTabbable' | 'isVisible' | 'isFocusable'> = {
+  isTabbable: (element: HTMLElement) => element.tabIndex >= 0,
+  isVisible: () => true,
+  isFocusable: () => true,
+};
+
+describe('TxPopover focus and API', () => {
+  let fixture: ComponentFixture<FocusHost>;
+  const el = (selector: string) => fixture.nativeElement.querySelector(selector) as HTMLElement;
+  const panel = (selector = '.tx-popover') => document.querySelector(selector) as HTMLElement | null;
+  const settle = async () => {
+    await fixture.whenStable();
+    await Promise.resolve();
+    await fixture.whenStable();
+  };
+  const tab = (target: HTMLElement, shiftKey = false) => {
+    const event = new KeyboardEvent('keydown', { key: 'Tab', shiftKey, bubbles: true, cancelable: true });
+    target.dispatchEvent(event);
+    return event;
+  };
+
+  beforeEach(async () => {
+    TestBed.configureTestingModule({ providers: [{ provide: InteractivityChecker, useValue: checker }] });
+    fixture = TestBed.createComponent(FocusHost);
+    fixture.autoDetectChanges();
+    await settle();
+  });
+
+  afterEach(() => {
+    fixture.destroy();
+    document.querySelector('.cdk-overlay-container')?.remove();
+  });
+
+  it('focuses the first content control, names itself by the header slot and adds the pane class', async () => {
+    el('#anchor').click();
+    await settle();
+    const dialog = panel() as HTMLElement;
+    expect(document.activeElement?.id).toBe('one');
+    expect(dialog.closest('.tx-popover-pane')?.classList).toContain('own-pane');
+    expect(document.getElementById(dialog.getAttribute('aria-labelledby') ?? '')?.textContent?.trim()).toBe('Custom title');
+    expect(dialog.querySelector('.tx-popover__close')?.classList).not.toContain('tx-popover__close--floating');
+    expect(fixture.componentInstance.pop().isOpen()).toBe(true);
+    fixture.componentInstance.pop().updatePosition();
+    expect(panel()).not.toBeNull();
+  });
+
+  it('keeps Tab inside, and leaves with Tab at the edges', async () => {
+    el('#anchor').click();
+    await settle();
+    const dialog = panel() as HTMLElement;
+    const other = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+    dialog.dispatchEvent(other);
+    expect(other.defaultPrevented).toBe(false);
+    expect(tab(dialog).defaultPrevented).toBe(false);
+    expect(tab(dialog, true).defaultPrevented).toBe(false);
+    (dialog.querySelector('.tx-popover__close') as HTMLElement).focus();
+    expect(tab(dialog, true).defaultPrevented).toBe(true);
+    await settle();
+    expect(panel()).toBeNull();
+
+    el('#anchor').click();
+    await settle();
+    (panel()?.querySelector('#three') as HTMLElement).focus();
+    expect(tab(panel() as HTMLElement).defaultPrevented).toBe(true);
+    await settle();
+    expect(panel()).toBeNull();
+    expect(document.activeElement?.id).toBe('after');
+    expect(fixture.componentInstance.reasons).toEqual(['tab', 'tab']);
+  });
+
+  it('focuses the panel itself, or nothing', async () => {
+    fixture.componentInstance.autoFocus.set('panel');
+    await settle();
+    el('#anchor').click();
+    await settle();
+    expect(document.activeElement).toBe(panel());
+    el('#anchor').click();
+    await settle();
+    fixture.componentInstance.autoFocus.set('none');
+    await settle();
+    el('#anchor').focus();
+    el('#anchor').click();
+    await settle();
+    expect(panel()).not.toBeNull();
+    expect(document.activeElement?.id).toBe('anchor');
+  });
+
+  it('opens only at a target without triggers, and moves between targets', async () => {
+    const solo = fixture.componentInstance.solo();
+    solo.show();
+    solo.toggle();
+    await settle();
+    expect(panel()).toBeNull();
+    solo.show(el('#spot-a'));
+    await settle();
+    const dialog = panel() as HTMLElement;
+    expect(dialog.getAttribute('aria-label')).toBe('Solo');
+    expect(dialog.querySelector('.tx-popover__arrow')).toBeNull();
+    expect(dialog.querySelector('.tx-popover__close')?.classList).toContain('tx-popover__close--floating');
+    solo.show(el('#spot-a'));
+    await settle();
+    expect(fixture.componentInstance.soloReasons).toEqual([]);
+    solo.show(el('#spot-b'));
+    await settle();
+    expect(solo.isOpenFor(el('#spot-b'))).toBe(true);
+    expect(solo.isOpen()).toBe(true);
+    expect(fixture.componentInstance.soloReasons).toEqual(['api']);
+    (panel()?.querySelector('.solo-done') as HTMLButtonElement).click();
+    await settle();
+    expect(panel()).toBeNull();
+    expect(fixture.componentInstance.soloReasons).toEqual(['api', 'api']);
+  });
+
+  it('takes the anchor from a dispatched event and closes silently on destroy', async () => {
+    const solo = fixture.componentInstance.solo();
+    const event = new Event('custom');
+    el('#spot-a').dispatchEvent(event);
+    solo.toggle(event);
+    await settle();
+    expect(solo.isOpenFor(el('#spot-a'))).toBe(true);
+    fixture.destroy();
+    expect(fixture.componentInstance.soloReasons).toEqual([]);
   });
 });

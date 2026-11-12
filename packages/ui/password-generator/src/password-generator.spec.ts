@@ -11,6 +11,7 @@ import { TxPasswordGenerator } from './password-generator.service';
     <tx-password #password ariaLabel="Password" [formControl]="password1" [toggleMask]="true" />
     <button id="fill-password" [txPasswordGenerate]="password" [length]="20" (generated)="last = $event">Generate</button>
     <button id="fill-control" [txPasswordGenerate]="token" [symbols]="false" [excludeSimilar]="true" [length]="32">Token</button>
+    <button id="only-emit" [txPasswordGenerate]="null" (generated)="emitted = $event">Suggest</button>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -19,6 +20,7 @@ class Host {
   readonly token = new FormControl('');
   readonly passwordRef = viewChild.required(TxPassword);
   last = '';
+  emitted = '';
 }
 
 describe('TxPasswordGenerator', () => {
@@ -41,6 +43,10 @@ describe('TxPasswordGenerator', () => {
     const own = generator().generate({ length: 30, lowercase: false, uppercase: false, digits: false, symbolSet: '*' });
     expect(own).toBe('*'.repeat(30));
     expect(() => generator().generate({ lowercase: false, uppercase: false, digits: false, symbols: false })).toThrow();
+  });
+
+  it('makes 16 characters by default', () => {
+    expect(generator().generate()).toHaveLength(16);
   });
 
   it('keeps the old generatePassword(length) call and returns different values', () => {
@@ -76,4 +82,13 @@ describe('TxPasswordGenerate', () => {
     expect(fixture.componentInstance.token.value).toMatch(/^[A-Za-z2-9]{32}$/);
     expect(fixture.componentInstance.token.dirty).toBe(true);
   });
+
+  it('only reports the password without a target', async () => {
+    (fixture.nativeElement.querySelector('#only-emit') as HTMLButtonElement).click();
+    await fixture.whenStable();
+    expect(fixture.componentInstance.emitted).toHaveLength(16);
+    expect(fixture.componentInstance.password1.value).toBe('');
+    expect(fixture.componentInstance.token.value).toBe('');
+  });
 });
+

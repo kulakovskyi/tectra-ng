@@ -89,3 +89,38 @@ describe('TxActionsMenu', () => {
     expect(root.querySelector('.tx-actions-menu__trigger')).toBeNull();
   });
 });
+
+@Component({
+  imports: [TxActionsMenu],
+  template: `<tx-actions-menu [ariaLabel]="ariaLabel()" [items]="items" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class PlainHost {
+  readonly ariaLabel = signal<string | undefined>(undefined);
+  readonly items: TxActionsMenuItem[] = [
+    { id: 'copy', label: 'Copy' },
+    { id: 'share', label: 'Share' },
+  ];
+}
+
+describe('TxActionsMenu labels and other keys', () => {
+  it('names the trigger from the aria label or the default text and ignores keys that do not move', async () => {
+    const fixture = TestBed.createComponent(PlainHost);
+    await fixture.whenStable();
+    const trigger = fixture.nativeElement.querySelector('.tx-actions-menu__trigger') as HTMLButtonElement;
+    expect(trigger.getAttribute('aria-label')).toBe('More actions');
+    fixture.componentInstance.ariaLabel.set('File actions');
+    await fixture.whenStable();
+    expect(trigger.getAttribute('aria-label')).toBe('File actions');
+
+    trigger.click();
+    await fixture.whenStable();
+    const items = Array.from(document.querySelectorAll<HTMLButtonElement>('[role="menuitem"]'));
+    items[1].focus();
+    const letter = new KeyboardEvent('keydown', { key: 'x', bubbles: true, cancelable: true });
+    items[1].dispatchEvent(letter);
+    expect(letter.defaultPrevented).toBe(false);
+    expect(document.activeElement).toBe(items[1]);
+    fixture.destroy();
+  });
+});

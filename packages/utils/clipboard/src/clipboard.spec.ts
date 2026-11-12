@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { TxToastService } from '@tectra-ng/ui/toast';
-import { copyToClipboard } from './clipboard';
+import { TxClipboard, copyToClipboard } from './clipboard';
+import { CLIPBOARD_ICON_DEFAULTS } from './clipboard.icons';
 import { TxCopy } from './copy.directive';
 
 @Component({
@@ -103,5 +104,42 @@ describe('clipboard', () => {
     code.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
     await flush();
     expect(writeText).toHaveBeenCalledWith('ORD-1042');
+  });
+
+  it('fails without a window and when the copy command throws', async () => {
+    expect(await copyToClipboard('x', document.implementation.createHTMLDocument(''))).toBe(false);
+    Object.defineProperty(window, 'isSecureContext', { value: false, configurable: true });
+    document.execCommand = vi.fn(() => {
+      throw new Error('blocked');
+    });
+    const field = document.createElement('input');
+    document.body.appendChild(field);
+    field.focus();
+    expect(await copyToClipboard('x')).toBe(false);
+    expect(document.activeElement).toBe(field);
+    field.remove();
+  });
+
+  it('copies nothing for an empty value and can stay silent on failure', async () => {
+    const clipboard = TestBed.inject(TxClipboard);
+    const error = vi.spyOn(TestBed.inject(TxToastService), 'error');
+    expect(await clipboard.copy(undefined)).toBe(false);
+    expect(writeText).not.toHaveBeenCalled();
+    writeText.mockRejectedValue(new Error('denied'));
+    document.execCommand = vi.fn().mockReturnValue(false);
+    expect(await clipboard.copy('a', { errorMessage: false })).toBe(false);
+    expect(await clipboard.copy('a', { errorMessage: 'Nope' })).toBe(false);
+    expect(error).toHaveBeenCalledTimes(1);
+    expect(error).toHaveBeenCalledWith('Nope');
+  });
+
+  it('leaves keys on native controls to the browser', async () => {
+    const fixture = TestBed.createComponent(CopyHost);
+    fixture.detectChanges();
+    const button = (fixture.nativeElement as HTMLElement).querySelector('.button') as HTMLElement;
+    button.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await flush();
+    expect(writeText).not.toHaveBeenCalled();
+    expect(Object.keys(CLIPBOARD_ICON_DEFAULTS).length).toBeGreaterThan(0);
   });
 });

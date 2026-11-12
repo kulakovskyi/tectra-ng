@@ -10,6 +10,7 @@ import { TxTruncateText } from './truncate-text.component';
     <tx-truncate-text id="long" [text]="long()" [limit]="10" [highlight]="search()" copyable (copied)="copied = $event" [dt]="{ root: { gap: '4px' } }" [pt]="{ text: { class: 'own-text' } }" />
     <tx-truncate-text id="href" text="https://example.com/a/very/long/path" [limit]="12" href="https://example.com/a/very/long/path" ellipsis="…" />
     <tx-truncate-text id="open" text="https://example.org/docs" openLink />
+    <tx-truncate-text id="same-tab" text="Inbox" href="/inbox" target="_self" />
     <tx-truncate-text id="number" [text]="12345678901234567890" [limit]="5" unstyled />
     <tx-truncate-text id="empty" [text]="null" copyable />
   `,
@@ -109,4 +110,26 @@ describe('TxTruncateText', () => {
     expect(el('#number').hasAttribute('data-styled')).toBe(false);
     expect(el('#long').hasAttribute('data-styled')).toBe(true);
   });
+
+  it('keeps a same-tab link without a rel', () => {
+    expect(el('#same-tab a').getAttribute('target')).toBe('_self');
+    expect(el('#same-tab a').hasAttribute('rel')).toBe(false);
+  });
+
+  it('restarts the check when copied again and resets it after a while', () => {
+    vi.useFakeTimers();
+    Object.assign(navigator, { clipboard: undefined });
+    const button = el('#long .tx-truncate-text__copy') as HTMLButtonElement;
+    button.click();
+    vi.advanceTimersByTime(1000);
+    button.click();
+    vi.advanceTimersByTime(1000);
+    fixture.detectChanges();
+    expect(button.getAttribute('aria-label')).toBe('Copied');
+    vi.advanceTimersByTime(1000);
+    fixture.detectChanges();
+    expect(button.getAttribute('aria-label')).toBe('Copy');
+    vi.useRealTimers();
+  });
 });
+

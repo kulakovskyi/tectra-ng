@@ -112,4 +112,89 @@ describe('TxInputOtp', () => {
     await fixture.whenStable();
     expect(cells().every((cell) => cell.disabled)).toBe(true);
   });
+
+  it('deletes in place, moves right, and keeps a cell on Backspace when it has a character', async () => {
+    fixture.componentInstance.code.setValue('123');
+    await fixture.whenStable();
+    await key(1, 'Delete');
+    expect(cells().map((cell) => cell.value)).toEqual(['1', '', '3', '', '', '']);
+    await key(0, 'ArrowRight');
+    expect(document.activeElement).toBe(cells()[1]);
+    await key(5, 'ArrowRight');
+    expect(document.activeElement).toBe(cells()[5]);
+    await key(0, 'Backspace');
+    expect(cells()[0].value).toBe('1');
+    await key(0, 'Tab');
+    expect(fixture.componentInstance.code.value).toBe('13');
+  });
+
+  it('replaces a character typed over an existing one and clears an emptied cell', async () => {
+    fixture.componentInstance.code.setValue('12');
+    await fixture.whenStable();
+    await type(3, ' ');
+    expect(cells()[3].value).toBe('');
+    await type(0, '15');
+    expect(cells()[0].value).toBe('5');
+    expect(cells()[1].value).toBe('2');
+    await type(1, '');
+    expect(cells()[1].value).toBe('2');
+    await type(3, ' ');
+    expect(cells()[3].value).toBe('');
+    expect(fixture.componentInstance.code.value).toBe('52');
+  });
+
+  it('ignores an empty paste and accepts letters without integerOnly', async () => {
+    const paste = new Event('paste', { cancelable: true }) as ClipboardEvent;
+    cells()[0].dispatchEvent(paste);
+    await fixture.whenStable();
+    expect(paste.defaultPrevented).toBe(true);
+    expect(fixture.componentInstance.code.value).toBe('');
+    fixture.componentInstance.integerOnly.set(false);
+    await fixture.whenStable();
+    await type(0, 'ab');
+    expect(fixture.componentInstance.code.value).toBe('ab');
+  });
+
+  it('focuses the first empty cell and shows an empty code for null', async () => {
+    fixture.componentInstance.code.setValue('12');
+    await fixture.whenStable();
+    const otp = fixture.debugElement.query((node) => node.componentInstance instanceof TxInputOtp).componentInstance as TxInputOtp;
+    otp.focus();
+    expect(document.activeElement).toBe(cells()[2]);
+    fixture.componentInstance.code.setValue('123456');
+    await fixture.whenStable();
+    otp.focus();
+    expect(document.activeElement).toBe(cells()[5]);
+    fixture.componentInstance.code.setValue(null);
+    await fixture.whenStable();
+    expect(cells().every((cell) => cell.value === '')).toBe(true);
+  });
+});
+
+@Component({
+  imports: [TxInputOtp],
+  template: `<tx-input-otp [length]="4" autoFocus ariaLabel="Pin" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class AutoFocusHost {}
+
+describe('TxInputOtp with autoFocus', () => {
+  it('focuses the first cell after the first render', async () => {
+    const fixture = TestBed.createComponent(AutoFocusHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    expect(document.activeElement).toBe(fixture.nativeElement.querySelector('input'));
+  });
+});
+
+describe('TxInputOtp recompiled by TestBed', () => {
+  it('still reads its cells when a test overrides the component', async () => {
+    TestBed.overrideComponent(TxInputOtp, { set: { styles: [] } });
+    const fixture = TestBed.createComponent(Host);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    fixture.componentInstance.code.setValue('42');
+    await fixture.whenStable();
+    expect(Array.from(fixture.nativeElement.querySelectorAll('input'), (cell: HTMLInputElement) => cell.value).slice(0, 3)).toEqual(['4', '2', '']);
+  });
 });

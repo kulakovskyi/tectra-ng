@@ -32,4 +32,16 @@ describe('TxNumberFormat', () => {
     const integer = new TxNumberFormat({ locale: 'en-US', mode: 'decimal', useGrouping: false, maxFractionDigits: 0 });
     expect(integer.formatTyping('12.5')).toEqual({ display: '125', value: 125 });
   });
+
+  it('defaults the currency, keeps a lone minus and a leading decimal, and places the caret of negatives', () => {
+    const money = new TxNumberFormat({ locale: 'en-US', mode: 'currency', useGrouping: true });
+    expect(money.format(5)).toBe('$5.00');
+    expect(money.formatTyping('-')).toEqual({ display: '-', value: null });
+    expect(money.formatTyping('.5')).toEqual({ display: '$0.5', value: 0.5 });
+    const negative = money.formatTyping('-12');
+    expect(negative).toEqual({ display: '-$12', value: -12 });
+    expect(money.caretFor(negative.display, 0)).toBe(2);
+    expect(money.caretFor(negative.display, 1)).toBe(3);
+    expect(money.caretFor(negative.display, 5)).toBe(4);
+  });
 });

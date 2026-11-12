@@ -131,14 +131,15 @@ export class TxTreemap {
 
   readonly tooltip = computed<TxChartTooltipData | null>(() => {
     const index = this.hovered();
-    const tile = index === null ? undefined : this.layout().tiles[index];
-    if (!tile || !this.showTooltip()) return null;
+    if (index === null || !this.showTooltip()) return null;
+    const tile = this.layout().tiles[index];
+    if (!tile) return null;
     const custom = this.tooltipFormatter();
-    const value = custom ? custom(tile.value, { seriesIndex: tile.path[0], dataPointIndex: index ?? 0 }) : this.valueFormatter()(tile.value);
+    const value = custom ? custom(tile.value, { seriesIndex: tile.path[0], dataPointIndex: index }) : this.valueFormatter()(tile.value);
     return {
       title: tile.group ?? '',
       rows: [{ label: tile.label, value, share: this.percentFormatter()(Number(tile.share.toFixed(1))), color: tile.color, raw: tile.value, seriesIndex: tile.path[0], active: true }],
-      index: index ?? 0,
+      index,
       x: tile.x + tile.width / 2,
       y: tile.y,
       placement: 'top',
@@ -219,7 +220,7 @@ export class TxTreemap {
       label,
       group,
       value: node.value,
-      share: total ? (node.value / total) * 100 : 0,
+      share: (node.value / total) * 100,
       color,
       x: node.x,
       y: node.y,

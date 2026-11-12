@@ -5,11 +5,18 @@ import { TxLocaleService } from '@tectra-ng/core/i18n';
 import { Observable, defer, throwError } from 'rxjs';
 import { buildHttpParams } from './http-params.functions';
 import { httpRetryDelay, parseRetryAfter, retryHttpReads } from './http-retry.functions';
-import { TxHttpStatusLabelPipe, TxHttpStatusTonePipe, httpStatusGroup, httpStatusTone } from './http-status';
+import { TxHttpStatusGroupPipe, TxHttpStatusLabelPipe, TxHttpStatusTonePipe, httpStatusGroup, httpStatusTone } from './http-status';
+import { HTTP_ICON_DEFAULTS } from './http.icons';
 
 @Component({
-  imports: [TxHttpStatusLabelPipe, TxHttpStatusTonePipe],
-  template: `<span class="label">{{ status() | txHttpStatusLabel }}</span><span class="tone">{{ status() | txHttpStatusTone: [270] }}</span>`,
+  imports: [TxHttpStatusLabelPipe, TxHttpStatusTonePipe, TxHttpStatusGroupPipe],
+  template: `
+    <span class="label">{{ status() | txHttpStatusLabel }}</span>
+    <span class="tone">{{ status() | txHttpStatusTone: [270] }}</span>
+    <span class="group">{{ status() | txHttpStatusGroup }}</span>
+    <span class="warn-group">{{ status() | txHttpStatusGroup: [404] }}</span>
+    <span class="warn-label">{{ status() | txHttpStatusLabel: [404] }}</span>
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class StatusHost {
@@ -72,6 +79,23 @@ describe('http retry', () => {
     expect(run([503, 503, 503, 503, 503, 503]).failed).toBeInstanceOf(HttpErrorResponse);
     vi.useRealTimers();
   });
+
+  it('gives up at once when Retry-After asks for more than the cap', () => {
+    let calls = 0;
+    let failed: unknown = null;
+    defer(() => {
+      calls++;
+      return throwError(() => httpError(503, { 'Retry-After': '120' }));
+    })
+      .pipe(retryHttpReads({ maxDelayMs: 1000 }))
+      .subscribe({ error: (error) => (failed = error) });
+    expect(calls).toBe(1);
+    expect(failed).toBeInstanceOf(HttpErrorResponse);
+  });
+
+  it('lists the icons it draws', () => {
+    expect(Object.keys(HTTP_ICON_DEFAULTS)).toEqual(['info']);
+  });
 });
 
 describe('http status', () => {
@@ -99,6 +123,9 @@ describe('http status', () => {
     const text = (selector: string) => (fixture.nativeElement as HTMLElement).querySelector(selector)?.textContent;
     expect(text('.label')).toBe('Client error');
     expect(text('.tone')).toBe('danger');
+    expect(text('.group')).toBe('clientError');
+    expect(text('.warn-group')).toBe('warning');
+    expect(text('.warn-label')).toBe('Warning');
     fixture.componentInstance.status.set(270);
     await TestBed.inject(TxLocaleService).setLocale('ua');
     fixture.detectChanges();

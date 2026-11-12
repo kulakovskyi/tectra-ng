@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TxRatingOnIconTemplate } from './rating-templates.directive';
+import { TxRatingOffIconTemplate, TxRatingOnIconTemplate } from './rating-templates.directive';
 import { TxRating } from './rating.component';
 
 @Component({
@@ -104,3 +104,73 @@ describe('TxRating', () => {
     expect(slider().getAttribute('aria-disabled')).toBe('true');
   });
 });
+
+@Component({
+  imports: [TxRating, TxRatingOffIconTemplate, ReactiveFormsModule],
+  template: `
+    <tx-rating id="half" ariaLabel="Half" allowHalf onIcon="own-on" offIcon="own-off" [formControl]="half" />
+    <tx-rating id="empty" ariaLabel="Empty" [stars]="4">
+      <ng-template txRatingOffIcon let-index><i class="own-off-template">{{ index }}</i></ng-template>
+    </tx-rating>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class HalfHost {
+  readonly half = new FormControl<number | null>(null);
+}
+
+describe('TxRating with half stars and own icons', () => {
+  let fixture: ComponentFixture<HalfHost>;
+  const slider = (id: string) => fixture.nativeElement.querySelector(`#${id} [role="slider"]`) as HTMLElement;
+  const stars = (id: string) => Array.from(fixture.nativeElement.querySelectorAll(`#${id} .tx-rating__star`)) as HTMLElement[];
+
+  beforeEach(async () => {
+    fixture = TestBed.createComponent(HalfHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+  });
+
+  it('draws unregistered icon names as classes and an own off icon', () => {
+    expect(stars('half')[0].querySelector('.tx-rating__on span.own-on')).not.toBeNull();
+    expect(stars('half')[0].querySelector('.tx-rating__off span.own-off')).not.toBeNull();
+    expect(fixture.nativeElement.querySelectorAll('#empty .own-off-template')).toHaveLength(4);
+  });
+
+  it('rates half a star on the left half and a full one otherwise', async () => {
+    const [first, second] = stars('half');
+    first.getBoundingClientRect = () => ({ left: 0, width: 20 }) as DOMRect;
+    first.dispatchEvent(new MouseEvent('click', { clientX: 5, bubbles: true }));
+    await fixture.whenStable();
+    expect(fixture.componentInstance.half.value).toBe(0.5);
+    first.dispatchEvent(new MouseEvent('click', { clientX: 15, bubbles: true }));
+    await fixture.whenStable();
+    expect(fixture.componentInstance.half.value).toBe(1);
+    second.dispatchEvent(new MouseEvent('click', { clientX: 0, bubbles: true }));
+    await fixture.whenStable();
+    expect(fixture.componentInstance.half.value).toBe(2);
+  });
+
+  it('ignores pointers between stars and other keys, starts keys from zero and is touched on blur', async () => {
+    slider('half').dispatchEvent(new MouseEvent('pointermove', { bubbles: true }));
+    slider('half').dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('#half').classList).not.toContain('tx-rating--preview');
+    slider('half').dispatchEvent(new KeyboardEvent('keydown', { key: 'x', cancelable: true }));
+    expect(fixture.componentInstance.half.value).toBeNull();
+    slider('half').dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', cancelable: true }));
+    expect(fixture.componentInstance.half.value).toBe(0.5);
+    slider('half').dispatchEvent(new FocusEvent('blur'));
+    expect(fixture.componentInstance.half.touched).toBe(true);
+  });
+});
+
+describe('TxRating recompiled by TestBed', () => {
+  it('still finds its icon templates when a test overrides the component', async () => {
+    TestBed.overrideComponent(TxRating, { set: { styles: [] } });
+    const fixture = TestBed.createComponent(HalfHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelectorAll('#empty .own-off-template')).toHaveLength(4);
+  });
+});
+

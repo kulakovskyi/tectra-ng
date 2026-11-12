@@ -75,4 +75,31 @@ describe('TxSplitButton', () => {
     expect(el('#outlined .tx-split-button__button').hasAttribute('disabled')).toBe(false);
     expect(el('#outlined').hasAttribute('data-filled')).toBe(false);
   });
+
+  it('opens at the first item with Arrow Down', async () => {
+    const toggle = el('tx-split-button .tx-split-button__menu-button');
+    toggle.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true }));
+    await settle();
+    const items = [...document.querySelectorAll('.cdk-overlay-container [role="menuitem"]')];
+    expect(toggle.getAttribute('aria-expanded')).toBe('true');
+    expect(document.activeElement).toBe(items[0]);
+  });
 });
+
+describe('TxSplitButton recompiled by TestBed', () => {
+  afterEach(() => document.querySelector('.cdk-overlay-container')?.remove());
+
+  it('still reaches its menu when a test overrides the component', async () => {
+    TestBed.overrideComponent(TxSplitButton, { set: { styles: [] } });
+    const fixture = TestBed.createComponent(Host);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    (document.querySelector('tx-split-button .tx-split-button__menu-button') as HTMLElement).click();
+    await fixture.whenStable();
+    await Promise.resolve();
+    await fixture.whenStable();
+    expect(document.querySelector('.cdk-overlay-container tx-menu-list')).not.toBeNull();
+    fixture.destroy();
+  });
+});
+

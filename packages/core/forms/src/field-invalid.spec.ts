@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, Directive, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Directive, input, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { injectFieldInvalid } from './field-invalid';
+import { TX_FIELD_STATE } from './field-state';
 
 @Directive({ selector: '[testField]', host: { '[attr.data-invalid]': 'isInvalid()' } })
 class TestField {
@@ -39,5 +40,18 @@ describe('injectFieldInvalid', () => {
     fixture.autoDetectChanges();
     await fixture.whenStable();
     expect((fixture.nativeElement.querySelector('#forced') as HTMLElement).getAttribute('data-invalid')).toBe('true');
+  });
+
+  it('follows the invalid state of a wrapping field', async () => {
+    const invalid = signal(false);
+    TestBed.configureTestingModule({ providers: [{ provide: TX_FIELD_STATE, useValue: { invalid } }] });
+    const fixture = TestBed.createComponent(Host);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    const field = fixture.nativeElement.querySelector('input') as HTMLInputElement;
+    expect(field.getAttribute('data-invalid')).toBe('false');
+    invalid.set(true);
+    await fixture.whenStable();
+    expect(field.getAttribute('data-invalid')).toBe('true');
   });
 });

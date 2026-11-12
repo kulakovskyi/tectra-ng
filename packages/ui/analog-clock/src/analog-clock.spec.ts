@@ -71,3 +71,34 @@ describe('TxAnalogClock', () => {
     expect(el('#fixed [role="img"]').getAttribute('aria-label')).toBe('London office, 15:00');
   });
 });
+
+@Component({
+  imports: [TxAnalogClock, TxAnalogClockHandsPipe],
+  template: `
+    <tx-analog-clock id="ticking" timezone="UTC" showSeconds />
+    <span class="minute-angle">{{ (at | txAnalogClockHands: 'UTC').minuteAngle }}</span>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class TickingHost {
+  readonly at = Date.UTC(2026, 0, 1, 9, 15, 0);
+}
+
+describe('TxAnalogClock following the time', () => {
+  afterEach(() => vi.useRealTimers());
+
+  it('moves the second hand every second and reads hands through the pipe', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] });
+    vi.setSystemTime(new Date(Date.UTC(2026, 0, 1, 10, 0, 0, 500)));
+    const fixture = TestBed.createComponent(TickingHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    const second = () => (fixture.nativeElement.querySelector('#ticking .tx-analog-clock__hand--second') as HTMLElement).style.getPropertyValue('--tx-analog-clock-angle');
+    expect(second()).toBe('0deg');
+    vi.advanceTimersByTime(1000);
+    await fixture.whenStable();
+    expect(second()).toBe('6deg');
+    expect(fixture.nativeElement.querySelector('.minute-angle').textContent).toBe('90');
+    fixture.destroy();
+  });
+});

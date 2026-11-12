@@ -83,6 +83,21 @@ describe('sankey layout', () => {
       expect(link.y1 + link.width / 2).toBeLessThanOrEqual(link.target.y + link.target.height + 0.01);
     }
   });
+
+  it('keeps early sinks in their column when aligned left and clamps the curve past its end', () => {
+    const left = sankeyLayout([], [
+      { source: 'A', target: 'B', value: 5 },
+      { source: 'A', target: 'C', value: 5 },
+      { source: 'C', target: 'D', value: 5 },
+    ], { width: 300, height: 100, nodeWidth: 10, nodePadding: 10, align: 'left' });
+    expect(left.nodes.map((item) => [item.id, item.depth])).toEqual([
+      ['A', 0],
+      ['B', 1],
+      ['C', 1],
+      ['D', 2],
+    ]);
+    expect(sankeyLinkY(0, 0, 10, 5, 20)).toBe(5);
+  });
 });
 
 function fail(name: string): never {

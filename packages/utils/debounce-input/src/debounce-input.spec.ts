@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { TxDebounceInput } from './debounce-input.directive';
 
 @Component({
@@ -88,5 +89,14 @@ describe('txDebounceInput', () => {
     fixture.destroy();
     vi.advanceTimersByTime(1000);
     expect(host.values).toEqual([]);
+  });
+  it('ignores Enter with nothing typed and reads non-field targets as empty', () => {
+    const { fixture, host } = setup();
+    const directive = fixture.debugElement.query(By.directive(TxDebounceInput)).injector.get(TxDebounceInput);
+    directive.flush();
+    expect(host.values).toEqual([]);
+    (fixture.nativeElement as HTMLElement).querySelector('div')?.dispatchEvent(new Event('input'));
+    vi.advanceTimersByTime(300);
+    expect(host.values).toEqual(['']);
   });
 });

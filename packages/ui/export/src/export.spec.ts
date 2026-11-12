@@ -1,6 +1,7 @@
 import { TxExportField, TxExportRow } from './export.types';
-import { buildExportTable, cellText, csvCell, exportMatrix, hexColor, inferType, withExtension } from './export.utils';
-import { writeCsv, writeHtml, writeJson, writeMarkdown, writeTsv } from './writers/text';
+import { buildExportTable, cellText, csvCell, downloadBlob, downloadCsv, exportMatrix, hexColor, inferType, localIso, matrixToCsv, readExportField, toDate, withExtension } from './export.utils';
+import { printHtml } from './writers/print';
+import { htmlTable, printPageCss, writeCsv, writeHtml, writeJson, writeMarkdown, writeTsv } from './writers/text';
 import { crc32, zip } from './writers/zip';
 
 interface User {
@@ -67,6 +68,41 @@ describe('export table', () => {
     expect(cellText({ a: 1 }, { ...column, type: 'text' }, CONTEXT)).toBe('{"a":1}');
   });
 
+  it('reads missing rows and broken paths as undefined', () => {
+    expect(readExportField(null, 'a')).toBeUndefined();
+    expect(readExportField(undefined, 'a.b')).toBeUndefined();
+    expect(readExportField({ a: null }, 'a.b.c')).toBeUndefined();
+    expect(readExportField({ 'a.b': 1, a: { b: 2 } }, 'a.b')).toBe(1);
+  });
+
+  it('turns strings, numbers and dates into valid dates only', () => {
+    expect(toDate('2026-03-04T05:06:07')).toEqual(new Date(2026, 2, 4, 5, 6, 7));
+    expect(toDate(0)).toEqual(new Date(0));
+    expect(toDate('nope')).toBeNull();
+    expect(toDate(new Date(Number.NaN))).toBeNull();
+    expect(toDate(true)).toBeNull();
+  });
+
+  it('writes dates by column type and time of day', () => {
+    const column = { key: 'x', title: 'X', type: 'datetime' as const, align: 'start' as const };
+    expect(cellText('2026-01-05T09:30:00', column, CONTEXT)).toMatch(/^Jan 5, 2026, 9:30\sAM$/);
+    expect(cellText(new Date(2026, 0, 5, 9, 30), { ...column, type: 'text' }, CONTEXT)).toMatch(/^Jan 5, 2026, 9:30\sAM$/);
+    expect(cellText('2026-01-05T09:30:00', { ...column, type: 'date' }, CONTEXT)).toBe('Jan 5, 2026');
+    expect(cellText('soon', { ...column, type: 'date' }, CONTEXT)).toBe('soon');
+    expect(localIso(new Date(2026, 0, 5), 'text')).toBe('2026-01-05');
+    expect(localIso(new Date(2026, 0, 5, 9, 5, 7), 'text')).toBe('2026-01-05 09:05:07');
+    expect(localIso(new Date(2026, 0, 5), 'datetime')).toBe('2026-01-05 00:00');
+    const invalid = new Date(Number.NaN);
+    expect(localIso(invalid, 'date')).toBe(invalid);
+  });
+
+  it('quotes empty cells and writes dates and objects into CSV', () => {
+    expect(csvCell(undefined, ',', { quoteAll: true })).toBe('""');
+    expect(csvCell(new Date(Date.UTC(2026, 0, 5)))).toBe('2026-01-05T00:00:00.000Z');
+    expect(csvCell({ a: 1 })).toBe('"{""a"":1}"');
+    expect(matrixToCsv([['a', 'b;c'], [1, null]], ';')).toBe('a;"b;c"\r\n1;');
+  });
+
   it('normalises colours and extensions', () => {
     expect(hexColor('#abc', '000000')).toBe('AABBCC');
     expect(hexColor('nope', '#112233')).toBe('112233');
@@ -119,6 +155,141 @@ describe('text writers', () => {
   });
 });
 
+describe('more text writers', () => {
+  const table = buildExportTable(
+    [
+      { name: 'Ada', score: 1, done: true, note: undefined },
+      { name: 'Lin', score: 2, done: false, note: 'x' },
+    ],
+    [{ field: 'name', title: '' }, { field: 'score', title: 'Score' }, { field: 'done', title: 'Done' }, { field: 'note', title: 'Note' }],
+  );
+
+  it('writes empty JSON values as null', () => {
+    expect(JSON.parse(writeJson(table))[0]).toEqual({ name: 'Ada', score: 1, done: true, note: null });
+  });
+
+  it('aligns HTML cells and leaves the head out on request', () => {
+    const html = htmlTable(table, CONTEXT);
+    expect(html).toContain('<th>name</th><th style="text-align:right">Score</th><th style="text-align:center">Done</th>');
+    expect(html).toContain('<td style="text-align:center">Yes</td>');
+    expect(htmlTable(table, CONTEXT, false)).not.toContain('<thead>');
+  });
+
+  it('writes an HTML document with a subtitle, a date, page CSS and own styles', () => {
+    const html = writeHtml(table, { subtitle: 'Q1\nend', showDate: true, header: false, page: '@page{}', styles: '.x{}' }, CONTEXT, new Date(2026, 0, 2, 3, 4));
+    expect(html).toContain('<html><head>');
+    expect(html).toContain('<title>Export</title>');
+    expect(html).not.toContain('<h1>');
+    expect(html).toContain('<p class="subtitle">Q1<br>end</p>');
+    expect(html).toMatch(/<p class="date">Jan 2, 2026, 3:04\sAM<\/p>/);
+    expect(html).toContain('@page{}.x{}</style>');
+    expect(html).not.toContain('<thead>');
+  });
+
+  it('builds print page CSS from the page options', () => {
+    expect(printPageCss({}, 3)).toBe('@page { size: 595.28pt 841.89pt; margin: 36pt 36pt 36pt 36pt; } @media print { body { margin: 0; } }');
+    expect(printPageCss({ pageSize: 'letter', orientation: 'landscape', margin: [10, 20, 30, 40] }, 1)).toContain('size: 792pt 612pt; margin: 10pt 20pt 30pt 40pt;');
+  });
+
+  it('writes Markdown without a header and with centered columns', () => {
+    expect(writeMarkdown(table, { header: false }, CONTEXT)).toBe('|   |   |   |   |\n| --- | ---: | :---: | --- |\n| Ada | 1 | Yes |  |\n| Lin | 2 | No | x |\n');
+    expect(writeMarkdown(table, {}, CONTEXT).split('\n')[0]).toBe('| name | Score | Done | Note |');
+    expect(writeMarkdown(buildExportTable([{}], [{ field: '' }]), {}, CONTEXT)).toBe('|   |\n| --- |\n|  |\n');
+  });
+});
+
+describe('downloads', () => {
+  afterEach(() => vi.useRealTimers());
+
+  it('does nothing without object URLs', () => {
+    const host = { defaultView: null } as unknown as Document;
+    expect(() => downloadBlob(host, new Blob(['x']), 'x.txt')).not.toThrow();
+  });
+
+  it('clicks a hidden link and revokes the URL later', () => {
+    vi.useFakeTimers();
+    const revoked: string[] = [];
+    const names: string[] = [];
+    const link = document.createElement('a');
+    vi.spyOn(link, 'click').mockImplementation(() => names.push(link.download));
+    const view = {
+      URL: { createObjectURL: () => 'blob:own', revokeObjectURL: (url: string) => revoked.push(url) },
+      setTimeout: (handler: () => void, timeout: number) => setTimeout(handler, timeout),
+    };
+    const host = { defaultView: view, createElement: () => link, body: document.body } as unknown as Document;
+    downloadCsv(host, 'a,b', 'report');
+    expect(names).toEqual(['report.csv']);
+    expect(link.isConnected).toBe(false);
+    expect(revoked).toEqual([]);
+    vi.advanceTimersByTime(1000);
+    expect(revoked).toEqual(['blob:own']);
+  });
+});
+
+describe('print', () => {
+  class FakeView extends EventTarget {
+    focused = 0;
+    printed = 0;
+    focus(): void {
+      this.focused++;
+    }
+    print(): void {
+      this.printed++;
+    }
+  }
+
+  const setup = (view: FakeView | null) => {
+    const container = document.createElement('div');
+    const frame = document.createElement('iframe');
+    Object.defineProperty(frame, 'contentWindow', { value: view });
+    const host = { createElement: () => frame, body: container } as unknown as Document;
+    return { container, frame, host };
+  };
+
+  afterEach(() => vi.useRealTimers());
+
+  it('prints the HTML from a hidden frame and removes it after printing', async () => {
+    vi.useFakeTimers();
+    const view = new FakeView();
+    const { container, frame, host } = setup(view);
+    const done = printHtml(host, '<p>Report</p>');
+    expect(container.contains(frame)).toBe(true);
+    expect(frame.srcdoc).toBe('<p>Report</p>');
+    expect(frame.getAttribute('aria-hidden')).toBe('true');
+    expect(frame.getAttribute('tabindex')).toBe('-1');
+    frame.dispatchEvent(new Event('load'));
+    await done;
+    expect([view.focused, view.printed]).toEqual([1, 1]);
+    view.dispatchEvent(new Event('afterprint'));
+    expect(container.contains(frame)).toBe(true);
+    vi.advanceTimersByTime(0);
+    expect(container.contains(frame)).toBe(false);
+    vi.advanceTimersByTime(60000);
+    expect(container.contains(frame)).toBe(false);
+  });
+
+  it('removes the frame after a minute without afterprint', async () => {
+    vi.useFakeTimers();
+    const view = new FakeView();
+    const { container, frame, host } = setup(view);
+    const done = printHtml(host, '<p>x</p>');
+    frame.dispatchEvent(new Event('load'));
+    await done;
+    vi.advanceTimersByTime(59999);
+    expect(container.contains(frame)).toBe(true);
+    vi.advanceTimersByTime(1);
+    expect(container.contains(frame)).toBe(false);
+  });
+
+  it('gives up without a frame window', async () => {
+    const { container, frame, host } = setup(null);
+    const done = printHtml(host, '<p>x</p>');
+    frame.dispatchEvent(new Event('load'));
+    await done;
+    expect(container.contains(frame)).toBe(false);
+  });
+});
+
 describe('zip', () => {
   it('computes CRC-32 and writes stored entries with a central directory', async () => {
     expect(crc32(new TextEncoder().encode('123456789'))).toBe(0xcbf43926);
@@ -133,5 +304,12 @@ describe('zip', () => {
     const directory = view.getUint32(end + 16, true);
     expect(view.getUint32(directory, true)).toBe(0x02014b50);
     expect(view.getUint16(directory + 8, true) & 0x0800).toBe(0x0800);
+  });
+
+  it('stores byte entries as they are', async () => {
+    const data = new Uint8Array([1, 2, 3]);
+    const bytes = await zip([{ name: 'b', data }], new Date(1970, 0, 1), false);
+    expect([...bytes.subarray(31, 34)]).toEqual([1, 2, 3]);
+    expect(new DataView(bytes.buffer).getUint16(12, true)).toBe((0 << 9) | (1 << 5) | 1);
   });
 });

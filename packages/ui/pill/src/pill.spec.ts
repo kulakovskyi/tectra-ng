@@ -10,6 +10,7 @@ import { TX_ICONS, provideTxIcons } from '@tectra-ng/icons';
     <tx-pill id="status" [tone]="tone()" [size]="size()" variant="solid" icon="pi-check" [dt]="{ root: { fontSize: '14px' } }" [pt]="{ label: { class: 'own' } }">Active</tx-pill>
     <tx-pill id="tag" value="Angular" [removable]="true" (removed)="removed = removed + 1"><img txPillLeading alt="" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" /></tx-pill>
     <tx-pill id="dot" tone="warn" [dot]="true" removeLabel="Drop">Pending</tx-pill>
+    <tx-pill id="own" icon="own-pill-icon">Own</tx-pill>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -58,4 +59,9 @@ describe('TxPill', () => {
     expect(el('#dot .tx-pill__dot')).not.toBeNull();
     expect(el('#dot .tx-pill__remove')).toBeNull();
   });
+
+  it('draws an unregistered icon name as a class', () => {
+    expect(el('#own .tx-pill__icon span.own-pill-icon')).not.toBeNull();
+  });
 });
+

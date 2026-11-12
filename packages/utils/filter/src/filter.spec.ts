@@ -1,3 +1,5 @@
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { TxFilterByPipe, TxSearchPipe, filterBy, filterBySearch, matches, normalizeSearch, resolveField } from './filter';
 
 interface Person {
@@ -14,6 +16,22 @@ const people: Person[] = [
   { name: 'Mark Ivanenko', city: 'Lviv', age: 45, joined: '2019-11-20', team: { name: 'Sales' } },
 ];
 const names = (list: Person[]) => list.map((person) => person.name);
+
+@Component({
+  imports: [TxSearchPipe, TxFilterByPipe],
+  template: `
+    <span class="search">{{ names(people() | txSearch: 'lviv' : fields) }}</span>
+    <span class="by">{{ names(people() | txFilterBy: 40 : ['age'] : 'gt') }}</span>
+    <span class="empty">{{ (missing() | txSearch: 'a' : fields).length }}</span>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class FilterHost {
+  readonly people = signal(people);
+  readonly missing = signal<Person[] | null>(null);
+  readonly fields = ['name', 'city'];
+  readonly names = names;
+}
 
 describe('filter', () => {
   it('normalizes accents, case and spaces', () => {
@@ -46,5 +64,14 @@ describe('filter', () => {
     expect(resolveField(people[0], 'team.name')).toBe('Design');
     expect(names(new TxSearchPipe().transform(people, 'lee', ['name']))).toEqual(['Ann Lee']);
     expect(new TxFilterByPipe().transform(null, 'x', ['name'])).toEqual([]);
+  });
+
+  it('filters inside templates and treats a missing list as empty', () => {
+    const fixture = TestBed.createComponent(FilterHost);
+    fixture.detectChanges();
+    const text = (selector: string) => (fixture.nativeElement.querySelector(selector) as HTMLElement).textContent;
+    expect(text('.search')).toBe('Mark Ivanenko');
+    expect(text('.by')).toBe('Mark Ivanenko');
+    expect(text('.empty')).toBe('0');
   });
 });

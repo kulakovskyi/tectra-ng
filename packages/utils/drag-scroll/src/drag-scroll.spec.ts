@@ -4,11 +4,12 @@ import { TxDragPanDelta, TxDragScroll } from './drag-scroll.directive';
 
 @Component({
   imports: [TxDragScroll],
-  template: `<div class="box" txDragScroll [panMode]="pan()" (panMove)="moves.push($event)" (dragEnd)="ends = ends + 1"><button type="button" (click)="clicks = clicks + 1">Item</button></div>`,
+  template: `<div class="box" txDragScroll [panMode]="pan()" [disabled]="disabled()" (panMove)="moves.push($event)" (dragEnd)="ends = ends + 1"><button type="button" (click)="clicks = clicks + 1">Item</button></div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class DragHost {
   readonly pan = signal(false);
+  readonly disabled = signal(false);
   readonly moves: TxDragPanDelta[] = [];
   ends = 0;
   clicks = 0;
@@ -69,5 +70,21 @@ describe('txDragScroll', () => {
     box.dispatchEvent(pointer('pointerdown', 0, 0, { pointerType: 'touch' }));
     box.dispatchEvent(pointer('pointermove', 50, 0));
     expect(fixture.componentInstance.ends).toBe(0);
+  });
+  it('ignores other pointers, plain clicks and a disabled box', () => {
+    const { fixture, box } = setup();
+    box.dispatchEvent(pointer('pointerdown', 0, 0));
+    box.dispatchEvent(pointer('pointermove', 50, 0, { pointerId: 2 }));
+    box.dispatchEvent(pointer('pointerup', 50, 0, { pointerId: 2 }));
+    box.dispatchEvent(pointer('pointerup', 0, 0));
+    expect(box.scrollLeft).toBe(100);
+    expect(fixture.componentInstance.ends).toBe(0);
+
+    fixture.componentInstance.disabled.set(true);
+    fixture.detectChanges();
+    expect(box.style.cursor).toBe('');
+    box.dispatchEvent(pointer('pointerdown', 0, 0));
+    box.dispatchEvent(pointer('pointermove', 50, 0));
+    expect(box.scrollLeft).toBe(100);
   });
 });

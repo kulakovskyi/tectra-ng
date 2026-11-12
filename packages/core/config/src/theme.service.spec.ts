@@ -43,3 +43,17 @@ describe('TxThemeService component tokens', () => {
     expect(document.getElementById('tectra-tokens-tag')?.textContent).toContain('--tx-tag-');
   });
 });
+
+describe('TxThemeService mode', () => {
+  afterEach(() => document.documentElement.removeAttribute('data-tx-theme'));
+
+  it('toggles between light and dark on the root element', () => {
+    const service = TestBed.inject(TxThemeService);
+    service.toggleMode();
+    expect(service.mode()).toBe('dark');
+    expect(document.documentElement.getAttribute('data-tx-theme')).toBe('dark');
+    service.toggleMode();
+    expect(service.mode()).toBe('light');
+    expect(document.documentElement.getAttribute('data-tx-theme')).toBe('light');
+  });
+});

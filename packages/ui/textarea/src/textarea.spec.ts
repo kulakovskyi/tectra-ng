@@ -115,3 +115,53 @@ describe('TxTextarea', () => {
     expect(textarea().getAttribute('aria-invalid')).toBe('true');
   });
 });
+
+@Component({
+  imports: [TxTextarea],
+  template: `<textarea txTextarea autoResize [maxRows]="2" style="line-height: 20px; font-size: 10px; padding-top: 4px; padding-bottom: 4px" (heightChange)="heights.push($event)"></textarea>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class RowsHost {
+  heights: number[] = [];
+}
+
+describe('TxTextarea limited by rows', () => {
+  const observers: { callback: () => void; disconnect: ReturnType<typeof vi.fn> }[] = [];
+
+  beforeEach(() => {
+    observers.length = 0;
+    Object.defineProperty(HTMLTextAreaElement.prototype, 'scrollHeight', { configurable: true, get: () => 120 });
+    vi.stubGlobal(
+      'ResizeObserver',
+      class {
+        readonly disconnect = vi.fn();
+        constructor(readonly callback: () => void) {
+          observers.push(this);
+        }
+        observe(): void {
+          return;
+        }
+      },
+    );
+  });
+
+  afterEach(() => vi.unstubAllGlobals());
+
+  it('stops at maxRows lines from the line height, or from the font size without one, and refits on resize', async () => {
+    const fixture = TestBed.createComponent(RowsHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    await new Promise((resolve) => setTimeout(resolve));
+    const textarea = fixture.nativeElement.querySelector('textarea') as HTMLTextAreaElement;
+    expect(textarea.style.height).toBe('48px');
+    expect(textarea.style.overflowY).toBe('auto');
+    textarea.style.lineHeight = 'normal';
+    expect(observers).toHaveLength(1);
+    observers[0].callback();
+    expect(textarea.style.height).toBe('38px');
+    expect(fixture.componentInstance.heights).toEqual([48, 38]);
+    fixture.destroy();
+    expect(observers[0].disconnect).toHaveBeenCalled();
+  });
+});
+

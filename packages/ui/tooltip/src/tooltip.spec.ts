@@ -265,3 +265,157 @@ describe('TxTooltip delays', () => {
     document.querySelector('.cdk-overlay-container')?.remove();
   });
 });
+
+@Component({
+  imports: [TxTooltip],
+  template: `
+    <button id="both" txTooltip="Both ways" [tooltipArrow]="false"><span id="inner">Both</span></button>
+    <button id="focus" txTooltip="Focus only" tooltipEvent="focus">Focus</button>
+    <button id="sticky" txTooltip="Sticky" tooltipInteractive [tooltipHideDelay]="50">Sticky</button>
+    <span id="sourced" [txTooltip]="undefined" tooltipEvent="manual" #sourced="txTooltip">Sourced</span>
+    <span id="first" txTooltip="First" tooltipEvent="manual" #first="txTooltip">First</span>
+    <span id="second" txTooltip="Second" tooltipEvent="manual" #second="txTooltip">Second</span>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class BehaviourHost {
+  readonly sourced = viewChild.required<TxTooltip>('sourced');
+  readonly first = viewChild.required<TxTooltip>('first');
+  readonly second = viewChild.required<TxTooltip>('second');
+}
+
+describe('TxTooltip behaviour', () => {
+  let fixture: ComponentFixture<BehaviourHost>;
+  const el = (selector: string) => fixture.nativeElement.querySelector(selector) as HTMLElement;
+  const panels = () => [...document.querySelectorAll('tx-tooltip')] as HTMLElement[];
+  const flush = async () => {
+    fixture.detectChanges();
+    await Promise.resolve();
+    await Promise.resolve();
+    fixture.detectChanges();
+  };
+  const fire = (target: Element, type: string, init: Partial<Record<'relatedTarget' | 'pointerType', unknown>> = {}) => {
+    const event = new Event(type, { bubbles: true });
+    for (const [name, value] of Object.entries(init)) {
+      Object.defineProperty(event, name, { value });
+    }
+    target.dispatchEvent(event);
+  };
+
+  beforeEach(async () => {
+    vi.useFakeTimers();
+    fixture = TestBed.createComponent(BehaviourHost);
+    fixture.autoDetectChanges();
+    await flush();
+  });
+
+  afterEach(() => {
+    fixture.destroy();
+    vi.useRealTimers();
+    document.querySelector('.cdk-overlay-container')?.remove();
+  });
+
+  it('shows on visible focus in both mode, without an arrow, sized to its element', async () => {
+    const both = el('#both');
+    both.getBoundingClientRect = () => ({ width: 80, height: 24, top: 0, left: 0, right: 80, bottom: 24, x: 0, y: 0, toJSON: () => ({}) });
+    Object.defineProperty(both, 'matches', {
+      value: () => {
+        throw new SyntaxError('unsupported');
+      },
+    });
+    fire(both, 'focusin');
+    await flush();
+    const tooltip = panels()[0];
+    expect(tooltip?.textContent?.trim()).toBe('Both ways');
+    expect(tooltip.querySelector('.tx-tooltip__arrow')).toBeNull();
+    fire(both, 'focusout', { relatedTarget: el('#inner') });
+    await flush();
+    expect(panels()).toHaveLength(1);
+    fire(both, 'mouseenter');
+    fire(both, 'focusout', { relatedTarget: null });
+    await flush();
+    expect(panels()).toHaveLength(1);
+    fire(both, 'mouseleave');
+    await flush();
+    expect(panels()).toHaveLength(0);
+  });
+
+  it('skips focus that is not visible in both mode', async () => {
+    const both = el('#both');
+    Object.defineProperty(both, 'matches', { value: (selector: string) => selector !== ':focus-visible' });
+    fire(both, 'focusin');
+    await flush();
+    expect(panels()).toHaveLength(0);
+  });
+
+  it('ignores the hover after a touch and keeps focus tooltips on press', async () => {
+    const both = el('#both');
+    fire(both, 'pointerdown', { pointerType: 'touch' });
+    fire(both, 'mouseenter');
+    await flush();
+    expect(panels()).toHaveLength(0);
+    const focus = el('#focus');
+    fire(focus, 'focusin');
+    await flush();
+    expect(panels()).toHaveLength(1);
+    fire(focus, 'pointerdown', { pointerType: 'mouse' });
+    await flush();
+    expect(panels()).toHaveLength(1);
+    fire(focus, 'focusout', { relatedTarget: panels()[0] });
+    await flush();
+    expect(panels()).toHaveLength(1);
+    fire(focus, 'focusout');
+    await flush();
+    expect(panels()).toHaveLength(0);
+  });
+
+  it('keeps an interactive tooltip open while the pointer is over it', async () => {
+    const sticky = el('#sticky');
+    fire(sticky, 'mouseenter');
+    await flush();
+    fire(sticky, 'mouseleave');
+    vi.advanceTimersByTime(50);
+    fire(panels()[0], 'mouseenter');
+    vi.advanceTimersByTime(200);
+    await flush();
+    expect(panels()).toHaveLength(1);
+    fire(panels()[0], 'mouseleave');
+    vi.advanceTimersByTime(99);
+    await flush();
+    expect(panels()).toHaveLength(1);
+    vi.advanceTimersByTime(1);
+    await flush();
+    expect(panels()).toHaveLength(0);
+  });
+
+  it('stays open when the pointer leaves the panel back to its element', async () => {
+    const sticky = el('#sticky');
+    fire(sticky, 'mouseenter');
+    await flush();
+    fire(panels()[0], 'mouseleave');
+    vi.advanceTimersByTime(500);
+    await flush();
+    expect(panels()).toHaveLength(1);
+  });
+
+  it('takes its text from a content source and toggles from code', async () => {
+    const sourced = fixture.componentInstance.sourced();
+    sourced.useContent(signal('From source'));
+    sourced.toggle();
+    await flush();
+    expect(panels()[0]?.textContent?.trim()).toBe('From source');
+    sourced.toggle();
+    await flush();
+    expect(panels()).toHaveLength(0);
+  });
+
+  it('closes the open tooltip when another one opens', async () => {
+    fixture.componentInstance.first().show();
+    await flush();
+    fixture.componentInstance.second().show();
+    await flush();
+    vi.advanceTimersByTime(1000);
+    await flush();
+    expect(panels().map((panel) => panel.textContent?.trim())).toEqual(['Second']);
+  });
+});

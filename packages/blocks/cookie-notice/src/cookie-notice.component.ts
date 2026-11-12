@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, DOCUMENT, afterNextRender, computed, inject, input, numberAttribute, output, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
@@ -30,7 +30,7 @@ export class TxCookieNotice {
   private readonly cookieNoticeTheme = injectTokens(COOKIE_NOTICE_THEME);
 
   private readonly document = inject(DOCUMENT);
-  protected readonly router = inject(Router, { optional: true });
+  protected readonly router = inject(ActivatedRoute, { optional: true }) ? inject(Router) : null;
 
   readonly title = input<string | undefined>(undefined);
   readonly text = input<string | undefined>(undefined);

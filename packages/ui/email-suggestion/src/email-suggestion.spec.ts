@@ -19,6 +19,13 @@ describe('suggestEmail', () => {
     expect(suggestEmail('bad value@', ['example.com'])).toBeNull();
     expect(editDistance('kitten', 'sitting')).toBe(3);
   });
+
+  it('allows one typo in short domains and ignores very short or empty input', () => {
+    expect(suggestEmail('a@xy.co', [], ['xy.com'])).toEqual({ email: 'a@xy.com', kind: 'typo' });
+    expect(suggestEmail('a@ab.io', [], ['ab.com'])).toBeNull();
+    expect(suggestEmail('a@gm', [])).toBeNull();
+    expect(suggestEmail(null, ['example.com'])).toBeNull();
+  });
 });
 
 @Component({
@@ -49,3 +56,19 @@ describe('TxEmailSuggestion', () => {
     expect(fixture.componentInstance.applied).toBe('iryna@example.com');
   });
 });
+
+@Component({
+  imports: [TxEmailSuggestion],
+  template: `<tx-email-suggestion value="anna" [domain]="['team.dev', 'example.com']" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class DomainsHost {}
+
+describe('TxEmailSuggestion with several domains', () => {
+  it('completes with the first own domain', () => {
+    const fixture = TestBed.createComponent(DomainsHost);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('tx-email-suggestion button')?.textContent?.trim()).toBe('Use anna@team.dev');
+  });
+});
+

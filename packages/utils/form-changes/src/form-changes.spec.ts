@@ -63,4 +63,13 @@ describe('form changes', () => {
     expect(form.controls.name.value).toBe('Mark');
     expect(changes.changed()).toBe(false);
   });
+
+  it('leaves the form alone on reset before tracking starts', () => {
+    TestBed.configureTestingModule({ providers: [TxFormChangeTracker] });
+    const tracker = TestBed.inject(TxFormChangeTracker);
+    const form = makeForm();
+    form.controls.name.setValue('Bob');
+    tracker.resetFormToInitial(form);
+    expect(form.controls.name.value).toBe('Bob');
+  });
 });

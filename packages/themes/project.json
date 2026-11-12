@@ -3,15 +3,11 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
   "sourceRoot": "packages/themes",
-  "tags": [
-    "pkg:themes"
-  ],
+  "tags": ["pkg:themes"],
   "targets": {
     "build": {
       "executor": "@nx/angular:package",
-      "outputs": [
-        "{workspaceRoot}/dist/packages/themes"
-      ],
+      "outputs": ["{workspaceRoot}/dist/packages/themes"],
       "options": {
         "project": "packages/themes/ng-package.json",
         "tsConfig": "packages/themes/tsconfig.lib.json"
@@ -23,8 +19,19 @@
         "buildTarget": "sandbox:build",
         "tsConfig": "packages/themes/tsconfig.spec.json",
         "runner": "vitest",
-        "watch": false
-      }
+        "watch": false,
+        "coverage": true,
+        "coverageInclude": ["packages/themes/**/*.ts"],
+        "coverageExclude": ["**/*.spec.ts", "**/index.ts", "**/test-setup.ts", "**/generated/**"],
+        "coverageReporters": ["text-summary", "json-summary", "lcovonly"],
+        "coverageThresholds": {
+          "statements": 95,
+          "branches": 95,
+          "functions": 95,
+          "lines": 95
+        }
+      },
+      "outputs": ["{workspaceRoot}/coverage/themes"]
     }
   }
 }

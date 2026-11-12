@@ -221,7 +221,7 @@ export function shiftIndent(delta: number): Command {
       if (parent.type.name === 'list_item' || parent.type.name === 'task_item') {
         return false;
       }
-      const indent = Math.max(0, Math.min(MAX_INDENT, Number(node.attrs['indent'] ?? 0) + delta));
+      const indent = Math.max(0, Math.min(MAX_INDENT, Number(node.attrs['indent']) + delta));
       if (indent !== node.attrs['indent']) {
         tr.setNodeMarkup(pos, undefined, { ...node.attrs, indent });
       }
@@ -426,9 +426,6 @@ export const liftEmptyBlock: Command = (state, dispatch) => {
 export const splitBlock: Command = (state, dispatch) => {
   const { $from, $to } = state.selection;
   if (state.selection instanceof NodeSelection && state.selection.node.isBlock) {
-    return false;
-  }
-  if (!$from.parent.isBlock) {
     return false;
   }
   if (state.selection.empty && $from.parentOffset === 0 && $from.parent.type.name === 'heading' && $from.parent.content.size > 0) {

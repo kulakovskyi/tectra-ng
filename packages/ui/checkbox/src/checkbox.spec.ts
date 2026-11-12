@@ -167,3 +167,79 @@ describe('TxCheckboxGroup', () => {
     expect(boxes().every((box) => box.disabled)).toBe(true);
   });
 });
+
+@Component({
+  imports: [TxCheckbox, TxCheckboxGroup, ReactiveFormsModule],
+  template: `
+    <tx-checkbox id="classes" label="Classes" icon="own-check" indeterminateIcon="own-dash" [(indeterminate)]="mixed" />
+    <tx-checkbox id="empty-array" value="x" label="X" [formControl]="list" />
+    <tx-checkbox-group id="plain-group" [formControl]="roles" ariaLabel="Roles">
+      <tx-checkbox value="admin" label="Admin" />
+      <tx-checkbox value="guest" label="Guest" />
+    </tx-checkbox-group>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class PlainHost {
+  readonly list = new FormControl<string[] | null>(null);
+  readonly roles = new FormControl<string[] | null>(null);
+  mixed = true;
+}
+
+describe('TxCheckbox edge cases', () => {
+  let fixture: ComponentFixture<PlainHost>;
+  const input = (selector: string) => fixture.nativeElement.querySelector(`${selector} input`) as HTMLInputElement;
+  const indicator = () => fixture.nativeElement.querySelector('#classes .tx-checkbox__indicator') as HTMLElement;
+
+  beforeEach(async () => {
+    fixture = TestBed.createComponent(PlainHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+  });
+
+  it('draws unregistered icon names as classes for the mixed and checked states', async () => {
+    expect(indicator().querySelector('span.own-dash')).not.toBeNull();
+    input('#classes').click();
+    await fixture.whenStable();
+    expect(indicator().querySelector('span.own-check')).not.toBeNull();
+  });
+
+  it('starts an array from an empty value and focuses its input', async () => {
+    input('#empty-array').click();
+    await fixture.whenStable();
+    expect(fixture.componentInstance.list.value).toEqual(['x']);
+    const checkbox = fixture.debugElement.query((node) => node.nativeElement.id === 'empty-array').componentInstance as TxCheckbox;
+    checkbox.focus();
+    expect(document.activeElement).toBe(input('#empty-array'));
+  });
+
+  it('fills an empty group, unchecks a member and is touched when a member loses focus', async () => {
+    const boxes = () => Array.from(fixture.nativeElement.querySelectorAll('#plain-group input')) as HTMLInputElement[];
+    expect(boxes()).toHaveLength(2);
+    expect(boxes().some((box) => box.checked)).toBe(false);
+    boxes()[1].click();
+    await fixture.whenStable();
+    boxes()[0].click();
+    await fixture.whenStable();
+    expect(fixture.componentInstance.roles.value).toEqual(['guest', 'admin']);
+    boxes()[1].click();
+    await fixture.whenStable();
+    expect(fixture.componentInstance.roles.value).toEqual(['admin']);
+    boxes()[0].dispatchEvent(new FocusEvent('blur'));
+    expect(fixture.componentInstance.roles.touched).toBe(true);
+  });
+});
+
+describe('TxCheckbox recompiled by TestBed', () => {
+  it('still finds its icon template when a test overrides the component', async () => {
+    TestBed.overrideComponent(TxCheckbox, { set: { styles: [] } });
+    TestBed.overrideComponent(TxCheckboxGroup, { set: { styles: [] } });
+    const fixture = TestBed.createComponent(Host);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('#own-icon .own-icon').textContent).toBe('☆');
+    (fixture.nativeElement.querySelectorAll('#group input')[2] as HTMLInputElement).click();
+    await fixture.whenStable();
+    expect(fixture.componentInstance.permissions.value).toEqual(['read', 'write']);
+  });
+});

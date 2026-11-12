@@ -19,8 +19,19 @@
         "buildTarget": "sandbox:build",
         "tsConfig": "packages/qr/tsconfig.spec.json",
         "runner": "vitest",
-        "watch": false
-      }
+        "watch": false,
+        "coverage": true,
+        "coverageInclude": ["packages/qr/**/*.ts"],
+        "coverageExclude": ["**/*.spec.ts", "**/index.ts", "**/test-setup.ts", "**/generated/**"],
+        "coverageReporters": ["text-summary", "json-summary", "lcovonly"],
+        "coverageThresholds": {
+          "statements": 95,
+          "branches": 95,
+          "functions": 95,
+          "lines": 95
+        }
+      },
+      "outputs": ["{workspaceRoot}/coverage/qr"]
     }
   }
 }

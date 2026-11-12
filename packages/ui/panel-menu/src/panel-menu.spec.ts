@@ -194,6 +194,13 @@ describe('TxPanelMenu panel', () => {
     files.focus();
     keydown(files, 'ArrowDown');
     expect(document.activeElement).toBe(cloud);
+    keydown(cloud, 'ArrowUp');
+    expect(document.activeElement).toBe(files);
+    keydown(files, 'ArrowDown');
+    const other = new KeyboardEvent('keydown', { key: 'x', bubbles: true, cancelable: true });
+    cloud.dispatchEvent(other);
+    expect(other.defaultPrevented).toBe(false);
+    expect(document.activeElement).toBe(cloud);
     keydown(cloud, 'End');
     expect(document.activeElement).toBe(help);
     keydown(help, 'Home');
@@ -322,5 +329,209 @@ describe('TxPanelMenu collapsed', () => {
     fixture.componentInstance.variant.set('panel');
     await fixture.whenStable();
     expect(root.classList).not.toContain('tx-panel-menu--collapsed');
+  });
+});
+
+@Component({
+  imports: [TxPanelMenu],
+  template: `<tx-panel-menu ariaLabel="Main" [variant]="variant()" [model]="model()" [multiple]="multiple()" [(expandedKeys)]="keys" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class FlexHost {
+  readonly variant = signal<TxPanelMenuVariant>('panel');
+  readonly model = signal<TxPanelMenuItem[]>([]);
+  readonly multiple = signal(false);
+  keys: TxPanelMenuExpandedKeys = {};
+}
+
+async function flex(model: TxPanelMenuItem[], variant: TxPanelMenuVariant = 'panel', setup?: (host: FlexHost) => void) {
+  const fixture = TestBed.createComponent(FlexHost);
+  fixture.componentInstance.model.set(model);
+  fixture.componentInstance.variant.set(variant);
+  setup?.(fixture.componentInstance);
+  fixture.autoDetectChanges();
+  await fixture.whenStable();
+  const root = fixture.nativeElement.querySelector('tx-panel-menu') as HTMLElement;
+  const menu = fixture.debugElement.children[0].componentInstance as TxPanelMenu;
+  const item = (label: string) =>
+    (Array.from(root.querySelectorAll('[role="treeitem"], .tx-panel-menu__header')) as HTMLElement[]).find(
+      (element) => element.querySelector('.tx-panel-menu__label')?.textContent?.trim() === label,
+    ) as HTMLElement;
+  return { fixture, root, menu, item };
+}
+
+function press(target: HTMLElement, key: string): KeyboardEvent {
+  const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
+  target.dispatchEvent(event);
+  return event;
+}
+
+describe('TxPanelMenu without a router', () => {
+  it('renders router links and urls as plain links', async () => {
+    const { root, item } = await flex([
+      { label: 'Site', url: 'https://example.invalid', target: '_blank' },
+      {
+        label: 'Links',
+        expanded: true,
+        items: [
+          { label: 'Docs', url: '/docs', title: 'Read the docs' },
+          { label: 'Reports', routerLink: ['reports', 'daily'] },
+          { label: 'Path', routerLink: '/path', active: false },
+        ],
+      },
+    ]);
+    expect(root.getAttribute('role')).toBe('navigation');
+    expect(root.getAttribute('aria-label')).toBe('Main');
+    const site = item('Site');
+    expect(site.tagName).toBe('A');
+    expect(site.getAttribute('href')).toBe('https://example.invalid');
+    expect(site.getAttribute('rel')).toBe('noopener noreferrer');
+    expect(item('Docs').getAttribute('href')).toBe('/docs');
+    expect(item('Docs').getAttribute('title')).toBe('Read the docs');
+    expect(item('Reports').getAttribute('href')).toBe('reports/daily');
+    expect(item('Path').getAttribute('href')).toBe('/path');
+    expect(root.querySelector('[aria-current]')).toBeNull();
+  });
+});
+
+describe('TxPanelMenu sidebar trees', () => {
+  beforeEach(() => TestBed.configureTestingModule({ providers: [provideRouter([{ path: '**', component: Blank }])] }));
+
+  const model: TxPanelMenuItem[] = [
+    { label: 'Home', routerLink: '/home', icon: 'custom-glyph' },
+    { separator: true },
+    {
+      label: 'Group',
+      items: [
+        { label: 'Alpha' },
+        { separator: true },
+        { label: 'Beta', items: [{ label: 'Beta one' }] },
+        { label: 'Gamma', disabled: true },
+      ],
+    },
+    { label: 'Locked', items: [{ label: 'Off', disabled: true }] },
+  ];
+
+  it('draws a root leaf as its own named tree, separators and unknown icons', async () => {
+    const { root, item } = await flex(model, 'sidebar');
+    const trees = Array.from(root.querySelectorAll('[role="tree"]')) as HTMLElement[];
+    expect(trees[0].getAttribute('aria-label')).toBe('Home');
+    expect(trees[0].hasAttribute('aria-labelledby')).toBe(false);
+    expect(root.querySelector(':scope > [role="separator"]')).not.toBeNull();
+    expect(root.querySelector('li.tx-panel-menu__separator')?.getAttribute('aria-hidden')).toBe('true');
+    expect(item('Home').querySelector('.tx-panel-menu__icon span')?.className).toBe('custom-glyph');
+    expect(item('Off').hasAttribute('tabindex')).toBe(false);
+    expect(Array.from(trees[2].querySelectorAll('[tabindex="0"]'))).toHaveLength(0);
+  });
+
+  it('skips separators and stays put at the edges of the tree', async () => {
+    const { fixture, item } = await flex(model, 'sidebar');
+    const alpha = item('Alpha');
+    alpha.focus();
+    press(alpha, 'ArrowDown');
+    expect(document.activeElement).toBe(item('Beta'));
+    press(item('Beta'), 'ArrowUp');
+    expect(document.activeElement).toBe(alpha);
+    expect(press(alpha, 'ArrowRight').defaultPrevented).toBe(true);
+    expect(press(alpha, 'ArrowLeft').defaultPrevented).toBe(true);
+    expect(document.activeElement).toBe(alpha);
+    expect(press(alpha, 'ArrowUp').defaultPrevented).toBe(true);
+    expect(document.activeElement).toBe(alpha);
+    expect(press(alpha, 'x').defaultPrevented).toBe(false);
+    expect(press(item('Gamma'), 'ArrowDown').defaultPrevented).toBe(false);
+    press(item('Beta'), 'ArrowRight');
+    await fixture.whenStable();
+    press(item('Beta'), 'ArrowRight');
+    expect(document.activeElement).toBe(item('Beta one'));
+    press(item('Beta one'), 'ArrowDown');
+    expect(document.activeElement).toBe(item('Beta one'));
+  });
+
+  it('keeps the root sections open and ignores toggles of leaves and disabled items', async () => {
+    const { menu, fixture } = await flex(model, 'sidebar');
+    const [home, , group] = menu.nodes();
+    expect(menu.isExpanded(group)).toBe(true);
+    menu.toggle(home);
+    menu.toggle(group.children[3]);
+    await fixture.whenStable();
+    expect(fixture.componentInstance.keys).toEqual({});
+  });
+
+  it('matches array router links with custom active options', async () => {
+    const { item, fixture } = await flex(
+      [
+        {
+          label: 'Reports',
+          items: [
+            { label: 'Daily', routerLink: ['/reports', 'daily'], routerLinkActiveOptions: { paths: 'exact' } },
+            { label: 'All', routerLink: '/reports', routerLinkActiveOptions: { exact: false } },
+            { label: 'Index', routerLink: '/reports', routerLinkActiveOptions: { exact: true } },
+          ],
+        },
+      ],
+      'panel',
+    );
+    await TestBed.inject(Router).navigateByUrl('/reports/daily');
+    await fixture.whenStable();
+    expect(item('Daily').getAttribute('aria-current')).toBe('page');
+    expect(item('All').getAttribute('aria-current')).toBe('page');
+    expect(item('Index').hasAttribute('aria-current')).toBe(false);
+    expect(item('Reports').getAttribute('aria-expanded')).toBe('true');
+    expect(fixture.componentInstance.keys).toEqual({ '0': true });
+  });
+
+  it('adds the active branch to the open ones with multiple', async () => {
+    const reports: TxPanelMenuItem[] = [
+      { label: 'Reports', items: [{ label: 'Daily', routerLink: '/reports/daily' }] },
+      { label: 'Other', items: [{ label: 'More' }] },
+    ];
+    const { fixture } = await flex(reports, 'panel', (host) => {
+      host.multiple.set(true);
+      host.keys = { '1': true };
+    });
+    await TestBed.inject(Router).navigateByUrl('/reports/daily');
+    await fixture.whenStable();
+    expect(fixture.componentInstance.keys).toEqual({ '1': true, '0': true });
+  });
+
+  it('leaves the keys alone when the active branch is the only open one', async () => {
+    const initial: TxPanelMenuExpandedKeys = { '0': true, '1': false };
+    const { fixture } = await flex([{ label: 'Reports', items: [{ label: 'Daily', routerLink: '/reports/daily' }] }, { label: 'Other', items: [{ label: 'More' }] }], 'panel', (host) => {
+      host.keys = initial;
+    });
+    await TestBed.inject(Router).navigateByUrl('/reports/daily');
+    await fixture.whenStable();
+    expect(fixture.componentInstance.keys).toBe(initial);
+  });
+
+  it('closes the other open branches when the active one is already open', async () => {
+    const { fixture } = await flex([{ label: 'Reports', items: [{ label: 'Daily', routerLink: '/reports/daily' }] }, { label: 'Other', items: [{ label: 'More' }] }], 'panel', (host) => {
+      host.keys = { '0': true, '1': true };
+    });
+    await TestBed.inject(Router).navigateByUrl('/reports/daily');
+    await fixture.whenStable();
+    expect(fixture.componentInstance.keys).toEqual({ '0': true });
+  });
+});
+
+describe('TxPanelMenuItemTemplate', () => {
+  it('narrows the template context', () => {
+    const directive = {} as TxPanelMenuItemTemplate;
+    expect(TxPanelMenuItemTemplate.ngTemplateContextGuard(directive, { item: { label: 'A' } })).toBe(true);
+    expect(TxPanelMenuItemTemplate.ngTemplateContextGuard(directive, null)).toBe(false);
+  });
+});
+
+describe('TxPanelMenu router link target', () => {
+  beforeEach(() => TestBed.configureTestingModule({ providers: [provideRouter([])] }));
+
+  it('opens a router link in the target of its item', async () => {
+    const { item } = await flex([
+      { label: 'Reports', routerLink: '/reports', target: '_blank' },
+      { label: 'Links', expanded: true, items: [{ label: 'Daily', routerLink: '/daily', target: '_blank' }] },
+    ]);
+    expect(item('Reports').getAttribute('href')).toBe('/reports');
+    expect(item('Reports').getAttribute('target')).toBe('_blank');
+    expect(item('Daily').getAttribute('target')).toBe('_blank');
   });
 });

@@ -30,7 +30,7 @@ function blockAttrsToDom(attrs: Record<string, unknown>): Record<string, string>
   if (attrs['align']) {
     styles.push(`text-align: ${attrs['align']}`);
   }
-  const indent = Number(attrs['indent'] ?? 0);
+  const indent = Number(attrs['indent']);
   if (indent > 0) {
     dom['data-indent'] = String(indent);
     styles.push(`margin-left: ${indent * INDENT_STEP_EM}em`);
@@ -170,7 +170,7 @@ const nodes: Record<string, NodeSpec> = {
         tag: 'img[src]',
         getAttrs: (dom) => {
           const element = dom as HTMLImageElement;
-          const src = element.getAttribute('src') ?? '';
+          const src = element.getAttribute('src') as string;
           return SAFE_IMAGE.test(src)
             ? { src, alt: element.getAttribute('alt'), title: element.getAttribute('title'), width: element.getAttribute('width') }
             : false;
@@ -191,7 +191,7 @@ const nodes: Record<string, NodeSpec> = {
       {
         tag: 'iframe[src]',
         getAttrs: (dom) => {
-          const src = toVideoEmbed((dom as HTMLElement).getAttribute('src') ?? '');
+          const src = toVideoEmbed((dom as HTMLElement).getAttribute('src') as string);
           return src ? { src } : false;
         },
       },
@@ -306,7 +306,7 @@ const nodes: Record<string, NodeSpec> = {
         getAttrs: (dom) => {
           const element = dom as HTMLElement;
           const id = element.getAttribute('data-id');
-          return id ? { id, label: element.getAttribute('data-label') ?? element.textContent?.replace(/^@/, '') ?? id } : false;
+          return id ? { id, label: element.getAttribute('data-label') ?? (element.textContent as string).replace(/^@/, '') } : false;
         },
       },
     ],
@@ -325,7 +325,7 @@ const marks: Record<string, MarkSpec> = {
         tag: 'a[href]',
         getAttrs: (dom) => {
           const element = dom as HTMLAnchorElement;
-          const href = element.getAttribute('href') ?? '';
+          const href = element.getAttribute('href') as string;
           return SAFE_LINK.test(href) ? { href, target: element.getAttribute('target') === '_blank' ? '_blank' : null, rel: element.getAttribute('rel') } : false;
         },
       },

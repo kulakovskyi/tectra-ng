@@ -62,7 +62,7 @@ export const undoInputRule: Command = (state, dispatch) => {
   return true;
 };
 
-function blockRule(match: RegExp, type: NodeType, attrs?: (match: RegExpMatchArray) => Record<string, unknown>): TxInputRule {
+function blockRule(match: RegExp, type: NodeType, attrs: (match: RegExpMatchArray) => Record<string, unknown>): TxInputRule {
   return {
     match,
     handler: (state, found, start, end) => {
@@ -70,7 +70,7 @@ function blockRule(match: RegExp, type: NodeType, attrs?: (match: RegExpMatchArr
       if (!$start.node(-1).canReplaceWith($start.index(-1), $start.indexAfter(-1), type)) {
         return null;
       }
-      return state.tr.delete(start, end).setBlockType(start, start, type, attrs?.(found) ?? null);
+      return state.tr.delete(start, end).setBlockType(start, start, type, attrs(found));
     },
   };
 }
@@ -102,9 +102,6 @@ function markRule(match: RegExp, type: MarkType): TxInputRule {
     prefix: true,
     handler: (state, found, start, end) => {
       const inner = found[2];
-      if (!inner) {
-        return null;
-      }
       const marker = (found[0].length - found[1].length - inner.length) / 2;
       const tr = state.tr;
       tr.delete(start + marker + inner.length, end);

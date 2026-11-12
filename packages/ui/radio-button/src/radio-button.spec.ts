@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormsModule, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TxRadioButton } from './radio-button.component';
 import { TxRadioGroup } from './radio-group.component';
 
@@ -90,4 +90,34 @@ describe('TxRadioButton', () => {
     expect(el('#alone-a').style.getPropertyValue('--tx-radio-button-size')).toBe('24px');
     expect(el('#alone-a .tx-radio-button__dot').classList).toContain('own-dot');
   });
+
+  it('focuses its input and touches the group on blur', () => {
+    const radio = fixture.debugElement.query((node) => node.componentInstance instanceof TxRadioButton).componentInstance as TxRadioButton;
+    radio.focus();
+    expect(document.activeElement).toBe(radios()[0]);
+    radios()[0].dispatchEvent(new FocusEvent('blur'));
+    expect(fixture.componentInstance.plan.touched).toBe(true);
+  });
+
+  it('is touched on blur when alone', async () => {
+    const model = fixture.debugElement.query((node) => node.nativeElement.id === 'alone-b').injector.get(NgModel);
+    expect(model.touched).toBe(false);
+    (el('#alone-b input') as HTMLInputElement).dispatchEvent(new FocusEvent('blur'));
+    await fixture.whenStable();
+    expect(model.touched).toBe(true);
+  });
 });
+
+describe('TxRadioButton recompiled by TestBed', () => {
+  it('still joins its group when a test overrides the components', async () => {
+    TestBed.overrideComponent(TxRadioButton, { set: { styles: [] } });
+    TestBed.overrideComponent(TxRadioGroup, { set: { styles: [] } });
+    const fixture = TestBed.createComponent(Host);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    (fixture.nativeElement.querySelectorAll('#plan input')[1] as HTMLInputElement).click();
+    await fixture.whenStable();
+    expect(fixture.componentInstance.plan.value).toBe('team');
+  });
+});
+

@@ -1,5 +1,8 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { TxAnnouncer } from '@tectra-ng/core/a11y';
+import { TxChartTooltipFormatter, TxChartTooltipTemplate } from '@tectra-ng/charts/core';
 import { TxTreemap } from './treemap.component';
 import { TxTreemapTileTemplate } from './treemap-tile.directive';
 import { insetRect, squarify, treemapValue } from './treemap-layout';
@@ -70,6 +73,8 @@ describe('treemap layout', () => {
   it('sums nested values and insets a rectangle', () => {
     expect(treemapValue({ label: 'g', children: [{ label: 'a', value: 2 }, { label: 'b', children: [{ label: 'c', value: 3 }] }] })).toBe(5);
     expect(treemapValue({ label: 'x', value: -4 })).toBe(0);
+    expect(treemapValue({ label: 'x' })).toBe(0);
+    expect(treemapValue({ label: 'x', value: Number.POSITIVE_INFINITY })).toBe(0);
     expect(insetRect({ x: 0, y: 0, width: 10, height: 10 }, 4)).toEqual({ x: 2, y: 2, width: 6, height: 6 });
   });
 });
@@ -137,5 +142,137 @@ describe('TxTreemap', () => {
     const empty = fixture.nativeElement.querySelector('#empty') as HTMLElement;
     expect(empty.textContent).toContain('No data');
     expect(main().style.getPropertyValue('--tx-chart-treemap-radius')).toBe('2px');
+  });
+});
+
+describe('TxTreemapTileTemplate', () => {
+  it('narrows any given context to the tile context', () => {
+    expect(TxTreemapTileTemplate.ngTemplateContextGuard({} as TxTreemapTileTemplate, {})).toBe(true);
+    expect(TxTreemapTileTemplate.ngTemplateContextGuard({} as TxTreemapTileTemplate, null)).toBe(false);
+  });
+});
+
+@Component({
+  imports: [TxTreemap, TxChartTooltipTemplate],
+  template: `
+    <tx-treemap [items]="items()" [height]="300" [showTooltip]="showTooltip()" [tooltipFormatter]="formatter()" (tileClick)="clicks.push($event)">
+      @if (template()) {
+        <ng-template txChartTooltip let-data><span class="own-tooltip">{{ data.title }}|{{ data.rows[0].value }}</span></ng-template>
+      }
+    </tx-treemap>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class OptionsHost {
+  readonly items = signal<TxTreemapItem[] | null>([
+    { label: 'Europe', children: [{ label: 'Germany', value: 40 }, { label: 'France', value: 20 }] },
+    { label: 'Asia', value: 40 },
+  ]);
+  readonly showTooltip = signal(true);
+  readonly formatter = signal<TxChartTooltipFormatter | null>(null);
+  readonly template = signal(false);
+  readonly clicks: TxTreemapTileEvent[] = [];
+}
+
+describe('TxTreemap options', () => {
+  let fixture: ComponentFixture<OptionsHost>;
+  let host: OptionsHost;
+  const treemap = () => fixture.debugElement.query(By.directive(TxTreemap)).componentInstance as TxTreemap;
+  const el = (selector: string) => fixture.nativeElement.querySelector(selector) as HTMLElement;
+  const key = async (name: string) => {
+    el('.tx-chart-frame__plot').dispatchEvent(new KeyboardEvent('keydown', { key: name, bubbles: true }));
+    await fixture.whenStable();
+  };
+  const panel = () => document.querySelector('.tx-chart-frame__tooltip') as HTMLElement | null;
+
+  beforeEach(async () => {
+    fixture = TestBed.createComponent(OptionsHost);
+    host = fixture.componentInstance;
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+  });
+
+  afterEach(() => document.querySelectorAll('.cdk-overlay-container').forEach((container) => (container.innerHTML = '')));
+
+  it('shows the empty state without items and ignores the keyboard', async () => {
+    host.items.set(null);
+    await fixture.whenStable();
+    expect(el('.tx-chart-frame__empty')).not.toBeNull();
+    expect(treemap().layout().tiles).toEqual([]);
+    treemap().onNavigate(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+    expect(treemap().hovered()).toBeNull();
+  });
+
+  it('names the group in the tooltip, the table and the announcement', async () => {
+    const tiles = treemap().layout().tiles;
+    const germany = tiles.findIndex((tile) => tile.label === 'Germany');
+    expect(treemap().dataTable().rows.map((row) => row.label)).toContain('Europe / Germany');
+    treemap().hovered.set(germany);
+    expect(treemap().tooltip()?.title).toBe('Europe');
+    const announce = vi.spyOn(TestBed.inject(TxAnnouncer), 'announce');
+    treemap().hovered.set(null);
+    for (let step = 0; step <= germany; step += 1) await key('ArrowRight');
+    expect(treemap().hovered()).toBe(germany);
+    expect(announce).toHaveBeenLastCalledWith('Europe, Germany: 40, 40%');
+    const asia = tiles.findIndex((tile) => tile.label === 'Asia');
+    await key(asia === 0 ? 'Home' : 'End');
+    expect(announce).toHaveBeenLastCalledWith('Asia: 40, 40%');
+  });
+
+  it('walks backwards from nothing and wraps around', async () => {
+    const count = treemap().layout().tiles.length;
+    await key('ArrowLeft');
+    expect(treemap().hovered()).toBe(count - 1);
+    await key('ArrowUp');
+    expect(treemap().hovered()).toBe(count - 2);
+    await key('ArrowDown');
+    expect(treemap().hovered()).toBe(count - 1);
+    await key('ArrowDown');
+    expect(treemap().hovered()).toBe(0);
+  });
+
+  it('formats the tooltip value with a custom formatter and its own template', async () => {
+    host.formatter.set((value, context) => `${value} @${context.seriesIndex}:${context.dataPointIndex}`);
+    host.template.set(true);
+    await fixture.whenStable();
+    const index = treemap().layout().tiles.findIndex((tile) => tile.label === 'Asia');
+    await key('Home');
+    for (let step = 0; step < index; step += 1) await key('ArrowRight');
+    const asia = treemap().layout().tiles[index];
+    expect(treemap().tooltip()?.rows[0].value).toBe(`40 @${asia.path[0]}:${index}`);
+    expect(panel()?.querySelector('.own-tooltip')?.textContent).toBe(`|40 @${asia.path[0]}:${index}`);
+  });
+
+  it('clears the hover between tiles and hides the tooltip when asked', async () => {
+    const tile = treemap().layout().tiles[0];
+    treemap().onPointer({ x: tile.x + 2, y: tile.y + 2, type: 'move', target: null });
+    expect(treemap().hovered()).toBe(0);
+    treemap().onPointer({ x: -10, y: -10, type: 'click', target: null });
+    expect(treemap().hovered()).toBeNull();
+    expect(host.clicks).toEqual([]);
+    await key('End');
+    expect(treemap().tooltip()).not.toBeNull();
+    host.items.set([{ label: 'Asia', value: 40 }]);
+    await fixture.whenStable();
+    expect(treemap().tooltip()).toBeNull();
+    host.showTooltip.set(false);
+    await fixture.whenStable();
+    treemap().onPointer({ x: tile.x + 2, y: tile.y + 2, type: 'move', target: null });
+    expect(treemap().tooltip()).toBeNull();
+  });
+});
+
+describe('TxTreemap recompiled by TestBed', () => {
+  it('still renders its tiles and tooltip template when a test overrides the component', async () => {
+    TestBed.overrideComponent(TxTreemap, { set: { styles: [] } });
+    const fixture = TestBed.createComponent(OptionsHost);
+    fixture.componentInstance.template.set(true);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelectorAll('.tx-treemap__tile')).toHaveLength(3);
+    fixture.nativeElement.querySelector('.tx-chart-frame__plot').dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', bubbles: true }));
+    await fixture.whenStable();
+    expect(document.querySelector('.tx-chart-frame__tooltip .own-tooltip')).not.toBeNull();
+    document.querySelectorAll('.cdk-overlay-container').forEach((container) => (container.innerHTML = ''));
   });
 });

@@ -1,6 +1,8 @@
+import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
 import { hsbToRgb, parseHex, rgbToHex, rgbToHsb, toHsb } from './color';
 import { TxColorPicker } from './color-picker.component';
 import { TxColorFormat, TxColorValue } from './color-picker.types';
@@ -34,6 +36,15 @@ describe('color helpers', () => {
     expect(hsbToRgb({ h: 120, s: 100, b: 100 })).toEqual({ r: 0, g: 255, b: 0 });
     expect(toHsb({ r: 0, g: 0, b: 255 })).toEqual({ h: 240, s: 100, b: 100 });
     expect(toHsb({ h: 10, s: 20, b: 30 })).toEqual({ h: 10, s: 20, b: 30 });
+  });
+
+  it('handles greys, black, green and blue hues and values that are not colours', () => {
+    expect(rgbToHsb({ r: 128, g: 128, b: 128 })).toEqual({ h: 0, s: 0, b: 50 });
+    expect(rgbToHsb({ r: 0, g: 0, b: 0 })).toEqual({ h: 0, s: 0, b: 0 });
+    expect(rgbToHsb({ r: 0, g: 255, b: 0 })).toEqual({ h: 120, s: 100, b: 100 });
+    expect(toHsb('nope')).toBeNull();
+    expect(toHsb({ r: 1, g: 2 })).toBeNull();
+    expect(toHsb(42)).toBeNull();
   });
 });
 
@@ -228,5 +239,263 @@ describe('TxColorPicker field', () => {
     fixture.detectChanges();
     expect(field().disabled).toBe(true);
     expect(dot().disabled).toBe(true);
+  });
+});
+
+@Component({
+  imports: [TxColorPicker, ReactiveFormsModule],
+  template: `<div class="scroller" style="overflow: auto">
+    <tx-color-picker
+      [formControl]="control"
+      [inline]="inline()"
+      [field]="field()"
+      [readonly]="readonly()"
+      [presets]="['#00f', 'nope']"
+      [showValue]="showValue()"
+      [placeholder]="placeholder()"
+      [ariaLabel]="ariaLabel()"
+      [ariaLabelledBy]="ariaLabelledBy()"
+      [inputId]="inputId()"
+      (opened)="events.push('opened')"
+      (closed)="events.push('closed')"
+    />
+    <button type="button" class="outside">Outside</button>
+  </div>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class OptionsHost {
+  control = new FormControl<TxColorValue | null>(null);
+  readonly inline = signal(false);
+  readonly field = signal(false);
+  readonly readonly = signal(false);
+  readonly showValue = signal(true);
+  readonly placeholder = signal<string | undefined>(undefined);
+  readonly ariaLabel = signal<string | undefined>(undefined);
+  readonly ariaLabelledBy = signal<string | undefined>(undefined);
+  readonly inputId = signal<string | undefined>(undefined);
+  events: string[] = [];
+}
+
+describe('TxColorPicker interactions', () => {
+  let fixture: ComponentFixture<OptionsHost>;
+  let host: OptionsHost;
+  const render = () => fixture.detectChanges();
+  const trigger = () => fixture.nativeElement.querySelector('.tx-color-picker__trigger, .tx-color-picker__dot') as HTMLButtonElement;
+  const panel = () => document.querySelector('.tx-color-picker__panel') as HTMLElement | null;
+  const area = () => document.querySelector('.tx-color-picker__area') as HTMLElement;
+  const hue = () => document.querySelector('.tx-color-picker__hue') as HTMLElement;
+  const hexInput = () => document.querySelector('.tx-color-picker__input') as HTMLInputElement;
+  const picker = () => fixture.debugElement.query(By.directive(TxColorPicker)).componentInstance as TxColorPicker;
+  const isOpen = () => trigger().getAttribute('aria-expanded') === 'true';
+  const pointer = (target: HTMLElement, type: string, init: MouseEventInit = {}) => {
+    target.dispatchEvent(new MouseEvent(type, { bubbles: true, ...init }));
+    render();
+  };
+  const rect = (element: HTMLElement) => vi.spyOn(element, 'getBoundingClientRect').mockReturnValue({ left: 0, top: 0, width: 200, height: 100 } as DOMRect);
+  const keydown = (target: HTMLElement, key: string, init: KeyboardEventInit = {}) => {
+    const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true, ...init });
+    target.dispatchEvent(event);
+    render();
+    return event;
+  };
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(OptionsHost);
+    host = fixture.componentInstance;
+    render();
+  });
+
+  afterEach(() => document.querySelector('.cdk-overlay-container')?.replaceChildren());
+
+  it('names the trigger from the placeholder, the label and the labelled-by id', () => {
+    host.placeholder.set('None yet');
+    render();
+    expect(trigger().getAttribute('aria-label')).toBe('Pick a colour, None yet');
+    host.ariaLabel.set('Brand');
+    host.showValue.set(false);
+    render();
+    expect(trigger().getAttribute('aria-label')).toBe('Brand');
+    expect(trigger().getAttribute('aria-description')).toBe('None yet');
+    host.ariaLabel.set(undefined);
+    host.inputId.set('brand');
+    render();
+    expect(trigger().hasAttribute('aria-label')).toBe(false);
+    host.inputId.set(undefined);
+    host.ariaLabelledBy.set('brand-label');
+    render();
+    expect(trigger().hasAttribute('aria-label')).toBe(false);
+    expect(trigger().getAttribute('aria-labelledby')).toContain('brand-label ');
+  });
+
+  it('picks saturation, brightness and hue with the pointer', () => {
+    host.inline.set(true);
+    render();
+    const capture = vi.fn();
+    area().setPointerCapture = capture;
+    rect(area());
+    rect(hue());
+    pointer(area(), 'pointerdown', { clientX: 50, clientY: 25 });
+    expect(capture).toHaveBeenCalled();
+    expect(document.activeElement).toBe(area());
+    expect(area().getAttribute('aria-valuetext')).toBe('Saturation 25%, brightness 75%');
+    pointer(area(), 'pointermove', { clientX: 400, clientY: -10 });
+    expect(area().getAttribute('aria-valuetext')).toBe('Saturation 25%, brightness 75%');
+    pointer(area(), 'pointermove', { clientX: 400, clientY: -10, buttons: 1 });
+    expect(area().getAttribute('aria-valuetext')).toBe('Saturation 100%, brightness 100%');
+    pointer(hue(), 'pointerdown', { clientX: 100 });
+    expect(hue().getAttribute('aria-valuenow')).toBe('180');
+    expect(document.activeElement).toBe(hue());
+    pointer(hue(), 'pointermove', { clientX: 50 });
+    expect(hue().getAttribute('aria-valuenow')).toBe('180');
+    pointer(hue(), 'pointermove', { clientX: 50, buttons: 1 });
+    expect(hue().getAttribute('aria-valuenow')).toBe('90');
+    expect(host.control.value).toBe(rgbToHex(hsbToRgb({ h: 90, s: 100, b: 100 })));
+  });
+
+  it('steps the hue by ten with Shift and ignores other keys', () => {
+    host.inline.set(true);
+    render();
+    keydown(hue(), 'ArrowUp', { shiftKey: true });
+    expect(hue().getAttribute('aria-valuenow')).toBe('10');
+    expect(keydown(hue(), 'x').defaultPrevented).toBe(false);
+    expect(keydown(area(), 'PageDown').defaultPrevented).toBe(true);
+    expect(area().getAttribute('aria-valuenow')).toBe('100');
+    expect(area().getAttribute('aria-valuetext')).toBe('Saturation 100%, brightness 90%');
+    expect(keydown(panel() as HTMLElement, 'Escape').defaultPrevented).toBe(false);
+  });
+
+  it('ignores the pointer, keys and presets while readonly', () => {
+    host.inline.set(true);
+    host.readonly.set(true);
+    render();
+    rect(area());
+    rect(hue());
+    pointer(area(), 'pointerdown', { clientX: 50, clientY: 25 });
+    pointer(hue(), 'pointerdown', { clientX: 100 });
+    expect(keydown(area(), 'Home').defaultPrevented).toBe(false);
+    picker().pickPreset('#00f');
+    expect(host.control.value).toBeNull();
+    expect(area().getAttribute('tabindex')).toBe('-1');
+  });
+
+  it('keeps a typed hex draft until it is a colour and drops it on blur', () => {
+    host.inline.set(true);
+    render();
+    hexInput().value = '#12';
+    hexInput().dispatchEvent(new Event('input'));
+    render();
+    expect(host.control.value).toBeNull();
+    expect(hexInput().value).toBe('#12');
+    hexInput().dispatchEvent(new Event('blur'));
+    render();
+    expect(hexInput().value).toBe('');
+    hexInput().value = '#abcdef';
+    hexInput().dispatchEvent(new Event('input'));
+    render();
+    expect(host.control.value).toBe('#abcdef');
+    const presets = Array.from(document.querySelectorAll('.tx-color-picker__preset')) as HTMLButtonElement[];
+    presets[1].click();
+    render();
+    expect(host.control.value).toBe('#abcdef');
+    presets[0].click();
+    render();
+    expect(host.control.value).toBe('#0000ff');
+  });
+
+  it('closes on outside clicks and on focus leaving the panel, not on the trigger', async () => {
+    trigger().click();
+    render();
+    expect(isOpen()).toBe(true);
+    expect(host.events).toEqual(['opened']);
+    const insideTrigger = new MouseEvent('click');
+    Object.defineProperty(insideTrigger, 'target', { value: trigger() });
+    picker().onOutsideClick(insideTrigger);
+    render();
+    expect(isOpen()).toBe(true);
+    panel()?.dispatchEvent(new FocusEvent('focusout', { bubbles: true, relatedTarget: null }));
+    panel()?.dispatchEvent(new FocusEvent('focusout', { bubbles: true, relatedTarget: area() }));
+    panel()?.dispatchEvent(new FocusEvent('focusout', { bubbles: true, relatedTarget: trigger() }));
+    render();
+    expect(isOpen()).toBe(true);
+    panel()?.dispatchEvent(new FocusEvent('focusout', { bubbles: true, relatedTarget: fixture.nativeElement.querySelector('.outside') }));
+    render();
+    expect(isOpen()).toBe(false);
+    trigger().click();
+    render();
+    document.body.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true }));
+    document.body.click();
+    render();
+    expect(isOpen()).toBe(false);
+    expect(host.events).toEqual(['opened', 'closed', 'opened', 'closed']);
+    await fixture.whenStable();
+    render();
+    expect(panel()).toBeNull();
+  });
+
+  it('follows page scrolls, closes on a container scroll and only opens when it can', () => {
+    trigger().click();
+    render();
+    document.dispatchEvent(new Event('scroll'));
+    render();
+    expect(isOpen()).toBe(true);
+    picker().open();
+    expect(host.events).toEqual(['opened']);
+    fixture.nativeElement.querySelector('.scroller').dispatchEvent(new Event('scroll'));
+    render();
+    expect(isOpen()).toBe(false);
+    picker().close();
+    expect(host.events).toEqual(['opened', 'closed']);
+    trigger().click();
+    render();
+    trigger().click();
+    render();
+    expect(isOpen()).toBe(false);
+    expect(document.activeElement).toBe(trigger());
+    host.readonly.set(true);
+    render();
+    trigger().click();
+    render();
+    expect(isOpen()).toBe(false);
+  });
+
+  it('keeps the panel mounted when it opens again before the leave ends', async () => {
+    const component = picker();
+    component.open();
+    component.close();
+    component.open();
+    await Promise.resolve();
+    render();
+    expect(panel()).not.toBeNull();
+    component.onPositionChange({ connectionPair: { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom' } } as ConnectedOverlayPositionChange);
+    expect(component.placement()).toBe('bottom-start');
+    component.onPositionChange({ connectionPair: component.positions[1] } as ConnectedOverlayPositionChange);
+    expect(component.placement()).toBe('top-start');
+  });
+
+  it('keeps the field untouched while its panel is open', () => {
+    host.field.set(true);
+    render();
+    trigger().click();
+    render();
+    const input = fixture.nativeElement.querySelector('input.tx-input') as HTMLInputElement;
+    input.dispatchEvent(new Event('blur'));
+    render();
+    expect(host.control.touched).toBe(false);
+  });
+});
+
+describe('TxColorPicker recompiled by TestBed', () => {
+  it('still binds to a form control and validates when a test overrides the component', () => {
+    TestBed.overrideComponent(TxColorPicker, { set: { styles: [] } });
+    const fixture = TestBed.createComponent(FieldHost);
+    fixture.detectChanges();
+    const input = fixture.nativeElement.querySelector('#field input') as HTMLInputElement;
+    input.value = '#12';
+    input.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    expect(fixture.componentInstance.control.value).toBe('#12');
+    expect(fixture.componentInstance.control.errors).toEqual({ pattern: { requiredPattern: '#rrggbb', actualValue: '#12' } });
+    fixture.destroy();
+    document.querySelector('.cdk-overlay-container')?.remove();
   });
 });

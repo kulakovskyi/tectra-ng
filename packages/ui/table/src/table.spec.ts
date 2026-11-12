@@ -6,7 +6,7 @@ import { TxTableActions } from './table-actions.component';
 import { TxTable } from './table.component';
 import { TxTableAction, TxTableActionsTemplate, TxTableCell, TxTableEmpty, TxTableExpansion } from './table.templates';
 import { TxSortMeta, TxSortOrder, TxTableColumn, TxTableLazyLoadEvent, TxTableSelectionMode, TxTableSortEvent } from './table.types';
-import { actionIdOf, compareValues, mergeColumnOrder, nextSortOrder, resolveField, sortRows } from './table.utils';
+import { actionIdOf, columnLabel, compareValues, mergeColumnOrder, nextSortOrder, pxOf, resolveField, rowKeyOf, sortRows, writeField } from './table.utils';
 
 interface Person {
   id: number;
@@ -137,6 +137,60 @@ describe('table utils', () => {
     expect(actionIdOf({ label: 'x', id: 'own' })).toBe('own');
     const columns = [{ field: 'a' }, { field: 'new' }, { field: 'b' }, { field: 'c' }];
     expect(mergeColumnOrder(columns, ['c', 'a', 'b'], () => true).map((column) => column.field)).toEqual(['c', 'a', 'new', 'b']);
+  });
+
+  it('writes nested fields and skips missing parents', () => {
+    const row = { a: { b: 1 }, c: null as unknown, d: 'text' };
+    writeField(row, 'a.b', 2);
+    writeField(row, 'c.x', 3);
+    writeField(row, 'd.length', 4);
+    writeField(row, 'missing.deep.value', 5);
+    writeField(row, '', 6);
+    expect(row).toEqual({ a: { b: 2 }, c: null, d: 'text' });
+    expect(resolveField({ a: null }, 'a.b')).toBeUndefined();
+    expect(resolveField({ a: 1 }, undefined)).toBeUndefined();
+  });
+
+  it('compares dates, booleans, numbers and empty values', () => {
+    expect(compareValues(new Date(2026, 0, 2), new Date(2026, 0, 1))).toBeGreaterThan(0);
+    expect(compareValues(true, false)).toBe(1);
+    expect(compareValues(3, 5)).toBe(-2);
+    expect(compareValues(1, '')).toBe(-1);
+    expect(compareValues(undefined, 'a')).toBe(1);
+    expect(compareValues('a', 'a')).toBe(0);
+  });
+
+  it('keeps the order of equal rows and copies rows without sort meta', () => {
+    const rows = [
+      { id: 1, city: 'Kyiv' },
+      { id: 2, city: 'Kyiv' },
+    ];
+    expect(sortRows(rows, [{ field: 'city', order: 'desc' }]).map((row) => row.id)).toEqual([1, 2]);
+    const copy = sortRows(rows, []);
+    expect(copy).toEqual(rows);
+    expect(copy).not.toBe(rows);
+  });
+
+  it('builds row keys from a data key, the row itself or the index', () => {
+    expect(rowKeyOf({ id: 7 }, 'id', 0)).toBe(7);
+    expect(rowKeyOf({ name: 'x' }, 'id', 3)).toBe(3);
+    const row = { name: 'y' };
+    expect(rowKeyOf(row, undefined, 1)).toBe(row);
+    expect(rowKeyOf(null, undefined, 4)).toBe(4);
+  });
+
+  it('reads pixel lengths and column labels', () => {
+    expect(pxOf('120px')).toBe(120);
+    expect(pxOf(' -4.5px ')).toBe(-4.5);
+    expect(pxOf('10rem')).toBeNull();
+    expect(pxOf(undefined)).toBeNull();
+    expect(columnLabel({ field: 'city' })).toBe('city');
+    expect(columnLabel({ field: 'city', header: 'City' })).toBe('City');
+  });
+
+  it('puts new columns before the next visible saved column or at the end', () => {
+    const columns = [{ field: 'a' }, { field: 'b' }, { field: 'c' }, { field: 'd' }];
+    expect(mergeColumnOrder(columns, ['c', 'missing', 'a'], (field) => field !== 'c').map((column) => column.field)).toEqual(['c', 'a', 'b', 'd']);
   });
 });
 

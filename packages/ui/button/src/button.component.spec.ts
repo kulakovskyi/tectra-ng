@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideTectra } from '@tectra-ng/core/config';
 import { Tectra } from '@tectra-ng/themes';
 import { TxButton } from './button.component';
-import { TxButtonIconTemplate } from './button-templates.directive';
+import { TxButtonIconTemplate, TxButtonLoadingIconTemplate } from './button-templates.directive';
 
 @Component({
   imports: [TxButton, TxButtonIconTemplate],
@@ -118,3 +118,56 @@ describe('TxButton', () => {
     expect(el('templated').querySelector('.custom-icon')).not.toBeNull();
   });
 });
+
+@Component({
+  imports: [TxButton, TxButtonLoadingIconTemplate],
+  template: `
+    <button txButton id="as-link" link label="More" (click)="clicks.update((n) => n + 1)"></button>
+    <button txButton id="as-text" text label="Skip"></button>
+    <button txButton id="own-spinner" loading loadingIcon="own-spinner-icon" label="Saving"></button>
+    <button txButton id="spinner-template" loading label="Sending"><ng-template txButtonLoadingIcon><i class="own-spin">~</i></ng-template></button>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class LoadingHost {
+  readonly clicks = signal(0);
+}
+
+describe('TxButton shortcuts and loading icons', () => {
+  let fixture: ComponentFixture<LoadingHost>;
+  const el = (id: string) => fixture.nativeElement.querySelector(`#${id}`) as HTMLElement;
+
+  beforeEach(async () => {
+    fixture = TestBed.createComponent(LoadingHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+  });
+
+  it('looks like a link or text with the shortcuts', () => {
+    expect(el('as-link').getAttribute('data-variant')).toBe('link');
+    expect(el('as-text').getAttribute('data-variant')).toBe('text');
+    el('as-link').click();
+    expect(fixture.componentInstance.clicks()).toBe(1);
+  });
+
+  it('draws an unregistered loading icon as a class and an own loading template without spinning it', () => {
+    expect(el('own-spinner').querySelector('.tx-button__icon--spin span.own-spinner-icon')).not.toBeNull();
+    expect(el('spinner-template').querySelector('.own-spin')).not.toBeNull();
+    expect(el('spinner-template').querySelector('.tx-button__icon--spin')).toBeNull();
+  });
+});
+
+describe('TxButton recompiled by TestBed', () => {
+  it('still finds its icon templates when a test overrides the component', async () => {
+    TestBed.overrideComponent(TxButton, { set: { styles: [] } });
+    const fixture = TestBed.createComponent(LoadingHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('#spinner-template .own-spin')).not.toBeNull();
+    const host = TestBed.createComponent(Host);
+    host.autoDetectChanges();
+    await host.whenStable();
+    expect(host.nativeElement.querySelector('#templated .custom-icon')).not.toBeNull();
+  });
+});
+

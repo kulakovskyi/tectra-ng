@@ -16,7 +16,7 @@ import {
   untracked,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { IsActiveMatchOptions, NavigationEnd, Router, RouterLink, containsTree } from '@angular/router';
+import { ActivatedRoute, IsActiveMatchOptions, NavigationEnd, Router, RouterLink, containsTree } from '@angular/router';
 import { uniqueId } from '@tectra-ng/core/a11y';
 import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
@@ -79,7 +79,7 @@ const EXACT_MATCH: IsActiveMatchOptions = { paths: 'exact', queryParams: 'exact'
 export class TxPanelMenu {
   private readonly panelMenuTheme = injectTokens(PANEL_MENU_THEME);
 
-  private readonly router = inject(Router, { optional: true });
+  private readonly router = inject(ActivatedRoute, { optional: true }) ? inject(Router) : null;
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private readonly txIconRegistry = injectTxIcons();
   private readonly baseId = uniqueId('tx-panel-menu');

@@ -98,8 +98,199 @@ describe('TxSpeedDial', () => {
 
     button.click();
     await settle();
+    items()[0].dispatchEvent(new Event('pointerdown', { bubbles: true }));
+    await settle();
+    expect(fixture.componentInstance.open()).toBe(true);
     el('#outside').dispatchEvent(new Event('pointerdown', { bubbles: true }));
     await settle();
+    expect(fixture.componentInstance.open()).toBe(false);
+  });
+});
+
+@Component({
+  imports: [TxSpeedDial],
+  template: `
+    <tx-speed-dial
+      [model]="items"
+      [type]="type()"
+      [direction]="direction()"
+      [disabled]="disabled()"
+      [hideOnClickOutside]="false"
+      hideIcon="times"
+      [style.--tx-speed-dial-gap]="'10px'"
+      [(visible)]="open"
+      (opened)="events.push('opened')"
+      (closed)="events.push('closed')"
+      (itemSelected)="picked.push($event.item.id ?? '')"
+    />
+    <button id="away">Away</button>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class DialHost {
+  readonly open = signal(false);
+  readonly type = signal<TxSpeedDialType>('linear');
+  readonly direction = signal<TxSpeedDialDirection>('up');
+  readonly disabled = signal(false);
+  readonly events: string[] = [];
+  readonly picked: string[] = [];
+  readonly items: TxMenuItem[] = [
+    { id: 'copy', label: 'Copy', icon: 'copy', command: () => this.picked.push('command') },
+    { id: 'off', label: 'Off', icon: 'lock', disabled: true },
+    { separator: true },
+    { id: 'drop', label: 'Drop', icon: 'trash', severity: 'danger' },
+  ];
+}
+
+describe('TxSpeedDial layouts and keys', () => {
+  let fixture: ComponentFixture<DialHost>;
+  let dial: TxSpeedDial;
+  const el = (selector: string) => fixture.nativeElement.querySelector(selector) as HTMLElement;
+  const items = () => [...fixture.nativeElement.querySelectorAll('.tx-speed-dial__item')] as HTMLElement[];
+  const enabled = () => items().filter((item) => !item.hasAttribute('disabled'));
+  const key = (target: Element, name: string) => {
+    const event = new KeyboardEvent('keydown', { key: name, bubbles: true, cancelable: true });
+    target.dispatchEvent(event);
+    return event;
+  };
+  const point = (item: HTMLElement) => [parseFloat(item.style.getPropertyValue('--_x')), parseFloat(item.style.getPropertyValue('--_y'))];
+  const layout = async (type: TxSpeedDialType, direction: TxSpeedDialDirection) => {
+    fixture.componentInstance.type.set(type);
+    fixture.componentInstance.direction.set(direction);
+    await fixture.whenStable();
+    return items().map(point);
+  };
+
+  beforeEach(async () => {
+    fixture = TestBed.createComponent(DialHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    dial = fixture.debugElement.children[0].componentInstance as TxSpeedDial;
+  });
+
+  afterEach(() => fixture.destroy());
+
+  it('lays items in a full circle, quarter circles and fallback arcs', async () => {
+    expect(items()).toHaveLength(3);
+    expect(await layout('circle', 'up')).toEqual([
+      [0, -80],
+      [69, 40],
+      [-69, 40],
+    ]);
+    expect(await layout('quarter-circle', 'down-right')).toEqual([
+      [80, 0],
+      [57, 57],
+      [0, 80],
+    ]);
+    expect(await layout('quarter-circle', 'up')).toEqual([
+      [-80, 0],
+      [-57, -57],
+      [0, -80],
+    ]);
+    expect(await layout('semi-circle', 'up-left')).toEqual(await layout('semi-circle', 'up'));
+    expect(dial.tooltipPlacement()).toBe('top');
+  });
+
+  it('lays items in a line along every direction and places tooltips beside it', async () => {
+    expect(dial.tooltipPlacement()).toBe('left');
+    const [right] = await layout('linear', 'right');
+    expect(right[0]).toBeGreaterThan(0);
+    expect(right[1]).toBe(0);
+    expect(dial.tooltipPlacement()).toBe('top');
+    const [downLeft] = await layout('linear', 'down-left');
+    expect(downLeft[0]).toBeLessThan(0);
+    expect(downLeft[1]).toBeGreaterThan(0);
+  });
+
+  it('measures the buttons and the gap token before opening', async () => {
+    const button = el('.tx-speed-dial__button');
+    Object.defineProperty(button, 'offsetWidth', { value: 40, configurable: true });
+    dial.show();
+    await fixture.whenStable();
+    expect(point(items()[0])).toEqual([0, -50]);
+    expect(dial.currentIcon()).toBe('times');
+    Object.defineProperty(items()[0], 'offsetWidth', { value: 20, configurable: true });
+    dial.show();
+    await fixture.whenStable();
+    expect(point(items()[0])).toEqual([0, -40]);
+    expect(fixture.componentInstance.events).toEqual(['opened']);
+  });
+
+  it('stays closed while disabled and ignores repeated show and hide', async () => {
+    fixture.componentInstance.disabled.set(true);
+    await fixture.whenStable();
+    dial.show();
+    expect(fixture.componentInstance.open()).toBe(false);
+    fixture.componentInstance.disabled.set(false);
+    await fixture.whenStable();
+    dial.hide();
+    dial.show();
+    dial.show();
+    await fixture.whenStable();
+    expect(fixture.componentInstance.events).toEqual(['opened']);
+    expect(document.activeElement).not.toBe(items()[0]);
+    el('#away').dispatchEvent(new Event('pointerdown', { bubbles: true }));
+    await fixture.whenStable();
+    expect(fixture.componentInstance.open()).toBe(true);
+    dial.toggle();
+    await fixture.whenStable();
+    expect(fixture.componentInstance.events).toEqual(['opened', 'closed']);
+  });
+
+  it('runs commands, skips disabled items and keeps open on the button keys it does not own', async () => {
+    dial.show();
+    await fixture.whenStable();
+    const [copy] = items();
+    dial.run(fixture.componentInstance.items[1], new Event('click'));
+    expect(fixture.componentInstance.open()).toBe(true);
+    expect(fixture.componentInstance.picked).toEqual([]);
+    copy.click();
+    await fixture.whenStable();
+    expect(fixture.componentInstance.picked).toEqual(['command', 'copy']);
+    expect(document.activeElement).toBe(el('.tx-speed-dial__button'));
+    const button = el('.tx-speed-dial__button');
+    expect(key(button, 'Escape').defaultPrevented).toBe(false);
+    dial.show();
+    await fixture.whenStable();
+    expect(key(button, 'ArrowUp').defaultPrevented).toBe(false);
+    expect(key(button, 'Enter').defaultPrevented).toBe(false);
+    expect(key(button, 'Escape').defaultPrevented).toBe(true);
+    await fixture.whenStable();
+    expect(fixture.componentInstance.open()).toBe(false);
+  });
+
+  it('moves with Home, End and the arrows of each direction and closes on Tab', async () => {
+    fixture.componentInstance.direction.set('down');
+    dial.show(true);
+    await new Promise((resolve) => setTimeout(resolve));
+    await fixture.whenStable();
+    const [first, last] = enabled();
+    expect(document.activeElement).toBe(first);
+    key(first, 'ArrowDown');
+    expect(document.activeElement).toBe(last);
+    key(last, 'Home');
+    expect(document.activeElement).toBe(first);
+    key(first, 'End');
+    expect(document.activeElement).toBe(last);
+    fixture.componentInstance.direction.set('left');
+    await fixture.whenStable();
+    key(last, 'ArrowLeft');
+    expect(document.activeElement).toBe(first);
+    key(first, 'ArrowRight');
+    expect(document.activeElement).toBe(last);
+    fixture.componentInstance.direction.set('right');
+    await fixture.whenStable();
+    key(last, 'ArrowRight');
+    expect(document.activeElement).toBe(first);
+    fixture.componentInstance.type.set('circle');
+    await fixture.whenStable();
+    key(first, 'ArrowDown');
+    expect(document.activeElement).toBe(last);
+    key(last, 'ArrowUp');
+    expect(document.activeElement).toBe(first);
+    expect(key(first, 'x').defaultPrevented).toBe(false);
+    expect(key(first, 'Tab').defaultPrevented).toBe(false);
+    await fixture.whenStable();
     expect(fixture.componentInstance.open()).toBe(false);
   });
 });

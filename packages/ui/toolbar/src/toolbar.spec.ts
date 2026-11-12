@@ -65,3 +65,16 @@ describe('TxToolbar', () => {
     expect(toolbar.firstElementChild?.className).toBe('free');
   });
 });
+
+describe('TxToolbar recompiled by TestBed', () => {
+  it('still finds its groups when a test overrides the component', async () => {
+    TestBed.overrideComponent(TxToolbar, { set: { styles: [] } });
+    const fixture = TestBed.createComponent(Host);
+    await fixture.whenStable();
+    const toolbar = fixture.nativeElement.querySelector('tx-toolbar') as HTMLElement;
+    expect(toolbar.getAttribute('role')).toBe('toolbar');
+    expect(toolbar.querySelector('.tx-toolbar__start .new')).not.toBeNull();
+    expect(toolbar.querySelector('.tx-toolbar__center .title')).not.toBeNull();
+    expect(toolbar.querySelector('.tx-toolbar__end .save')).not.toBeNull();
+  });
+});

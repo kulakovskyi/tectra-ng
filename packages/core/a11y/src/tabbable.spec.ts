@@ -32,4 +32,9 @@ describe('tabbable', () => {
     expect(nextTabbable(trigger, checker)?.id).toBe('inside');
     expect(nextTabbable(trigger, checker, root.querySelector('#panel') as HTMLElement)?.id).toBe('after');
   });
+
+  it('returns null when nothing tabbable follows', () => {
+    const after = root.querySelector('#after') as HTMLElement;
+    expect(nextTabbable(after, checker)).toBeNull();
+  });
 });

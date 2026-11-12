@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TxToggleButton } from './toggle-button.component';
 import { TxToggleButtonChangeEvent } from './toggle-button.types';
+import { TX_ICONS, provideTxIcons } from '@tectra-ng/icons';
 
 @Component({
   imports: [TxToggleButton, ReactiveFormsModule],
@@ -56,4 +57,20 @@ describe('TxToggleButton', () => {
     fixture.detectChanges();
     expect(button().disabled).toBe(true);
   });
+
+  it('is touched on blur', () => {
+    button().dispatchEvent(new FocusEvent('blur'));
+    expect(fixture.componentInstance.control.touched).toBe(true);
+  });
 });
+
+describe('TxToggleButton with registered icons', () => {
+  it('draws a registered icon as a tectra icon', () => {
+    TestBed.configureTestingModule({ providers: [provideTxIcons(TX_ICONS)] });
+    const fixture = TestBed.createComponent(Host);
+    fixture.componentInstance.control.setValue(true);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('button tx-icon')?.getAttribute('data-icon')).toBe('check');
+  });
+});
+

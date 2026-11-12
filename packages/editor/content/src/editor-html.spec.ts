@@ -1,4 +1,4 @@
-import { fromQuillHtml, isQuillHtml, toQuillHtml } from './editor-html';
+import { formatEditorHtml, fromQuillHtml, isQuillHtml, toEditorHtml, toQuillHtml } from './editor-html';
 import { sanitizeEditorHtml } from './editor-sanitizer';
 
 const quill = [
@@ -113,6 +113,108 @@ describe('sanitizeEditorHtml', () => {
   });
 });
 
+describe('more Quill markup', () => {
+  const read = (html: string) => {
+    const body = document.createElement('div');
+    body.innerHTML = html;
+    return body;
+  };
+
+  it('reads old lists without data-list, aligned items, fonts, direction and code languages', () => {
+    const body = read(
+      fromQuillHtml(
+        [
+          '<ul><li>One</li><li class="ql-indent-1 ql-align-right">Two</li></ul>',
+          '<ol><li class="ql-indent-1">Deep</li></ol>',
+          '<p class="ql-font-serif ql-direction-rtl ql-size-unknown ql-align-sideways">Serif<span class="ql-font-fancy">F</span></p>',
+          '<div class="ql-code-block-container"><div class="ql-code-block" data-language="js">a</div></div>',
+          '<div class="ql-code-block-container"><div class="ql-code-block">b</div></div>',
+        ].join(''),
+      ),
+    );
+    expect(body.querySelector(':scope > ul > li > p')?.textContent).toBe('One');
+    const nested = body.querySelector(':scope > ul > li > ul > li > p') as HTMLElement;
+    expect(nested.textContent).toBe('Two');
+    expect(nested.style.textAlign).toBe('right');
+    expect(body.querySelector(':scope > ol > li > p')?.textContent).toBe('Deep');
+    const paragraph = body.querySelector(':scope > p') as HTMLElement;
+    expect(paragraph.style.fontFamily).toBe('serif');
+    expect(paragraph.getAttribute('dir')).toBe('rtl');
+    expect(paragraph.style.fontSize).toBe('');
+    expect(paragraph.hasAttribute('class')).toBe(false);
+    expect(paragraph.querySelector('span')?.outerHTML).toBe('<span>F</span>');
+    expect(Array.from(body.querySelectorAll('pre > code')).map((code) => `${code.className}:${code.textContent}`)).toEqual(['language-js:a', ':b']);
+  });
+
+  it('starts a new list when the kind changes at the same level', () => {
+    const body = read(fromQuillHtml('<ol><li data-list="bullet">A</li><li data-list="ordered">B</li><li data-list="checked">C</li><li data-list="unchecked">D</li></ol>'));
+    expect(Array.from(body.children).map((child) => `${child.tagName}:${child.textContent}`)).toEqual(['UL:A', 'OL:B', 'UL:CD']);
+  });
+
+  it('writes lists, code, sizes, fonts, direction and videos as Quill markup', () => {
+    const clean = [
+      '<ul data-type="taskList"><li data-type="taskItem" data-checked="false"><p style="text-align: center">Task</p><p>More</p></li></ul>',
+      '<ul><li><p style="text-align: left">Left</p></li></ul>',
+      '<pre>plain\n\nend</pre>',
+      '<p dir="rtl" style="font-size: 0.75em; font-family: monospace; margin-left: 6em">Small</p>',
+      '<span style="font-size: 3em">Odd</span>',
+      '<iframe data-type="video" src="https://player.vimeo.com/video/1"></iframe>',
+    ].join('');
+    const body = read(toQuillHtml(clean));
+    const items = Array.from(body.querySelectorAll('ol > li'));
+    expect(items.map((item) => `${item.getAttribute('data-list')}|${item.className}|${item.innerHTML}`)).toEqual([
+      'unchecked|ql-align-center|Task<br>More',
+      'bullet||Left',
+    ]);
+    expect(Array.from(body.querySelectorAll('.ql-code-block')).map((line) => `${line.getAttribute('data-language')}:${line.innerHTML}`)).toEqual([
+      'plain:plain',
+      'plain:<br>',
+      'plain:end',
+    ]);
+    const paragraph = body.querySelector('p') as HTMLElement;
+    expect(paragraph.className).toBe('ql-indent-2 ql-size-small ql-font-monospace ql-direction-rtl');
+    expect(paragraph.hasAttribute('dir')).toBe(false);
+    expect(paragraph.hasAttribute('style')).toBe(false);
+    expect(body.querySelector('span')?.getAttribute('style')).toBe('font-size: 3em');
+    const frame = body.querySelector('iframe') as HTMLIFrameElement;
+    expect(frame.className).toBe('ql-video');
+    expect(frame.hasAttribute('data-type')).toBe(false);
+    expect(frame.getAttribute('frameborder')).toBe('0');
+    expect(frame.getAttribute('allowfullscreen')).toBe('true');
+  });
+
+  it('reads the item blocks of task lists written without a wrapper', () => {
+    const body = read(toQuillHtml('<ul data-type="taskList"><li data-type="taskItem" data-checked="true"><label><input type="checkbox"></label><p>Bare</p></li></ul>'));
+    expect(body.querySelector('li')?.outerHTML).toBe('<li data-list="checked">Bare</li>');
+  });
+
+  it('keeps other classes and skips elements without inline styles', () => {
+    expect(fromQuillHtml('<p class="ql-align-center tx-note">x</p>')).toBe('<p class="tx-note" style="text-align: center;">x</p>');
+    expect(fromQuillHtml('<math class="ql-align-center ql-indent-2"></math>')).toBe('<math></math>');
+    expect(toQuillHtml('<math data-indent="x" dir="rtl"></math><p style="text-align: left">L</p>')).toBe('<math class="ql-direction-rtl"></math><p>L</p>');
+  });
+
+  it('passes empty values through and picks the format', () => {
+    expect(fromQuillHtml('')).toBe('');
+    expect(fromQuillHtml(null)).toBe('');
+    expect(toQuillHtml(undefined)).toBe('');
+    expect(toEditorHtml('<p class="ql-align-center">x</p>')).toBe('<p style="text-align: center;">x</p>');
+    expect(formatEditorHtml('<p>x</p>', 'html')).toBe('<p>x</p>');
+    expect(formatEditorHtml('<p style="text-align: right">x</p>', 'quill')).toBe('<p class="ql-align-right">x</p>');
+  });
+});
+
+describe('more sanitizing', () => {
+  it('drops comments, unsafe classes, targets and input types and disables checkboxes', () => {
+    const html = sanitizeEditorHtml(
+      '<!-- note --><p class="evil">a</p><a href="https://a.com" target="_top">b</a><input type="checkbox" checked><input type="text"><span>c</span>',
+    );
+    expect(html).toBe('<p>a</p><a href="https://a.com">b</a><input type="checkbox" checked="" disabled=""><input disabled=""><span>c</span>');
+    expect(sanitizeEditorHtml('')).toBe('');
+    expect(sanitizeEditorHtml('<iframe></iframe><p>x</p>')).toBe('<p>x</p>');
+  });
+});
+
 describe('without DOMParser (server rendering)', () => {
   const Parser = globalThis.DOMParser;
 
@@ -131,6 +233,8 @@ describe('without DOMParser (server rendering)', () => {
 
   it('renders nothing unsafe without a document', () => {
     expect(sanitizeEditorHtml('<p>Hi</p>')).toBe('');
+    expect(fromQuillHtml('<p class="ql-align-center">Hi</p>')).toBe('<p class="ql-align-center">Hi</p>');
+    expect(toQuillHtml('<p>Hi</p>')).toBe('<p>Hi</p>');
   });
 
   it('works on a DOM without append, replaceWith and replaceChildren', () => {

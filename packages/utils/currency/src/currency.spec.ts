@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { TxLocaleService } from '@tectra-ng/core/i18n';
 import { TxCurrencySymbolPipe, currencySymbol } from './currency';
+import { CURRENCY_ICON_DEFAULTS } from './currency.icons';
 
 @Component({
   imports: [TxCurrencySymbolPipe],
@@ -35,5 +36,14 @@ describe('currencySymbol', () => {
     await TestBed.inject(TxLocaleService).setLocale('ua');
     fixture.detectChanges();
     expect(fixture.nativeElement.textContent).toBe('українська гривня');
+  });
+
+  it('gives the same symbol again from memory', () => {
+    expect(currencySymbol('GBP', 'en-GB')).toBe('£');
+    expect(currencySymbol(' gbp ', 'en-GB')).toBe('£');
+  });
+
+  it('lists the icons it draws', () => {
+    expect(Object.keys(CURRENCY_ICON_DEFAULTS)).toEqual(['code']);
   });
 });

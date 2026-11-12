@@ -94,5 +94,24 @@ describe('TxCountry', () => {
     expect(isCountryCode('EUR')).toBe(false);
     expect(countryName('jp', 'en-US')).toBe('Japan');
     expect(countryEmoji('PL')).toBe('🇵🇱');
+    expect(countryName('Europe', 'en-US')).toBe('Europe');
+    expect(countryEmoji('EUR')).toBe('');
+  });
+
+  it('shows nothing for an empty value', () => {
+    const fixture = create();
+    fixture.componentInstance.code.set(null);
+    fixture.detectChanges();
+    expect(root(fixture).querySelector('.tx-country__flag')).toBeNull();
+    expect(root(fixture).textContent?.trim()).toBe('');
+    expect(root(fixture).hasAttribute('role')).toBe(false);
+  });
+
+  it('falls back to the emoji when an async flag fails to load', async () => {
+    TestBed.configureTestingModule({ providers: [provideTxFlags(txFlagImages(() => Promise.reject(new Error('offline'))))] });
+    const fixture = create();
+    await settle(fixture);
+    expect(root(fixture).querySelector('.tx-country__flag--loading')).toBeNull();
+    expect(root(fixture).querySelector('.tx-country__flag--emoji')?.textContent?.trim()).toBe('🇺🇦');
   });
 });

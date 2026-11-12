@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, DeferBlockBehavior, DeferBlockState, TestBed } from '@angular/core/testing';
 import { TxTable } from './table.component';
-import { TxTableEditor } from './table.templates';
+import { TxTableCell, TxTableEditor } from './table.templates';
 import { TxTableCellEditEvent, TxTableColumn, TxTableEditMode, TxTableRowEditEvent } from './table.types';
 
 interface Product {
@@ -13,7 +13,7 @@ interface Product {
 }
 
 @Component({
-  imports: [TxTable, TxTableEditor],
+  imports: [TxTable, TxTableEditor, TxTableCell],
   template: `
     <tx-table
       ariaLabel="Products"
@@ -28,8 +28,12 @@ interface Product {
       (rowEditSave)="saves.push($event)"
       (rowEditCancel)="rowCancels.push($event)"
     >
-      <ng-template txTableEditor="note" let-value="value" let-set="set" let-commit="commit">
+      <ng-template txTableEditor="note" let-value="value" let-set="set" let-commit="commit" let-cancel="cancel">
         <textarea class="own-editor" aria-label="Note" [value]="value" (input)="set($any($event.target).value)" (blur)="commit()"></textarea>
+        <button type="button" class="own-cancel" (click)="cancel()">Cancel</button>
+      </ng-template>
+      <ng-template txTableCell="stock" let-value="value">
+        <button type="button" class="stock-info">{{ value }}</button>
       </ng-template>
     </tx-table>
   `,
@@ -163,6 +167,190 @@ describe('TxTable editing', () => {
     await stable();
     expect(host.products[1].name).toBe('Stool');
     expect(host.rowCancels).toHaveLength(1);
+  });
+});
+
+describe('TxTable editing edge cases', () => {
+  let fixture: ComponentFixture<Host>;
+  let host: Host;
+  let table: TxTable<Product>;
+  const root = () => fixture.nativeElement.querySelector('tx-table') as HTMLElement;
+  const rows = () => [...root().querySelectorAll<HTMLElement>('tbody .tx-table__row')];
+  const cell = (row: number, field: string) => rows()[row].querySelector(`[data-field="${field}"]`) as HTMLElement;
+  const item = (index: number) => table.renderRows()[index];
+  const column = (field: string) => host.columns.find((own) => own.field === field) as TxTableColumn;
+  const stable = async () => {
+    await fixture.whenStable();
+    await new Promise((resolve) => setTimeout(resolve));
+    await fixture.whenStable();
+  };
+  const key = (target: Element, name: string, shiftKey = false) => target.dispatchEvent(new KeyboardEvent('keydown', { key: name, shiftKey, bubbles: true, cancelable: true }));
+
+  beforeEach(async () => {
+    fixture = TestBed.createComponent(Host);
+    host = fixture.componentInstance;
+    fixture.autoDetectChanges();
+    await stable();
+    table = fixture.debugElement.query((node) => node.componentInstance instanceof TxTable).componentInstance as TxTable<Product>;
+  });
+
+  afterEach(() => {
+    fixture.destroy();
+    document.querySelector('.cdk-overlay-container')?.remove();
+  });
+
+  it('commits and cancels own editors in row mode', async () => {
+    host.mode.set('row');
+    host.editing.set([1]);
+    await stable();
+    const area = cell(0, 'note').querySelector('.own-editor') as HTMLTextAreaElement;
+    area.value = 'teak';
+    area.dispatchEvent(new Event('input'));
+    area.dispatchEvent(new Event('blur'));
+    await stable();
+    expect(host.products[0].note).toBe('teak');
+    expect(host.saves[0].changes).toEqual({ note: 'teak' });
+    host.editing.set([2]);
+    await stable();
+    (cell(1, 'note').querySelector('.own-cancel') as HTMLElement).click();
+    await stable();
+    expect(host.rowCancels).toHaveLength(1);
+    expect(host.editing()).toEqual([]);
+  });
+
+  it('saves a row with Enter and cancels it with Escape', async () => {
+    host.mode.set('row');
+    host.editing.set([1]);
+    await stable();
+    const name = cell(0, 'name').querySelector('input') as HTMLInputElement;
+    name.value = 'Desk 2';
+    name.dispatchEvent(new Event('input'));
+    key(name, 'Enter');
+    await stable();
+    expect(host.products[0].name).toBe('Desk 2');
+    host.editing.set([1]);
+    await stable();
+    key(cell(0, 'name').querySelector('input') as HTMLInputElement, 'Escape');
+    await stable();
+    expect(host.rowCancels).toHaveLength(1);
+    expect(host.editing()).toEqual([]);
+  });
+
+  it('drops drafts of rows that leave the editing keys and ignores repeated or missing row edits', async () => {
+    host.mode.set('row');
+    host.editing.set([1, 2]);
+    await stable();
+    expect(rows().map((row) => row.classList.contains('tx-table__row--editing'))).toEqual([true, true]);
+    host.editing.set([2]);
+    await stable();
+    expect(rows().map((row) => row.classList.contains('tx-table__row--editing'))).toEqual([false, true]);
+    table.startRowEdit(item(1));
+    table.startRowEdit(item(0));
+    await stable();
+    expect(host.editing()).toEqual([2, 1]);
+    table.cancelRow(item(0));
+    table.cancelRow(item(0));
+    table.saveRow(item(0));
+    expect(host.rowCancels).toHaveLength(1);
+    expect(host.saves).toHaveLength(0);
+    await stable();
+    table.setDraft(item(0), column('name'), 'Bench');
+    await stable();
+    expect(table.isRowEditing(item(0))).toBe(true);
+    expect((cell(0, 'name').querySelector('input') as HTMLInputElement).value).toBe('Bench');
+  });
+
+  it('wraps Tab to the next row and Shift+Tab to the previous row', async () => {
+    cell(1, 'name').click();
+    await stable();
+    key(cell(1, 'name').querySelector('input') as HTMLInputElement, 'Tab', true);
+    await stable();
+    expect(cell(0, 'received').querySelector('.tx-table__editor')).toBeTruthy();
+    key(cell(0, 'received').querySelector('.tx-table__editor') as HTMLElement, 'Tab');
+    await stable();
+    expect(cell(1, 'name').querySelector('input')).toBeTruthy();
+    table.cancelCell();
+    await stable();
+    cell(1, 'received').click();
+    await stable();
+    key(cell(1, 'received').querySelector('.tx-table__editor') as HTMLElement, 'Tab');
+    await stable();
+    expect(root().querySelector('.tx-table__editor')).toBeNull();
+  });
+
+  it('commits when the focus leaves the cell but not when it moves inside the cell or into an overlay', async () => {
+    cell(0, 'name').click();
+    await stable();
+    const overlay = document.createElement('div');
+    overlay.className = 'cdk-overlay-container';
+    const option = document.createElement('button');
+    overlay.appendChild(option);
+    document.body.appendChild(overlay);
+    const blur = (relatedTarget: EventTarget | null) => cell(0, 'name').dispatchEvent(new FocusEvent('focusout', { bubbles: true, relatedTarget }));
+    blur(cell(0, 'name').querySelector('input'));
+    blur(option);
+    await stable();
+    expect(host.completes).toHaveLength(0);
+    blur(null);
+    await stable();
+    expect(host.completes).toHaveLength(1);
+    blur(null);
+    expect(host.completes).toHaveLength(1);
+    overlay.remove();
+  });
+
+  it('cancels an own cell editor from its template', async () => {
+    cell(0, 'note').click();
+    await stable();
+    (cell(0, 'note').querySelector('.own-cancel') as HTMLElement).click();
+    await stable();
+    expect(host.cancels).toHaveLength(1);
+    expect(cell(0, 'note').querySelector('.own-editor')).toBeNull();
+  });
+
+  it('ignores clicks on controls in a cell, keys outside editable cells and edits of rows that went away', async () => {
+    (cell(0, 'stock').querySelector('.stock-info') as HTMLElement).click();
+    await stable();
+    expect(host.inits).toHaveLength(0);
+    key(cell(0, 'stock').querySelector('.stock-info') as HTMLElement, 'Enter');
+    key(cell(0, 'name'), 'a');
+    await stable();
+    expect(host.inits).toHaveLength(0);
+    table.cancelCell();
+    table.commitCell();
+    expect(host.cancels).toHaveLength(0);
+
+    cell(1, 'name').click();
+    await stable();
+    table.applyFilter('name', { operator: 'and', rules: [{ value: 'desk', matchMode: 'equals' }] });
+    await stable();
+    table.commitCell();
+    expect(host.completes).toHaveLength(0);
+    table.clearFilters();
+    await stable();
+    cell(1, 'name').click();
+    await stable();
+    table.applyFilter('name', { operator: 'and', rules: [{ value: 'desk', matchMode: 'equals' }] });
+    await stable();
+    table.cancelCell();
+    expect(host.cancels).toHaveLength(0);
+  });
+
+  it('completes an unchanged cell without writing it', async () => {
+    cell(0, 'name').click();
+    await stable();
+    key(cell(0, 'name').querySelector('input') as HTMLInputElement, 'Enter');
+    await stable();
+    expect(host.completes[0]).toMatchObject({ value: 'Desk', previousValue: 'Desk' });
+    table.setDraft(item(0), column('name'), 'ignored');
+    expect(table.cellEdit()).toBeNull();
+  });
+
+  it('reads date drafts from dates and ISO strings', () => {
+    expect(table.dateDraft(new Date(Number.NaN))).toBeNull();
+    expect(table.dateDraft('2026-03-04T10:00')).toEqual(new Date(2026, 2, 4));
+    expect(table.dateDraft('soon')).toBeNull();
+    expect(table.dateDraft(42)).toBeNull();
   });
 });
 

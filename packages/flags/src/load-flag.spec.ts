@@ -1,4 +1,4 @@
-import { TX_FLAG_CODES } from './generated/flag-loaders';
+import { TX_FLAG_CODES, TX_FLAG_RECTANGLES } from './generated/flag-loaders';
 import { isTxFlagCode, loadTxFlag, loadTxFlagSvg } from './load-flag';
 
 describe('flags', () => {
@@ -21,5 +21,13 @@ describe('flags', () => {
     expect(loadTxFlag('PL')).toBe(first);
     expect(await first).toMatch(/^data:image\/svg\+xml,/);
     expect(await loadTxFlag('zz')).toBeNull();
+  });
+
+  it('forgets a failed load so the next call tries again', async () => {
+    const loader = TX_FLAG_RECTANGLES.de;
+    TX_FLAG_RECTANGLES.de = () => Promise.reject(new Error('offline'));
+    await expect(loadTxFlag('de')).rejects.toThrow('offline');
+    TX_FLAG_RECTANGLES.de = loader;
+    expect(await loadTxFlag('de')).toMatch(/^data:image\/svg\+xml,/);
   });
 });

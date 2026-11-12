@@ -3,15 +3,11 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
   "sourceRoot": "packages/core",
-  "tags": [
-    "pkg:core"
-  ],
+  "tags": ["pkg:core"],
   "targets": {
     "build": {
       "executor": "@nx/angular:package",
-      "outputs": [
-        "{workspaceRoot}/dist/packages/core"
-      ],
+      "outputs": ["{workspaceRoot}/dist/packages/core"],
       "options": {
         "project": "packages/core/ng-package.json",
         "tsConfig": "packages/core/tsconfig.lib.json"
@@ -23,8 +19,19 @@
         "buildTarget": "sandbox:build",
         "tsConfig": "packages/core/tsconfig.spec.json",
         "runner": "vitest",
-        "watch": false
-      }
+        "watch": false,
+        "coverage": true,
+        "coverageInclude": ["packages/core/**/*.ts"],
+        "coverageExclude": ["**/*.spec.ts", "**/index.ts", "**/test-setup.ts", "**/generated/**"],
+        "coverageReporters": ["text-summary", "json-summary", "lcovonly"],
+        "coverageThresholds": {
+          "statements": 95,
+          "branches": 95,
+          "functions": 95,
+          "lines": 95
+        }
+      },
+      "outputs": ["{workspaceRoot}/coverage/core"]
     }
   }
 }

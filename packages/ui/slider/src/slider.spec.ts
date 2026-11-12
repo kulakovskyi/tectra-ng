@@ -105,3 +105,119 @@ describe('TxSlider', () => {
     expect(handles('single')[0].getAttribute('tabindex')).toBe('-1');
   });
 });
+
+@Component({
+  imports: [TxSlider, ReactiveFormsModule],
+  template: `
+    <tx-slider id="pair" [formControl]="pair" [range]="true" [showSteps]="true" [step]="25" [marks]="[{ value: 50, label: 'Half' }, { value: 75 }]" ariaLabelledBy="pair-label" />
+    <tx-slider id="fine" [formControl]="fine" [step]="0.5" [max]="2" [showSteps]="many()" />
+    <tx-slider id="flat" [min]="10" [max]="10" />
+    <tx-slider id="dense" [max]="1000" showSteps />
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class EdgeHost {
+  readonly pair = new FormControl<TxSliderValue | null>(null);
+  readonly fine = new FormControl<TxSliderValue | null>(null);
+  readonly many = signal(false);
+}
+
+describe('TxSlider edge cases', () => {
+  let fixture: ComponentFixture<EdgeHost>;
+  const handles = (id: string) => Array.from(fixture.nativeElement.querySelectorAll(`#${id} [role="slider"]`)) as HTMLElement[];
+  const track = (id: string) => fixture.nativeElement.querySelector(`#${id} .tx-slider__track`) as HTMLElement;
+  const pointer = async (id: string, type: string, x: number, target?: HTMLElement) => {
+    (target ?? track(id)).dispatchEvent(new MouseEvent(type, { clientX: x, button: 0, bubbles: true, cancelable: true }));
+    await fixture.whenStable();
+  };
+  const sized = (id: string, width: number) =>
+    (track(id).getBoundingClientRect = () => ({ left: 0, top: 0, width, height: width, right: width, bottom: width, x: 0, y: 0, toJSON: () => ({}) }));
+
+  beforeEach(async () => {
+    fixture = TestBed.createComponent(EdgeHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+  });
+
+  it('spans the whole track for an empty range and merges step marks with labelled marks', () => {
+    const [start, end] = handles('pair');
+    expect(start.getAttribute('aria-valuenow')).toBe('0');
+    expect(end.getAttribute('aria-valuenow')).toBe('100');
+    expect(start.hasAttribute('aria-label')).toBe(false);
+    expect(start.getAttribute('aria-labelledby')).toBe('pair-label');
+    expect(fixture.nativeElement.querySelectorAll('#pair .tx-slider__mark')).toHaveLength(5);
+    expect(fixture.nativeElement.querySelectorAll('#pair .tx-slider__label')).toHaveLength(1);
+  });
+
+  it('starts an empty single slider at the minimum, snaps to fractional steps and hides too many step marks', async () => {
+    const [handle] = handles('fine');
+    expect(handle.getAttribute('aria-valuenow')).toBe('0');
+    handle.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', cancelable: true }));
+    await fixture.whenStable();
+    expect(fixture.componentInstance.fine.value).toBe(0.5);
+    fixture.componentInstance.many.set(true);
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelectorAll('#fine .tx-slider__mark')).toHaveLength(5);
+    expect(fixture.nativeElement.querySelectorAll('#dense .tx-slider__mark')).toHaveLength(0);
+  });
+
+  it('places a slider without a span at the start', () => {
+    expect(handles('flat')[0].style.getPropertyValue('--_at')).toBe('0%');
+  });
+
+  it('grabs a handle without moving it and ignores moves and releases without a grab', async () => {
+    sized('pair', 200);
+    await pointer('pair', 'pointermove', 100);
+    await pointer('pair', 'pointerup', 100);
+    expect(fixture.componentInstance.pair.value).toBeNull();
+    expect(fixture.componentInstance.pair.touched).toBe(false);
+    await pointer('pair', 'pointerdown', 150, handles('pair')[1]);
+    expect(document.activeElement).toBe(handles('pair')[1]);
+    expect(fixture.componentInstance.pair.value).toBeNull();
+    await pointer('pair', 'pointermove', 100);
+    expect(fixture.componentInstance.pair.value).toEqual([0, 50]);
+  });
+
+  it('moves the nearer handle, and picks by side when both sit together', async () => {
+    sized('pair', 200);
+    await pointer('pair', 'pointerdown', 40);
+    await pointer('pair', 'pointerup', 40);
+    expect(fixture.componentInstance.pair.value).toEqual([25, 100]);
+    fixture.componentInstance.pair.setValue([50, 50]);
+    await fixture.whenStable();
+    await pointer('pair', 'pointerdown', 20);
+    await pointer('pair', 'pointerup', 20);
+    expect(fixture.componentInstance.pair.value).toEqual([0, 50]);
+    fixture.componentInstance.pair.setValue([50, 50]);
+    await fixture.whenStable();
+    await pointer('pair', 'pointerdown', 180);
+    expect(fixture.componentInstance.pair.value).toEqual([50, 100]);
+  });
+
+  it('falls back to the minimum on a track without a size and ignores other keys', async () => {
+    fixture.componentInstance.fine.setValue(1);
+    await fixture.whenStable();
+    sized('fine', 0);
+    await pointer('fine', 'pointerdown', 80);
+    expect(fixture.componentInstance.fine.value).toBe(0);
+    const [handle] = handles('fine');
+    handle.dispatchEvent(new KeyboardEvent('keydown', { key: 'a', cancelable: true }));
+    handle.dispatchEvent(new FocusEvent('blur'));
+    await fixture.whenStable();
+    expect(fixture.componentInstance.fine.value).toBe(0);
+    expect(fixture.componentInstance.fine.touched).toBe(true);
+  });
+});
+
+describe('TxSlider recompiled by TestBed', () => {
+  it('still reads its track when a test overrides the component', async () => {
+    TestBed.overrideComponent(TxSlider, { set: { styles: [] } });
+    const fixture = TestBed.createComponent(EdgeHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    const handle = fixture.nativeElement.querySelector('#fine [role="slider"]') as HTMLElement;
+    handle.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', cancelable: true }));
+    await fixture.whenStable();
+    expect(fixture.componentInstance.fine.value).toBe(2);
+  });
+});

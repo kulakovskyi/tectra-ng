@@ -139,4 +139,10 @@ describe('date functions', () => {
     expect(isExpiringWithin(now - MS_IN_DAY, undefined, now)).toBe(true);
     expect(isExpiringWithin(undefined)).toBe(false);
   });
+  it('shows the empty text when the format gives nothing or the locale is unknown', () => {
+    const pipe = TestBed.runInInjectionContext(() => new TxDatePipe());
+    expect(pipe.transform('2026-11-11', '')).toBe('-');
+    expect(pipe.transform('2026-11-11', 'yyyy', undefined, 'xx-unknown')).toBe('-');
+    expect(toIsoString('')).toBeUndefined();
+  });
 });

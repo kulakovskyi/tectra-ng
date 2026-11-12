@@ -62,6 +62,20 @@ describe('segmented bar segments', () => {
     expect(segmentedBarSegments(null, String)).toEqual([]);
     expect(segmentedBarSegments([{ key: 'a', label: 'A', value: 0 }], String)[0].share).toBe(0);
   });
+
+  it('counts non-finite values as empty parts', () => {
+    const segments = segmentedBarSegments(
+      [
+        { key: 'a', label: 'A', value: Number.NaN },
+        { key: 'b', label: 'B', value: 4 },
+      ],
+      String,
+    );
+    expect(segments.map((segment) => [segment.raw, segment.share, segment.isEmpty])).toEqual([
+      [0, 0, true],
+      [4, 100, false],
+    ]);
+  });
 });
 
 describe('TxSegmentedBar', () => {

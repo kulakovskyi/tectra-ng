@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { TxContextMenu } from './context-menu.component';
+import { TxMenuList } from './menu-list.component';
 import { TxMenu, TxMenuItemTemplate, TxMenuTrigger } from './menu.component';
 import { TxMenuItem } from './menu.types';
 
@@ -47,6 +49,42 @@ class Host {
     { id: 'copy', label: 'Copy' },
     { id: 'paste', label: 'Paste' },
   ];
+}
+
+@Component({
+  imports: [TxMenu, TxContextMenu],
+  template: `
+    <tx-menu id="plain" ariaLabel="Plain" [model]="plain" (itemSelected)="picked.push($event.item.label ?? '')" />
+    <tx-tiered-menu id="hover" ariaLabel="Hover" [model]="hover" />
+    <button id="toggler" (click)="popup.toggle($event)">Toggle</button>
+    <button id="other">Other</button>
+    <tx-menu #popup popup ariaLabel="Popup" [model]="flat" (opened)="events.push('opened')" (closed)="events.push('closed')" />
+    <tx-menu #empty popup ariaLabel="Empty" [model]="[]" />
+    <tx-context-menu #global global ariaLabel="Page" [model]="flat" (closed)="events.push('context closed')" />
+    <tx-context-menu ariaLabel="Detached" [model]="flat" />
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class MoreHost {
+  readonly popup = viewChild.required<TxMenu>('popup');
+  readonly empty = viewChild.required<TxMenu>('empty');
+  readonly global = viewChild.required<TxContextMenu>('global');
+  readonly picked: string[] = [];
+  readonly events: string[] = [];
+  readonly plain: TxMenuItem[] = [
+    { label: 'Alpha' },
+    { label: 'Docs', url: '#menu-docs' },
+    { icon: 'plus', title: 'Add' },
+    { label: 'Off', disabled: true },
+    { label: 'Group', items: [{ label: 'Inside' }, { separator: true }, { label: 'Last' }] },
+  ];
+  readonly hover: TxMenuItem[] = [
+    { label: 'Alpha', items: [{ label: 'A1' }, { label: 'A2' }] },
+    { label: 'Beta', items: [{ label: 'B1' }] },
+    { label: 'Gamma' },
+    { label: 'Delta', disabled: true },
+  ];
+  readonly flat: TxMenuItem[] = [{ label: 'One' }, { label: 'Two' }];
 }
 
 describe('TxMenu', () => {
@@ -183,5 +221,195 @@ describe('TxMenu', () => {
 
   it('renders items from a template', () => {
     expect([...document.querySelectorAll('#custom .custom')].map((item) => item.textContent)).toEqual(['Copy!', 'Paste!']);
+  });
+
+  describe('more cases', () => {
+    let more: ComponentFixture<MoreHost>;
+    const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+    const calm = async () => {
+      await more.whenStable();
+      await Promise.resolve();
+      await more.whenStable();
+    };
+    const hoverOver = async (item: HTMLElement) => {
+      item.dispatchEvent(new MouseEvent('mouseenter'));
+      await wait(150);
+      await calm();
+    };
+    const submenu = () => document.querySelector('tx-menu-list[data-panel="submenu"]') as HTMLElement | null;
+    const popupOf = (label: string) => document.querySelector(`.cdk-overlay-container tx-menu-list[aria-label="${label}"]`) as HTMLElement | null;
+
+    beforeEach(async () => {
+      fixture.destroy();
+      more = TestBed.createComponent(MoreHost);
+      more.autoDetectChanges();
+      await calm();
+    });
+
+    afterEach(() => {
+      more.destroy();
+      document.querySelector('.cdk-overlay-container')?.remove();
+    });
+
+    it('handles keys that do nothing, links and items without labels', async () => {
+      const list = el('#plain tx-menu-list');
+      const entries = items(list);
+      expect(entries.map((item) => item.tagName)).toEqual(['DIV', 'A', 'DIV', 'DIV', 'DIV', 'DIV']);
+      expect(entries[2].getAttribute('title')).toBe('Add');
+      expect(list.querySelectorAll('[role="separator"]').length).toBe(1);
+
+      key(entries[0], 'Enter');
+      expect(more.componentInstance.picked).toEqual([]);
+
+      entries[0].focus();
+      key(entries[0], 'ArrowRight');
+      key(entries[0], 'ArrowLeft');
+      key(entries[0], 'g', { ctrlKey: true });
+      expect(document.activeElement).toBe(entries[0]);
+      key(entries[0], 'i');
+      expect(document.activeElement).toBe(entries[4]);
+      key(entries[4], 'z');
+      expect(document.activeElement).toBe(entries[4]);
+
+      entries[3].focus();
+      key(entries[3], ' ');
+      expect(more.componentInstance.picked).toEqual([]);
+
+      entries[1].focus();
+      key(entries[1], 'Enter');
+      expect(more.componentInstance.picked).toEqual(['Docs']);
+
+      entries[3].dispatchEvent(new MouseEvent('mouseenter'));
+      expect(document.activeElement).toBe(entries[1]);
+      entries[4].dispatchEvent(new MouseEvent('mouseenter'));
+      expect(document.activeElement).toBe(entries[4]);
+      await calm();
+      expect(entries[4].getAttribute('tabindex')).toBe('0');
+    });
+
+    it('ignores keys that come from outside the list', () => {
+      const list = more.debugElement.query(By.directive(TxMenuList)).componentInstance as TxMenuList;
+      const entries = items(el('#plain tx-menu-list'));
+      entries[0].focus();
+      const outside = el('#other');
+      outside.addEventListener('keydown', (event) => list.onKeydown(event));
+      key(outside, 'ArrowDown');
+      expect(document.activeElement).toBe(entries[0]);
+    });
+
+    it('opens and switches sub-menus on hover', async () => {
+      const entries = items(el('#hover tx-menu-list'));
+      await hoverOver(entries[0]);
+      expect(entries[0].getAttribute('aria-expanded')).toBe('true');
+      expect(items(submenu()).map((item) => item.textContent?.trim())).toEqual(['A1', 'A2']);
+      expect(document.activeElement).toBe(entries[0]);
+
+      await hoverOver(entries[0]);
+      expect(items(submenu()).length).toBe(2);
+      key(entries[0], 'ArrowRight');
+      expect(document.activeElement).toBe(items(submenu())[0]);
+
+      await hoverOver(entries[1]);
+      await wait(300);
+      await calm();
+      expect(entries[0].getAttribute('aria-expanded')).toBe('false');
+      expect(entries[1].getAttribute('aria-expanded')).toBe('true');
+      expect(items(submenu()).map((item) => item.textContent?.trim())).toEqual(['B1']);
+
+      await hoverOver(entries[3]);
+      expect(entries[1].getAttribute('aria-expanded')).toBe('true');
+      await hoverOver(entries[2]);
+      await wait(300);
+      await calm();
+      expect(entries[1].getAttribute('aria-expanded')).toBe('false');
+      expect(submenu()).toBeNull();
+    });
+
+    it('opens a popup from an event, moves it to another anchor and toggles it closed', async () => {
+      const host = more.componentInstance;
+      const toggler = el('#toggler');
+      const other = el('#other');
+      host.popup().show();
+      await calm();
+      expect(host.popup().isOpen()).toBe(false);
+
+      toggler.click();
+      await calm();
+      expect(host.popup().isOpen()).toBe(true);
+      expect(host.popup().isOpenFor(toggler)).toBe(true);
+      expect(popupOf('Popup')).not.toBeNull();
+
+      host.popup().show(toggler);
+      host.popup().show(other);
+      await calm();
+      expect(host.popup().isOpenFor(other)).toBe(true);
+      expect(host.events).toEqual(['opened', 'closed', 'opened']);
+
+      host.popup().toggle();
+      await calm();
+      expect(host.popup().isOpen()).toBe(false);
+      host.popup().show();
+      await calm();
+      expect(host.popup().isOpenFor(other)).toBe(true);
+      host.popup().hide();
+      await calm();
+    });
+
+    it('moves an open popup to the element of a dispatched event when toggled from there', async () => {
+      const host = more.componentInstance;
+      const toggler = el('#toggler');
+      const other = el('#other');
+      toggler.click();
+      await calm();
+      const click = new MouseEvent('click');
+      other.dispatchEvent(click);
+      host.popup().toggle(click);
+      await calm();
+      expect(host.popup().isOpenFor(other)).toBe(true);
+      expect(toggler.getAttribute('aria-expanded')).toBeNull();
+      host.popup().toggle(other);
+      await calm();
+      expect(host.popup().isOpen()).toBe(false);
+    });
+
+    it('opens an empty popup without focusing anything', async () => {
+      const other = el('#other');
+      other.focus();
+      more.componentInstance.empty().show(other, 'last');
+      await calm();
+      expect(items(popupOf('Empty'))).toEqual([]);
+      expect(document.activeElement).toBe(other);
+    });
+
+    it('opens a page-wide context menu and closes it on a pointer press outside', async () => {
+      const host = more.componentInstance;
+      document.body.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true }));
+      await calm();
+      const list = popupOf('Page') as HTMLElement;
+      expect(list).not.toBeNull();
+      items(list)[0].dispatchEvent(new MouseEvent('pointerdown', { bubbles: true }));
+      await calm();
+      expect(popupOf('Page')).not.toBeNull();
+      document.body.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true }));
+      await calm();
+      expect(popupOf('Page')).toBeNull();
+      expect(host.events).toContain('context closed');
+
+      key(document.body, 'a');
+      await calm();
+      expect(popupOf('Page')).toBeNull();
+      key(document.body, 'ContextMenu');
+      await calm();
+      expect(popupOf('Page')).not.toBeNull();
+      document.dispatchEvent(new MouseEvent('pointerdown'));
+      await calm();
+      expect(popupOf('Page')).toBeNull();
+
+      key(document.body, 'ContextMenu');
+      await calm();
+      host.global().hide();
+      await calm();
+      expect(popupOf('Page')).toBeNull();
+    });
   });
 });

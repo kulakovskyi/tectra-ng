@@ -1,5 +1,5 @@
-import { addMonths, buildMonth, isSelectable, weekNumber, weekdayOrder } from './calendar';
-import { dateNames, formatDate, formatTime, parseDate, parseTime } from './date-format';
+import { addMonths, buildMonth, isMonthSelectable, isSelectable, isYearSelectable, weekNumber, weekdayOrder } from './calendar';
+import { dateNames, formatDate, formatTime, parseDate, parseTime, resolveCutoff } from './date-format';
 
 const names = dateNames('en-US');
 const ua = dateNames('uk-UA');
@@ -34,7 +34,37 @@ describe('date format', () => {
     expect(parseDate('01/05/45', 'mm/dd/y', names, '+10', now)?.getFullYear()).toBe(1945);
   });
 
+  it('formats and parses ticks, quoted text and missing parts', () => {
+    const ticks = formatDate(date, '!', names);
+    expect(ticks).toBe(String(date.getTime() * 10000 + 621355968000000000));
+    expect(parseDate(ticks, '!', names)?.getTime()).toBe(new Date(2026, 0, 5).getTime());
+    expect(parseDate('day 5 of January', "'day' d 'of' MM", names, '+10', new Date(2026, 5, 1))).toEqual(new Date(2026, 0, 5));
+    expect(parseDate("5'1.2026", "d''m.yy", names)).toEqual(new Date(2026, 0, 5));
+    expect(parseDate('Tue 6.1.2026', 'D d.m.yy', names)).toEqual(new Date(2026, 0, 6));
+    expect(parseDate('05.01', 'dd.mm', names, '+10', new Date(2030, 5, 1))).toEqual(new Date(2030, 0, 5));
+    expect(parseDate('ab', 'dd', names)).toBeNull();
+    expect(parseDate('Foo 5', 'M d', names)).toBeNull();
+    expect(parseDate('5-1-2026', 'd.m.yy', names)).toBeNull();
+    expect(parseDate('nope 5', "'day' d", names)).toBeNull();
+    expect(parseDate('2026', 'yy', names)).toBeNull();
+    expect(parseDate('0.1.2026', 'd.m.yy', names)).toBeNull();
+  });
+
+  it('resolves the short year cutoff', () => {
+    expect(resolveCutoff('+10', new Date(2026, 0, 1))).toBe(36);
+    expect(resolveCutoff('50')).toBe(50);
+    expect(resolveCutoff(20)).toBe(20);
+    expect(parseDate('01/05/40', 'mm/dd/y', names, 50, new Date(2026, 5, 1))?.getFullYear()).toBe(2040);
+  });
+
   it('formats and parses times', () => {
+    expect(formatTime(null, time)).toBe('');
+    expect(formatTime(new Date(Number.NaN), time)).toBe('');
+    expect(parseTime('nope', time)).toBeNull();
+    expect(parseTime('10:75', time)).toBeNull();
+    expect(parseTime('10:15:75', { ...time, showSeconds: true })).toBeNull();
+    expect(parseTime('10:15 PM', time)).toBeNull();
+    expect(parseTime('13:15 PM', { ...time, hourFormat: '12' })).toBeNull();
     expect(formatTime(date, time)).toBe('09:07');
     expect(formatTime(date, { ...time, showSeconds: true })).toBe('09:07:03');
     expect(formatTime(new Date(2026, 0, 1, 0, 5), { ...time, hourFormat: '12' })).toBe('12:05 AM');
@@ -67,6 +97,14 @@ describe('calendar', () => {
     expect(isSelectable(new Date(2026, 0, 15), rules)).toBe(false);
     expect(isSelectable(new Date(2026, 0, 18), rules)).toBe(false);
     expect(isSelectable(new Date(2026, 0, 21), rules)).toBe(false);
+  });
+
+  it('checks months and years against both limits', () => {
+    const rules = { minDate: new Date(2026, 2, 10), maxDate: new Date(2026, 9, 20) };
+    expect([1, 2, 9, 10].map((month) => isMonthSelectable(2026, month, rules))).toEqual([false, true, true, false]);
+    expect([2025, 2026, 2027].map((year) => isYearSelectable(year, rules))).toEqual([false, true, false]);
+    expect(isMonthSelectable(2026, 0, {})).toBe(true);
+    expect(isYearSelectable(1900, {})).toBe(true);
   });
 
   it('numbers ISO weeks and moves months without overflow', () => {

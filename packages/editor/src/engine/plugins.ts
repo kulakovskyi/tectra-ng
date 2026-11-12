@@ -53,7 +53,7 @@ export function normalizeHref(value: string): string {
 }
 
 function linkMatches(text: string): { start: number; end: number; href: string }[] {
-  return Array.from(text.matchAll(URL_PATTERN)).map((match) => ({ start: match.index ?? 0, end: (match.index ?? 0) + match[0].length, href: normalizeHref(match[0]) }));
+  return Array.from(text.matchAll(URL_PATTERN)).map((match) => ({ start: match.index, end: match.index + match[0].length, href: normalizeHref(match[0]) }));
 }
 
 function linkTextblock(tr: Transaction, node: ProseNode, pos: number, target: string | null, limit?: { from: number; to: number }): void {

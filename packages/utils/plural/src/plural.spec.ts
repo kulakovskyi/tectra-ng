@@ -10,7 +10,7 @@ import { TxPluralFormPipe, TxPluralPipe } from './plural.pipe';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class PluralHost {
-  readonly count = signal(1);
+  readonly count = signal<number | null>(1);
   readonly template = '{count, plural, one {# file} few {# файли} many {# файлів} other {# files}}';
 }
 
@@ -35,6 +35,7 @@ describe('plural', () => {
     expect(plural(3, forms, 'uk-UA')).toBe('3 файли');
     expect(plural(5, forms, 'uk-UA')).toBe('5 файлів');
     expect(plural(2, { many: '# items' })).toBe('2 items');
+    expect(plural(2, { one: '# item' })).toBe('');
     expect(plural(2, '{count, plural, one {# row} other {# rows}}')).toBe('2 rows');
   });
 
@@ -54,5 +55,10 @@ describe('plural', () => {
     fixture.detectChanges();
     expect(text('.form')).toBe('few');
     expect(text('.text')).toBe('3 файли');
+
+    fixture.componentInstance.count.set(null);
+    fixture.detectChanges();
+    expect(text('.form')).toBe('many');
+    expect(text('.text')).toBe('0 файлів');
   });
 });

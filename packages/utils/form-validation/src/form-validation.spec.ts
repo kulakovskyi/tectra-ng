@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AsyncValidatorFn, FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NEVER } from 'rxjs';
 import { TxSelect } from '@tectra-ng/ui/select';
 import { firstInvalidElement, focusTarget, markAllTouched } from './form-validation.functions';
 import { TxFormValidation } from './form-validation.service';
@@ -28,6 +29,22 @@ class FormHost {
     address: new FormGroup({ city: new FormControl('', Validators.required) }),
     role: new FormControl<string | null>(null, Validators.required),
   });
+}
+
+@Component({
+  imports: [ReactiveFormsModule, TxScrollToInvalid],
+  template: `
+    <form [formGroup]="form" txScrollToInvalid (invalidSubmit)="invalid = invalid + 1" (validSubmit)="valid = valid + 1">
+      <input formControlName="name" aria-label="Name" />
+    </form>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class PendingHost {
+  invalid = 0;
+  valid = 0;
+  private readonly checkLater: AsyncValidatorFn = () => NEVER;
+  readonly form = new FormGroup({ name: new FormControl('Ann', { asyncValidators: this.checkLater }) });
 }
 
 describe('form validation', () => {
@@ -81,5 +98,49 @@ describe('form validation', () => {
     submit();
     expect(fixture.componentInstance.valid).toBe(1);
     fixture.nativeElement.remove();
+  });
+
+  it('finds nothing in a valid scope and focuses an element without focusable children itself', () => {
+    const scope = document.createElement('div');
+    scope.innerHTML = '<span class="ng-invalid">Note</span>';
+    const note = scope.querySelector('span') as HTMLElement;
+    expect(focusTarget(note)).toBe(note);
+    expect(firstInvalidElement(document.createElement('div'))).toBeNull();
+  });
+
+  it('searches the whole page, scrolls without motion when asked and can skip focus', () => {
+    const matchMedia = window.matchMedia;
+    window.matchMedia = vi.fn(() => ({ matches: true }) as MediaQueryList);
+    const fixture = TestBed.createComponent(FormHost);
+    document.body.appendChild(fixture.nativeElement);
+    fixture.detectChanges();
+    const city = (fixture.nativeElement as HTMLElement).querySelector('[aria-label="City"]') as HTMLElement;
+    const validation = TestBed.inject(TxFormValidation);
+    expect(validation.scrollToFirstInvalid(fixture.componentInstance.form, { focus: false, block: 'start' })).toBe(true);
+    expect(city.scrollIntoView).toHaveBeenCalledWith({ behavior: 'auto', block: 'start' });
+    expect(document.activeElement).not.toBe(city);
+    window.matchMedia = matchMedia;
+    fixture.nativeElement.remove();
+  });
+
+  it('reports false when no invalid field is on the page', () => {
+    const form = new FormGroup({ name: new FormControl('', Validators.required) });
+    expect(TestBed.inject(TxFormValidation).scrollToFirstInvalid(form, { scope: document.createElement('div') })).toBe(false);
+    expect(form.get('name')?.touched).toBe(true);
+  });
+
+  it('only marks the form on the server', () => {
+    TestBed.configureTestingModule({ providers: [{ provide: PLATFORM_ID, useValue: 'server' }] });
+    const form = new FormGroup({ name: new FormControl('', Validators.required) });
+    expect(TestBed.inject(TxFormValidation).scrollToFirstInvalid(form)).toBe(true);
+    expect(form.get('name')?.dirty).toBe(true);
+  });
+
+  it('waits for pending async validation on submit', () => {
+    const fixture = TestBed.createComponent(PendingHost);
+    fixture.detectChanges();
+    expect(fixture.componentInstance.form.pending).toBe(true);
+    (fixture.nativeElement as HTMLElement).querySelector('form')?.dispatchEvent(new Event('submit', { cancelable: true }));
+    expect(fixture.componentInstance.invalid + fixture.componentInstance.valid).toBe(0);
   });
 });

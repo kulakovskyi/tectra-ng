@@ -38,6 +38,7 @@ describe('TxClock', () => {
     expect(state.isExpired()).toBe(true);
     target.set(null);
     expect(state.isExpired()).toBe(false);
+    expect(state.remainingMs()).toBe(0);
     expect(clock.countdown('2020-01-01').isExpired()).toBe(true);
   });
 

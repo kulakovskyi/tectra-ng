@@ -20,7 +20,7 @@
     },
     "test": {
       "executor": "nx:run-commands",
-      "outputs": ["{workspaceRoot}/coverage/packages/tectra-ng"],
+      "outputs": ["{workspaceRoot}/coverage/tectra-ng"],
       "options": {
         "command": "vitest run -c packages/tectra-ng/vitest.config.mts"
       }

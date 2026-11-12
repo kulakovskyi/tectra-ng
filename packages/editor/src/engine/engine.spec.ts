@@ -204,6 +204,8 @@ describe('toVideoEmbed', () => {
     expect(toVideoEmbed('https://www.youtube.com/watch?v=dQw4w9WgXcQ')).toBe('https://www.youtube.com/embed/dQw4w9WgXcQ');
     expect(toVideoEmbed('youtube.com/watch?feature=share&t=10&v=dQw4w9WgXcQ')).toBe('https://www.youtube.com/embed/dQw4w9WgXcQ');
     expect(toVideoEmbed('https://youtu.be/dQw4w9WgXcQ?t=5')).toBe('https://www.youtube.com/embed/dQw4w9WgXcQ');
+    expect(toVideoEmbed('https://youtu.be/')).toBe('https://youtu.be/');
+    expect(toVideoEmbed('https://www.youtube.com/embed')).toBe('https://www.youtube.com/embed');
     expect(toVideoEmbed('https://www.youtube.com/shorts/abcdef12')).toBe('https://www.youtube.com/embed/abcdef12');
     expect(toVideoEmbed('https://www.youtube-nocookie.com/embed/abcdefg')).toBe('https://www.youtube.com/embed/abcdefg');
     expect(toVideoEmbed('https://vimeo.com/76979871')).toBe('https://player.vimeo.com/video/76979871');

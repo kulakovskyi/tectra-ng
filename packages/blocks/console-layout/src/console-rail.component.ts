@@ -22,7 +22,7 @@ import { CONSOLE_LAYOUT_THEME } from './console-layout.theme';
             [routerLink]="item.routerLink"
             [queryParams]="item.queryParams"
             [routerLinkActiveOptions]="item.activeOptions ?? exactMatch"
-            [attr.target]="item.target ?? null"
+            [target]="item.target"
           >
             <tx-icon class="tx-console-rail__icon" aria-hidden="true" [name]="item.icon" />
             <span class="tx-console-rail__label">{{ item.label }}</span>

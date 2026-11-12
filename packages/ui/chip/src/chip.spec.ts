@@ -8,6 +8,8 @@ import { TX_ICONS, provideTxIcons } from '@tectra-ng/icons';
   template: `
     <tx-chip id="person" label="Olena" image="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" [removable]="true" removeLabel="Remove Olena" (removed)="removed = removed + 1" />
     <tx-chip id="filter" label="Paid" icon="filter" removeIcon="pi pi-times" [removable]="true" [dt]="{ root: { height: '24px' } }" />
+    <tx-chip id="avatar" label="Taras" image="data:image/gif;base64,R0lGODlhAQABAAAAACw=" />
+    <tx-chip id="own" label="Own" icon="own-chip-icon" />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -40,9 +42,16 @@ describe('TxChip', () => {
     expect(remove.getAttribute('aria-label')).toBe('Remove Olena');
     remove.click();
     remove.dispatchEvent(new KeyboardEvent('keydown', { key: 'Backspace', cancelable: true }));
+    remove.dispatchEvent(new KeyboardEvent('keydown', { key: 'Delete', cancelable: true }));
     await fixture.whenStable();
-    expect(fixture.componentInstance.removed).toBe(2);
+    expect(fixture.componentInstance.removed).toBe(3);
     expect(el('#filter .tx-chip__remove span').className).toBe('pi pi-times');
     expect(el('#filter .tx-chip__remove').getAttribute('aria-label')).toBe('Remove');
   });
+
+  it('gives an image without alt an empty one and draws an unregistered icon as a class', () => {
+    expect(el('#avatar img').getAttribute('alt')).toBe('');
+    expect(el('#own .tx-chip__icon span.own-chip-icon')).not.toBeNull();
+  });
 });
+

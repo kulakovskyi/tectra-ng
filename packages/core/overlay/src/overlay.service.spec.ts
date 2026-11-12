@@ -6,12 +6,18 @@ import { TxOverlay } from './overlay.service';
 import { TxOverlayCloseReason } from './overlay.types';
 
 @Component({
-  template: `<button #origin>Open</button><ng-template #panel let-name><div class="panel">Hello {{ name }}</div></ng-template>`,
+  template: `
+    <button #origin>Open</button>
+    <span id="outside">Outside</span>
+    <ng-template #panel let-name><div class="panel">Hello {{ name }}</div></ng-template>
+    <ng-template #plain>Just text</ng-template>
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class Host {
   viewContainerRef = inject(ViewContainerRef);
   readonly panel = viewChild.required<TemplateRef<{ $implicit: string }>>('panel');
+  readonly plain = viewChild.required<TemplateRef<unknown>>('plain');
 }
 
 @Component({ selector: 'test-panel', template: 'Component panel', changeDetection: ChangeDetectionStrategy.OnPush })
@@ -76,6 +82,59 @@ describe('TxOverlay', () => {
     expect(reasons).toEqual([]);
     container.dispatchEvent(new Event('scroll'));
     expect(reasons).toEqual(['scroll']);
+  });
+
+  it('closes once, on a click outside the origin, without taking focus back', async () => {
+    const { fixture, origin, overlay } = setup();
+    document.body.appendChild(fixture.nativeElement);
+    origin.focus();
+    const reasons: TxOverlayCloseReason[] = [];
+    const ref = overlay.open(Panel, { origin, matchWidth: true });
+    ref.closed.subscribe((reason) => reasons.push(reason));
+    const outside = fixture.nativeElement.querySelector('#outside') as HTMLElement;
+    for (const target of [origin, outside]) {
+      target.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true }));
+      target.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    }
+    expect(reasons).toEqual(['outside']);
+    ref.close();
+    expect(reasons).toEqual(['outside']);
+    await Promise.resolve();
+    fixture.nativeElement.remove();
+  });
+
+  it('ignores outside clicks when closeOnOutsideClick is false and restoreFocus is off', () => {
+    const { fixture, origin, overlay } = setup();
+    document.body.appendChild(fixture.nativeElement);
+    const reasons: TxOverlayCloseReason[] = [];
+    const ref = overlay.open(Panel, { origin, closeOnOutsideClick: false, restoreFocus: false, animate: false });
+    ref.closed.subscribe((reason) => reasons.push(reason));
+    const outside = fixture.nativeElement.querySelector('#outside') as HTMLElement;
+    outside.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true }));
+    outside.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    expect(reasons).toEqual([]);
+    ref.close();
+    expect(reasons).toEqual(['api']);
+    fixture.nativeElement.remove();
+  });
+
+  it('closes with the scroll reason when the close strategy detaches it', async () => {
+    const { origin, overlay } = setup();
+    const reasons: TxOverlayCloseReason[] = [];
+    const ref = overlay.open(Panel, { origin, scroll: 'close', motion: 'pop' });
+    ref.closed.subscribe((reason) => reasons.push(reason));
+    document.dispatchEvent(new Event('scroll'));
+    await vi.waitFor(() => expect(reasons).toEqual(['scroll']));
+  });
+
+  it('reports a detachment when the template view goes away and animates a text-only panel', async () => {
+    const { fixture, origin, overlay } = setup();
+    const reasons: TxOverlayCloseReason[] = [];
+    const ref = overlay.open(fixture.componentInstance.plain(), { origin, viewContainerRef: fixture.componentInstance.viewContainerRef, scroll: 'block' });
+    ref.closed.subscribe((reason) => reasons.push(reason));
+    expect(ref.element.textContent).toContain('Just text');
+    fixture.destroy();
+    await vi.waitFor(() => expect(reasons).toEqual(['detached']));
   });
 
   it('needs a view container for templates', () => {

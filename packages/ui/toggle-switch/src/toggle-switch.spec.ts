@@ -87,4 +87,49 @@ describe('TxToggleSwitch', () => {
     expect(el('#mode').style.getPropertyValue('--tx-toggle-switch-width')).toBe('60px');
     expect(el('#mode .tx-toggle-switch__handle').classList).toContain('own-handle');
   });
+
+  it('focuses its input, is touched on blur and turns off', async () => {
+    const toggle = fixture.debugElement.query((node) => node.nativeElement.id === 'notify').componentInstance as TxToggleSwitch;
+    toggle.focus();
+    expect(document.activeElement).toBe(input('notify'));
+    input('notify').click();
+    await fixture.whenStable();
+    input('notify').click();
+    await fixture.whenStable();
+    expect(fixture.componentInstance.notify.value).toBe(false);
+    expect(fixture.componentInstance.events.map((event) => event.checked)).toEqual([true, false]);
+    input('notify').dispatchEvent(new FocusEvent('blur'));
+    expect(fixture.componentInstance.notify.touched).toBe(true);
+  });
 });
+
+@Component({
+  imports: [TxToggleSwitch],
+  template: `<tx-toggle-switch id="classes" ariaLabel="Classes" onIcon="own-on" offIcon="own-off" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class ClassHost {}
+
+describe('TxToggleSwitch with icon classes', () => {
+  it('draws unregistered icon names as classes', async () => {
+    const fixture = TestBed.createComponent(ClassHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    const handle = fixture.nativeElement.querySelector('#classes .tx-toggle-switch__handle') as HTMLElement;
+    expect(handle.querySelector('span.own-off')).not.toBeNull();
+    (fixture.nativeElement.querySelector('#classes input') as HTMLInputElement).click();
+    await fixture.whenStable();
+    expect(handle.querySelector('span.own-on')).not.toBeNull();
+  });
+});
+
+describe('TxToggleSwitch recompiled by TestBed', () => {
+  it('still finds its handle template when a test overrides the component', async () => {
+    TestBed.overrideComponent(TxToggleSwitch, { set: { styles: [] } });
+    const fixture = TestBed.createComponent(Host);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('#custom .own').textContent).toBe('off');
+  });
+});
+

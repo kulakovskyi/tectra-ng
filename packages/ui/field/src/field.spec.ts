@@ -112,3 +112,56 @@ describe('TxField', () => {
     expect(query('#email-field tx-label').classList).toContain('own-label');
   });
 });
+
+@Component({
+  imports: [TxField, TxInput],
+  template: `
+    <tx-field id="text-field" label="Note"><span class="plain">No control here</span></tx-field>
+    <tx-field id="bare-field"><input txInput class="bare" /></tx-field>
+    <tx-field id="named-group" label="Days"><div role="group" aria-label="Week days" class="days"></div></tx-field>
+    <tx-field id="unlabelled-group"><div role="group" class="days"></div></tx-field>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class PlainHost {}
+
+describe('TxField without a form control', () => {
+  let fixture: ComponentFixture<PlainHost>;
+  const query = (selector: string) => fixture.nativeElement.querySelector(selector) as HTMLElement;
+
+  beforeEach(async () => {
+    fixture = TestBed.createComponent(PlainHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+  });
+
+  it('points the label nowhere when there is no control', () => {
+    expect(query('#text-field label').hasAttribute('for')).toBe(false);
+  });
+
+  it('gives a bare input an id and links only the error slot', () => {
+    const input = query('#bare-field input');
+    expect(input.id).toMatch(/^tx-field-\d+-control$/);
+    expect(input.getAttribute('aria-describedby')?.split(' ')).toHaveLength(1);
+    expect(input.hasAttribute('aria-labelledby')).toBe(false);
+  });
+
+  it('keeps an own group name and does not name a group without a label', () => {
+    expect(query('#named-group .days').getAttribute('aria-label')).toBe('Week days');
+    expect(query('#named-group .days').hasAttribute('aria-labelledby')).toBe(false);
+    expect(query('#unlabelled-group .days').hasAttribute('aria-labelledby')).toBe(false);
+  });
+});
+
+describe('TxField recompiled by TestBed', () => {
+  it('still finds the projected form control when a test overrides the component', async () => {
+    TestBed.overrideComponent(TxField, { set: { styles: [] } });
+    const fixture = TestBed.createComponent(Host);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    fixture.componentInstance.form.controls.email.markAsTouched();
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('#email-field tx-field-error')?.textContent).toContain('This field is required');
+  });
+});
+

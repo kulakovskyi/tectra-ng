@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { TxPinnedTabs } from './pinned-tabs.component';
 
 const KEY = 'tx-spec-pinned';
@@ -73,5 +74,109 @@ describe('TxPinnedTabs', () => {
     await fixture.whenStable();
     expect(JSON.parse(localStorage.getItem(KEY) ?? '[]')).toEqual(['design', 'sales']);
     expect(Array.from(root.querySelectorAll('[role="tab"]')).map((tab) => tab.textContent?.trim())).toEqual(['All teams', 'Design', 'Sales']);
+  });
+});
+
+@Component({
+  imports: [TxPinnedTabs],
+  template: `
+    <tx-pinned-tabs
+      [stateKey]="key()"
+      [options]="options"
+      dialogTitle="Pinned teams"
+      dialogText="Pick the teams you use most"
+    />
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class PlainHost {
+  readonly key = signal(KEY);
+  readonly options = [
+    { value: 'design', label: 'Design' },
+    { value: 'sales', label: 'Sales' },
+  ];
+}
+
+describe('TxPinnedTabs dialog and storage edges', () => {
+  beforeEach(() => localStorage.clear());
+  afterEach(() => {
+    vi.restoreAllMocks();
+    document.querySelectorAll('.cdk-overlay-container').forEach((node) => node.remove());
+  });
+
+  async function setup() {
+    const fixture = TestBed.createComponent(PlainHost);
+    await fixture.whenStable();
+    const root = fixture.nativeElement.querySelector('tx-pinned-tabs') as HTMLElement;
+    const tabs = fixture.debugElement.query(By.directive(TxPinnedTabs)).componentInstance as TxPinnedTabs;
+    return { fixture, root, tabs };
+  }
+
+  const footerButton = (label: string) =>
+    Array.from(document.querySelectorAll<HTMLButtonElement>('tx-dialog-footer button')).find((button) => button.textContent?.trim() === label) as HTMLButtonElement;
+
+  it('shows the own dialog texts, unpins a value and keeps the pins when cancelled', async () => {
+    localStorage.setItem(KEY, JSON.stringify(['design', 'sales']));
+    const { fixture, root, tabs } = await setup();
+    expect(Array.from(root.querySelectorAll('[role="tab"]')).map((tab) => tab.textContent?.trim())).toEqual(['All', 'Design', 'Sales']);
+
+    tabs.openSettings();
+    await fixture.whenStable();
+    expect(document.querySelector('tx-dialog-header')?.textContent).toContain('Pinned teams');
+    expect(document.querySelector('.tx-pinned-tabs-dialog')?.textContent).toContain('Pick the teams you use most');
+    expect(document.querySelector('.tx-pinned-tabs-dialog__options')?.getAttribute('aria-label')).toBe('Pinned teams');
+    const options = Array.from(document.querySelectorAll<HTMLButtonElement>('.tx-pinned-tabs-dialog__option'));
+    options[0].click();
+    await fixture.whenStable();
+    expect(options.map((option) => option.getAttribute('aria-checked'))).toEqual(['false', 'true']);
+    footerButton('Cancel').click();
+    await fixture.whenStable();
+    expect(tabs.pinned()).toEqual(['design', 'sales']);
+    expect(JSON.parse(localStorage.getItem(KEY) ?? '[]')).toEqual(['design', 'sales']);
+
+    tabs.openSettings();
+    await fixture.whenStable();
+    document.querySelectorAll<HTMLButtonElement>('.tx-pinned-tabs-dialog__option')[0].click();
+    footerButton('Save').click();
+    await fixture.whenStable();
+    expect(tabs.pinned()).toEqual(['sales']);
+    expect(JSON.parse(localStorage.getItem(KEY) ?? '[]')).toEqual(['sales']);
+  });
+
+  it('reads broken or foreign stored values as nothing pinned', async () => {
+    localStorage.setItem(KEY, '{oops');
+    localStorage.setItem('tx-spec-object', JSON.stringify({ design: true }));
+    const { fixture, tabs } = await setup();
+    expect(tabs.pinned()).toEqual([]);
+    fixture.componentInstance.key.set('tx-spec-object');
+    await fixture.whenStable();
+    expect(tabs.pinned()).toEqual([]);
+    expect(tabs.tabs()).toEqual([]);
+  });
+
+  it('still pins values when the storage cannot be used', async () => {
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new Error('quota');
+    });
+    const quota = await setup();
+    quota.tabs.openSettings();
+    await quota.fixture.whenStable();
+    document.querySelectorAll<HTMLButtonElement>('.tx-pinned-tabs-dialog__option')[1].click();
+    footerButton('Save').click();
+    await quota.fixture.whenStable();
+    expect(quota.tabs.pinned()).toEqual(['sales']);
+    expect(localStorage.getItem(KEY)).toBeNull();
+
+    vi.spyOn(window, 'localStorage', 'get').mockImplementation(() => {
+      throw new Error('denied');
+    });
+    const denied = await setup();
+    expect(denied.tabs.pinned()).toEqual([]);
+  });
+
+  it('starts with nothing pinned when the window has no storage', async () => {
+    vi.spyOn(window, 'localStorage', 'get').mockReturnValue(null as unknown as Storage);
+    const { tabs } = await setup();
+    expect(tabs.pinned()).toEqual([]);
   });
 });

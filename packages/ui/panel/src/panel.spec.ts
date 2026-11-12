@@ -12,6 +12,7 @@ import { TX_ICONS, provideTxIcons } from '@tectra-ng/icons';
       <p>List</p>
       <div txPanelFooter><button>Save</button></div>
     </tx-panel>
+    <tx-panel id="own-icon" title="Own" icon="own-panel-icon">Body</tx-panel>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -64,5 +65,9 @@ describe('TxPanel', () => {
     fixture.componentInstance.variant.set('inset');
     await fixture.whenStable();
     expect(el('#members').getAttribute('data-variant')).toBe('inset');
+  });
+
+  it('draws an unregistered icon name as a class', () => {
+    expect(fixture.nativeElement.querySelector('#own-icon .tx-panel__icon span.own-panel-icon')).not.toBeNull();
   });
 });

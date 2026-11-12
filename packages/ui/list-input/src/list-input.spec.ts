@@ -4,7 +4,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TxLocaleService } from '@tectra-ng/core/i18n';
 import { provideTxTooltip } from '@tectra-ng/ui/tooltip';
 import { TxListInput } from './list-input.component';
-import { txParseDomain, txParseEmail, txParseList, txParseUrl } from './list-input.parsers';
+import { TX_LIST_INPUT_PARSERS, txParseDomain, txParseEmail, txParseList, txParseText, txParseUrl } from './list-input.parsers';
 import { TxListInputResult } from './list-input.types';
 
 @Component({
@@ -75,6 +75,9 @@ describe('TxListInput', () => {
     expect(txParseUrl('ftp://example.com')).toBeNull();
     expect(txParseUrl('not a url')).toBeNull();
     expect(txParseList('a.com b.com, a.com; nope', txParseDomain)).toEqual({ items: ['a.com', 'b.com'], invalid: ['nope'], duplicates: 1 });
+    expect(TX_LIST_INPUT_PARSERS.text).toBe(txParseText);
+    expect(txParseList('one two one', txParseText)).toEqual({ items: ['one', 'two'], invalid: [], duplicates: 1 });
+    expect(txParseList(null, txParseText)).toEqual({ items: [], invalid: [], duplicates: 0 });
   });
 
   it('counts items, duplicates and unrecognized lines as the user types', async () => {
@@ -131,6 +134,12 @@ describe('TxListInput', () => {
     emails.setValue(['c@example.net', 'd@example.net']);
     await fixture.whenStable();
     expect(field('form').value).toBe('c@example.net\nd@example.net');
+    emails.setValue(['c@example.net', 'd@example.net']);
+    await fixture.whenStable();
+    expect(field('form').value).toBe('c@example.net\nd@example.net');
+    emails.setValue(null);
+    await fixture.whenStable();
+    expect(field('form').value).toBe('');
     emails.disable();
     await fixture.whenStable();
     expect(field('form').disabled).toBe(true);

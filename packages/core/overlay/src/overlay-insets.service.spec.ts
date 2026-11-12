@@ -35,6 +35,14 @@ describe('TxOverlayInsets', () => {
     expect(insets.measure()).toEqual({ top: 0, bottom: 40 });
   });
 
+  it('ignores chrome that scrolls with the page and counts a footer stuck to the bottom', () => {
+    const insets = TestBed.inject(TxOverlayInsets);
+    insets.register(element({ position: 'static' }, 0, 56));
+    insets.register(element({ position: 'sticky', bottom: '0px' }, innerHeight - 30, 30));
+    insets.register(element({ position: 'sticky', bottom: '0px' }, 200, 30));
+    expect(insets.measure()).toEqual({ top: 0, bottom: 30 });
+  });
+
   it('starts from the configured insets', () => {
     TestBed.configureTestingModule({ providers: [{ provide: TECTRA_CONFIG, useValue: { preset: Tectra, overlay: { viewportInsets: { top: 64 } } } }] });
     expect(TestBed.inject(TxOverlayInsets).measure()).toEqual({ top: 64, bottom: 0 });

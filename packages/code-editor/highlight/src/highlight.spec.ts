@@ -158,3 +158,27 @@ describe('TxCodeHighlight', () => {
     expect(root.querySelector('.tx-code-highlight__number')).toBeNull();
   });
 });
+
+@Component({
+  imports: [TxCodeHighlight],
+  template: `<tx-code-highlight [code]="code()" height="120px" ariaLabel="Snippet" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class EmptyHost {
+  readonly code = signal<string | null>(null);
+}
+
+describe('TxCodeHighlight without code', () => {
+  it('renders one empty line, the height and the label without tokens', async () => {
+    const fixture = TestBed.createComponent(EmptyHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    const root = fixture.nativeElement.querySelector('tx-code-highlight') as HTMLElement;
+    expect(root.querySelectorAll('.tx-code-highlight__line').length).toBe(1);
+    expect(root.style.height).toBe('120px');
+    expect(root.querySelector('pre')?.getAttribute('aria-label')).toBe('Snippet');
+    fixture.componentInstance.code.set('<b>');
+    await fixture.whenStable();
+    expect(root.querySelector('.tx-code-tok-tag')?.textContent).toBe('b');
+  });
+});

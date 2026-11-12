@@ -82,8 +82,52 @@ describe('polling', () => {
     expect(values).toEqual([1, 3]);
   });
 
+  it('keeps polling a hidden page when asked and retries reads by default', () => {
+    const server = jobServer(2);
+    const visibility = vi.spyOn(document, 'visibilityState', 'get').mockReturnValue('hidden');
+    const values: number[] = [];
+    poll({ request: server.request, isActive: (job) => job.status === 'running', delay: 100, pauseWhenHidden: false }).subscribe((job) => values.push(job.step));
+    vi.advanceTimersByTime(100);
+    expect(values).toEqual([1, 2]);
+    visibility.mockRestore();
+  });
+
+  it('refreshes at once, on hidden pages too, and passes errors on when asked', () => {
+    const visibility = vi.spyOn(document, 'visibilityState', 'get').mockReturnValue('hidden');
+    let calls = 0;
+    const values: number[] = [];
+    const errors: unknown[] = [];
+    refreshEvery({
+      delay: 1000,
+      immediate: true,
+      pauseWhenHidden: false,
+      skipErrors: false,
+      request: () => defer(() => (++calls === 2 ? throwError(() => new Error('x')) : of(calls))),
+    }).subscribe({ next: (value) => values.push(value), error: (error) => errors.push(error) });
+    vi.advanceTimersByTime(0);
+    expect(values).toEqual([1]);
+    vi.advanceTimersByTime(1000);
+    expect(errors).toHaveLength(1);
+    visibility.mockRestore();
+  });
+
+  it('does not poll or refresh without a document', () => {
+    vi.stubGlobal('document', undefined);
+    const request = vi.fn(() => of(1));
+    const values: number[] = [];
+    let completed = 0;
+    poll({ request, isActive: () => true, delay: 100, retry: false }).subscribe({ next: (value) => values.push(value), complete: () => completed++ });
+    refreshEvery({ request, delay: 100 }).subscribe({ complete: () => completed++ });
+    vi.unstubAllGlobals();
+    expect(values).toEqual([1]);
+    expect(request).toHaveBeenCalledTimes(1);
+    expect(completed).toBe(2);
+  });
+
   it('turns errors into status and message', () => {
     expect(toPollingError(new HttpErrorResponse({ status: 409, error: { error: 'Busy' } }))).toEqual({ status: 409, message: 'Busy' });
+    expect(toPollingError(new HttpErrorResponse({ status: 400, error: { message: 'Bad' } }))).toEqual({ status: 400, message: 'Bad' });
+    expect(toPollingError(new HttpErrorResponse({ status: 500, error: { error: { code: 1 } } }))).toEqual({ status: 500, message: null });
     expect(toPollingError(new Error('x'))).toEqual({ status: 0, message: null });
   });
 

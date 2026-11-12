@@ -75,4 +75,35 @@ describe('TxSwitchTheme', () => {
     document.startViewTransition = original;
     root.animate = originalAnimate;
   });
+
+  it('starts the reveal from the middle of the button after a keyboard click', async () => {
+    const fixture = TestBed.createComponent(Host);
+    await fixture.whenStable();
+    const animate = vi.fn();
+    const root = document.documentElement as HTMLElement & { animate: typeof animate };
+    const originalAnimate = root.animate;
+    root.animate = animate;
+    const original = document.startViewTransition;
+    document.startViewTransition = ((update: () => void) => {
+      update();
+      return { ready: Promise.resolve(), finished: Promise.resolve(), updateCallbackDone: Promise.resolve(), skipTransition: vi.fn() };
+    }) as unknown as Document['startViewTransition'];
+    try {
+      const button = fixture.nativeElement.querySelector('.own-reveal') as HTMLButtonElement;
+      vi.spyOn(button, 'getBoundingClientRect').mockReturnValue({ left: 100, top: 20, width: 40, height: 20 } as DOMRect);
+      button.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      expect(fixture.componentInstance.reveals).toBe(1);
+      await Promise.resolve();
+      await Promise.resolve();
+      expect(animate).toHaveBeenCalledWith(
+        expect.objectContaining({ clipPath: [expect.stringContaining('circle(0px at 120px 30px)'), expect.stringContaining('at 120px 30px')] }),
+        expect.anything(),
+      );
+      await new Promise((resolve) => setTimeout(resolve));
+    } finally {
+      document.startViewTransition = original;
+      root.animate = originalAnimate;
+      vi.restoreAllMocks();
+    }
+  });
 });

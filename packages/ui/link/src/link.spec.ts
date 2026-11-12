@@ -17,11 +17,12 @@ class Page {}
     <tx-icon-link id="nav" icon="pi-user" text="Profile" routerLink="/profile" />
     <tx-icon-link id="external" icon="book" text="Docs" href="https://docs.example.com" />
     <tx-icon-link id="action" icon="sign-out" text="Log out" />
+    <tx-icon-link id="own-icon" icon="own-link-icon" text="Own" />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class Host {
-  readonly link = signal('docs.example.com/guide');
+  readonly link = signal<string | null>('docs.example.com/guide');
   readonly type = signal<TxLinkType>('url');
   copiedText = '';
 }
@@ -92,4 +93,33 @@ describe('TxLink and TxIconLink', () => {
     expect(el('#external a').getAttribute('target')).toBe('_blank');
     expect(el('#action button').textContent).toContain('Log out');
   });
+
+  it('keeps absolute and local addresses, treats a missing link as empty and draws an unknown icon as a class', async () => {
+    fixture.componentInstance.link.set('/local/page');
+    await fixture.whenStable();
+    expect(el('#url a').getAttribute('href')).toBe('/local/page');
+    fixture.componentInstance.link.set('http://example.com');
+    await fixture.whenStable();
+    expect(el('#url a').getAttribute('href')).toBe('http://example.com');
+    fixture.componentInstance.link.set(null);
+    await fixture.whenStable();
+    expect(el('#url .tx-link__text').textContent).toBe('');
+    expect(el('#own-icon span.own-link-icon')).not.toBeNull();
+  });
+
+  it('restarts the check when copied again and resets it after a while', async () => {
+    vi.useFakeTimers();
+    const button = el('#url .tx-link__copy') as HTMLButtonElement;
+    button.click();
+    vi.advanceTimersByTime(1000);
+    button.click();
+    vi.advanceTimersByTime(1000);
+    fixture.detectChanges();
+    expect(button.getAttribute('aria-label')).toBe('Copied');
+    vi.advanceTimersByTime(1000);
+    fixture.detectChanges();
+    expect(button.getAttribute('aria-label')).toBe('Copy link');
+    vi.useRealTimers();
+  });
 });
+

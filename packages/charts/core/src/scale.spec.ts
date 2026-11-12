@@ -1,5 +1,7 @@
 import {
+  addTime,
   bandScale,
+  floorTime,
   extent,
   linearScale,
   linearTicks,
@@ -10,6 +12,7 @@ import {
   pointScale,
   tickStep,
   timeInterval,
+  timeScale,
   timeTicks,
   toTime,
 } from './scale';
@@ -90,5 +93,61 @@ describe('chart scales', () => {
   it('finds the extent of finite values', () => {
     expect(extent([3, null, -2, Number.NaN, 8])).toEqual([-2, 8]);
     expect(extent([null])).toBeNull();
+  });
+
+  it('pads a single value away from zero and drops negative zero', () => {
+    expect(niceDomain(-5, -5)).toEqual([-6, 0]);
+    expect(niceDomain(Number.MIN_VALUE, Number.MIN_VALUE)).toEqual([0, 1]);
+    expect(Object.is(linearTicks(-0.5, 2, 2)[0], 0)).toBe(true);
+    expect(linearTicks(3, 3)).toEqual([3]);
+    expect(linearTicks(Number.NaN, Number.NaN)).toEqual([]);
+  });
+
+  it('keeps flat domains and ranges usable', () => {
+    const flat = linearScale([5, 5], [0, 0]);
+    expect(flat.map(6)).toBe(0);
+    expect(flat.invert(10)).toBe(15);
+    const log = logScale([10, 10], [0, 0]);
+    expect(log.map(10)).toBe(0);
+    expect(log.invert(0)).toBe(10);
+    expect(logTicks(1, 1e10, 2)).toEqual([1, 100000, 10000000000]);
+    expect(bandScale(3, [0, 300]).start(1)).toBe(100);
+    expect(pointScale(1, [0, 100]).indexAt(80)).toBe(0);
+  });
+
+  it('floors and steps every calendar unit', () => {
+    const at = new Date(2026, 4, 14, 13, 47, 33, 500).getTime();
+    const unit = (
+      name: 'year' | 'month' | 'week' | 'day' | 'hour' | 'minute' | 'second',
+      step: number,
+    ) => ({ unit: name, step, duration: 1 });
+    expect(floorTime(at, unit('year', 5))).toEqual(new Date(2025, 0, 1));
+    expect(floorTime(at, unit('week', 1)).getDay()).toBe(0);
+    expect(floorTime(at, unit('day', 1))).toEqual(new Date(2026, 4, 14));
+    expect(floorTime(at, unit('day', 2))).toEqual(new Date(2026, 4, 13));
+    expect(floorTime(at, unit('hour', 6))).toEqual(new Date(2026, 4, 14, 12));
+    expect(floorTime(at, unit('minute', 15))).toEqual(new Date(2026, 4, 14, 13, 45));
+    expect(floorTime(at, unit('second', 5)).getSeconds()).toBe(30);
+    const start = new Date(2026, 0, 31, 10, 0, 0);
+    expect(addTime(start, unit('year', 2)).getFullYear()).toBe(2028);
+    expect(addTime(start, unit('week', 1)).getDate()).toBe(7);
+    expect(addTime(start, unit('day', 2)).getDate()).toBe(2);
+    expect(addTime(start, unit('hour', 3)).getHours()).toBe(13);
+    expect(addTime(start, unit('minute', 5)).getMinutes()).toBe(5);
+    expect(addTime(start, unit('second', 30)).getSeconds()).toBe(30);
+  });
+
+  it('starts time ticks at the first boundary inside the range and falls back to whole years', () => {
+    const start = new Date(2026, 0, 1, 0, 0, 20).getTime();
+    const { ticks } = timeTicks(start, start + 60_000, 4);
+    expect(ticks[0]).toBeGreaterThanOrEqual(start);
+    expect(timeInterval(0, 1e15, 0)).toMatchObject({ unit: 'year', step: 1 });
+    const scale = timeScale([start, start + 86_400_000], [0, 100]);
+    expect(scale.kind).toBe('time');
+    expect(scale.interval().unit).toBe('hour');
+    expect(scale.ticks(4).length).toBeGreaterThan(1);
+    expect(toTime(new Date(Number.NaN))).toBeNull();
+    expect(toTime(Number.POSITIVE_INFINITY)).toBeNull();
+    expect(toTime(undefined)).toBeNull();
   });
 });

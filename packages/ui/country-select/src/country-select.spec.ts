@@ -2,17 +2,18 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TxCountrySelect } from './country-select.component';
-import { TxCountryOption } from './country-select.types';
+import { TxCountryOption, TxCountrySort } from './country-select.types';
 
 @Component({
   imports: [TxCountrySelect, ReactiveFormsModule],
-  template: `<tx-country-select [formControl]="control" [options]="options()" [multiple]="multiple()" [maxFlags]="2" [ariaLabel]="'Country'" />`,
+  template: `<tx-country-select [formControl]="control" [options]="options()" [multiple]="multiple()" [sort]="sort()" [maxFlags]="2" [ariaLabel]="'Country'" />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class Host {
   control = new FormControl<string | string[] | null>(null);
   readonly options = signal<(string | TxCountryOption)[] | undefined>(undefined);
   readonly multiple = signal(false);
+  readonly sort = signal<TxCountrySort>('name');
 }
 
 describe('TxCountrySelect', () => {
@@ -69,6 +70,18 @@ describe('TxCountrySelect', () => {
     expect(host.control.value).toBe('UA');
     expect(trigger().textContent).toContain('Ukraine');
     expect(host.control.touched).toBe(true);
+  });
+
+  it('keeps the given order and own labels without sorting', () => {
+    host.options.set([{ code: 'ua', label: 'Home', value: 'home' }, 'PL', 'DE']);
+    host.sort.set('none');
+    render();
+    trigger().click();
+    render();
+    expect(options().map((option) => option.querySelector('.tx-country__name')?.textContent)).toEqual(['Home', 'Poland', 'Germany']);
+    options()[0].click();
+    render();
+    expect(host.control.value).toBe('home');
   });
 
   it('shows a few flags and a counter for several countries', async () => {

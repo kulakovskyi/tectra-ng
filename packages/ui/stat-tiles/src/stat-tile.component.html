@@ -5,7 +5,7 @@
     [style]="passThrough().body?.style"
     [routerLink]="commands"
     [queryParams]="queryParams()"
-    [attr.target]="target() || null"
+    [target]="target() || undefined"
     [attr.rel]="rel()"
   >
     <ng-container [ngTemplateOutlet]="body" />

@@ -21,6 +21,11 @@ describe('injectUnstyled', () => {
     local.set(false);
     expect(unstyled()).toBe(false);
   });
+
+  it('is styled without a global config', () => {
+    const unstyled = TestBed.runInInjectionContext(() => injectUnstyled(signal<boolean | undefined>(undefined)));
+    expect(unstyled()).toBe(false);
+  });
 });
 
 describe('injectPassThrough', () => {
@@ -55,5 +60,16 @@ describe('injectPassThrough', () => {
     expect(result().root?.class).toBe('idle');
     instance.loading.set(true);
     expect(result().root?.class).toBe('busy');
+  });
+
+  it('uses the global parts when there is no local pass-through', () => {
+    setup({ pt: { button: { root: { class: 'global-root' } } } });
+    expect(passThrough(undefined)().root?.class).toBe('global-root');
+  });
+
+  it('leaves the class out when neither side has one with mergeProps', () => {
+    setup({ pt: { button: { label: { style: { color: 'red' } } } }, ptOptions: { mergeProps: true } });
+    const result = passThrough({ label: { style: { margin: '0' } } })();
+    expect(result.label).toEqual({ class: undefined, style: { color: 'red', margin: '0' } });
   });
 });

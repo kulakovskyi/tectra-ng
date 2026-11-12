@@ -9,7 +9,7 @@ import { TxTagListItem } from './tag.types';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class Host {
-  readonly tags = signal<TxTagListItem[]>([{ value: 'One', severity: 'success' }, { value: 'Two' }, { value: 'Three' }, { value: 'Four' }]);
+  readonly tags = signal<TxTagListItem[] | null>([{ value: 'One', severity: 'success' }, { value: 'Two' }, { value: 'Three' }, { value: 'Four' }]);
   readonly limit = signal<number | undefined>(2);
 }
 
@@ -40,4 +40,15 @@ describe('TxTagList', () => {
     expect(root.querySelector('.tx-tag-list__empty')?.textContent).toBe('-');
     expect(root.classList).toContain('tx-tag-list--empty');
   });
+
+  it('treats missing tags as empty', async () => {
+    const fixture = TestBed.createComponent(Host);
+    fixture.componentInstance.tags.set(null);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    const root = fixture.nativeElement.querySelector('tx-tag-list') as HTMLElement;
+    expect(root.querySelectorAll('tx-tag')).toHaveLength(0);
+    expect(root.classList).toContain('tx-tag-list--empty');
+  });
 });
+

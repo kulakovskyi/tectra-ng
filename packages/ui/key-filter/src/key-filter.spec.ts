@@ -76,4 +76,82 @@ describe('TxKeyFilter', () => {
     fixture.componentInstance.control.setValue('12');
     expect(fixture.componentInstance.control.errors).toBeNull();
   });
+
+  it('lets deletions, line breaks and paste insertions through', () => {
+    const { input } = setup();
+    expect(input.dispatchEvent(new InputEvent('beforeinput', { inputType: 'deleteContentBackward', data: 'a', cancelable: true }))).toBe(true);
+    expect(input.dispatchEvent(new InputEvent('beforeinput', { inputType: 'insertLineBreak', cancelable: true }))).toBe(true);
+    expect(input.dispatchEvent(new InputEvent('beforeinput', { inputType: 'insertFromPaste', data: 'a', cancelable: true }))).toBe(true);
+  });
+
+  it('blocks a character that breaks the whole value', () => {
+    const { fixture, input } = setup();
+    fixture.componentInstance.filter.set('positive');
+    fixture.detectChanges();
+    input.value = '1.5';
+    input.setSelectionRange(3, 3);
+    expect(type(input, '.')).toBe(false);
+    expect(type(input, '0')).toBe(true);
+  });
+
+  it('keeps a clean paste, drops a paste with nothing allowed and one that breaks the value', () => {
+    const { fixture, input } = setup();
+    const paste = (text: string | null) => {
+      const event = new Event('paste', { cancelable: true }) as ClipboardEvent;
+      Object.defineProperty(event, 'clipboardData', { value: text === null ? null : { getData: () => text } });
+      input.dispatchEvent(event);
+      return event.defaultPrevented;
+    };
+    expect(paste('42')).toBe(false);
+    expect(paste(null)).toBe(false);
+    expect(paste('abc')).toBe(true);
+    expect(input.value).toBe('');
+    fixture.componentInstance.filter.set('positive');
+    fixture.detectChanges();
+    expect(paste('1.2.3x')).toBe(true);
+    expect(input.value).toBe('');
+  });
+
+  it('cleans dropped text and ignores a drop without data', () => {
+    const { input } = setup();
+    const drop = (text: string | null) => {
+      const event = new Event('drop', { cancelable: true }) as DragEvent;
+      Object.defineProperty(event, 'dataTransfer', { value: text === null ? null : { getData: () => text } });
+      input.dispatchEvent(event);
+      return event.defaultPrevented;
+    };
+    expect(drop('x7y')).toBe(true);
+    expect(input.value).toBe('7');
+    expect(drop(null)).toBe(false);
+  });
+
+  it('neither cleans pastes and drops nor fails an empty value with validateOnly', () => {
+    const { fixture, input } = setup();
+    fixture.componentInstance.validateOnly.set(true);
+    fixture.detectChanges();
+    const paste = new Event('paste', { cancelable: true });
+    const drop = new Event('drop', { cancelable: true });
+    input.dispatchEvent(paste);
+    input.dispatchEvent(drop);
+    expect(paste.defaultPrevented).toBe(false);
+    expect(drop.defaultPrevented).toBe(false);
+    fixture.componentInstance.control.setValue(null);
+    expect(fixture.componentInstance.control.errors).toBeNull();
+  });
+
+  it('appends at the end when the input has no readable selection', () => {
+    const { fixture, input } = setup();
+    fixture.componentInstance.filter.set(/[a-z]/);
+    fixture.detectChanges();
+    input.value = 'ab';
+    Object.defineProperty(input, 'selectionStart', { get: () => null, configurable: true });
+    Object.defineProperty(input, 'selectionEnd', { get: () => null, configurable: true });
+    expect(type(input, 'c')).toBe(true);
+    Object.defineProperty(input, 'selectionStart', {
+      get: () => {
+        throw new DOMException('No selection', 'InvalidStateError');
+      },
+    });
+    expect(type(input, '1')).toBe(false);
+  });
 });

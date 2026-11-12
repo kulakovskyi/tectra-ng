@@ -12,4 +12,12 @@ describe('TxAnnouncer', () => {
     expect(region?.classList).toContain('cdk-visually-hidden');
     expect(region?.textContent).toBe('Saved');
   });
+
+  it('clears the live region', async () => {
+    const announcer = TestBed.inject(TxAnnouncer);
+    void announcer.announce('Loading');
+    await new Promise((resolve) => setTimeout(resolve, 150));
+    announcer.clear();
+    expect(document.querySelector('.cdk-live-announcer-element')?.textContent).toBe('');
+  });
 });

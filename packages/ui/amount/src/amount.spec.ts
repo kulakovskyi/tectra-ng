@@ -26,6 +26,7 @@ describe('formatAmount', () => {
     expect(parseDigitsInfo('1.0-2')).toEqual({ minimumIntegerDigits: 1, minimumFractionDigits: 0, maximumFractionDigits: 2 });
     expect(parseDigitsInfo('1.2')).toEqual({ minimumIntegerDigits: 1, minimumFractionDigits: 2, maximumFractionDigits: 2 });
     expect(parseDigitsInfo('wrong')).toEqual({});
+    expect(parseDigitsInfo('2-3')).toEqual({ minimumIntegerDigits: 2, maximumFractionDigits: 3 });
   });
 
   it('splits the currency from the number and keeps an unknown code', () => {
@@ -64,6 +65,9 @@ describe('TxAmount', () => {
   it('shows a dash without a value, compact numbers and strong', () => {
     expect(el('#empty').textContent?.trim()).toBe('—');
     expect(el('#empty').classList).toContain('tx-amount--empty');
+    const empty = fixture.debugElement.query((node) => node.nativeElement.id === 'empty').componentInstance as TxAmount;
+    expect(empty.segments()).toEqual([]);
+    expect(empty.sign()).toBeNull();
     expect(text(el('#compact'))).toBe('1.23M');
     expect(el('#compact').classList).toContain('tx-amount--strong');
   });

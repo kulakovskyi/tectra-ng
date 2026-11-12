@@ -45,4 +45,20 @@ describe('mask engine', () => {
     const date = parseMask('99.99.9999');
     expect(render(date, fromText(date, '12', true), 'dd.mm.yyyy')).toBe('12.mm.yyyy');
   });
+
+  it('keeps the values when nothing typed fits, and stays put at the edges', () => {
+    const start = fromText(phone, '050', true);
+    const typed = insert(phone, start, 4, 4, 'xy');
+    expect(typed.values).toEqual(start);
+    expect(typed.caret).toBe(6);
+    expect(deleteBackward(phone, start, 0)).toEqual({ values: start, caret: 0 });
+    expect(deleteForward(phone, start, 14)).toEqual({ values: start, caret: 14 });
+  });
+
+  it('reads masked text, skipping characters that do not fit and stopping at the end', () => {
+    expect(show(fromText(phone, '(0x5) 123-456789', false))).toBe('(051) 234-5678');
+    expect(renderFilled(phone, fromText(phone, '', false), '_')).toBe('');
+    const code = parseMask('9999');
+    expect(render(code, fromText(code, '1', true), 'ab')).toBe('1b__');
+  });
 });

@@ -1,5 +1,9 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { TxChartTooltipTemplate } from '@tectra-ng/charts/core';
+import { TxAnnouncer } from '@tectra-ng/core/a11y';
+import { TectraChartTokens, TectraDeepPartial } from '@tectra-ng/themes';
 import { TxBulletChart } from './bullet-chart.component';
 import { TxBulletEvent, TxBulletItem } from './bullet-chart.types';
 import { bulletMax, bulletSegments } from './bullet-layout';
@@ -80,5 +84,135 @@ describe('TxBulletChart', () => {
     const bar = all('#main .tx-bullet-chart__bar')[1];
     plot().dispatchEvent(new MouseEvent('click', { clientX: Number(bar.getAttribute('x')) + 2, clientY: Number(bar.getAttribute('y')) + 2, bubbles: true }));
     expect(fixture.componentInstance.clicks[0]).toEqual({ index: 1, label: 'Profit', value: 40, target: 30 });
+  });
+});
+
+@Component({
+  imports: [TxBulletChart, TxChartTooltipTemplate],
+  template: `
+    <tx-bullet-chart [items]="items()" [ranges]="[40]" [ariaLabel]="ariaLabel()" [dt]="dt()" (barClick)="clicks.push($event)">
+      @if (templates()) {
+        <ng-template txChartTooltip let-data><span class="own-tooltip">{{ data.title }}</span></ng-template>
+      }
+    </tx-bullet-chart>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class ConfigHost {
+  readonly items = signal<TxBulletItem[] | null>([
+    { label: 'Plain', value: 30 },
+    { label: 'Own', value: null, target: 120, ranges: [60, 90] },
+  ]);
+  readonly ariaLabel = signal('');
+  readonly dt = signal<TectraDeepPartial<TectraChartTokens> | undefined>(undefined);
+  readonly templates = signal(false);
+  readonly clicks: TxBulletEvent[] = [];
+}
+
+describe('TxBulletChart options', () => {
+  let fixture: ComponentFixture<ConfigHost>;
+  let host: ConfigHost;
+  const chart = () => fixture.debugElement.query(By.directive(TxBulletChart)).componentInstance as TxBulletChart;
+  const el = (selector: string) => fixture.nativeElement.querySelector(selector) as HTMLElement;
+  const plot = () => el('.tx-chart-frame__plot');
+  const key = async (name: string) => {
+    plot().dispatchEvent(new KeyboardEvent('keydown', { key: name, bubbles: true }));
+    await fixture.whenStable();
+  };
+  const pointer = async (type: 'pointermove' | 'click', x: number, y: number) => {
+    plot().dispatchEvent(new MouseEvent(type, { clientX: x, clientY: y, bubbles: true }));
+    await fixture.whenStable();
+  };
+
+  beforeEach(async () => {
+    fixture = TestBed.createComponent(ConfigHost);
+    host = fixture.componentInstance;
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+  });
+
+  afterEach(() => document.querySelectorAll('.cdk-overlay-container').forEach((container) => (container.innerHTML = '')));
+
+  it('shows the empty state without items and ignores the keyboard', async () => {
+    host.items.set(null);
+    await fixture.whenStable();
+    expect(el('.tx-chart-frame__empty')).not.toBeNull();
+    chart().onNavigate(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    expect(chart().active()).toBeNull();
+  });
+
+  it('fits the scale to values, targets and own or shared ranges', () => {
+    expect(chart().domainMax()).toBe(120);
+    expect(chart().rows()[0].ranges.map((range) => range.level)).toEqual([2, 3]);
+    expect(chart().rows()[1].ranges.map((range) => range.level)).toEqual([1, 2, 3]);
+  });
+
+  it('prefixes the summary with the aria label', async () => {
+    host.ariaLabel.set('Goals');
+    await fixture.whenStable();
+    expect(plot().getAttribute('aria-label')).toBe('Goals. Bullet chart, 1 series, 2 values');
+  });
+
+  it('reads rows upwards and announces missing values and targets', async () => {
+    const announce = vi.spyOn(TestBed.inject(TxAnnouncer), 'announce');
+    await key('ArrowUp');
+    expect(chart().active()).toBe(1);
+    expect(announce).toHaveBeenLastCalledWith('Own: —, target 120');
+    expect(chart().tooltip()?.rows.map((row) => [row.label, row.value])).toEqual([
+      ['Value', '—'],
+      ['Target', '120'],
+    ]);
+    await key('ArrowUp');
+    expect(chart().active()).toBe(0);
+    expect(announce).toHaveBeenLastCalledWith('Plain: 30');
+    expect(chart().tooltip()?.rows.map((row) => row.label)).toEqual(['Value']);
+    await key('Escape');
+    expect(chart().active()).toBeNull();
+  });
+
+  it('forgets a row that no longer exists', async () => {
+    await key('End');
+    host.items.set([{ label: 'Only', value: 1 }]);
+    await fixture.whenStable();
+    expect(chart().active()).toBe(1);
+    expect(chart().tooltip()).toBeNull();
+  });
+
+  it('tracks the pointer inside the plot only and clears on leave', async () => {
+    const row = chart().rows()[1];
+    const x = chart().layout().plot.left + 4;
+    await pointer('click', x, row.center);
+    expect(host.clicks).toEqual([{ index: 1, label: 'Own', value: null, target: 120 }]);
+    await pointer('pointermove', x, -40);
+    expect(chart().active()).toBeNull();
+    await pointer('pointermove', x, row.center);
+    expect(chart().active()).toBe(1);
+    plot().dispatchEvent(new MouseEvent('pointerleave'));
+    await fixture.whenStable();
+    expect(chart().active()).toBeNull();
+  });
+
+  it('renders an own tooltip template', async () => {
+    host.templates.set(true);
+    await fixture.whenStable();
+    await key('ArrowDown');
+    expect(document.querySelector('.own-tooltip')?.textContent).toBe('Plain');
+  });
+
+  it('reads the row geometry from the tokens', async () => {
+    host.dt.set({ bullet: { rowHeight: '60', trackHeight: '0.6', barHeight: '0.4', targetHeight: '0.8' } });
+    await fixture.whenStable();
+    expect(chart().geometry()).toEqual({ rowHeight: 60, trackHeight: 0.6, barHeight: 0.4, targetHeight: 0.8 });
+    expect(el('.tx-chart-frame').style.height).toBe(`${2 * 60 + 30}px`);
+  });
+});
+
+describe('TxBulletChart recompiled by TestBed', () => {
+  it('still renders its bars when a test overrides the component', async () => {
+    TestBed.overrideComponent(TxBulletChart, { set: { styles: [] } });
+    const fixture = TestBed.createComponent(Host);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelectorAll('#main .tx-bullet-chart__bar').length).toBeGreaterThan(0);
   });
 });

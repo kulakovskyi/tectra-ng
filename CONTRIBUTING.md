@@ -19,8 +19,9 @@ The release workflow follows the same rule: it publishes from a tagged `release/
 3. A `*.spec.ts` next to every component, directive and service. `npm run lint` must be clean, without warnings.
 4. `npm run e2e` must stay green — no console errors, no layout shift, no serious axe violations in light and dark.
 5. Bundle size stays within [`tools/bundle-size/budgets.json`](tools/bundle-size/budgets.json): CI builds a new Angular app per scenario (one component each) and fails when the kit code loaded at start grows past its budget or a scenario starts to pull in another entry point. When the growth is intended, run `npm run size:update` (after `npm run build:packages` and `npm run e2e:ng-add`) and say why in the pull request.
-6. The pull request title is a conventional commit (`feat(ui): …`, `fix(docs): …`) — it becomes the squash commit, and the release reads the next version and the changelog from it. CI checks it.
-7. Every commit is signed off (see below).
+6. Links stay valid: the docs build job checks every link inside the repository and the docs site (relative paths, anchors, docs pages, `tectra-ng.com` and repository file links) — `npm run links -- --offline` after the docs build. The weekly `links` workflow also requests every external address; run `npm run links` for the same check locally.
+7. The pull request title is a conventional commit (`feat(ui): …`, `fix(docs): …`) — it becomes the squash commit, and the release reads the next version and the changelog from it. CI checks it.
+8. Every commit is signed off (see below).
 
 ## Coding standards
 
@@ -50,7 +51,7 @@ This adds `Signed-off-by: Your Name <your@email>` with the same email as the com
 | Every release | Lint and unit tests again before anything is published, then CI on the version pull request |
 | Weekly | CodeQL on `main`, OpenSSF Scorecard |
 
-**Test policy:** every new feature and every bug fix adds or updates automated tests — a unit spec for the behaviour, an e2e check in `e2e/visual/interactions.spec.ts` for layout, motion or focus. Each package keeps at least 95% statement, branch, function and line coverage ([ROADMAP](ROADMAP.md), stage 14).
+**Test policy:** every new feature and every bug fix adds or updates automated tests — a unit spec for the behaviour, an e2e check in `e2e/visual/interactions.spec.ts` for layout, motion or focus. Each package keeps at least 95% statement, branch, function and line coverage ([ROADMAP](ROADMAP.md), stage 14): coverage is always on in the `test` target of every package, its `coverageThresholds` fail `npm run test` and CI when a package drops, and `npm run coverage:report` prints the table of all packages (reports in `coverage/<package>`). New or changed code comes with the specs that keep its package there; never lower a threshold or exclude files to pass.
 
 ## Dependencies
 

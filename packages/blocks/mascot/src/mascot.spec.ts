@@ -71,3 +71,20 @@ describe('TxMascot', () => {
     expect(el('#plain').hasAttribute('data-styled')).toBe(false);
   });
 });
+
+@Component({
+  imports: [TxMascot],
+  template: `<tx-mascot [playful]="false" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class DefaultSizeHost {}
+
+describe('TxMascot default size', () => {
+  it('leaves the size to the theme when none is given', () => {
+    const plain = TestBed.createComponent(DefaultSizeHost);
+    plain.detectChanges();
+    const root = plain.nativeElement.querySelector('tx-mascot') as HTMLElement;
+    expect(root.style.getPropertyValue('--tx-mascot-size')).toBe('');
+    plain.destroy();
+  });
+});
