@@ -21,6 +21,14 @@ The release workflow follows the same rule: it publishes from a tagged `release/
 5. The pull request title is a conventional commit (`feat(ui): …`, `fix(docs): …`) — it becomes the squash commit, and the release reads the next version and the changelog from it. CI checks it.
 6. Every commit is signed off (see below).
 
+## Coding standards
+
+- **Angular:** the official [Angular style guide](https://angular.dev/style-guide) with signals — standalone components, signal `input()` / `output()` / `model()`, `inject()`, `OnPush`, no decorators for inputs and outputs, selector prefix `tx-`.
+- **TypeScript:** `strict`, `strictTemplates`, no `any`; types of an entry point live in `<name>.types.ts`.
+- **Styles:** design tokens through `var(--tx-…)` only, BEM classes `tx-<name>__part--state`, motion respects `prefers-reduced-motion`.
+- **Formatting:** Prettier ([`.prettierrc.json`](.prettierrc.json): single quotes, width 100) and [`.editorconfig`](.editorconfig).
+- **Enforcement:** ESLint ([`eslint.config.mjs`](eslint.config.mjs): typescript-eslint, angular-eslint including `prefer-signals` and `prefer-on-push-component-change-detection`, module boundaries between packages) runs in CI as part of `ci-ok`; it must report no errors and no warnings.
+
 ## Developer Certificate of Origin
 
 By signing off a commit you state that you wrote it or have the right to submit it under the project's MIT license, as described in the [Developer Certificate of Origin 1.1](https://developercertificate.org/). Sign off with:

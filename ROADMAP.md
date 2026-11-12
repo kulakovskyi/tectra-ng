@@ -6,6 +6,11 @@ Everything tectra covers, ordered by dependencies and by how much the first cons
 
 **Usage** = how many files of the first consumer app use the part (counted 2026-11-05). It is the main signal for priority inside a stage.
 
+## The next twelve months
+
+- **Planned:** stage 14 (one-command setup, live examples in StackBlitz, bundle size and 95% coverage checks, link checks, the silver OpenSSF Best Practices level), the editor backlog, and support for each new Angular major release.
+- **Not planned:** an own rich text or code editor engine (the ProseMirror and CodeMirror cores stay), support for frameworks other than Angular (only `@tectra-ng/qr` is framework-free), NgModule-based or zone-dependent APIs, server-side services or hosted products — tectra stays a client-side library.
+
 ## Definition of done (every item)
 
 1. Component in `packages/<pkg>/<name>` — signals, OnPush, standalone, keyboard + ARIA.
@@ -281,6 +286,6 @@ Make the kit easy to try, keep its promises checked in CI and the repository rea
 | `ng add tectra-ng` | One command installs the packages, adds `provideTectra` with a preset to `app.config.ts` and the fonts to `index.html` — the three manual steps of Getting started | ⬜ |
 | Open in StackBlitz | A button on every docs example opens it as a live, editable project — nothing to install locally | ⬜ |
 | Bundle size check | `size-limit` in CI: importing one component must not pull the whole kit, CI fails when a size budget grows — guards "tree-shakable" | ⬜ |
-| Test coverage 95% | The same setup as the UI kit of the first consumer app, on our Vitest runner: coverage always on in the `test` target of every package with tests (`coverage: true`, include `src/**/*.ts`, exclude specs, `index.ts` and test setup), `coverageThresholds` statements, branches, functions and lines ≥ 95% (`@vitest/coverage-v8` as the only new dev dependency), so `npm run test` and CI fail below it; coverage report in CI with a README badge; a step toward the silver OpenSSF Best Practices level. Raise the packages below 95% first (lines / branches on 2026-11-12): themes 100 / 94, core 97 / 86, icons 100 / 96, qr 99 / 98, ui 89 / 81, code-editor 83 / 70, charts 80 / 67, blocks 75 / 62, editor 64 / 55, utils 25 / 27 | ⬜ |
+| Test coverage 95% | The same setup as the UI kit of the first consumer app, on our Vitest runner: coverage always on in the `test` target of every package with tests (`coverage: true`, include `src/**/*.ts`, exclude specs, `index.ts` and test setup), `coverageThresholds` statements, branches, functions and lines ≥ 95% (`@vitest/coverage-v8` as the only new dev dependency), so `npm run test` and CI fail below it; coverage report in CI with a README badge; a step toward the silver OpenSSF Best Practices level. Raise the packages below 95% first (lines / branches of each package's own files on 2026-11-12; all packages together: 87% of statements): themes 100 / 94, core 96 / 86, icons 100 / 96, qr 99 / 98, utils 96 / 88, charts 93 / 76, ui 90 / 82, blocks 90 / 79, code-editor 86 / 73, editor 64 / 57 | ⬜ |
 | Link check | Weekly workflow that checks every link in the READMEs and the built docs site, so a broken link is caught before a user finds it | ⬜ |
 | Best Practices silver | The silver level of the OpenSSF Best Practices badge: `GOVERNANCE.md` (who decides, how to become a maintainer), roles and responsibilities, access continuity if the maintainer is away, test coverage from the item above | ⬜ |
