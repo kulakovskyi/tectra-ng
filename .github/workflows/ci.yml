@@ -135,7 +135,7 @@ jobs:
           name: playwright-report-${{ matrix.shard }}
           path: test-results
 
-  ng-add:
+  new-app:
     needs: [packages, docs]
     runs-on: ubuntu-latest
     timeout-minutes: 25
@@ -169,10 +169,13 @@ jobs:
       - run: npm run e2e:ng-add
         env:
           TX_NG_ADD_DIR: ${{ runner.temp }}/tectra-ng-add
+      - run: npm run size
+        env:
+          TX_NG_ADD_DIR: ${{ runner.temp }}/tectra-ng-add
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: failure()
         with:
-          name: playwright-report-ng-add
+          name: playwright-report-new-app
           path: test-results
 
   dependency-review:
@@ -247,7 +250,7 @@ jobs:
 
   ci-ok:
     if: always()
-    needs: [check, packages, docs, e2e, ng-add, dependency-review, codeql, dco]
+    needs: [check, packages, docs, e2e, new-app, dependency-review, codeql, dco]
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:

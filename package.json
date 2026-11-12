@@ -15,6 +15,8 @@
     "test": "nx run-many -t test -p themes core icons flags qr ui editor code-editor charts utils blocks tectra-ng",
     "e2e": "nx e2e visual",
     "e2e:ng-add": "node e2e/ng-add/prepare.mjs && playwright test -c e2e/ng-add/playwright.config.ts",
+    "size": "node tools/bundle-size/check-bundle-size.mjs",
+    "size:update": "node tools/bundle-size/check-bundle-size.mjs --update",
     "lint": "eslint .",
     "format:examples": "prettier --write \"apps/docs/src/content/**/*.example.ts\""
   },
