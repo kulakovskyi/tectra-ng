@@ -1,5 +1,9 @@
 # Upgrading
 
+## From 0.3.1
+
+The packages need Angular and the CDK **22.2 or newer** (the peer ranges said 22.0, but the panel menu already used a router function that came with 22.2, so 22.0 and 22.1 did not build). On an older 22 minor run `ng update @angular/core@22 @angular/cli@22 @angular/cdk@22` first. CI now builds and tests the packages on the lowest versions they accept.
+
 ## From 0.2
 
 The next release makes an app ship only the parts of the kit it uses: the tokens of its components, its own style, its icons and its language. A new app set up with `ng add tectra-ng` or the [Getting started](https://tectra-ng.com/getting-started) page needs nothing below. An existing app takes these steps.

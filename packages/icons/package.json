@@ -21,7 +21,7 @@
     "icon-component"
   ],
   "peerDependencies": {
-    "@angular/core": "^22.0.0"
+    "@angular/core": "^22.2.0"
   },
   "publishConfig": {
     "access": "public"
