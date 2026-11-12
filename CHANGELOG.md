@@ -1,3 +1,13 @@
+## 0.3.0 (2026-11-12)
+
+### 🚀 Features
+
+- ng add, StackBlitz examples, size budgets and a smaller kit ([#19](https://github.com/kulakovskyi/tectra-ng/pull/19))
+
+### ❤️ Thank You
+
+- Andriy @kulakovskyi
+
 ## 0.2.6 (2026-11-12)
 
 This was a version bump only, there were no code changes.

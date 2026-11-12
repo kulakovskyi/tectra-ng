@@ -1,6 +1,6 @@
 {
   "name": "@tectra-ng/utils",
-  "version": "0.2.6",
+  "version": "0.3.0",
   "description": "Angular utilities on signals next to the tectra components: date, relative time, plural, file size and currency pipes; debounced input, copy to clipboard, in view, defer, drag scroll and auto focus directives; form validators and scroll to the first invalid field; filters kept in storage and the URL; HTTP params, retries and polling; clock, page title and breakpoints. Server rendering safe.",
   "license": "MIT",
   "homepage": "https://tectra-ng.com/components/date",
@@ -34,10 +34,10 @@
     "@angular/platform-browser": "^22.0.0",
     "@angular/router": "^22.0.0",
     "rxjs": "^7.8.0",
-    "@tectra-ng/core": "^0.2.6",
-    "@tectra-ng/icons": "^0.2.6",
-    "@tectra-ng/themes": "^0.2.6",
-    "@tectra-ng/ui": "^0.2.6"
+    "@tectra-ng/core": "^0.3.0",
+    "@tectra-ng/icons": "^0.3.0",
+    "@tectra-ng/themes": "^0.3.0",
+    "@tectra-ng/ui": "^0.3.0"
   },
   "peerDependenciesMeta": {
     "@angular/forms": { "optional": true },
