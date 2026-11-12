@@ -30,7 +30,7 @@ contributor ──pull request──▶ GitHub ──▶ ci workflow ──ci-ok
 maintainer ──run workflow──▶ release workflow ┼──▶ npm (OIDC, provenance) ──▶ application developers
                                               ├──▶ tag + GitHub release (tarballs, SBOM, attestation)
                                               └──▶ version pull request ──▶ main
-main ──▶ ci workflow ──▶ deploy-docs ──▶ Cloudflare ──▶ tectra-ng.com ──▶ visitors
+main ──▶ ci workflow ──ci-ok──▶ deploy-docs ──▶ Cloudflare ──▶ tectra-ng.com ──▶ visitors
 Dependabot ──pull request──▶ ci workflow ──▶ auto-merge after ci-ok
 ```
 
