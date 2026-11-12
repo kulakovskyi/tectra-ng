@@ -1,3 +1,13 @@
+## 0.3.1 (2026-11-12)
+
+### 🩹 Fixes
+
+- 95% coverage in every package and the bugs it found, link check ([#24](https://github.com/kulakovskyi/tectra-ng/pull/24))
+
+### ❤️ Thank You
+
+- Andriy @kulakovskyi
+
 ## 0.3.0 (2026-11-12)
 
 ### 🚀 Features

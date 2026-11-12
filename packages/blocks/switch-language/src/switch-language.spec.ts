@@ -36,6 +36,7 @@ describe('TxSwitchLanguage', () => {
     options()[1].click();
     await fixture.whenStable();
     await vi.waitFor(() => expect(TestBed.inject(TxLocaleService).locale().code).toBe('ua'));
+    await fixture.whenStable();
     expect(fixture.componentInstance.value()).toBe('ua');
     expect(options()[1].getAttribute('aria-checked')).toBe('true');
     expect(group.style.getPropertyValue('--tx-switch-language-index')).toBe('1');

@@ -1,6 +1,6 @@
 {
   "name": "@tectra-ng/core",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "tectra core for Angular: provideTectra, overlay, accessibility helpers, forms, locale and styles.",
   "license": "MIT",
   "homepage": "https://tectra-ng.com",
@@ -27,7 +27,7 @@
     "@angular/core": "^22.0.0",
     "@angular/forms": "^22.0.0",
     "rxjs": "^7.8.0",
-    "@tectra-ng/themes": "^0.3.0"
+    "@tectra-ng/themes": "^0.3.1"
   },
   "publishConfig": {
     "access": "public"
