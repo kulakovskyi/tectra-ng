@@ -43,18 +43,19 @@ What the kit adds to an empty Angular app at start (production build, minified /
 
 | Scenario | Before | After |
 |---|---|---|
-| `provideTectra` alone | 159 kB / 33 kB | 47 kB / 13 kB |
-| button | 276 kB / 62 kB | 122 kB / 31 kB |
-| select | 494 kB / 120 kB | 289 kB / 80 kB |
-| dialog | 428 kB / 99 kB | 224 kB / 59 kB |
-| datepicker | 538 kB / 127 kB | 338 kB / 88 kB |
-| table | 1086 kB / 266 kB | 802 kB / 202 kB, 458 kB more on first use |
+| `provideTectra` alone | 159 kB / 33 kB | 15 kB / 6 kB |
+| button | 276 kB / 62 kB | 90 kB / 24 kB |
+| select | 494 kB / 120 kB | 257 kB / 74 kB |
+| dialog | 428 kB / 99 kB | 193 kB / 53 kB |
+| datepicker | 538 kB / 127 kB | 306 kB / 82 kB |
+| table | 1086 kB / 266 kB | 769 kB / 196 kB, 458 kB more on first use |
 
 - [x] Table: the date, number and options editors of the filters and cells are `@defer` blocks (lazy chunks); a read-only input of the same size holds their place, a cell editor that loads gets the focus
 - [x] Locales: only English is in the bundle; Ukrainian is `@tectra-ng/core/i18n/ua`, loaded before the app starts when `provideTectra({ locale: 'ua' })` names it, or by `setLocale` (now a promise); `provideTectra({ locales })` for one that switches at once; translation types in `@tectra-ng/core/i18n/types`
 - [x] Icons: one constant per icon; components bring the icons they draw (`<name>.icons.ts`, `provideTxIconDefaults`), apps register the rest with `provideTxIcons(TX_ICONS)` or chosen icons; e2e of a new app that registers no icon
 - [x] Themes: `@tectra-ng/themes` is tree-shakable (no top-level side effects in token files); presets hold only the overrides of a style; a component registers the token groups it uses (`<name>.theme.ts`, `injectTokens`) and `TxThemeService` writes only those; `presetToCss` still writes everything; docs e2e fails on a `var(--tx-…)` that no rule declares (it also found a token pointing at a weight that does not exist)
-- [ ] Later: the three other styles (soft, edge, paper, about 32 kB) come with `createTectraPreset` because the style is picked by name — an object form of the style option would let an app ship only its own style
+- [x] Styles: `createTectraPreset({ style: softStyle })` takes the style object, so an app ships only its own style (the default preset with palettes is about 11 kB, Soft adds 4.5 kB); style files have no top-level side effects either; `TECTRA_STYLES[name]` for a choice at runtime
+- [x] `UPGRADING.md`: the steps for an app on 0.2
 
 ## 14.4 Test coverage 95% ⬜
 

@@ -117,7 +117,7 @@ export function exampleDependencies(source: string, setup: StackblitzSetup): Rec
 }
 
 export function presetCall({ style, primary, surface }: StackblitzTheme): string {
-  const options = [style !== 'tectra' ? `style: '${style}'` : '', `primary: '${primary}'`, surface !== 'ink' ? `surface: '${surface}'` : ''].filter(Boolean);
+  const options = [style !== 'tectra' ? `style: ${style}Style` : '', `primary: '${primary}'`, surface !== 'ink' ? `surface: '${surface}'` : ''].filter(Boolean);
   return `createTectraPreset({ ${options.join(', ')} })`;
 }
 
@@ -129,7 +129,7 @@ import { provideTxBrandIcons } from '@tectra-ng/brand-icons';
 import { provideTectra } from '@tectra-ng/core/config';
 import { loadTxFlag } from '@tectra-ng/flags';
 import { TX_ICONS, provideTxIcons } from '@tectra-ng/icons';
-import { createTectraPreset } from '@tectra-ng/themes';
+import { ${['createTectraPreset', theme.style !== 'tectra' ? `${theme.style}Style` : ''].filter(Boolean).join(', ')} } from '@tectra-ng/themes';
 import { provideTxFlags, txFlagImages } from '@tectra-ng/ui/country';
 
 export const appConfig: ApplicationConfig = {

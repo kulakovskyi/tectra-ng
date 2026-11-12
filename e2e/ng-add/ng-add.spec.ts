@@ -2,7 +2,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { createTectraPreset } from '@tectra-ng/themes';
+import { createTectraPreset, softStyle } from '@tectra-ng/themes';
 import { answers, appDir } from './workdir.mjs';
 
 const read = (path: string) => readFileSync(join(appDir, path), 'utf8');
@@ -24,7 +24,7 @@ test.describe('ng add tectra-ng in a new Angular app', () => {
     const config = read('src/app/app.config.ts');
     expect(config).toContain("import { provideTectra } from '@tectra-ng/core/config';");
     expect(config).toMatch(/provideTectra\(\{\s*preset: createTectraPreset\(/);
-    expect(config).toContain(`createTectraPreset({ style: '${answers.style}', primary: '${answers.primary}', surface: '${answers.surface}' })`);
+    expect(config).toContain(`createTectraPreset({ style: ${answers.style}Style, primary: '${answers.primary}', surface: '${answers.surface}' })`);
     expect(occurrences(config, 'provideTectra(')).toBe(1);
     expect(occurrences(config, 'provideTxIcons(TX_ICONS)')).toBe(1);
   });
@@ -43,7 +43,7 @@ test.describe('ng add tectra-ng in a new Angular app', () => {
 
     const button = page.getByRole('button', { name: 'Save' });
     await expect(button).toHaveClass(/tx-button/);
-    const preset = createTectraPreset({ style: 'soft', primary: 'violet', surface: 'slate' } as const);
+    const preset = createTectraPreset({ style: softStyle, primary: 'violet', surface: 'slate' });
     await expect(button).toHaveCSS('background-color', rgb(preset.light.primary.base));
     expect(await page.evaluate(() => [...document.fonts].some((font) => font.family.includes('Onest')))).toBe(true);
 

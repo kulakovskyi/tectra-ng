@@ -2,14 +2,17 @@ import { TectraComponentTokens } from '../../components/component-tokens';
 import { lightDark, tokenRef } from '../../components/token-helpers';
 import { TectraDeepPartial } from '../../types/deep-partial.type';
 
+/* @__NO_SIDE_EFFECTS__ */
 const steps = (palette: string, light: number, dark: number) => lightDark(tokenRef(`${palette}-${light}`), tokenRef(`${palette}-${dark}`));
 
+/* @__NO_SIDE_EFFECTS__ */
 const outlined = (palette: string) => ({
   hoverBackground: steps(palette, 50, 950),
   activeBackground: steps(palette, 100, 900),
   borderColor: steps(palette, 600, 500),
 });
 
+/* @__NO_SIDE_EFFECTS__ */
 const outlinedWithColor = (palette: string) => ({ ...outlined(palette), color: steps(palette, 600, 500) });
 
 export const edgeControlsTokens: TectraDeepPartial<TectraComponentTokens> = {

@@ -41,8 +41,8 @@ export function ngAdd(options: TectraNgAddOptions): Rule {
   };
 }
 
-export function presetOptions({ style = 'tectra', primary = 'blue', surface = 'ink' }: TectraNgAddOptions): string {
-  return [style !== 'tectra' ? `style: '${style}'` : '', `primary: '${primary}'`, surface !== 'ink' ? `surface: '${surface}'` : '']
+export function presetOptions({ style = 'tectra', primary = 'blue', surface = 'ink' }: TectraNgAddOptions, styleSymbol = `${style}Style`): string {
+  return [style !== 'tectra' ? `style: ${styleSymbol}` : '', `primary: '${primary}'`, surface !== 'ink' ? `surface: '${surface}'` : '']
     .filter(Boolean)
     .join(', ');
 }
@@ -102,7 +102,8 @@ function addProvider(tree: Tree, projectName: string, project: ProjectDefinition
     addRootProvider(projectName, ({ code, external }) => {
       const provideTectra = external('provideTectra', '@tectra-ng/core/config');
       const createTectraPreset = external('createTectraPreset', '@tectra-ng/themes');
-      return code`${provideTectra}({ preset: ${createTectraPreset}({ ${presetOptions(options)} }) })`;
+      const style = options.style && options.style !== 'tectra' ? external(`${options.style}Style`, '@tectra-ng/themes') : undefined;
+      return code`${provideTectra}({ preset: ${createTectraPreset}({ ${presetOptions(options, style)} }) })`;
     }),
     (_tree: Tree, context: SchematicContext) => {
       context.logger.info(`tectra is set up with createTectraPreset({ ${presetOptions(options)} }).`);

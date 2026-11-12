@@ -2,6 +2,7 @@ import { TectraComponentTokens } from '../../components/component-tokens';
 import { fade, lightDark, tokenRef } from '../../components/token-helpers';
 import { TectraDeepPartial } from '../../types/deep-partial.type';
 
+/* @__NO_SIDE_EFFECTS__ */
 function solid(severity: string) {
   return { background: tokenRef(`${severity}-base`), color: tokenRef(`${severity}-contrast`) };
 }

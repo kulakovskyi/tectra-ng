@@ -103,7 +103,7 @@ export default class ThemingPage {
 
   readonly presetCode = computed(() => {
     const options = [
-      this.settings.style() !== 'tectra' ? `style: '${this.settings.style()}'` : '',
+      this.settings.style() !== 'tectra' ? `style: ${this.settings.style()}Style` : '',
       this.settings.primary() !== 'blue' ? `primary: '${this.settings.primary()}'` : '',
       this.settings.surface() !== 'ink' ? `surface: '${this.settings.surface()}'` : '',
     ].filter(Boolean);
@@ -112,7 +112,7 @@ export default class ThemingPage {
       this.settings.mode() === 'dark' ? `mode: 'dark',` : '',
       this.settings.ripple() ? 'ripple: true,' : '',
     ].filter(Boolean);
-    const imports = options.length ? 'createTectraPreset' : 'Tectra';
+    const imports = options.length ? ['createTectraPreset', this.settings.style() !== 'tectra' ? `${this.settings.style()}Style` : ''].filter(Boolean).join(', ') : 'Tectra';
     return `import { provideTectra } from '@tectra-ng/core/config';
 import { ${imports} } from '@tectra-ng/themes';
 

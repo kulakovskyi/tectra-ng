@@ -72,13 +72,13 @@ export default class GettingStartedPage {
 
   readonly themeCode = computed(() => {
     const options = [
-      this.style() !== 'tectra' ? `style: '${this.style()}'` : '',
+      this.style() !== 'tectra' ? `style: ${this.style()}Style` : '',
       `primary: '${this.primary()}'`,
       this.surface() !== 'ink' ? `surface: '${this.surface()}'` : '',
     ].filter(Boolean);
     return `import { provideTectra } from '@tectra-ng/core/config';
 import { TX_ICONS, provideTxIcons } from '@tectra-ng/icons';
-import { createTectraPreset } from '@tectra-ng/themes';
+import { ${['createTectraPreset', this.style() !== 'tectra' ? `${this.style()}Style` : ''].filter(Boolean).join(', ')} } from '@tectra-ng/themes';
 
 export const appConfig: ApplicationConfig = {
   providers: [

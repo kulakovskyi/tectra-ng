@@ -70,8 +70,9 @@ test.describe('Open in StackBlitz', () => {
     await page.goto('/components/button');
     const payload = await openInStackblitz(page, context, 'severity');
     expect(payload.files['src/app/app.config.ts']).toContain(
-      "provideTectra({ preset: createTectraPreset({ style: 'soft', primary: 'violet', surface: 'slate' }), mode: 'dark' })",
+      "provideTectra({ preset: createTectraPreset({ style: softStyle, primary: 'violet', surface: 'slate' }), mode: 'dark' })",
     );
+    expect(payload.files['src/app/app.config.ts']).toContain("import { createTectraPreset, softStyle } from '@tectra-ng/themes';");
   });
 
   test('includes the images an example shows', async ({ page, context }) => {

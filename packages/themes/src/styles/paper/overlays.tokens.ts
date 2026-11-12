@@ -1,5 +1,5 @@
 import { TectraComponentTokens } from '../../components/component-tokens';
-import { lightDark, tokenRef } from '../../components/token-helpers';
+import { joinCss, lightDark, tokenRef } from '../../components/token-helpers';
 import { TectraDeepPartial } from '../../types/deep-partial.type';
 
 const radius = tokenRef('radius-sm');
@@ -23,9 +23,9 @@ export const paperOverlaysTokens: TectraDeepPartial<TectraComponentTokens> = {
   },
   popover: {
     root: { borderRadius: radius, shadow: elevatedShadow },
-    header: { padding: `${popoverPadding} ${popoverPadding} 0` },
+    header: { padding: joinCss(popoverPadding, ' ', popoverPadding, ' 0') },
     content: { padding: popoverPadding },
-    footer: { padding: `0 ${popoverPadding} ${popoverPadding}` },
+    footer: { padding: joinCss('0 ', popoverPadding, ' ', popoverPadding) },
   },
   toast: {
     root: { width: 'min(306.25px, calc(100vw - 28px))' },
@@ -39,12 +39,12 @@ export const paperOverlaysTokens: TectraDeepPartial<TectraComponentTokens> = {
       loadingPaddingEnd: popoverPadding,
     },
     closeButton: { size: '24.5px' },
-    focusRing: { shadow: `0 0 1px 4px ${lightDark(tokenRef('surface-200'), tokenRef('surface-700'))}` },
+    focusRing: { shadow: joinCss('0 0 1px 4px ', lightDark(tokenRef('surface-200'), tokenRef('surface-700'))) },
   },
   dialog: {
     root: { borderColor: tokenRef('surface-overlay-border'), borderRadius: radius, shadow: elevatedShadow },
     header: { padding: modalPadding },
-    content: { padding: `0 ${modalPadding}`, lastPaddingBottom: modalPadding },
+    content: { padding: joinCss('0 ', modalPadding), lastPaddingBottom: modalPadding },
     footer: { padding: modalPadding },
     drawer: {
       headerPadding: modalPadding,

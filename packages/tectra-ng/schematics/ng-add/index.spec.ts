@@ -75,7 +75,7 @@ describe('ng add tectra-ng', () => {
   describe('preset options', () => {
     it('keeps only what differs from the defaults, with the primary colour always written', () => {
       expect(presetOptions({})).toBe("primary: 'blue'");
-      expect(presetOptions({ style: 'soft', primary: 'violet', surface: 'slate' })).toBe("style: 'soft', primary: 'violet', surface: 'slate'");
+      expect(presetOptions({ style: 'soft', primary: 'violet', surface: 'slate' })).toBe("style: softStyle, primary: 'violet', surface: 'slate'");
       expect(presetOptions({ style: 'tectra', primary: 'noir', surface: 'ink' })).toBe("primary: 'noir'");
     });
   });
@@ -96,8 +96,9 @@ describe('ng add tectra-ng', () => {
     it('writes the chosen style, primary colour and surface', async () => {
       const { tree } = await run(await application(), { style: 'edge', primary: 'emerald', surface: 'stone' });
       expect(tree.readContent('/projects/app/src/app/app.config.ts')).toContain(
-        "provideTectra({ preset: createTectraPreset({ style: 'edge', primary: 'emerald', surface: 'stone' }) })",
+        "provideTectra({ preset: createTectraPreset({ style: edgeStyle, primary: 'emerald', surface: 'stone' }) })",
       );
+      expect(tree.readContent('/projects/app/src/app/app.config.ts')).toContain("import { createTectraPreset, edgeStyle } from '@tectra-ng/themes';");
     });
 
     it('adds the fonts once, indented like the rest of <head>', async () => {

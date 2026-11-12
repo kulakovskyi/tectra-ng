@@ -1,6 +1,8 @@
+/* @__NO_SIDE_EFFECTS__ */
 const halo = (color: string, transparency: string) => `0 0 1px 10px color-mix(in srgb, ${color}, transparent ${transparency})`;
 const elevation = 'var(--tx-toggle-switch-handle-shadow)';
 
+/* @__NO_SIDE_EFFECTS__ */
 const selectionHalo = (block: string, checkedColor: string) => `
 .${block}[data-styled] .${block}__box {
   border-radius: 50%;
@@ -24,7 +26,9 @@ const selectionHalo = (block: string, checkedColor: string) => `
 }
 `;
 
-export const paperControlsCss = `
+/* @__NO_SIDE_EFFECTS__ */
+function controlsCss(): string {
+  return `
 .tx-button[data-styled]:focus-visible {
   border-color: var(--_active-border-color);
   background: var(--_active-background);
@@ -100,3 +104,6 @@ ${selectionHalo('tx-checkbox', 'var(--tx-checkbox-checked-background)')}${select
   }
 }
 `;
+}
+
+export const paperControlsCss = controlsCss();

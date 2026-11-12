@@ -5,7 +5,7 @@ Gives the primitive tokens a meaning. A preset = semantic tokens for light + dar
 | File | What it does |
 |---|---|
 | `semantic/light.semantic.ts`, `semantic/dark.semantic.ts` | which step of which palette is `primary`, `surface.card`, `field.border`, `danger.hover`… in each mode |
-| `presets/tectra.preset.ts` | `createTectraPreset({ style, primary, surface })` — `style` from `TECTRA_STYLES` (`tectra` · `soft` · `edge` · `paper`), `primary` from `PRIMARY_ORDER` (`noir` follows the surface), `surface` from `SURFACE_PALETTES`; ready presets `Tectra` (default), `Soft`, `Edge`, `Paper` |
+| `presets/tectra.preset.ts` | `createTectraPreset({ style, primary, surface })` — `style` is the style object (`tectraStyle` by default, `softStyle`, `edgeStyle`, `paperStyle`; only the one passed lands in the bundle, `TECTRA_STYLES[name]` picks one by name and ships them all), `primary` from `PRIMARY_ORDER` (`noir` follows the surface), `surface` from `SURFACE_PALETTES`; ready presets `Tectra` (default), `Soft`, `Edge`, `Paper` |
 | `styles/<name>/` | a style = component token overrides + semantic overrides + optional CSS on top of the default look: `tectra` — the default; `soft` — pill buttons, tags and segments, filled borderless fields, tonal secondary buttons, large card and overlay radii, glow focus; `edge` — sharp corners, strong borders, solid selection; `paper` — filled fields with an underline, elevation shadows, focus halos |
 | `semantic/contrast.ts` | `primaryBaseStep(scale)` — light primary is step 600, or 700 when white text on 600 is under 4.5:1 |
 | `define-preset.ts` | `definePreset(base, overrides)` — deep merge: override one token without copying the rest |

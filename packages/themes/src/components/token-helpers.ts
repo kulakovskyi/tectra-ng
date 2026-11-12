@@ -27,3 +27,10 @@ export function extendTokens<T extends object, U extends object>(base: T, extra:
 export function joinCss(...parts: string[]): string {
   return parts.join('');
 }
+
+type MergedTokens<T extends object[]> = T extends [infer Head, ...infer Rest extends object[]] ? Head & MergedTokens<Rest> : unknown;
+
+/* @__NO_SIDE_EFFECTS__ */
+export function mergeTokens<T extends object[]>(...parts: T): MergedTokens<T> {
+  return Object.assign({}, ...parts) as MergedTokens<T>;
+}

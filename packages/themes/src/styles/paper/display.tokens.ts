@@ -1,7 +1,8 @@
 import { TectraComponentTokens } from '../../components/component-tokens';
-import { lightDark, tokenRef } from '../../components/token-helpers';
+import { joinCss, lightDark, tokenRef } from '../../components/token-helpers';
 import { TectraDeepPartial } from '../../types/deep-partial.type';
 
+/* @__NO_SIDE_EFFECTS__ */
 function solid(severity: string) {
   return { background: tokenRef(`${severity}-base`), color: tokenRef(`${severity}-contrast`) };
 }
@@ -37,7 +38,7 @@ export const paperDisplayTokens: TectraDeepPartial<TectraComponentTokens> = {
       removeColor: lightDark(tokenRef('surface-600'), tokenRef('surface-0')),
       focusRingWidth: '0',
       focusRingOffset: '0',
-      focusRingShadow: `0 0 1px 4px ${lightDark(tokenRef('surface-300'), tokenRef('surface-600'))}`,
+      focusRingShadow: joinCss('0 0 1px 4px ', lightDark(tokenRef('surface-300'), tokenRef('surface-600'))),
     },
   },
   message: {

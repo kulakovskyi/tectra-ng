@@ -88,7 +88,7 @@ export class CityField {
 }
 ```
 
-Fonts, dark mode, locales and the theme builder: [tectra-ng.com/getting-started](https://tectra-ng.com/getting-started).
+Fonts, dark mode, locales and the theme builder: [tectra-ng.com/getting-started](https://tectra-ng.com/getting-started). Upgrading from 0.2: [UPGRADING.md](UPGRADING.md).
 
 Try before installing: the bolt button on every example of [tectra-ng.com](https://tectra-ng.com) opens it in StackBlitz as a live, editable Angular CLI project with the theme you picked on the site.
 

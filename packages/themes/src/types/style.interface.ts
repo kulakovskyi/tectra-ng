@@ -4,6 +4,7 @@ import { TectraPalettes } from './preset.interface';
 import { TectraSemanticTokens } from './semantic-tokens.interface';
 
 export interface TectraStyle {
+  name: string;
   label: string;
   light?: (palettes: TectraPalettes) => TectraDeepPartial<TectraSemanticTokens>;
   dark?: (palettes: TectraPalettes) => TectraDeepPartial<TectraSemanticTokens>;

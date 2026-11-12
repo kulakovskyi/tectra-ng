@@ -106,4 +106,6 @@ The code editor is not part of `tectra-ng` either — it carries the CodeMirror 
 npm i @tectra-ng/code-editor
 ```
 
+Upgrading from 0.2: [UPGRADING.md](https://github.com/kulakovskyi/tectra-ng/blob/main/UPGRADING.md).
+
 Docs and examples: [tectra-ng.com](https://tectra-ng.com) · MIT license.

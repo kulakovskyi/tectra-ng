@@ -1,6 +1,8 @@
 import { ACCENT_PALETTES, SURFACE_PALETTES } from '@tectra-ng/tokens';
 import { deepMerge, definePreset } from './define-preset';
 import { Soft, Tectra, createTectraPreset } from './presets/tectra.preset';
+import { edgeStyle } from './styles/edge/edge.style';
+import { TectraStyle } from './types/style.interface';
 
 describe('deepMerge', () => {
   it('keeps sibling keys when overriding a nested one', () => {
@@ -47,6 +49,10 @@ describe('createTectraPreset', () => {
   });
 
   it('applies the style overrides', () => {
-    expect(createTectraPreset({ style: 'edge' }).name).toBe('edge-blue-ink');
+    expect(createTectraPreset({ style: edgeStyle }).name).toBe('edge-blue-ink');
+  });
+
+  it('explains how to pass a style given by its name', () => {
+    expect(() => createTectraPreset({ style: 'soft' as unknown as TectraStyle })).toThrow('import { softStyle } from');
   });
 });
