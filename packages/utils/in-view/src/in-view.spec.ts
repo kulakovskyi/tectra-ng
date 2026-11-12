@@ -46,6 +46,13 @@ class InViewHost {
 }
 
 @Component({
+  imports: [TxInView],
+  template: `<section txInView>Plain</section>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class PlainInViewHost {}
+
+@Component({
   imports: [TxVisibleOnScroll],
   template: `<ul [txVisibleOnScroll]="items()" (itemVisible)="seen.push($event)">
     @for (item of items(); track item.id) {
@@ -120,5 +127,28 @@ describe('in view', () => {
     const next = fixture.nativeElement.querySelectorAll('li');
     observer.fire(next[0], 1);
     expect(fixture.componentInstance.seen).toEqual(['a', 'b']);
+  });
+
+  it('ignores reports that change nothing and works without classes', async () => {
+    const fixture = TestBed.createComponent(InViewHost);
+    await fixture.whenStable();
+    const section = fixture.nativeElement.querySelector('section') as HTMLElement;
+    FakeObserver.instances[0].fire(section, 0);
+    expect(fixture.componentInstance.log).toEqual([]);
+
+    const plain = TestBed.createComponent(PlainInViewHost);
+    await plain.whenStable();
+    const element = plain.nativeElement.querySelector('section') as HTMLElement;
+    (FakeObserver.instances.at(-1) as FakeObserver).fire(element, 1);
+    await plain.whenStable();
+    expect(element.className).toBe('tx-in-view');
+  });
+
+  it('reports nothing about list items without IntersectionObserver', async () => {
+    vi.stubGlobal('IntersectionObserver', undefined);
+    const fixture = TestBed.createComponent(ListHost);
+    await fixture.whenStable();
+    expect(FakeObserver.instances).toHaveLength(0);
+    expect(fixture.componentInstance.seen).toEqual([]);
   });
 });

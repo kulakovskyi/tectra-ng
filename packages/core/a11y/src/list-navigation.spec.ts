@@ -25,6 +25,11 @@ describe('nextListIndex', () => {
     expect(nextListIndex('ArrowDown', { count: 0, current: -1 })).toBeNull();
   });
 
+  it('stays in place when every other item is disabled', () => {
+    expect(nextListIndex('ArrowDown', { ...base, isDisabled: (index) => index !== 2 })).toBe(2);
+    expect(nextListIndex('ArrowUp', { ...base, isDisabled: () => true })).toBe(2);
+  });
+
   it('starts from an edge when nothing is active', () => {
     expect(nextListIndex('ArrowDown', { count: 3, current: -1 })).toBe(0);
     expect(nextListIndex('ArrowUp', { count: 3, current: -1 })).toBe(2);
@@ -47,5 +52,23 @@ describe('TxTypeahead', () => {
     typeahead.search('k', labels, -1);
     expect(typeahead.search('h', labels, 0)).toBe(1);
     expect(typeahead.search('xx', labels, 0)).toBeNull();
+  });
+
+  it('finds nothing for an unknown letter or an empty list', () => {
+    const typeahead = new TxTypeahead();
+    expect(typeahead.search('z', labels, 0)).toBeNull();
+    expect(typeahead.search('k', [], 0)).toBeNull();
+  });
+
+  it('forgets the typed word after the delay', () => {
+    vi.useFakeTimers();
+    try {
+      const typeahead = new TxTypeahead(300);
+      expect(typeahead.search('l', labels, -1)).toBe(2);
+      vi.advanceTimersByTime(300);
+      expect(typeahead.search('o', labels, 2)).toBe(3);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

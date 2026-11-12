@@ -1,4 +1,13 @@
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { TxCapitalizePipe, TxHttpPrefixPipe, TxTruncatePipe, capitalize, escapeHtml, normalizeKeyword, slugify, transliterate, truncate, withHttpPrefix } from './text';
+
+@Component({
+  imports: [TxTruncatePipe, TxCapitalizePipe, TxHttpPrefixPipe],
+  template: `{{ 'abcdef' | txTruncate: 3 }}|{{ 'kyiv' | txCapitalize }}|{{ 'example.com' | txHttpPrefix }}`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class TextHost {}
 
 describe('text', () => {
   it('truncates at the end or in the middle, by characters', () => {
@@ -36,5 +45,16 @@ describe('text', () => {
 
   it('escapes HTML', () => {
     expect(escapeHtml(`<a href="x">Tom & 'Jerry'</a>`)).toBe('&lt;a href=&quot;x&quot;&gt;Tom &amp; &#39;Jerry&#39;&lt;/a&gt;');
+  });
+
+  it('keeps only the head when the middle limit is one character', () => {
+    expect(truncate('abcdef', 1, '…', 'middle')).toBe('a…');
+    expect(normalizeKeyword(null)).toBe('');
+  });
+
+  it('works as template pipes', () => {
+    const fixture = TestBed.createComponent(TextHost);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).toBe('abc...|Kyiv|https://example.com');
   });
 });

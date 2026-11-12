@@ -26,6 +26,14 @@ import { provideTxTooltip } from '@tectra-ng/ui/tooltip';
       <tx-avatar name="Gus Hale" />
       <tx-avatar name="Ida Webb" />
     </tx-avatar-group>
+    <tx-avatar-group id="sized" [size]="28" [max]="0">
+      <tx-avatar label="ZZ" />
+      <tx-avatar icon="custom-glyph" />
+    </tx-avatar-group>
+    <tx-avatar-group id="all">
+      <tx-avatar name="Olena" />
+      <tx-avatar label="QA" />
+    </tx-avatar-group>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -157,6 +165,29 @@ describe('TxAvatar', () => {
     more.click();
     await settle();
     expect(more.getAttribute('aria-expanded')).toBe('false');
+  });
+
+  it('shows every avatar of a group without max and passes a numeric size down', () => {
+    const avatars = Array.from(el('#all').querySelectorAll('tx-avatar')) as HTMLElement[];
+    expect(avatars.map((avatar) => avatar.hidden)).toEqual([false, false]);
+    expect(avatars[0].textContent?.trim()).toBe('O');
+    expect(el('#all .tx-avatar-group__more')).toBeNull();
+    expect(el('#sized').style.getPropertyValue('--tx-avatar-size')).toBe('28px');
+    expect(el('#sized').hasAttribute('data-size')).toBe(false);
+    expect(el('#sized tx-avatar').style.getPropertyValue('--tx-avatar-size')).toBe('28px');
+  });
+
+  it('draws an unknown icon as a class name and names unnamed people by label or nothing', async () => {
+    const glyph = el('#sized tx-avatar:nth-of-type(2) .tx-avatar__icon span');
+    expect(glyph.className).toBe('custom-glyph');
+    const unnamed = el('#sized tx-avatar') as HTMLElement;
+    fire(unnamed, 'mouseenter');
+    await settle();
+    expect(tooltip()).toBeNull();
+    (el('#sized .tx-avatar-group__more') as HTMLButtonElement).click();
+    await settle();
+    const names = Array.from(document.querySelectorAll('.tx-popover .tx-avatar-group__name')).map((name) => name.textContent?.trim());
+    expect(names).toEqual(['ZZ', '']);
   });
 
   it('puts +N first without an overlap when every avatar is hidden', () => {

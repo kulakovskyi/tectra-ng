@@ -84,3 +84,50 @@ describe('TxWizard', () => {
     expect(root.querySelector('tx-wizard-stage')?.getAttribute('data-direction')).toBe('back');
   });
 });
+
+@Component({
+  imports: [TxWizardProgress, TxWizardStepHead, TxWizardStage, TxWizardFooter],
+  template: `
+    <tx-wizard-progress [total]="total()" [current]="0" />
+    <tx-wizard-step-head title="Welcome" />
+    <tx-wizard-footer nextLabel="Start" nextIcon="check" />
+    <tx-wizard-stage [caption]="caption()"><div class="scene">Scene</div></tx-wizard-stage>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class BareHost {
+  readonly total = signal(2);
+  readonly caption = signal<string | undefined>(undefined);
+}
+
+describe('TxWizard parts on their own', () => {
+  it('fall back to the default labels and leave out the optional pieces', async () => {
+    const fixture = TestBed.createComponent(BareHost);
+    await fixture.whenStable();
+    const root = fixture.nativeElement as HTMLElement;
+    expect(root.querySelector('.tx-wizard-progress__label')).toBeNull();
+    expect(root.querySelector('.tx-wizard-progress__segments')?.getAttribute('aria-label')).toBe('Progress');
+    const segments = Array.from(root.querySelectorAll('.tx-wizard-progress__segment'));
+    expect(segments.map((segment) => segment.hasAttribute('aria-label'))).toEqual([false, false]);
+
+    const head = root.querySelector('tx-wizard-step-head') as HTMLElement;
+    expect(head.querySelector('.tx-wizard-step-head__icon')).toBeNull();
+    expect(head.querySelector('tx-pill')).toBeNull();
+    expect(head.querySelector('.tx-wizard-step-head__lead')).toBeNull();
+
+    const buttons = Array.from(root.querySelectorAll<HTMLButtonElement>('tx-wizard-footer button'));
+    expect(buttons.map((button) => button.textContent?.trim())).toEqual(['Back', 'Start']);
+
+    const stage = root.querySelector('tx-wizard-stage') as HTMLElement;
+    expect(stage.getAttribute('data-responsive')).toBe('viewport');
+    expect(stage.getAttribute('data-direction')).toBe('forward');
+    expect(stage.querySelector('.tx-wizard-stage__caption')).toBeNull();
+
+    fixture.componentInstance.caption.set('Hello');
+    fixture.componentInstance.total.set(-1);
+    await fixture.whenStable();
+    expect(stage.querySelector('.tx-wizard-stage__number')).toBeNull();
+    expect(stage.querySelector('.tx-wizard-stage__title')?.textContent?.trim()).toBe('Hello');
+    expect(root.querySelectorAll('.tx-wizard-progress__segment')).toHaveLength(0);
+  });
+});

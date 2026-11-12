@@ -14,7 +14,7 @@ export function barListRows(
     label: item.label,
     raw: item.value,
     value: format(item.value),
-    share: max ? (item.value / max) * 100 : 0,
+    share: (item.value / max) * 100,
     percent: `${percentFormat(Math.round((item.value / total) * 1000) / 10)}%`,
     link: item.link,
     queryParams: item.queryParams,

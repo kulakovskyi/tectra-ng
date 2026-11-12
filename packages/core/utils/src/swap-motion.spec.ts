@@ -17,6 +17,7 @@ describe('txSwapMotion', () => {
     expect(flip?.sequential).toBe(true);
     expect(flip?.enter[0]).toEqual({ opacity: 0, transform: 'perspective(1200px) rotateY(-90deg)' });
     expect(txSwapMotion('none', 1)).toBeNull();
+    expect(txSwapMotion('flip', -1, 'y')?.enter[0]).toEqual({ opacity: 0, transform: 'perspective(1200px) rotateX(-90deg)' });
   });
 
   it('reads times from CSS and skips elements that cannot animate', () => {
@@ -29,5 +30,26 @@ describe('txSwapMotion', () => {
     expect(txCssTime(element, '--missing', 500)).toBe(500);
     expect(txCanAnimate(null)).toBe(false);
     element.remove();
+  });
+
+  it('animates only elements that can, unless reduced motion is asked for', () => {
+    const element = document.createElement('div');
+    Object.defineProperty(element, 'animate', { configurable: true, writable: true, value: undefined });
+    expect(txCanAnimate(element)).toBe(false);
+    element.animate = vi.fn();
+    try {
+      window.matchMedia = vi.fn(() => ({ matches: false }) as MediaQueryList);
+      expect(txCanAnimate(element)).toBe(true);
+      window.matchMedia = vi.fn(() => ({ matches: true }) as MediaQueryList);
+      expect(txCanAnimate(element)).toBe(false);
+    } finally {
+      Reflect.deleteProperty(window, 'matchMedia');
+    }
+    expect(txCanAnimate(element)).toBe(true);
+  });
+
+  it('falls back for an element of a document without a window', () => {
+    const element = document.implementation.createHTMLDocument('').createElement('div');
+    expect(txCssTime(element, '--speed', 250)).toBe(250);
   });
 });

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { TxActionTile } from './action-tile.component';
 
 @Component({
@@ -62,5 +63,38 @@ describe('TxActionTile', () => {
     expect(button.hasAttribute('aria-busy')).toBe(false);
     button.click();
     expect(fixture.componentInstance.clicks).toBe(0);
+  });
+});
+
+@Component({
+  imports: [TxActionTile],
+  template: `<tx-action-tile title="Plain" [disabled]="disabled()" [loading]="loading()" (tileClick)="clicks = clicks + 1" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class PlainHost {
+  clicks = 0;
+  readonly disabled = signal(false);
+  readonly loading = signal(false);
+}
+
+describe('TxActionTile without an icon', () => {
+  it('leaves out the icon and ignores click handlers while blocked', async () => {
+    const fixture = TestBed.createComponent(PlainHost);
+    await fixture.whenStable();
+    const root = fixture.nativeElement.querySelector('tx-action-tile') as HTMLElement;
+    expect(root.querySelector('.tx-action-tile__icon')).toBeNull();
+    const button = fixture.debugElement.query(By.css('button'));
+    fixture.componentInstance.loading.set(true);
+    await fixture.whenStable();
+    button.triggerEventHandler('click');
+    fixture.componentInstance.loading.set(false);
+    fixture.componentInstance.disabled.set(true);
+    await fixture.whenStable();
+    button.triggerEventHandler('click');
+    expect(fixture.componentInstance.clicks).toBe(0);
+    fixture.componentInstance.disabled.set(false);
+    await fixture.whenStable();
+    button.triggerEventHandler('click');
+    expect(fixture.componentInstance.clicks).toBe(1);
   });
 });

@@ -9,6 +9,7 @@ import { TxProgressBarMode } from './progress-bar.types';
   template: `
     <tx-progress-bar id="upload" ariaLabel="Upload" [value]="value()" [mode]="mode()" [showValue]="true" severity="success" size="normal" />
     <tx-progress-bar id="disk" [value]="320" [max]="500" unit=" GB" [showValue]="true" color="teal" />
+    <tx-progress-bar id="flat" value="abc" [min]="5" [max]="5" ariaLabel="Flat" />
     <tx-progress-bar id="custom" [value]="3" [max]="4" [showValue]="true">
       <ng-template txProgressBarValue let-value let-percent="percent"><b class="own">{{ value }} of 4 · {{ percent }}</b></ng-template>
     </tx-progress-bar>
@@ -59,4 +60,20 @@ describe('TxProgressBar', () => {
     expect(el('#upload').getAttribute('aria-busy')).toBe('true');
     expect(el('#upload .tx-progress-bar__label')).toBeNull();
   });
+
+  it('starts a value that is not a number at the minimum and draws an empty span as empty', () => {
+    expect(el('#flat').getAttribute('aria-valuenow')).toBe('5');
+    expect((el('#flat .tx-progress-bar__value') as HTMLElement).style.width).toBe('0%');
+  });
 });
+
+describe('TxProgressBar recompiled by TestBed', () => {
+  it('still finds its value template when a test overrides the component', async () => {
+    TestBed.overrideComponent(TxProgressBar, { set: { styles: [] } });
+    const fixture = TestBed.createComponent(Host);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('#custom .own').textContent).toBe('3 of 4 · 75');
+  });
+});
+

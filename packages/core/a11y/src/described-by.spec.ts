@@ -25,4 +25,12 @@ describe('linkDescribedBy', () => {
     unlink();
     expect(field.hasAttribute('aria-describedby')).toBe(false);
   });
+
+  it('copes with the attribute removed before unlinking', () => {
+    const field = document.createElement('input');
+    const unlink = linkDescribedBy(field, 'hint');
+    field.removeAttribute('aria-describedby');
+    unlink();
+    expect(field.hasAttribute('aria-describedby')).toBe(false);
+  });
 });

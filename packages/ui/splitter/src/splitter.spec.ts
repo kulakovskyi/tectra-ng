@@ -85,6 +85,13 @@ describe('moveGutter', () => {
     expect(open).toEqual({ sizes: [10, 90], collapsed: [false, false] });
   });
 
+  it('leaves the sizes for a zero move and skips collapsed panels it passes', () => {
+    const three = [...limits, { minSize: 10, maxSize: 100, collapsible: true, collapsedSize: 0 }];
+    const state = { sizes: [50, 50, 0], collapsed: [false, false, true] };
+    expect(moveGutter(state, three, 0, 0)).toEqual(state);
+    expect(moveGutter(state, three, 0, 60)).toEqual({ sizes: [80, 20, 0], collapsed: [false, false, true] });
+  });
+
   it('respects the maximum and takes space from further panels', () => {
     const three = [...limits, { minSize: 0, maxSize: 40, collapsible: false, collapsedSize: 0 }];
     expect(moveGutter({ sizes: [20, 50, 30], collapsed: [false, false, false] }, three, 1, -20).sizes).toEqual([20, 40, 40]);
@@ -231,5 +238,147 @@ describe('TxSplitter nested and stateful', () => {
     expect(again.componentInstance.outer().sizes()).toEqual([95, 5]);
     again.componentInstance.outer().resetState();
     expect(again.componentInstance.outer().sizes()).toEqual([95, 5]);
+  });
+
+  it('ignores Enter between panels that cannot collapse', async () => {
+    const fixture = TestBed.createComponent(NestedHost);
+    await fixture.whenStable();
+    const gutter = fixture.nativeElement.querySelector('#inner > .tx-splitter__gutter') as HTMLElement;
+    expect(key(gutter, 'Enter').defaultPrevented).toBe(false);
+  });
+});
+
+@Component({
+  imports: [TxSplitter, TxSplitterPanel],
+  template: `
+    <tx-splitter [layout]="layout()" [panelSizes]="sizes()" [stateKey]="stateKey()" (collapsedChange)="collapses.push($event)">
+      <tx-splitter-panel [minSize]="10">One</tx-splitter-panel>
+      <tx-splitter-panel [minSize]="10" collapsible>Two</tx-splitter-panel>
+      @if (third()) {
+        <tx-splitter-panel>Three</tx-splitter-panel>
+      }
+    </tx-splitter>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class EdgeHost {
+  readonly splitter = viewChild.required(TxSplitter);
+  readonly layout = signal<TxSplitterLayout>('horizontal');
+  readonly sizes = signal<readonly number[]>([60, 0, 40]);
+  readonly third = signal(true);
+  readonly stateKey = signal<string | undefined>(undefined);
+  readonly collapses: TxSplitterCollapseEvent[] = [];
+}
+
+describe('TxSplitter edges', () => {
+  let fixture: ComponentFixture<EdgeHost>;
+  const gutters = () => Array.from(fixture.nativeElement.querySelectorAll('.tx-splitter__gutter')) as HTMLElement[];
+  const sizes = () => fixture.componentInstance.splitter().sizes();
+
+  beforeEach(async () => {
+    sessionStorage.clear();
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement) {
+      const size = this.classList.contains('tx-splitter__panel') ? 100 : 0;
+      return { width: size, height: size, top: 0, left: 0, right: size, bottom: size, x: 0, y: 0, toJSON: () => ({}) } as DOMRect;
+    });
+    fixture = TestBed.createComponent(EdgeHost);
+    await fixture.whenStable();
+  });
+
+  afterEach(() => vi.restoreAllMocks());
+
+  it('opens a panel that starts collapsed to its minimum from the gutter after it', async () => {
+    expect(fixture.componentInstance.splitter().collapsed()).toEqual([false, true, false]);
+    key(gutters()[0], 'Enter');
+    expect(sizes()).toEqual([50, 10, 40]);
+    key(gutters()[1], 'keyup', 'keyup');
+    key(gutters()[1], 'Enter');
+    expect(sizes()).toEqual([50, 0, 50]);
+    expect(fixture.componentInstance.collapses.map((event) => event.collapsed)).toEqual([false, true]);
+  });
+
+  it('ignores other keys and a key up without a move', () => {
+    fixture.componentInstance.sizes.set([50, 50]);
+    fixture.componentInstance.third.set(false);
+    fixture.detectChanges();
+    const splitter = fixture.componentInstance.splitter();
+    splitter.resetState();
+    const [gutter] = gutters();
+    expect(key(gutter, 'x').defaultPrevented).toBe(false);
+    expect(key(gutter, 'ArrowUp').defaultPrevented).toBe(false);
+    key(gutter, 'keyup', 'keyup');
+    expect(sizes()).toEqual([50, 50]);
+  });
+
+  it('ignores the horizontal arrows in a vertical layout and moves up with ArrowUp', async () => {
+    fixture.componentInstance.layout.set('vertical');
+    await fixture.whenStable();
+    const [, gutter] = gutters();
+    expect(key(gutter, 'ArrowRight').defaultPrevented).toBe(false);
+    expect(key(gutter, 'ArrowLeft').defaultPrevented).toBe(false);
+    key(gutter, 'ArrowUp');
+    const [first, second, third] = sizes();
+    expect(first).toBeLessThan(60);
+    expect(second).toBe(0);
+    expect(third).toBeGreaterThan(40);
+    key(gutters()[0], 'ArrowUp');
+    expect(sizes()[1]).toBe(10);
+  });
+
+  it('mirrors the pointer and the arrows in right-to-left', async () => {
+    vi.spyOn(window, 'getComputedStyle').mockImplementation(() => ({ direction: 'rtl' }) as CSSStyleDeclaration);
+    const [gutter] = gutters();
+    key(gutter, 'ArrowLeft');
+    expect(sizes()[0]).toBeGreaterThan(60);
+    key(gutter, 'keyup', 'keyup');
+    fixture.componentInstance.splitter().resetState();
+    gutter.setPointerCapture = vi.fn();
+    gutter.hasPointerCapture = vi.fn(() => true);
+    gutter.releasePointerCapture = vi.fn();
+    gutter.dispatchEvent(pointer('pointerdown', 100));
+    gutter.dispatchEvent(pointer('pointermove', 80));
+    expect(sizes()[0]).toBeGreaterThan(60);
+    gutter.dispatchEvent(pointer('pointerup', 80));
+    expect(gutter.releasePointerCapture).toHaveBeenCalled();
+    gutter.dispatchEvent(pointer('pointerup', 80));
+    expect(gutter.releasePointerCapture).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps the dragged sizes when the panels change during a drag', async () => {
+    const [gutter] = gutters();
+    gutter.dispatchEvent(pointer('pointerdown', 0));
+    fixture.componentInstance.third.set(false);
+    await fixture.whenStable();
+    expect(sizes()).toEqual([60, 0, 40]);
+    gutter.dispatchEvent(pointer('pointerup', 0));
+    await fixture.whenStable();
+    expect(gutters()).toHaveLength(1);
+  });
+
+  it('counts a layout without any size as a hundred', () => {
+    fixture.componentInstance.sizes.set([0, 0, 0]);
+    fixture.detectChanges();
+    fixture.componentInstance.splitter().resetState();
+    key(gutters()[1], 'End');
+    expect(sizes()).toEqual([0, 0, 0]);
+  });
+
+  it('keeps working when the storage fails or holds broken data', async () => {
+    fixture.componentInstance.stateKey.set('tx-spec-edge');
+    sessionStorage.setItem('tx-spec-edge', '{broken');
+    await fixture.whenStable();
+    expect(sizes()).toEqual([60, 0, 40]);
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new Error('quota');
+    });
+    const [gutter] = gutters();
+    key(gutter, 'ArrowRight');
+    key(gutter, 'keyup', 'keyup');
+    expect(sizes()[0]).toBeGreaterThan(60);
+    vi.spyOn(window, 'sessionStorage', 'get').mockImplementation(() => {
+      throw new Error('denied');
+    });
+    fixture.componentInstance.splitter().resetState();
+    expect(sizes()).toEqual([60, 0, 40]);
   });
 });

@@ -322,3 +322,121 @@ describe('TxSteps', () => {
     expect(own).toEqual(['0:One:true:false', '1:Two:false:true']);
   });
 });
+
+@Component({
+  imports: [TxStepper, TxStepList, TxStep, TxStepContent],
+  template: `
+    <tx-stepper [(value)]="value" [linear]="linear()">
+      <tx-step-list>
+        <tx-step value="x">X</tx-step>
+        <tx-step value="y">Y</tx-step>
+        <tx-step>
+          <ng-template txStepContent let-value let-index="index"><span class="loose">[{{ value }}] {{ index }}</span></ng-template>
+        </tx-step>
+        <tx-step>Plain</tx-step>
+      </tx-step-list>
+    </tx-stepper>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class LooseStepperHost {
+  readonly value = signal<TxStepValue | undefined>(undefined);
+  readonly linear = signal(false);
+}
+
+describe('TxStepper without a value', () => {
+  let fixture: ComponentFixture<LooseStepperHost>;
+  const el = (selector: string) => fixture.nativeElement.querySelector(selector) as HTMLElement;
+  const headers = () => Array.from(fixture.nativeElement.querySelectorAll('.tx-step__header')) as HTMLButtonElement[];
+  const press = (target: HTMLElement, key: string) => {
+    const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
+    target.dispatchEvent(event);
+    return event;
+  };
+
+  beforeEach(async () => {
+    fixture = setup(LooseStepperHost);
+    await fixture.whenStable();
+  });
+
+  it('puts the first enabled step in the tab order and leaves steps without panels unlinked', () => {
+    const [x, y] = headers();
+    expect(x.tabIndex).toBe(0);
+    expect(y.tabIndex).toBe(-1);
+    expect(x.hasAttribute('aria-controls')).toBe(false);
+    expect(el('.loose').textContent).toBe('[] -1');
+  });
+
+  it('does not activate a step without a value', async () => {
+    const plain = headers()[2];
+    plain.click();
+    await fixture.whenStable();
+    expect(fixture.componentInstance.value()).toBeUndefined();
+    expect(plain.id).toMatch(/-step-$/);
+  });
+
+  it('moves back with the arrows and ignores other keys', () => {
+    const [x, , plain] = headers();
+    x.focus();
+    expect(press(x, 'ArrowLeft').defaultPrevented).toBe(true);
+    expect(document.activeElement).toBe(plain);
+    expect(press(plain, 'x').defaultPrevented).toBe(false);
+  });
+
+  it('has nothing to focus when every step is locked', async () => {
+    fixture.componentInstance.linear.set(true);
+    await fixture.whenStable();
+    expect(headers().every((header) => header.disabled)).toBe(true);
+    expect(press(headers()[0], 'ArrowRight').defaultPrevented).toBe(false);
+  });
+});
+
+describe('TxStepper vertical keys', () => {
+  it('leaves the keys of a step inside an item to the page', async () => {
+    const fixture = setup(VerticalHost);
+    await fixture.whenStable();
+    const header = fixture.nativeElement.querySelector('.tx-step__header') as HTMLElement;
+    const event = new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true });
+    header.dispatchEvent(event);
+    expect(event.defaultPrevented).toBe(false);
+  });
+});
+
+describe('TxSteps edges', () => {
+  it('moves back and home between clickable steps, ignores other keys and renders no items', async () => {
+    const fixture = setup(StepsHost);
+    fixture.componentInstance.readonly.set(false);
+    await fixture.whenStable();
+    const buttons = Array.from(fixture.nativeElement.querySelectorAll('button.tx-steps__link')) as HTMLButtonElement[];
+    buttons[1].focus();
+    buttons[1].dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
+    expect(document.activeElement).toBe(buttons[0]);
+    buttons[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
+    expect(document.activeElement).toBe(buttons[2]);
+    buttons[2].dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', bubbles: true }));
+    expect(document.activeElement).toBe(buttons[0]);
+    const other = new KeyboardEvent('keydown', { key: 'x', bubbles: true, cancelable: true });
+    buttons[0].dispatchEvent(other);
+    expect(other.defaultPrevented).toBe(false);
+  });
+
+  it('renders an empty list for missing items', async () => {
+    @Component({
+      imports: [TxSteps],
+      template: `<tx-steps [items]="null" />`,
+      changeDetection: ChangeDetectionStrategy.OnPush,
+    })
+    class EmptyStepsHost {}
+    const fixture = setup(EmptyStepsHost);
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelectorAll('li')).toHaveLength(0);
+  });
+});
+
+describe('stepper templates', () => {
+  it('narrow their contexts', () => {
+    expect(TxStepContent.ngTemplateContextGuard({} as TxStepContent, {})).toBe(true);
+    expect(TxStepPanelContent.ngTemplateContextGuard({} as TxStepPanelContent, null)).toBe(false);
+    expect(TxStepsItemTemplate.ngTemplateContextGuard({} as TxStepsItemTemplate, { index: 0 })).toBe(true);
+  });
+});

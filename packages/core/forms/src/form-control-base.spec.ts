@@ -26,4 +26,11 @@ describe('TxFormControlBase', () => {
     control.setDisabledState(true);
     expect(control.disabled()).toBe(true);
   });
+
+  it('changes and touches safely before the form registers callbacks', () => {
+    const control = new TestControl();
+    control.change('c');
+    control.touch();
+    expect(control.value()).toBe('c');
+  });
 });

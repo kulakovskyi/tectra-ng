@@ -30,4 +30,11 @@ describe('stream', () => {
     expect(chunks.join('')).toBe('Привіт, world');
     expect(await readTextStream(new Response(null), () => undefined)).toBe('');
   });
+  it('ends with a replacement mark for a letter cut off at the end', async () => {
+    const chunks: string[] = [];
+    for await (const chunk of textChunks(streamed([bytes.slice(0, 1)]))) {
+      chunks.push(chunk);
+    }
+    expect(chunks).toEqual(['\uFFFD']);
+  });
 });

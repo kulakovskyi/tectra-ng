@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TxPasswordContentTemplate } from './password-templates.directive';
+import { TxPasswordContentTemplate, TxPasswordFooterTemplate, TxPasswordHeaderTemplate } from './password-templates.directive';
 import { TxPassword } from './password.component';
 import { TxPasswordStrength } from './password.types';
 
@@ -113,4 +113,81 @@ describe('TxPassword', () => {
     await fixture.whenStable();
     expect(input().disabled).toBe(true);
   });
+
+  it('keeps one meter open on a second focus and names a strong password by default', async () => {
+    input().dispatchEvent(new Event('focus'));
+    await fixture.whenStable();
+    input().dispatchEvent(new Event('focus'));
+    await fixture.whenStable();
+    expect(document.querySelectorAll('.tx-password__panel')).toHaveLength(1);
+    await type('Abc12345');
+    expect(panel()?.querySelector('.tx-password__info')?.textContent?.trim()).toBe('Strong');
+  });
+
+  it('fills a value, revealing it unless asked not to, and shows an empty value for null', async () => {
+    const password = fixture.debugElement.query((node) => node.componentInstance instanceof TxPassword).componentInstance as TxPassword;
+    password.fill('generated-1', false);
+    await fixture.whenStable();
+    expect(fixture.componentInstance.password.value).toBe('generated-1');
+    expect(input().type).toBe('password');
+    password.fill('generated-2');
+    await fixture.whenStable();
+    expect(input().type).toBe('text');
+    fixture.componentInstance.password.setValue(null);
+    await fixture.whenStable();
+    expect(input().value).toBe('');
+  });
 });
+
+@Component({
+  imports: [TxPassword, TxPasswordHeaderTemplate, TxPasswordFooterTemplate],
+  template: `
+    <tx-password id="rules" feedback mediumRegex="^.{4,}$" [strongRegex]="strong" ariaLabel="Rules">
+      <ng-template txPasswordHeader><p class="own-header">Pick a password</p></ng-template>
+      <ng-template txPasswordFooter><p class="own-footer">No reuse</p></ng-template>
+    </tx-password>
+    <tx-password id="locked" feedback readonly ariaLabel="Locked" />
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class RulesHost {
+  readonly strong = /^.{10,}$/;
+}
+
+describe('TxPassword with own rules', () => {
+  afterEach(() => document.querySelector('.cdk-overlay-container')?.replaceChildren());
+
+  it('grades by string patterns, shows own header and footer and opens no meter when readonly', async () => {
+    const fixture = TestBed.createComponent(RulesHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    const locked = fixture.nativeElement.querySelector('#locked input') as HTMLInputElement;
+    locked.dispatchEvent(new Event('focus'));
+    await fixture.whenStable();
+    expect(document.querySelector('.tx-password__panel')).toBeNull();
+    const input = fixture.nativeElement.querySelector('#rules input') as HTMLInputElement;
+    input.dispatchEvent(new Event('focus'));
+    input.value = 'abcd';
+    input.dispatchEvent(new Event('input'));
+    await fixture.whenStable();
+    const panel = document.querySelector('.tx-password__panel') as HTMLElement;
+    expect(panel.querySelector('.tx-password__meter')?.getAttribute('data-strength')).toBe('medium');
+    expect(panel.querySelector('.own-header')).not.toBeNull();
+    expect(panel.querySelector('.own-footer')).not.toBeNull();
+  });
+});
+
+describe('TxPassword recompiled by TestBed', () => {
+  afterEach(() => document.querySelector('.cdk-overlay-container')?.replaceChildren());
+
+  it('still finds its panel templates when a test overrides the component', async () => {
+    TestBed.overrideComponent(TxPassword, { set: { styles: [] } });
+    const fixture = TestBed.createComponent(RulesHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    (fixture.nativeElement.querySelector('#rules input') as HTMLInputElement).dispatchEvent(new Event('focus'));
+    await fixture.whenStable();
+    expect(document.querySelector('.tx-password__panel .own-header')).not.toBeNull();
+  });
+});
+

@@ -148,3 +148,121 @@ describe('TxInputNumber', () => {
     expect(buttons.map((button) => button.getAttribute('aria-label'))).toEqual(['Decrease', 'Increase']);
   });
 });
+
+@Component({
+  imports: [TxInputNumber],
+  template: `
+    <tx-input-number
+      ariaLabel="Count"
+      [min]="min()"
+      [max]="max()"
+      [readonly]="readonly()"
+      [allowEmpty]="allowEmpty()"
+      showButtons
+      buttonLayout="vertical"
+      incrementIcon="my-plus"
+      decrementIcon="my-minus"
+      (changed)="changes.push($event.value)"
+    />
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class LooseHost {
+  readonly min = signal<number | undefined>(undefined);
+  readonly max = signal<number | undefined>(undefined);
+  readonly readonly = signal(false);
+  readonly allowEmpty = signal(true);
+  readonly changes: (number | null)[] = [];
+}
+
+describe('TxInputNumber without limits', () => {
+  let fixture: ComponentFixture<LooseHost>;
+  let component: TxInputNumber;
+  const input = () => fixture.nativeElement.querySelector('input') as HTMLInputElement;
+  const key = (name: string) => {
+    const event = new KeyboardEvent('keydown', { key: name, cancelable: true });
+    input().dispatchEvent(event);
+    return event;
+  };
+
+  beforeEach(async () => {
+    fixture = TestBed.createComponent(LooseHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    component = fixture.debugElement.children[0].componentInstance as TxInputNumber;
+  });
+
+  afterEach(() => vi.useRealTimers());
+
+  it('draws unknown button icons as classes', () => {
+    expect(fixture.nativeElement.querySelector('.tx-input-number__increment span')?.className).toBe('my-plus');
+    expect(fixture.nativeElement.querySelector('.tx-input-number__decrement span')?.className).toBe('my-minus');
+  });
+
+  it('leaves Home and End alone without limits and jumps to the max with End', async () => {
+    expect(key('Home').defaultPrevented).toBe(false);
+    expect(key('End').defaultPrevented).toBe(false);
+    fixture.componentInstance.max.set(50);
+    await fixture.whenStable();
+    expect(key('End').defaultPrevented).toBe(true);
+    expect(fixture.componentInstance.changes).toEqual([50]);
+    expect(input().value).toBe('50');
+  });
+
+  it('commits on Enter and ignores keys while read-only', async () => {
+    input().value = '7';
+    input().dispatchEvent(new Event('input'));
+    key('Enter');
+    expect(fixture.componentInstance.changes).toEqual([7]);
+    fixture.componentInstance.readonly.set(true);
+    await fixture.whenStable();
+    expect(key('ArrowUp').defaultPrevented).toBe(false);
+    expect(component.value()).toBe(7);
+  });
+
+  it('reads the caret from the end when the input has no selection', () => {
+    Object.defineProperty(input(), 'selectionStart', { configurable: true, get: () => null });
+    input().value = '-42';
+    input().dispatchEvent(new Event('input'));
+    expect(component.value()).toBe(-42);
+  });
+
+  it('keeps an empty value on blur, or falls back to zero without empty and min', async () => {
+    input().dispatchEvent(new Event('blur'));
+    expect(component.value()).toBeNull();
+    fixture.componentInstance.allowEmpty.set(false);
+    await fixture.whenStable();
+    input().dispatchEvent(new Event('blur'));
+    expect(component.value()).toBe(0);
+    component.clear(new Event('click'));
+    expect(component.value()).toBe(0);
+  });
+
+  it('repeats the step while a button is held and only for the main button', () => {
+    const increment = fixture.nativeElement.querySelector('.tx-input-number__increment') as HTMLButtonElement;
+    increment.dispatchEvent(new MouseEvent('pointerdown', { button: 2, cancelable: true }));
+    expect(component.value()).toBeNull();
+    vi.useFakeTimers();
+    increment.dispatchEvent(new MouseEvent('pointerdown', { button: 0, cancelable: true }));
+    expect(component.value()).toBe(1);
+    vi.advanceTimersByTime(400);
+    expect(component.value()).toBe(2);
+    vi.advanceTimersByTime(120);
+    expect(component.value()).toBe(4);
+    increment.dispatchEvent(new MouseEvent('pointerleave'));
+    vi.advanceTimersByTime(500);
+    expect(component.value()).toBe(4);
+  });
+
+  it('stops repeating at the limit', async () => {
+    fixture.componentInstance.max.set(2);
+    await fixture.whenStable();
+    const increment = fixture.nativeElement.querySelector('.tx-input-number__increment') as HTMLButtonElement;
+    vi.useFakeTimers();
+    increment.dispatchEvent(new MouseEvent('pointerdown', { button: 0, cancelable: true }));
+    vi.advanceTimersByTime(400);
+    expect(component.value()).toBe(2);
+    vi.advanceTimersByTime(600);
+    expect(component.value()).toBe(2);
+  });
+});

@@ -46,3 +46,35 @@ describe('TxAppFooter', () => {
     expect(root.getAttribute('data-variant')).toBe('console');
   });
 });
+
+describe('TxAppFooter router link targets', () => {
+  beforeEach(() => TestBed.configureTestingModule({ providers: [provideRouter([])] }));
+
+  it('opens a router link in the given target', async () => {
+    const fixture = TestBed.createComponent(Host);
+    fixture.componentInstance.links.set([
+      { label: 'Terms', routerLink: '/terms', queryParams: { lang: 'en' }, target: '_blank' },
+      { label: 'Privacy', routerLink: '/privacy' },
+    ]);
+    await fixture.whenStable();
+    const [terms, privacy] = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('nav a'));
+    expect(terms.getAttribute('href')).toBe('/terms?lang=en');
+    expect(terms.getAttribute('target')).toBe('_blank');
+    expect(privacy.hasAttribute('target')).toBe(false);
+  });
+});
+
+@Component({
+  imports: [TxAppFooter],
+  template: `<tx-app-footer name="Acme" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class YearHost {}
+
+describe('TxAppFooter year', () => {
+  it('shows the current year by default', async () => {
+    const fixture = TestBed.createComponent(YearHost);
+    await fixture.whenStable();
+    expect((fixture.nativeElement as HTMLElement).querySelector('.tx-app-footer__copy')?.textContent?.trim()).toBe(`© ${new Date().getFullYear()} Acme`);
+  });
+});

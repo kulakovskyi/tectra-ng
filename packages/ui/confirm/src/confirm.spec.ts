@@ -55,8 +55,9 @@ describe('TxConfirmService', () => {
     query('.tx-confirm__reject')?.click();
     expect(await cancelled).toBe(false);
 
-    const escaped = confirm.dialog({ title: 'Archive?' });
+    const escaped = confirm.dialog({ title: 'Archive?', icon: false });
     await settle();
+    expect(query('.tx-confirm__icon')).toBeNull();
     document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
     expect(await escaped).toBe(false);
   });
@@ -106,4 +107,45 @@ describe('TxConfirmService', () => {
     await settle();
     expect(query('tx-confirm-popup')).toBeNull();
   });
+
+  it('opens a popup from a click event with a title and without an icon, and answers false on cancel', async () => {
+    const target = document.getElementById('delete') as HTMLElement;
+    let answer: Promise<boolean> = Promise.resolve(true);
+    target.addEventListener('click', (event) => (answer = confirm.popup(event, { title: 'Drop the draft?', icon: false })), { once: true });
+    target.click();
+    await settle();
+    const popup = query('tx-confirm-popup') as HTMLElement;
+    expect(popup.getAttribute('aria-label')).toBe('Drop the draft?');
+    expect(popup.querySelector('.tx-confirm__title')?.textContent).toBe('Drop the draft?');
+    expect(popup.querySelector('.tx-confirm__icon')).toBeNull();
+    expect(popup.querySelector('.tx-confirm__message')).toBeNull();
+    expect(popup.hasAttribute('aria-describedby')).toBe(false);
+    (popup.querySelector('.tx-confirm__reject') as HTMLButtonElement).click();
+    expect(await answer).toBe(false);
+  });
+
+  it('anchors a popup to the target of an event that already finished and ignores a second accept while busy', async () => {
+    const target = document.getElementById('delete') as HTMLElement;
+    const event = new MouseEvent('click');
+    target.dispatchEvent(event);
+    let calls = 0;
+    let finish: () => void = () => undefined;
+    const answer = confirm.popup(event, {
+      message: 'Archive?',
+      accept: () =>
+        new Promise<void>((resolve) => {
+          calls++;
+          finish = resolve;
+        }),
+    });
+    await settle();
+    const accept = query('tx-confirm-popup .tx-confirm__accept') as HTMLButtonElement;
+    accept.click();
+    accept.click();
+    await settle();
+    finish();
+    expect(await answer).toBe(true);
+    expect(calls).toBe(1);
+  });
 });
+

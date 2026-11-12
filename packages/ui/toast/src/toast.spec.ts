@@ -21,6 +21,13 @@ import { TxToastCloseReason } from './toast.types';
 })
 class Host {}
 
+@Component({
+  imports: [TxToast],
+  template: `<div id="frame"><tx-toast id="inline" key="inline" inPlace /></div>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class InPlaceHost {}
+
 describe('TxToast', () => {
   let fixture: ComponentFixture<Host>;
   let toasts: TxToastService;
@@ -148,6 +155,157 @@ describe('TxToast', () => {
     await render();
     expect(toasts.toasts().map((toast) => toast.text)).toEqual(['One', 'Two']);
     toasts.clear('side');
+    expect(toasts.toasts()).toEqual([]);
+  });
+
+  it('keeps an in-place outlet where it is declared and mounts without animation frames', async () => {
+    const view = document.defaultView as Window;
+    const frame = Object.getOwnPropertyDescriptor(view, 'requestAnimationFrame');
+    Object.defineProperty(view, 'requestAnimationFrame', { configurable: true, writable: true, value: undefined });
+    const inPlace = TestBed.createComponent(InPlaceHost);
+    inPlace.detectChanges();
+    await Promise.resolve();
+    inPlace.detectChanges();
+    expect(document.querySelector('#inline')?.parentElement?.id).toBe('frame');
+    toasts.info('Here', { key: 'inline' });
+    inPlace.detectChanges();
+    const [item] = items('#inline');
+    expect(item.hasAttribute('data-mounted')).toBe(false);
+    vi.advanceTimersByTime(0);
+    inPlace.detectChanges();
+    expect(item.hasAttribute('data-mounted')).toBe(true);
+    if (frame) {
+      Object.defineProperty(view, 'requestAnimationFrame', frame);
+    } else {
+      Reflect.deleteProperty(view, 'requestAnimationFrame');
+    }
+    inPlace.destroy();
+  });
+
+  it('hides the icon when turned off or not registered', async () => {
+    toasts.info('No icon', { icon: false });
+    toasts.info('Unknown icon', { icon: 'not-registered' });
+    toasts.info('Own icon', { icon: 'check' });
+    await render();
+    expect(items().map((item) => item.querySelector('tx-icon:not(.tx-toast__close tx-icon)')?.getAttribute('data-icon') ?? null)).toEqual(['check', null, null]);
+  });
+
+  it('stays expanded while focus moves inside the outlet', async () => {
+    toasts.info('Focus', { actions: [{ label: 'Undo', keepOpen: true }] });
+    await render();
+    const host = document.querySelector('#main') as HTMLElement;
+    const [item] = items();
+    const close = item.querySelector('.tx-toast__close') as HTMLButtonElement;
+    item.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+    item.dispatchEvent(new FocusEvent('focusout', { bubbles: true, relatedTarget: close }));
+    await render();
+    expect(host.hasAttribute('data-expanded')).toBe(true);
+    vi.advanceTimersByTime(10000);
+    expect(toasts.toasts().length).toBe(1);
+    (item.querySelector('.tx-toast__action') as HTMLButtonElement).click();
+    expect(toasts.toasts().length).toBe(1);
+  });
+
+  it('closes a toast swiped far or fast enough', async () => {
+    const pointer = (target: Element, type: string, init: MouseEventInit = {}) => target.dispatchEvent(new MouseEvent(type, { bubbles: true, button: 0, ...init }));
+    toasts.info('Swipe me', { sticky: true });
+    toasts.loading('Busy');
+    await render();
+    const [busy, swipe] = items();
+    expect(busy.textContent).toContain('Busy');
+
+    pointer(busy, 'pointerdown', { clientX: 0 });
+    pointer(busy, 'pointermove', { clientX: 80 });
+    pointer(busy, 'pointerup');
+    expect(toasts.toasts().length).toBe(2);
+
+    pointer(swipe, 'pointerdown', { button: 2 });
+    pointer(swipe.querySelector('.tx-toast__close') as HTMLElement, 'pointerdown');
+    pointer(swipe, 'pointermove', { clientX: 80 });
+    pointer(swipe, 'pointerup');
+    expect(toasts.toasts().length).toBe(2);
+
+    pointer(swipe, 'pointerdown', { clientX: 10, clientY: 10 });
+    pointer(swipe, 'pointermove', { clientX: 11, clientY: 12 });
+    await render();
+    expect(swipe.hasAttribute('data-swiping')).toBe(false);
+    pointer(swipe, 'pointerup');
+    expect(toasts.toasts().length).toBe(2);
+
+    pointer(swipe, 'pointerdown', { clientX: 10, clientY: 10 });
+    pointer(swipe, 'pointermove', { clientX: 12, clientY: 30 });
+    await render();
+    expect(swipe.hasAttribute('data-swiping')).toBe(true);
+    expect(swipe.style.getPropertyValue('--_swipe-y')).toBe('20px');
+    vi.advanceTimersByTime(1000);
+    pointer(swipe, 'pointercancel');
+    await render();
+    expect(swipe.hasAttribute('data-swiping')).toBe(false);
+    expect(toasts.toasts().length).toBe(2);
+
+    pointer(swipe, 'pointerdown', { clientX: 10, clientY: 10 });
+    pointer(swipe, 'pointermove', { clientX: 70, clientY: 15 });
+    await render();
+    expect(swipe.style.getPropertyValue('--_swipe-x')).toBe('60px');
+    vi.advanceTimersByTime(2000);
+    pointer(swipe, 'pointerup');
+    expect(toasts.toasts().map((toast) => toast.text)).toEqual(['Busy']);
+
+    toasts.info('Flick', { sticky: true });
+    await render();
+    const flick = items()[0];
+    pointer(flick, 'pointerdown', { clientX: 10, clientY: 10 });
+    pointer(flick, 'pointermove', { clientX: 30, clientY: 10 });
+    pointer(flick, 'pointerup');
+    expect(toasts.toasts().map((toast) => toast.text)).toEqual(['Busy']);
+  });
+
+  it('ignores unknown ids and pauses nested hovers once', () => {
+    const closed: TxToastCloseReason[] = [];
+    const ref = toasts.show({ text: 'Plain', life: 1000 });
+    ref.closed.subscribe((reason) => closed.push(reason));
+    expect(toasts.toasts()[0].severity).toBe('info');
+    toasts.close(999);
+    toasts.update(999, { text: 'x' });
+    toasts.run(999, { label: 'x' });
+    toasts.pause(999);
+    toasts.resume(999);
+    toasts.resume(ref.id);
+    toasts.clear('other');
+    expect(toasts.toasts().length).toBe(1);
+
+    toasts.pause(ref.id);
+    toasts.pause(ref.id);
+    expect(toasts.toasts()[0].paused).toBe(true);
+    toasts.resume(ref.id);
+    expect(toasts.toasts()[0].paused).toBe(true);
+    ref.update({ title: undefined });
+    vi.advanceTimersByTime(5000);
+    expect(toasts.toasts().length).toBe(1);
+    toasts.resume(ref.id);
+    expect(toasts.toasts()[0].paused).toBe(false);
+    vi.advanceTimersByTime(1000);
+    expect(toasts.toasts()).toEqual([]);
+    expect(closed).toEqual(['timeout']);
+  });
+
+  it('announces only changed text, keeps loading when asked and closes from its ref', () => {
+    const ref = toasts.loading('Working', { life: 0 });
+    announce.mockClear();
+    ref.update({ severity: 'warn', loading: true });
+    expect(toasts.toasts()[0].loading).toBe(true);
+    expect(announce).not.toHaveBeenCalled();
+    ref.update({ loading: false, closable: true });
+    vi.advanceTimersByTime(10000);
+    expect(toasts.toasts().length).toBe(1);
+    const closed: TxToastCloseReason[] = [];
+    ref.closed.subscribe((reason) => closed.push(reason));
+    ref.close();
+    expect(closed).toEqual(['api']);
+
+    toasts.show({ severity: 'secondary', sticky: true });
+    expect(announce).not.toHaveBeenCalled();
+    toasts.run(toasts.toasts()[0].id, { label: 'Done' });
     expect(toasts.toasts()).toEqual([]);
   });
 });

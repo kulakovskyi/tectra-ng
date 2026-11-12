@@ -102,4 +102,75 @@ describe('TxKnob', () => {
     await fixture.whenStable();
     expect(control().getAttribute('tabindex')).toBe('-1');
   });
+
+  it('ignores other buttons, other keys and moves without a drag, and is touched on blur', async () => {
+    control().dispatchEvent(new MouseEvent('pointerdown', { clientX: 50, clientY: 0, button: 2, bubbles: true }));
+    await pointer('pointermove', 100, 50);
+    await pointer('pointerup', 100, 50);
+    await key('x');
+    expect(fixture.componentInstance.volume.value).toBe(40);
+    expect(fixture.componentInstance.volume.touched).toBe(false);
+    control().dispatchEvent(new FocusEvent('blur'));
+    expect(fixture.componentInstance.volume.touched).toBe(true);
+  });
+
+  it('snaps a press in the gap under the dial to the nearer end', async () => {
+    await pointer('pointerdown', 45, 100);
+    expect(fixture.componentInstance.volume.value).toBe(0);
+    await pointer('pointermove', 55, 100);
+    expect(fixture.componentInstance.volume.value).toBe(100);
+  });
+
+  it('does not wrap past the top of a ring from the start either', async () => {
+    fixture.componentInstance.arc.set('ring');
+    await fixture.whenStable();
+    await pointer('pointerdown', 55, 2);
+    expect(fixture.componentInstance.volume.value).toBe(0);
+    await pointer('pointermove', 45, 2);
+    expect(fixture.componentInstance.volume.value).toBe(0);
+  });
+
+  it('does not move on a track without a size and reports no limit', async () => {
+    const custom = control('custom');
+    custom.dispatchEvent(new MouseEvent('pointerdown', { clientX: 10, clientY: 10, button: 0, bubbles: true, cancelable: true }));
+    await fixture.whenStable();
+    expect(fixture.componentInstance.custom.value).toBe(7);
+    const knob = fixture.debugElement.query((node) => node.nativeElement.id === 'custom').componentInstance as TxKnob;
+    expect(knob.limitFraction()).toBe(1);
+  });
+});
+
+@Component({
+  imports: [TxKnob],
+  template: `
+    <tx-knob id="fine" ariaLabel="Fine" [step]="0.5" [max]="10" />
+    <tx-knob id="flat" ariaLabel="Flat" [min]="5" [max]="5" />
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class PlainHost {}
+
+describe('TxKnob without a form control', () => {
+  it('starts at the minimum, steps by fractions and draws an empty range as empty', async () => {
+    const fixture = TestBed.createComponent(PlainHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    const fine = fixture.nativeElement.querySelector('#fine [role="slider"]') as HTMLElement;
+    expect(fine.getAttribute('aria-valuenow')).toBe('0');
+    fine.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', cancelable: true }));
+    await fixture.whenStable();
+    expect(fine.getAttribute('aria-valuenow')).toBe('0.5');
+    const flat = fixture.debugElement.query((node) => node.nativeElement.id === 'flat').componentInstance as TxKnob;
+    expect(flat.fraction()).toBe(0);
+  });
+});
+
+describe('TxKnob recompiled by TestBed', () => {
+  it('still finds its value template when a test overrides the component', async () => {
+    TestBed.overrideComponent(TxKnob, { set: { styles: [] } });
+    const fixture = TestBed.createComponent(Host);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('#custom .own').textContent).toBe('7 pts');
+  });
 });

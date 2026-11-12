@@ -76,4 +76,11 @@ describe('gantt layout', () => {
     const lanes = ganttFolds(ganttRows(tasks, 'timeline', new Set(['Design']), start, 10, 4));
     expect(lanes.map((fold) => [fold.head, fold.collapsed, fold.rows.length])).toEqual([[null, false, 3]]);
   });
+
+  it('keeps a group without dated tasks bare and pads partial and Sunday ranges', () => {
+    const rows = ganttRows([{ id: 'x', label: 'Draft', start: 'nope', group: 'Ideas' }], 'tasks', new Set(), day(2, 1), 10, 4);
+    expect(rows).toEqual([expect.objectContaining({ kind: 'group', label: 'Ideas', summary: null, count: 0 })]);
+    expect(ganttRange([{ id: 'x', label: 'x', start: new Date(2026, 2, 2), end: new Date(2026, 2, 4, 12) }], 0)).toEqual([day(2, 2), day(2, 5)]);
+    expect(ganttTicks([day(2, 1), day(2, 15)], 'week', 'en-US').bottom.map((tick) => tick.label)).toEqual(['', 'Mar 2', 'Mar 9']);
+  });
 });

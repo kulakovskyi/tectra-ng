@@ -69,7 +69,10 @@ export class TxCountry {
     const value = (this.country() ?? '').trim().toUpperCase();
     return isCountryCode(value) ? value : null;
   });
-  readonly label = computed(() => this.name() ?? (this.code() ? countryName(this.code() ?? '', this.locale.locale().intl) : (this.country() ?? '').trim()));
+  readonly label = computed(() => {
+    const code = this.code();
+    return this.name() ?? (code ? countryName(code, this.locale.locale().intl) : (this.country() ?? '').trim());
+  });
   private readonly loaded = signal<{ key: string; flag: TxFlag | null } | null>(null);
   private readonly resolution = computed(() => {
     const code = this.code();

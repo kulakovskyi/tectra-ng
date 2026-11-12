@@ -91,7 +91,6 @@ function convertQuillList(list: Element): void {
     if (align && ALIGNMENTS.includes(align)) {
       paragraph.style.textAlign = align;
     }
-    item.querySelectorAll('.ql-ui').forEach((node) => node.remove());
     appendNodes(paragraph, item.childNodes);
     if (kind === 'checked' || kind === 'unchecked') {
       next.setAttribute('data-type', 'taskItem');

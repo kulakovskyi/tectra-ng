@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { Router, provideRouter } from '@angular/router';
+import { Router, UrlTree, provideRouter } from '@angular/router';
 import { TxGoBack } from './go-back.directive';
 
 @Component({ template: '', changeDetection: ChangeDetectionStrategy.OnPush })
@@ -14,6 +14,19 @@ class Page {}
 })
 class BackHost {
   last = '';
+}
+
+@Component({
+  imports: [TxGoBack],
+  template: `
+    <button type="button" class="tree" [txGoBack]="tree">Tree</button>
+    <button type="button" class="empty" txGoBack="">Home</button>
+    <span class="link" role="link" txGoBack="/orders">Orders</span>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class FallbackHost {
+  readonly tree: UrlTree = inject(Router).parseUrl('/orders?tab=open');
 }
 
 async function setup(urls: string[]) {
@@ -58,5 +71,30 @@ describe('txGoBack', () => {
     crumb.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
     await settle();
     expect(router.url).toBe('/orders');
+  });
+
+  it('falls back to a URL tree or the root and leaves keys to native controls and own roles', async () => {
+    TestBed.configureTestingModule({ providers: [provideRouter([{ path: '**', component: Page }])] });
+    const router = TestBed.inject(Router);
+    await router.navigateByUrl('/orders/42');
+    vi.spyOn(TestBed.inject(Location), 'getState').mockReturnValue({ navigationId: 1 });
+    const fixture = TestBed.createComponent(FallbackHost);
+    fixture.detectChanges();
+    const root = fixture.nativeElement as HTMLElement;
+    const get = (selector: string) => root.querySelector(selector) as HTMLElement;
+
+    get('.tree').click();
+    await settle();
+    expect(router.url).toBe('/orders?tab=open');
+
+    get('.empty').click();
+    await settle();
+    expect(router.url).toBe('/');
+
+    expect(get('.link').hasAttribute('tabindex')).toBe(false);
+    get('.link').dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    get('.tree').dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await settle();
+    expect(router.url).toBe('/');
   });
 });

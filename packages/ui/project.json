@@ -3,15 +3,11 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
   "sourceRoot": "packages/ui",
-  "tags": [
-    "pkg:ui"
-  ],
+  "tags": ["pkg:ui"],
   "targets": {
     "build": {
       "executor": "@nx/angular:package",
-      "outputs": [
-        "{workspaceRoot}/dist/packages/ui"
-      ],
+      "outputs": ["{workspaceRoot}/dist/packages/ui"],
       "options": {
         "project": "packages/ui/ng-package.json",
         "tsConfig": "packages/ui/tsconfig.lib.json"
@@ -23,8 +19,19 @@
         "buildTarget": "sandbox:build",
         "tsConfig": "packages/ui/tsconfig.spec.json",
         "runner": "vitest",
-        "watch": false
-      }
+        "watch": false,
+        "coverage": true,
+        "coverageInclude": ["packages/ui/**/*.ts"],
+        "coverageExclude": ["**/*.spec.ts", "**/index.ts", "**/test-setup.ts", "**/generated/**"],
+        "coverageReporters": ["text-summary", "json-summary", "lcovonly"],
+        "coverageThresholds": {
+          "statements": 95,
+          "branches": 95,
+          "functions": 95,
+          "lines": 95
+        }
+      },
+      "outputs": ["{workspaceRoot}/coverage/ui"]
     }
   }
 }

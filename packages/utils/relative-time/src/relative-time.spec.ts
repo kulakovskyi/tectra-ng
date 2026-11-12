@@ -11,7 +11,7 @@ const DAY = 24 * HOUR;
 
 @Component({
   imports: [TxRelativeTimePipe],
-  template: `{{ value() | txRelativeTime: { now } }}`,
+  template: `<span class="fixed">{{ value() | txRelativeTime: { now } }}</span><span class="live">{{ value() | txRelativeTime }}</span>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class RelativeHost {
@@ -43,15 +43,35 @@ describe('relativeTime', () => {
     expect(relativeTime(at(-DAY), { ...options, numeric: 'always' })).toBe('1 day ago');
     expect(relativeTime(at(-20_000), { ...options, numeric: 'always' })).toBe('20 seconds ago');
     expect(relativeTime(null)).toBe('');
+    expect(relativeTime(new Date(Date.now() + 3 * DAY))).toBe('in 3 days');
     expect(relativeTime('broken')).toBe('');
   });
 
   it('follows the tectra locale in templates', async () => {
     const fixture = TestBed.createComponent(RelativeHost);
     fixture.detectChanges();
-    expect(fixture.nativeElement.textContent).toBe('5 minutes ago');
+    const text = (selector: string) => (fixture.nativeElement as HTMLElement).querySelector(selector)?.textContent;
+    expect(text('.fixed')).toBe('5 minutes ago');
+    fixture.detectChanges();
+    expect(text('.fixed')).toBe('5 minutes ago');
     await TestBed.inject(TxLocaleService).setLocale('ua');
     fixture.detectChanges();
-    expect(fixture.nativeElement.textContent).toBe('5 хвилин тому');
+    expect(text('.fixed')).toBe('5 хвилин тому');
+  });
+  it('reuses the last text while nothing changes', () => {
+    const pipe = TestBed.runInInjectionContext(() => new TxRelativeTimePipe());
+    const value = at(-5 * MINUTE);
+    expect(pipe.transform(value, { now: NOW })).toBe('5 minutes ago');
+    expect(pipe.transform(value, { now: NOW })).toBe('5 minutes ago');
+  });
+
+  it('measures from the current time when no now is given', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(NOW);
+    const fixture = TestBed.createComponent(RelativeHost);
+    fixture.componentInstance.value.set('2026-11-11T11:00:00');
+    fixture.detectChanges();
+    expect((fixture.nativeElement as HTMLElement).querySelector('.live')?.textContent).toBe('1 hour ago');
+    vi.useRealTimers();
   });
 });

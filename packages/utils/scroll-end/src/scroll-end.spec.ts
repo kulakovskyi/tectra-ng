@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { TxScrollEnd } from './scroll-end.directive';
 
 @Component({
@@ -46,5 +47,14 @@ describe('txScrollEnd', () => {
     fixture.detectChanges();
     scrollTo(800);
     expect(fixture.componentInstance.loads).toBe(0);
+  });
+  it('asks again for the same height after a reset', () => {
+    const { fixture, scrollTo } = setup();
+    scrollTo(800);
+    scrollTo(800);
+    expect(fixture.componentInstance.loads).toBe(1);
+    fixture.debugElement.query(By.directive(TxScrollEnd)).injector.get(TxScrollEnd).reset();
+    scrollTo(800);
+    expect(fixture.componentInstance.loads).toBe(2);
   });
 });

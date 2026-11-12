@@ -132,4 +132,120 @@ describe('TxChipsInput', () => {
     render();
     expect(host.control.value).toEqual([]);
   });
+
+  it('keeps the browser paste for a single item and without clipboard data', () => {
+    const single = new Event('paste', { cancelable: true });
+    Object.defineProperty(single, 'clipboardData', { value: { getData: () => 'one' } });
+    input().dispatchEvent(single);
+    const empty = new Event('paste', { cancelable: true });
+    input().dispatchEvent(empty);
+    expect(single.defaultPrevented).toBe(false);
+    expect(empty.defaultPrevented).toBe(false);
+    expect(host.control.value).toBeNull();
+  });
+
+  it('does nothing for Enter, Backspace and blur without text to act on', () => {
+    key('Enter');
+    key('Backspace');
+    input().dispatchEvent(new FocusEvent('blur'));
+    render();
+    expect(host.control.value).toBeNull();
+    host.control.setValue(['a']);
+    render();
+    type('b');
+    key('Backspace');
+    expect(host.control.value).toEqual(['a']);
+    expect(host.added).toEqual([]);
+  });
+
+  it('focuses the field on a click in the box but not on a chip button', () => {
+    host.control.setValue(['a']);
+    render();
+    const box = fixture.nativeElement.querySelector('.tx-chips-input__box') as HTMLElement;
+    box.click();
+    expect(document.activeElement).toBe(input());
+    input().blur();
+    const button = chips()[0].querySelector('button') as HTMLButtonElement;
+    const focus = vi.spyOn(input(), 'focus');
+    button.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+    fixture.nativeElement.querySelector('tx-chips-input').dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    expect(focus).toHaveBeenCalledTimes(1);
+    focus.mockClear();
+    button.click();
+    render();
+    expect(focus).toHaveBeenCalledTimes(1);
+    expect(host.control.value).toEqual([]);
+  });
+
+  it('does not remove items while disabled', () => {
+    host.control.setValue(['a']);
+    host.control.disable();
+    render();
+    const chipsInput = fixture.debugElement.query((node) => node.componentInstance instanceof TxChipsInput).componentInstance as TxChipsInput;
+    chipsInput.removeAt(0);
+    expect(host.control.value).toEqual(['a']);
+    expect(host.removed).toEqual([]);
+  });
+});
+
+@Component({
+  imports: [TxChipsInput],
+  template: `
+    <tx-chips-input id="plain" ariaLabel="Tags" caseSensitive [addOnBlur]="false" (added)="added.push($event.value)" />
+    <tx-chips-input id="locked" ariaLabel="Locked" readonly />
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class PlainHost {
+  added: string[] = [];
+}
+
+describe('TxChipsInput without a form control', () => {
+  let fixture: ComponentFixture<PlainHost>;
+  const field = (id: string) => fixture.nativeElement.querySelector(`#${id} .tx-chips-input__input`) as HTMLInputElement;
+  const component = (id: string) => fixture.debugElement.query((node) => node.nativeElement.id === id).componentInstance as TxChipsInput;
+  const enter = (id: string, text: string) => {
+    field(id).value = text;
+    field(id).dispatchEvent(new Event('input'));
+    field(id).dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', cancelable: true }));
+    fixture.detectChanges();
+  };
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(PlainHost);
+    fixture.detectChanges();
+  });
+
+  it('starts empty, compares case-sensitively and keeps text on blur', () => {
+    expect(component('plain').values()).toEqual([]);
+    enter('plain', 'Tag');
+    enter('plain', 'tag');
+    enter('plain', 'Tag');
+    expect(fixture.componentInstance.added).toEqual(['Tag', 'tag']);
+    field('plain').value = 'draft';
+    field('plain').dispatchEvent(new Event('input'));
+    field('plain').dispatchEvent(new FocusEvent('blur'));
+    fixture.detectChanges();
+    expect(component('plain').values()).toEqual(['Tag', 'tag']);
+    expect(field('plain').value).toBe('draft');
+  });
+
+  it('ignores keys and removals when readonly', () => {
+    enter('locked', 'one');
+    expect(component('locked').values()).toEqual([]);
+    component('locked').writeValue(['kept']);
+    component('locked').removeAt(0);
+    expect(component('locked').values()).toEqual(['kept']);
+  });
+});
+
+describe('TxChipsInput recompiled by TestBed', () => {
+  it('still finds its item template when a test overrides the component', () => {
+    TestBed.overrideComponent(TxChipsInput, { set: { styles: [] } });
+    const fixture = TestBed.createComponent(Host);
+    fixture.componentInstance.custom.set(true);
+    fixture.componentInstance.control.setValue(['x']);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('tx-chip').textContent.trim()).toBe('#x');
+  });
 });

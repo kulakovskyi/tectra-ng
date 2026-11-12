@@ -25,4 +25,13 @@ describe('TxBreakpoints', () => {
     const breakpoints = TestBed.inject(TxBreakpoints);
     expect(breakpoints.matches('(prefers-reduced-motion: reduce)')).toBe(breakpoints.matches('(prefers-reduced-motion: reduce)'));
   });
+
+  it('reports no match where media queries are missing', () => {
+    const matchMedia = window.matchMedia;
+    Object.defineProperty(window, 'matchMedia', { value: undefined, configurable: true, writable: true });
+    const breakpoints = TestBed.inject(TxBreakpoints);
+    expect(breakpoints.isMobile()).toBe(false);
+    expect(breakpoints.isTablet()).toBe(false);
+    window.matchMedia = matchMedia;
+  });
 });

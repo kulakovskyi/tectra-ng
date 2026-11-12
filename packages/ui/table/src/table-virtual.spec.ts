@@ -52,6 +52,7 @@ describe('table csv', () => {
     expect(csvCell('-12.5')).toBe('-12.5');
     expect(csvCell('-')).toBe('-');
     expect(toCsv([{ a: 1, b: { c: 'x' } }], [{ field: 'a', header: 'A' }, { field: 'b.c', header: 'C' }])).toBe('A,C\r\n1,x');
+    expect(toCsv([{ a: 1, b: 2 }], [{ field: 'a' }, { field: 'b' }], { header: false, separator: ';', value: (row, column) => `${column.field}${row.a}` })).toBe('a1;b1');
   });
 });
 
@@ -100,6 +101,10 @@ describe('TxTable virtual scroll and export', () => {
     await scrollTo(3000);
     expect(root().querySelector('.tx-table__loading-cell')).toBeTruthy();
     expect(host.loads.at(-1)).toMatchObject({ first: 58, rows: 12 });
+    const count = host.loads.length;
+    await scrollTo(3000);
+    await scrollTo(0);
+    expect(host.loads).toHaveLength(count);
   });
 
   it('moves the keyboard focus past the rendered window', async () => {

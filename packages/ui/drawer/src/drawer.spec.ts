@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TxDialogClose } from '@tectra-ng/ui/dialog';
-import { TxDrawer, TxDrawerFooter } from './drawer.component';
+import { TxDrawer, TxDrawerFooter, TxDrawerHeader } from './drawer.component';
 
 @Component({
   imports: [TxDrawer, TxDrawerFooter, TxDialogClose],
@@ -90,3 +90,71 @@ describe('TxDrawer', () => {
     expect(container()).toBeNull();
   });
 });
+
+@Component({
+  imports: [TxDrawer, TxDrawerHeader],
+  template: `
+    <tx-drawer #drawer [(visible)]="open" (closed)="closed = closed + 1">
+      <div txDrawerHeader><h2 class="own-header">Settings</h2></div>
+      <button class="done" (click)="drawer.close()">Done</button>
+    </tx-drawer>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class HeaderHost {
+  readonly open = signal(true);
+  closed = 0;
+}
+
+describe('TxDrawer with an own header', () => {
+  let fixture: ComponentFixture<HeaderHost>;
+  const settle = async () => {
+    await fixture.whenStable();
+    for (let i = 0; i < 4; i++) {
+      await Promise.resolve();
+    }
+    await fixture.whenStable();
+  };
+
+  beforeEach(async () => {
+    fixture = TestBed.createComponent(HeaderHost);
+    fixture.autoDetectChanges();
+    await settle();
+  });
+
+  afterEach(() => document.querySelector('.cdk-overlay-container')?.remove());
+
+  it('shows the own header and closes from its content', async () => {
+    expect(document.querySelector('tx-dialog-container .own-header')?.textContent).toBe('Settings');
+    (document.querySelector('tx-dialog-container .done') as HTMLButtonElement).click();
+    await settle();
+    expect(document.querySelector('tx-dialog-container')).toBeNull();
+    expect(fixture.componentInstance.open()).toBe(false);
+    expect(fixture.componentInstance.closed).toBe(1);
+    fixture.destroy();
+  });
+
+  it('closes quietly when its host goes away', async () => {
+    fixture.destroy();
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(fixture.componentInstance.closed).toBe(0);
+    expect(fixture.componentInstance.open()).toBe(true);
+  });
+});
+
+describe('TxDrawer recompiled by TestBed', () => {
+  afterEach(() => document.querySelector('.cdk-overlay-container')?.remove());
+
+  it('still finds its header and footer when a test overrides the component', async () => {
+    TestBed.overrideComponent(TxDrawer, { set: { styles: [] } });
+    const fixture = TestBed.createComponent(HeaderHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    await Promise.resolve();
+    await fixture.whenStable();
+    expect(document.querySelector('tx-dialog-container .own-header')).not.toBeNull();
+    fixture.destroy();
+  });
+});
+

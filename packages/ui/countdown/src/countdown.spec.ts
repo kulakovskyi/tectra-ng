@@ -125,4 +125,72 @@ describe('TxCountdown', () => {
     await advance(60050);
     expect(el('template').textContent?.trim()).toBe('1h 29m (under 89m)');
   });
+
+  it('restarts frozen while paused and shows zero without a deadline', async () => {
+    fixture.componentInstance.paused.set(true);
+    await fixture.whenStable();
+    fixture.componentInstance.value.set(8);
+    await fixture.whenStable();
+    await advance(3000);
+    expect(el('value').textContent?.trim()).toBe('8 s');
+    fixture.componentInstance.value.set(undefined);
+    fixture.componentInstance.format.set('number');
+    await fixture.whenStable();
+    expect(el('value').textContent?.trim()).toBe('0 s');
+    expect(el('value').classList).not.toContain('tx-countdown--expired');
+    fixture.componentInstance.target.set(null);
+    await fixture.whenStable();
+    expect(el('target').textContent?.trim()).toBe('00:00');
+    fixture.destroy();
+  });
+
+  it('narrows the value template context', () => {
+    expect(TxCountdownValue.ngTemplateContextGuard({} as TxCountdownValue, { $implicit: 0, days: 0, hours: 0, minutes: 0, seconds: 0, expired: true })).toBe(true);
+  });
 });
+
+@Component({
+  imports: [TxRemainingTimePipe],
+  template: `<span class="left">{{ 3725000 | txRemainingTime }}</span>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class PipeHost {}
+
+@Component({
+  imports: [TxCountdown],
+  template: `<tx-countdown id="idle" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class IdleHost {}
+
+describe('TxCountdown without a deadline', () => {
+  it('shows zero, never completes and leaves cleanly', async () => {
+    const fixture = TestBed.createComponent(IdleHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    const countdown = fixture.nativeElement.querySelector('#idle') as HTMLElement;
+    expect(countdown.textContent?.trim()).toBe('0');
+    expect(countdown.classList).not.toContain('tx-countdown--expired');
+    expect(() => fixture.destroy()).not.toThrow();
+  });
+});
+
+describe('TxRemainingTimePipe in a template', () => {
+  it('formats milliseconds as a clock', () => {
+    const fixture = TestBed.createComponent(PipeHost);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.left').textContent).toBe('1:02:05');
+  });
+});
+
+describe('TxCountdown recompiled by TestBed', () => {
+  it('still finds its value template when a test overrides the component', async () => {
+    TestBed.overrideComponent(TxCountdown, { set: { styles: [] } });
+    const fixture = TestBed.createComponent(Host);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('#template b')).not.toBeNull();
+    fixture.destroy();
+  });
+});
+

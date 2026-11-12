@@ -1,7 +1,10 @@
-import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
+import { Location } from '@angular/common';
+import { SpyLocation, provideLocationMocks } from '@angular/common/testing';
+import { ChangeDetectionStrategy, Component, Injector, TemplateRef, ViewContainerRef, inject, signal, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TxImage } from './image.component';
 import { TxImageIndicatorTemplate, TxImagePreviewTemplate } from './image.templates';
+import { openImageLayer } from './image-layer';
 
 @Component({
   imports: [TxImage],
@@ -36,6 +39,7 @@ class Host {
       <ng-template txImagePreview let-src let-style="style" let-close="close">
         <figure class="own-preview" [style]="style">
           <img [src]="src" alt="" />
+          <input class="own-input" aria-label="Caption" />
           <button type="button" class="own-close" (click)="close()">Done</button>
         </figure>
       </ng-template>
@@ -204,5 +208,225 @@ describe('TxImage templates', () => {
     (document.querySelector('.own-close') as HTMLElement).click();
     await vi.waitFor(() => expect(document.querySelector('.own-preview')).toBeNull());
     document.querySelectorAll('.cdk-overlay-container').forEach((node) => node.remove());
+  });
+});
+
+@Component({
+  imports: [TxImage],
+  template: `
+    <tx-image
+      [src]="src()"
+      [srcSet]="srcSet()"
+      [sizes]="sizes()"
+      [previewSrc]="previewSrc()"
+      [previewSrcSet]="previewSrcSet()"
+      [previewSizes]="previewSizes()"
+      [alt]="alt()"
+      [ariaLabel]="ariaLabel()"
+      preview
+      (closed)="events.push('closed')"
+    />
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class SourcesHost {
+  readonly image = viewChild.required(TxImage);
+  readonly src = signal<string | undefined>('small.jpg');
+  readonly srcSet = signal<string | undefined>('small.jpg 1x, small@2x.jpg 2x');
+  readonly sizes = signal<string | undefined>('100vw');
+  readonly previewSrc = signal<string | undefined>(undefined);
+  readonly previewSrcSet = signal<string | undefined>(undefined);
+  readonly previewSizes = signal<string | undefined>(undefined);
+  readonly alt = signal<string | undefined>(undefined);
+  readonly ariaLabel = signal<string | undefined>(undefined);
+  readonly events: string[] = [];
+}
+
+describe('TxImage sources and gestures', () => {
+  let fixture: ComponentFixture<SourcesHost>;
+  let image: TxImage;
+  const layer = (selector: string) => document.querySelector(selector) as HTMLElement;
+  const pointer = (type: string, init: MouseEventInit, pointerId = 1) => {
+    const event = new MouseEvent(type, { bubbles: true, cancelable: true, ...init });
+    Object.defineProperty(event, 'pointerId', { value: pointerId });
+    return event;
+  };
+
+  beforeEach(async () => {
+    TestBed.configureTestingModule({ providers: [provideLocationMocks()] });
+    fixture = TestBed.createComponent(SourcesHost);
+    await fixture.whenStable();
+    image = fixture.componentInstance.image();
+  });
+
+  afterEach(() => {
+    fixture.destroy();
+    document.querySelectorAll('.cdk-overlay-container').forEach((node) => node.remove());
+  });
+
+  it('falls back to the small sources and the default label', async () => {
+    expect(image.fullSrc()).toBe('small.jpg');
+    expect(image.fullSrcSet()).toBe('small.jpg 1x, small@2x.jpg 2x');
+    expect(image.fullSizes()).toBe('100vw');
+    expect(image.previewLabel()).toBe('Image preview');
+    expect(image.previewContext().alt).toBe('');
+    fixture.componentInstance.previewSrcSet.set('large.jpg 1x');
+    fixture.componentInstance.previewSizes.set('50vw');
+    fixture.componentInstance.ariaLabel.set('Lake');
+    await fixture.whenStable();
+    expect(image.fullSrcSet()).toBe('large.jpg 1x');
+    expect(image.fullSizes()).toBe('50vw');
+    expect(image.previewLabel()).toBe('Lake');
+    fixture.componentInstance.previewSrc.set('large.jpg');
+    fixture.componentInstance.previewSrcSet.set(undefined);
+    fixture.componentInstance.previewSizes.set(undefined);
+    await fixture.whenStable();
+    expect(image.fullSrcSet()).toBeUndefined();
+    expect(image.fullSizes()).toBeUndefined();
+    fixture.componentInstance.previewSrc.set(undefined);
+    fixture.componentInstance.src.set(undefined);
+    await fixture.whenStable();
+    expect(image.fullSrc()).toBe('');
+  });
+
+  it('opens once, ignores close while closed and closes when the browser navigates', async () => {
+    image.close();
+    expect(fixture.componentInstance.events).toEqual([]);
+    image.open();
+    image.open();
+    await fixture.whenStable();
+    expect(document.querySelectorAll('.tx-image-preview')).toHaveLength(1);
+    (TestBed.inject(Location) as SpyLocation).simulateUrlPop('/elsewhere');
+    await vi.waitFor(() => expect(fixture.componentInstance.events).toEqual(['closed']));
+    expect(image.visible()).toBe(false);
+  });
+
+  it('zooms with the equals key and the wheel, and leaves modified and other keys alone', async () => {
+    image.open();
+    await fixture.whenStable();
+    const dialog = layer('.tx-image-preview');
+    key(dialog, '=');
+    expect(image.scale()).toBe(1.1);
+    const ctrl = new KeyboardEvent('keydown', { key: '+', ctrlKey: true, bubbles: true, cancelable: true });
+    dialog.dispatchEvent(ctrl);
+    expect(ctrl.defaultPrevented).toBe(false);
+    expect(key(dialog, 'x').defaultPrevented).toBe(false);
+    expect(image.scale()).toBe(1.1);
+    const original = layer('.tx-image-preview__original');
+    const flat = new WheelEvent('wheel', { deltaY: 0, bubbles: true, cancelable: true });
+    original.dispatchEvent(flat);
+    expect(flat.defaultPrevented).toBe(false);
+    original.dispatchEvent(new WheelEvent('wheel', { deltaY: 50, bubbles: true, cancelable: true }));
+    expect(image.scale()).toBe(1);
+  });
+
+  it('toggles the zoom with a double click', async () => {
+    image.open();
+    await fixture.whenStable();
+    const original = layer('.tx-image-preview__original');
+    original.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
+    expect(image.scale()).toBe(1.5);
+    await fixture.whenStable();
+    expect(original.classList).toContain('tx-image-preview__original--zoomed');
+    original.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
+    expect(image.scale()).toBe(1);
+  });
+
+  it('pans only a zoomed image with the main button, past a small threshold and for the same pointer', async () => {
+    image.open();
+    await fixture.whenStable();
+    const original = layer('.tx-image-preview__original');
+    const flat = pointer('pointerdown', { button: 0, clientX: 0, clientY: 0 });
+    original.dispatchEvent(flat);
+    expect(flat.defaultPrevented).toBe(false);
+    image.zoomIn();
+    const secondary = pointer('pointerdown', { button: 2, clientX: 0, clientY: 0 });
+    original.dispatchEvent(secondary);
+    expect(secondary.defaultPrevented).toBe(false);
+    original.dispatchEvent(pointer('pointerdown', { button: 0, clientX: 0, clientY: 0 }));
+    document.dispatchEvent(pointer('pointermove', { clientX: 2, clientY: 1 }));
+    expect(image.panning()).toBe(false);
+    document.dispatchEvent(pointer('pointermove', { clientX: 50, clientY: 50 }, 7));
+    expect(image.offset()).toEqual({ x: 0, y: 0 });
+    document.dispatchEvent(pointer('pointermove', { clientX: 20, clientY: 10 }));
+    expect(image.panning()).toBe(true);
+    expect(image.offset()).toEqual({ x: 20, y: 10 });
+    document.dispatchEvent(pointer('pointercancel', {}));
+    expect(image.panning()).toBe(false);
+  });
+});
+
+describe('TxImage custom preview keys', () => {
+  it('leaves keys typed into a field of the preview alone', async () => {
+    const fixture = TestBed.createComponent(TemplateHost);
+    await fixture.whenStable();
+    const image = fixture.componentInstance.image();
+    image.open();
+    await fixture.whenStable();
+    const input = document.querySelector('.own-input') as HTMLInputElement;
+    expect(key(input, '+').defaultPrevented).toBe(false);
+    expect(image.scale()).toBe(1);
+    fixture.destroy();
+    document.querySelectorAll('.cdk-overlay-container').forEach((node) => node.remove());
+  });
+
+  it('narrows the template contexts', () => {
+    expect(TxImageIndicatorTemplate.ngTemplateContextGuard({} as TxImageIndicatorTemplate, { $implicit: 'a.jpg' })).toBe(true);
+    expect(TxImagePreviewTemplate.ngTemplateContextGuard({} as TxImagePreviewTemplate, null)).toBe(false);
+  });
+});
+
+@Component({
+  template: `<button id="opener">Open</button><ng-template #tpl><div class="body"><button class="first">First</button></div></ng-template>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class LayerHost {
+  readonly tpl = viewChild.required<TemplateRef<unknown>>('tpl');
+  readonly injector = inject(Injector);
+  readonly viewContainerRef = inject(ViewContainerRef);
+}
+
+describe('openImageLayer', () => {
+  let fixture: ComponentFixture<LayerHost>;
+
+  beforeEach(async () => {
+    fixture = TestBed.createComponent(LayerHost);
+    await fixture.whenStable();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    document.querySelectorAll('.cdk-overlay-container').forEach((node) => node.remove());
+  });
+
+  it('focuses the first control when the asked one is missing, waits for leave animations and closes once', async () => {
+    const opener = fixture.nativeElement.querySelector('#opener') as HTMLButtonElement;
+    opener.focus();
+    const onEscape = vi.fn();
+    const host = fixture.componentInstance;
+    const layer = openImageLayer(host.tpl(), { injector: host.injector, viewContainerRef: host.viewContainerRef, focus: '.missing', onEscape });
+    expect(document.activeElement).toBe(layer.element.querySelector('.first'));
+    const leaving = { finished: Promise.reject(new Error('cancelled')) } as unknown as Animation;
+    layer.element.getAnimations = vi.fn(() => [leaving]);
+    const closing = layer.close();
+    expect(layer.close()).toBe(closing);
+    layer.element.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    expect(layer.element.querySelector('.body')?.classList).toContain('tx-image-layer--leaving');
+    await closing;
+    expect(onEscape).not.toHaveBeenCalled();
+    expect(document.activeElement).toBe(opener);
+  });
+
+  it('skips focus restore when the opener is gone and works without callbacks', async () => {
+    const opener = fixture.nativeElement.querySelector('#opener') as HTMLButtonElement;
+    opener.focus();
+    const host = fixture.componentInstance;
+    const layer = openImageLayer(host.tpl(), { injector: host.injector, viewContainerRef: host.viewContainerRef });
+    expect(document.activeElement).toBe(layer.element.querySelector('.first'));
+    document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    opener.remove();
+    await layer.close();
+    expect(document.contains(layer.element)).toBe(false);
   });
 });

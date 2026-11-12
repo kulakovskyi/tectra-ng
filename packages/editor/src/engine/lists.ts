@@ -91,7 +91,7 @@ export function splitListItem(itemType?: NodeType): Command {
     const nextType = atEnd ? item.contentMatchAt(0).defaultType : null;
     const tr = state.tr.delete($from.pos, $to.pos);
     const itemAttrs = type.name === 'task_item' ? { checked: false } : null;
-    const types = nextType ? [{ type, attrs: itemAttrs ?? undefined }, { type: nextType }] : [{ type, attrs: itemAttrs ?? undefined }];
+    const types = [{ type, attrs: itemAttrs ?? undefined }, nextType ? { type: nextType } : null];
     if (!canSplit(tr.doc, $from.pos, 2, types)) {
       return false;
     }

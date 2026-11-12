@@ -14,7 +14,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { uniqueId } from '@tectra-ng/core/a11y';
 import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
@@ -54,7 +54,7 @@ export class TxPublicHeader {
   private readonly document = inject(DOCUMENT);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly toggleButton = viewChild<ElementRef<HTMLButtonElement>>('menuButton');
-  protected readonly router = inject(Router, { optional: true });
+  protected readonly router = inject(ActivatedRoute, { optional: true }) ? inject(Router) : null;
   protected readonly brandSlot = contentChild(TxPublicHeaderBrand);
 
   readonly brand = input.required<string>();

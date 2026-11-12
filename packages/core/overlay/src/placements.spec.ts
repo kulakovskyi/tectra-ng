@@ -61,3 +61,12 @@ describe('orderByRoom', () => {
     expect(txArrowOffset('right-start', origin)).toBe(shifted('18.5px'));
   });
 });
+
+describe('placementFromPosition', () => {
+  it('reads the placement from the first panel class and ignores foreign positions', () => {
+    const position = { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top' } as const;
+    expect(placementFromPosition({ ...position, panelClass: ['tx-placement-left-end', 'own'] })).toBe('left-end');
+    expect(placementFromPosition({ ...position, panelClass: 'own' })).toBeNull();
+    expect(placementFromPosition(position)).toBeNull();
+  });
+});

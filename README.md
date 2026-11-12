@@ -13,6 +13,7 @@
   <a href="https://www.npmjs.com/package/tectra-ng"><img src="https://img.shields.io/npm/v/tectra-ng?color=2560e4&label=npm" alt="npm version" /></a>
   <a href="https://www.npmjs.com/package/tectra-ng"><img src="https://img.shields.io/npm/dm/tectra-ng?color=2560e4" alt="npm downloads" /></a>
   <a href="https://github.com/kulakovskyi/tectra-ng/actions/workflows/ci.yml"><img src="https://github.com/kulakovskyi/tectra-ng/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
+  <a href="https://github.com/kulakovskyi/tectra-ng/actions/workflows/ci.yml"><img src="https://img.shields.io/endpoint?url=https%3A%2F%2Ftectra-ng.com%2Fbadges%2Fcoverage.json" alt="Unit test coverage" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-2560e4" alt="MIT license" /></a>
   <a href="https://angular.dev"><img src="https://img.shields.io/badge/Angular-22-dd0031?logo=angular&logoColor=white" alt="Angular 22" /></a>
   <br />

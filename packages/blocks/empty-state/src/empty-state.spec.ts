@@ -81,3 +81,14 @@ describe('TxEmptyState', () => {
     expect(root.querySelector('tx-icon')?.getAttribute('data-icon')).toBe('inbox');
   });
 });
+
+describe('TxEmptyState title only', () => {
+  it('renders the title without a text line', async () => {
+    const fixture = TestBed.createComponent(Host);
+    fixture.componentInstance.text.set(undefined);
+    await fixture.whenStable();
+    const root = fixture.nativeElement.querySelector('tx-empty-state') as HTMLElement;
+    expect(root.querySelector('.tx-empty-state__title')?.textContent?.trim()).toBe('No workers yet');
+    expect(root.querySelector('.tx-empty-state__text')).toBeNull();
+  });
+});

@@ -218,3 +218,170 @@ describe('TxTabs from parts', () => {
     expect(tabs()[0].hasAttribute('data-styled')).toBe(false);
   });
 });
+
+@Component({
+  imports: [TxTabs, TxTabList, TxTab],
+  template: `
+    <tx-tabs id="scroll" variant="line" scrollable [orientation]="orientation()" [(value)]="active">
+      <tx-tab-list ariaLabelledBy="heading">
+        <tx-tab value="one" icon="custom-glyph">One</tx-tab>
+        <button txTab value="two">Two</button>
+        <tx-tab value="three" disabled>Three</tx-tab>
+        <tx-tab value="four">Four</tx-tab>
+      </tx-tab-list>
+    </tx-tabs>
+    <tx-tabs id="off" [value]="'x'">
+      <tx-tab-list>
+        <tx-tab value="x" disabled>X</tx-tab>
+      </tx-tab-list>
+    </tx-tabs>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class ScrollHost {
+  readonly orientation = signal<'horizontal' | 'vertical'>('horizontal');
+  readonly active = signal<TxTabValue | undefined>('one');
+}
+
+class FakeResizeObserver {
+  static readonly all: FakeResizeObserver[] = [];
+  readonly observed: Element[] = [];
+  disconnected = false;
+
+  constructor(readonly callback: () => void) {
+    FakeResizeObserver.all.push(this);
+  }
+
+  observe(element: Element): void {
+    this.observed.push(element);
+  }
+
+  unobserve(): void {
+    this.observed.length = 0;
+  }
+
+  disconnect(): void {
+    this.observed.length = 0;
+    this.disconnected = true;
+  }
+}
+
+function rect(left: number, width: number): DOMRect {
+  return { left, right: left + width, width, top: 0, bottom: 20, height: 20, x: left, y: 0, toJSON: () => ({}) };
+}
+
+describe('TxTabs scrolling', () => {
+  let fixture: ComponentFixture<ScrollHost>;
+  let scrollLeft = 0;
+  const el = (selector: string) => fixture.nativeElement.querySelector(selector) as HTMLElement;
+  const tabs = () => Array.from(fixture.nativeElement.querySelectorAll('#scroll [role="tab"]')) as HTMLElement[];
+
+  beforeEach(async () => {
+    vi.stubGlobal('ResizeObserver', FakeResizeObserver);
+    FakeResizeObserver.all.length = 0;
+    scrollLeft = 0;
+    fixture = TestBed.createComponent(ScrollHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    const content = el('#scroll [role="tablist"]');
+    Object.defineProperty(content, 'scrollWidth', { value: 500, configurable: true });
+    Object.defineProperty(content, 'clientWidth', { value: 200, configurable: true });
+    Object.defineProperty(content, 'scrollLeft', { get: () => scrollLeft, set: (value: number) => (scrollLeft = value), configurable: true });
+  });
+
+  afterEach(() => {
+    fixture.destroy();
+    vi.unstubAllGlobals();
+  });
+
+  it('observes the list and its tabs and shows the navigators the content needs', async () => {
+    const content = el('#scroll [role="tablist"]');
+    const observer = FakeResizeObserver.all.find((each) => each.observed.includes(content)) as FakeResizeObserver;
+    expect(observer.observed).toHaveLength(5);
+    expect(el('#scroll [role="tablist"]').getAttribute('aria-labelledby')).toBe('heading');
+    const previous = el('.tx-tab-list__nav--previous');
+    const next = el('.tx-tab-list__nav--next');
+    expect(next.classList).toContain('tx-tab-list__nav--hidden');
+    observer.callback();
+    await fixture.whenStable();
+    expect(next.classList).not.toContain('tx-tab-list__nav--hidden');
+    expect(previous.classList).toContain('tx-tab-list__nav--hidden');
+    next.click();
+    expect(scrollLeft).toBe(160);
+    el('#scroll [role="tablist"]').dispatchEvent(new Event('scroll'));
+    await fixture.whenStable();
+    expect(previous.classList).not.toContain('tx-tab-list__nav--hidden');
+    previous.click();
+    expect(scrollLeft).toBe(0);
+    previous.click();
+    expect(scrollLeft).toBe(0);
+    fixture.destroy();
+    expect(observer.disconnected).toBe(true);
+  });
+
+  it('scrolls the active tab into view from either side', async () => {
+    const content = el('#scroll [role="tablist"]');
+    content.getBoundingClientRect = () => rect(100, 200);
+    const [, two, , four] = tabs();
+    four.getBoundingClientRect = () => rect(350, 50);
+    two.getBoundingClientRect = () => rect(40, 50);
+    fixture.componentInstance.active.set('four');
+    await fixture.whenStable();
+    expect(scrollLeft).toBeGreaterThan(50);
+    const after = scrollLeft;
+    fixture.componentInstance.active.set('two');
+    await fixture.whenStable();
+    expect(scrollLeft).toBeLessThan(after);
+    expect(two.getAttribute('type')).toBe('button');
+  });
+
+  it('draws an unknown icon as a class and sets the bar along a vertical list', async () => {
+    expect(tabs()[0].querySelector('.tx-tab__icon span')?.className).toBe('custom-glyph');
+    const [one] = tabs();
+    Object.defineProperty(one, 'offsetTop', { value: 12, configurable: true });
+    Object.defineProperty(one, 'offsetHeight', { value: 30, configurable: true });
+    fixture.componentInstance.orientation.set('vertical');
+    await fixture.whenStable();
+    const bar = el('.tx-tab-list__active-bar');
+    expect(bar.style.getPropertyValue('--_bar-start')).toBe('12px');
+    expect(bar.style.getPropertyValue('--_bar-size')).toBe('30px');
+    expect(el('.tx-tab-list__nav--next')).toBeNull();
+  });
+
+  it('moves with the up and down arrows when vertical and ignores other keys', async () => {
+    fixture.componentInstance.orientation.set('vertical');
+    await fixture.whenStable();
+    const [one, two, , four] = tabs();
+    one.focus();
+    keydown(one, 'ArrowDown');
+    expect(document.activeElement).toBe(two);
+    keydown(two, 'ArrowUp');
+    expect(document.activeElement).toBe(one);
+    keydown(one, 'ArrowUp');
+    expect(document.activeElement).toBe(four);
+    const other = new KeyboardEvent('keydown', { key: 'x', bubbles: true, cancelable: true });
+    four.dispatchEvent(other);
+    expect(other.defaultPrevented).toBe(false);
+    (document.activeElement as HTMLElement).blur();
+    const enter = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+    el('#scroll [role="tablist"]').dispatchEvent(enter);
+    expect(enter.defaultPrevented).toBe(false);
+  });
+
+  it('leaves a list of disabled tabs alone and keeps its disabled value', () => {
+    const tab = el('#off [role="tab"]');
+    const event = new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true });
+    tab.dispatchEvent(event);
+    expect(event.defaultPrevented).toBe(false);
+    expect(tab.getAttribute('aria-selected')).toBe('true');
+    expect(tab.getAttribute('tabindex')).toBe('-1');
+  });
+});
+
+describe('TxTabPanelContent', () => {
+  it('narrows the template context', () => {
+    const directive = {} as TxTabPanelContent;
+    expect(TxTabPanelContent.ngTemplateContextGuard(directive, { $implicit: 'a' })).toBe(true);
+    expect(TxTabPanelContent.ngTemplateContextGuard(directive, undefined)).toBe(false);
+  });
+});

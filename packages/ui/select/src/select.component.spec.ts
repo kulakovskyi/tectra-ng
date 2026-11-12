@@ -1,10 +1,24 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { CdkConnectedOverlay, ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import { ChangeDetectionStrategy, Component, Type, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TxSelectEmptyFilterTemplate, TxSelectFooterTemplate, TxSelectGroupTemplate, TxSelectValueTemplate } from './select-option-template.directive';
-import { buildOptionRows, readOptionField } from './select-options';
+import { By } from '@angular/platform-browser';
+import { TxOptionList } from './option-list.component';
+import { TxOptionsBase } from './options-base';
+import { TxSelectBase } from './select-base';
+import {
+  TxSelectEmptyFilterTemplate,
+  TxSelectEmptyTemplate,
+  TxSelectFooterTemplate,
+  TxSelectGroupTemplate,
+  TxSelectHeaderTemplate,
+  TxSelectOptionTemplate,
+  TxSelectValueTemplate,
+} from './select-option-template.directive';
+import { buildOptionRows, foldText, matchesQuery, readOptionField, sameOptionValue } from './select-options';
 import { TxSelect } from './select.component';
-import { TxSelectChangeEvent, TxSelectLazyLoadEvent } from './select.types';
+import { TxSelectChangeEvent, TxSelectItem, TxSelectLazyLoadEvent, TxSelectRow } from './select.types';
 
 @Component({
   imports: [TxSelect, ReactiveFormsModule],
@@ -276,6 +290,21 @@ describe('TxSelect features', () => {
     vi.useRealTimers();
   });
 
+  it('drops a delayed filter output when destroyed', () => {
+    vi.useFakeTimers();
+    try {
+      host.filterDelay.set(300);
+      render();
+      open();
+      type(search(), 'k');
+      fixture.destroy();
+      vi.advanceTimersByTime(300);
+      expect(host.queries).toEqual([]);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it('shows the empty filter template with the query', () => {
     open();
     type(search(), 'Rivne');
@@ -426,5 +455,523 @@ describe('select options', () => {
       isSelected: (value) => value === 'Lviv',
     });
     expect(rows).toEqual([{ type: 'option', id: 'x-1', index: 1, label: 'Lviv', value: 'Lviv', option: 'Lviv', selected: true, disabled: false }]);
+  });
+
+  const fields = { label: 'label', value: 'value', disabled: 'disabled', groupLabel: 'name', groupChildren: 'items', dataKey: undefined };
+  const request = { fields, idPrefix: 'x', filterFields: [], matchMode: 'contains' as const, isSelected: () => false };
+
+  it('stops reading a nested field at a plain value', () => {
+    expect(readOptionField({ user: 'Olena' }, 'user.name')).toBeUndefined();
+    expect(readOptionField(null, 'label')).toBeNull();
+  });
+
+  it('matches by every mode on folded text', () => {
+    expect(foldText('Straße Øresund')).toBe('strasse oresund');
+    expect(matchesQuery('Kyiv', 'iv', 'endsWith')).toBe(true);
+    expect(matchesQuery('Kyiv', 'ky', 'endsWith')).toBe(false);
+    expect(matchesQuery('Kyiv', 'kyiv', 'equals')).toBe(true);
+    expect(matchesQuery('Kyiv', 'ky', 'equals')).toBe(false);
+  });
+
+  it('compares by dataKey only for two objects', () => {
+    expect(sameOptionValue({ id: 1, name: 'a' }, { id: 1, name: 'b' }, 'id')).toBe(true);
+    expect(sameOptionValue({ id: 1 }, null, 'id')).toBe(false);
+    expect(sameOptionValue('a', 'a', 'id')).toBe(true);
+  });
+
+  it('keeps indexes stable and labels empty when a field is missing', () => {
+    const rows = buildOptionRows({ ...request, options: [{ value: 1 }, { label: 'Lviv', value: 2 }], group: false, query: '' });
+    expect(rows.map((row) => (row.type === 'option' ? row.label : row.type))).toEqual(['', 'Lviv']);
+    const filtered = buildOptionRows({ ...request, options: [{ value: 1 }, null, { label: 'Lviv', value: 2 }], group: false, query: 'lv' });
+    expect(filtered).toEqual([expect.objectContaining({ id: 'x-2', index: 2, label: 'Lviv' })]);
+  });
+
+  it('drops groups without matches and tolerates groups without children', () => {
+    const options = [{ name: 'West', items: [{ label: 'Lviv' }, { label: 'Uzhhorod' }] }, { items: 'none' }, { name: 'South', items: [{ label: 'Odesa' }] }];
+    const all = buildOptionRows({ ...request, options, group: true, query: '' });
+    expect(all.map((row) => row.type + ':' + (row.type === 'loader' ? '' : row.label))).toEqual(['group:West', 'option:Lviv', 'option:Uzhhorod', 'group:', 'group:South', 'option:Odesa']);
+    const filtered = buildOptionRows({ ...request, options, group: true, query: 'uzh' });
+    expect(filtered).toEqual([expect.objectContaining({ type: 'group', label: 'West' }), expect.objectContaining({ type: 'option', id: 'x-1', label: 'Uzhhorod' })]);
+  });
+});
+
+const NATO = ['Alpha', 'Bravo', 'Charlie', 'Delta', 'Echo', 'Foxtrot', 'Golf', 'Hotel', 'India', 'Juliet', 'Kilo', 'Lima', 'Mike', 'November'];
+const BLOCKED = new Set(['Bravo', 'Kilo', 'November']);
+
+@Component({
+  imports: [TxSelect, ReactiveFormsModule, TxSelectOptionTemplate, TxSelectHeaderTemplate, TxSelectEmptyTemplate, TxSelectFooterTemplate],
+  template: `
+    <div class="scroller" style="overflow: auto">
+      <tx-select
+        [options]="options()"
+        [formControl]="control"
+        [filter]="filter()"
+        [resetFilterOnHide]="true"
+        [showClear]="true"
+        [editable]="editable()"
+        [readonly]="readonly()"
+        [lazy]="lazy()"
+        [placeholder]="'Letter'"
+        (opened)="opens = opens + 1"
+        (closed)="closes = closes + 1"
+        (filtered)="queries.push($event.query)"
+        (lazyLoad)="loads.push($event)"
+      >
+        <ng-template txSelectHeader><button type="button" class="own-header">Top</button></ng-template>
+        <ng-template txSelectOption let-option let-selected="selected">{{ option.label }}{{ selected ? ' *' : '' }}</ng-template>
+        <ng-template txSelectEmpty><span class="own-empty">Nothing here</span></ng-template>
+        @if (footer()) {
+          <ng-template txSelectFooter><button type="button" class="own-footer">Add</button></ng-template>
+        }
+      </tx-select>
+    </div>
+    <button type="button" class="outside">Outside</button>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class BehaviourHost {
+  readonly letters = NATO.map((label) => ({ label, value: label.toLowerCase(), disabled: BLOCKED.has(label) }));
+  readonly options = signal<readonly unknown[]>(this.letters);
+  readonly filter = signal(false);
+  readonly editable = signal(false);
+  readonly readonly = signal(false);
+  readonly lazy = signal(false);
+  readonly footer = signal(true);
+  control = new FormControl<unknown>(null);
+  opens = 0;
+  closes = 0;
+  queries: string[] = [];
+  loads: TxSelectLazyLoadEvent[] = [];
+}
+
+describe('TxSelect behaviour', () => {
+  let fixture: ComponentFixture<BehaviourHost>;
+  let host: BehaviourHost;
+  const select = () => fixture.debugElement.query(By.directive(TxSelect)).componentInstance as TxSelect;
+  const trigger = () => fixture.nativeElement.querySelector('.tx-select__trigger') as HTMLElement;
+  const box = () => fixture.nativeElement.querySelector('.tx-select__box') as HTMLElement;
+  const panel = () => document.querySelector('.tx-select__panel') as HTMLElement | null;
+  const search = () => document.querySelector('.tx-select__filter-input') as HTMLInputElement;
+  const active = () => document.querySelector('.tx-select__option--active')?.textContent?.trim() ?? null;
+  const render = () => fixture.detectChanges();
+  const key = (target: HTMLElement, name: string, init: KeyboardEventInit = {}) => {
+    const event = new KeyboardEvent('keydown', { key: name, bubbles: true, cancelable: true, ...init });
+    target.dispatchEvent(event);
+    render();
+    return event;
+  };
+  const type = (input: HTMLInputElement, text: string) => {
+    input.value = text;
+    input.dispatchEvent(new Event('input'));
+    render();
+  };
+  const open = () => {
+    box().click();
+    render();
+  };
+  const isOpen = () => trigger().getAttribute('aria-expanded') === 'true';
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(BehaviourHost);
+    host = fixture.componentInstance;
+    render();
+  });
+
+  afterEach(() => document.querySelector('.cdk-overlay-container')?.replaceChildren());
+
+  it('pages past disabled options in both directions', () => {
+    key(trigger(), 'ArrowDown');
+    expect(active()).toBe('Alpha');
+    key(trigger(), 'PageDown');
+    expect(active()).toBe('Lima');
+    key(trigger(), 'PageUp');
+    expect(active()).toBe('Alpha');
+    key(trigger(), 'End');
+    expect(active()).toBe('Mike');
+    key(trigger(), 'PageDown');
+    expect(active()).toBe('Mike');
+  });
+
+  it('starts from the last option with ArrowUp and from the selected one when there is a value', () => {
+    open();
+    expect(active()).toBeNull();
+    key(trigger(), 'ArrowUp');
+    expect(active()).toBe('Mike');
+    key(trigger(), 'Escape');
+    host.control.setValue('echo');
+    render();
+    expect(trigger().textContent).toContain('Echo *');
+    open();
+    key(trigger(), 'ArrowDown');
+    expect(active()).toBe('Echo *');
+    key(trigger(), 'Escape');
+    key(trigger(), 'ArrowDown');
+    expect(active()).toBe('Echo *');
+  });
+
+  it('does nothing when paging an empty list and shows the empty template', () => {
+    host.options.set([]);
+    render();
+    open();
+    expect(document.querySelector('.own-empty')?.textContent).toBe('Nothing here');
+    key(trigger(), 'PageDown');
+    key(trigger(), 'ArrowUp');
+    expect(active()).toBeNull();
+    expect(select().activeIndex()).toBe(-1);
+    expect(isOpen()).toBe(true);
+  });
+
+  it('opens with Space, closes with Enter when nothing is active and with Tab', () => {
+    const space = key(trigger(), ' ');
+    expect(space.defaultPrevented).toBe(true);
+    expect(isOpen()).toBe(true);
+    expect(host.opens).toBe(1);
+    select().activeIndex.set(-1);
+    key(trigger(), 'Enter');
+    expect(isOpen()).toBe(false);
+    expect(host.closes).toBe(1);
+    key(trigger(), 'Escape');
+    expect(host.closes).toBe(1);
+    open();
+    key(trigger(), 'Tab');
+    expect(isOpen()).toBe(false);
+  });
+
+  it('finds options by typed letters while open and ignores misses and shortcuts', () => {
+    open();
+    key(trigger(), 'g');
+    expect(active()).toBe('Golf');
+    expect(isOpen()).toBe(true);
+    key(trigger(), 'z');
+    expect(active()).toBe('Golf');
+    key(trigger(), 'a', { ctrlKey: true });
+    expect(active()).toBe('Golf');
+    key(trigger(), 'Escape');
+    key(trigger(), 'x');
+    expect(host.control.value).toBeNull();
+  });
+
+  it('keeps Home, End and letters for the search field and resets the query on close', () => {
+    host.filter.set(true);
+    render();
+    open();
+    key(search(), 'ArrowDown');
+    const home = key(search(), 'Home');
+    expect(home.defaultPrevented).toBe(false);
+    key(search(), 'e');
+    expect(active()).toBe('Alpha');
+    type(search(), 'zzz');
+    expect(host.queries).toEqual(['zzz']);
+    key(search(), 'Enter');
+    expect(isOpen()).toBe(false);
+    expect(host.queries).toEqual(['zzz', '']);
+    expect(select().query()).toBe('');
+  });
+
+  it('keeps the panel open on Tab when the panel has more to focus', () => {
+    host.filter.set(true);
+    render();
+    open();
+    key(search(), 'Tab');
+    expect(isOpen()).toBe(true);
+    key(search(), 'Tab', { shiftKey: true });
+    expect(isOpen()).toBe(true);
+    host.footer.set(false);
+    render();
+    key(search(), 'Tab');
+    expect(isOpen()).toBe(false);
+  });
+
+  it('closes on Escape from the panel and keeps the default for focusable targets on mousedown', () => {
+    open();
+    const footer = document.querySelector('.own-footer') as HTMLButtonElement;
+    const other = key(footer, 'x');
+    expect(other.defaultPrevented).toBe(false);
+    expect(isOpen()).toBe(true);
+    const escape = key(footer, 'Escape');
+    expect(escape.defaultPrevented).toBe(true);
+    expect(isOpen()).toBe(false);
+    expect(document.activeElement).toBe(trigger());
+    open();
+    const plain = new MouseEvent('mousedown', { bubbles: true, cancelable: true });
+    panel()?.dispatchEvent(plain);
+    expect(plain.defaultPrevented).toBe(true);
+    const onButton = new MouseEvent('mousedown', { bubbles: true, cancelable: true });
+    document.querySelector('.own-header')?.dispatchEvent(onButton);
+    expect(onButton.defaultPrevented).toBe(false);
+  });
+
+  it('closes when focus leaves for the page and returns focus when it goes nowhere', async () => {
+    host.filter.set(true);
+    render();
+    open();
+    const header = document.querySelector('.own-header') as HTMLButtonElement;
+    header.dispatchEvent(new FocusEvent('focusout', { bubbles: true, relatedTarget: trigger() }));
+    render();
+    expect(isOpen()).toBe(true);
+    search().blur();
+    expect(document.activeElement).toBe(document.body);
+    header.dispatchEvent(new FocusEvent('focusout', { bubbles: true, relatedTarget: null }));
+    await Promise.resolve();
+    expect(document.activeElement).toBe(search());
+    header.focus();
+    header.dispatchEvent(new FocusEvent('focusout', { bubbles: true, relatedTarget: null }));
+    await Promise.resolve();
+    expect(document.activeElement).toBe(header);
+    header.dispatchEvent(new FocusEvent('focusout', { bubbles: true, relatedTarget: fixture.nativeElement.querySelector('.outside') }));
+    render();
+    expect(isOpen()).toBe(false);
+  });
+
+  it('focuses the trigger when focus goes nowhere and there is no search field', async () => {
+    open();
+    trigger().blur();
+    expect(document.activeElement).toBe(document.body);
+    (document.querySelector('.own-header') as HTMLElement).dispatchEvent(new FocusEvent('focusout', { bubbles: true, relatedTarget: null }));
+    await Promise.resolve();
+    expect(document.activeElement).toBe(trigger());
+    select().close();
+    render();
+    trigger().blur();
+    select().onPanelFocusOut(new FocusEvent('focusout', { relatedTarget: null }));
+    await Promise.resolve();
+    expect(document.activeElement).toBe(document.body);
+  });
+
+  it('closes on a click outside but not on a click inside its box', () => {
+    host.control.setValue('alpha');
+    render();
+    open();
+    (fixture.nativeElement.querySelector('.tx-select__clear') as HTMLElement).click();
+    render();
+    expect(host.control.value).toBeNull();
+    expect(isOpen()).toBe(true);
+    const fromBox = new MouseEvent('click');
+    Object.defineProperty(fromBox, 'target', { value: trigger() });
+    select().onOutsideClick(fromBox);
+    render();
+    expect(isOpen()).toBe(true);
+    const outside = fixture.nativeElement.querySelector('.outside') as HTMLElement;
+    outside.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true }));
+    outside.click();
+    render();
+    expect(isOpen()).toBe(false);
+  });
+
+  it('toggles with box clicks and closes when its scroll container scrolls', () => {
+    open();
+    expect(isOpen()).toBe(true);
+    open();
+    expect(isOpen()).toBe(false);
+    open();
+    fixture.nativeElement.querySelector('.scroller').dispatchEvent(new Event('scroll'));
+    render();
+    expect(isOpen()).toBe(false);
+    expect(host.closes).toBe(2);
+  });
+
+  it('closes when the overlay detaches', async () => {
+    open();
+    const overlay = fixture.debugElement.queryAllNodes(By.directive(CdkConnectedOverlay))[0].injector.get(CdkConnectedOverlay);
+    overlay.overlayRef.detach();
+    render();
+    await fixture.whenStable();
+    expect(isOpen()).toBe(false);
+    expect(panel()).toBeNull();
+  });
+
+  it('unmounts at once when closed before the panel rendered', async () => {
+    const component = select();
+    component.open();
+    component.close();
+    component.close();
+    expect(host.closes).toBe(1);
+    await Promise.resolve();
+    expect(component.isPanelMounted()).toBe(false);
+  });
+
+  it('ignores keys when readonly and does not open when disabled', () => {
+    host.readonly.set(true);
+    render();
+    key(trigger(), 'ArrowDown');
+    expect(isOpen()).toBe(false);
+    host.readonly.set(false);
+    host.control.disable();
+    render();
+    key(trigger(), 'ArrowDown');
+    expect(isOpen()).toBe(false);
+    expect(host.opens).toBe(0);
+  });
+
+  it('moves the active option to the first one when the options change under it', () => {
+    open();
+    key(trigger(), 'End');
+    expect(active()).toBe('Mike');
+    host.options.set(host.letters.slice(0, 3));
+    render();
+    expect(active()).toBe('Alpha');
+    expect(trigger().getAttribute('aria-activedescendant')).toBe(document.querySelector('.tx-select__option--active')?.id);
+  });
+
+  it('lists only enabled options as selectable and does not choose a disabled one', () => {
+    const component = select();
+    expect(component.selectableItems().map((item) => item.label)).toEqual(NATO.filter((label) => !BLOCKED.has(label)));
+    const bravo = component.rows()[1];
+    component.choose(bravo as TxSelectItem);
+    expect(host.control.value).toBeNull();
+  });
+
+  it('asks for the same lazy range only once', () => {
+    host.lazy.set(true);
+    host.options.set([{ label: 'Alpha', value: 'alpha' }, undefined, undefined]);
+    render();
+    open();
+    expect(host.loads).toEqual([{ first: 1, last: 3, query: '' }]);
+    select().onRangeChange({ start: 0, end: 3 });
+    select().onRangeChange({ start: 0, end: 1 });
+    expect(host.loads).toHaveLength(1);
+  });
+
+  it('opens on a box click and clears to null when editable', () => {
+    host.editable.set(true);
+    render();
+    (fixture.nativeElement.querySelector('.tx-select__dropdown') as HTMLElement).click();
+    render();
+    expect(isOpen()).toBe(true);
+    const input = trigger() as HTMLInputElement;
+    input.click();
+    render();
+    expect(isOpen()).toBe(true);
+    type(input, 'gol');
+    expect(active()).toBe('Golf');
+    expect(host.control.value).toBe('gol');
+    type(input, '');
+    expect(host.control.value).toBeNull();
+    expect(host.opens).toBe(1);
+  });
+
+  it('waits for room before the enter animation and falls back to bottom-start', () => {
+    const root = document.documentElement;
+    const clientHeight = vi.spyOn(Element.prototype, 'clientHeight', 'get').mockImplementation(function (this: Element) {
+      return this === root ? 600 : 0;
+    });
+    const clientWidth = vi.spyOn(Element.prototype, 'clientWidth', 'get').mockImplementation(function (this: Element) {
+      return this === root ? 800 : 0;
+    });
+    const height = vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockReturnValue(100);
+    vi.spyOn(box(), 'getBoundingClientRect').mockReturnValue({ top: 500, bottom: 540, left: 10, right: 210, width: 200, height: 40 } as DOMRect);
+    try {
+      open();
+      const component = select();
+      const below = { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top' } as const;
+      component.onPositionChange({ connectionPair: below } as ConnectedOverlayPositionChange);
+      expect(component.positions()[0].originY).toBe('top');
+      expect(component.panelPlacement()).toBe('bottom-start');
+      component.onPositionChange({ connectionPair: component.positions()[0] } as ConnectedOverlayPositionChange);
+      expect(component.panelPlacement()).toBe('top-start');
+    } finally {
+      height.mockRestore();
+      clientHeight.mockRestore();
+      clientWidth.mockRestore();
+    }
+  });
+});
+
+@Component({
+  imports: [TxOptionList],
+  template: `<tx-option-list [rows]="rows()" [listboxId]="'own-list'" [activeIndex]="active()" [focusable]="true" [virtualScroll]="virtual()" [itemSize]="36" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class ListHost {
+  readonly rows = signal<readonly TxSelectRow[]>(
+    buildOptionRows({
+      options: [{ label: 'North', items: ['Kyiv', 'Chernihiv'] }],
+      fields: { label: 'label', value: 'value', disabled: 'disabled', groupLabel: 'label', groupChildren: 'items', dataKey: undefined },
+      group: true,
+      idPrefix: 'row',
+      query: '',
+      filterFields: [],
+      matchMode: 'contains',
+      isSelected: () => false,
+    }),
+  );
+  readonly active = signal(-1);
+  readonly virtual = signal(false);
+}
+
+describe('TxOptionList', () => {
+  let fixture: ComponentFixture<ListHost>;
+  const list = () => fixture.debugElement.query(By.directive(TxOptionList)).componentInstance as TxOptionList;
+  const listbox = () => fixture.nativeElement.querySelector('[role="listbox"]') as HTMLElement;
+
+  beforeAll(() => {
+    Element.prototype.scrollTo ??= function scrollTo(this: Element) {
+      return undefined;
+    };
+  });
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(ListHost);
+    fixture.detectChanges();
+  });
+
+  it('points aria-activedescendant at the active option only', () => {
+    expect(listbox().getAttribute('tabindex')).toBe('0');
+    expect(listbox().hasAttribute('aria-activedescendant')).toBe(false);
+    fixture.componentInstance.active.set(0);
+    fixture.detectChanges();
+    expect(listbox().hasAttribute('aria-activedescendant')).toBe(false);
+    fixture.componentInstance.active.set(2);
+    fixture.detectChanges();
+    expect(listbox().getAttribute('aria-activedescendant')).toBe('row-1');
+  });
+
+  it('focuses the plain list and the virtual viewport', async () => {
+    list().focus();
+    expect(document.activeElement).toBe(listbox());
+    fixture.componentInstance.virtual.set(true);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    list().focus();
+    expect(document.activeElement?.tagName).toBe('CDK-VIRTUAL-SCROLL-VIEWPORT');
+  });
+
+  it('scrolls the virtual viewport only when the row is out of view', async () => {
+    fixture.componentInstance.virtual.set(true);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const viewport = list().viewport() as CdkVirtualScrollViewport;
+    const scroll = vi.spyOn(viewport, 'scrollToOffset');
+    vi.spyOn(viewport, 'getViewportSize').mockReturnValue(72);
+    const offset = vi.spyOn(viewport, 'measureScrollOffset').mockReturnValue(36);
+    list().scrollToIndex(1);
+    expect(scroll).not.toHaveBeenCalled();
+    list().scrollToIndex(0);
+    expect(scroll).toHaveBeenLastCalledWith(0);
+    offset.mockReturnValue(0);
+    list().scrollToIndex(2);
+    expect(scroll).toHaveBeenLastCalledWith(36);
+  });
+});
+
+describe('TxSelect recompiled by TestBed', () => {
+  it('still binds to a form control and finds its templates when a test overrides the components', () => {
+    TestBed.overrideComponent(TxSelect, { set: { styles: [] } });
+    TestBed.overrideComponent(TxOptionList, { set: { styles: [] } });
+    TestBed.overrideDirective(TxOptionsBase as unknown as Type<unknown>, { set: {} });
+    TestBed.overrideDirective(TxSelectBase as unknown as Type<unknown>, { set: {} });
+    const fixture = TestBed.createComponent(BehaviourHost);
+    fixture.detectChanges();
+    fixture.componentInstance.control.setValue('echo');
+    fixture.detectChanges();
+    const trigger = fixture.nativeElement.querySelector('.tx-select__trigger') as HTMLElement;
+    expect(trigger.textContent).toContain('Echo *');
+    (fixture.nativeElement.querySelector('.tx-select__box') as HTMLElement).click();
+    fixture.detectChanges();
+    expect(document.querySelector('.own-header')).not.toBeNull();
+    expect(document.querySelector('.own-footer')).not.toBeNull();
+    (document.querySelectorAll('.tx-select__option')[2] as HTMLElement).click();
+    expect(fixture.componentInstance.control.value).toBe('charlie');
+    document.querySelector('.cdk-overlay-container')?.replaceChildren();
   });
 });

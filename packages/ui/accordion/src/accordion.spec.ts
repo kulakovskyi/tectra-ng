@@ -211,3 +211,104 @@ describe('TxAccordion with items', () => {
     expect(all('#plain .own-icon').map((icon) => icon.textContent)).toEqual(['-', '+']);
   });
 });
+
+@Component({
+  imports: [TxAccordion, TxAccordionPanel, TxAccordionHeader, TxAccordionContent],
+  template: `
+    <tx-accordion id="single" [items]="items" [multiple]="false" [(value)]="open" (closed)="closed.push($event)" expandIcon="own-expand" />
+    <tx-accordion id="collapse-only" [multiple]="false" collapseIcon="minus" [(value)]="other" (closed)="closed.push($event)">
+      <tx-accordion-panel value="x">
+        <tx-accordion-header>X</tx-accordion-header>
+        <tx-accordion-content>X</tx-accordion-content>
+      </tx-accordion-panel>
+      <tx-accordion-panel value="y" disabled>
+        <tx-accordion-header>Y</tx-accordion-header>
+        <tx-accordion-content>Y</tx-accordion-content>
+      </tx-accordion-panel>
+    </tx-accordion>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class SingleHost {
+  readonly items: TxAccordionItem[] = [
+    { header: 'First', content: 'One' },
+    { header: 'Second', content: 'Two' },
+  ];
+  readonly open = signal<TxAccordionValue>(0);
+  readonly other = signal<TxAccordionValue>('gone');
+  readonly closed: TxAccordionToggleEvent[] = [];
+}
+
+describe('TxAccordion with one open panel', () => {
+  let fixture: ComponentFixture<SingleHost>;
+  const buttons = (id: string) => Array.from(fixture.nativeElement.querySelectorAll(`#${id} .tx-accordion-header__button`)) as HTMLButtonElement[];
+  const panel = (id: string, index: number) =>
+    fixture.debugElement.queryAll((node) => node.componentInstance instanceof TxAccordionPanel && !!node.nativeElement.closest(`#${id}`))[index].componentInstance as TxAccordionPanel;
+
+  beforeEach(async () => {
+    fixture = TestBed.createComponent(SingleHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+  });
+
+  it('reports the item of the panel it closes and draws an unknown icon as a class', async () => {
+    expect(fixture.nativeElement.querySelector('#single .tx-accordion-header__toggle span.own-expand')).not.toBeNull();
+    buttons('single')[1].click();
+    await fixture.whenStable();
+    expect(fixture.componentInstance.open()).toBe(1);
+    expect(fixture.componentInstance.closed.map((event) => [event.value, event.index, event.item?.header])).toEqual([[0, 0, 'First']]);
+    expect(fixture.nativeElement.querySelector('#single .tx-accordion-panel--active .tx-accordion-header__toggle span.own-expand')).not.toBeNull();
+  });
+
+  it('closes a value without a panel and uses the collapse icon for both states', async () => {
+    const toggle = () => fixture.nativeElement.querySelector('#collapse-only .tx-accordion-header__toggle tx-icon') as HTMLElement;
+    expect(toggle().getAttribute('data-icon')).toBe('minus');
+    buttons('collapse-only')[0].click();
+    await fixture.whenStable();
+    expect(fixture.componentInstance.closed.map((event) => [event.value, event.index, event.item])).toEqual([['gone', -1, undefined]]);
+    expect(toggle().getAttribute('data-icon')).toBe('minus');
+  });
+
+  it('does not open a disabled panel or reopen an open one', async () => {
+    panel('collapse-only', 1).toggle();
+    panel('collapse-only', 1).open();
+    expect(fixture.componentInstance.other()).toBe('gone');
+    panel('collapse-only', 0).open();
+    fixture.componentInstance.closed.length = 0;
+    panel('collapse-only', 0).open();
+    expect(fixture.componentInstance.other()).toBe('x');
+    expect(fixture.componentInstance.closed).toEqual([]);
+  });
+
+  it('leaves other keys to the browser', () => {
+    const [first] = buttons('single');
+    const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+    first.dispatchEvent(event);
+    expect(event.defaultPrevented).toBe(false);
+  });
+
+  it('narrows the template contexts', () => {
+    const context = { $implicit: { header: 'A' }, index: 0, active: true };
+    expect(TxAccordionHeaderTemplate.ngTemplateContextGuard({} as TxAccordionHeaderTemplate, context)).toBe(true);
+    expect(TxAccordionContentTemplate.ngTemplateContextGuard({} as TxAccordionContentTemplate, context)).toBe(true);
+    expect(TxAccordionToggleIconTemplate.ngTemplateContextGuard({} as TxAccordionToggleIconTemplate, { $implicit: true, active: true })).toBe(true);
+  });
+});
+
+describe('TxAccordion recompiled by TestBed', () => {
+  it('still finds its templates when a test overrides the components', async () => {
+    TestBed.overrideComponent(TxAccordion, { set: { styles: [] } });
+    TestBed.overrideComponent(TxAccordionContent, { set: { styles: [] } });
+    const parts = TestBed.createComponent(PartsHost);
+    parts.autoDetectChanges();
+    await parts.whenStable();
+    (parts.nativeElement.querySelectorAll('.tx-accordion-header__button')[2] as HTMLButtonElement).click();
+    await parts.whenStable();
+    expect(parts.nativeElement.querySelector('.lazy')).not.toBeNull();
+    const items = TestBed.createComponent(ItemsHost);
+    items.autoDetectChanges();
+    await items.whenStable();
+    expect(items.nativeElement.querySelectorAll('#items .head')).toHaveLength(2);
+    expect(items.nativeElement.querySelectorAll('#plain .own-icon')).toHaveLength(2);
+  });
+});

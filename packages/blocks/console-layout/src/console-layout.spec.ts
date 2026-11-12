@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { Title } from '@angular/platform-browser';
+import { By, Title } from '@angular/platform-browser';
 import { Router, provideRouter } from '@angular/router';
 import { TxConsoleLayout } from './console-layout.component';
 import { TxConsoleRailItem } from './console-layout.types';
@@ -143,5 +143,140 @@ describe('TxConsoleLayout', () => {
     expect(title.getTitle()).toBe('Reports · Search console');
     fixture.destroy();
     expect(title.getTitle()).toBe('Docs');
+  });
+});
+
+@Component({
+  imports: [TxConsoleLayout],
+  template: `
+    <tx-console-layout title="Search" [favicon]="favicon()" [railItems]="items()">
+      <p class="page">Page</p>
+    </tx-console-layout>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class FaviconHost {
+  readonly favicon = signal<string | undefined>('/console.ico');
+  readonly items = signal<TxConsoleRailItem[]>([
+    { label: 'Overview', icon: 'home', routerLink: '/search', queryParams: { tab: 'all' }, target: '_self' },
+    { label: 'Docs', icon: 'book', url: 'https://example.com/docs', target: '_blank', active: true },
+    { label: 'Noop', icon: 'refresh' },
+  ]);
+}
+
+@Component({
+  imports: [TxConsolePanel],
+  template: `
+    <tx-console-panel>
+      <nav txConsolePanelAside class="tree">
+        <a href="#one" class="link">One</a>
+        <span class="text">Text</span>
+      </nav>
+      <a href="#page" class="page-link">Page link</a>
+    </tx-console-panel>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class LonePanelHost {}
+
+describe('TxConsoleLayout favicon, rail and lone panel', () => {
+  beforeEach(() =>
+    TestBed.configureTestingModule({
+      providers: [provideRouter([{ path: '**', component: Page }])],
+    }),
+  );
+  afterEach(() => document.head.querySelectorAll('link[rel="icon"]').forEach((link) => link.remove()));
+
+  it('swaps the favicon and restores it on destroy', async () => {
+    const link = document.createElement('link');
+    link.rel = 'icon';
+    link.href = '/site.ico';
+    document.head.appendChild(link);
+    const fixture = TestBed.createComponent(FaviconHost);
+    await fixture.whenStable();
+    expect(link.getAttribute('href')).toBe('/console.ico');
+    fixture.componentInstance.favicon.set('/alert.ico');
+    await fixture.whenStable();
+    expect(link.getAttribute('href')).toBe('/alert.ico');
+    fixture.componentInstance.favicon.set(undefined);
+    await fixture.whenStable();
+    expect(link.getAttribute('href')).toBe('/alert.ico');
+    fixture.destroy();
+    expect(link.getAttribute('href')).toBe('/site.ico');
+  });
+
+  it('restores an empty favicon href and does nothing without a favicon link', async () => {
+    const plain = TestBed.createComponent(FaviconHost);
+    await plain.whenStable();
+    plain.destroy();
+    expect(document.head.querySelector('link[rel="icon"]')).toBeNull();
+
+    const link = document.createElement('link');
+    link.rel = 'icon';
+    document.head.appendChild(link);
+    const fixture = TestBed.createComponent(FaviconHost);
+    await fixture.whenStable();
+    expect(link.getAttribute('href')).toBe('/console.ico');
+    link.remove();
+    fixture.destroy();
+    document.head.appendChild(link);
+    expect(link.getAttribute('href')).toBe('/console.ico');
+  });
+
+  it('renders rail links with query params, targets and the default match, and untranslated labels', async () => {
+    const fixture = TestBed.createComponent(FaviconHost);
+    await TestBed.inject(Router).navigateByUrl('/search?tab=all');
+    await fixture.whenStable();
+    const root = fixture.nativeElement.querySelector('tx-console-layout') as HTMLElement;
+    const [overview, docs, noop] = Array.from(root.querySelectorAll<HTMLElement>('.tx-console-rail__item'));
+    expect(overview.getAttribute('href')).toBe('/search?tab=all');
+    expect(overview.getAttribute('target')).toBe('_self');
+    expect(overview.classList).toContain('tx-console-rail__item--active');
+    expect(docs.getAttribute('target')).toBe('_blank');
+    expect(docs.getAttribute('aria-current')).toBe('page');
+    expect(noop.hasAttribute('aria-current')).toBe(false);
+    noop.click();
+    expect(root.querySelector('.tx-console-rail__label')?.textContent).toBe('Overview');
+    expect(root.querySelector('span.tx-console-layout__brand')).not.toBeNull();
+    expect(root.querySelectorAll('.tx-console-layout__crumb')).toHaveLength(0);
+  });
+
+  it('closes a lone panel after a pick in its nav or a navigation', async () => {
+    const fixture = TestBed.createComponent(LonePanelHost);
+    await fixture.whenStable();
+    const root = fixture.nativeElement.querySelector('tx-console-panel') as HTMLElement;
+    const panel = fixture.debugElement.query(By.directive(TxConsolePanel)).componentInstance as TxConsolePanel;
+    const toggle = root.querySelector('.tx-console-panel__toggle') as HTMLButtonElement;
+    expect(root.getAttribute('data-responsive')).toBe('viewport');
+    expect(toggle.textContent?.trim()).toBe('Menu');
+    expect(root.querySelector('aside')?.hasAttribute('aria-label')).toBe(false);
+    expect(root.querySelector('tx-app-footer')).toBeNull();
+
+    const prevent = (event: Event) => event.preventDefault();
+    root.addEventListener('click', prevent);
+    toggle.click();
+    (root.querySelector('.text') as HTMLElement).click();
+    (root.querySelector('.page-link') as HTMLElement).click();
+    expect(panel.expanded()).toBe(true);
+    root.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    expect(panel.expanded()).toBe(true);
+    (root.querySelector('.link') as HTMLElement).click();
+    expect(panel.expanded()).toBe(false);
+    root.removeEventListener('click', prevent);
+
+    panel.expanded.set(true);
+    await TestBed.inject(Router).navigateByUrl('/elsewhere');
+    expect(panel.expanded()).toBe(false);
+    (root.querySelector('.tree') as HTMLElement).dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    expect(panel.expanded()).toBe(false);
+  });
+
+  it('shows no route crumbs without a router', async () => {
+    TestBed.overrideProvider(Router, { useValue: null });
+    const fixture = TestBed.createComponent(FaviconHost);
+    fixture.componentInstance.items.set([{ label: 'Docs', icon: 'book', url: 'https://example.com/docs' }]);
+    await fixture.whenStable();
+    const root = fixture.nativeElement.querySelector('tx-console-layout') as HTMLElement;
+    expect(root.querySelectorAll('.tx-console-layout__crumb')).toHaveLength(0);
   });
 });

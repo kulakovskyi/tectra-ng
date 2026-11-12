@@ -27,7 +27,7 @@
               [routerLink]="$any(entry.item.routerLink)"
               [queryParams]="entry.item.queryParams"
               [fragment]="entry.item.fragment"
-              [attr.target]="entry.item.target ?? null"
+              [target]="entry.item.target"
               [attr.title]="entry.item.title ?? null"
               [attr.aria-label]="entry.item.ariaLabel ?? null"
               [class]="passThrough().link?.class"

@@ -77,7 +77,7 @@ import { isEmptyDoc, parseHtml, serializeFragment, serializeHtml } from './engin
 import { aiKey } from './engine/ai';
 import { TxSuggestionMatch, TxSuggestionTrigger, normalizeHref, selectionText, textLength } from './engine/plugins';
 import { addColumn, addRow, deleteColumn, deleteRow, deleteTable, headerRowActive, insertTable, tableContext, toggleHeaderRow } from './engine/tables';
-import { TX_EDITOR_EMOJI, TxEditorEmoji, matchEmoji } from './editor.emoji';
+import { TxEditorEmoji, matchEmoji } from './editor.emoji';
 import { TX_EDITOR_SLASH_ITEMS, TxEditorSlashItem, matchSlashItems } from './editor.slash';
 import { editorPlugins } from './engine/setup';
 import { toVideoEmbed, txEditorSchema as schema } from './engine/schema';
@@ -229,6 +229,7 @@ export class TxEditor extends TxFormControlBase<string> {
   protected readonly placeholderHeight = signal<number | null>(null);
   protected readonly bubbleTools: readonly TxEditorTool[] = ['bold', 'italic', 'underline', 'strike', 'code'];
   protected readonly scrollStrategy = txScrollStrategy(inject(Injector));
+  protected readonly suggestScrollStrategy = txScrollStrategy(inject(Injector));
   private readonly abovePositions: ConnectedPosition[] = txPositions('top', 8);
   private readonly belowPositions: ConnectedPosition[] = txPositions('bottom', 8);
   protected readonly bubblePositions = computed(() => {
@@ -246,7 +247,6 @@ export class TxEditor extends TxFormControlBase<string> {
     let index = 0;
     return groups.map((group) => group.map((tool) => ({ tool, index: index++ }))).filter((group) => group.length);
   });
-  protected readonly toolCount = computed(() => this.groups().reduce((sum, group) => sum + group.length, 0) + (this.ai() ? 1 : 0) + (this.showFullViewButton() ? 1 : 0));
   protected readonly showFullViewButton = computed(() => this.fullViewButton() ?? this.toolbar() === 'full');
   protected readonly levels = computed<readonly TxEditorHeadingLevel[]>(() => this.headingLevels() ?? (this.toolbar() === 'full' ? [1, 2, 3, 4, 5, 6] : [1, 2]));
 
@@ -402,6 +402,7 @@ export class TxEditor extends TxFormControlBase<string> {
       clearTimeout(this.draftTimer);
       this.unmountFullView();
       this.view?.destroy();
+      this.view = null;
     });
   }
 
@@ -416,7 +417,7 @@ export class TxEditor extends TxFormControlBase<string> {
 
   clear(): void {
     this.setContent('');
-    this.emitValue();
+    this.emitValue(true);
   }
 
   getHtml(): string {
@@ -609,13 +610,6 @@ export class TxEditor extends TxFormControlBase<string> {
     if (view && range) {
       view.dispatch(view.state.tr.removeMark(range.from, range.to, schema.marks['link']));
       view.focus();
-    }
-  }
-
-  protected openCurrentLink(): void {
-    const href = this.state()?.link?.href;
-    if (href) {
-      this.document.defaultView?.open(href, '_blank', 'noopener,noreferrer');
     }
   }
 
@@ -883,16 +877,19 @@ export class TxEditor extends TxFormControlBase<string> {
     this.view = new EditorView(host, {
       state,
       editable: () => this.editable(),
-      attributes: () => ({
-        class: 'tx-editor__prose tx-editor-prose',
-        role: 'textbox',
-        'aria-multiline': 'true',
-        ...(this.ariaLabelledBy() ? { 'aria-labelledby': this.ariaLabelledBy() ?? '' } : { 'aria-label': this.ariaLabel() ?? this.translations().editorLabel }),
-        'aria-readonly': String(this.readonly()),
-        'aria-disabled': String(this.isDisabled()),
-        'aria-invalid': String(this.isInvalid()),
-        id: `${this.id}-content`,
-      }),
+      attributes: () => {
+        const labelledBy = this.ariaLabelledBy();
+        return {
+          class: 'tx-editor__prose tx-editor-prose',
+          role: 'textbox',
+          'aria-multiline': 'true',
+          ...(labelledBy ? { 'aria-labelledby': labelledBy } : { 'aria-label': this.ariaLabel() ?? this.translations().editorLabel }),
+          'aria-readonly': String(this.readonly()),
+          'aria-disabled': String(this.isDisabled()),
+          'aria-invalid': String(this.isInvalid()),
+          id: `${this.id}-content`,
+        };
+      },
       nodeViews: {
         task_item: (node, view, getPos) => new TxTaskItemView(node, view, getPos, () => this.translations().editorTaskList),
         video: (node, view, getPos) => new TxVideoView(node, view, getPos),
@@ -1092,7 +1089,7 @@ export class TxEditor extends TxFormControlBase<string> {
         value: item,
       }));
     } else {
-      options = (match.query ? matchEmoji(match.query) : TX_EDITOR_EMOJI.slice(0, 8)).map((emoji) => ({ id: emoji.name, label: `:${emoji.name}:`, glyph: emoji.char, value: emoji }));
+      options = matchEmoji(match.query).map((emoji) => ({ id: emoji.name, label: `:${emoji.name}:`, glyph: emoji.char, value: emoji }));
     }
     if (request !== this.suggestionRequest) {
       return;

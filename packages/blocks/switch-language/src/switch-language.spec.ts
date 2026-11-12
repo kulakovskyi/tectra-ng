@@ -61,4 +61,24 @@ describe('TxSwitchLanguage', () => {
     await fixture.whenStable();
     expect(fixture.componentInstance.value()).toBe('ua');
   });
+
+  it('moves back with the left arrow, jumps Home and ignores other keys', async () => {
+    const fixture = TestBed.createComponent(Host);
+    fixture.componentInstance.sync.set(false);
+    await fixture.whenStable();
+    const root = fixture.nativeElement.querySelector('tx-switch-language') as HTMLElement;
+    const options = () => Array.from(root.querySelectorAll<HTMLButtonElement>('[role="radio"]'));
+    options()[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
+    await fixture.whenStable();
+    expect(fixture.componentInstance.value()).toBe('ua');
+    expect(document.activeElement).toBe(options()[1]);
+    const enter = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+    options()[1].dispatchEvent(enter);
+    expect(enter.defaultPrevented).toBe(false);
+    expect(fixture.componentInstance.value()).toBe('ua');
+    options()[1].dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', bubbles: true }));
+    await fixture.whenStable();
+    expect(fixture.componentInstance.value()).toBe('us');
+    expect(document.activeElement).toBe(options()[0]);
+  });
 });

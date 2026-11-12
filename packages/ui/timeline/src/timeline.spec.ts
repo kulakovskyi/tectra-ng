@@ -118,3 +118,36 @@ describe('TxTimeline', () => {
     expect(Array.from(root.querySelectorAll('.own-connector')).map((node) => node.getAttribute('data-first'))).toEqual(['true', 'false']);
   });
 });
+
+@Component({
+  imports: [TxTimeline],
+  template: `<tx-timeline id="none" [value]="null" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class NullHost {}
+
+describe('TxTimeline without a value', () => {
+  it('draws no events for a missing list', async () => {
+    const fixture = TestBed.createComponent(NullHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelectorAll('#none li')).toHaveLength(0);
+  });
+});
+
+describe('TxTimeline recompiled by TestBed', () => {
+  it('still finds its templates when a test overrides the component', async () => {
+    TestBed.overrideComponent(TxTimeline, { set: { styles: [] } });
+    const plain = TestBed.createComponent(Host);
+    plain.autoDetectChanges();
+    await plain.whenStable();
+    expect(plain.nativeElement.querySelectorAll('.status')).toHaveLength(3);
+    expect(plain.nativeElement.querySelectorAll('.date')).toHaveLength(3);
+    const templates = TestBed.createComponent(TemplatesHost);
+    templates.autoDetectChanges();
+    await templates.whenStable();
+    expect(templates.nativeElement.querySelectorAll('.own-marker')).toHaveLength(3);
+    expect(templates.nativeElement.querySelectorAll('.own-connector')).toHaveLength(2);
+  });
+});
+

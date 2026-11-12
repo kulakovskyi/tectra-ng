@@ -41,4 +41,9 @@ describe('provideTxTitle', () => {
     await TestBed.inject(Router).navigateByUrl('/orders');
     expect(TestBed.inject(Title).getTitle()).toBe('Замовлення — Console');
   });
+  it('takes a plain translated string', async () => {
+    TestBed.configureTestingModule({ providers: [provideRouter(routes), provideTxTitle({ appName: 'Console', translate: (page) => page.toUpperCase() })] });
+    await TestBed.inject(Router).navigateByUrl('/orders');
+    expect(TestBed.inject(Title).getTitle()).toBe('ORDERS · Console');
+  });
 });

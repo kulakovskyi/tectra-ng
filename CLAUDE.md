@@ -37,7 +37,7 @@ apps/docs       docs site (port 4300), content in apps/docs/src/content/componen
 apps/sandbox    playground (port 4301)
 e2e/visual      Playwright checks of the built docs (port 4310)
 e2e/ng-add      `ng new` + `ng add tectra-ng` from the packed packages, built and checked with Playwright (port 4330, `TX_NG_ADD_PORT` to change); also builds the "Open in StackBlitz" projects of a few docs examples on that install (needs the built docs, served on 4331)
-tools/          bundle-size (budgets per scenario on a new app), registry-builder (docs registry), site-files (sitemap, robots, llms.txt, component .md, 404 after the docs build), brand (favicons, social preview), icons, flags, export-font, serve-docs
+tools/          bundle-size (budgets per scenario on a new app), registry-builder (docs registry), site-files (sitemap, robots, llms.txt, component .md, 404 after the docs build), link-check (links of the READMEs and the built docs), coverage (coverage table and badge), brand (favicons, social preview), icons, flags, export-font, serve-docs
 ```
 
 Aliases are wildcards in `tsconfig.base.json` (`@tectra-ng/ui/*` → `./packages/ui/*/index.ts`) — a new entry point needs no alias. Module boundaries (`eslint.config.mjs`, tags `pkg:*`): tokens → nothing; themes → tokens; core → themes, tokens; ui → core, icons, themes, tokens; qr → nothing; editor → ui + below; code-editor → ui + below; charts → ui + below; utils → ui + below; blocks → utils, code-editor, ui + below and qr. A ui entry point may import another ui entry point through its alias.
@@ -58,6 +58,9 @@ Prefix Nx commands with `NX_DAEMON=false NX_NO_CLOUD=true`.
 |---|---|
 | Lint (must be clean, also warnings) | `npm run lint` |
 | Unit tests | `npm run test` |
+| Link check of every Markdown file and the built docs (after the docs build; `--offline` skips external addresses, as on pull requests; the weekly `links` workflow checks them all) | `npm run links` |
+| Tests of the tools (`node:test`, no dependencies) | `npm run test:tools` |
+| Coverage table of all packages (after `npm run test`; CI job summary, badge JSON in `coverage/badge`) | `npm run coverage:report` |
 | e2e (builds docs, serves on 4310, `TX_E2E_PORT` to change) | `npm run e2e` |
 | e2e of `ng add tectra-ng` and of the StackBlitz projects (after `build:packages` and `docs:build`; `ng new` + `ng add` from the packed packages in the OS temp folder, `TX_NG_ADD_DIR` to change) | `npm run e2e:ng-add` |
 | Bundle size budgets (after `npm run e2e:ng-add`; `size:update` to raise them on purpose) | `npm run size` |
@@ -89,7 +92,7 @@ Install packages with `npm i …`; `.npmrc` sets `legacy-peer-deps=true` (npm ar
 - Styles: tokens through `var(--tx-…)` only — no hard-coded colours, sizes come from tokens. Motion respects `prefers-reduced-motion`.
 - Accessibility is part of done: keyboard map in the README, ARIA roles/states, axe clean in light and dark.
 - Server rendering: every component renders on the server exactly as in the browser — the docs pages are prerendered and hydrated, and apps may use SSR. No `window`, `document`, `DOMParser`, `requestAnimationFrame` or `ResizeObserver` outside the browser: take `DOCUMENT`, put browser-only work in `afterNextRender`. Anything that changes the first paint (classes, insets, label checks) is decided from inputs or in `ngAfterViewInit`, not only after `afterNextRender`, or the page jumps after hydration. The server DOM has no `append` / `replaceWith` / `replaceChildren`: use `appendChild` / `insertBefore` / `replaceChild`.
-- Unit test coverage is at least 95% for statements, branches, functions and lines in every package with tests (`coverageThresholds` of the `test` target, ROADMAP stage 14). New or changed code comes with the specs that keep its package there — never lower a threshold or exclude files to pass; until the thresholds are set everywhere, at least do not lower a package's coverage.
+- Unit test coverage is at least 95% for statements, branches, functions and lines in every package with tests (`coverageThresholds` of the `test` target, ROADMAP stage 14; only specs, `index.ts`, test setup and `generated/` data are excluded). New or changed code comes with the specs that keep its package there — never lower a threshold or exclude files to pass. Specs run in one shared jsdom (not isolated): restore every global you stub (`vi.stubGlobal` + `vi.unstubAllGlobals`, never assign `globalThis.X = original` when `X` was missing) and leave no pending rejected promise or timer behind.
 - e2e: import `test` / `expect` from `e2e/visual/fixtures.ts` — `goto` and `reload` wait for hydration. An asset named `missing-*` (a broken image on purpose) may 404 without failing the console check.
 - e2e geometry: the scrollbar takes ~10px of the window in CI (Linux) and on Windows, 0px on macOS. Compare positions with `layoutViewport(page)` from `e2e/visual/helpers.ts`, not `page.viewportSize()` / `innerWidth` (ESLint blocks them). Details in the `verify` skill.
 

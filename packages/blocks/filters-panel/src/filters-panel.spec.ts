@@ -1,4 +1,6 @@
+import { CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, input, signal, viewChild } from '@angular/core';
+import { By } from '@angular/platform-browser';
 import { TxFluid, injectFluid } from '@tectra-ng/core/fluid';
 import { TestBed } from '@angular/core/testing';
 import { TxFilterField, TxFiltersReset } from './filter-field.directive';
@@ -15,6 +17,7 @@ const STATE_KEY = 'tx-spec-filters';
       #panel
       ariaLabel="Orders"
       [stateKey]="stateKey()"
+      [stateStorage]="stateStorage()"
       [defaultVisible]="2"
       [busy]="busy()"
       [variant]="variant()"
@@ -41,6 +44,7 @@ const STATE_KEY = 'tx-spec-filters';
 class Host {
   readonly panel = viewChild.required<TxFiltersPanel>('panel');
   readonly stateKey = signal<string | undefined>(undefined);
+  readonly stateStorage = signal<'local' | 'session'>('local');
   readonly busy = signal(false);
   readonly variant = signal<'card' | 'plain'>('card');
   readonly search = signal('');
@@ -297,5 +301,265 @@ describe('hasFilterValue', () => {
     expect(pipe.transform(false)).toBe(true);
     expect(pipe.transform('', ['a'])).toBe(true);
     expect(hasFilterValue(' x ')).toBe(true);
+  });
+});
+
+@Component({
+  imports: [TxFilterField],
+  template: `<div txFilterField="alone" filterLabel="Alone"><input aria-label="Alone" /></div>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class LooseFieldHost {}
+
+function mockMedia(state: { narrow: boolean; reduced: boolean }) {
+  const listeners: (() => void)[] = [];
+  const original = window.matchMedia;
+  window.matchMedia = ((query: string) => ({
+    get matches() {
+      return query.includes('reduce') ? state.reduced : state.narrow;
+    },
+    media: query,
+    addEventListener: (_type: string, listener: () => void) => listeners.push(listener),
+    removeEventListener: () => undefined,
+  })) as unknown as typeof window.matchMedia;
+  return {
+    change: () => listeners.forEach((listener) => listener()),
+    restore: () => {
+      window.matchMedia = original;
+    },
+  };
+}
+
+describe('TxFiltersPanel folding, storage and menu edges', () => {
+  beforeEach(() => {
+    localStorage.clear();
+    sessionStorage.clear();
+  });
+  afterEach(() => {
+    vi.restoreAllMocks();
+    vi.useRealTimers();
+    document.querySelectorAll('.cdk-overlay-container').forEach((node) => node.remove());
+  });
+
+  async function setup(prepare?: (host: Host) => void) {
+    const fixture = TestBed.createComponent(Host);
+    prepare?.(fixture.componentInstance);
+    await fixture.whenStable();
+    const root = fixture.nativeElement.querySelector('tx-filters-panel') as HTMLElement;
+    return { fixture, host: fixture.componentInstance, root };
+  }
+
+  it('animates the fold closed on a narrow screen until the animation or the fallback ends', async () => {
+    const media = mockMedia({ narrow: true, reduced: false });
+    try {
+      const { fixture, host, root } = await setup();
+      const panel = host.panel();
+      const panelElement = root.querySelector('.tx-filters-panel__panel') as HTMLElement;
+      panel.setExpanded(true);
+      panel.setExpanded(true);
+      expect(host.expansions).toEqual([true]);
+
+      panel.setExpanded(false);
+      fixture.detectChanges();
+      expect(root.classList).toContain('tx-filters-panel--closing');
+      panelElement.querySelector('.tx-filter-field')?.dispatchEvent(new Event('animationend', { bubbles: true }));
+      fixture.detectChanges();
+      expect(root.classList).toContain('tx-filters-panel--closing');
+      panelElement.dispatchEvent(new Event('animationend'));
+      fixture.detectChanges();
+      expect(root.classList).not.toContain('tx-filters-panel--closing');
+      panelElement.dispatchEvent(new Event('animationend'));
+      expect(root.classList).not.toContain('tx-filters-panel--closing');
+
+      vi.useFakeTimers();
+      panel.setExpanded(true);
+      panel.setExpanded(false);
+      fixture.detectChanges();
+      expect(root.classList).toContain('tx-filters-panel--closing');
+      vi.advanceTimersByTime(400);
+      fixture.detectChanges();
+      expect(root.classList).not.toContain('tx-filters-panel--closing');
+    } finally {
+      media.restore();
+    }
+  });
+
+  it('closes without the animation when motion is reduced and unfolds once the screen grows', async () => {
+    const state = { narrow: true, reduced: true };
+    const media = mockMedia(state);
+    try {
+      const { fixture, host, root } = await setup();
+      const panel = host.panel();
+      panel.setExpanded(true);
+      panel.setExpanded(false);
+      fixture.detectChanges();
+      expect(root.classList).not.toContain('tx-filters-panel--closing');
+
+      panel.setExpanded(true);
+      media.change();
+      expect(panel.expanded()).toBe(true);
+      state.narrow = false;
+      media.change();
+      await fixture.whenStable();
+      expect(panel.folded()).toBe(false);
+      expect(panel.expanded()).toBe(false);
+      expect(root.classList).not.toContain('tx-filters-panel--expanded');
+      expect(host.expansions).toEqual([true, false, true, false]);
+    } finally {
+      media.restore();
+    }
+  });
+
+  it('stays open for clicks and Escape that come from an overlay or a detached node', async () => {
+    const { fixture, host, root } = await setup();
+    const panel = host.panel();
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    expect(host.expansions).toEqual([]);
+
+    (root.querySelector('.tx-filters-panel__toggle') as HTMLButtonElement).click();
+    await fixture.whenStable();
+    const overlay = document.createElement('div');
+    overlay.className = 'cdk-overlay-container';
+    const inside = document.createElement('button');
+    overlay.appendChild(inside);
+    document.body.appendChild(overlay);
+    inside.click();
+    inside.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    const detached = document.createElement('button');
+    detached.addEventListener('click', () => detached.remove());
+    document.body.appendChild(detached);
+    detached.click();
+    expect(panel.expanded()).toBe(true);
+
+    root.querySelector('.tx-filters-panel__toggle')?.dispatchEvent(new Event('focus'));
+    (document.activeElement as HTMLElement | null)?.blur();
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    await fixture.whenStable();
+    expect(panel.expanded()).toBe(false);
+    expect(document.activeElement).toBe(document.body);
+  });
+
+  it('keeps the layout in memory without a state key and ignores moves out of range', async () => {
+    const { host } = await setup();
+    const panel = host.panel();
+    expect(panel.customizable()).toBe(false);
+    expect(panel.options().map((option) => option.visible)).toEqual([true, true, false]);
+    expect(panel.fieldOrder('search')).toBeNull();
+
+    panel.move('missing', 1);
+    panel.move('search', -1);
+    panel.move('owner', 1);
+    panel.toggle('missing');
+    expect(host.layouts).toEqual([]);
+
+    panel.toggle('owner');
+    expect(host.layouts).toEqual([
+      { order: ['search', 'status', 'owner'], visible: ['search', 'status', 'owner'] },
+    ]);
+    expect(localStorage.length).toBe(0);
+  });
+
+  it('reads a stored object layout from session storage and survives broken values', async () => {
+    sessionStorage.setItem(STATE_KEY, JSON.stringify({ order: ['owner', 7], visible: ['owner'] }));
+    const { fixture, host } = await setup((host) => host.stateKey.set(STATE_KEY));
+    const panel = host.panel();
+    expect(panel.options().map((option) => option.key)).toEqual(['search', 'status', 'owner']);
+
+    host.stateStorage.set('session');
+    host.stateKey.set(undefined);
+    await fixture.whenStable();
+    host.stateKey.set(STATE_KEY);
+    await fixture.whenStable();
+    expect(panel.options().map((option) => [option.key, option.visible])).toEqual([
+      ['owner', true],
+      ['search', false],
+      ['status', false],
+    ]);
+
+    panel.toggle('search');
+    expect(JSON.parse(sessionStorage.getItem(STATE_KEY) ?? 'null')).toEqual({
+      order: ['owner', 'search', 'status'],
+      visible: ['owner', 'search'],
+    });
+
+    const layoutFor = async (value: string) => {
+      sessionStorage.setItem('tx-spec-broken', value);
+      host.stateKey.set('tx-spec-broken');
+      await fixture.whenStable();
+      const options = panel.options().map((option) => [option.key, option.visible]);
+      host.stateKey.set(STATE_KEY);
+      await fixture.whenStable();
+      return options;
+    };
+    const defaults = [
+      ['search', true],
+      ['status', true],
+      ['owner', false],
+    ];
+    expect(await layoutFor('{oops')).toEqual(defaults);
+    expect(await layoutFor('42')).toEqual(defaults);
+    expect(await layoutFor(JSON.stringify({ order: 'owner', visible: 'owner' }))).toEqual(defaults);
+  });
+
+  it('falls back to the defaults when the storage cannot be used', async () => {
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new Error('quota');
+    });
+    const { host } = await setup((host) => host.stateKey.set(STATE_KEY));
+    const panel = host.panel();
+    panel.toggle('owner');
+    expect(host.layouts).toHaveLength(1);
+    expect(panel.options().every((option) => option.visible)).toBe(true);
+
+    vi.spyOn(window, 'localStorage', 'get').mockImplementation(() => {
+      throw new Error('blocked');
+    });
+    panel.reset();
+    expect(host.layouts.at(-1)).toBeNull();
+    expect(panel.options().map((option) => option.visible)).toEqual([true, true, false]);
+  });
+
+  it('reorders the menu with Alt and ArrowDown and with a drop on the list', async () => {
+    const { fixture, host, root } = await setup((host) => host.stateKey.set(STATE_KEY));
+    (root.querySelector('.tx-filters-panel__menu-button') as HTMLButtonElement).click();
+    await fixture.whenStable();
+    const menu = document.querySelector('.tx-filters-panel-menu') as HTMLElement;
+    const row = (key: string) => menu.querySelector(`[data-key="${key}"]`) as HTMLButtonElement;
+    row('search').dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true, bubbles: true }));
+    await fixture.whenStable();
+    expect(host.panel().options().map((option) => option.key)).toEqual(['status', 'search', 'owner']);
+    expect(document.activeElement).toBe(row('search'));
+
+    row('owner').focus();
+    row('owner').dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true }));
+    expect(document.activeElement).toBe(row('owner'));
+    row('owner').dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', bubbles: true }));
+    expect(document.activeElement).toBe(row('status'));
+
+    const list = fixture.debugElement.query(By.directive(CdkDropList)).injector.get(CdkDropList);
+    list.dropped.emit({ previousIndex: 1, currentIndex: 1 } as CdkDragDrop<unknown>);
+    expect(host.layouts).toHaveLength(1);
+    list.dropped.emit({ previousIndex: 2, currentIndex: 0 } as CdkDragDrop<unknown>);
+    expect(host.layouts.at(-1)).toEqual({ order: ['owner', 'status', 'search'], visible: ['search', 'status'] });
+  });
+
+  it('lets a filter field work outside a panel', async () => {
+    const fixture = TestBed.createComponent(LooseFieldHost);
+    await fixture.whenStable();
+    const element = fixture.nativeElement.querySelector('.tx-filter-field') as HTMLElement;
+    const directive = fixture.debugElement.query(By.directive(TxFilterField)).injector.get(TxFilterField);
+    expect(directive.hidden()).toBe(false);
+    expect(directive.order()).toBeNull();
+    expect(element.hasAttribute('hidden')).toBe(false);
+    expect(element.style.order).toBe('');
+  });
+
+  it('keeps the layout in memory when the window has no storage', async () => {
+    vi.spyOn(window, 'localStorage', 'get').mockReturnValue(null as unknown as Storage);
+    const { host } = await setup((host) => host.stateKey.set(STATE_KEY));
+    const panel = host.panel();
+    panel.toggle('owner');
+    expect(panel.options().every((option) => option.visible)).toBe(true);
+    expect(host.layouts).toHaveLength(1);
   });
 });

@@ -10,6 +10,7 @@ import { TxCard } from './card.component';
       Visitors grew 12%.
       <div txCardFooter><button>Open</button></div>
     </tx-card>
+    <tx-card id="plain">Only content</tx-card>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -36,4 +37,11 @@ describe('TxCard', () => {
     expect(el('#report .tx-card__footer button')).not.toBeNull();
     expect(el('#report .tx-card__body').classList).toContain('own');
   });
+
+  it('leaves out the title and subtitle when not given', () => {
+    expect(el('#plain .tx-card__title')).toBeNull();
+    expect(el('#plain .tx-card__subtitle')).toBeNull();
+    expect(el('#plain .tx-card__content').textContent).toContain('Only content');
+  });
 });
+

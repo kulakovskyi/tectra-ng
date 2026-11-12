@@ -56,6 +56,7 @@ describe('paginator utils', () => {
     expect(pageCountOf(5, 0)).toBe(1);
     expect(firstToPage(25, 10)).toBe(2);
     expect(pageToFirst(3, 20)).toBe(60);
+    expect(firstToPage(25, 0)).toBe(0);
   });
 
   it('keeps a window of page links around the current page', () => {
@@ -244,6 +245,40 @@ describe('TxPaginator', () => {
     expect(el('.end').textContent).toBe('of 12');
   });
 
+  it('keeps the page size options as given when they contain the rows', async () => {
+    host.options.set([5, 10]);
+    await fixture.whenStable();
+    const paginator = fixture.debugElement.children[0].componentInstance as TxPaginator;
+    expect(paginator.rowsPerPageItems()).toEqual([
+      { label: '5', value: 5 },
+      { label: '10', value: 10 },
+    ]);
+  });
+
+  it('reports zeros for an empty list', async () => {
+    host.report.set(true);
+    host.reportTemplate.set('{currentPage}/{totalPages}: {first}-{last}');
+    host.total.set(0);
+    await fixture.whenStable();
+    expect(el('.tx-paginator__report').textContent?.trim()).toBe('0/0: 0-0');
+  });
+
+  it('ignores pages out of range, page sizes that change nothing and any change while disabled', async () => {
+    const paginator = fixture.debugElement.children[0].componentInstance as TxPaginator;
+    paginator.changePage(-1);
+    paginator.changePage(12);
+    paginator.changeRows(null);
+    paginator.changeRows(0);
+    paginator.changeRows(10);
+    host.disabled.set(true);
+    await fixture.whenStable();
+    paginator.changePage(3);
+    await fixture.whenStable();
+    expect(host.changes).toEqual([]);
+    expect(host.first()).toBe(0);
+    expect(host.rows()).toBe(10);
+  });
+
   it('applies dt and pt', () => {
     expect(root().style.getPropertyValue('--tx-paginator-nav-button-border-radius')).toBe('50%');
     expect(el('nav').classList).toContain('own-bar');
@@ -268,3 +303,41 @@ describe('TxPaginator unstyled', () => {
     expect(root.querySelectorAll('.tx-paginator__page')).toHaveLength(3);
   });
 });
+
+@Component({
+  imports: [TxPaginator],
+  template: `<tx-paginator [rows]="10" [totalRecords]="30" [compactBreakpoint]="null" showJumpToPageDropdown />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class DropdownHost {}
+
+describe('TxPaginator with a page dropdown', () => {
+  afterEach(() => document.querySelector('.cdk-overlay-container')?.remove());
+
+  it('lists every page in the dropdown and never goes compact without a breakpoint', async () => {
+    const fixture = TestBed.createComponent(DropdownHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    const paginator = fixture.debugElement.children[0].componentInstance as TxPaginator;
+    expect(paginator.jumpToPageItems()).toEqual([
+      { label: '1', value: 0 },
+      { label: '2', value: 1 },
+      { label: '3', value: 2 },
+    ]);
+    expect(fixture.nativeElement.querySelector('.tx-paginator__jump-dropdown')).not.toBeNull();
+    expect(paginator.compact()).toBe(false);
+    expect(fixture.nativeElement.querySelector('.tx-paginator__first')).not.toBeNull();
+  });
+});
+
+describe('TxPaginator recompiled by TestBed', () => {
+  it('still finds its start and end templates when a test overrides the component', async () => {
+    TestBed.overrideComponent(TxPaginator, { set: { styles: [] } });
+    const fixture = TestBed.createComponent(Host);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('.start').textContent).toBe('page 0');
+    expect(fixture.nativeElement.querySelector('.end').textContent).toBe('of 12');
+  });
+});
+

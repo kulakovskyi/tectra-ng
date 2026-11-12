@@ -20,6 +20,9 @@
     "size": "node tools/bundle-size/check-bundle-size.mjs",
     "size:update": "node tools/bundle-size/check-bundle-size.mjs --update",
     "lint": "eslint .",
+    "coverage:report": "node tools/coverage/coverage-report.mjs",
+    "links": "node tools/link-check/check-links.mjs",
+    "test:tools": "node --test \"tools/**/*.test.mjs\"",
     "format:examples": "prettier --write \"apps/docs/src/content/**/*.example.ts\""
   },
   "dependencies": {

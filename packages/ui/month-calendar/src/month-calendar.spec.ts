@@ -50,6 +50,19 @@ class Host {
   clicked: string[] = [];
 }
 
+@Component({
+  imports: [TxMonthCalendar],
+  template: `<tx-month-calendar [events]="events" [markers]="markers" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class DefaultsHost {
+  readonly events: TxMonthCalendarEvent[] = [
+    { id: 'bad', start: 'nope', title: 'Broken', tone: 'neutral' },
+    { id: 'ok', start: '2026-03-12', title: 'Kept', tone: 'info' },
+  ];
+  readonly markers: TxMonthCalendarMarker[] = [{ date: '', tone: 'warn', label: 'Lost' }];
+}
+
 describe('month calendar layout', () => {
   it('turns dates into day indexes and back', () => {
     const index = dayIndex('2026-10-05') as number;
@@ -77,6 +90,20 @@ describe('month calendar layout', () => {
     expect(second.segments.find((segment) => segment.event.id === 'e')).toMatchObject({ startsHere: true, endsHere: false });
     expect(weeks[3].days.find((day) => day.key === '2026-10-20')?.markers[0].label).toBe('Deadline');
     expect(weeks[2].days.find((day) => day.today)?.key).toBe('2026-10-15');
+  });
+
+  it('skips events and markers without a valid date', () => {
+    const weeks = buildMonthLayout({
+      month: new Date(2026, 9, 1),
+      events: [{ id: 'x', start: 'nope', title: 'Broken', tone: 'neutral' }],
+      markers: [{ date: 'nope', tone: 'warn', label: 'Lost' }],
+      selectedDate: null,
+      today: new Date(2026, 9, 15),
+      weekStartsOn: 0,
+      maxLanes: 3,
+    });
+    expect(weeks.flatMap((week) => week.segments)).toEqual([]);
+    expect(weeks.flatMap((week) => week.days).some((item) => item.markers.length)).toBe(false);
   });
 
   it('names weekdays from the week start', () => {
@@ -150,5 +177,51 @@ describe('TxMonthCalendar', () => {
     await fixture.whenStable();
     expect(root().querySelectorAll('.tx-month-calendar__week')).toHaveLength(5);
     expect(root().querySelectorAll('.tx-month-calendar__event')).toHaveLength(0);
+  });
+});
+
+describe('TxMonthCalendar defaults', () => {
+  afterEach(() => vi.useRealTimers());
+
+  it('falls back to the current month, the locale week start and the first day in the month', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date(2026, 2, 10, 9, 0));
+    const fixture = TestBed.createComponent(DefaultsHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    const root = fixture.nativeElement as HTMLElement;
+    expect(root.querySelector('[role="columnheader"]')?.textContent?.trim()).toContain('Sun');
+    expect(root.querySelector('[aria-current="date"]')?.getAttribute('data-day-key')).toBe('2026-03-10');
+    expect(root.querySelector('[tabindex="0"]')?.getAttribute('data-day-key')).toBe('2026-03-10');
+    expect(root.querySelectorAll('.tx-month-calendar__event')).toHaveLength(1);
+    expect(root.querySelector('tx-pill')).toBeNull();
+  });
+
+  it('focuses the first day of the month when today is elsewhere and ignores other keys', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date(2026, 2, 10, 9, 0));
+    const fixture = TestBed.createComponent(TxMonthCalendar);
+    fixture.componentRef.setInput('month', new Date(2026, 5, 1));
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    const root = fixture.nativeElement as HTMLElement;
+    const first = root.querySelector('[tabindex="0"]') as HTMLButtonElement;
+    expect(first.getAttribute('data-day-key')).toBe('2026-06-01');
+    const tab = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true });
+    first.dispatchEvent(tab);
+    expect(tab.defaultPrevented).toBe(false);
+    const corner = root.querySelector('[data-day-key="2026-05-31"]') as HTMLButtonElement;
+    corner.focus();
+    const up = new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true, cancelable: true });
+    corner.dispatchEvent(up);
+    await fixture.whenStable();
+    expect(up.defaultPrevented).toBe(true);
+    expect(document.activeElement).toBe(corner);
+    expect(first.getAttribute('tabindex')).toBe('0');
+  });
+
+  it('accepts any context in the event template guard', () => {
+    expect(TxMonthCalendarEventTemplate.ngTemplateContextGuard({} as TxMonthCalendarEventTemplate, {})).toBe(true);
+    expect(TxMonthCalendarEventTemplate.ngTemplateContextGuard({} as TxMonthCalendarEventTemplate, null)).toBe(false);
   });
 });

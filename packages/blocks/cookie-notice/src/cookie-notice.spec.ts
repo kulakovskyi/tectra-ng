@@ -45,3 +45,49 @@ describe('TxCookieNotice', () => {
     expect(again.nativeElement.querySelector('[role="region"]')).not.toBeNull();
   });
 });
+
+@Component({
+  imports: [TxCookieNotice],
+  template: `<tx-cookie-notice cookieName="test-shared" sharedDomain="example.com" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class SharedHost {
+  readonly notice = viewChild.required(TxCookieNotice);
+}
+
+describe('TxCookieNotice on another host', () => {
+  beforeEach(() => TestBed.configureTestingModule({ providers: [provideRouter([])] }));
+  afterEach(() => {
+    document.cookie = 'test-shared=; max-age=0; path=/';
+  });
+
+  it('keeps the cookie on the current host when it is outside the shared domain', async () => {
+    const fixture = TestBed.createComponent(SharedHost);
+    await fixture.whenStable();
+    const writes: string[] = [];
+    const descriptor = Object.getOwnPropertyDescriptor(Document.prototype, 'cookie') as PropertyDescriptor;
+    vi.spyOn(document, 'cookie', 'set').mockImplementation((value: string) => {
+      writes.push(value);
+      descriptor.set?.call(document, value);
+    });
+    fixture.componentInstance.notice().dismiss();
+    vi.restoreAllMocks();
+    expect(writes).toHaveLength(1);
+    expect(writes[0]).toMatch(/^test-shared=1; max-age=\d+; path=\/; samesite=lax$/);
+    expect(document.cookie).toContain('test-shared=1');
+  });
+});
+
+describe('TxCookieNotice with no router provided', () => {
+  afterEach(() => {
+    document.cookie = 'test-notice=; max-age=0; path=/';
+  });
+
+  it('renders without a router link instead of failing', async () => {
+    const fixture = TestBed.createComponent(Host);
+    await fixture.whenStable();
+    const root = fixture.nativeElement.querySelector('tx-cookie-notice') as HTMLElement;
+    expect(root.querySelector('[role="region"]')).not.toBeNull();
+    expect(root.querySelector('.tx-cookie-notice__link')).toBeNull();
+  });
+});

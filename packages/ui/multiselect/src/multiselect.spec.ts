@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { TxSelectItem } from '@tectra-ng/ui/select';
 import { TxMultiselect } from './multiselect.component';
 import { TxMultiselectChangeEvent, TxMultiselectDisplay } from './multiselect.types';
 
@@ -164,6 +165,56 @@ describe('TxMultiselect', () => {
     expect(trigger().textContent?.trim()).toBe('Tags');
   });
 
+  it('keeps showing a selected option that the filter hides and drops unknown values', () => {
+    host.filter.set(true);
+    render();
+    open();
+    options()[0].click();
+    render();
+    const search = document.querySelector('.tx-select__filter-input') as HTMLInputElement;
+    search.value = 'back';
+    search.dispatchEvent(new Event('input'));
+    render();
+    expect(options().map((option) => option.textContent?.trim())).toEqual(['Backend']);
+    expect(trigger().textContent).toContain('Design');
+    search.value = 'zzz';
+    search.dispatchEvent(new Event('input'));
+    render();
+    key(search, 'Enter');
+    expect(trigger().getAttribute('aria-expanded')).toBe('true');
+    host.control.setValue(['ghost', 'frontend']);
+    render();
+    expect(trigger().textContent?.trim()).toBe('Frontend');
+  });
+
+  it('opens on a typed letter, ignores Backspace without chips and unselects a disabled option', () => {
+    host.display.set('chip');
+    render();
+    key(trigger(), 'Backspace');
+    expect(host.changes).toEqual([]);
+    key(trigger(), 'b');
+    expect(trigger().getAttribute('aria-expanded')).toBe('true');
+    const multiselect = fixture.debugElement.query((node) => node.componentInstance instanceof TxMultiselect).componentInstance as TxMultiselect;
+    const archive = (selected: boolean): TxSelectItem => ({ type: 'option', id: 'archive', index: 3, label: 'Archive', value: 'archive', option: host.options[3], selected, disabled: true });
+    multiselect.toggleItem(archive(false));
+    expect(host.control.value).toBeNull();
+    host.control.setValue(['archive']);
+    render();
+    multiselect.toggleItem(archive(true));
+    expect(host.control.value).toEqual([]);
+  });
+
+  it('does not remove chips while disabled', () => {
+    host.display.set('chip');
+    host.control.setValue(['design']);
+    host.control.disable();
+    render();
+    const multiselect = fixture.debugElement.query((node) => node.componentInstance instanceof TxMultiselect).componentInstance as TxMultiselect;
+    const event = new MouseEvent('click');
+    multiselect.removeItem(multiselect.selectedItems()[0], event);
+    expect(host.control.value).toEqual(['design']);
+  });
+
   it('hides the toggle and drops styles when asked', () => {
     host.toggleAll.set(false);
     host.unstyled.set(true);
@@ -194,3 +245,16 @@ describe('TxMultiselect texts', () => {
     expect(all.querySelector('.tx-multiselect__count')?.textContent?.trim()).toBe('0/3');
   });
 });
+
+describe('TxMultiselect recompiled by TestBed', () => {
+  afterEach(() => document.querySelector('.cdk-overlay-container')?.replaceChildren());
+
+  it('still binds to a form control when a test overrides the component', () => {
+    TestBed.overrideComponent(TxMultiselect, { set: { styles: [] } });
+    const fixture = TestBed.createComponent(Host);
+    fixture.componentInstance.control.setValue(['backend']);
+    fixture.detectChanges();
+    expect((fixture.nativeElement.querySelector('.tx-select__trigger') as HTMLElement).textContent).toContain('Backend');
+  });
+});
+

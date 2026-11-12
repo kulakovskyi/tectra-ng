@@ -131,7 +131,7 @@ export class TxSankeyChart {
     if (!active) return null;
     if (active.kind === 'link') {
       const link = layout.links[active.index];
-      return { links: new Set([link.index]), nodes: new Set([link.source.index, link.target.index]) };
+      return link ? { links: new Set([link.index]), nodes: new Set([link.source.index, link.target.index]) } : null;
     }
     const links = layout.links.filter((link) => link.source.index === active.index || link.target.index === active.index);
     return { links: new Set(links.map((link) => link.index)), nodes: new Set([active.index, ...links.flatMap((link) => [link.source.index, link.target.index])]) };

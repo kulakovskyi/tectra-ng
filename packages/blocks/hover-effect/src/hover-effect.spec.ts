@@ -62,3 +62,30 @@ describe('TxHoverEffect', () => {
     expect(off.layer.style.getPropertyValue('--tx-hover-effect-y')).toBe('0deg');
   });
 });
+
+@Component({
+  imports: [TxHoverEffect],
+  template: `<tx-hover-effect [constrain]="0"><div class="card">Card</div></tx-hover-effect>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class FreeHost {}
+
+describe('TxHoverEffect without a constraint', () => {
+  afterEach(() => vi.restoreAllMocks());
+
+  it('tilts by the raw offset when constrain is zero', async () => {
+    vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {
+      callback(0);
+      return 1;
+    });
+    const fixture = TestBed.createComponent(FreeHost);
+    await fixture.whenStable();
+    const root = fixture.nativeElement.querySelector('tx-hover-effect') as HTMLElement;
+    const layer = root.querySelector('.tx-hover-effect__layer') as HTMLElement;
+    vi.spyOn(layer, 'getBoundingClientRect').mockReturnValue({ x: 0, y: 0, width: 20, height: 10 } as DOMRect);
+    move(root, 12, 3);
+    await fixture.whenStable();
+    expect(layer.style.getPropertyValue('--tx-hover-effect-x')).toBe('2deg');
+    expect(layer.style.getPropertyValue('--tx-hover-effect-y')).toBe('2deg');
+  });
+});

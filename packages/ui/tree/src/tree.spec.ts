@@ -1,10 +1,12 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { TxMenuItem } from '@tectra-ng/ui/menu';
-import { TxTree } from './tree.component';
-import { TxTreeNodeTemplate } from './tree.templates';
-import { TxTreeFilterMode, TxTreeNode, TxTreeNodeDropEvent, TxTreeSelection, TxTreeSelectionMode } from './tree.types';
-import { filterTree, moveNode, normalizeChecked, scopesMatch } from './tree.utils';
+import { TxTreeDragService } from './tree-drag.service';
+import { TxTree, TxTreeRow } from './tree.component';
+import { TxTreeCheckboxIcon, TxTreeEmpty, TxTreeFilter, TxTreeFooter, TxTreeHeader, TxTreeLoading, TxTreeNodeTemplate, TxTreeToggleIcon } from './tree.templates';
+import { TxTreeFilterEvent, TxTreeFilterMode, TxTreeLoadingMode, TxTreeNode, TxTreeNodeDropEvent, TxTreeNodeEvent, TxTreeScope, TxTreeSelection, TxTreeSelectionMode } from './tree.types';
+import { descendantKeys, filterTree, insertNode, isDescendantOf, moveNode, nodeMatches, normalizeChecked, scopesMatch } from './tree.utils';
 
 const TREE: TxTreeNode[] = [
   {
@@ -32,6 +34,7 @@ const TREE: TxTreeNode[] = [
     [metaKeySelection]="meta()"
     [filter]="filter()"
     [filterMode]="filterMode()"
+    [filterInputAutoFocus]="autoFocus()"
     [contextMenu]="menu()"
     [draggableNodes]="drag()"
     [droppableNodes]="drag()"
@@ -60,6 +63,7 @@ class Host {
   readonly drag = signal(false);
   readonly validate = signal(false);
   readonly virtual = signal(false);
+  readonly autoFocus = signal(false);
   expandedEvents: string[] = [];
   selected: string[] = [];
   drops: TxTreeNodeDropEvent[] = [];
@@ -294,6 +298,289 @@ describe('TxTree', () => {
     await key('End', item('n0'));
     expect(focused()).toBe('n199');
   });
+
+  const tree = () => fixture.debugElement.query(By.directive(TxTree)).componentInstance as TxTree;
+
+  it('handles Up, Enter, typing without a match and keys from inner elements', async () => {
+    item('photos').dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));
+    await render();
+    expect(focused()).toBe('docs');
+    await key('Enter', item('docs'));
+    expect((host.selection() as TxTreeNode).key).toBe('docs');
+    await key('z', item('docs'));
+    expect(focused()).toBe('docs');
+    await key('p', item('docs'), { ctrlKey: true });
+    expect(focused()).toBe('docs');
+    await key('ArrowDown', item('docs').querySelector('.tx-tree__toggler') as HTMLElement);
+    expect(focused()).toBe('docs');
+    await key('F10', item('docs'));
+    expect(fixture.nativeElement.querySelector('.tx-tree__content--context')).toBeNull();
+  });
+
+  it('ignores keys on rows of a collapsed branch and unmounts them after the transition', async () => {
+    await toggle('docs');
+    await toggle('docs');
+    const cv = item('cv');
+    expect(cv).not.toBeNull();
+    await key('ArrowDown', cv);
+    expect(focused()).not.toBe('tax');
+    const collapse = item('docs').parentElement?.querySelector('.tx-tree__collapse') as HTMLElement;
+    const transition = (target: HTMLElement, propertyName: string) => {
+      const event = new Event('transitionend', { bubbles: true });
+      Object.defineProperty(event, 'propertyName', { value: propertyName });
+      target.dispatchEvent(event);
+    };
+    transition(collapse.querySelector('.tx-tree__collapse-inner') as HTMLElement, 'grid-template-rows');
+    transition(collapse, 'opacity');
+    await render();
+    expect(item('cv')).not.toBeNull();
+    transition(collapse, 'grid-template-rows');
+    await render();
+    expect(item('cv')).toBeNull();
+  });
+
+  it('keeps an open branch mounted when its transition ends', async () => {
+    await toggle('docs');
+    const collapse = item('docs').parentElement?.querySelector('.tx-tree__collapse') as HTMLElement;
+    const event = new Event('transitionend');
+    Object.defineProperty(event, 'propertyName', { value: 'grid-template-rows' });
+    collapse.dispatchEvent(event);
+    await render();
+    expect(item('cv')).not.toBeNull();
+  });
+
+  it('does nothing when the toggler of a leaf is clicked', async () => {
+    await toggle('locked');
+    expect(host.expanded()).toEqual([]);
+    expect(host.expandedEvents).toEqual([]);
+  });
+
+  it('expands and collapses everything through the API, ignoring rows in the wrong state', async () => {
+    tree().expandAll();
+    await render();
+    expect(host.expanded()).toEqual(['docs', 'tax', 'photos']);
+    const event = new Event('click');
+    const row = (rowKey: string) => tree().rows().find((entry) => entry.node.key === rowKey) as TxTreeRow;
+    tree().expand(row('docs'), event);
+    tree().expand(row('cv'), event);
+    tree().collapse(row('lazy'), event);
+    expect(host.expandedEvents).toEqual([]);
+    tree().collapseAll();
+    await render();
+    expect(labels()).toEqual(['Documents', 'Photos', 'Archive', 'Locked']);
+  });
+
+  it('emits double clicks', async () => {
+    const events: TxTreeNodeEvent[] = [];
+    tree().nodeDoubleClick.subscribe((event) => events.push(event));
+    content('photos').dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
+    expect(events.map((event) => event.node.key)).toEqual(['photos']);
+  });
+
+  it('keeps the native context menu without menu items', async () => {
+    host.menu.set([]);
+    await render();
+    const event = new MouseEvent('contextmenu', { bubbles: true, cancelable: true });
+    content('photos').dispatchEvent(event);
+    expect(event.defaultPrevented).toBe(false);
+  });
+
+  it('opens the context menu from the keyboard next to the node', async () => {
+    host.menu.set([{ label: 'Rename' }]);
+    await render();
+    item('photos').focus();
+    await key('ContextMenu', item('photos'));
+    await new Promise((resolve) => setTimeout(resolve));
+    expect(tree().contextMenuSelection()?.key).toBe('photos');
+    expect(content('photos').classList).toContain('tx-tree__content--context');
+    await key('F10', item('photos'), { shiftKey: true });
+    await new Promise((resolve) => setTimeout(resolve));
+    expect(document.querySelectorAll('body > div[style*="position: fixed"]').length).toBe(1);
+    (document.querySelector('tx-menu-list [role="menuitem"]') as HTMLElement).click();
+    await render();
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    await render();
+    expect(document.querySelectorAll('body > div[style*="position: fixed"]').length).toBe(0);
+  });
+
+  it('runs a context menu command and focuses the node when the menu closes', async () => {
+    const picked: string[] = [];
+    host.menu.set([{ label: 'Rename', command: () => picked.push('rename') }]);
+    await render();
+    (document.activeElement as HTMLElement | null)?.blur();
+    content('docs').dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true }));
+    await render();
+    await new Promise((resolve) => setTimeout(resolve));
+    expect(tree().contextMenuSelection()?.key).toBe('docs');
+    (document.querySelector('tx-menu-list [role="menuitem"]') as HTMLElement).click();
+    await render();
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    await render();
+    expect(picked).toEqual(['rename']);
+    expect(fixture.nativeElement.querySelector('.tx-tree__content--context')).toBeNull();
+    expect(focused()).toBe('docs');
+  });
+
+  it('keeps focus where it is when the context menu closes onto the tree', async () => {
+    host.menu.set([{ label: 'Rename' }]);
+    await render();
+    content('photos').dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true, clientX: 5, clientY: 5 }));
+    await render();
+    await new Promise((resolve) => setTimeout(resolve));
+    item('lazy').focus();
+    item('lazy').dispatchEvent(new Event('pointerdown', { bubbles: true }));
+    await render();
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    await render();
+    expect(tree().menuOpen()).toBe(false);
+    expect(focused()).toBe('lazy');
+  });
+
+  it('unselects a single node only with the meta key under meta key selection', async () => {
+    host.meta.set(true);
+    await render();
+    content('photos').click();
+    await render();
+    content('photos').click();
+    await render();
+    expect((host.selection() as TxTreeNode).key).toBe('photos');
+    content('photos').dispatchEvent(new MouseEvent('click', { bubbles: true, metaKey: true }));
+    await render();
+    expect(host.selection()).toBeNull();
+  });
+
+  it('keeps a lone selection under meta key selection and unselects in multiple mode', async () => {
+    host.mode.set('multiple');
+    host.meta.set(true);
+    await render();
+    content('docs').click();
+    await render();
+    content('docs').click();
+    await render();
+    expect((host.selection() as TxTreeNode[]).map((node) => node.key)).toEqual(['docs']);
+    host.meta.set(false);
+    await render();
+    content('docs').click();
+    await render();
+    expect(host.selection()).toEqual([]);
+  });
+
+  it('turns a single selected node into a list in multiple mode', async () => {
+    host.selection.set(TREE[1]);
+    host.mode.set('multiple');
+    await render();
+    content('docs').click();
+    await render();
+    expect((host.selection() as TxTreeNode[]).map((node) => node.key)).toEqual(['docs', 'photos']);
+  });
+
+  it('focuses the filter on init and moves into the tree with Down', async () => {
+    fixture.nativeElement.remove();
+    fixture = TestBed.createComponent(Host);
+    host = fixture.componentInstance;
+    host.filter.set(true);
+    host.autoFocus.set(true);
+    document.body.appendChild(fixture.nativeElement);
+    await render();
+    const input = fixture.nativeElement.querySelector('.tx-tree__filter-input') as HTMLInputElement;
+    expect(document.activeElement).toBe(input);
+    const enter = new KeyboardEvent('keydown', { key: 'Enter', cancelable: true });
+    input.dispatchEvent(enter);
+    expect(enter.defaultPrevented).toBe(true);
+    const other = new KeyboardEvent('keydown', { key: 'a', cancelable: true });
+    input.dispatchEvent(other);
+    expect(other.defaultPrevented).toBe(false);
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', cancelable: true }));
+    await render();
+    expect(focused()).toBe('docs');
+  });
+
+  it('expands and collapses filtered branches without touching the expanded keys', async () => {
+    host.filter.set(true);
+    await render();
+    expect(tree().filterExpanded().size).toBe(0);
+    const filtered: TxTreeFilterEvent[] = [];
+    tree().filtered.subscribe((event) => filtered.push(event));
+    const input = fixture.nativeElement.querySelector('.tx-tree__filter-input') as HTMLInputElement;
+    input.value = 'xlsx';
+    input.dispatchEvent(new Event('input'));
+    await render();
+    expect(filtered[0].filter).toBe('xlsx');
+    expect(labels()).toEqual(['Documents', 'Taxes', '2024.xlsx', '2025.xlsx']);
+    await toggle('tax');
+    expect(labels()).toEqual(['Documents', 'Taxes']);
+    await toggle('tax');
+    expect(labels()).toEqual(['Documents', 'Taxes', '2024.xlsx', '2025.xlsx']);
+    expect(host.expanded()).toEqual([]);
+    expect(host.expandedEvents).toEqual(['tax']);
+    tree().resetFilter();
+    await render();
+    expect(input.value).toBe('');
+    expect(labels()).toEqual(['Documents', 'Photos', 'Archive', 'Locked']);
+    input.value = 'nothing';
+    input.dispatchEvent(new Event('input'));
+    await render();
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', cancelable: true }));
+    await render();
+    expect(document.activeElement).not.toBe(item('docs'));
+  });
+
+  it('shows the empty message for an empty tree', async () => {
+    host.value.set([]);
+    await render();
+    expect(tree().tabKey()).toBeNull();
+    expect(fixture.nativeElement.querySelector('.tx-tree__empty').textContent.trim()).toBe('No results found');
+  });
+
+  it('skips nodes that cannot move with Alt and the arrows', async () => {
+    host.drag.set(true);
+    host.value.set([
+      { key: 'a', label: 'A' },
+      { key: 'b', label: 'B', droppable: false },
+      { key: 'c', label: 'C' },
+      { key: 'd', label: 'D', disabled: true },
+    ]);
+    await render();
+    item('a').focus();
+    await key('ArrowUp', item('a'), { altKey: true });
+    await key('ArrowLeft', item('a'), { altKey: true });
+    expect(host.drops).toEqual([]);
+    await key('ArrowRight', item('c'), { altKey: true });
+    await key('ArrowDown', item('d'), { altKey: true });
+    expect(host.drops).toEqual([]);
+    expect(focused()).toBe('d');
+    await key('ArrowLeft', item('a'));
+    expect(host.value().map((node) => node.key)).toEqual(['a', 'b', 'c', 'd']);
+  });
+
+  it('works out the window only for virtual scroll', async () => {
+    expect(tree().visibleRows().length).toBe(tree().rows().length);
+    const wrapper = fixture.nativeElement.querySelector('.tx-tree__wrapper') as HTMLElement;
+    wrapper.dispatchEvent(new Event('scroll'));
+    expect(tree().scrollTop()).toBe(0);
+  });
+
+  it('follows the scroll position and scrolls focused rows into view with virtual scroll', async () => {
+    host.value.set(Array.from({ length: 200 }, (_, index) => ({ key: `n${index}`, label: `Node ${index}` })));
+    host.virtual.set(true);
+    await render();
+    const wrapper = fixture.nativeElement.querySelector('.tx-tree__wrapper') as HTMLElement;
+    Object.defineProperty(wrapper, 'scrollTop', { value: 600, writable: true, configurable: true });
+    Object.defineProperty(wrapper, 'clientHeight', { value: 90, configurable: true });
+    wrapper.dispatchEvent(new Event('scroll'));
+    await render();
+    expect(items()[0].dataset['treeKey']).toBe('n10');
+    tree().focusKey('missing');
+    await render();
+    expect(wrapper.scrollTop).toBe(600);
+    item('n20').focus();
+    await key('Home', item('n20'));
+    expect(wrapper.scrollTop).toBe(0);
+    expect(focused()).toBe('n0');
+    await key('ArrowDown', item('n0'));
+    expect(wrapper.scrollTop).toBe(0);
+    expect(focused()).toBe('n1');
+  });
 });
 
 describe('tree utils', () => {
@@ -318,5 +605,390 @@ describe('tree utils', () => {
     expect(scopesMatch(undefined, undefined)).toBe(true);
     expect(scopesMatch(undefined, 'files')).toBe(false);
     expect(scopesMatch(['a', 'files'], 'files')).toBe(true);
+  });
+});
+
+describe('tree utils edge cases', () => {
+  it('handles missing fields, empty queries, unknown keys and nested targets', () => {
+    expect(nodeMatches({ key: 'a', label: 'A' }, 'a', ['missing'])).toBe(false);
+    expect(filterTree(TREE, '  ', ['label'])).toEqual(TREE);
+    expect(isDescendantOf(TREE, 'missing', 'cv')).toBe(false);
+    const node = { key: 'new', label: 'New' };
+    expect(insertNode(TREE, node, null, 'inside').map((item) => item.key)).toEqual(['docs', 'photos', 'lazy', 'locked', 'new']);
+    expect(insertNode(TREE, node, 'locked', 'inside')[3].children).toEqual([node]);
+    expect(insertNode(TREE, node, 't24', 'after')[0].children?.[1].children?.map((item) => item.key)).toEqual(['t24', 'new', 't25']);
+    expect(scopesMatch('files', ['files'])).toBe(true);
+    expect(scopesMatch(['a'], 'b')).toBe(false);
+    const parent = { key: 'p', label: 'P', children: [{ key: 'x', label: 'X', disabled: true }, { key: 'y', label: 'Y', selectable: false }, { key: 'z', label: 'Z' }] };
+    expect(descendantKeys(parent)).toEqual(['z']);
+  });
+});
+
+@Component({
+  imports: [TxTree, TxTreeHeader, TxTreeFooter, TxTreeEmpty, TxTreeLoading, TxTreeFilter, TxTreeToggleIcon, TxTreeCheckboxIcon, TxTreeNodeTemplate],
+  template: `<tx-tree
+    [(value)]="value"
+    selectionMode="checkbox"
+    [(selection)]="selection"
+    [(expandedKeys)]="expanded"
+    [propagateSelectionUp]="up()"
+    [propagateSelectionDown]="down()"
+    [loading]="loading()"
+    [loadingMode]="loadingMode()"
+    [highlightOnSelect]="true"
+    [unstyled]="true"
+    filter
+    emptyMessage="Empty"
+  >
+    <ng-template txTreeHeader><span class="head">Head</span></ng-template>
+    <ng-template txTreeFooter><span class="foot">Foot</span></ng-template>
+    <ng-template txTreeEmpty><span class="nothing">Nothing here</span></ng-template>
+    <ng-template txTreeLoading><span class="wait">Wait</span></ng-template>
+    <ng-template txTreeFilter let-query let-filter="filter" let-reset="reset">
+      <button type="button" class="find" (click)="filter('2024')">{{ query || 'all' }}</button>
+      <button type="button" class="clear" (click)="reset()">Clear</button>
+    </ng-template>
+    <ng-template txTreeToggleIcon let-expanded let-busy="loading">
+      <i class="toggle">{{ expanded ? 'open' : 'closed' }}{{ busy ? ' busy' : '' }}</i>
+    </ng-template>
+    <ng-template txTreeCheckboxIcon let-checked let-partial="partial">
+      <i class="box">{{ checked ? 'on' : partial ? 'some' : 'off' }}</i>
+    </ng-template>
+    <ng-template txTreeNode let-node let-level="level">
+      <em class="any">{{ node.label }}:{{ level }}</em>
+    </ng-template>
+  </tx-tree>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class TemplatesHost {
+  readonly value = signal<TxTreeNode[]>(TREE);
+  readonly selection = signal<TxTreeSelection>(null);
+  readonly expanded = signal<string[]>(['docs', 'tax']);
+  readonly up = signal(true);
+  readonly down = signal(true);
+  readonly loading = signal(false);
+  readonly loadingMode = signal<TxTreeLoadingMode>('mask');
+}
+
+describe('TxTree templates', () => {
+  let fixture: ComponentFixture<TemplatesHost>;
+  let host: TemplatesHost;
+  const render = async () => {
+    fixture.detectChanges();
+    await fixture.whenStable();
+  };
+  const el = (selector: string) => fixture.nativeElement.querySelector(selector) as HTMLElement | null;
+  const item = (key: string) => fixture.nativeElement.querySelector(`[data-tree-key="${key}"]`) as HTMLElement;
+  const keys = () => (host.selection() as TxTreeNode[]).map((node) => node.key);
+
+  beforeEach(async () => {
+    fixture = TestBed.createComponent(TemplatesHost);
+    host = fixture.componentInstance;
+    await render();
+  });
+
+  it('renders header, footer, toggle, checkbox and node templates', async () => {
+    expect(el('.head')?.textContent).toBe('Head');
+    expect(el('.foot')?.textContent).toBe('Foot');
+    expect(el('tx-tree')?.hasAttribute('data-styled')).toBe(false);
+    expect(item('docs').querySelector('.toggle')?.textContent).toBe('open');
+    expect(item('photos').querySelector('.toggle')?.textContent).toBe('closed');
+    expect(item('cv').querySelector('.any')?.textContent).toBe('Resume.pdf:2');
+    item('t24').click();
+    await render();
+    expect(item('t24').querySelector('.box')?.textContent).toBe('on');
+    expect(item('tax').querySelector('.box')?.textContent).toBe('some');
+    expect(item('t24').classList).toContain('tx-tree__content--selected');
+    item('lazy').querySelector<HTMLButtonElement>('.tx-tree__toggler')?.click();
+    await render();
+    expect(item('lazy').querySelector('.toggle')?.textContent).toBe('open busy');
+  });
+
+  it('checks without propagating down or up', async () => {
+    host.down.set(false);
+    host.up.set(false);
+    await render();
+    item('tax').click();
+    await render();
+    expect(keys()).toEqual(['tax']);
+    expect(item('docs').getAttribute('aria-checked')).toBe('false');
+    item('t24').click();
+    item('t25').click();
+    await render();
+    expect(keys()).toEqual(['tax', 't24', 't25']);
+    item('tax').click();
+    await render();
+    expect(keys()).toEqual(['t24', 't25']);
+  });
+
+  it('shows a loading mask with its template only in mask mode', async () => {
+    host.loading.set(true);
+    await render();
+    expect(el('.tx-tree__mask .wait')?.textContent).toBe('Wait');
+    expect(el('[role="tree"]')?.getAttribute('aria-busy')).toBe('true');
+    host.loadingMode.set('icon');
+    await render();
+    expect(el('.tx-tree__mask')).toBeNull();
+  });
+
+  it('renders the empty template', async () => {
+    host.value.set([]);
+    await render();
+    expect(el('.tx-tree__empty .nothing')?.textContent).toBe('Nothing here');
+  });
+
+  it('filters and resets through the filter template', async () => {
+    expect(el('.find')?.textContent).toBe('all');
+    el('.find')?.click();
+    await render();
+    expect(el('.find')?.textContent).toBe('2024');
+    expect(fixture.nativeElement.querySelectorAll('[role="treeitem"]').length).toBe(3);
+    el('.clear')?.click();
+    await render();
+    expect(el('.find')?.textContent).toBe('all');
+  });
+});
+
+@Component({
+  imports: [TxTree],
+  template: `
+    <tx-tree
+      class="left"
+      [(value)]="left"
+      [(expandedKeys)]="leftExpanded"
+      draggableNodes
+      droppableNodes
+      [draggableScope]="dragScope()"
+      [droppableScope]="leftDrop()"
+      (nodeDrop)="drops.push($event)"
+    />
+    <tx-tree
+      class="right"
+      [(value)]="right"
+      [(expandedKeys)]="rightExpanded"
+      draggableNodes
+      droppableNodes
+      [droppableScope]="rightDrop()"
+      [validateDrop]="validate()"
+      (nodeDrop)="drops.push($event)"
+    />
+    <tx-tree class="plain" [value]="plain" />
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class DragHost {
+  readonly left = signal<TxTreeNode[]>([
+    { key: 'docs', label: 'Documents', children: [{ key: 'cv', label: 'Resume.pdf' }, { key: 'tax', label: 'Taxes', children: [{ key: 't24', label: '2024' }] }] },
+    { key: 'pics', label: 'Pictures', droppable: false },
+    { key: 'locked', label: 'Locked', disabled: true },
+  ]);
+  readonly right = signal<TxTreeNode[]>([
+    { key: 'r1', label: 'Inbox' },
+    { key: 'r2', label: 'Sent', children: [{ key: 'r21', label: 'Old' }] },
+  ]);
+  readonly plain: TxTreeNode[] = [{ key: 'p1', label: 'Plain' }];
+  readonly leftExpanded = signal<string[]>(['docs', 'tax']);
+  readonly rightExpanded = signal<string[]>(['r2']);
+  readonly dragScope = signal<TxTreeScope>(undefined);
+  readonly leftDrop = signal<TxTreeScope>(undefined);
+  readonly rightDrop = signal<TxTreeScope>(undefined);
+  readonly validate = signal(false);
+  readonly drops: TxTreeNodeDropEvent[] = [];
+}
+
+describe('TxTree drag and drop', () => {
+  let fixture: ComponentFixture<DragHost>;
+  let host: DragHost;
+  let service: TxTreeDragService;
+  const render = async () => {
+    fixture.detectChanges();
+    await fixture.whenStable();
+  };
+  const item = (tree: string, key: string) => fixture.nativeElement.querySelector(`.${tree} [data-tree-key="${key}"]`) as HTMLElement;
+  const wrapper = (tree: string) => fixture.nativeElement.querySelector(`.${tree} .tx-tree__wrapper`) as HTMLElement;
+  const keys = (nodes: TxTreeNode[]) => nodes.map((node) => node.key);
+  const drag = (type: string, init: MouseEventInit = {}, dataTransfer: Partial<DataTransfer> | null = { setData: vi.fn(), effectAllowed: 'none', dropEffect: 'none' }) => {
+    const event = new MouseEvent(type, { bubbles: true, cancelable: true, ...init });
+    if (dataTransfer) Object.defineProperty(event, 'dataTransfer', { value: dataTransfer });
+    return event;
+  };
+  const fire = async (target: HTMLElement, event: Event) => {
+    target.dispatchEvent(event);
+    await render();
+    return event;
+  };
+  const sized = (element: HTMLElement) => {
+    vi.spyOn(element, 'getBoundingClientRect').mockReturnValue({ top: 0, height: 40, left: 0, bottom: 40, right: 100, width: 100, x: 0, y: 0, toJSON: () => ({}) });
+    return element;
+  };
+
+  beforeEach(async () => {
+    fixture = TestBed.createComponent(DragHost);
+    host = fixture.componentInstance;
+    service = TestBed.inject(TxTreeDragService);
+    await render();
+  });
+
+  afterEach(() => {
+    fixture.destroy();
+    service.stop();
+  });
+
+  it('starts a drag only on draggable nodes', async () => {
+    const blocked = await fire(item('left', 'locked'), drag('dragstart'));
+    expect(blocked.defaultPrevented).toBe(true);
+    expect(service.state()).toBeNull();
+    const transfer = { setData: vi.fn(), effectAllowed: 'none' as DataTransfer['effectAllowed'] };
+    await fire(item('left', 'cv'), drag('dragstart', {}, transfer));
+    expect(transfer.setData).toHaveBeenCalledWith('text/plain', 'Resume.pdf');
+    expect(transfer.effectAllowed).toBe('move');
+    expect(item('left', 'cv').classList).toContain('tx-tree__content--dragging');
+    expect(service.state()?.node.key).toBe('cv');
+    await fire(item('left', 'cv'), drag('dragend'));
+    expect(item('left', 'cv').classList).not.toContain('tx-tree__content--dragging');
+    expect(service.state()).toBeNull();
+  });
+
+  it('shows before, inside and after drop points from the pointer position', async () => {
+    await fire(item('left', 'cv'), drag('dragstart', {}, null));
+    const target = sized(item('right', 'r1'));
+    const transfer = { dropEffect: 'none' as DataTransfer['dropEffect'] };
+    const over = await fire(target, drag('dragover', { clientY: 2 }, transfer));
+    expect(over.defaultPrevented).toBe(true);
+    expect(transfer.dropEffect).toBe('move');
+    expect(target.querySelector('.tx-tree__drop-point')).not.toBeNull();
+    expect(target.querySelector('.tx-tree__drop-point--after')).toBeNull();
+    await fire(target, drag('dragover', { clientY: 2 }, null));
+    expect(target.querySelector('.tx-tree__drop-point')).not.toBeNull();
+    await fire(target, drag('dragover', { clientY: 38 }));
+    expect(target.querySelector('.tx-tree__drop-point--after')).not.toBeNull();
+    await fire(target, drag('dragover', { clientY: 20 }));
+    expect(target.classList).toContain('tx-tree__content--drop-inside');
+    await fire(target, drag('dragleave', { relatedTarget: target.querySelector('.tx-tree__label') }));
+    expect(target.classList).toContain('tx-tree__content--drop-inside');
+    await fire(item('right', 'r2'), drag('dragleave', { bubbles: false }));
+    expect(target.classList).toContain('tx-tree__content--drop-inside');
+    await fire(target, drag('dragleave', { relatedTarget: document.body }));
+    expect(target.classList).not.toContain('tx-tree__content--drop-inside');
+  });
+
+  it('only drops before or after a node that takes no children', async () => {
+    await fire(item('left', 'cv'), drag('dragstart'));
+    const target = sized(item('left', 'pics'));
+    await fire(target, drag('dragover', { clientY: 15 }));
+    expect(target.querySelector('.tx-tree__drop-point--after')).toBeNull();
+    expect(target.querySelector('.tx-tree__drop-point')).not.toBeNull();
+    await fire(target, drag('dragover', { clientY: 25 }));
+    expect(target.querySelector('.tx-tree__drop-point--after')).not.toBeNull();
+    await fire(item('left', 'docs'), drag('dragover'));
+    expect(item('left', 'docs').classList).toContain('tx-tree__content--drop-inside');
+  });
+
+  it('refuses drops onto the node itself or its descendants', async () => {
+    await fire(item('left', 'docs'), drag('dragstart'));
+    await fire(item('left', 'docs'), drag('dragover'));
+    const onSelf = await fire(item('left', 'docs'), drag('dragover'));
+    expect(onSelf.defaultPrevented).toBe(false);
+    const onChild = await fire(item('left', 't24'), drag('dragover'));
+    expect(onChild.defaultPrevented).toBe(false);
+    const drop = await fire(item('left', 't24'), drag('drop'));
+    expect(drop.defaultPrevented).toBe(false);
+    expect(host.drops).toEqual([]);
+  });
+
+  it('moves a node inside another node of the same tree and expands it', async () => {
+    await fire(item('left', 'cv'), drag('dragstart'));
+    await fire(item('left', 'pics'), drag('dragover', {}, null));
+    await fire(item('left', 'docs'), drag('dragover'));
+    const drop = await fire(item('left', 'docs'), drag('drop'));
+    expect(drop.defaultPrevented).toBe(true);
+    expect(service.state()).toBeNull();
+    expect(host.drops[0].dropNode?.key).toBe('docs');
+    expect(host.drops[0].position).toBe('inside');
+    expect(keys(host.left()[0].children ?? [])).toEqual(['tax', 'cv']);
+    expect(host.leftExpanded()).toEqual(['docs', 'tax']);
+  });
+
+  it('drops onto the empty area of a tree as the last root node', async () => {
+    await fire(item('left', 'cv'), drag('dragstart'));
+    const area = wrapper('left');
+    const transfer = { dropEffect: 'none' as DataTransfer['dropEffect'] };
+    const over = await fire(area, drag('dragover', {}, transfer));
+    expect(over.defaultPrevented).toBe(true);
+    expect(transfer.dropEffect).toBe('move');
+    expect(area.classList).toContain('tx-tree__wrapper--drop');
+    await fire(area, drag('dragover', {}, null));
+    await fire(area, drag('dragleave', { relatedTarget: item('left', 'docs') }));
+    expect(area.classList).toContain('tx-tree__wrapper--drop');
+    await fire(area, drag('dragleave'));
+    expect(area.classList).not.toContain('tx-tree__wrapper--drop');
+    await fire(area, drag('dragover'));
+    await fire(area, drag('drop'));
+    expect(host.drops[0].dropNode).toBeNull();
+    expect(keys(host.left())).toEqual(['docs', 'pics', 'locked', 'cv']);
+    expect(host.drops[0].index).toBe(3);
+  });
+
+  it('moves a node into another tree inside a leaf', async () => {
+    await fire(item('left', 'cv'), drag('dragstart'));
+    await fire(item('right', 'r1'), drag('dragover'));
+    await fire(item('right', 'r1'), drag('drop'));
+    expect(keys(host.left()[0].children ?? [])).toEqual(['tax']);
+    expect(keys(host.right()[0].children ?? [])).toEqual(['cv']);
+    expect(host.rightExpanded()).toEqual(['r2', 'r1']);
+    await fire(item('left', 'tax'), drag('dragstart'));
+    await fire(item('right', 'r2'), drag('dragover'));
+    await fire(item('right', 'r2'), drag('drop'));
+    expect(keys(host.right()[1].children ?? [])).toEqual(['r21', 'tax']);
+    expect(host.rightExpanded()).toEqual(['r2', 'r1']);
+  });
+
+  it('waits for accept before moving across trees', async () => {
+    host.validate.set(true);
+    await render();
+    await fire(item('left', 'cv'), drag('dragstart'));
+    await fire(item('right', 'r1'), drag('dragover', { clientY: -1 }));
+    sized(item('right', 'r1'));
+    await fire(item('right', 'r1'), drag('dragover', { clientY: 39 }));
+    await fire(item('right', 'r1'), drag('drop'));
+    expect(keys(host.right())).toEqual(['r1', 'r2']);
+    host.drops[0].accept();
+    await render();
+    expect(keys(host.right())).toEqual(['r1', 'cv', 'r2']);
+    expect(keys(host.left()[0].children ?? [])).toEqual(['tax']);
+  });
+
+  it('respects drag and drop scopes', async () => {
+    host.dragScope.set('files');
+    host.rightDrop.set('mail');
+    host.leftDrop.set('files');
+    await render();
+    await fire(item('left', 'cv'), drag('dragstart'));
+    const refused = await fire(item('right', 'r1'), drag('dragover'));
+    expect(refused.defaultPrevented).toBe(false);
+    const area = await fire(wrapper('right'), drag('dragover'));
+    expect(area.defaultPrevented).toBe(false);
+    const allowed = await fire(item('left', 'pics'), drag('dragover'));
+    expect(allowed.defaultPrevented).toBe(true);
+  });
+
+  it('ignores drags over a tree without droppable nodes or without a drag', async () => {
+    const idle = await fire(item('right', 'r1'), drag('dragover'));
+    expect(idle.defaultPrevented).toBe(false);
+    const idleArea = await fire(wrapper('right'), drag('dragover'));
+    expect(idleArea.defaultPrevented).toBe(false);
+    await fire(item('left', 'cv'), drag('dragstart'));
+    const plain = await fire(item('plain', 'p1'), drag('dragover'));
+    expect(plain.defaultPrevented).toBe(false);
+    const plainArea = await fire(wrapper('plain'), drag('dragover'));
+    expect(plainArea.defaultPrevented).toBe(false);
+    await fire(item('right', 'r1'), drag('dragend'));
+    expect(service.state()?.node.key).toBe('cv');
+  });
+
+  it('stops the drag when the source tree is destroyed', async () => {
+    await fire(item('left', 'cv'), drag('dragstart'));
+    fixture.destroy();
+    expect(service.state()).toBeNull();
   });
 });

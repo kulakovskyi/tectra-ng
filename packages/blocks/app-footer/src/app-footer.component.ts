@@ -20,7 +20,7 @@ import { APP_FOOTER_THEME } from './app-footer.theme';
           <nav class="tx-app-footer__nav" [attr.aria-label]="navLabel() ?? translations().legal" [class]="passThrough().nav?.class" [style]="passThrough().nav?.style">
             @for (item of links(); track item.label) {
               @if (item.routerLink !== undefined) {
-                <a class="tx-app-footer__link" [routerLink]="item.routerLink" [queryParams]="item.queryParams" [attr.target]="item.target ?? null" [class]="passThrough().link?.class" [style]="passThrough().link?.style">{{ item.label }}</a>
+                <a class="tx-app-footer__link" [routerLink]="item.routerLink" [queryParams]="item.queryParams" [target]="item.target" [class]="passThrough().link?.class" [style]="passThrough().link?.style">{{ item.label }}</a>
               } @else {
                 <a class="tx-app-footer__link" [attr.href]="item.url ?? null" [attr.target]="item.target ?? null" [class]="passThrough().link?.class" [style]="passThrough().link?.style">{{ item.label }}</a>
               }

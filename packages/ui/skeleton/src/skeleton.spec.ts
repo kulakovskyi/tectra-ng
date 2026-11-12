@@ -10,6 +10,7 @@ import { TxSkeleton } from './skeleton.component';
     <tx-skeleton id="box" width="60%" height="120px" borderRadius="16px" animation="none" [dt]="{ root: { duration: '3s' } }" />
     <tx-skeleton id="text" [lines]="3" />
     <tx-skeleton-table id="table" [rows]="2" [columns]="3" />
+    <tx-skeleton-table id="body-only" [rows]="2" [columns]="2" [header]="false" />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -42,5 +43,7 @@ describe('TxSkeleton', () => {
     expect(el('#table').querySelectorAll('.tx-skeleton-table__row')).toHaveLength(3);
     expect(el('#table').querySelectorAll('.tx-skeleton-table__header tx-skeleton')).toHaveLength(3);
     expect(el('#table').style.getPropertyValue('--_columns')).toBe('3');
+    expect(el('#body-only .tx-skeleton-table__header')).toBeNull();
+    expect(el('#body-only').querySelectorAll('.tx-skeleton-table__row')).toHaveLength(2);
   });
 });

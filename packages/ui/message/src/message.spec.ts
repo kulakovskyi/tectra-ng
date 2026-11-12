@@ -107,6 +107,10 @@ describe('TxMessage', () => {
     await fixture.whenStable();
     expect(message().classList).toContain('tx-message--closing');
     expect(fixture.componentInstance.closedCount).toBe(0);
+    close.click();
+    message().dispatchEvent(Object.assign(new Event('animationend'), { animationName: 'tx-message-in' }));
+    await fixture.whenStable();
+    expect(fixture.componentInstance.closedCount).toBe(0);
     message().dispatchEvent(Object.assign(new Event('animationend'), { animationName: 'tx-message-out' }));
     await fixture.whenStable();
     expect(message().style.display).toBe('none');
@@ -207,3 +211,47 @@ describe('TxFieldHint and TxFieldError', () => {
     expect(errorText()).toBe("Обов'язкове поле");
   });
 });
+
+@Component({
+  imports: [TxFieldHint, TxFieldError, ReactiveFormsModule],
+  template: `
+    <tx-field-hint id="own-hint" icon="own-hint-icon">Own icon</tx-field-hint>
+    <tx-field-error id="tags-error" [control]="tags" successText="Saved" [messages]="{ required: 'Need {missing}' }" />
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class ListHost {
+  readonly tags = new FormControl<string[]>([], Validators.required);
+}
+
+describe('TxFieldError with a list value', () => {
+  it('keeps unknown placeholders, shows success for an edited list and draws an unknown hint icon as a class', async () => {
+    const fixture = TestBed.createComponent(ListHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    const text = () => fixture.nativeElement.querySelector('#tags-error .tx-field-message__text')?.textContent?.trim() ?? null;
+    expect(fixture.nativeElement.querySelector('#own-hint span.own-hint-icon')).not.toBeNull();
+    const { tags } = fixture.componentInstance;
+    tags.markAsDirty();
+    tags.setValue([]);
+    await fixture.whenStable();
+    expect(text()).toBe('Need {missing}');
+    tags.setValue(['a']);
+    await fixture.whenStable();
+    expect(tags.touched).toBe(false);
+    expect(text()).toBe('Saved');
+  });
+});
+
+describe('TxMessage recompiled by TestBed', () => {
+  it('still finds its icon templates when a test overrides the component', async () => {
+    TestBed.overrideComponent(TxMessage, { set: { styles: [] } });
+    const fixture = TestBed.createComponent(MessageHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    const templated = fixture.nativeElement.querySelector('#templated') as HTMLElement;
+    expect(templated.querySelector('.own-icon')).not.toBeNull();
+    expect(templated.querySelector('.own-close')).not.toBeNull();
+  });
+});
+

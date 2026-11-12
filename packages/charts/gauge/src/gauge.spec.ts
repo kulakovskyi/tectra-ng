@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { TectraChartTokens, TectraDeepPartial } from '@tectra-ng/themes';
 import { TxGauge } from './gauge.component';
 import { TxGaugeBand } from './gauge.types';
 import { gaugeAngle, gaugeNeedle, gaugeRatio } from './gauge-layout';
@@ -68,5 +70,132 @@ describe('TxGauge', () => {
 
   it('shows "No data" without a value', () => {
     expect(el('#empty .tx-chart-frame__empty')).not.toBeNull();
+  });
+});
+
+@Component({
+  imports: [TxGauge],
+  template: `
+    <tx-gauge
+      [value]="value()"
+      [bands]="bands()"
+      [needle]="needle()"
+      [color]="color()"
+      [showTicks]="showTicks()"
+      [showValue]="showValue()"
+      [ticks]="ticks()"
+      [startAngle]="startAngle()"
+      [endAngle]="endAngle()"
+      [dt]="dt()"
+    />
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class OptionsHost {
+  readonly value = signal<number | null | undefined>(0);
+  readonly bands = signal<TxGaugeBand[] | null>(null);
+  readonly needle = signal<boolean | undefined>(undefined);
+  readonly color = signal<string | undefined>(undefined);
+  readonly showTicks = signal(true);
+  readonly showValue = signal(true);
+  readonly ticks = signal(2);
+  readonly startAngle = signal(-90);
+  readonly endAngle = signal(90);
+  readonly dt = signal<TectraDeepPartial<TectraChartTokens> | undefined>(undefined);
+}
+
+describe('TxGauge options', () => {
+  let fixture: ComponentFixture<OptionsHost>;
+  let host: OptionsHost;
+  const gauge = () => fixture.debugElement.query(By.directive(TxGauge)).componentInstance as TxGauge;
+  const el = (selector: string) => fixture.nativeElement.querySelector(selector) as HTMLElement;
+  const all = (selector: string) => Array.from(fixture.nativeElement.querySelectorAll(selector)) as HTMLElement[];
+
+  beforeEach(async () => {
+    fixture = TestBed.createComponent(OptionsHost);
+    host = fixture.componentInstance;
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+  });
+
+  it('draws no progress arc at the minimum and treats missing bands as none', () => {
+    expect(gauge().bandList()).toEqual([]);
+    expect(gauge().hasNeedle()).toBe(false);
+    expect(gauge().progress()).toBe('');
+    expect(el('.tx-gauge__value').textContent?.trim()).toBe('0');
+  });
+
+  it('anchors tick labels by their side of a half circle', () => {
+    expect(gauge().tickMarks().map((tick) => [tick.label, tick.anchor])).toEqual([
+      ['0', 'end'],
+      ['50', 'middle'],
+      ['100', 'start'],
+    ]);
+    expect(all('.tx-gauge__tick-label').map((label) => label.getAttribute('text-anchor'))).toEqual(['end', 'middle', 'start']);
+  });
+
+  it('gives the arc more room without ticks', async () => {
+    const radius = gauge().fit().radius;
+    host.showTicks.set(false);
+    await fixture.whenStable();
+    expect(gauge().tickRoom()).toBe(0);
+    expect(all('.tx-gauge__tick')).toHaveLength(0);
+    expect(gauge().fit().radius).toBeGreaterThan(radius);
+  });
+
+  it('shows "No data" for an undefined value', async () => {
+    host.value.set(undefined);
+    await fixture.whenStable();
+    expect(gauge().angle()).toBe(gauge().span()[0]);
+    expect(gauge().formatted()).toBe('—');
+    expect(el('.tx-chart-frame__empty')).not.toBeNull();
+  });
+
+  it('grows the arc without the value text, with and without a needle', async () => {
+    host.value.set(40);
+    await fixture.whenStable();
+    const radius = gauge().fit().radius;
+    host.showValue.set(false);
+    await fixture.whenStable();
+    expect(el('.tx-gauge__value')).toBeNull();
+    const bare = gauge().fit().radius;
+    expect(bare).toBeGreaterThanOrEqual(radius);
+    host.needle.set(true);
+    await fixture.whenStable();
+    expect(el('.tx-gauge__needle')).not.toBeNull();
+    expect(gauge().fit().radius).toBeLessThanOrEqual(bare);
+  });
+
+  it('skips empty bands and falls back to the neutral tone without a label', async () => {
+    host.value.set(30);
+    host.bands.set([
+      { from: 0, to: 40 },
+      { from: 40, to: 40, label: 'Edge' },
+      { from: 100, to: 40, color: '#00aa00', label: 'High' },
+    ]);
+    await fixture.whenStable();
+    const arcs = gauge().bandArcs();
+    expect(arcs.map((arc) => [arc.color, arc.label])).toEqual([
+      ['var(--tx-chart-gauge-neutral-color)', null],
+      ['#00aa00', 'High'],
+    ]);
+    expect(el('.tx-chart-frame__plot').getAttribute('aria-label')).toBe('Gauge: 30 of 0 to 100');
+  });
+
+  it('paints the progress arc in its own colour', async () => {
+    host.value.set(60);
+    host.color.set('#123456');
+    await fixture.whenStable();
+    expect(el('.tx-gauge__progress').style.stroke).toBe('#123456');
+  });
+
+  it('reads the arc thickness and tick geometry from the tokens', async () => {
+    host.value.set(60);
+    await fixture.whenStable();
+    const width = gauge().width();
+    host.dt.set({ gauge: { thickness: '0.3', tickLength: '12' } } as TectraDeepPartial<TectraChartTokens>);
+    await fixture.whenStable();
+    expect(gauge().geometry()).toMatchObject({ thickness: 0.3, tickLength: 12 });
+    expect(gauge().width()).toBeGreaterThan(width);
   });
 });

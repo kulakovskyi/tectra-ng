@@ -10,6 +10,10 @@ describe('toCssVariables', () => {
   it('skips the root key', () => {
     expect(toCssVariables({ root: { paddingX: '4px' } }, '--tx-button')).toEqual([{ name: '--tx-button-padding-x', value: '4px' }]);
   });
+
+  it('writes a null value as text', () => {
+    expect(toCssVariables({ shadow: null })).toEqual([{ name: '--tx-shadow', value: 'null' }]);
+  });
 });
 
 describe('toStyleObject', () => {
@@ -40,6 +44,12 @@ describe('presetToCss', () => {
     expect(css).toContain('--tx-red-500:');
     expect(css).toContain('--tx-button-primary-background:');
     expect(css).toContain('--tx-toggle-button-checked-color:');
+  });
+
+  it('adds the style css only when the preset has it', () => {
+    const withCss = presetToCss({ ...Tectra, css: '.tx-button { gap: 0; }' });
+    expect(withCss).toContain('.tx-button { gap: 0; }');
+    expect(presetToCss({ ...Tectra, css: undefined }).split('\n')).toHaveLength(2);
   });
 });
 

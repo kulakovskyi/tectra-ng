@@ -32,6 +32,7 @@ describe('TxLocaleService', () => {
     expect(service.monthNames('long')[0]).toBe('January');
     expect(service.weekdayNames('short')[0]).toBe('Sun');
     expect(service.formatNumber(1234.5)).toBe('1,234.5');
+    expect(service.formatDate(new Date(2024, 2, 5), { month: 'short', day: 'numeric' })).toBe('Mar 5');
   });
 
   it('picks plural forms by the locale rules', async () => {
@@ -43,6 +44,9 @@ describe('TxLocaleService', () => {
     expect(formatMessage('{n, plural, =0 {none} other {{n} of {total}}}', { n: 0, total: 9 })).toBe('none');
     expect(formatMessage('{n, plural, =0 {none} other {{n} of {total}}}', { n: 2, total: 9 })).toBe('2 of 9');
     expect(formatMessage('Keep {missing}', {})).toBe('Keep {missing}');
+    expect(formatMessage('{n, plural, =0 {none} other {# left}}')).toBe('none');
+    expect(formatMessage('{n, plural, =3 {three}} left', { n: 1 })).toBe(' left');
+    expect(formatMessage('{n, plural, one {# item}', { n: 1 })).toBe('1 item');
     const service = TestBed.inject(TxLocaleService);
     await service.setLocale('ua');
     expect(service.format('{count, plural, one {# рядок} few {# рядки} other {# рядків}}', { count: 2 })).toBe('2 рядки');
