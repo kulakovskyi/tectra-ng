@@ -34,6 +34,9 @@ class Host {
   readonly toggles: TxGanttGroupToggle[] = [];
 }
 
+beforeEach(() => vi.stubGlobal('CSS', { escape: (value: string) => value.replace(/["\\]/g, '\\$&') }));
+afterEach(() => vi.unstubAllGlobals());
+
 describe('TxGanttChart', () => {
   let fixture: ComponentFixture<Host>;
   const el = (selector: string) => fixture.nativeElement.querySelector(selector) as HTMLElement;
@@ -173,13 +176,11 @@ describe('TxGanttChart interaction', () => {
   };
 
   beforeEach(async () => {
-    vi.stubGlobal('CSS', { escape: (value: string) => value.replace(/"/g, '\\"') });
     fixture = TestBed.createComponent(InteractiveHost);
     fixture.autoDetectChanges();
     await fixture.whenStable();
   });
 
-  afterEach(() => vi.unstubAllGlobals());
 
   it('zooms around the pointer with ctrl or cmd and the wheel', async () => {
     measure(800);

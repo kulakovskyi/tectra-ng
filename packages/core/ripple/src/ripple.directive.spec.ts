@@ -11,6 +11,11 @@ import { TxRipple } from './ripple.directive';
 })
 class Host {}
 
+afterEach(() => {
+  Reflect.deleteProperty(window, 'matchMedia');
+  Reflect.deleteProperty(HTMLElement.prototype, 'animate');
+});
+
 @Component({
   imports: [TxRipple],
   template: `

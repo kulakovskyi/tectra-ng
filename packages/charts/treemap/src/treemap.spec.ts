@@ -115,7 +115,7 @@ describe('TxTreemap', () => {
   });
 
   it('shows the tooltip and emits tileClick from the pointer', () => {
-    const treemap = fixture.debugElement.query((element) => element.nativeElement === main()).componentInstance as TxTreemap;
+    const treemap = fixture.debugElement.query(By.css('#main')).componentInstance as TxTreemap;
     const tile = treemap.layout().tiles[0];
     treemap.onPointer({ x: tile.x + 2, y: tile.y + 2, type: 'click', target: null });
     expect(treemap.tooltip()?.rows[0].label).toBe('Hosting');
@@ -126,7 +126,7 @@ describe('TxTreemap', () => {
   });
 
   it('walks the tiles with the keyboard', () => {
-    const treemap = fixture.debugElement.query((element) => element.nativeElement === main()).componentInstance as TxTreemap;
+    const treemap = fixture.debugElement.query(By.css('#main')).componentInstance as TxTreemap;
     treemap.onNavigate(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
     expect(treemap.hovered()).toBe(0);
     treemap.onNavigate(new KeyboardEvent('keydown', { key: 'End' }));

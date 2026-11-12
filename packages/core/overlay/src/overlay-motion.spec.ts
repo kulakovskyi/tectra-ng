@@ -5,6 +5,10 @@ describe('overlay motion', () => {
     window.matchMedia = vi.fn(() => ({ matches: false }) as MediaQueryList);
   });
 
+  afterEach(() => {
+    Reflect.deleteProperty(window, 'matchMedia');
+  });
+
   it('animates from the side of the origin', () => {
     const element = document.createElement('div');
     const animate = vi.fn(() => ({ finished: Promise.resolve() }) as unknown as Animation);

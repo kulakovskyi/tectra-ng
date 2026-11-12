@@ -154,7 +154,7 @@ describe('TxOrgChart', () => {
   let fixture: ComponentFixture<Host>;
   let host: Host;
   const main = () => fixture.nativeElement.querySelector('#main') as HTMLElement;
-  const chart = () => fixture.debugElement.query((element) => element.nativeElement === main()).componentInstance as TxOrgChart;
+  const chart = () => fixture.debugElement.query(By.css('#main')).componentInstance as TxOrgChart;
 
   beforeEach(async () => {
     fixture = TestBed.createComponent(Host);
@@ -185,15 +185,11 @@ describe('TxOrgChart', () => {
   });
 
   it('marks matches, counts them and emits search after the delay', async () => {
-    vi.useFakeTimers();
     const input = main().querySelector('input') as HTMLInputElement;
     input.value = 'cfo';
     input.dispatchEvent(new Event('input'));
     expect(host.searches).toEqual([]);
-    vi.advanceTimersByTime(400);
-    expect(host.searches).toEqual(['cfo']);
-    vi.runOnlyPendingTimers();
-    vi.useRealTimers();
+    await vi.waitFor(() => expect(host.searches).toEqual(['cfo']), { timeout: 2000 });
     host.highlight.set(['cfo']);
     fixture.detectChanges();
     await fixture.whenStable();

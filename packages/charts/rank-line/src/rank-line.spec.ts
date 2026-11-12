@@ -70,7 +70,7 @@ describe('TxRankChart', () => {
   let fixture: ComponentFixture<Host>;
   let host: Host;
   const main = () => fixture.nativeElement.querySelector('#main') as HTMLElement;
-  const chart = () => fixture.debugElement.query((element) => element.nativeElement === main()).componentInstance as TxRankChart;
+  const chart = () => fixture.debugElement.query(By.css('#main')).componentInstance as TxRankChart;
 
   beforeEach(async () => {
     fixture = TestBed.createComponent(Host);

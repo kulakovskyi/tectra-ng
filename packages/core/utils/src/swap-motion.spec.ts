@@ -33,15 +33,19 @@ describe('txSwapMotion', () => {
   });
 
   it('animates only elements that can, unless reduced motion is asked for', () => {
-    const matchMedia = window.matchMedia;
     const element = document.createElement('div');
-    expect(txCanAnimate(element)).toBe(typeof element.animate === 'function');
-    element.animate = vi.fn();
-    window.matchMedia = vi.fn(() => ({ matches: false }) as MediaQueryList);
-    expect(txCanAnimate(element)).toBe(true);
-    window.matchMedia = vi.fn(() => ({ matches: true }) as MediaQueryList);
+    Object.defineProperty(element, 'animate', { configurable: true, writable: true, value: undefined });
     expect(txCanAnimate(element)).toBe(false);
-    window.matchMedia = matchMedia;
+    element.animate = vi.fn();
+    try {
+      window.matchMedia = vi.fn(() => ({ matches: false }) as MediaQueryList);
+      expect(txCanAnimate(element)).toBe(true);
+      window.matchMedia = vi.fn(() => ({ matches: true }) as MediaQueryList);
+      expect(txCanAnimate(element)).toBe(false);
+    } finally {
+      Reflect.deleteProperty(window, 'matchMedia');
+    }
+    expect(txCanAnimate(element)).toBe(true);
   });
 
   it('falls back for an element of a document without a window', () => {
