@@ -12,7 +12,8 @@ Automation with access:
 
 | Actor | Access |
 |---|---|
-| `release` workflow | Publishes to npm through trusted publishing (OIDC, no stored token), creates tags, GitHub releases and the version pull request; runs only from `main` in the `npm` environment |
+| `release` workflow | Publishes to npm through trusted publishing (OIDC, no stored token), creates tags and GitHub releases; runs only from `main` in the `npm` environment |
+| `tectra-ng-release` GitHub App | Opens the version pull request of a release and turns on its auto-merge; installed only on this repository with contents and pull-request access, used only by the release workflow |
 | `ci` workflow, `deploy-docs` job | Deploys the docs site with the Cloudflare token of the `docs` environment; runs only on `main` |
 | Dependabot | Opens dependency pull requests; they merge only after CI passes |
 

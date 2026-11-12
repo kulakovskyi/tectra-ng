@@ -24,13 +24,11 @@ jobs:
   release:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 45
     permissions:
       contents: write
-      pull-requests: write
       id-token: write
       attestations: write
-      actions: write
     environment:
       name: npm
       url: https://www.npmjs.com/package/tectra-ng
@@ -43,6 +41,13 @@ jobs:
           node-version: 24
           cache: npm
           registry-url: https://registry.npmjs.org
+      - id: app-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.RELEASE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
       - run: npm ci --legacy-peer-deps
       - run: npx nx show projects > /dev/null
         env:
@@ -84,23 +89,10 @@ jobs:
         if: steps.release.outputs.tag != ''
         run: |
           gh pr create --base main --head "$BRANCH" --title "chore(release): $VERSION" \
-            --body "Version bump and changelog of $TAG, published to npm. Merged by the release workflow once CI passes."
-          gh workflow run ci.yml --ref "$BRANCH"
-          for attempt in $(seq 1 30); do
-            RUN=$(gh run list --workflow ci.yml --branch "$BRANCH" --event workflow_dispatch --limit 1 --json databaseId --jq '.[0].databaseId // empty')
-            [ -n "$RUN" ] && break
-            sleep 10
-          done
-          if [ -z "$RUN" ]; then
-            echo "::error::The CI run for $BRANCH did not start; merge the version pull request after CI passes."
-            exit 1
-          fi
-          gh run watch "$RUN" --exit-status --interval 30 > /dev/null
-          gh pr merge "$BRANCH" --squash --match-head-commit "$(git rev-parse HEAD)"
-          git push origin --delete "$BRANCH"
-          gh workflow run ci.yml --ref main
+            --body "Version bump and changelog of $TAG, already published to npm. Merges itself once the ci-ok check passes."
+          gh pr merge "$BRANCH" --squash --auto
         env:
           BRANCH: ${{ steps.release.outputs.branch }}
           TAG: ${{ steps.release.outputs.tag }}
           VERSION: ${{ steps.release.outputs.version }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}

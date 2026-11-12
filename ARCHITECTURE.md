@@ -39,7 +39,8 @@ Dependabot ──pull request──▶ ci workflow ──▶ auto-merge after ci
 | Contributor | Opens issues, discussions, pull requests from forks or branches | Untrusted input; runs no code with secrets |
 | Maintainer | Reviews and merges pull requests, starts releases, manages settings and secrets ([GOVERNANCE.md](GOVERNANCE.md)) | Trusted, 2FA |
 | `ci` workflow | Lint, unit tests, package and docs build, e2e, CodeQL, dependency review, sign-off check; deploys the docs from `main` | Read-only token on pull requests; Cloudflare token only on `main` in the `docs` environment |
-| `release` workflow | Versions, builds, publishes to npm, tags, attests and attaches assets, opens and merges the version pull request after CI | Runs only from `main` in the `npm` environment; OIDC publishing, no stored npm token |
+| `release` workflow | Versions, builds, publishes to npm, tags, attests and attaches assets, opens the version pull request through the release GitHub App with auto-merge | Runs only from `main` in the `npm` environment; OIDC publishing, no stored npm token |
+| `tectra-ng-release` GitHub App | Opens the version pull request so that CI runs on it, and merges it when `ci-ok` passes | Short-lived token for one run, contents and pull requests only |
 | Dependabot | Opens dependency update pull requests weekly and on advisories | Same checks as any pull request |
 | npm registry | Serves the packages with provenance | External |
 | Cloudflare | Hosts the docs site and the `tectra-ng.com` domain | External |
@@ -58,4 +59,4 @@ Dependabot ──pull request──▶ ci workflow ──▶ auto-merge after ci
 
 ## Build and release
 
-Nx builds every package with ng-packagr (`npm run build:packages`). The release workflow resolves the next version from conventional commits since the last tag, publishes to npm, commits the version bump on `release/vX.Y.Z`, tags it, attaches tarballs, a CycloneDX SBOM and a signed provenance attestation to the GitHub release, then merges the version bump into `main` through a pull request once CI passes. Details and verification: [SECURITY.md](SECURITY.md#verifying-a-release).
+Nx builds every package with ng-packagr (`npm run build:packages`). The release workflow resolves the next version from conventional commits since the last tag, publishes to npm, commits the version bump on `release/vX.Y.Z`, tags it, attaches tarballs, a CycloneDX SBOM and a signed provenance attestation to the GitHub release, then opens the version bump as a pull request from the release GitHub App, which merges itself into `main` once CI passes. Details and verification: [SECURITY.md](SECURITY.md#verifying-a-release).
