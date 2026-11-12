@@ -31,7 +31,7 @@
   },
   "select": {
     "what": "TxSelect",
-    "kitBytes": 505000,
+    "kitBytes": 455000,
     "entryPoints": [
       "core-a11y",
       "core-config",
@@ -48,7 +48,7 @@
   },
   "table": {
     "what": "TxTable",
-    "kitBytes": 975000,
+    "kitBytes": 952000,
     "entryPoints": [
       "core-a11y",
       "core-config",
@@ -80,7 +80,7 @@
   },
   "datepicker": {
     "what": "TxDatePicker",
-    "kitBytes": 549000,
+    "kitBytes": 499000,
     "entryPoints": [
       "core-a11y",
       "core-config",
@@ -102,7 +102,7 @@
   },
   "dialog": {
     "what": "TxDialog",
-    "kitBytes": 437000,
+    "kitBytes": 387000,
     "entryPoints": [
       "core-a11y",
       "core-config",
@@ -121,7 +121,7 @@
   },
   "line-chart": {
     "what": "TxLineChart",
-    "kitBytes": 567000,
+    "kitBytes": 517000,
     "entryPoints": [
       "charts-core",
       "charts-line",
@@ -144,7 +144,7 @@
   },
   "editor": {
     "what": "TxEditor (rich text)",
-    "kitBytes": 982000,
+    "kitBytes": 932000,
     "entryPoints": [
       "core-a11y",
       "core-config",
@@ -171,7 +171,7 @@
   },
   "code-editor": {
     "what": "TxCodeEditor",
-    "kitBytes": 701000,
+    "kitBytes": 651000,
     "entryPoints": [
       "code-editor",
       "code-editor-highlight",

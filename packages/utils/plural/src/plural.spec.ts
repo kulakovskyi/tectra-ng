@@ -38,7 +38,7 @@ describe('plural', () => {
     expect(plural(2, '{count, plural, one {# row} other {# rows}}')).toBe('2 rows');
   });
 
-  it('follows the tectra locale in templates', () => {
+  it('follows the tectra locale in templates', async () => {
     const fixture = TestBed.createComponent(PluralHost);
     fixture.detectChanges();
     const text = (selector: string) => (fixture.nativeElement as HTMLElement).querySelector(selector)?.textContent;
@@ -50,7 +50,7 @@ describe('plural', () => {
     expect(text('.form')).toBe('many');
     expect(text('.text')).toBe('3 files');
 
-    TestBed.inject(TxLocaleService).setLocale('ua');
+    await TestBed.inject(TxLocaleService).setLocale('ua');
     fixture.detectChanges();
     expect(text('.form')).toBe('few');
     expect(text('.text')).toBe('3 файли');

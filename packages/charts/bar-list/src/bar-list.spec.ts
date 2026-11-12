@@ -130,7 +130,7 @@ describe('TxBarList', () => {
   });
 
   it('formats numbers in the tectra locale', async () => {
-    TestBed.inject(TxLocaleService).setLocale('ua');
+    await TestBed.inject(TxLocaleService).setLocale('ua');
     host.items.set([{ label: 'A', value: 1000.5 }, { label: 'B', value: 1000.5 }, { label: 'C', value: 1000.5 }]);
     await fixture.whenStable();
     const row = main().querySelector('.tx-bar-list__row') as HTMLElement;

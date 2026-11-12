@@ -1,17 +1,35 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { TECTRA_CONFIG, TxLocaleCode, TxLocaleDefinition, TxTranslations } from '@tectra-ng/core/config';
+import { TECTRA_CONFIG, TxLocaleCode, TxLocaleDefinition, TxLocaleRegistry, TxTranslations } from '@tectra-ng/core/config';
 import { TxMessageParams, formatMessage } from './format-message';
-import { TX_LOCALES, TX_LOCALE_US } from './locales';
+import { TX_LOCALE_US } from './locales';
 
 @Injectable({ providedIn: 'root' })
 export class TxLocaleService {
   private config = inject(TECTRA_CONFIG, { optional: true });
+  private registry = inject(TxLocaleRegistry);
 
   readonly locale = signal<TxLocaleDefinition>(this.resolve(this.config?.locale ?? 'us'));
   readonly translations = computed<TxTranslations>(() => ({ ...this.locale().translations, ...this.config?.translations }));
 
-  setLocale(locale: TxLocaleCode | TxLocaleDefinition): void {
-    this.locale.set(this.resolve(locale));
+  constructor() {
+    const initial = this.config?.locale;
+    if (typeof initial === 'string' && this.locale().code !== initial) {
+      void this.setLocale(initial);
+    }
+  }
+
+  private request = 0;
+
+  async setLocale(locale: TxLocaleCode | TxLocaleDefinition): Promise<void> {
+    const request = ++this.request;
+    if (typeof locale !== 'string' || locale === TX_LOCALE_US.code || this.registry.get(locale)) {
+      this.locale.set(this.resolve(locale));
+      return;
+    }
+    const loaded = await this.registry.load(locale);
+    if (request === this.request) {
+      this.locale.set(loaded ?? TX_LOCALE_US);
+    }
   }
 
   translate(key: keyof TxTranslations, params: TxMessageParams = {}): string {
@@ -42,6 +60,6 @@ export class TxLocaleService {
   }
 
   private resolve(locale: TxLocaleCode | TxLocaleDefinition): TxLocaleDefinition {
-    return typeof locale === 'string' ? (TX_LOCALES[locale] ?? TX_LOCALE_US) : locale;
+    return typeof locale === 'string' ? (this.registry.get(locale) ?? TX_LOCALE_US) : locale;
   }
 }

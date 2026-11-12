@@ -46,11 +46,11 @@ describe('relativeTime', () => {
     expect(relativeTime('broken')).toBe('');
   });
 
-  it('follows the tectra locale in templates', () => {
+  it('follows the tectra locale in templates', async () => {
     const fixture = TestBed.createComponent(RelativeHost);
     fixture.detectChanges();
     expect(fixture.nativeElement.textContent).toBe('5 minutes ago');
-    TestBed.inject(TxLocaleService).setLocale('ua');
+    await TestBed.inject(TxLocaleService).setLocale('ua');
     fixture.detectChanges();
     expect(fixture.nativeElement.textContent).toBe('5 хвилин тому');
   });

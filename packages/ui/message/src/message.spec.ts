@@ -198,7 +198,7 @@ describe('TxFieldHint and TxFieldError', () => {
     TestBed.configureTestingModule({ providers: [{ provide: TECTRA_CONFIG, useValue: { preset: Tectra, validationMessages: { format: 'Wrong code' } } }] });
     await setup();
     expect(errorText('#code-error')).toBe('Wrong code');
-    TestBed.inject(TxLocaleService).setLocale('ua');
+    await TestBed.inject(TxLocaleService).setLocale('ua');
     fixture.componentInstance.email.markAsTouched();
     await fixture.whenStable();
     expect(errorText()).toBe("Обов'язкове поле");
