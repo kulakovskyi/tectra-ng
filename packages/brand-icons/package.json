@@ -1,6 +1,6 @@
 {
   "name": "@tectra-ng/brand-icons",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Brand logos for the tectra TxIcon component.",
   "license": "MIT AND CC0-1.0",
   "homepage": "https://tectra-ng.com",
@@ -19,7 +19,7 @@
   ],
   "peerDependencies": {
     "@angular/core": "^22.0.0",
-    "@tectra-ng/icons": "^0.2.4"
+    "@tectra-ng/icons": "^0.2.5"
   },
   "publishConfig": {
     "access": "public"

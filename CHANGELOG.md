@@ -1,3 +1,13 @@
+## 0.2.5 (2026-11-12)
+
+### 🩹 Fixes
+
+- ship the LICENSE file in the blocks, brand-icons, code-editor and editor packages; brand-icons is MIT AND CC0-1.0 for the Simple Icons paths ([2daace8](https://github.com/kulakovskyi/tectra-ng/commit/2daace8))
+
+### ❤️ Thank You
+
+- tears @kulakovskyi
+
 ## 0.2.4 (2026-11-11)
 
 This was a version bump only, there were no code changes.
