@@ -20,6 +20,7 @@ function header(name) {
   <a href="${repo}/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-2560e4" alt="MIT license" /></a>
   <a href="https://angular.dev"><img src="https://img.shields.io/badge/Angular-22-dd0031?logo=angular&logoColor=white" alt="Angular 22" /></a>
   <a href="https://www.bestpractices.dev/projects/16576"><img src="https://www.bestpractices.dev/projects/16576/badge" alt="OpenSSF Best Practices" /></a>
+  <a href="https://www.bestpractices.dev/projects/16576/baseline-2"><img src="https://www.bestpractices.dev/projects/16576/baseline" alt="OpenSSF Baseline" /></a>
 </p>
 
 <p align="center">
