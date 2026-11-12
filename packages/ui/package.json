@@ -1,6 +1,6 @@
 {
   "name": "@tectra-ng/ui",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Angular UI components on signals: table, datepicker, select, multiselect, dialog, drawer, toast, tooltip, tree and 80+ more. Standalone, OnPush, zoneless, accessible and themable, one entry point per component.",
   "license": "MIT",
   "homepage": "https://tectra-ng.com",
@@ -60,9 +60,9 @@
     "@angular/forms": "^22.2.0",
     "@angular/router": "^22.2.0",
     "rxjs": "^7.8.0",
-    "@tectra-ng/core": "^0.3.1",
-    "@tectra-ng/icons": "^0.3.1",
-    "@tectra-ng/themes": "^0.3.1"
+    "@tectra-ng/core": "^0.3.2",
+    "@tectra-ng/icons": "^0.3.2",
+    "@tectra-ng/themes": "^0.3.2"
   },
   "peerDependenciesMeta": {
     "@angular/router": {
