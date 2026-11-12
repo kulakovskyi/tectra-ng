@@ -37,7 +37,7 @@ apps/docs       docs site (port 4300), content in apps/docs/src/content/componen
 apps/sandbox    playground (port 4301)
 e2e/visual      Playwright checks of the built docs (port 4310)
 e2e/ng-add      `ng new` + `ng add tectra-ng` from the packed packages, built and checked with Playwright (port 4330, `TX_NG_ADD_PORT` to change); also builds the "Open in StackBlitz" projects of a few docs examples on that install (needs the built docs, served on 4331)
-tools/          bundle-size (budgets per scenario on a new app), registry-builder (docs registry), site-files (sitemap, robots, llms.txt, component .md, 404 after the docs build), link-check (links of the READMEs and the built docs), coverage (coverage table and badge), brand (favicons, social preview), icons, flags, export-font, serve-docs
+tools/          bundle-size (budgets per scenario on a new app), registry-builder (docs registry), site-files (sitemap, robots, llms.txt, component .md, 404 after the docs build), link-check (links of the READMEs and the built docs), min-versions (installs the lowest versions the peer ranges allow, for CI), coverage (coverage table and badge), brand (favicons, social preview), icons, flags, export-font, serve-docs
 ```
 
 Aliases are wildcards in `tsconfig.base.json` (`@tectra-ng/ui/*` → `./packages/ui/*/index.ts`) — a new entry point needs no alias. Module boundaries (`eslint.config.mjs`, tags `pkg:*`): tokens → nothing; themes → tokens; core → themes, tokens; ui → core, icons, themes, tokens; qr → nothing; editor → ui + below; code-editor → ui + below; charts → ui + below; utils → ui + below; blocks → utils, code-editor, ui + below and qr. A ui entry point may import another ui entry point through its alias.
@@ -60,6 +60,7 @@ Prefix Nx commands with `NX_DAEMON=false NX_NO_CLOUD=true`.
 | Unit tests | `npm run test` |
 | Link check of every Markdown file and the built docs (after the docs build; `--offline` skips external addresses, as on pull requests; the weekly `links` workflow checks them all) | `npm run links` |
 | Tests of the tools (`node:test`, no dependencies) | `npm run test:tools` |
+| Lowest versions the packages accept (CI job `Test · lowest supported versions` installs them with `--install`, builds and tests; locally only in a separate worktree, it changes `node_modules`) | `node tools/min-versions/min-versions.mjs` |
 | Coverage table of all packages (after `npm run test`; CI job summary, badge JSON in `coverage/badge`) | `npm run coverage:report` |
 | e2e (builds docs, serves on 4310, `TX_E2E_PORT` to change) | `npm run e2e` |
 | e2e of `ng add tectra-ng` and of the StackBlitz projects (after `build:packages` and `docs:build`; `ng new` + `ng add` from the packed packages in the OS temp folder, `TX_NG_ADD_DIR` to change) | `npm run e2e:ng-add` |

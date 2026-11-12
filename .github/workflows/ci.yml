@@ -135,6 +135,33 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
+  lowest-versions:
+    name: Test · lowest supported versions
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+      - id: modules
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: node_modules
+          key: modules-${{ runner.os }}-node24-${{ hashFiles('package-lock.json') }}
+      - if: steps.modules.outputs.cache-hit != 'true'
+        run: npm ci --legacy-peer-deps
+      - run: node tools/min-versions/min-versions.mjs --install
+      - run: npm run build:packages
+        env:
+          NX_DAEMON: 'false'
+          NX_NO_CLOUD: 'true'
+      - run: npm run test
+        env:
+          NX_DAEMON: 'false'
+          NX_NO_CLOUD: 'true'
+
   codeql:
     name: Security · CodeQL (${{ matrix.language }})
     runs-on: ubuntu-latest
@@ -293,7 +320,7 @@ jobs:
 
   ci-ok:
     if: always()
-    needs: [lint, unit, packages, docs, e2e, new-app, dependency-review, codeql, dco]
+    needs: [lint, unit, lowest-versions, packages, docs, e2e, new-app, dependency-review, codeql, dco]
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
