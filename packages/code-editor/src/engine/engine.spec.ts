@@ -20,7 +20,7 @@ import { findMatches, replacementFor } from './search';
 
 function create(text: string, language: TxCodeLanguage = 'javascript', tabSize = 2): EditorState {
   const cursor = text.indexOf('|');
-  const doc = cursor < 0 ? text : text.replace('|', '');
+  const doc = cursor < 0 ? text : text.slice(0, cursor) + text.slice(cursor + 1);
   return EditorState.create({
     doc,
     selection: EditorSelection.cursor(Math.max(cursor, 0)),
