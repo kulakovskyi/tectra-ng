@@ -55,7 +55,7 @@ function iconFile(entry, names) {
 }
 
 function addImport(text, symbol, from) {
-  const existing = new RegExp(`import \\{([^}]*)\\} from '${from.replace(/[./]/g, '\\$&')}';`).exec(text);
+  const existing = [...text.matchAll(/import \{([^}]*)\} from '([^']+)';/g)].find((match) => match[2] === from);
   if (existing) {
     const symbols = existing[1].split(',').map((part) => part.trim()).filter(Boolean);
     return symbols.includes(symbol) ? text : text.replace(existing[0], `import { ${[...symbols, symbol].sort((a, b) => a.localeCompare(b)).join(', ')} } from '${from}';`);
