@@ -1,6 +1,6 @@
 {
   "name": "@tectra-ng/code-editor",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Code editor for tectra: HTML, CSS, JavaScript, TypeScript, JSON and Markdown with highlighting from design tokens, search and replace, forms support, an inline or side by side diff and a static server-rendered code view.",
   "license": "MIT",
   "homepage": "https://tectra-ng.com/components/code-editor",
@@ -32,10 +32,10 @@
     "@angular/common": "^22.0.0",
     "@angular/core": "^22.0.0",
     "@angular/forms": "^22.0.0",
-    "@tectra-ng/core": "^0.2.5",
-    "@tectra-ng/icons": "^0.2.5",
-    "@tectra-ng/themes": "^0.2.5",
-    "@tectra-ng/ui": "^0.2.5"
+    "@tectra-ng/core": "^0.2.6",
+    "@tectra-ng/icons": "^0.2.6",
+    "@tectra-ng/themes": "^0.2.6",
+    "@tectra-ng/ui": "^0.2.6"
   },
   "dependencies": {
     "@codemirror/state": "^6.7.6",
