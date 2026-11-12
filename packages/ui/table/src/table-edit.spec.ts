@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, DeferBlockBehavior, DeferBlockState, TestBed } from '@angular/core/testing';
 import { TxTable } from './table.component';
 import { TxTableEditor } from './table.templates';
 import { TxTableCellEditEvent, TxTableColumn, TxTableEditMode, TxTableRowEditEvent } from './table.types';
@@ -163,5 +163,32 @@ describe('TxTable editing', () => {
     await stable();
     expect(host.products[1].name).toBe('Stool');
     expect(host.rowCancels).toHaveLength(1);
+  });
+});
+
+describe('TxTable editors that load on first use', () => {
+  it('shows the cell value in a read-only stand-in and focuses the editor once it has loaded', async () => {
+    TestBed.configureTestingModule({ deferBlockBehavior: DeferBlockBehavior.Manual });
+    const fixture = TestBed.createComponent(Host);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    const stock = () => fixture.nativeElement.querySelectorAll('tbody .tx-table__row')[0].querySelector('[data-field="stock"]') as HTMLElement;
+
+    stock().click();
+    await fixture.whenStable();
+    await new Promise((resolve) => setTimeout(resolve));
+    const standIn = stock().querySelector<HTMLInputElement>('input.tx-table__editor-pending');
+    expect(standIn?.value).toBe('4');
+    expect(standIn?.readOnly).toBe(true);
+    expect(document.activeElement).not.toBe(standIn);
+
+    for (const block of await fixture.getDeferBlocks()) {
+      await block.render(DeferBlockState.Complete);
+    }
+    await fixture.whenStable();
+    await new Promise((resolve) => setTimeout(resolve));
+    expect(stock().querySelector('.tx-table__editor-pending')).toBeNull();
+    expect(stock().querySelector('tx-input-number')?.contains(document.activeElement)).toBe(true);
+    fixture.destroy();
   });
 });

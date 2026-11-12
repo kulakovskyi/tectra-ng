@@ -8,3 +8,4 @@ export * from './src/table.utils';
 export * from './src/table.filter';
 export { TxTableSettings } from './src/table-settings.component';
 export { TxTableColumnFilter } from './src/table-column-filter.component';
+export { TxTableEditorFocus } from './src/table-editor-focus.directive';

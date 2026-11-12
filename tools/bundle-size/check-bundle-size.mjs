@@ -1,7 +1,8 @@
 import { execFileSync } from 'node:child_process';
-import { appendFileSync, existsSync, mkdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { appendFileSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { gzipSync } from 'node:zlib';
 import { appDir, workdir } from '../../e2e/ng-add/workdir.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -96,32 +97,28 @@ function measure(scenario) {
     env: { ...process.env, NG_CLI_ANALYTICS: 'false', CI: '1' },
     stdio: 'pipe',
   });
-  const stats = JSON.parse(readFileSync(join(dir, 'dist/size/browser-stats.json'), 'utf8'));
-  const outputs = Object.entries(stats.outputs).filter(([name]) => name.endsWith('.js'));
-  const initial = new Set(outputs.filter(([, output]) => output.entryPoint?.endsWith('src/main.ts')).map(([name]) => name));
-  for (const name of initial) {
-    for (const imported of stats.outputs[name].imports ?? []) {
-      if (imported.kind === 'import-statement') {
-        initial.add(imported.path);
-      }
+  const browser = join(dir, 'dist/size/browser');
+  const html = readFileSync(join(browser, 'index.html'), 'utf8');
+  const initial = new Set([...html.matchAll(/<script[^>]*\ssrc="([^"]+\.js)"|<link[^>]*rel="modulepreload"[^>]*href="([^"]+\.js)"/g)].map((match) => match[1] ?? match[2]));
+  const files = readdirSync(browser).filter((name) => name.endsWith('.js'));
+  const result = { initial: 0, gzip: 0, lazy: 0, entryPoints: new Set() };
+  for (const name of files) {
+    const bytes = readFileSync(join(browser, name));
+    if (initial.has(name)) {
+      result.initial += bytes.length;
+      result.gzip += gzipSync(bytes, { level: 9 }).length;
+    } else {
+      result.lazy += bytes.length;
     }
   }
-  const result = { total: 0, kit: 0, lazy: 0, entryPoints: new Set() };
-  for (const [name, output] of outputs) {
-    const isInitial = initial.has(name);
-    if (isInitial) {
-      result.total += output.bytes;
-    }
-    for (const [input, { bytesInOutput }] of Object.entries(output.inputs)) {
-      const entry = entryPoint(input);
-      if (!entry) {
-        continue;
-      }
-      if (isInitial) {
-        result.kit += bytesInOutput;
-        result.entryPoints.add(entry);
-      } else {
-        result.lazy += bytesInOutput;
+  const stats = JSON.parse(readFileSync(join(dir, 'dist/size/browser-stats.json'), 'utf8'));
+  for (const [name, output] of Object.entries(stats.outputs)) {
+    if (initial.has(name)) {
+      for (const input of Object.keys(output.inputs)) {
+        const entry = entryPoint(input);
+        if (entry) {
+          result.entryPoints.add(entry);
+        }
       }
     }
   }
@@ -141,13 +138,20 @@ const failures = [];
 const notes = [];
 const rows = [];
 
+let baseline = { initial: 0, gzip: 0 };
 for (const scenario of SCENARIOS) {
-  const result = measure(scenario);
+  const measured = measure(scenario);
+  if (scenario.name === 'angular') {
+    baseline = measured;
+  }
+  const result = { ...measured, kit: measured.initial - baseline.initial, kitGzip: measured.gzip - baseline.gzip };
   const budget = budgets[scenario.name];
   next[scenario.name] = { what: scenario.what, kitBytes: Math.ceil((result.kit * (1 + headroom)) / 1000) * 1000, entryPoints: result.entryPoints };
-  rows.push(`| ${scenario.name} | ${scenario.what} | ${kb(result.kit)} | ${budget ? kb(budget.kitBytes) : '—'} | ${kb(result.total)} | ${result.lazy ? kb(result.lazy) : '—'} |`);
+  rows.push(
+    `| ${scenario.name} | ${scenario.what} | ${kb(result.kit)} | ${kb(result.kitGzip)} | ${budget ? kb(budget.kitBytes) : '—'} | ${kb(result.initial)} | ${result.lazy ? kb(result.lazy) : '—'} |`,
+  );
   console.log(
-    `${scenario.name.padEnd(12)} kit ${kb(result.kit).padStart(9)}  budget ${(budget ? kb(budget.kitBytes) : '—').padStart(9)}  initial JS ${kb(result.total).padStart(9)}  lazy kit ${kb(result.lazy).padStart(9)}`,
+    `${scenario.name.padEnd(12)} kit ${kb(result.kit).padStart(9)} (gzip ${kb(result.kitGzip).padStart(8)})  budget ${(budget ? kb(budget.kitBytes) : '—').padStart(9)}  initial JS ${kb(result.initial).padStart(9)}  lazy JS ${kb(result.lazy).padStart(9)}`,
   );
   if (update) {
     continue;
@@ -174,10 +178,10 @@ for (const scenario of SCENARIOS) {
 const summary = [
   '### Bundle size',
   '',
-  'Production `ng build` of a new Angular app per scenario. "Kit" is the minified JavaScript of `@tectra-ng/*` loaded at start, "initial JS" all of it with Angular, "lazy" the kit code loaded only on use.',
+  'Production `ng build` of a new Angular app per scenario. "Initial JS" is what `index.html` loads at start, "kit" the part of it the kit adds over an empty Angular app (with the Angular packages it needs), "lazy" the JavaScript loaded only on use.',
   '',
-  '| Scenario | What the app uses | Kit | Budget | Initial JS | Lazy |',
-  '|---|---|---|---|---|---|',
+  '| Scenario | What the app uses | Kit | Kit, gzip | Budget | Initial JS | Lazy |',
+  '|---|---|---|---|---|---|---|',
   ...rows,
   '',
   ...failures.map((failure) => `- ❌ ${failure}`),
