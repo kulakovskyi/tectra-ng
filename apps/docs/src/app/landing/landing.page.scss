@@ -45,10 +45,12 @@
     box-shadow: 0 10px 30px -18px color-mix(in srgb, var(--tx-surface-950) 40%, transparent);
   }
 
-  ::ng-deep .tx-public-header__panel {
-    top: calc(100% + 8px);
-    border: 1px solid var(--l-line);
-    border-radius: 24px;
+  @media (width < 768px) {
+    ::ng-deep .tx-public-header__panel {
+      margin-top: 8px;
+      border: 1px solid var(--l-line);
+      border-radius: 24px;
+    }
   }
 }
 

@@ -52,7 +52,7 @@ export default class LandingPage {
   readonly headerTokens = {
     root: {
       height: '52px',
-      paddingX: '10px',
+      paddingX: '11px',
       background: 'color-mix(in srgb, var(--tx-surface-card) 72%, transparent)',
     },
     nav: {
