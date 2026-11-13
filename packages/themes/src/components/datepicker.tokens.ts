@@ -137,5 +137,7 @@ export const datePickerTokens = {
   },
 };
 
+type DatePickerTokensShape = typeof datePickerTokens;
+
 /** Type of `datePickerTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraDatePickerTokens = typeof datePickerTokens;
+export interface TectraDatePickerTokens extends DatePickerTokensShape {}

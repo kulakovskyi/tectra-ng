@@ -119,5 +119,7 @@ export const fileUploadTokens = {
   },
 };
 
+type FileUploadTokensShape = typeof fileUploadTokens;
+
 /** Type of `fileUploadTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraFileUploadTokens = typeof fileUploadTokens;
+export interface TectraFileUploadTokens extends FileUploadTokensShape {}

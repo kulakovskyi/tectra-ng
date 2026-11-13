@@ -85,11 +85,19 @@ export const fieldsetTokens = {
   },
 };
 
+type DividerTokensShape = typeof dividerTokens;
+
 /** Type of `dividerTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraDividerTokens = typeof dividerTokens;
+export interface TectraDividerTokens extends DividerTokensShape {}
+type CardTokensShape = typeof cardTokens;
+
 /** Type of `cardTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraCardTokens = typeof cardTokens;
+export interface TectraCardTokens extends CardTokensShape {}
+type PanelTokensShape = typeof panelTokens;
+
 /** Type of `panelTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraPanelTokens = typeof panelTokens;
+export interface TectraPanelTokens extends PanelTokensShape {}
+type FieldsetTokensShape = typeof fieldsetTokens;
+
 /** Type of `fieldsetTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraFieldsetTokens = typeof fieldsetTokens;
+export interface TectraFieldsetTokens extends FieldsetTokensShape {}

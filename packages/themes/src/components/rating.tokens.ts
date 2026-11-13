@@ -24,5 +24,7 @@ export const ratingTokens = {
   lg: { iconSize: '30px', gap: '4px' },
 };
 
+type RatingTokensShape = typeof ratingTokens;
+
 /** Type of `ratingTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraRatingTokens = typeof ratingTokens;
+export interface TectraRatingTokens extends RatingTokensShape {}

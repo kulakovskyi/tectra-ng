@@ -55,5 +55,7 @@ export const cookieNoticeTokens = {
   },
 };
 
+type CookieNoticeTokensShape = typeof cookieNoticeTokens;
+
 /** Type of `cookieNoticeTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraCookieNoticeTokens = typeof cookieNoticeTokens;
+export interface TectraCookieNoticeTokens extends CookieNoticeTokensShape {}

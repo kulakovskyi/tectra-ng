@@ -28,5 +28,7 @@ export const carouselTokens = {
   },
 };
 
+type CarouselTokensShape = typeof carouselTokens;
+
 /** Type of `carouselTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraCarouselTokens = typeof carouselTokens;
+export interface TectraCarouselTokens extends CarouselTokensShape {}

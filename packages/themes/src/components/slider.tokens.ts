@@ -34,5 +34,7 @@ export const sliderTokens = {
   },
 };
 
+type SliderTokensShape = typeof sliderTokens;
+
 /** Type of `sliderTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraSliderTokens = typeof sliderTokens;
+export interface TectraSliderTokens extends SliderTokensShape {}

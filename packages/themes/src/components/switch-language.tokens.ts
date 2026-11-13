@@ -30,5 +30,7 @@ export const switchLanguageTokens = {
   },
 };
 
+type SwitchLanguageTokensShape = typeof switchLanguageTokens;
+
 /** Type of `switchLanguageTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraSwitchLanguageTokens = typeof switchLanguageTokens;
+export interface TectraSwitchLanguageTokens extends SwitchLanguageTokensShape {}

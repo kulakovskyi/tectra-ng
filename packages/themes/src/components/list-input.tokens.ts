@@ -46,5 +46,7 @@ export const listInputTokens = {
   },
 };
 
+type ListInputTokensShape = typeof listInputTokens;
+
 /** Type of `listInputTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraListInputTokens = typeof listInputTokens;
+export interface TectraListInputTokens extends ListInputTokensShape {}

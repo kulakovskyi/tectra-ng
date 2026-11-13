@@ -22,5 +22,7 @@ export const switchThemeTokens = {
   },
 };
 
+type SwitchThemeTokensShape = typeof switchThemeTokens;
+
 /** Type of `switchThemeTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraSwitchThemeTokens = typeof switchThemeTokens;
+export interface TectraSwitchThemeTokens extends SwitchThemeTokensShape {}

@@ -14,5 +14,7 @@ export const inputOtpTokens = {
   lg: { cellWidth: '52px', cellFontSize: '20px', gap: '10px' },
 };
 
+type InputOtpTokensShape = typeof inputOtpTokens;
+
 /** Type of `inputOtpTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraInputOtpTokens = typeof inputOtpTokens;
+export interface TectraInputOtpTokens extends InputOtpTokensShape {}

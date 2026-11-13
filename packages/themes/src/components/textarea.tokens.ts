@@ -17,5 +17,7 @@ export const textareaTokens = {
   },
 };
 
+type TextareaTokensShape = typeof textareaTokens;
+
 /** Type of `textareaTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraTextareaTokens = typeof textareaTokens;
+export interface TectraTextareaTokens extends TextareaTokensShape {}

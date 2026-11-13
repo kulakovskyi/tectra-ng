@@ -132,5 +132,7 @@ export const buttonTokens = {
   },
 };
 
+type ButtonTokensShape = typeof buttonTokens;
+
 /** Type of `buttonTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraButtonTokens = typeof buttonTokens;
+export interface TectraButtonTokens extends ButtonTokensShape {}

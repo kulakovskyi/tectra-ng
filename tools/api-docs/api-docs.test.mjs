@@ -316,10 +316,16 @@ export declare class TxPart {
   readonly hostStyle: string;
   static ɵcmp: i0.ɵɵComponentDeclaration<TxPart, "tx-part", never, {}, {}, never, never, true, never>;
 }
+type Shape = typeof LIMIT;
+interface Helper {
+  value: string;
+}
+declare function listed(): void;
+export { listed };
 `;
     assert.deepEqual(
       missingDocs(text).map((item) => `${item.kind} ${item.name}`),
-      ['function size', 'constant LIMIT', 'type Mode', 'interface Options', 'field Options.life', 'class Service', 'member Service.value', 'component TxPart'],
+      ['function size', 'constant LIMIT', 'type Mode', 'function listed', 'interface Options', 'field Options.life', 'class Service', 'member Service.value', 'component TxPart'],
     );
   });
 });

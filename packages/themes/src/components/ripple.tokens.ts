@@ -9,5 +9,7 @@ export const rippleTokens = {
   },
 };
 
+type RippleTokensShape = typeof rippleTokens;
+
 /** Type of `rippleTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraRippleTokens = typeof rippleTokens;
+export interface TectraRippleTokens extends RippleTokensShape {}

@@ -100,5 +100,7 @@ export const selectTokens = {
   },
 };
 
+type SelectTokensShape = typeof selectTokens;
+
 /** Type of `selectTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraSelectTokens = typeof selectTokens;
+export interface TectraSelectTokens extends SelectTokensShape {}

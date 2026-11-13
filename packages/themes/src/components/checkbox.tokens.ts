@@ -52,5 +52,7 @@ export const checkboxTokens = {
   group: { gap: '10px', horizontalGap: '20px', selectAllGap: '12px' },
 };
 
+type CheckboxTokensShape = typeof checkboxTokens;
+
 /** Type of `checkboxTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraCheckboxTokens = typeof checkboxTokens;
+export interface TectraCheckboxTokens extends CheckboxTokensShape {}

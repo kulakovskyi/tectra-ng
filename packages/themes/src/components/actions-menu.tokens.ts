@@ -26,5 +26,7 @@ export const actionsMenuTokens = {
   },
 };
 
+type ActionsMenuTokensShape = typeof actionsMenuTokens;
+
 /** Type of `actionsMenuTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraActionsMenuTokens = typeof actionsMenuTokens;
+export interface TectraActionsMenuTokens extends ActionsMenuTokensShape {}

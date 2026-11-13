@@ -6,5 +6,7 @@ export const splitButtonTokens = {
   },
 };
 
+type SplitButtonTokensShape = typeof splitButtonTokens;
+
 /** Type of `splitButtonTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraSplitButtonTokens = typeof splitButtonTokens;
+export interface TectraSplitButtonTokens extends SplitButtonTokensShape {}

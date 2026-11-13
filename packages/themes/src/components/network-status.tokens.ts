@@ -37,5 +37,7 @@ export const networkStatusTokens = {
   },
 };
 
+type NetworkStatusTokensShape = typeof networkStatusTokens;
+
 /** Type of `networkStatusTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraNetworkStatusTokens = typeof networkStatusTokens;
+export interface TectraNetworkStatusTokens extends NetworkStatusTokensShape {}

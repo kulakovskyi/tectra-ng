@@ -16,5 +16,7 @@ export const inputNumberTokens = {
   },
 };
 
+type InputNumberTokensShape = typeof inputNumberTokens;
+
 /** Type of `inputNumberTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraInputNumberTokens = typeof inputNumberTokens;
+export interface TectraInputNumberTokens extends InputNumberTokensShape {}

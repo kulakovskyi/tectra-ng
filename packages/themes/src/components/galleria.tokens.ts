@@ -88,5 +88,7 @@ export const galleriaTokens = {
   },
 };
 
+type GalleriaTokensShape = typeof galleriaTokens;
+
 /** Type of `galleriaTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraGalleriaTokens = typeof galleriaTokens;
+export interface TectraGalleriaTokens extends GalleriaTokensShape {}

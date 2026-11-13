@@ -13,5 +13,7 @@ export const qrCodeTokens = {
   },
 };
 
+type QrCodeTokensShape = typeof qrCodeTokens;
+
 /** Type of `qrCodeTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraQrCodeTokens = typeof qrCodeTokens;
+export interface TectraQrCodeTokens extends QrCodeTokensShape {}

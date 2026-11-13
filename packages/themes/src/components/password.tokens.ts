@@ -27,5 +27,7 @@ export const passwordTokens = {
   },
 };
 
+type PasswordTokensShape = typeof passwordTokens;
+
 /** Type of `passwordTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraPasswordTokens = typeof passwordTokens;
+export interface TectraPasswordTokens extends PasswordTokensShape {}

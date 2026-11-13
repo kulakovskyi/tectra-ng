@@ -46,5 +46,7 @@ export const actionTileTokens = {
   },
 };
 
+type ActionTileTokensShape = typeof actionTileTokens;
+
 /** Type of `actionTileTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraActionTileTokens = typeof actionTileTokens;
+export interface TectraActionTileTokens extends ActionTileTokensShape {}

@@ -15,5 +15,7 @@ export const toolbarTokens = {
   },
 };
 
+type ToolbarTokensShape = typeof toolbarTokens;
+
 /** Type of `toolbarTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraToolbarTokens = typeof toolbarTokens;
+export interface TectraToolbarTokens extends ToolbarTokensShape {}

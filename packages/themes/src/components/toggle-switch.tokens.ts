@@ -47,5 +47,7 @@ export const toggleSwitchTokens = {
   lg: { width: '50px', height: '28px', handleSize: '24px', iconSize: '14px', labelFontSize: tokenRef('font-size-lg') },
 };
 
+type ToggleSwitchTokensShape = typeof toggleSwitchTokens;
+
 /** Type of `toggleSwitchTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraToggleSwitchTokens = typeof toggleSwitchTokens;
+export interface TectraToggleSwitchTokens extends ToggleSwitchTokensShape {}

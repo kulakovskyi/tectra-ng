@@ -35,5 +35,7 @@ export const appFooterTokens = {
   },
 };
 
+type AppFooterTokensShape = typeof appFooterTokens;
+
 /** Type of `appFooterTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraAppFooterTokens = typeof appFooterTokens;
+export interface TectraAppFooterTokens extends AppFooterTokensShape {}

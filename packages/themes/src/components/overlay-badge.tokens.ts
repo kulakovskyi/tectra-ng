@@ -10,5 +10,7 @@ export const overlayBadgeTokens = {
   },
 };
 
+type OverlayBadgeTokensShape = typeof overlayBadgeTokens;
+
 /** Type of `overlayBadgeTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraOverlayBadgeTokens = typeof overlayBadgeTokens;
+export interface TectraOverlayBadgeTokens extends OverlayBadgeTokensShape {}

@@ -18,5 +18,7 @@ export const scrollPanelTokens = {
   },
 };
 
+type ScrollPanelTokensShape = typeof scrollPanelTokens;
+
 /** Type of `scrollPanelTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraScrollPanelTokens = typeof scrollPanelTokens;
+export interface TectraScrollPanelTokens extends ScrollPanelTokensShape {}

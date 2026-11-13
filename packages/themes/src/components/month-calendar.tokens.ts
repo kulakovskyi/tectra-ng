@@ -91,5 +91,7 @@ export const monthCalendarTokens = {
   },
 };
 
+type MonthCalendarTokensShape = typeof monthCalendarTokens;
+
 /** Type of `monthCalendarTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraMonthCalendarTokens = typeof monthCalendarTokens;
+export interface TectraMonthCalendarTokens extends MonthCalendarTokensShape {}

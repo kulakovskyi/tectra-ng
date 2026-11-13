@@ -23,5 +23,7 @@ export const tooltipTokens = {
   },
 };
 
+type TooltipTokensShape = typeof tooltipTokens;
+
 /** Type of `tooltipTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraTooltipTokens = typeof tooltipTokens;
+export interface TectraTooltipTokens extends TooltipTokensShape {}

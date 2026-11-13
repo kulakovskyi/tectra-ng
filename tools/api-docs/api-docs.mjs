@@ -383,8 +383,18 @@ export function missingDocs(text, file = 'index.d.ts') {
       missing.push({ kind, name, line: sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile)).line + 1 });
     }
   };
+  const listed = new Set(
+    sourceFile.statements
+      .filter((statement) => ts.isExportDeclaration(statement) && !statement.moduleSpecifier && statement.exportClause && ts.isNamedExports(statement.exportClause))
+      .flatMap((statement) => statement.exportClause.elements.map((element) => (element.propertyName ?? element.name).text)),
+  );
+  const exported = (node, name) => !!(ts.getCombinedModifierFlags(node) & ts.ModifierFlags.Export) || listed.has(name);
   const functions = new Set();
   for (const statement of sourceFile.statements) {
+    const name = statement.name?.text ?? (ts.isVariableStatement(statement) ? statement.declarationList.declarations[0]?.name.getText(sourceFile) : undefined);
+    if (!name || !exported(statement, name)) {
+      continue;
+    }
     if (ts.isFunctionDeclaration(statement) && statement.name && !functions.has(statement.name.text)) {
       functions.add(statement.name.text);
       note(statement, statement.name.text, 'function');
@@ -395,6 +405,9 @@ export function missingDocs(text, file = 'index.d.ts') {
     }
   }
   for (const declaration of classes) {
+    if (!exported(declaration.node, declaration.name)) {
+      continue;
+    }
     note(declaration.node, declaration.name, declaration.isInterface ? 'interface' : declaration.meta ? declaration.meta.kind : 'class');
     if (declaration.meta) {
       continue;

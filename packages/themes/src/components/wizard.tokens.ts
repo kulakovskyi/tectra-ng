@@ -84,5 +84,7 @@ export const wizardTokens = {
   },
 };
 
+type WizardTokensShape = typeof wizardTokens;
+
 /** Type of `wizardTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraWizardTokens = typeof wizardTokens;
+export interface TectraWizardTokens extends WizardTokensShape {}

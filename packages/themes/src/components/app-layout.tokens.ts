@@ -93,5 +93,7 @@ export const appLayoutTokens = {
   },
 };
 
+type AppLayoutTokensShape = typeof appLayoutTokens;
+
 /** Type of `appLayoutTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraAppLayoutTokens = typeof appLayoutTokens;
+export interface TectraAppLayoutTokens extends AppLayoutTokensShape {}

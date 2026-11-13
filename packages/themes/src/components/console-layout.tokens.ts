@@ -99,5 +99,7 @@ export const consoleLayoutTokens = {
   },
 };
 
+type ConsoleLayoutTokensShape = typeof consoleLayoutTokens;
+
 /** Type of `consoleLayoutTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraConsoleLayoutTokens = typeof consoleLayoutTokens;
+export interface TectraConsoleLayoutTokens extends ConsoleLayoutTokensShape {}

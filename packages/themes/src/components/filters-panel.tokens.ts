@@ -112,5 +112,7 @@ export const filtersPanelTokens = {
   },
 };
 
+type FiltersPanelTokensShape = typeof filtersPanelTokens;
+
 /** Type of `filtersPanelTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraFiltersPanelTokens = typeof filtersPanelTokens;
+export interface TectraFiltersPanelTokens extends FiltersPanelTokensShape {}

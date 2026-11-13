@@ -74,7 +74,11 @@ export const fieldMessageTokens = {
   error: { color: lightDark(tokenRef('red-700'), tokenRef('red-400')) },
 };
 
+type MessageTokensShape = typeof messageTokens;
+
 /** Type of `messageTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraMessageTokens = typeof messageTokens;
+export interface TectraMessageTokens extends MessageTokensShape {}
+type FieldMessageTokensShape = typeof fieldMessageTokens;
+
 /** Type of `fieldMessageTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraFieldMessageTokens = typeof fieldMessageTokens;
+export interface TectraFieldMessageTokens extends FieldMessageTokensShape {}

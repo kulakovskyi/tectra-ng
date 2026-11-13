@@ -45,6 +45,13 @@ export default [
     },
   },
   {
+    files: ['packages/themes/src/components/*.ts'],
+    rules: {
+      '@typescript-eslint/no-empty-object-type': ['error', { allowInterfaces: 'with-single-extends' }],
+      '@typescript-eslint/no-empty-interface': ['error', { allowSingleExtends: true }],
+    },
+  },
+  {
     files: ['apps/**/*.ts'],
     rules: {
       '@angular-eslint/component-selector': 'off',

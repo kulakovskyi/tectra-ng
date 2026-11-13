@@ -37,5 +37,7 @@ export const breadcrumbTokens = {
   },
 };
 
+type BreadcrumbTokensShape = typeof breadcrumbTokens;
+
 /** Type of `breadcrumbTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraBreadcrumbTokens = typeof breadcrumbTokens;
+export interface TectraBreadcrumbTokens extends BreadcrumbTokensShape {}
