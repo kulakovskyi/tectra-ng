@@ -1,0 +1,153 @@
+@use '../landing' as l;
+
+:host {
+  display: block;
+}
+
+.intro {
+  @include l.paper;
+
+  position: relative;
+  padding: clamp(96px, 12vw, 160px) 0 clamp(80px, 10vw, 140px);
+  background-color: var(--l-bg);
+}
+
+.intro__frame {
+  @include l.frame;
+
+  display: grid;
+  grid-template-columns: minmax(160px, 1fr) minmax(0, 3fr);
+  gap: 32px clamp(24px, 4vw, 64px);
+  padding: 0 clamp(16px, 2vw, 24px);
+  border-inline: 1px solid var(--l-line);
+}
+
+.intro__label {
+  @include l.label;
+
+  height: fit-content;
+  margin: 10px 0 0;
+  color: var(--l-muted);
+}
+
+.intro__statement {
+  margin: 0;
+  font-size: clamp(26px, 3.4vw, 46px);
+  font-weight: 500;
+  line-height: 1.16;
+  letter-spacing: -0.03em;
+  text-wrap: pretty;
+}
+
+.intro__word {
+  --lit: clamp(0, calc((var(--p, 0) * 1.35 - var(--w)) * 7), 1);
+
+  opacity: calc(0.16 + var(--lit) * 0.84);
+  transition: opacity 0.2s linear;
+}
+
+.intro__loop {
+  display: flex;
+  grid-column: 2;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 40px clamp(32px, 6vw, 88px);
+  margin-top: clamp(48px, 7vw, 96px);
+}
+
+.orbit {
+  --size: clamp(260px, 30vw, 380px);
+  --radius: calc(var(--size) * 0.38);
+
+  position: relative;
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: var(--size);
+  height: var(--size);
+}
+
+.orbit__ring {
+  position: absolute;
+  inset: 0;
+  transform: rotate(calc(var(--p, 0) * 150deg - 40deg));
+  transition: l.$scrub;
+}
+
+.orbit__item {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: calc(var(--size) * 0.19);
+  margin: calc(var(--size) * -0.095) 0 0 calc(var(--size) * -0.095);
+  transform: rotate(var(--a)) translateY(calc(var(--radius) * -1)) rotate(calc(var(--a) * -1 + var(--p, 0) * -150deg));
+  transition: l.$scrub;
+
+  docs-landing-shape {
+    transition: scale 0.45s l.$spring;
+  }
+
+  &:hover docs-landing-shape {
+    scale: 1.15;
+  }
+}
+
+.orbit__core {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: calc(var(--size) * 0.42);
+  height: calc(var(--size) * 0.42);
+  border-radius: 50%;
+  background: var(--l-orange);
+  box-shadow: 0 30px 60px -30px color-mix(in srgb, var(--tx-orange-500) 70%, transparent);
+  transform: scale(calc(0.8 + var(--p, 0) * 0.2));
+  transition: l.$scrub;
+
+  docs-logo-mark {
+    width: 52%;
+    height: 52%;
+  }
+}
+
+.intro__aside {
+  flex: 1 1 260px;
+  max-width: 380px;
+  margin: 0;
+  font-size: clamp(18px, 1.6vw, 21px);
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+}
+
+@media (width < 820px) {
+  .intro__frame {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .intro__loop {
+    grid-column: 1;
+    justify-content: center;
+  }
+}
+
+@include l.reduced {
+  .intro__word {
+    opacity: 1;
+  }
+
+  .orbit__ring,
+  .orbit__item,
+  .orbit__core {
+    transition: none;
+  }
+
+  .orbit__ring,
+  .orbit__core {
+    transform: none;
+  }
+
+  .orbit__item {
+    transform: rotate(var(--a)) translateY(calc(var(--radius) * -1)) rotate(calc(var(--a) * -1));
+  }
+}

@@ -1,0 +1,48 @@
+<section class="glue" docsScrollProgress="sticky" aria-labelledby="glue-title">
+  <div class="glue__stage">
+    <header class="glue__head">
+      <span class="glue__label">The glue tax</span>
+      <h2 class="glue__title" id="glue-title">Without a kit, you glue it together</h2>
+    </header>
+
+    <ul class="glue__libraries">
+      @for (library of libraries; track library.title; let index = $index) {
+        <li class="library" [attr.data-tone]="library.tone" [style.--x]="library.x" [style.--y]="library.y" [style.--turn]="library.turn" [style.--i]="index">
+          <span class="library__icon"><tx-icon [name]="library.icon" /></span>
+          <span class="library__title">{{ library.title }}</span>
+          <span class="library__text">{{ library.text }}</span>
+          <span class="library__note">own theme · own releases</span>
+        </li>
+      }
+    </ul>
+
+    <div class="glue__merge" aria-hidden="true">
+      <svg class="glue__ring" viewBox="0 0 100 100"><circle cx="50" cy="50" r="49" /></svg>
+      <div class="glue__orbit">
+        @for (label of orbit; track label; let index = $index) {
+          <span class="glue__chip" [style.--a]="(index * 360) / orbit.length + 'deg'">{{ label }}</span>
+        }
+      </div>
+      <span class="glue__core">
+        <docs-logo-mark />
+        <span>tectra</span>
+      </span>
+    </div>
+
+    <p class="glue__side glue__side--left">Your whole UI,<br />in one install.</p>
+    <p class="glue__side glue__side--right">Everything on it,<br />themed together.</p>
+
+    <div class="glue__tallies">
+      @for (tally of tallies; track tally.beforeLabel) {
+        <p class="tally">
+          <span class="tally__state tally__state--before"
+            ><strong>{{ tally.before }}</strong> {{ tally.beforeLabel }}</span
+          >
+          <span class="tally__state tally__state--after"
+            ><strong>{{ tally.after }}</strong> {{ tally.afterLabel }}</span
+          >
+        </p>
+      }
+    </div>
+  </div>
+</section>

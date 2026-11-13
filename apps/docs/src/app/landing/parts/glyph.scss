@@ -1,0 +1,321 @@
+$spring: cubic-bezier(0.3, 1.4, 0.5, 1);
+
+:host {
+  position: relative;
+  display: block;
+  width: 150px;
+  height: 80px;
+  color: var(--l-on-block);
+}
+
+.glyph {
+  position: absolute;
+  inset: 0;
+}
+
+i {
+  position: absolute;
+  display: none;
+  background: currentColor;
+  transition:
+    transform 0.6s $spring,
+    border-radius 0.4s;
+}
+
+.glyph[data-kind='dots'] i {
+  top: 0;
+  display: block;
+  width: 70px;
+  height: 80px;
+  border-radius: 50%;
+
+  &:nth-child(1) {
+    left: 0;
+  }
+
+  &:nth-child(2) {
+    left: 40px;
+    width: 56px;
+  }
+
+  &:nth-child(3) {
+    left: 76px;
+    width: 42px;
+  }
+
+  &:nth-child(4) {
+    left: 104px;
+    width: 28px;
+  }
+}
+
+.glyph[data-kind='asterisk'] i {
+  top: 30px;
+  left: 30px;
+  display: block;
+  width: 90px;
+  height: 22px;
+  border-radius: 4px;
+
+  &:nth-child(2) {
+    transform: rotate(60deg);
+  }
+
+  &:nth-child(3) {
+    transform: rotate(-60deg);
+  }
+
+  &:nth-child(4) {
+    display: none;
+  }
+}
+
+.glyph[data-kind='arch'] i:nth-child(1) {
+  bottom: 0;
+  left: 15px;
+  display: block;
+  width: 120px;
+  height: 60px;
+  border-radius: 60px 60px 0 0;
+  background: radial-gradient(circle at 50% 100%, transparent 22px, currentColor 23px);
+}
+
+.glyph[data-kind='stripes'] i {
+  left: 0;
+  display: block;
+  width: 130px;
+  height: 18px;
+  border-radius: 999px;
+
+  &:nth-child(1) {
+    top: 0;
+    width: 90px;
+  }
+
+  &:nth-child(2) {
+    top: 22px;
+  }
+
+  &:nth-child(3) {
+    top: 44px;
+    width: 110px;
+  }
+
+  &:nth-child(4) {
+    top: 66px;
+    width: 70px;
+    height: 14px;
+  }
+}
+
+.glyph[data-kind='pinwheel'] i {
+  display: block;
+  width: 40px;
+  height: 40px;
+
+  &:nth-child(1) {
+    top: 0;
+    left: 35px;
+    border-radius: 40px 0 0;
+  }
+
+  &:nth-child(2) {
+    top: 0;
+    left: 75px;
+    border-radius: 0 40px 0 0;
+  }
+
+  &:nth-child(3) {
+    top: 40px;
+    left: 75px;
+    border-radius: 0 0 40px;
+  }
+
+  &:nth-child(4) {
+    top: 40px;
+    left: 35px;
+    border-radius: 0 0 0 40px;
+  }
+}
+
+.glyph[data-kind='pill'] i {
+  top: 10px;
+  display: block;
+  height: 60px;
+  border-radius: 999px;
+
+  &:nth-child(1) {
+    left: 0;
+    width: 150px;
+    background: radial-gradient(circle at 30px 50%, transparent 18px, currentColor 19px);
+  }
+
+  &:nth-child(n + 2) {
+    display: none;
+  }
+}
+
+.glyph[data-kind='bars'] i {
+  bottom: 0;
+  transform-origin: bottom;
+  display: block;
+  width: 26px;
+  border-radius: 13px 13px 0 0;
+
+  &:nth-child(1) {
+    left: 6px;
+    height: 40px;
+  }
+
+  &:nth-child(2) {
+    left: 42px;
+    height: 80px;
+  }
+
+  &:nth-child(3) {
+    left: 78px;
+    height: 58px;
+  }
+
+  &:nth-child(4) {
+    left: 114px;
+    height: 28px;
+  }
+}
+
+.glyph[data-kind='half'] i {
+  display: block;
+
+  &:nth-child(1) {
+    top: 0;
+    left: 0;
+    width: 80px;
+    height: 80px;
+    border-radius: 80px 0 0 80px;
+  }
+
+  &:nth-child(2) {
+    top: 0;
+    left: 86px;
+    width: 40px;
+    height: 80px;
+    border-radius: 0 80px 80px 0;
+  }
+
+  &:nth-child(n + 3) {
+    display: none;
+  }
+}
+
+.glyph[data-kind='grid'] i {
+  display: block;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+
+  &:nth-child(1) {
+    top: 0;
+    left: 30px;
+  }
+
+  &:nth-child(2) {
+    top: 0;
+    left: 74px;
+    border-radius: 8px;
+  }
+
+  &:nth-child(3) {
+    top: 44px;
+    left: 30px;
+    border-radius: 8px;
+  }
+
+  &:nth-child(4) {
+    top: 44px;
+    left: 74px;
+  }
+}
+
+:host-context(a:hover),
+:host-context(a:focus-visible) {
+  .glyph[data-kind='dots'] i {
+    &:nth-child(2) {
+      transform: translateX(-12px);
+    }
+
+    &:nth-child(3) {
+      transform: translateX(-26px);
+    }
+
+    &:nth-child(4) {
+      transform: translateX(-40px);
+    }
+  }
+
+  .glyph[data-kind='asterisk'] i {
+    &:nth-child(1) {
+      transform: rotate(90deg);
+    }
+
+    &:nth-child(2) {
+      transform: rotate(150deg);
+    }
+
+    &:nth-child(3) {
+      transform: rotate(30deg);
+    }
+  }
+
+  .glyph[data-kind='arch'] i,
+  .glyph[data-kind='pill'] i {
+    transform: translateY(-8px) scale(1.06);
+  }
+
+  .glyph[data-kind='stripes'] i {
+    &:nth-child(odd) {
+      transform: translateX(20px);
+    }
+  }
+
+  .glyph[data-kind='pinwheel'] i {
+    &:nth-child(1) {
+      transform: translate(-6px, -6px);
+    }
+
+    &:nth-child(2) {
+      transform: translate(6px, -6px);
+    }
+
+    &:nth-child(3) {
+      transform: translate(6px, 6px);
+    }
+
+    &:nth-child(4) {
+      transform: translate(-6px, 6px);
+    }
+  }
+
+  .glyph[data-kind='bars'] i {
+    &:nth-child(odd) {
+      transform: scaleY(1.3);
+    }
+
+    &:nth-child(even) {
+      transform: scaleY(0.7);
+    }
+  }
+
+  .glyph[data-kind='half'] i:nth-child(2) {
+    transform: translateX(-46px) rotate(180deg);
+  }
+
+  .glyph[data-kind='grid'] i {
+    border-radius: 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  i {
+    transition: none;
+  }
+}

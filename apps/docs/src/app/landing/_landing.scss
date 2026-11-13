@@ -1,0 +1,92 @@
+$ease: cubic-bezier(0.16, 1, 0.3, 1);
+$spring: cubic-bezier(0.3, 1.4, 0.5, 1);
+$scrub: transform 0.15s linear;
+
+@mixin title($size: clamp(44px, 6.4vw, 92px)) {
+  margin: 0;
+  font-size: $size;
+  font-weight: 600;
+  line-height: 0.98;
+  letter-spacing: -0.05em;
+  text-wrap: balance;
+}
+
+@mixin label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  padding: 4px 11px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font-family: var(--tx-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+@mixin paper($color: var(--l-grid), $size: 36px) {
+  background-image: linear-gradient($color 1px, transparent 1px), linear-gradient(90deg, $color 1px, transparent 1px);
+  background-position: center top;
+  background-size: $size $size;
+}
+
+@mixin marks($color: var(--l-ink), $size: 7px) {
+  background:
+    linear-gradient($color, $color) left top / $size $size no-repeat,
+    linear-gradient($color, $color) right top / $size $size no-repeat,
+    linear-gradient($color, $color) left bottom / $size $size no-repeat,
+    linear-gradient($color, $color) right bottom / $size $size no-repeat;
+}
+
+@mixin frame {
+  box-sizing: border-box;
+  width: min(100% - 32px, var(--l-width));
+  margin-inline: auto;
+}
+
+@mixin focus {
+  &:focus-visible {
+    outline: 2px solid var(--tx-focus-ring-color);
+    outline-offset: 4px;
+  }
+}
+
+@mixin sr-only {
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
+
+@mixin rise {
+  .rise {
+    animation: landing-rise 1s $ease both;
+    animation-delay: calc(var(--i, 0) * 90ms);
+  }
+
+  @keyframes landing-rise {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rise {
+      animation: none;
+    }
+  }
+}
+
+@mixin reduced {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}

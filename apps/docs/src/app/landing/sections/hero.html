@@ -1,0 +1,54 @@
+<section class="hero" docsScrollProgress="leave">
+  <div class="hero__copy">
+    <span class="hero__label rise">Open source · Angular 22 · MIT</span>
+    <h1 class="hero__title rise" style="--i: 1">
+      <span class="hero__line">Angular UI</span>
+      <span class="hero__line">
+        for your
+        <span class="hero__words" aria-hidden="true">
+          <span class="hero__track">
+            @for (word of words; track $index) {
+              <span class="hero__word" [attr.data-tone]="word.tone">{{ word.text }}</span>
+            }
+          </span>
+        </span>
+        <span class="sr-only">whole app</span>
+      </span>
+    </h1>
+    <p class="hero__lead rise" style="--i: 2">
+      {{ componentsLabel }} components, charts, editors and page blocks on signals. Themed with tokens, rendered on the server, open source.
+    </p>
+    <div class="hero__actions rise" style="--i: 3">
+      <a txButton rounded size="large" routerLink="/getting-started">Get started</a>
+      <button type="button" class="hero__command" (click)="copy()">
+        <span class="hero__prompt" aria-hidden="true">$</span>
+        <code>{{ command }}</code>
+        <docs-copy-icon [copied]="copied()" />
+        <span class="sr-only">Copy the install command</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="mosaic" aria-hidden="true">
+    <div class="mosaic__grid">
+      @for (tile of tiles; track $index) {
+        <span
+          class="mosaic__tile"
+          [class.mosaic__tile--small]="tile.small"
+          [style.grid-column]="tile.col"
+          [style.grid-row]="tile.row"
+          [style.--dx]="tile.dx"
+          [style.--dy]="tile.dy"
+          [style.--spin]="tile.spin"
+          [style.--turn]="(tile.turn ?? 0) + 'deg'"
+          [style.--order]="tile.order"
+        >
+          <docs-landing-shape [kind]="tile.kind" [tone]="tile.tone" [icon]="tile.icon" />
+        </span>
+      }
+      <a class="mosaic__logo" routerLink="/getting-started" tabindex="-1">
+        <docs-logo-mark />
+      </a>
+    </div>
+  </div>
+</section>

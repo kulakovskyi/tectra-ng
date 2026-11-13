@@ -1,0 +1,290 @@
+@use 'sass:math';
+@use '../landing' as l;
+
+$words: 7;
+$step: math.div(100%, $words);
+$move: 3.2%;
+
+:host {
+  display: block;
+}
+
+@include l.sr-only;
+@include l.rise;
+
+.hero {
+  --cell: min(74px, (100vw - 24px) / 11);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100svh;
+  padding: 116px 0 0;
+  overflow: clip;
+  background: var(--l-bg);
+  text-align: center;
+
+  &::before {
+    @include l.frame;
+
+    position: absolute;
+    inset: 0;
+    border-inline: 1px solid var(--l-line);
+    content: '';
+    pointer-events: none;
+  }
+}
+
+.hero__copy {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.hero__label {
+  @include l.label;
+
+  color: var(--l-muted);
+}
+
+.hero__title {
+  @include l.title(clamp(46px, 7.8vw, 108px));
+
+  margin-top: 22px;
+}
+
+.hero__line {
+  display: block;
+  white-space: nowrap;
+}
+
+.hero__words {
+  display: inline-block;
+  height: 1.08em;
+  overflow: hidden;
+  border-radius: 0.16em;
+  vertical-align: -0.17em;
+}
+
+.hero__track {
+  display: flex;
+  flex-direction: column;
+  animation: hero-words #{$words * 2.4s} infinite;
+  animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.hero__word {
+  height: 1.08em;
+  padding: 0 0.16em;
+  background: var(--l-sky);
+  color: var(--l-on-block);
+  line-height: 1.08;
+  text-align: center;
+
+  &[data-tone='green'] {
+    background: var(--l-green);
+  }
+
+  &[data-tone='amber'] {
+    background: var(--l-amber);
+  }
+
+  &[data-tone='orange'] {
+    background: var(--l-orange);
+  }
+
+  &[data-tone='purple'] {
+    background: var(--l-purple);
+  }
+
+  &[data-tone='blue'] {
+    background: var(--l-blue);
+  }
+}
+
+@keyframes hero-words {
+  @for $i from 0 to $words {
+    #{$i * $step},
+    #{($i + 1) * $step - $move} {
+      transform: translateY(#{-1.08 * $i}em);
+    }
+  }
+
+  100% {
+    transform: translateY(#{-1.08 * $words}em);
+  }
+}
+
+.hero__lead {
+  max-width: 620px;
+  margin: 22px 0 0;
+  color: var(--l-muted);
+  font-size: clamp(17px, 1.8vw, 21px);
+  line-height: 1.45;
+  text-wrap: balance;
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.hero__command {
+  --docs-copy-done: var(--tx-green-500);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 48px;
+  padding: 0 18px;
+  border: 1px solid var(--l-line-strong);
+  border-radius: 999px;
+  background: var(--l-card);
+  color: var(--l-ink);
+  font-family: var(--tx-font-mono);
+  font-size: 14px;
+  cursor: pointer;
+  transition:
+    border-color 0.25s,
+    transform 0.4s l.$spring;
+
+  code {
+    padding: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+  }
+
+  &:hover {
+    border-color: var(--l-ink);
+    transform: translateY(-2px);
+  }
+
+  @include l.focus;
+}
+
+.hero__prompt {
+  color: var(--l-muted);
+}
+
+.mosaic {
+  position: relative;
+  width: 100%;
+  margin-top: auto;
+  padding-top: clamp(40px, 6vh, 64px);
+}
+
+.mosaic__grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(11, var(--cell));
+  grid-template-rows: repeat(3, var(--cell));
+  justify-content: center;
+  padding: calc(var(--cell) * 0.5) 0;
+  border-block: 1px solid var(--l-line);
+
+  &::before {
+    @include l.frame;
+    @include l.marks;
+
+    position: absolute;
+    inset: -4px 0;
+    content: '';
+    pointer-events: none;
+  }
+
+  &::after {
+    @include l.paper;
+
+    position: absolute;
+    inset: 100% 0 auto;
+    height: 160px;
+    content: '';
+    mask-image: linear-gradient(to bottom, black, transparent);
+    pointer-events: none;
+  }
+}
+
+.mosaic__tile {
+  display: grid;
+  place-items: center;
+  animation: mosaic-in 0.9s l.$spring backwards;
+  animation-delay: calc(var(--order) * 60ms + 260ms);
+  transition: scale 0.45s l.$spring;
+
+  docs-landing-shape {
+    transform: translate(calc(var(--dx) * var(--p, 0) * 8vw), calc(var(--dy) * var(--p, 0) * 22vh)) rotate(calc(var(--turn) + var(--spin) * var(--p, 0) * 1deg))
+      scale(calc(1 - var(--p, 0) * 0.25));
+    transition: l.$scrub;
+  }
+
+  &:hover {
+    scale: 1.1;
+  }
+}
+
+.mosaic__tile--small docs-landing-shape {
+  width: 48%;
+}
+
+.mosaic__logo {
+  z-index: 1;
+  grid-column: 6;
+  grid-row: 2;
+  display: block;
+  margin: -14%;
+  border-radius: 28%;
+  transform: scale(calc(1 + var(--p, 0) * 0.5));
+  transition: l.$scrub;
+  filter: drop-shadow(0 18px 30px color-mix(in srgb, var(--tx-primary-base) 40%, transparent));
+
+  docs-logo-mark {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+@keyframes mosaic-in {
+  from {
+    opacity: 0;
+    transform: scale(0.2) rotate(-40deg);
+  }
+}
+
+@media (width < 640px) {
+  .hero {
+    padding-top: 112px;
+  }
+
+  .hero__line {
+    white-space: normal;
+  }
+
+  .hero__words {
+    vertical-align: -0.2em;
+  }
+}
+
+@include l.reduced {
+  .hero__track,
+  .mosaic__tile {
+    animation: none;
+  }
+
+  .mosaic__tile docs-landing-shape,
+  .mosaic__logo {
+    transform: rotate(var(--turn, 0deg));
+    transition: none;
+  }
+
+  .mosaic__logo {
+    transform: none;
+  }
+}

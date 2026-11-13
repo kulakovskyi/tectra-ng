@@ -22,153 +22,16 @@
 </tx-public-header>
 
 <main class="landing">
-  <section class="hero" docsScrollProgress="leave">
-    <div class="hero__wall" aria-hidden="true">
-      <div class="hero__plane">
-        @for (column of wall; track $index; let odd = $odd) {
-          <div class="hero__column" [class.hero__column--down]="odd">
-            @for (item of column; track $index) {
-              <img [src]="shot(item)" alt="" width="1440" height="900" loading="lazy" decoding="async" />
-            }
-          </div>
-        }
-      </div>
-    </div>
-    <div class="hero__copy">
-      <p class="hero__eyebrow rise">tectra for Angular</p>
-      <h1 class="hero__title rise" style="--i: 1">Angular UI.<br />Finished.</h1>
-      <p class="hero__lead rise" style="--i: 2">
-        {{ componentsLabel }} components and ready page blocks on signals — themed with tokens, rendered on the server, open source.
-      </p>
-      <div class="hero__actions rise" style="--i: 3">
-        <a txButton rounded size="large" routerLink="/getting-started">Get started</a>
-        <a class="more" routerLink="/docs">Browse the docs <tx-icon name="angle-right" /></a>
-      </div>
-    </div>
-    <div class="laptop" docsScrollProgress="view">
-      <div class="laptop__lid">
-        <div class="laptop__screen">
-          <span class="laptop__camera" aria-hidden="true"></span>
-          <img [src]="shot(hero)" [alt]="hero.alt" width="1440" height="900" fetchpriority="high" />
-        </div>
-      </div>
-      <div class="laptop__base" aria-hidden="true"></div>
-      <div class="laptop__shadow" aria-hidden="true"></div>
-    </div>
-  </section>
-
-  <section class="highlights" docsScrollProgress="sticky" [steps]="highlights.length" #gallery="scrollProgress" [style.--count]="highlights.length">
-    <div class="highlights__stage">
-      <div class="highlights__head">
-        <h2 class="section-title">Get the highlights.</h2>
-        <div class="highlights__dots" aria-hidden="true">
-          @for (item of highlights; track item.name; let index = $index) {
-            <span class="highlights__dot" [class.highlights__dot--active]="gallery.step() === index"></span>
-          }
-        </div>
-      </div>
-      <div class="highlights__track">
-        @for (item of highlights; track item.name; let index = $index) {
-          <a class="highlight" [routerLink]="item.link" [style.--tone]="item.tone" [style.--i]="index">
-            <span class="window">
-              <span class="window__bar" aria-hidden="true"><i></i><i></i><i></i><span class="window__url">acme.app</span></span>
-              <img [src]="shot(item, 'light')" [alt]="item.alt" width="1440" height="900" loading="lazy" decoding="async" />
-            </span>
-            <span class="highlight__copy">
-              <span class="highlight__eyebrow">{{ item.eyebrow }}</span>
-              <span class="highlight__title">{{ item.title }}</span>
-              <span class="highlight__text">{{ item.text }}</span>
-            </span>
-          </a>
-        }
-      </div>
-    </div>
-  </section>
-
-  <section class="dark-mode" docsScrollProgress="sticky">
-    <div class="dark-mode__stage">
-      <div class="dark-mode__copy">
-        <h2 class="section-title">Dark mode.<br /><span>Built in.</span></h2>
-        <p class="dark-mode__lead">Every component reads its colours from tokens, so one switch turns the whole app — with a circle that grows from the click.</p>
-      </div>
-      <div class="dark-mode__scene">
-        <span class="phone phone--side phone--left" aria-hidden="true"><img [src]="shot(tiles[0], 'light')" alt="" width="390" height="844" loading="lazy" decoding="async" /></span>
-        <div class="dark-mode__plane">
-          <div class="dark-mode__shot">
-            <img [src]="shot(hero, 'light')" alt="The customers page in the light theme" width="1440" height="900" loading="lazy" decoding="async" />
-            <img class="dark-mode__dark" [src]="shot(hero, 'dark')" alt="The same page in the dark theme" width="1440" height="900" loading="lazy" decoding="async" />
-            <span class="dark-mode__line" aria-hidden="true"></span>
-            <span class="dark-mode__label dark-mode__label--light" aria-hidden="true">Light</span>
-            <span class="dark-mode__label dark-mode__label--dark" aria-hidden="true">Dark</span>
-          </div>
-        </div>
-        <span class="phone phone--side phone--right" aria-hidden="true"><img [src]="shot(tiles[0], 'dark')" alt="" width="390" height="844" loading="lazy" decoding="async" /></span>
-      </div>
-    </div>
-  </section>
-
-  <section class="stats" docsScrollProgress="view" #counter="scrollProgress">
-    <h2 class="section-title">Big where it counts.<br /><span>Light where it matters.</span></h2>
-    <div class="stats__grid">
-      @for (stat of stats; track stat.label) {
-        <div class="stat">
-          <span class="stat__value">{{ count(stat.value, counter.progress()) }}{{ stat.suffix }}</span>
-          <span class="stat__label">{{ stat.label }}</span>
-        </div>
-      }
-    </div>
-    <p class="stats__note">
-      Built on Angular and its CDK alone — no third-party UI libraries underneath. The only engine we bring is the text editor's core, and it ships on its own.
-    </p>
-  </section>
-
-  <section class="bento">
-    @for (tile of tiles; track tile.name) {
-      <a class="tile" docsScrollProgress="view" [class.tile--phone]="tile.phone" [routerLink]="tile.link">
-        <span class="tile__eyebrow">{{ tile.eyebrow }}</span>
-        <span class="tile__title">{{ tile.title }}</span>
-        <span class="tile__media">
-          @if (tile.phone) {
-            <span class="phone"><img [src]="shot(tile)" [alt]="tile.alt" width="390" height="844" loading="lazy" decoding="async" /></span>
-          } @else {
-            <img [src]="shot(tile)" [alt]="tile.alt" width="1440" height="900" loading="lazy" decoding="async" />
-          }
-        </span>
-      </a>
-    }
-    <div class="tile tile--wide tile--code">
-      <span class="tile__eyebrow">Start</span>
-      <span class="tile__title">Five lines to a themed app.</span>
-      <pre class="code"><code>@for (part of snippet; track $index) {<span [class]="'code__' + part.kind">{{ part.text }}</span>}</code></pre>
-      <button type="button" class="install" (click)="copyInstall()">
-        <code>{{ installCommand }}</code>
-        <docs-copy-icon [copied]="copied()" />
-        <span class="sr-only">Copy the install command</span>
-      </button>
-    </div>
-  </section>
-
-  <section class="closing" docsScrollProgress="view">
-    <div class="wall" aria-hidden="true">
-      <div class="wall__plane">
-        @for (column of wall; track $index; let odd = $odd) {
-          <div class="wall__column" [class.wall__column--down]="odd">
-            @for (item of column; track $index) {
-              <img [src]="shot(item, 'dark')" alt="" width="1440" height="900" loading="lazy" decoding="async" />
-            }
-          </div>
-        }
-      </div>
-    </div>
-    <div class="closing__copy">
-      <h2 class="closing__title">Start building.</h2>
-      <p class="closing__lead">One install. Every component, block and token at one version.</p>
-      <div class="hero__actions">
-        <a txButton rounded size="large" routerLink="/getting-started">Get started</a>
-        <a class="more more--light" routerLink="/components/button">See every component <tx-icon name="angle-right" /></a>
-      </div>
-    </div>
-  </section>
+  <docs-landing-hero />
+  <docs-landing-intro />
+  <docs-landing-questions />
+  <docs-landing-features />
+  <docs-landing-glue />
+  <docs-landing-stats />
+  <docs-landing-catalog />
+  <docs-landing-start />
+  <docs-landing-faq />
+  <docs-landing-closing />
 </main>
 
 <docs-site-footer />

@@ -1,0 +1,41 @@
+@use '../landing' as l;
+
+:host {
+  display: block;
+}
+
+.faq {
+  padding: clamp(80px, 10vw, 140px) 0;
+  border-top: 1px solid var(--l-line);
+  background: var(--l-bg);
+}
+
+.faq__frame {
+  @include l.frame;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: 40px clamp(32px, 6vw, 96px);
+}
+
+.faq__intro {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.faq__label {
+  @include l.label;
+
+  color: var(--l-muted);
+}
+
+.faq__title {
+  @include l.title(clamp(36px, 4.6vw, 64px));
+}
+
+@media (width < 900px) {
+  .faq__frame {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
