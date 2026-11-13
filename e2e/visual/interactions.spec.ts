@@ -124,7 +124,7 @@ test('locale switches built-in texts at runtime', async ({ page }) => {
   await page.goto('/core/locale');
   await page.getByRole('combobox', { name: 'Language' }).click();
   await page.getByRole('option', { name: 'Українська (ua)' }).click();
-  await expect(page.locator('.facts').first()).toContainText('з 42');
+  await expect(page.locator('.facts').first()).toContainText('1 з 5');
   await page.getByRole('combobox', { name: /Open me/ }).click();
   await expect(page.locator('.tx-select__empty')).toHaveText('Нічого не знайдено');
 });

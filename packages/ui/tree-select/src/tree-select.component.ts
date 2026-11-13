@@ -37,7 +37,7 @@ import { optionalBoolean } from '@tectra-ng/core/utils';
 import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraSelectTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxFieldVariant, TxSelectSize, foldText } from '@tectra-ng/ui/select';
-import { TxTreeNode, TxTreeSelectionMode, descendantKeys, findNode, normalizeChecked, parentMap } from '@tectra-ng/ui/tree';
+import { TxTreeNode, TxTreeSelectionMode, descendantKeys, findNode, nodeMatches, normalizeChecked, parentMap } from '@tectra-ng/ui/tree';
 import { TxTreeBranch, TxTreeSelectRow, TxTreeSelectChangeEvent, TxTreeSelectDisplay, TxTreeSelectPart } from './tree-select.types';
 import { TREE_SELECT_ICON_DEFAULTS } from './tree-select.icons';
 import { TREE_SELECT_THEME } from './tree-select.theme';
@@ -73,6 +73,7 @@ export class TxTreeSelect extends TxFormControlBase<string | string[]> {
   readonly expandedKeys = model<string[]>([]);
   readonly filter = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly filterPlaceholder = input<string | undefined>(undefined);
+  readonly filterBy = input('label');
   readonly placeholder = input<string>('');
   readonly showClear = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly emptyMessage = input<string | undefined>(undefined);
@@ -141,15 +142,19 @@ export class TxTreeSelect extends TxFormControlBase<string | string[]> {
   );
   readonly branches = computed<TxTreeBranch[]>(() => {
     const query = foldText(this.query().trim());
+    const fields = this.filterBy()
+      .split(',')
+      .map((field) => field.trim())
+      .filter(Boolean);
     const expanded = new Set(this.expandedKeys());
     const selected = new Set(this.selectedKeys());
     const matches = (node: TxTreeNode): boolean =>
-      foldText(node.label).includes(query) || (node.children ?? []).some((child) => matches(child));
+      nodeMatches(node, query, fields) || (node.children ?? []).some((child) => matches(child));
     const build = (nodes: readonly TxTreeNode[], level: number, parent: TxTreeSelectRow | null, shown: boolean): TxTreeBranch[] => {
       const visible = query && !shown ? nodes.filter(matches) : nodes;
       return visible.map((node, index) => {
         const children = node.children ?? [];
-        const own = !!query && foldText(node.label).includes(query);
+        const own = !!query && nodeMatches(node, query, fields);
         const open = query ? children.some((child) => matches(child)) || (own && children.length > 0 && expanded.has(node.key)) : expanded.has(node.key);
         const checkable = children.filter((child) => !child.disabled);
         const checkedChildren = checkable.filter((child) => this.isChecked(child, selected)).length;

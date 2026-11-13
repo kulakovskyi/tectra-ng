@@ -6,7 +6,7 @@ export interface TxPieData {
   series: readonly number[];
   /** One label per value, in the same order. */
   labels: readonly string[];
-  /** Optional title of the data set. */
+  /** Name of the data set, shown on top of the tooltip, e.g. `Traffic, May`. */
   title?: string;
   /** Own colour per segment; `undefined` takes the palette colour of its slot. */
   colors?: readonly (string | undefined)[];

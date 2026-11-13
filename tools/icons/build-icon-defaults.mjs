@@ -73,7 +73,8 @@ for (const pkg of PACKAGES) {
     const files = sourceFiles(entry);
     const names = new Set();
     for (const file of files) {
-      for (const match of readFileSync(file, 'utf8').matchAll(/['"`]([a-z0-9-]+)['"`]/g)) {
+      const code = readFileSync(file, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+      for (const match of code.matchAll(/['"`]([a-z0-9-]+)['"`]/g)) {
         if (ICON_NAMES.has(match[1])) {
           names.add(match[1]);
         }

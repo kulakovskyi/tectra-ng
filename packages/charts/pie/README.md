@@ -13,7 +13,7 @@ import { TxPieChart, TxPieLegendPipe } from '@tectra-ng/charts/pie';
 ## Inputs
 | Name | Description |
 |---|---|
-| pieData | Required. `{ series, labels, colors? }` — values, one label per value and optional own colours. No values or only zeros show "No data" |
+| pieData | Required. `{ series, labels, colors?, title? }` — values, one label per value, optional own colours and a name shown on top of the tooltip. No values or only zeros show "No data" |
 | chartWidth | Width: px (200) or a CSS size |
 | chartHeight | Height: px (400) or a CSS size; the donut takes the width and the legend goes under it |
 | showLegend | Shows the legend |
