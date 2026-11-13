@@ -1,6 +1,6 @@
 {
   "name": "@tectra-ng/charts",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Angular charts drawn as SVG with no chart library: line and area, column and bar, combo with two value axes, scatter and bubble, pie and donut, radar, radial bar, gauge, funnel, waterfall, bullet, candlestick, box plot, range area, gantt, sankey, sunburst, bar list, segmented bar, heatmap, treemap, rank chart, org chart on one core of scales, axes, legend, tooltip and accessibility. Server rendered, themed by design tokens, dark mode ready.",
   "license": "MIT",
   "homepage": "https://tectra-ng.com/components/line-chart",
@@ -56,10 +56,10 @@
     "@angular/common": "^22.2.0",
     "@angular/core": "^22.2.0",
     "@angular/router": "^22.2.0",
-    "@tectra-ng/core": "^0.4.0",
-    "@tectra-ng/icons": "^0.4.0",
-    "@tectra-ng/themes": "^0.4.0",
-    "@tectra-ng/ui": "^0.4.0"
+    "@tectra-ng/core": "^0.4.1",
+    "@tectra-ng/icons": "^0.4.1",
+    "@tectra-ng/themes": "^0.4.1",
+    "@tectra-ng/ui": "^0.4.1"
   },
   "peerDependenciesMeta": {
     "@angular/router": {
