@@ -1,3 +1,19 @@
+## 0.4.0 (2026-11-13)
+
+### 🚀 Features
+
+- document the public API in the published types ([#31](https://github.com/kulakovskyi/tectra-ng/pull/31))
+- **docs:** redesign the landing page ([#29](https://github.com/kulakovskyi/tectra-ng/pull/29))
+- **themes:** name the component token types in the published types ([#32](https://github.com/kulakovskyi/tectra-ng/pull/32))
+
+### 🩹 Fixes
+
+- **docs:** even insets in the landing header ([#30](https://github.com/kulakovskyi/tectra-ng/pull/30))
+
+### ❤️ Thank You
+
+- Andriy @kulakovskyi
+
 ## 0.3.2 (2026-11-12)
 
 ### 🩹 Fixes

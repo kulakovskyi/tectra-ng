@@ -1,6 +1,6 @@
 {
   "name": "@tectra-ng/flags",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "Country flags for the tectra country components, loaded one by one on demand.",
   "license": "MIT",
   "homepage": "https://tectra-ng.com",
