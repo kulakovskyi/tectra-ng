@@ -6,14 +6,17 @@ import { TX_DIALOG_CURRENT, TX_DIALOG_DATA, TxDialogRef } from './dialog-ref';
 import { TxDialogContainer } from './dialog-container.component';
 import { TxDialogConfig, TxDialogTemplateContext } from './dialog.types';
 
+/** Opens dialogs and drawers from a component or a template and keeps track of the open ones. */
 @Injectable({ providedIn: 'root' })
 export class TxDialogService {
   private injector = inject(Injector);
   private document = inject(DOCUMENT);
   private readonly dialogs = signal<TxDialogRef[]>([]);
 
+  /** The dialogs that are open now, the last opened last. */
   readonly openDialogs = this.dialogs.asReadonly();
 
+  /** Opens a component or a template in a dialog and returns its `TxDialogRef`. */
   open<C = unknown, D = unknown, R = unknown>(
     content: Type<C> | TemplateRef<TxDialogTemplateContext<D, R>>,
     config: TxDialogConfig<D, R> = {},
@@ -82,6 +85,7 @@ export class TxDialogService {
     return ref;
   }
 
+  /** Closes every open dialog, the last opened first. */
   closeAll(): void {
     [...this.dialogs()].reverse().forEach((dialog) => void dialog.close());
   }

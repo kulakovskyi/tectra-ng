@@ -3,6 +3,7 @@ import { optionalNumber } from '@tectra-ng/core/utils';
 import { injectTokens } from '@tectra-ng/core/config';
 import { SPLITTER_THEME } from './splitter.theme';
 
+/** One panel of `tx-splitter`: its content, initial size and limits. */
 @Component({
   selector: 'tx-splitter-panel',
   template: '<ng-template #content><ng-content /></ng-template>',

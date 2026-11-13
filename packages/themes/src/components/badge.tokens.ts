@@ -5,6 +5,10 @@ function severity(group: string) {
   return { background: tokenRef(`${group}-base`), color: tokenRef(`${group}-contrast`) };
 }
 
+/**
+ * Design tokens of `tx-badge`: colors, sizes and spacing of its root and dot, plus the `sm`, `lg` and `xl`
+ * sizes and the severity variants.
+ */
 export const badgeTokens = {
   root: {
     borderRadius: tokenRef('radius-full'),
@@ -31,4 +35,5 @@ export const badgeTokens = {
   contrast: severity('contrast'),
 };
 
+/** Type of `badgeTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraBadgeTokens = typeof badgeTokens;

@@ -29,6 +29,7 @@ function inTopLayer(element: Element): boolean {
   }
 }
 
+/** Scroll sources an element moves with, one per axis, from its nearest scrollable ancestor to the page. */
 export function scrollTracksOf(origin: Element): ScrollTrack[] {
   const document = origin.ownerDocument;
   const view = document.defaultView;
@@ -62,12 +63,16 @@ export function scrollTracksOf(origin: Element): ScrollTrack[] {
   return tracks;
 }
 
+/** Elements whose scroll moves the given element, nearest first. */
 export function scrollersOf(origin: Element): Element[] {
   return [...new Set(scrollTracksOf(origin).map((track) => track.source))];
 }
 
+/** One scroll source and the axis it scrolls along. */
 interface ScrollTrack {
+  /** Element that scrolls. */
   source: Element;
+  /** Axis of the scroll. */
   axis: ScrollAxis;
 }
 
@@ -90,6 +95,10 @@ function shift(track: ScrollTrack, by: number): string {
 
 type RangedAnimation = Animation & { rangeEnd: string };
 
+/**
+ * Keeps an overlay pane glued to its origin while the origin scrolls, and clips it under fixed bars; returns
+ * a function that stops it (also called when the overlay detaches).
+ */
 export function txAnchorPane(overlayRef: OverlayRef, origin: Element, chrome?: TxOverlayInsets, margin = 8): () => void {
   const host = overlayRef.hostElement;
   const pane = overlayRef.overlayElement;
@@ -268,6 +277,7 @@ export function txAnchorPane(overlayRef: OverlayRef, origin: Element, chrome?: T
   return release;
 }
 
+/** Applies `txAnchorPane` to a `cdkConnectedOverlay`, so it follows its origin on scroll. */
 @Directive({ selector: '[cdkConnectedOverlay][txOverlayAnchor]' })
 export class TxOverlayAnchor {
   private connectedOverlay = inject(CdkConnectedOverlay);

@@ -1,5 +1,9 @@
 import { fade, lightDark, mix, tokenRef } from './token-helpers';
 
+/**
+ * Design tokens of the `@tectra-ng/charts` charts: colors, sizes and spacing of the frame, axes, grid,
+ * legend, tooltip and each chart kind.
+ */
 export const chartTokens = {
   root: {
     fontFamily: 'inherit',
@@ -36,7 +40,6 @@ export const chartTokens = {
     titleColor: tokenRef('text-muted'),
     titleFontSize: '11.5px',
     titleFontWeight: tokenRef('font-weight-medium'),
-    lineColor: tokenRef('surface-border'),
   },
   legend: {
     gap: '10.5px',
@@ -634,4 +637,5 @@ export const chartTokens = {
   },
 };
 
+/** Type of `chartTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraChartTokens = typeof chartTokens;

@@ -2,9 +2,13 @@ import { isPlatformBrowser } from '@angular/common';
 import { DestroyRef, Injectable, PLATFORM_ID, Signal, computed, inject, isSignal, signal } from '@angular/core';
 import { MS_IN_SECOND, TxDateInput, toDate } from '@tectra-ng/utils/date';
 
+/** Signals of a countdown created by `TxClock.countdown`. */
 export interface TxCountdownState {
+  /** Milliseconds left until the target, never below 0. */
   remainingMs: Signal<number>;
+  /** `true` once the target has passed. */
   isExpired: Signal<boolean>;
+  /** `true` while the time left is above 0 and within the `endingSoonMs` of the countdown. */
   isEndingSoon: Signal<boolean>;
 }
 

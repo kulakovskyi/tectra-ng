@@ -11,16 +11,27 @@ const ICONS: Record<TxConfirmSeverity, string> = {
   danger: 'trash',
 };
 
+/** What the dialog and the popup render for a question: resolved texts, icon and the accept handler. */
 export interface TxConfirmView {
+  /** Severity of the question. */
   severity: TxConfirmSeverity;
+  /** Icon name, or `null` for no icon. */
   icon: string | null;
+  /** Title text, translated when not set in the options. */
   title: Signal<string>;
+  /** Details text, if any. */
   message: string | undefined;
+  /** Text of the accept button. */
   acceptLabel: Signal<string>;
+  /** Text of the reject button. */
   rejectLabel: Signal<string>;
+  /** Icon on the accept button, if any. */
   acceptIcon: string | undefined;
+  /** Inline CSS variables from the `dt` option. */
   style: Record<string, string>;
+  /** Whether `accept` is running. */
   busy: WritableSignal<boolean>;
+  /** Runs the `accept` option, then calls `finish(true)`; stays open and idle again when it rejects. */
   accept(finish: (accepted: boolean) => void): Promise<void>;
 }
 

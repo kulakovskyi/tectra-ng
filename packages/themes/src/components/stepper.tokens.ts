@@ -10,6 +10,10 @@ const focusRing = {
   shadow: 'none',
 };
 
+/**
+ * Design tokens of `tx-stepper`: colors, sizes and spacing of its root, separator, step, step header, step
+ * title and other parts.
+ */
 export const stepperTokens = {
   root: {
     transitionDuration: tokenRef('motion-duration'),
@@ -63,6 +67,10 @@ export const stepperTokens = {
   },
 };
 
+/**
+ * Design tokens of `tx-steps`: colors, sizes and spacing of its root, separator, item link, item label, item
+ * number and other parts.
+ */
 export const stepsTokens = {
   root: {
     transitionDuration: tokenRef('motion-duration'),
@@ -132,5 +140,7 @@ export const stepsTokens = {
   },
 };
 
+/** Type of `stepperTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraStepperTokens = typeof stepperTokens;
+/** Type of `stepsTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraStepsTokens = typeof stepsTokens;

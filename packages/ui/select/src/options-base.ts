@@ -12,8 +12,9 @@ import {
   TxSelectOptionTemplate,
 } from './select-option-template.directive';
 import { buildOptionRows, isSelectableRow, sameOptionValue } from './select-options';
-import { TxFilterMatchMode, TxOptionFields, TxSelectFilterEvent, TxSelectItem, TxSelectLazyLoadEvent, TxSelectRow } from './select.types';
+import { TxSelectFilterMatchMode, TxOptionFields, TxSelectFilterEvent, TxSelectItem, TxSelectLazyLoadEvent, TxSelectRow } from './select.types';
 
+/** Shared base of select-like components: option fields, grouping, filter and lazy loading. */
 @Directive()
 export abstract class TxOptionsBase<T> extends TxFormControlBase<T> {
   readonly optionLabel = input<string>('label');
@@ -25,7 +26,7 @@ export abstract class TxOptionsBase<T> extends TxFormControlBase<T> {
   readonly dataKey = input<string | undefined>(undefined);
   readonly filter = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly filterBy = input<string | undefined>(undefined);
-  readonly filterMatchMode = input<TxFilterMatchMode>('contains');
+  readonly filterMatchMode = input<TxSelectFilterMatchMode>('contains');
   readonly filterPlaceholder = input<string | undefined>(undefined);
   readonly filterDelay = input<number>(0);
   readonly loading = input<boolean, unknown>(false, { transform: booleanAttribute });

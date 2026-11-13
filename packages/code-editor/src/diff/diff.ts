@@ -1,29 +1,53 @@
+/** A span of text as character offsets; `to` is exclusive. */
 export interface TxTextRange {
+  /** Offset of the first character. */
   readonly from: number;
+  /** Offset after the last character. */
   readonly to: number;
 }
 
+/** One changed block: the lines it covers in both versions and the characters that differ inside them. */
 export interface TxCodeDiffChange {
+  /** First changed line of the original text (0-based). */
   readonly originalFrom: number;
+  /** Line after the last changed line of the original text; equals `originalFrom` for a pure insertion. */
   readonly originalTo: number;
+  /** First changed line of the modified text (0-based). */
   readonly modifiedFrom: number;
+  /** Line after the last changed line of the modified text; equals `modifiedFrom` for a pure removal. */
   readonly modifiedTo: number;
+  /** Characters removed inside the block, as offsets from the start of its first original line. */
   readonly originalRanges: readonly TxTextRange[];
+  /** Characters added inside the block, as offsets from the start of its first modified line. */
   readonly modifiedRanges: readonly TxTextRange[];
 }
 
+/** Options of `diffCode`. */
 export interface TxCodeDiffOptions {
+  /** Treats lines that differ only in leading and trailing whitespace as equal (default `true`). */
   readonly ignoreTrimWhitespace?: boolean;
+  /**
+   * Largest edit distance to search for (default 2000); above it the whole block counts as replaced, which keeps huge diffs fast.
+   */
   readonly maxCost?: number;
 }
 
+/** Kind of one step of a diff: a stretch kept, inserted or deleted. */
 type DiffOpType = 'equal' | 'insert' | 'delete';
 
+/**
+ * One step of a diff: a stretch of the first sequence (`aFrom`..`aTo`) matched to a stretch of the second (`bFrom`..`bTo`).
+ */
 interface DiffOp {
+  /** Whether the stretch is kept, inserted or deleted. */
   type: DiffOpType;
+  /** First index of the stretch in the first sequence. */
   aFrom: number;
+  /** Index after the stretch in the first sequence. */
   aTo: number;
+  /** First index of the stretch in the second sequence. */
   bFrom: number;
+  /** Index after the stretch in the second sequence. */
   bTo: number;
 }
 
@@ -114,6 +138,9 @@ function backtrack(trace: Int32Array[], depth: number, n: number, m: number, aSt
   }
 }
 
+/**
+ * Compares two sequences and returns the steps that turn the first into the second; `equal` decides when two items match and `maxCost` caps the search.
+ */
 export function diffSequences<T>(a: readonly T[], b: readonly T[], equal: (x: T, y: T) => boolean = (x, y) => x === y, maxCost = 2000): DiffOp[] {
   const ops: DiffOp[] = [];
   let start = 0;
@@ -233,10 +260,12 @@ function blockRanges(removed: readonly string[], added: readonly string[]): { or
   return { original, modified };
 }
 
+/** Splits text into lines at `\n`, `\r\n` or `\r`. */
 export function splitDiffLines(text: string): string[] {
   return text.split(/\r\n?|\n/);
 }
 
+/** Finds the changed line blocks between two texts, with the differing characters inside each block. */
 export function diffCode(original: string, modified: string, options: TxCodeDiffOptions = {}): TxCodeDiffChange[] {
   const a = splitDiffLines(original);
   const b = splitDiffLines(modified);
@@ -266,6 +295,9 @@ export function diffCode(original: string, modified: string, options: TxCodeDiff
   return changes;
 }
 
+/**
+ * Cuts text ranges into per-line ranges, one list for every line, with offsets relative to the line start.
+ */
 export function rangesByLine(lines: readonly string[], ranges: readonly TxTextRange[]): TxTextRange[][] {
   const result: TxTextRange[][] = lines.map(() => []);
   let lineStart = 0;
@@ -283,6 +315,7 @@ export function rangesByLine(lines: readonly string[], ranges: readonly TxTextRa
   return result;
 }
 
+/** Counts the added and removed lines and the changed blocks of a diff. */
 export function summarizeDiff(changes: readonly TxCodeDiffChange[]): { added: number; removed: number; changes: number } {
   return changes.reduce(
     (summary, change) => ({

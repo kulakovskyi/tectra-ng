@@ -1,5 +1,9 @@
 import { lightDark, tokenRef } from './token-helpers';
 
+/**
+ * Design tokens of `tx-checkbox`: colors, sizes and spacing of its root, tile and group, plus the `sm` and
+ * `lg` sizes.
+ */
 export const checkboxTokens = {
   root: {
     size: '18px',
@@ -48,4 +52,5 @@ export const checkboxTokens = {
   group: { gap: '10px', horizontalGap: '20px', selectAllGap: '12px' },
 };
 
+/** Type of `checkboxTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraCheckboxTokens = typeof checkboxTokens;

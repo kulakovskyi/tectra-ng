@@ -62,7 +62,15 @@ Shows a collection with your own list and grid templates — cards of products, 
 | txDataViewPaginatorEnd | `<ng-template txDataViewPaginatorEnd let-state>` — content at the end of the paginator |
 
 ## Layout switch
-`<tx-data-view-layout [(layout)]="layout" />` — two toggle buttons (list, grid) with `aria-pressed`; inputs `size`, `ariaLabel`, `unstyled`.
+`<tx-data-view-layout [(layout)]="layout" />` — two toggle buttons (list, grid) with `aria-pressed`.
+
+## Inputs — tx-data-view-layout
+| Name | Description |
+|---|---|
+| layout | `list` (default) or `grid`. Two-way: `[(layout)]` |
+| size | Size of the buttons: `small`, `medium` (default), `large` |
+| ariaLabel | Accessible name of the button group; "Layout" by default (translated) |
+| unstyled | Removes the tectra styles |
 
 ## Keyboard
 | Key | Action |

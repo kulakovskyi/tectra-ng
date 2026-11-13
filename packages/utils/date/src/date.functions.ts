@@ -25,12 +25,14 @@ export function startOfDay(value: Date | string | number): Date {
   return date;
 }
 
+/** Returns a copy of the date set to 12:00 local time, away from the daylight-saving shifts around midnight. */
 export function middleOfDay(value: Date | string | number): Date {
   const date = copy(value);
   date.setHours(MIDDLE_OF_DAY_HOUR, 0, 0, 0);
   return date;
 }
 
+/** Returns a copy of the date set to the last millisecond of the day, 23:59:59.999 local time. */
 export function endOfDay(value: Date | string | number): Date {
   const date = copy(value);
   date.setHours(23, 59, 59, 999);

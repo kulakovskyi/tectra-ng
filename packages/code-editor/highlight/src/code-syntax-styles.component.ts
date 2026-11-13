@@ -4,6 +4,9 @@ import { HIGHLIGHT_ICON_DEFAULTS } from './highlight.icons';
 import { injectTokens } from '@tectra-ng/core/config';
 import { HIGHLIGHT_THEME } from './highlight.theme';
 
+/**
+ * Loads the syntax colours (`tx-code-tok-*` classes) for highlighted code; add it once where code is shown without another code component.
+ */
 @Component({
   selector: 'tx-code-syntax-styles',
   template: '',

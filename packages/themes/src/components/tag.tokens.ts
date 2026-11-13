@@ -6,6 +6,10 @@ function tone(palette: string) {
   return { color, background: color };
 }
 
+/**
+ * Design tokens of `tx-tag`: colors, sizes and spacing of its root and list, plus the `sm` and `lg` sizes and
+ * the severity variants.
+ */
 export const tagTokens = {
   root: {
     gap: '4px',
@@ -41,6 +45,7 @@ export const tagTokens = {
   },
 };
 
+/** Design tokens of `tx-chip`: its colors, sizes and spacing. */
 export const chipTokens = {
   root: {
     gap: '6px',
@@ -63,5 +68,7 @@ export const chipTokens = {
   },
 };
 
+/** Type of `tagTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraTagTokens = typeof tagTokens;
+/** Type of `chipTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraChipTokens = typeof chipTokens;

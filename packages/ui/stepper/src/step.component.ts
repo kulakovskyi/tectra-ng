@@ -9,6 +9,7 @@ import { STEPPER_ICON_DEFAULTS } from './stepper.icons';
 import { injectTokens } from '@tectra-ng/core/config';
 import { STEPPER_THEME } from './stepper.theme';
 
+/** One numbered step in the header of `tx-stepper`. */
 @Component({
   selector: 'tx-step',
   imports: [NgTemplateOutlet],

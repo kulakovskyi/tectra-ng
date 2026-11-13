@@ -10,6 +10,10 @@ const ground = tokenRef('surface-ground');
 /* @__NO_SIDE_EFFECTS__ */
 const tint = (color: string, amount: string) => mix(color, amount, ground);
 
+/**
+ * Design tokens of `tx-app-layout`: colors, sizes and spacing of its root, topbar, menu button, plain,
+ * sidebar and other parts.
+ */
 export const appLayoutTokens = {
   root: {
     background: ground,
@@ -89,4 +93,5 @@ export const appLayoutTokens = {
   },
 };
 
+/** Type of `appLayoutTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraAppLayoutTokens = typeof appLayoutTokens;

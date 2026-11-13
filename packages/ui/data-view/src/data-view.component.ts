@@ -44,6 +44,9 @@ import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { DATA_VIEW_ICON_DEFAULTS } from './data-view.icons';
 import { DATA_VIEW_THEME } from './data-view.theme';
 
+/**
+ * Shows a collection with your own list and grid templates, with a layout switch, paging, sorting, search and lazy loading.
+ */
 @Component({
   selector: 'tx-data-view',
   imports: [NgTemplateOutlet, TxPaginator, TxPaginatorStart, TxPaginatorEnd, TxProgressSpinner],

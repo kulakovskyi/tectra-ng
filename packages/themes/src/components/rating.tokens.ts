@@ -1,5 +1,6 @@
 import { lightDark, tokenRef } from './token-helpers';
 
+/** Design tokens of `tx-rating`: its colors, sizes and spacing, plus the `sm` and `lg` sizes. */
 export const ratingTokens = {
   root: {
     gap: '2px',
@@ -23,4 +24,5 @@ export const ratingTokens = {
   lg: { iconSize: '30px', gap: '4px' },
 };
 
+/** Type of `ratingTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraRatingTokens = typeof ratingTokens;

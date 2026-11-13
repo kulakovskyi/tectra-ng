@@ -1,5 +1,9 @@
 import { joinCss, lightDark, mix, tokenRef } from './token-helpers';
 
+/**
+ * Design tokens of `tx-file-upload`: colors, sizes and spacing of its root, dropzone, icon, prompt, hint and
+ * other parts.
+ */
 export const fileUploadTokens = {
   root: {
     gap: '10.5px',
@@ -115,4 +119,5 @@ export const fileUploadTokens = {
   },
 };
 
+/** Type of `fileUploadTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraFileUploadTokens = typeof fileUploadTokens;

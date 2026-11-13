@@ -63,6 +63,7 @@ import {
 import { DATEPICKER_ICON_DEFAULTS } from './datepicker.icons';
 import { DATEPICKER_THEME } from './datepicker.theme';
 
+/** Part of the time a spinner changes: `hour`, `minute` or `second`. */
 type TimeUnit = 'hour' | 'minute' | 'second';
 
 const REPEAT_DELAY = 400;

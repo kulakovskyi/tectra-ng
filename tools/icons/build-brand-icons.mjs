@@ -46,17 +46,21 @@ writeFileSync(
   join(root, 'packages/brand-icons/src/brand-icons.ts'),
   `import { TxIconPath } from '@tectra-ng/icons';
 
+/** Name of a brand logo in the set, e.g. \`'github'\`. */
 export type TxBrandIconName =
 ${names};
 
+/** Every brand logo by name, for \`provideTxIcons(TX_BRAND_ICONS)\` and \`tx-icon\`. */
 export const TX_BRAND_ICONS: Record<TxBrandIconName, TxIconPath[]> = {
 ${icons}
 };
 
+/** The brand colour of each logo, as a hex value. */
 export const TX_BRAND_COLORS: Record<TxBrandIconName, string> = {
 ${colors}
 };
 
+/** The brand name of each logo as it is written, e.g. \`GitHub\`. */
 export const TX_BRAND_TITLES: Record<TxBrandIconName, string> = {
 ${titles}
 };

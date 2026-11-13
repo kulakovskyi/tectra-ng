@@ -39,6 +39,7 @@ function percent(value: number): string {
   return `${Math.round(value * 10000) / 10000}%`;
 }
 
+/** Returns the item as a `TxGalleriaImage` when it has a string `src`, otherwise `null`. */
 export function galleriaImage(item: unknown): TxGalleriaImage | null {
   return typeof item === 'object' && item !== null && typeof (item as TxGalleriaImage).src === 'string' ? (item as TxGalleriaImage) : null;
 }

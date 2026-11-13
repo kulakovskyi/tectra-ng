@@ -120,7 +120,7 @@ describe('TxTreemap', () => {
     treemap.onPointer({ x: tile.x + 2, y: tile.y + 2, type: 'click', target: null });
     expect(treemap.tooltip()?.rows[0].label).toBe('Hosting');
     expect(treemap.tooltip()?.rows[0].share).toBe('60%');
-    expect(host.clicks[0]).toMatchObject({ label: 'Hosting', value: 600, group: null, path: [0] });
+    expect(host.clicks[0]).toMatchObject({ label: 'Hosting', value: 600, group: null, path: [0], share: 0.6 });
     treemap.onPointer({ x: 0, y: 0, type: 'leave', target: null });
     expect(treemap.hovered()).toBeNull();
   });

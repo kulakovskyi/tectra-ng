@@ -33,6 +33,7 @@ const ALIASES: Record<string, TxCodeLanguage> = {
   txt: 'plain',
 };
 
+/** Resolves a language name or alias (`js`, `ts`, `md`) to a language; `null` for an unknown name. */
 export function resolveCodeLanguage(name: string | null | undefined): TxCodeLanguage | null {
   return name ? (ALIASES[name.trim().toLowerCase()] ?? null) : null;
 }
@@ -60,10 +61,12 @@ const MODES: Record<TxCodeLanguage, TxCodeMode> = {
   plain: PLAIN_MODE as TxCodeMode,
 };
 
+/** Gives the tokenizer of a language name; unknown names get the plain one. */
 export function getCodeMode(language: TxCodeLanguage | string | null | undefined): TxCodeMode {
   return MODES[resolveCodeLanguage(language) ?? 'plain'];
 }
 
+/** Tokens of one line, read with a mode and the state carried over from the lines before. */
 export function tokenizeLine(mode: TxCodeMode, text: string, state: unknown): TxCodeToken[] {
   const stream = new TxCodeStream(text);
   const tokens: TxCodeToken[] = [];
@@ -89,16 +92,19 @@ function pushToken(tokens: TxCodeToken[], from: number, to: number, type: TxCode
   }
 }
 
+/** Splits code into lines at `\n`, `\r\n` or `\r`. */
 export function splitCodeLines(code: string): string[] {
   return code.split(/\r\n?|\n/);
 }
 
+/** Tokens of every line of the code in the given language (default `plain`). */
 export function highlightCode(code: string, language: TxCodeLanguage | string = 'plain'): TxCodeToken[][] {
   const mode = getCodeMode(language);
   const state = mode.start();
   return splitCodeLines(code).map((line) => tokenizeLine(mode, line, state));
 }
 
+/** Caches the tokenizer state at the start of each line, so an editor can re-highlight only what changed. */
 export class TxCodeLineStates {
   private readonly states: unknown[];
 
@@ -106,16 +112,19 @@ export class TxCodeLineStates {
     this.states = [mode.start()];
   }
 
+  /** The language of the mode. */
   get language(): TxCodeLanguage {
     return this.mode.language;
   }
 
+  /** Forgets the stored states after the given line; call it when that line or a line above changes. */
   invalidateFrom(line: number): void {
     if (this.states.length > line + 1) {
       this.states.length = Math.max(1, line + 1);
     }
   }
 
+  /** Tokens of a line; `lineText` supplies the text of any line, read on demand to catch up the states. */
   tokens(line: number, lineText: (line: number) => string): TxCodeToken[] {
     while (this.states.length <= line) {
       const index = this.states.length - 1;

@@ -28,7 +28,7 @@ describe('TxLocaleService', () => {
 
   it('fills parameters and formats with Intl', () => {
     const service = TestBed.inject(TxLocaleService);
-    expect(service.translate('pageReport', { first: 1, last: 10, total: 42 })).toBe('1–10 of 42');
+    expect(service.translate('currentPageReport', { currentPage: 1, totalPages: 5 })).toBe('1 of 5');
     expect(service.monthNames('long')[0]).toBe('January');
     expect(service.weekdayNames('short')[0]).toBe('Sun');
     expect(service.formatNumber(1234.5)).toBe('1,234.5');

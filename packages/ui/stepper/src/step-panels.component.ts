@@ -5,6 +5,7 @@ import { STEPPER_ICON_DEFAULTS } from './stepper.icons';
 import { injectTokens } from '@tectra-ng/core/config';
 import { STEPPER_THEME } from './stepper.theme';
 
+/** Holds the panels of `tx-stepper`. */
 @Component({
   selector: 'tx-step-panels',
   template: '<ng-content />',

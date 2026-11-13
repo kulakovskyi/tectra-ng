@@ -1,5 +1,9 @@
 import { fade, joinCss, lightDark, tokenRef } from './token-helpers';
 
+/**
+ * Design tokens of `tx-toggle-switch`: colors, sizes and spacing of its root and handle, plus the `sm` and
+ * `lg` sizes.
+ */
 export const toggleSwitchTokens = {
   root: {
     width: '40px',
@@ -43,4 +47,5 @@ export const toggleSwitchTokens = {
   lg: { width: '50px', height: '28px', handleSize: '24px', iconSize: '14px', labelFontSize: tokenRef('font-size-lg') },
 };
 
+/** Type of `toggleSwitchTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraToggleSwitchTokens = typeof toggleSwitchTokens;

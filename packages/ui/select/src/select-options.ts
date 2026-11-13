@@ -1,5 +1,9 @@
-import { TxFilterMatchMode, TxOptionFields, TxSelectItem, TxSelectRow } from './select.types';
+import { TxSelectFilterMatchMode, TxOptionFields, TxSelectItem, TxSelectRow } from './select.types';
 
+/**
+ * Reads an option field by name, with dots for nested fields; without a field or for a primitive
+ * option it returns the option itself.
+ */
 export function readOptionField(option: unknown, field: string | undefined): unknown {
   if (!field || option === null || typeof option !== 'object') {
     return option;
@@ -11,6 +15,7 @@ export function readOptionField(option: unknown, field: string | undefined): unk
 
 const BASE_LETTERS: Record<string, string> = { ł: 'l', ø: 'o', đ: 'd', ß: 'ss', æ: 'ae', œ: 'oe', ı: 'i', ħ: 'h', þ: 'th' };
 
+/** Lower-cases text and strips accents, so searches ignore case and diacritics. */
 export function foldText(text: string): string {
   return text
     .normalize('NFD')
@@ -19,7 +24,8 @@ export function foldText(text: string): string {
     .replace(/[łøđßæœıħþ]/g, (letter) => BASE_LETTERS[letter]);
 }
 
-export function matchesQuery(text: string, query: string, mode: TxFilterMatchMode): boolean {
+/** Whether the text matches an already folded query in the given mode; case and accents are ignored. */
+export function matchesQuery(text: string, query: string, mode: TxSelectFilterMatchMode): boolean {
   const value = foldText(text);
   switch (mode) {
     case 'startsWith':
@@ -33,6 +39,7 @@ export function matchesQuery(text: string, query: string, mode: TxFilterMatchMod
   }
 }
 
+/** Compares two option values; objects with the same `dataKey` field count as equal. */
 export function sameOptionValue(a: unknown, b: unknown, dataKey: string | undefined): boolean {
   if (dataKey && a !== null && b !== null && typeof a === 'object' && typeof b === 'object') {
     return readOptionField(a, dataKey) === readOptionField(b, dataKey);
@@ -40,18 +47,32 @@ export function sameOptionValue(a: unknown, b: unknown, dataKey: string | undefi
   return a === b;
 }
 
+/** Input of `buildOptionRows`: the options, how to read them and the current filter. */
 export interface TxOptionRowsRequest {
+  /** Options or groups to build rows from; `null` or `undefined` items become loader rows. */
   options: readonly unknown[];
+  /** Names of the option fields to read. */
   fields: TxOptionFields;
+  /** Whether the options are groups with child options. */
   group: boolean;
+  /** Prefix of the DOM ids of the rows. */
   idPrefix: string;
+  /** Filter text; empty keeps every option. */
   query: string;
+  /** Fields the query is matched against; the label field when empty. */
   filterFields: readonly string[];
-  matchMode: TxFilterMatchMode;
+  /** How the query is matched. */
+  matchMode: TxSelectFilterMatchMode;
+  /** Tells whether a value is selected. */
   isSelected: (value: unknown) => boolean;
+  /** Tells whether a value cannot be picked, in addition to the disabled field. */
   isBlocked?: (value: unknown) => boolean;
 }
 
+/**
+ * Builds the option list of select-like components from options, groups and a filter query; used by
+ * `tx-select`, `tx-multiselect` and `tx-autocomplete`.
+ */
 export function buildOptionRows(request: TxOptionRowsRequest): TxSelectRow[] {
   const { options, fields, group, idPrefix, isSelected } = request;
   const query = foldText(request.query.trim());
@@ -116,6 +137,7 @@ export function buildOptionRows(request: TxOptionRowsRequest): TxSelectRow[] {
   return rows;
 }
 
+/** Whether a row is an option the user can pick (not a group, a loader or a disabled option). */
 export function isSelectableRow(row: TxSelectRow | undefined): row is TxSelectItem {
   return row?.type === 'option' && !row.disabled;
 }

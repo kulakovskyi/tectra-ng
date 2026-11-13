@@ -1,5 +1,6 @@
 import { fade, joinCss, lightDark, tokenRef } from './token-helpers';
 
+/** Design tokens of `tx-divider`: its colors, sizes and spacing. */
 export const dividerTokens = {
   root: {
     color: tokenRef('surface-border'),
@@ -12,6 +13,7 @@ export const dividerTokens = {
   },
 };
 
+/** Design tokens of `tx-card`: its colors, sizes and spacing. */
 export const cardTokens = {
   root: {
     background: tokenRef('surface-card'),
@@ -28,6 +30,7 @@ export const cardTokens = {
   },
 };
 
+/** Design tokens of `tx-panel`: colors, sizes and spacing of its root, inset and plain. */
 export const panelTokens = {
   root: {
     background: tokenRef('surface-card'),
@@ -58,6 +61,7 @@ export const panelTokens = {
   },
 };
 
+/** Design tokens of `tx-fieldset`: its colors, sizes and spacing. */
 export const fieldsetTokens = {
   root: {
     borderColor: tokenRef('surface-border'),
@@ -81,7 +85,11 @@ export const fieldsetTokens = {
   },
 };
 
+/** Type of `dividerTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraDividerTokens = typeof dividerTokens;
+/** Type of `cardTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraCardTokens = typeof cardTokens;
+/** Type of `panelTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraPanelTokens = typeof panelTokens;
+/** Type of `fieldsetTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraFieldsetTokens = typeof fieldsetTokens;

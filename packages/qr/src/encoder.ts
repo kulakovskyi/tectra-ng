@@ -46,14 +46,21 @@ interface Segment {
   bits: number[];
 }
 
+/** Options of `encodeQr`: error-correction level, version range and mask. */
 export interface TxQrEncodeOptions {
+  /** Error-correction level (default `M`). */
   errorCorrection?: TxQrErrorCorrection;
+  /** Smallest version to try (default 1). */
   minVersion?: number;
+  /** Largest version allowed (default 40); a longer text throws `TxQrCapacityError`. */
   maxVersion?: number;
+  /** Mask pattern from 0 to 7; by default the one with the lowest penalty is chosen. */
   mask?: number;
+  /** Raises the level to `Q` or `H` when the text still fits the chosen version. */
   boostErrorCorrection?: boolean;
 }
 
+/** Thrown by `encodeQr` when the text does not fit in a QR code of the allowed versions. */
 export class TxQrCapacityError extends Error {
   constructor() {
     super('The data does not fit in a QR code');
@@ -404,6 +411,10 @@ function penalty(grid: Grid): number {
   return result + (Math.ceil(Math.abs(dark * 20 - total * 10) / total) - 1) * PENALTY_BALANCE;
 }
 
+/**
+ * Encodes text into a QR code matrix; throws `TxQrCapacityError` when the text does not fit the
+ * allowed versions.
+ */
 export function encodeQr(text: string, options: TxQrEncodeOptions = {}): TxQrMatrix {
   const minVersion = options.minVersion ?? 1;
   const maxVersion = options.maxVersion ?? 40;

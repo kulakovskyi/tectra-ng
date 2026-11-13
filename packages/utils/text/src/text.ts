@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
+/** Where `txTruncate` cuts the text: at the `end` or in the `middle`. */
 export type TxTruncatePosition = 'end' | 'middle';
 
 const CYRILLIC_TO_LATIN: Record<string, string> = {

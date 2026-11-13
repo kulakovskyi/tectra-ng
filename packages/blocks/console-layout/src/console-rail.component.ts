@@ -7,6 +7,7 @@ import { CONSOLE_LAYOUT_ICON_DEFAULTS } from './console-layout.icons';
 import { injectTokens } from '@tectra-ng/core/config';
 import { CONSOLE_LAYOUT_THEME } from './console-layout.theme';
 
+/** The row of icon sections at the side of `tx-console-layout`. */
 @Component({
   selector: 'tx-console-rail',
   imports: [RouterLink, RouterLinkActive, TxIcon],

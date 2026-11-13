@@ -1,5 +1,9 @@
 import { joinCss, mix, tokenRef } from './token-helpers';
 
+/**
+ * Design tokens of `tx-cookie-notice`: colors, sizes and spacing of its root, icon, body, title, text and
+ * other parts.
+ */
 export const cookieNoticeTokens = {
   root: {
     inset: '14px',
@@ -51,4 +55,5 @@ export const cookieNoticeTokens = {
   },
 };
 
+/** Type of `cookieNoticeTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraCookieNoticeTokens = typeof cookieNoticeTokens;

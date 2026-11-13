@@ -1,5 +1,9 @@
 import { mix, tokenRef } from './token-helpers';
 
+/**
+ * Design tokens of `tx-console-layout`: colors, sizes and spacing of its root, header, apps, trail, brand and
+ * other parts.
+ */
 export const consoleLayoutTokens = {
   root: {
     background: tokenRef('surface-ground'),
@@ -95,4 +99,5 @@ export const consoleLayoutTokens = {
   },
 };
 
+/** Type of `consoleLayoutTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraConsoleLayoutTokens = typeof consoleLayoutTokens;

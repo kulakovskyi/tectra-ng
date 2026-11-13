@@ -25,6 +25,9 @@ import { TxChipsInputEvent, TxChipsInputPart, TxChipsInputSize, TxChipsInputVari
 import { CHIPS_INPUT_ICON_DEFAULTS } from './chips-input.icons';
 import { CHIPS_INPUT_THEME } from './chips-input.theme';
 
+/**
+ * A text field that turns typed text into removable chips; works with forms and a list of strings as the value.
+ */
 @Component({
   selector: 'tx-chips-input',
   imports: [NgTemplateOutlet, TxChip, TxIcon],

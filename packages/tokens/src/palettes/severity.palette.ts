@@ -1,5 +1,6 @@
 import { TectraColorScale } from '../types/color-scale.interface';
 
+/** Color scales used for the severities and their tints: red, green, orange, yellow, sky, purple, amber and blue. */
 export const SEVERITY_PALETTES = {
   red: {
     50: '#fef2f2',

@@ -8,6 +8,7 @@ import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { WIZARD_ICON_DEFAULTS } from './wizard.icons';
 import { WIZARD_THEME } from './wizard.theme';
 
+/** The progress of a wizard as one segment per step. */
 @Component({
   selector: 'tx-wizard-progress',
   template: `

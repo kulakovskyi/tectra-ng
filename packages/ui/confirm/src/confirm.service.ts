@@ -13,6 +13,7 @@ export class TxConfirmService {
   private overlay = inject(TxOverlay);
   private injector = inject(Injector);
 
+  /** Asks in a small alert dialog; resolves to `true` when accepted and `false` otherwise. */
   dialog(options: TxConfirmOptions = {}): Promise<boolean> {
     const state = this.state(options);
     const ref = this.dialogs.open<TxConfirmDialog, TxConfirmState, boolean>(TxConfirmDialog, {
@@ -25,6 +26,9 @@ export class TxConfirmService {
     return firstValueFrom(ref.closed, { defaultValue: undefined }).then((result) => result === true);
   }
 
+  /**
+   * Asks in a popup next to the element or the event target; resolves to `true` when accepted and `false` otherwise.
+   */
   popup(target: Element | Event, options: TxConfirmOptions = {}): Promise<boolean> {
     const origin = target instanceof Event ? ((target.currentTarget ?? target.target) as Element) : target;
     const state = this.state(options);

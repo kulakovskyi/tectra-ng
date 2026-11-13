@@ -9,6 +9,7 @@ import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { WIZARD_ICON_DEFAULTS } from './wizard.icons';
 import { WIZARD_THEME } from './wizard.theme';
 
+/** The illustrated stage of a wizard; its scenes slide in the direction of the move. */
 @Component({
   selector: 'tx-wizard-stage',
   imports: [DecimalPipe],

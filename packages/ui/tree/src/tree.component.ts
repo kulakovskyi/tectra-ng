@@ -65,30 +65,54 @@ import {
 import { TREE_ICON_DEFAULTS } from './tree.icons';
 import { TREE_THEME } from './tree.theme';
 
+/** One rendered node of `tx-tree` with the state the template needs. */
 export interface TxTreeRow<T = unknown> {
+  /** DOM id of the node element. */
   id: string;
+  /** The node data. */
   node: TxTreeNode<T>;
+  /** Depth of the node, the first level is 1. */
   level: number;
+  /** Number of siblings on this level, for `aria-setsize`. */
   setSize: number;
+  /** Position among the siblings from 1, for `aria-posinset`. */
   posInSet: number;
+  /** Key of the parent node; `null` at the top. */
   parentKey: string | null;
+  /** Whether the node has no children to show. */
   leaf: boolean;
+  /** Whether the node is open. */
   expanded: boolean;
+  /** Whether the node is loading its children. */
   loading: boolean;
+  /** Whether the node is selected. */
   selected: boolean;
+  /** Whether the node is checked. */
   checked: boolean;
+  /** Whether some, not all, descendants are checked. */
   partial: boolean;
+  /** Whether the node can be selected or checked. */
   selectable: boolean;
+  /** Whether the node can be dragged. */
   draggable: boolean;
+  /** Icon shown for the node in its current state; `null` for none. */
   icon: TxIconName | null;
+  /** Rows of the child nodes that are rendered. */
   children: TxTreeRow<T>[];
 }
 
+/** Where a drag would land now. */
 interface TxTreeDropTarget {
+  /** Key of the target node; `null` for the empty root. */
   key: string | null;
+  /** Where the node lands relative to the target. */
   position: TxTreeDropPosition;
 }
 
+/**
+ * A hierarchy as a WAI-ARIA tree: open, select, check, search, load lazily, drag and drop,
+ * and a context menu.
+ */
 @Component({
   selector: 'tx-tree',
   imports: [NgTemplateOutlet, TxIcon, TxIconField, TxInputIcon, TxInput, TxMenu],

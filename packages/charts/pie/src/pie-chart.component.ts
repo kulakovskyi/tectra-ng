@@ -280,7 +280,7 @@ export class TxPieChart {
     const reach = fit.radius + 4;
     const share = this.percentFormatter()(Number(arc.percent.toFixed(1)));
     return {
-      title: '',
+      title: this.pieData()?.title ?? '',
       rows: [{ label: this.labels()[index], value, share, color: this.colors()[index], raw, seriesIndex: index, active: true }],
       index,
       x: fit.cx + sin * reach,

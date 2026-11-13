@@ -36,6 +36,7 @@ export class TxDialogTitle {
   }
 }
 
+/** Header of a dialog: the title and subtitle, with the close and maximize buttons, and the drag handle. */
 @Component({
   selector: 'tx-dialog-header',
   imports: [TxButton],
@@ -129,6 +130,7 @@ export class TxDialogHeader {
   }
 }
 
+/** Scrolling body of a dialog. */
 @Component({
   selector: 'tx-dialog-content',
   template: '<ng-content />',
@@ -152,6 +154,7 @@ export class TxDialogContent {
   readonly passThrough = injectPassThrough<TxDialogPart, TxDialogContent>('dialog', this, signal(undefined), signal(undefined));
 }
 
+/** Actions at the bottom of a dialog, side by side in equal widths. */
 @Component({
   selector: 'tx-dialog-footer',
   template: '<ng-content />',
@@ -175,6 +178,7 @@ export class TxDialogFooter {
   readonly passThrough = injectPassThrough<TxDialogPart, TxDialogFooter>('dialog', this, signal(undefined), signal(undefined));
 }
 
+/** Closes the dialog it sits in when clicked; `[txDialogClose]="result"` closes with that result. */
 @Directive({
   selector: '[txDialogClose]',
   host: { '(click)': 'close()' },

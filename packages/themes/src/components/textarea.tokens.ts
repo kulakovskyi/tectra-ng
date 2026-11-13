@@ -1,5 +1,6 @@
 import { lightDark, tokenRef } from './token-helpers';
 
+/** Design tokens of `txTextarea`: colors, sizes and spacing of its root, borderless and counter. */
 export const textareaTokens = {
   root: {
     minHeight: '80px',
@@ -16,4 +17,5 @@ export const textareaTokens = {
   },
 };
 
+/** Type of `textareaTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraTextareaTokens = typeof textareaTokens;

@@ -15,6 +15,10 @@ import { TxSelectChangeEvent, TxSelectItem, TxSelectPart } from './select.types'
 import { SELECT_ICON_DEFAULTS } from './select.icons';
 import { SELECT_THEME } from './select.theme';
 
+/**
+ * A dropdown that picks one value from a list of options, with filter, groups, virtual scroll and lazy
+ * loading.
+ */
 @Component({
   selector: 'tx-select',
   imports: [CdkOverlayOrigin, CdkConnectedOverlay, TxOverlayAnchor, NgTemplateOutlet, TxIcon, TxOptionList],

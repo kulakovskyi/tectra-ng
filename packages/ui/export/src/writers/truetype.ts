@@ -1,13 +1,24 @@
+/** A parsed TrueType font: metrics, glyph lookup and a subsetter. */
 export interface TxTrueTypeFont {
+  /** Font units in one em. */
   readonly unitsPerEm: number;
+  /** Height above the baseline in font units. */
   readonly ascent: number;
+  /** Depth below the baseline in font units, usually negative. */
   readonly descent: number;
+  /** Height of capital letters in font units. */
   readonly capHeight: number;
+  /** Bounding box of all glyphs as `[xMin, yMin, xMax, yMax]` in font units. */
   readonly bbox: readonly [number, number, number, number];
+  /** Number of glyphs in the font. */
   readonly numGlyphs: number;
+  /** Name of the font from its name table; `Font` when it has none. */
   readonly name: string;
+  /** Gives the glyph for a Unicode code point; 0 when the font has none. */
   glyphId(codePoint: number): number;
+  /** Gives the width of a glyph in font units. */
   advance(glyph: number): number;
+  /** Builds a smaller font file that keeps only the given glyphs. */
   subset(glyphs: ReadonlySet<number>): Uint8Array;
 }
 
@@ -27,6 +38,7 @@ function checksum(bytes: Uint8Array): number {
   return sum;
 }
 
+/** Reads a TrueType font file; the result measures glyphs and cuts a smaller font with only the glyphs used. */
 export function parseTrueType(input: Uint8Array): TxTrueTypeFont {
   const bytes = input;
   const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);

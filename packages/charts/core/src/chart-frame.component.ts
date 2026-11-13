@@ -59,6 +59,10 @@ const WHEEL_ZOOM = 0.0025;
 const FOLLOW_PLACEMENT: TxPlacement = 'right';
 const FOLLOW_OFFSET = 14;
 
+/**
+ * The box of every chart: measures itself, places the legend, shows the tooltip, "No data" and the
+ * skeleton, gives screen readers a summary and a data table, and forwards pointer and key events.
+ */
 @Component({
   selector: 'tx-chart-frame',
   imports: [NgTemplateOutlet, TxChartLegend, TxIcon, TxSkeleton, TxButton, TxPopover, TxPopoverTrigger, TxChartMenu],

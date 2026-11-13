@@ -2,6 +2,10 @@ import { lightDark, tokenRef } from './token-helpers';
 
 const borderColor = tokenRef('surface-border');
 
+/**
+ * Design tokens of `tx-data-view`: colors, sizes and spacing of its root, header, footer, empty, loading and
+ * other parts.
+ */
 export const dataViewTokens = {
   root: {
     background: tokenRef('surface-card'),
@@ -36,8 +40,10 @@ export const dataViewTokens = {
   },
 };
 
+/** Type of `dataViewTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraDataViewTokens = typeof dataViewTokens;
 
+/** Design tokens of `tx-virtual-scroller`: colors, sizes and spacing of its root and loader. */
 export const virtualScrollerTokens = {
   root: {
     focusRingWidth: '2px',
@@ -51,8 +57,13 @@ export const virtualScrollerTokens = {
   },
 };
 
+/** Type of `virtualScrollerTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraVirtualScrollerTokens = typeof virtualScrollerTokens;
 
+/**
+ * Design tokens of `tx-timeline`: colors, sizes and spacing of its event, horizontal, vertical, event marker
+ * and event connector.
+ */
 export const timelineTokens = {
   event: {
     minHeight: '63px',
@@ -80,8 +91,10 @@ export const timelineTokens = {
   },
 };
 
+/** Type of `timelineTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraTimelineTokens = typeof timelineTokens;
 
+/** Design tokens of `tx-stat-tiles`: its colors, sizes and spacing, plus the `compact` size. */
 export const statTilesTokens = {
   root: {
     gap: '14px',
@@ -93,8 +106,13 @@ export const statTilesTokens = {
   },
 };
 
+/** Type of `statTilesTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraStatTilesTokens = typeof statTilesTokens;
 
+/**
+ * Design tokens of `tx-stat-tile`: colors, sizes and spacing of its root, icon, label, value, unit and other
+ * parts, plus the `compact` size and the tone variants.
+ */
 export const statTileTokens = {
   root: {
     background: tokenRef('surface-card'),
@@ -176,8 +194,10 @@ export const statTileTokens = {
   },
 };
 
+/** Type of `statTileTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraStatTileTokens = typeof statTileTokens;
 
+/** Design tokens of `tx-sparkline`: its colors, sizes and spacing, plus the tone variants. */
 export const sparklineTokens = {
   root: {
     height: '31.5px',
@@ -193,8 +213,10 @@ export const sparklineTokens = {
   },
 };
 
+/** Type of `sparklineTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraSparklineTokens = typeof sparklineTokens;
 
+/** Design tokens of `tx-countdown`: its colors, sizes and spacing. */
 export const countdownTokens = {
   root: {
     color: 'inherit',
@@ -205,8 +227,13 @@ export const countdownTokens = {
   },
 };
 
+/** Type of `countdownTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraCountdownTokens = typeof countdownTokens;
 
+/**
+ * Design tokens of `tx-analog-clock`: colors, sizes and spacing of its root, tick, hour hand, minute hand,
+ * second hand and other parts.
+ */
 export const analogClockTokens = {
   root: {
     size: '210px',
@@ -248,4 +275,5 @@ export const analogClockTokens = {
   },
 };
 
+/** Type of `analogClockTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraAnalogClockTokens = typeof analogClockTokens;

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { injectStorage, readJson, writeJson } from './storage';
 import { TxUrlSync } from './url-sync';
 
+/** Base class for a filters service that keeps its filters in local storage; set `localStorageKey`. */
 @Injectable()
 export abstract class TxSaveFilters<T> {
   private readonly filterStorage = injectStorage('local');
@@ -18,6 +19,10 @@ export abstract class TxSaveFilters<T> {
   }
 }
 
+/**
+ * Base class for a filters service that keeps its filters in local storage and in the query string;
+ * set `localStorageKey` and `initialFilters()`.
+ */
 @Injectable()
 export abstract class TxUrlFilters<T extends object> extends TxSaveFilters<T> {
   private readonly urlSync = new TxUrlSync<T>(inject(Router), () => this.initialFilters(), inject(DestroyRef), (filters) => this.applyUrlFilters?.(filters));

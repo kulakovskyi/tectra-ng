@@ -9,6 +9,7 @@ import { TxExportFetch, TxExportField, TxExportFormat, TxExportOptions, TxExport
 
 const COPIED_FOR = 1600;
 
+/** Icon name of every export format. */
 export const TX_EXPORT_ICONS: Record<TxExportFormat, string> = {
   csv: 'file',
   excel: 'file-excel',
@@ -21,6 +22,7 @@ export const TX_EXPORT_ICONS: Record<TxExportFormat, string> = {
   print: 'print',
 };
 
+/** Base of the export buttons: the data, fields and options, the run of an export and its state. */
 @Directive()
 export abstract class TxExportAction<T = TxExportRow> {
   private exporter = inject(TxExportService);

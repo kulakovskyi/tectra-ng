@@ -3,9 +3,13 @@ import { ElementRef, Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 import { firstInvalidElement, focusTarget, markAllTouched } from './form-validation.functions';
 
+/** Options of `TxFormValidation.scrollToFirstInvalid`. */
 export interface TxScrollToInvalidOptions {
+  /** Element to search for the first invalid field in (default: the whole page). */
   scope?: ParentNode;
+  /** Moves focus to the invalid field (default `true`). */
   focus?: boolean;
+  /** Where the field lands in the viewport after scrolling (default `center`). */
   block?: ScrollLogicalPosition;
 }
 

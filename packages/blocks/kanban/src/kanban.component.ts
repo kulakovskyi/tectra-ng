@@ -51,6 +51,10 @@ import { KANBAN_THEME } from './kanban.theme';
 const DRAG_SCROLL_IGNORE =
   '[data-drag-ignore], button, a, input, textarea, select, [contenteditable="true"]';
 
+/**
+ * A board of columns with cards that move inside a column and between columns; it reports the move and
+ * the page updates its state.
+ */
 @Component({
   selector: 'tx-kanban',
   imports: [

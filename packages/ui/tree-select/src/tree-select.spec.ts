@@ -11,7 +11,7 @@ const TREE: TxTreeNode[] = [
     key: 'docs',
     label: 'Documents',
     children: [
-      { key: 'cv', label: 'Resume.pdf' },
+      { key: 'cv', label: 'Resume.pdf', data: { code: 'HR-7' } },
       { key: 'tax', label: 'Taxes', children: [{ key: 't24', label: '2024.xlsx' }, { key: 't25', label: '2025.xlsx' }] },
     ],
   },
@@ -26,6 +26,7 @@ const TREE: TxTreeNode[] = [
     [formControl]="control"
     [selectionMode]="mode()"
     [filter]="filter()"
+    [filterBy]="filterBy()"
     [display]="'chip'"
     [showClear]="true"
     [placeholder]="'File'"
@@ -38,6 +39,7 @@ class Host {
   control = new FormControl<string | string[] | null>(null);
   readonly mode = signal<TxTreeSelectionMode>('single');
   readonly filter = signal(false);
+  readonly filterBy = signal('label');
   expanded: string[] = [];
 }
 
@@ -118,6 +120,21 @@ describe('TxTreeSelect', () => {
     key('ArrowDown', search);
     key('Enter', search);
     expect(host.control.value).toEqual(['t25']);
+  });
+
+  it('searches the fields named by filterBy', () => {
+    host.filter.set(true);
+    render();
+    trigger().click();
+    render();
+    const search = document.querySelector('.tx-select__filter-input') as HTMLInputElement;
+    search.value = 'hr-7';
+    search.dispatchEvent(new Event('input'));
+    render();
+    expect(labels()).toEqual([]);
+    host.filterBy.set('label, data.code');
+    render();
+    expect(labels()).toEqual(['Documents', 'Resume.pdf']);
   });
 
   it('skips disabled nodes and clears', () => {

@@ -5,6 +5,10 @@ function tone(palette: string) {
   return { tone: lightDark(tokenRef(`${palette}-600`), tokenRef(`${palette}-400`)) };
 }
 
+/**
+ * Design tokens of `tx-toast`: colors, sizes and spacing of its root, item, icon, text, close button and
+ * other parts, plus the severity variants.
+ */
 export const toastTokens = {
   root: {
     width: 'min(448px, calc(100vw - 28px))',
@@ -71,4 +75,5 @@ export const toastTokens = {
   contrast: { tone: tokenRef('text-primary') },
 };
 
+/** Type of `toastTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraToastTokens = typeof toastTokens;

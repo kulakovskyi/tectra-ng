@@ -1,7 +1,11 @@
+/** How a line connects its points: `smooth` (monotone), `straight` or `step`. */
 export type TxChartCurve = 'smooth' | 'straight' | 'step';
 
+/** A point in px. */
 export interface TxXY {
+  /** Horizontal position. */
   x: number;
+  /** Vertical position. */
   y: number;
 }
 
@@ -18,6 +22,7 @@ function sign(value: number): number {
   return value < 0 ? -1 : 1;
 }
 
+/** Slopes of the monotone curve at each point; the curve never overshoots the data. */
 export function monotoneTangents(points: readonly TxXY[]): number[] {
   const count = points.length;
   if (count < 2) {
@@ -81,6 +86,7 @@ function segment(points: readonly TxXY[], curve: TxChartCurve, move: boolean): s
   );
 }
 
+/** Splits a list of points at `null` into runs of connected points. */
 export function splitGaps(points: readonly (TxXY | null)[]): TxXY[][] {
   const runs: TxXY[][] = [];
   let run: TxXY[] = [];
@@ -98,12 +104,14 @@ export function splitGaps(points: readonly (TxXY | null)[]): TxXY[][] {
   return runs;
 }
 
+/** SVG path of a line through the points; a `null` point breaks the line. */
 export function linePath(points: readonly (TxXY | null)[], curve: TxChartCurve = 'smooth'): string {
   return splitGaps(points)
     .map((run) => segment(run, curve, true))
     .join('');
 }
 
+/** SVG path of the area between a top and a bottom line; runs split at `null` points. */
 export function areaPath(top: readonly (TxXY | null)[], bottom: readonly (TxXY | null)[], curve: TxChartCurve = 'smooth'): string {
   const runs: { top: TxXY[]; bottom: TxXY[] }[] = [];
   let current: { top: TxXY[]; bottom: TxXY[] } | null = null;

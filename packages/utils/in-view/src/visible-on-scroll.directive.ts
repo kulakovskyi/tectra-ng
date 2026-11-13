@@ -1,11 +1,15 @@
 import { DOCUMENT } from '@angular/common';
 import { DestroyRef, Directive, ElementRef, afterRenderEffect, inject, input, numberAttribute, output } from '@angular/core';
 
+/** One item of a list watched by `txVisibleOnScroll`; its position in the list matches the child element. */
 export interface TxVisibleOnScrollItem {
+  /** Value reported by `itemVisible` when the item is seen. */
   id: string;
+  /** Skips the item, for example when it is already handled. */
   ignore?: boolean;
 }
 
+/** Reports each child of a scrolling list once it has been seen, by the id of its item. */
 @Directive({
   selector: '[txVisibleOnScroll]',
   exportAs: 'txVisibleOnScroll',

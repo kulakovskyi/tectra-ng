@@ -62,6 +62,7 @@ const KIND_ICONS: Record<TxFileKind, TxIconName> = {
   other: 'file',
 };
 
+/** Value of `tx-file-upload`: one file, or an array of files when several are allowed. */
 type TxFileUploadValue = File | File[];
 
 @Component({

@@ -7,6 +7,7 @@ import { edgeDisplayTokens } from './display.tokens';
 import { edgeOverlaysTokens } from './overlays.tokens';
 import { edgeDataTokens } from './data.tokens';
 
+/** Edge look: sharp corners, strong borders and solid selection. */
 export const edgeStyle: TectraStyle = {
   name: 'edge',
   label: 'Edge',

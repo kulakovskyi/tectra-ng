@@ -38,6 +38,7 @@ function text(palette: string, color: string) {
 /* @__NO_SIDE_EFFECTS__ */
 const severityColor = (palette: string) => lightDark(tokenRef(`${palette}-600`), tokenRef(`${palette}-400`));
 
+/** Design tokens of `txButton`: colors, sizes and spacing of its root, outlined, text and link. */
 export const buttonTokens = {
   root: {
     borderRadius: tokenRef('radius-md'),
@@ -131,4 +132,5 @@ export const buttonTokens = {
   },
 };
 
+/** Type of `buttonTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraButtonTokens = typeof buttonTokens;

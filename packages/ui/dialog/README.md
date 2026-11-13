@@ -37,6 +37,9 @@ Layout parts: `<tx-dialog-header title subtitle>` (names the dialog, close and m
 | size | `small` (500px), `medium` (700px, default), `large` (900px), `xlarge` (1100px), `fullscreen` |
 | width | Own width (any CSS length), wins over `size` |
 | height | Own height |
+| minWidth | Smallest width (any CSS length) |
+| maxWidth | Largest width; keeps a wide `width` or a breakpoint in bounds |
+| maxHeight | Largest height; the content scrolls inside |
 | breakpoints | Width per viewport width; by default `{ '960px': '500px', '640px': '90vw' }` |
 | position | `center` (default), `top`, `bottom`, `left`, `right`, `top-left`, `top-right`, `bottom-left`, `bottom-right` |
 | drawer | Slides in from `left`, `right`, `top` or `bottom` instead (see Drawer) |

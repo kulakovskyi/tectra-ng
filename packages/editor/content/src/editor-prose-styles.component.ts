@@ -4,6 +4,9 @@ import { CONTENT_ICON_DEFAULTS } from './content.icons';
 import { injectTokens } from '@tectra-ng/core/config';
 import { CONTENT_THEME } from './content.theme';
 
+/**
+ * Loads the typography of editor text (`tx-editor-prose`); add it once where saved text is shown without `tx-editor-content`.
+ */
 @Component({
   selector: 'tx-editor-prose-styles',
   template: '',

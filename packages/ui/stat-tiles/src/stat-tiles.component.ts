@@ -7,6 +7,7 @@ import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { STAT_TILES_ICON_DEFAULTS } from './stat-tiles.icons';
 import { STAT_TILES_THEME } from './stat-tiles.theme';
 
+/** A responsive grid of key numbers made of `tx-stat-tile` elements. */
 @Component({
   selector: 'tx-stat-tiles',
   template: '<ng-content />',

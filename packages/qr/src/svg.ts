@@ -6,6 +6,7 @@ let nextId = 0;
 const escape = (value: string | number) =>
   String(value).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
+/** Renders text as a standalone QR code SVG string with colours, gradient, shapes and an optional logo. */
 export function qrToSvg(text: string, options: TxQrSvgOptions = {}): string {
   const layout = qrLayout(text, options);
   const { viewBox, paths, logoBox, matrix } = layout;

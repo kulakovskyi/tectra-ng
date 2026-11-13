@@ -42,6 +42,7 @@ const PEOPLE: Person[] = [
       [lazy]="lazy()"
       [totalRecords]="totalRecords()"
       [loading]="loading()"
+      [caption]="caption()"
       [selectionMode]="selectionMode()"
       [(selection)]="selection"
       [(expandedRowKeys)]="expanded"
@@ -98,6 +99,7 @@ class Host {
   readonly lazy = signal(false);
   readonly totalRecords = signal<number | undefined>(undefined);
   readonly loading = signal(false);
+  readonly caption = signal<string | undefined>(undefined);
   readonly selectionMode = signal<TxTableSelectionMode | undefined>(undefined);
   readonly selection = signal<Person | Person[] | null>(null);
   readonly expanded = signal<unknown[]>([]);
@@ -222,6 +224,15 @@ describe('TxTable', () => {
   afterEach(() => {
     fixture.destroy();
     document.querySelector('.cdk-overlay-container')?.remove();
+  });
+
+  it('renders a hidden caption only when one is given', async () => {
+    expect(el('caption')).toBeNull();
+    host.caption.set('People of the design team');
+    await stable();
+    expect(el('caption').textContent?.trim()).toBe('People of the design team');
+    expect(el('caption').classList).toContain('tx-table__sr-only');
+    expect(el('table').firstElementChild?.tagName).toBe('CAPTION');
   });
 
   it('renders headers, rows, cell templates and nested values', () => {

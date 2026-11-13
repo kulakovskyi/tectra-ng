@@ -1,5 +1,9 @@
 import { joinCss, mix, tokenRef } from './token-helpers';
 
+/**
+ * Design tokens of `tx-action-tile`: colors, sizes and spacing of its root, icon, body, title, text and other
+ * parts.
+ */
 export const actionTileTokens = {
   root: {
     gap: '12.25px',
@@ -42,4 +46,5 @@ export const actionTileTokens = {
   },
 };
 
+/** Type of `actionTileTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraActionTileTokens = typeof actionTileTokens;

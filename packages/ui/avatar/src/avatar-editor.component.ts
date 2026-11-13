@@ -14,6 +14,9 @@ import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { AVATAR_ICON_DEFAULTS } from './avatar.icons';
 import { AVATAR_THEME } from './avatar.theme';
 
+/**
+ * Tells whether a file matches an `accept` list of extensions (`.png`), MIME types and wildcards (`image/*`); an empty list accepts everything.
+ */
 export function acceptsFile(file: File, accept: string): boolean {
   const rules = accept
     .split(',')

@@ -1,3 +1,4 @@
+/** Design tokens of `txRipple`: its colors, sizes and spacing. */
 export const rippleTokens = {
   root: {
     color: 'currentColor',
@@ -8,4 +9,5 @@ export const rippleTokens = {
   },
 };
 
+/** Type of `rippleTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraRippleTokens = typeof rippleTokens;

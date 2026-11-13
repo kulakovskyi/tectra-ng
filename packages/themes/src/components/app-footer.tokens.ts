@@ -1,5 +1,6 @@
 import { joinCss, tokenRef } from './token-helpers';
 
+/** Design tokens of `tx-app-footer`: colors, sizes and spacing of its root, page, app, console and link. */
 export const appFooterTokens = {
   root: {
     borderColor: tokenRef('surface-border'),
@@ -34,4 +35,5 @@ export const appFooterTokens = {
   },
 };
 
+/** Type of `appFooterTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraAppFooterTokens = typeof appFooterTokens;

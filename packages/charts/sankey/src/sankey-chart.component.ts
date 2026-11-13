@@ -41,6 +41,7 @@ const DEFAULTS = { nodeWidth: 12, nodePadding: 14, labelGap: 8, fontSize: 12 };
 const PADDING = 4;
 const HIT_SLACK = 3;
 
+/** The node or the link that is hovered or focused, by index. */
 type TxSankeyActive = { kind: 'node'; index: number } | { kind: 'link'; index: number };
 
 @Component({

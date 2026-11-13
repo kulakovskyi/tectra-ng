@@ -1,5 +1,9 @@
 import { lightDark, tokenRef } from './token-helpers';
 
+/**
+ * Design tokens of `tx-select`, `tx-multiselect` and `tx-autocomplete`: colors, sizes and spacing of its
+ * root, overlay, list, option, checkbox and other parts.
+ */
 export const selectTokens = {
   root: {
     dropdownColor: tokenRef('form-field-icon-color'),
@@ -96,4 +100,5 @@ export const selectTokens = {
   },
 };
 
+/** Type of `selectTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraSelectTokens = typeof selectTokens;

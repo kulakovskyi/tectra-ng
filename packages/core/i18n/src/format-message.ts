@@ -1,8 +1,10 @@
 const PLURAL_START = /\{(\w+),\s*plural,\s*/g;
 const FORM_KEY = /^\s*(=\d+|\w+)\s*\{/;
 
+/** Values for the `{name}` placeholders of a message. */
 export type TxMessageParams = Record<string, string | number>;
 
+/** Fills `{name}` placeholders and ICU `{count, plural, one {…} other {…}}` forms of a message, with `#` as the count. */
 export function formatMessage(template: string, params: TxMessageParams = {}, intl = 'en-US'): string {
   return replacePlurals(template, params, new Intl.PluralRules(intl)).replace(/\{(\w+)\}/g, (match, name: string) => String(params[name] ?? match));
 }

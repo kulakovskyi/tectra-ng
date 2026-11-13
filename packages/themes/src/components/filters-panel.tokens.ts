@@ -2,6 +2,10 @@ import { fade, joinCss, tokenRef } from './token-helpers';
 
 const tint = fade(tokenRef('primary-base'), '91%');
 
+/**
+ * Design tokens of `tx-filters-panel`: colors, sizes and spacing of its root, skeleton, fields, actions,
+ * button and other parts.
+ */
 export const filtersPanelTokens = {
   root: {
     background: tokenRef('surface-card'),
@@ -108,4 +112,5 @@ export const filtersPanelTokens = {
   },
 };
 
+/** Type of `filtersPanelTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraFiltersPanelTokens = typeof filtersPanelTokens;

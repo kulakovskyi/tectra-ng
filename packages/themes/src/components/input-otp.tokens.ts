@@ -1,5 +1,6 @@
 import { tokenRef } from './token-helpers';
 
+/** Design tokens of `tx-input-otp`: its colors, sizes and spacing, plus the `sm` and `lg` sizes. */
 export const inputOtpTokens = {
   root: {
     gap: '8px',
@@ -13,4 +14,5 @@ export const inputOtpTokens = {
   lg: { cellWidth: '52px', cellFontSize: '20px', gap: '10px' },
 };
 
+/** Type of `inputOtpTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraInputOtpTokens = typeof inputOtpTokens;

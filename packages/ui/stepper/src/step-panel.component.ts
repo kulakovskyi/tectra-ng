@@ -9,6 +9,7 @@ import { STEPPER_ICON_DEFAULTS } from './stepper.icons';
 import { injectTokens } from '@tectra-ng/core/config';
 import { STEPPER_THEME } from './stepper.theme';
 
+/** The content of one step of `tx-stepper`, shown while the step is active. */
 @Component({
   selector: 'tx-step-panel',
   imports: [NgTemplateOutlet],

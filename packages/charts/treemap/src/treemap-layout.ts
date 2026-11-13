@@ -10,6 +10,9 @@ function worst(row: readonly number[], side: number): number {
   return Math.max((side2 * max) / sum2, sum2 / (side2 * min));
 }
 
+/**
+ * Squarified treemap layout: fills a rectangle with one node per positive value, largest first, with tiles as square as possible.
+ */
 export function squarify<T>(items: readonly { value: number; item: T }[], rect: TxTreemapRect): TxTreemapNode<T>[] {
   const indexed = items
     .map((entry, index) => ({ ...entry, index }))
@@ -59,6 +62,7 @@ export function squarify<T>(items: readonly { value: number; item: T }[], rect: 
   return nodes;
 }
 
+/** Value of an item: the sum of its children for a group, otherwise its own value; never below zero. */
 export function treemapValue(item: TxTreemapItem): number {
   if (item.children?.length) {
     return item.children.reduce((sum, child) => sum + Math.max(0, treemapValue(child)), 0);
@@ -66,6 +70,7 @@ export function treemapValue(item: TxTreemapItem): number {
   return Number.isFinite(item.value) ? Math.max(0, item.value ?? 0) : 0;
 }
 
+/** Shrinks a rectangle by `inset` px in total on each axis, keeping it centred. */
 export function insetRect(rect: TxTreemapRect, inset: number): TxTreemapRect {
   const half = inset / 2;
   return {

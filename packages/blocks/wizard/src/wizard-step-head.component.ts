@@ -8,6 +8,7 @@ import { TxWizardStepHeadPart } from './wizard.types';
 import { WIZARD_ICON_DEFAULTS } from './wizard.icons';
 import { WIZARD_THEME } from './wizard.theme';
 
+/** The heading of a wizard step: an icon, a title and a lead text. */
 @Component({
   selector: 'tx-wizard-step-head',
   imports: [TxIcon, TxPill],

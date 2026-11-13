@@ -1,5 +1,9 @@
 import { lightDark, tokenRef } from './token-helpers';
 
+/**
+ * Design tokens of `tx-accordion`: colors, sizes and spacing of its root, panel, header and content, plus the
+ * tone variants.
+ */
 export const accordionTokens = {
   root: {
     transitionDuration: '0.15s',
@@ -65,4 +69,5 @@ export const accordionTokens = {
   },
 };
 
+/** Type of `accordionTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraAccordionTokens = typeof accordionTokens;

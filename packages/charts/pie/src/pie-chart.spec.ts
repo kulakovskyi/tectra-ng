@@ -312,6 +312,10 @@ describe('TxPieChart options', () => {
     expect(tooltip()?.textContent).toContain('#2: 60');
     await key('ArrowLeft');
     expect(tooltip()?.textContent).toContain('#1: 10');
+    expect(document.querySelector('.tx-chart-frame__tooltip-title')).toBeNull();
+    host.data.set({ series: [30, 10, 60], labels: ['North', 'South', 'East'], title: 'Sales by region' });
+    await key('ArrowRight');
+    expect(document.querySelector('.tx-chart-frame__tooltip-title')?.textContent).toBe('Sales by region');
   });
 
   it('jumps to the first and last segment', async () => {

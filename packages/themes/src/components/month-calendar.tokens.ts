@@ -1,5 +1,9 @@
 import { joinCss, lightDark, tokenRef } from './token-helpers';
 
+/**
+ * Design tokens of `tx-month-calendar`: colors, sizes and spacing of its root, head, weekday, week, cell and
+ * other parts, plus the tone variants.
+ */
 export const monthCalendarTokens = {
   root: {
     background: tokenRef('surface-card'),
@@ -87,4 +91,5 @@ export const monthCalendarTokens = {
   },
 };
 
+/** Type of `monthCalendarTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraMonthCalendarTokens = typeof monthCalendarTokens;

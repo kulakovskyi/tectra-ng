@@ -11,6 +11,7 @@ import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { HIGHLIGHT_ICON_DEFAULTS } from './highlight.icons';
 import { HIGHLIGHT_THEME } from './highlight.theme';
 
+/** Design tokens of `tx-code-highlight` for `dt`: the `codeHighlight` group and `syntax` colours. */
 export type TxCodeHighlightTokens = TectraCodeHighlightTokens & { syntax: TectraCodeSyntaxTokens };
 
 @Component({

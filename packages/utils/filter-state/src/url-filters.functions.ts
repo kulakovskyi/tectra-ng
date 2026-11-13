@@ -1,5 +1,6 @@
 import { Params } from '@angular/router';
 
+/** Compares two values by their JSON text. */
 export function isSameValue(a: unknown, b: unknown): boolean {
   return JSON.stringify(a) === JSON.stringify(b);
 }
@@ -23,6 +24,7 @@ export function encodeUrlFilterValue(value: unknown): string {
   return isJson(value) ? JSON.stringify(value) : value;
 }
 
+/** Turns a query parameter back into a filter value: parsed when it is JSON, otherwise the plain text. */
 export function decodeUrlFilterValue(value: string): unknown {
   return isJson(value) ? JSON.parse(value) : value;
 }

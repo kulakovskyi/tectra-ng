@@ -1,7 +1,11 @@
 import { TxOrgChartChildrenView, TxOrgChartExpandState, TxOrgChartNode, TxOrgChartRect } from './org-chart.types';
 
+/** Distance in px between a card and the horizontal line of its connectors. */
 export const TX_ORG_CHART_CONNECTOR_GAP = 24;
 
+/**
+ * Decides what is drawn under a node: nothing for a closed one, a skeleton while loading, its children, or the empty text.
+ */
 export function orgChartChildren(node: TxOrgChartNode): TxOrgChartChildrenView {
   const nodes = node.children ?? [];
   const emptyText = node.childrenEmptyText ?? '';
@@ -15,6 +19,7 @@ function collapsibleNodes(nodes: readonly TxOrgChartNode[]): TxOrgChartNode[] {
   return nodes.flatMap((node) => [...(node.collapsible ? [node] : []), ...collapsibleNodes(node.children ?? [])]);
 }
 
+/** Tells whether all, none or some collapsible nodes of the tree are open. */
 export function orgChartExpandState(nodes: readonly TxOrgChartNode[]): TxOrgChartExpandState {
   const collapsible = collapsibleNodes(nodes);
   const expanded = collapsible.filter((node) => node.expanded).length;
@@ -25,6 +30,9 @@ export function orgChartExpandState(nodes: readonly TxOrgChartNode[]): TxOrgChar
   };
 }
 
+/**
+ * SVG path of the connectors along a chain of rectangles, each parent to the next child; `radius` rounds the corners.
+ */
 export function orgChartPathLine(rects: readonly TxOrgChartRect[], gap = TX_ORG_CHART_CONNECTOR_GAP, radius = 0, offset = 0, inset = 0): string {
   const round = (value: number) => Math.round(value * 100) / 100;
   return rects
@@ -55,6 +63,9 @@ export function orgChartPathLine(rects: readonly TxOrgChartRect[], gap = TX_ORG_
     .join(' ');
 }
 
+/**
+ * Returns the tree with the node `id` opened or closed; `expanded` sets it, otherwise it flips. The input is not changed.
+ */
 export function orgChartToggle(nodes: readonly TxOrgChartNode[], id: string, expanded?: boolean): TxOrgChartNode[] {
   return nodes.map((node) => {
     if (node.id === id) return { ...node, expanded: expanded ?? !node.expanded };
@@ -62,6 +73,7 @@ export function orgChartToggle(nodes: readonly TxOrgChartNode[], id: string, exp
   });
 }
 
+/** Returns the tree with every collapsible node open or closed. The input is not changed. */
 export function orgChartExpandAll(nodes: readonly TxOrgChartNode[], expanded: boolean): TxOrgChartNode[] {
   return nodes.map((node) => ({
     ...node,
@@ -70,6 +82,7 @@ export function orgChartExpandAll(nodes: readonly TxOrgChartNode[], expanded: bo
   }));
 }
 
+/** Ids of the nodes whose title or subtitle contains the text, ignoring case; empty for an empty query. */
 export function orgChartSearch(nodes: readonly TxOrgChartNode[], query: string): string[] {
   const needle = query.trim().toLocaleLowerCase();
   if (!needle) return [];
@@ -79,6 +92,7 @@ export function orgChartSearch(nodes: readonly TxOrgChartNode[], query: string):
   ]);
 }
 
+/** Ids from a root down to the node `id`, both included; empty when the node is not in the tree. */
 export function orgChartPathTo(nodes: readonly TxOrgChartNode[], id: string): string[] {
   for (const node of nodes) {
     if (node.id === id) return [node.id];
@@ -88,6 +102,7 @@ export function orgChartPathTo(nodes: readonly TxOrgChartNode[], id: string): st
   return [];
 }
 
+/** Returns the tree with the collapsible ancestors of the given nodes open. The input is not changed. */
 export function orgChartReveal(nodes: readonly TxOrgChartNode[], ids: Iterable<string>): TxOrgChartNode[] {
   const open = new Set<string>();
   for (const id of ids) {

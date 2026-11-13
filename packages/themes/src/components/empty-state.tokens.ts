@@ -1,5 +1,9 @@
 import { lightDark, tokenRef } from './token-helpers';
 
+/**
+ * Design tokens of `tx-empty-state`: colors, sizes and spacing of its root, framed, inset, icon, body and
+ * other parts, plus the `large` and `compact` sizes and the tone variants.
+ */
 export const emptyStateTokens = {
   root: {
     gap: '10.5px',
@@ -61,4 +65,5 @@ export const emptyStateTokens = {
   },
 };
 
+/** Type of `emptyStateTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraEmptyStateTokens = typeof emptyStateTokens;

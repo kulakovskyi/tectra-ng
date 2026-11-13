@@ -1,5 +1,6 @@
 import { TectraSurfaceScale } from '../types/color-scale.interface';
 
+/** Scale of the default `ink` neutral palette. */
 export const INK_SURFACE: TectraSurfaceScale = {
   0: '#ffffff',
   50: '#f6f8fa',
@@ -15,6 +16,7 @@ export const INK_SURFACE: TectraSurfaceScale = {
   950: '#0c1015',
 };
 
+/** Neutral surface palettes by name; a preset takes one for backgrounds, borders and text. */
 export const SURFACE_PALETTES = {
   ink: INK_SURFACE,
   slate: {
@@ -187,4 +189,5 @@ export const SURFACE_PALETTES = {
   },
 } satisfies Record<string, TectraSurfaceScale>;
 
+/** Name of a surface palette. */
 export type TectraSurface = keyof typeof SURFACE_PALETTES;

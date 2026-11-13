@@ -9,6 +9,7 @@ import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { DATA_VIEW_ICON_DEFAULTS } from './data-view.icons';
 import { DATA_VIEW_THEME } from './data-view.theme';
 
+/** Pair of buttons that switches a layout between list and grid; bind it to the layout of a `tx-data-view` with `[(layout)]`. */
 @Component({
   selector: 'tx-data-view-layout',
   imports: [TxButton, TxButtonGroup],

@@ -11,13 +11,20 @@ import { TxBreadcrumbItem, TxBreadcrumbItemEvent, TxBreadcrumbPart, TxBreadcrumb
 import { BREADCRUMB_ICON_DEFAULTS } from './breadcrumb.icons';
 import { BREADCRUMB_THEME } from './breadcrumb.theme';
 
+/** How an item is rendered: the current page, a router link, a plain link, a command button or plain text. */
 type TxBreadcrumbKind = 'current' | 'router' | 'url' | 'command' | 'text';
 
+/** An item prepared for rendering, with its kind and resolved icon. */
 interface TxBreadcrumbEntry {
+  /** The source item. */
   item: TxBreadcrumbItem;
+  /** How the item is rendered. */
   kind: TxBreadcrumbKind;
+  /** Whether this is the current page. */
   current: boolean;
+  /** Name of a registered icon, or `null`. */
   icon: string | null;
+  /** CSS class to use as the icon when the name is not a registered icon, or `null`. */
   iconClass: string | null;
 }
 

@@ -49,6 +49,9 @@ interface TxCarouselDrag {
   active: boolean;
 }
 
+/**
+ * Shows a list of items a few at a time and pages through them with buttons, indicators, swipes or autoplay.
+ */
 @Component({
   selector: 'tx-carousel',
   imports: [NgTemplateOutlet, TxButton],

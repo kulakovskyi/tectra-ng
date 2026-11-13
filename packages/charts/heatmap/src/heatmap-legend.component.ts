@@ -8,6 +8,7 @@ import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { HEATMAP_ICON_DEFAULTS } from './heatmap.icons';
 import { HEATMAP_THEME } from './heatmap.theme';
 
+/** The legend under `tx-heatmap`: a sample cell with a label for each entry, and an entry for empty cells. */
 @Component({
   selector: 'tx-heatmap-legend',
   imports: [TxHeatmapCellView],

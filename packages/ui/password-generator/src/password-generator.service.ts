@@ -7,10 +7,15 @@ const DIGITS = '0123456789';
 const SYMBOLS = '!@#$%^&*()-_=+[]{};:,.?/~';
 const SIMILAR = /[0O1lI|]/g;
 
+/**
+ * Makes strong random passwords from `crypto.getRandomValues`, with at least one character of every
+ * enabled set.
+ */
 @Injectable({ providedIn: 'root' })
 export class TxPasswordGenerator {
   private crypto = inject(DOCUMENT).defaultView?.crypto ?? globalThis.crypto;
 
+  /** Makes a password; throws when every character set is turned off. */
   generate(options: TxPasswordGeneratorOptions = {}): string {
     const sets = this.sets(options);
     if (!sets.length) {
@@ -29,6 +34,7 @@ export class TxPasswordGenerator {
     return chars.join('');
   }
 
+  /** Makes a password of the given length (default 16) with all character sets. */
   generatePassword(length = 16): string {
     return this.generate({ length });
   }

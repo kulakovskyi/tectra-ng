@@ -48,6 +48,7 @@ const COLLAPSE_QUERY = '(width < 64rem)';
 const OVERLAY_CONTAINER = '.cdk-overlay-container';
 const CLOSE_FALLBACK_MS = 400;
 
+/** A row of filter fields with reset, a "Filters" fold on narrow screens and an optional saved layout. */
 @Component({
   selector: 'tx-filters-panel',
   imports: [CdkDropList, CdkDrag, CdkDragHandle, TxIcon, TxButton, TxPopover, TxPopoverTrigger, TxTooltip],

@@ -23,6 +23,7 @@ import { TABLE_ICON_DEFAULTS } from './table.icons';
 import { injectTokens } from '@tectra-ng/core/config';
 import { TABLE_THEME } from './table.theme';
 
+/** Row action buttons of `tx-table`: some inline, the rest in a popover, shared with the right-click menu. */
 @Component({
   selector: 'tx-table-actions',
   imports: [NgTemplateOutlet, TxButton, TxPopover, TxPopoverTrigger, TxTooltip],

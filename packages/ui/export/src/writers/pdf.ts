@@ -60,6 +60,7 @@ function pdfDate(date: Date): string {
   return `D:${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}${pad(date.getHours())}${pad(date.getMinutes())}${pad(date.getSeconds())}`;
 }
 
+/** Breaks text into lines that fit the width, measured by the given function. */
 export function wrapText(text: string, width: number, measure: (text: string) => number): string[] {
   const lines: string[] = [];
   for (const paragraph of text.replace(/\t/g, ' ').split(/\r?\n/)) {
@@ -132,6 +133,7 @@ export async function loadPdfFonts(font: TxExportFont): Promise<{ regular: TxTru
   return { regular: parseTrueType(toBytes(font.regular)), bold: font.bold ? parseTrueType(toBytes(font.bold)) : null };
 }
 
+/** Writes the table as a PDF file blob, with the glyphs it uses embedded from the font. */
 export async function writePdf(
   table: TxExportTable,
   options: TxExportPdfOptions,

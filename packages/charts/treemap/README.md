@@ -30,7 +30,7 @@ import { TxTreemap } from '@tectra-ng/charts/treemap';
 ## Outputs
 | Name | Description |
 |---|---|
-| tileClick | A tile was clicked: `index`, `path` (indexes from the top level), `label`, `group`, `value`, `share` |
+| tileClick | A tile was clicked: `index`, `path` (indexes from the top level), `label`, `group`, `value`, `share` (0–1) |
 
 ## Slots
 | Name | Description |

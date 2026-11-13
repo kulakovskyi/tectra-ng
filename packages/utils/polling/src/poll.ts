@@ -21,6 +21,7 @@ export function isPageHidden(): boolean {
   return hasDocument() && document.visibilityState === 'hidden';
 }
 
+/** Emits at once when the tab is visible, otherwise when it becomes visible again. */
 export function waitUntilVisible(): Observable<void> {
   return defer(() =>
     isPageHidden()

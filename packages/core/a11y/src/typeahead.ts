@@ -1,9 +1,17 @@
+/**
+ * Type-to-find for lists: collects typed characters and finds the next label that starts with them; the
+ * buffer clears after a pause (default 500 ms).
+ */
 export class TxTypeahead {
   private buffer = '';
   private timer: ReturnType<typeof setTimeout> | null = null;
 
   constructor(private readonly delay = 500) {}
 
+  /**
+   * Adds a typed character and returns the index of the matching label, searching from the item after
+   * `current`; `null` when nothing matches.
+   */
   search(character: string, labels: string[], current: number): number | null {
     if (character.length !== 1 || !labels.length) {
       return null;
@@ -26,6 +34,7 @@ export class TxTypeahead {
     return null;
   }
 
+  /** Clears the typed characters. */
   reset(): void {
     this.buffer = '';
   }

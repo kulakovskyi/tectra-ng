@@ -5,26 +5,44 @@ import { TxPlacement, parsePlacement, txArrowOffset } from '@tectra-ng/core/over
 import { TxTooltipContent, TxTooltipContext, TxTooltipPart } from './tooltip.types';
 import { TOOLTIP_THEME } from './tooltip.theme';
 
+/** What `txTooltip` gives its panel to render: content, placement, look and pointer hooks. */
 export interface TxTooltipPanelState {
+  /** Id of the panel element. */
   id: string;
+  /** Element the tooltip belongs to. */
   origin: HTMLElement;
+  /** Text, number or template shown in the panel. */
   content: Signal<TxTooltipContent>;
+  /** Context passed to a template content. */
   context: Signal<TxTooltipContext>;
+  /** Side of the element where the panel opens. */
   placement: Signal<TxPlacement>;
+  /** Whether the arrow is shown. */
   arrow: Signal<boolean>;
+  /** Whether the pointer can move onto the panel. */
   interactive: Signal<boolean>;
+  /** Hides the panel from screen readers because the text is already read through `aria-describedby`. */
   hiddenFromReaders: Signal<boolean>;
+  /** Whether long text wraps onto several lines. */
   multiline: Signal<boolean>;
+  /** Whether the tectra styles are removed. */
   unstyled: Signal<boolean>;
+  /** Resolved `pt` classes and styles of the parts. */
   passThrough: Signal<TxResolvedPassThrough<TxTooltipPart>>;
+  /** Inline CSS variables from the `tooltipDt` input. */
   style: Signal<Record<string, string>>;
+  /** Extra class of the panel (the `tooltipClass` input). */
   panelClass: Signal<string | undefined>;
+  /** Called when the pointer enters the panel. */
   pointerEnter(): void;
+  /** Called when the pointer leaves the panel. */
   pointerLeave(): void;
 }
 
+/** Gives `tx-tooltip` its `TxTooltipPanelState`. */
 export const TX_TOOLTIP_PANEL = new InjectionToken<TxTooltipPanelState>('TX_TOOLTIP_PANEL');
 
+/** The tooltip bubble that `txTooltip` opens in an overlay; not used directly. */
 @Component({
   selector: 'tx-tooltip',
   imports: [NgTemplateOutlet],

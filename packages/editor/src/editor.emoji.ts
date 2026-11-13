@@ -1,6 +1,10 @@
+/** One emoji of the `:` list. */
 export interface TxEditorEmoji {
+  /** Name typed after `:`. */
   name: string;
+  /** The emoji character inserted. */
   char: string;
+  /** Other names that find the emoji. */
   aliases?: readonly string[];
 }
 

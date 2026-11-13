@@ -1,63 +1,105 @@
 import { TxChartPlot, TxChartX } from './chart.types';
 import { textWidth } from './format';
 
+/** Colour role of an annotation, from the `chart.annotation` tokens. */
 export type TxChartAnnotationTone = 'neutral' | 'primary' | 'success' | 'info' | 'warn' | 'danger';
 
+/** Options every annotation has: label and colour. */
 interface TxChartAnnotationBase {
+  /** Text shown in a pill at the annotation. */
   label?: string;
+  /** Colour role (default `neutral`). */
   tone?: TxChartAnnotationTone;
+  /** Own colour; replaces `tone`. */
   color?: string;
 }
 
+/** A line at one x value. */
 export interface TxChartXLine extends TxChartAnnotationBase {
+  /** Always `x-line`. */
   type: 'x-line';
+  /** Category or value where the line stands. */
   x: TxChartX;
 }
 
+/** A line at one y value. */
 export interface TxChartYLine extends TxChartAnnotationBase {
+  /** Always `y-line`. */
   type: 'y-line';
+  /** Value where the line stands. */
   y: number;
+  /** Value axis the value belongs to (default `primary`). */
   axis?: 'primary' | 'secondary';
 }
 
+/** A band between two x values. */
 export interface TxChartXBand extends TxChartAnnotationBase {
+  /** Always `x-band`. */
   type: 'x-band';
+  /** Start of the band. */
   from: TxChartX;
+  /** End of the band. */
   to: TxChartX;
 }
 
+/** A band between two y values. */
 export interface TxChartYBand extends TxChartAnnotationBase {
+  /** Always `y-band`. */
   type: 'y-band';
+  /** Lower value of the band. */
   from: number;
+  /** Upper value of the band. */
   to: number;
+  /** Value axis the values belong to (default `primary`). */
   axis?: 'primary' | 'secondary';
 }
 
+/** A marked point at an x and a y value. */
 export interface TxChartPointAnnotation extends TxChartAnnotationBase {
+  /** Always `point`. */
   type: 'point';
+  /** Category or value of the point. */
   x: TxChartX;
+  /** Value of the point. */
   y: number;
+  /** Value axis the value belongs to (default `primary`). */
   axis?: 'primary' | 'secondary';
 }
 
+/** A line, band or point drawn over the plot of a cartesian chart. */
 export type TxChartAnnotation = TxChartXLine | TxChartYLine | TxChartXBand | TxChartYBand | TxChartPointAnnotation;
 
+/** How a chart maps annotation values to pixels; `null` means the value is not on the chart. */
 export interface TxChartAnnotationMapping {
+  /** Plot area the shapes are placed in. */
   plot: TxChartPlot;
+  /** Pixel position of an x value. */
   x(value: TxChartX): number | null;
+  /** Pixel start and end of the category at an x value; bands use it to cover the whole bar slot. */
   xSpan?(value: TxChartX): [number, number] | null;
+  /** Pixel position of a y value on the given axis. */
   y(value: number, axis: 'primary' | 'secondary'): number | null;
+  /** Categories run vertically, so x annotations become horizontal. */
   horizontal?: boolean;
 }
 
+/** An annotation placed in pixels, ready for `tx-chart-annotations`. */
 export interface TxChartAnnotationShape {
+  /** Identifies the shape. */
   key: string;
+  /** Whether it is a `line`, a `band` or a `point`. */
   kind: 'line' | 'band' | 'point';
+  /** Colour of the shape. */
   color: string;
+  /** Left or start x, in px. */
   x1: number;
+  /** Top or start y, in px. */
   y1: number;
+  /** Right or end x, in px. */
   x2: number;
+  /** Bottom or end y, in px. */
   y2: number;
+  /** Label pill with its box and text anchor, or `null` without a label. */
   label: { text: string; x: number; y: number; width: number; height: number; anchor: 'start' | 'end' | 'middle' } | null;
 }
 
@@ -66,6 +108,7 @@ const LABEL_PAD = 6;
 const LABEL_HEIGHT = 18;
 const LABEL_GAP = 4;
 
+/** Index of an x value among the category labels; `-1` when it is not one of them. */
 export function chartCategoryIndex(value: TxChartX, labels: readonly string[]): number {
   if (typeof value === 'number') return Number.isInteger(value) && value >= 0 && value < labels.length ? value : -1;
   return labels.indexOf(value instanceof Date ? value.toISOString() : String(value));
@@ -79,6 +122,10 @@ function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
 }
 
+/**
+ * Places annotations inside the plot: maps their values to pixels, drops those outside it and fits the
+ * label pills.
+ */
 export function chartAnnotationShapes(list: readonly TxChartAnnotation[] | null | undefined, mapping: TxChartAnnotationMapping): TxChartAnnotationShape[] {
   const { plot } = mapping;
   const left = plot.left;

@@ -39,6 +39,7 @@ function isFocusVisible(element: Element): boolean {
   }
 }
 
+/** Shows a tooltip with text or a template when the host is hovered or focused. */
 @Directive({
   selector: '[txTooltip]',
   exportAs: 'txTooltip',

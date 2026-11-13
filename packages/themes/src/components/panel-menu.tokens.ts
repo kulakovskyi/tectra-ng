@@ -1,5 +1,9 @@
 import { joinCss, lightDark, tokenRef } from './token-helpers';
 
+/**
+ * Design tokens of `tx-panel-menu`: colors, sizes and spacing of its root, panel, list, item, icon and other
+ * parts.
+ */
 export const panelMenuTokens = {
   root: {
     gap: '7px',
@@ -105,4 +109,5 @@ export const panelMenuTokens = {
   },
 };
 
+/** Type of `panelMenuTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraPanelMenuTokens = typeof panelMenuTokens;

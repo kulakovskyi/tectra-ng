@@ -1,5 +1,9 @@
 import { lightDark, tokenRef } from './token-helpers';
 
+/**
+ * Design tokens of `tx-galleria`: colors, sizes and spacing of its root, nav button, thumbnails, thumbnail
+ * nav button, caption and other parts.
+ */
 export const galleriaTokens = {
   root: {
     borderWidth: '1px',
@@ -84,4 +88,5 @@ export const galleriaTokens = {
   },
 };
 
+/** Type of `galleriaTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraGalleriaTokens = typeof galleriaTokens;

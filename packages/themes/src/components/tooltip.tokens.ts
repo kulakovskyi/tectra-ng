@@ -1,5 +1,6 @@
 import { lightDark, tokenRef } from './token-helpers';
 
+/** Design tokens of `txTooltip`: colors, sizes and spacing of its root, multiline and arrow. */
 export const tooltipTokens = {
   root: {
     background: lightDark(tokenRef('surface-900'), tokenRef('surface-50')),
@@ -22,4 +23,5 @@ export const tooltipTokens = {
   },
 };
 
+/** Type of `tooltipTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraTooltipTokens = typeof tooltipTokens;

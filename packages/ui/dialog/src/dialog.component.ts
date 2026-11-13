@@ -60,6 +60,9 @@ export class TxDialog {
   readonly size = input<TxDialogSize>('medium');
   readonly width = input<string | undefined>(undefined);
   readonly height = input<string | undefined>(undefined);
+  readonly minWidth = input<string | undefined>(undefined);
+  readonly maxWidth = input<string | undefined>(undefined);
+  readonly maxHeight = input<string | undefined>(undefined);
   readonly breakpoints = input<Record<string, string> | undefined>(undefined);
   readonly position = input<TxDialogPosition>('center');
   readonly drawer = input<TxDrawerPosition | undefined>(undefined);
@@ -113,6 +116,9 @@ export class TxDialog {
       size: this.size(),
       width: this.width(),
       height: this.height(),
+      minWidth: this.minWidth(),
+      maxWidth: this.maxWidth(),
+      maxHeight: this.maxHeight(),
       breakpoints: this.breakpoints(),
       position: this.position(),
       drawer: this.drawer(),

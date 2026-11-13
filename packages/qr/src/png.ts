@@ -11,6 +11,10 @@ async function toDataUrl(url: string): Promise<string> {
   });
 }
 
+/**
+ * Replaces image links inside an SVG with data URLs so the SVG can be drawn to a canvas; images that
+ * cannot be fetched stay as they are. Browser only.
+ */
 export async function inlineSvgImages(svg: string): Promise<string> {
   const urls = Array.from(new Set(Array.from(svg.matchAll(/href="([^"]+)"/g), (match) => match[1]))).filter((url) => !url.startsWith('data:') && !url.startsWith('#'));
   let result = svg;
@@ -25,10 +29,12 @@ export async function inlineSvgImages(svg: string): Promise<string> {
   return result;
 }
 
+/** Wraps an SVG string into a `data:image/svg+xml` URL. */
 export function svgDataUrl(svg: string): string {
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 }
 
+/** Draws an SVG onto a square canvas and returns it as a PNG data URL (default 1024 px). Browser only. */
 export async function svgToPng(svg: string, pixelSize = 1024): Promise<string> {
   const image = new Image();
   image.src = svgDataUrl(await inlineSvgImages(svg));
@@ -40,6 +46,7 @@ export async function svgToPng(svg: string, pixelSize = 1024): Promise<string> {
   return canvas.toDataURL('image/png');
 }
 
+/** Renders text as a QR code PNG data URL; `pixelSize` sets the side in px (default 1024). Browser only. */
 export function qrToPng(text: string, options: TxQrPngOptions = {}): Promise<string> {
   return svgToPng(qrToSvg(text, options), options.pixelSize ?? 1024);
 }

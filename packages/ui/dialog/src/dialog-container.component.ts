@@ -29,6 +29,7 @@ const FIELDS = ['.tx-dialog-content', '.tx-dialog-footer', '.tx-dialog-header'];
 const LEAVE_LIMIT = 400;
 const DEFAULT_BREAKPOINTS: Record<string, string> = { '960px': '500px', '640px': '90vw' };
 
+/** Shows one dialog opened by `TxDialogService`: the panel, mask, animation, drag and size. */
 @Component({
   selector: 'tx-dialog-container',
   imports: [CdkPortalOutlet],

@@ -10,6 +10,7 @@ Pick from a hierarchy — folders, categories, org units. A select whose panel i
 | display | With several values: `comma` or `chip` |
 | expandedKeys | Keys of the open nodes; two-way with `[(expandedKeys)]` |
 | filter | Search field in the panel |
+| filterBy | Fields searched, comma separated (`label` by default, e.g. `label, data.code`) |
 | filterPlaceholder | Own placeholder of the search field |
 | placeholder | Text shown while nothing is selected |
 | showClear | Button that clears the value |

@@ -1,7 +1,12 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { TxFilterMatchMode, matchesRule, resolveField } from '@tectra-ng/ui/table';
 
+/**
+ * Own match rule for a filter: gets the value, the filter and the locale, returns whether the item
+ * matches.
+ */
 export type TxMatchFunction = (value: unknown, filter: unknown, locale?: string) => boolean;
+/** Where to look for a value in an item: a list of field paths or a function that returns the values. */
 export type TxFilterFields<T> = readonly string[] | ((item: T) => readonly unknown[]);
 
 export { resolveField };

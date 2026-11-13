@@ -35,6 +35,9 @@ const SKELETON_ROWS = 5;
 const TODAY_AT = 0.3;
 const REVEAL_FROM = 0.8;
 
+/**
+ * Where task names go: beside the bar, inside it, or nowhere; `auto` picks beside for `tasks` and inside for `timeline`.
+ */
 export type TxGanttBarLabels = 'auto' | 'outside' | 'inside' | 'none';
 
 @Component({

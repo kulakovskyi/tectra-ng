@@ -7,6 +7,7 @@ import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { CORE_ICON_DEFAULTS } from './core.icons';
 import { CORE_THEME } from './core.theme';
 
+/** The legend of a chart: items that toggle series, with arrow-key navigation. */
 @Component({
   selector: 'tx-chart-legend',
   imports: [NgTemplateOutlet],

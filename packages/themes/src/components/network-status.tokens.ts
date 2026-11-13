@@ -1,5 +1,9 @@
 import { lightDark, mix, tokenRef } from './token-helpers';
 
+/**
+ * Design tokens of `tx-network-status`: colors, sizes and spacing of its root, icon, offline, restored and
+ * motion.
+ */
 export const networkStatusTokens = {
   root: {
     bottom: '21px',
@@ -33,4 +37,5 @@ export const networkStatusTokens = {
   },
 };
 
+/** Type of `networkStatusTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraNetworkStatusTokens = typeof networkStatusTokens;

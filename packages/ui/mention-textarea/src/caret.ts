@@ -20,12 +20,17 @@ const COPIED = [
   'tabSize',
 ] as const;
 
+/** Position of the caret inside a textarea, in px. */
 export interface TxCaretPoint {
+  /** Distance from the top of the textarea to the caret line. */
   top: number;
+  /** Distance from the left edge of the textarea to the caret. */
   left: number;
+  /** Height of one text line. */
   height: number;
 }
 
+/** Measures where the caret is in a textarea by laying the text out in a hidden mirror element. */
 export function caretPoint(textarea: HTMLTextAreaElement, position: number): TxCaretPoint {
   const document = textarea.ownerDocument;
   const style = getComputedStyle(textarea);

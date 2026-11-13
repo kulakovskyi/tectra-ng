@@ -2,6 +2,10 @@ import { joinCss, mix, tokenRef } from './token-helpers';
 
 const focusRing = joinCss('0 0 0 2px ', tokenRef('surface-card'), ', 0 0 0 4px ', tokenRef('focus-ring-color'));
 
+/**
+ * Design tokens of `tx-public-header`: colors, sizes and spacing of its root, brand, nav, end, toggle and
+ * other parts.
+ */
 export const publicHeaderTokens = {
   root: {
     height: '56px',
@@ -57,4 +61,5 @@ export const publicHeaderTokens = {
   },
 };
 
+/** Type of `publicHeaderTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraPublicHeaderTokens = typeof publicHeaderTokens;

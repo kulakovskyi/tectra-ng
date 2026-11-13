@@ -2,6 +2,7 @@ import { TxExportCsvOptions, TxExportHtmlOptions, TxExportJsonOptions, TxExportM
 import { TxExportTextContext, cellText, csvCell, escapeXml, localIso } from '../export.utils';
 import { dateLine, pageGeometry } from './page';
 
+/** Writes the table as CSV text with the separator, line ending and quoting of the options. */
 export function writeCsv(table: TxExportTable, options: TxExportCsvOptions = {}): string {
   const separator = options.separator ?? ',';
   const cell = (value: unknown) => csvCell(value, separator, { quoteAll: options.quoteAll, formulaGuard: options.formulaGuard });
@@ -10,6 +11,7 @@ export function writeCsv(table: TxExportTable, options: TxExportCsvOptions = {})
   return lines.join(options.lineEnding ?? '\r\n');
 }
 
+/** Writes the table as tab-separated text, as for the clipboard. */
 export function writeTsv(table: TxExportTable, context: TxExportTextContext, header = true): string {
   const clean = (text: string) => text.replace(/[\t\r\n]+/g, ' ');
   const lines = table.rows.map((row) => table.columns.map((column, index) => clean(cellText(row[index], column, context))).join('\t'));
@@ -17,6 +19,7 @@ export function writeTsv(table: TxExportTable, context: TxExportTextContext, hea
   return lines.join('\n');
 }
 
+/** Writes the table as a JSON array of objects keyed by field or title. */
 export function writeJson(table: TxExportTable, options: TxExportJsonOptions = {}): string {
   const keys = table.columns.map((column) => (options.keys === 'title' ? column.title : column.key));
   const objects = table.rows.map((row) => Object.fromEntries(keys.map((key, index) => [key, row[index] === undefined ? null : localIso(row[index], table.columns[index].type)])));
@@ -27,6 +30,7 @@ function escapeHtml(text: string): string {
   return escapeXml(text).replace(/\n/g, '<br>');
 }
 
+/** Writes the table as an HTML `<table>` string. */
 export function htmlTable(table: TxExportTable, context: TxExportTextContext, header = true): string {
   const align = (value: string) => (value === 'end' ? ' style="text-align:right"' : value === 'center' ? ' style="text-align:center"' : '');
   const head = header ? `<thead><tr>${table.columns.map((column) => `<th${align(column.align)}>${escapeHtml(column.title)}</th>`).join('')}</tr></thead>` : '';
@@ -46,6 +50,7 @@ const DOCUMENT_STYLES = `
   tr { break-inside: avoid; }
 `;
 
+/** Writes the table as a full HTML page with the title, subtitle and date. */
 export function writeHtml(table: TxExportTable, options: TxExportHtmlOptions & { lang?: string; page?: string } = {}, context: TxExportTextContext, date = new Date()): string {
   const title = options.title ? `<h1>${escapeHtml(options.title)}</h1>` : '';
   const subtitle = options.subtitle ? `<p class="subtitle">${escapeHtml(options.subtitle)}</p>` : '';
@@ -61,6 +66,7 @@ export function printPageCss(options: TxExportPrintOptions, columns: number): st
   return `@page { size: ${page.width}pt ${page.height}pt; margin: ${top}pt ${right}pt ${bottom}pt ${left}pt; } @media print { body { margin: 0; } }`;
 }
 
+/** Writes the table as a Markdown table with an optional title. */
 export function writeMarkdown(table: TxExportTable, options: TxExportMarkdownOptions = {}, context: TxExportTextContext): string {
   const clean = (text: string) => text.replace(/\\/g, '\\\\').replace(/\|/g, '\\|').replace(/\r?\n/g, '<br>');
   const lines: string[] = [];

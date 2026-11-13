@@ -29,16 +29,27 @@ import { MENU_THEME } from './menu.theme';
 
 const HOVER_DELAY = 120;
 
+/** Where a menu list sits: inline in the page, in a popup overlay or in a sub-menu overlay. */
 export type TxMenuPanel = 'inline' | 'popup' | 'submenu';
+/** Item to focus when a list opens: the first, the last or none. */
 export type TxMenuFocus = 'first' | 'last' | null;
+/** Look of a menu list: `default` or `context` for context menus. */
 export type TxMenuVariant = 'default' | 'context';
 
+/** One row of a menu list: an item, a separator or a group heading. */
 interface TxMenuEntry {
+  /** Whether the row is an item, a separator or a group heading. */
   kind: 'item' | 'separator' | 'group';
+  /** The menu item behind the row. */
   item: TxMenuItem;
+  /** Unique element id of the row. */
   id: string;
 }
 
+/**
+ * The list of items shared by `tx-menu`, `tx-tiered-menu`, `tx-context-menu` and `tx-menubar`; handles
+ * keyboard and sub-menus.
+ */
 @Component({
   selector: 'tx-menu-list',
   imports: [NgTemplateOutlet, RouterLink, TxIcon, TxBadge],

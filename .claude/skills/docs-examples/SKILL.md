@@ -39,6 +39,7 @@ One sentence: what it is and when to use it.
 
 - Every public input / model / output is listed. Types and defaults are read from the source; the build FAILS when a README name has no declaration in `src/` (typo or renamed member).
 - Descriptions are short, plain, user-facing; inline markdown is allowed.
+- The same rows become the JSDoc of the published types: after `npm run build:packages`, `tools/api-docs` writes each description above its member in `dist/packages/*/types/*.d.ts` (what an IDE shows on hover and in the `.d.ts`), the README intro and the docs page link above the main class. A row is matched by its public name (input alias, output, method, slot directive selector, pipe, function, constant); `` `tx-part`: `` at the start of a description or `## Inputs — tx-part` keeps it on that component. The build fails when a row names nothing in the types.
 
 ## 2. Docs content — `apps/docs/src/content/components/<name>/`
 

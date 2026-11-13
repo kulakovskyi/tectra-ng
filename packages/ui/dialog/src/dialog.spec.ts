@@ -83,7 +83,7 @@ class GuardedHost {
   imports: [TxDialog, TxDialogFooter, TxDialogClose],
   template: `
     <button id="opener">Open</button>
-    <tx-dialog header="Delete file" [(visible)]="visible" [maximizable]="true" (closed)="closedCount = closedCount + 1">
+    <tx-dialog header="Delete file" [(visible)]="visible" [maximizable]="true" minWidth="12rem" maxWidth="36rem" maxHeight="24rem" (closed)="closedCount = closedCount + 1">
       <p class="body">The file will be gone.</p>
       <tx-dialog-footer>
         <button class="keep" txDialogClose>Keep</button>
@@ -252,6 +252,7 @@ describe('TxDialog', () => {
     expect(dialog.querySelector('.body')?.textContent).toBe('The file will be gone.');
     expect(dialog.querySelector('.tx-dialog-footer .keep')).not.toBeNull();
     expect(dialog.querySelectorAll('.tx-dialog-header__button').length).toBe(2);
+    expect([dialog.style.minWidth, dialog.style.maxWidth, dialog.style.maxHeight]).toEqual(['12rem', '36rem', '24rem']);
     (dialog.querySelector('.keep') as HTMLButtonElement).click();
     await settle();
     expect(panel()).toBeNull();

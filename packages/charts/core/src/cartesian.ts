@@ -17,64 +17,113 @@ import {
 import { textWidth, tickFormatter, timeTickFormatter, truncateText } from './format';
 import { bandScale, linearScale, logDomain, logScale, niceDomain, pointScale, timeScale } from './scale';
 
+/** How the category axis is built: `band`, `point`, `time` or `linear`. */
 export type TxCategoryKind = 'band' | 'point' | 'time' | 'linear';
 
+/** Scale of the value axis: `linear` or `log`. */
 export type TxValueScaleKind = 'linear' | 'log';
 
+/** Which grid lines to draw: at `value` ticks, at `category` ticks, `both` or `none`. */
 export type TxChartGridMode = 'value' | 'category' | 'both' | 'none';
 
+/** Options of the category axis for `cartesianLayout`. */
 export interface TxCategoryAxisOptions {
+  /** Scale kind of the axis. */
   kind: TxCategoryKind;
+  /** Texts of the categories for `band` and `point` axes. */
   labels?: readonly string[];
+  /** Number of categories; the number of labels when not set. */
   count?: number;
+  /** Value domain of a `time` or `linear` axis. */
   domain?: TxRange;
+  /** Formats the tick values of a `time` or `linear` axis. */
   format?: (value: number) => string;
+  /** What to do with labels that do not fit (default `auto`). */
   labelMode?: TxChartLabelMode;
+  /** Most labels to show; every n-th is kept when there are more. */
   maxLabels?: number;
+  /** Longest label, in px; longer ones are shortened (default 220). */
   maxLabelWidth?: number;
+  /** Gap between `band` bands as a share of a band (default 0). */
   paddingInner?: number;
+  /** Title of the axis. */
   title?: string;
 }
 
+/** Options of a value axis for `cartesianLayout`. */
 export interface TxValueAxisOptions {
+  /** Smallest and largest data value; `null` when there is no data. */
   extent: TxRange | null;
+  /** `linear` or `log` (default `linear`). */
   scale?: TxValueScaleKind;
+  /** How tick labels are written. */
   format?: TxChartValueFormat;
+  /** Keeps zero inside the domain (default `true`). */
   includeZero?: boolean;
+  /** Fixed lower bound of the axis. */
   min?: number;
+  /** Fixed upper bound of the axis. */
   max?: number;
+  /** Wanted number of ticks; chosen from the chart size when not set. */
   tickCount?: number;
+  /** Title of the axis. */
   title?: string;
 }
 
+/** Input of `cartesianLayout`: chart size, locale and the two axes. */
 export interface TxCartesianOptions {
+  /** Chart box width, in px. */
   width: number;
+  /** Chart box height, in px. */
   height: number;
+  /** Locale code for number and date formats. */
   intl: string;
+  /** Swaps the axes: categories run down the left side and values along the bottom. */
   horizontal?: boolean;
+  /** Options of the category axis. */
   category: TxCategoryAxisOptions;
+  /** Options of the value axis. */
   value: TxValueAxisOptions;
+  /** Options of a second value axis on the opposite side; ignored when `horizontal`. */
   secondaryValue?: TxValueAxisOptions;
+  /** Which grid lines to draw (default `value`). */
   grid?: TxChartGridMode;
+  /** Font size of the labels, in px (default 12). */
   fontSize?: number;
+  /** Draws the category axis (default `true`). */
   showCategoryAxis?: boolean;
+  /** Draws the value axis (default `true`). */
   showValueAxis?: boolean;
+  /** Puts the x axis at the `bottom` (default) or `top`. */
   xAxisPosition?: TxChartXAxisPosition;
+  /** Puts the y axis at the `left` (default) or `right`. */
   yAxisPosition?: TxChartYAxisPosition;
 }
 
+/** Scale of the category axis. */
 export type TxCategoryScale = TxBandScale | TxPointScale | TxContinuousScale | TxTimeScale;
 
+/** Result of `cartesianLayout`: plot area, scales, ticks and the axes model, ready to draw. */
 export interface TxCartesianLayout {
+  /** Plot area inside the chart box. */
   plot: TxChartPlot;
+  /** Scale of the primary value axis. */
   value: TxContinuousScale;
+  /** Scale of the secondary value axis, or `null`. */
   secondaryValue: TxContinuousScale | null;
+  /** Scale of the category axis. */
   category: TxCategoryScale;
+  /** Tick values of the primary value axis. */
   valueTicks: number[];
+  /** Tick values of the secondary value axis. */
   secondaryValueTicks: number[];
+  /** Axes, grid and zero line for `tx-chart-axes`. */
   axes: TxChartAxesModel;
+  /** Whether categories run vertically. */
   horizontal: boolean;
+  /** Pixel position of a category along its axis; `x` is the value on a `time` or `linear` axis. */
   categoryPosition(index: number, x?: number): number;
+  /** Index of the category nearest to a pixel position; `xs` are the x values of `time` and `linear` axes. */
   categoryIndexAt(position: number, xs?: readonly number[]): number;
 }
 
@@ -104,6 +153,10 @@ function niceStepAtLeast(raw: number): number {
   return factor * base;
 }
 
+/**
+ * Domain and ticks of a secondary axis with the same number of intervals as the primary one, so the
+ * grid lines match; `null` when it cannot be aligned.
+ */
 export function alignedDomain(options: TxValueAxisOptions, intervals: number, zeroAt: number | null = null): { domain: TxRange; ticks: number[] } | null {
   if (intervals < 1 || options.scale === 'log' || options.min !== undefined || options.max !== undefined) return null;
   const [rawMin, rawMax] = options.extent ?? [0, 1];
@@ -142,6 +195,10 @@ function pickEvery(ticks: readonly CategoryTick[], every: number): CategoryTick[
   return ticks.filter((_, position) => position % every === 0);
 }
 
+/**
+ * Lays out a cartesian chart: plot area, scales, tick labels (skipped or rotated when they collide),
+ * grid and zero line.
+ */
 export function cartesianLayout(options: TxCartesianOptions): TxCartesianLayout {
   const fontSize = options.fontSize ?? 12;
   const horizontal = options.horizontal ?? false;
@@ -322,7 +379,6 @@ export function cartesianLayout(options: TxCartesianOptions): TxCartesianLayout 
     axes.push({
       position: horizontal ? (xTop ? 'top' : 'bottom') : yRight ? 'right' : 'left',
       labels: valueAxisLabels,
-      line: null,
       title: options.value.title ? (horizontal ? xTitle(options.value.title) : yTitle(options.value.title)) : undefined,
     });
   }
@@ -339,7 +395,6 @@ export function cartesianLayout(options: TxCartesianOptions): TxCartesianLayout 
         baseline: 'middle',
         rotate: 0,
       })),
-      line: null,
       title: second.title ? yTitle(second.title, onRight) : undefined,
     });
   }
@@ -370,7 +425,6 @@ export function cartesianLayout(options: TxCartesianOptions): TxCartesianLayout 
     axes.push({
       position: horizontal ? (yRight ? 'right' : 'left') : xTop ? 'top' : 'bottom',
       labels,
-      line: null,
       title: cat.title ? (horizontal ? yTitle(cat.title) : xTitle(cat.title)) : undefined,
     });
   }

@@ -1,5 +1,6 @@
 import { TxOverlayBox, TxOverlayShift } from './overlay.types';
 
+/** Offset between the layout viewport and the visual viewport of the page, in px (differs when pinch-zoomed). */
 export function txLayoutShift(document: Document): TxOverlayShift {
   const viewport = document.defaultView?.visualViewport;
   const page = document.scrollingElement;
@@ -12,6 +13,7 @@ export function txLayoutShift(document: Document): TxOverlayShift {
   };
 }
 
+/** Page position of the top left corner of the visual viewport, in px. */
 export function txLayoutOrigin(document: Document): TxOverlayShift {
   const viewport = document.defaultView?.visualViewport;
   const page = document.scrollingElement;
@@ -21,12 +23,14 @@ export function txLayoutOrigin(document: Document): TxOverlayShift {
   return { x: page?.scrollLeft ?? 0, y: page?.scrollTop ?? 0 };
 }
 
+/** Rectangle of an element in layout viewport coordinates, in px. */
 export function txLayoutRect(element: Element): TxOverlayBox {
   const { top, left, width, height } = element.getBoundingClientRect();
   const shift = txLayoutShift(element.ownerDocument);
   return { top: top + shift.y, left: left + shift.x, width, height };
 }
 
+/** Space between the overlay host and the root element on the sides the pane is pinned to, in px. */
 export function txHostGap(host: HTMLElement, pane: HTMLElement): TxOverlayShift {
   const root = host.ownerDocument.documentElement;
   return {
@@ -47,6 +51,7 @@ function sideOf(pane: HTMLElement): string | null {
   return placement ? placement.slice('tx-placement-'.length).split('-')[0] : null;
 }
 
+/** Shift that keeps an overlay inside the viewport across its placement side, in px; zero when it already fits. */
 export function txCrossShift(pane: HTMLElement, margin: number): TxOverlayShift {
   const side = sideOf(pane);
   const root = pane.ownerDocument.documentElement;

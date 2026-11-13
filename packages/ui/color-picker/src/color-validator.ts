@@ -1,6 +1,9 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { parseHex } from './color';
 
+/**
+ * Form validator that accepts an empty value or a hex colour and gives a `pattern` error for any other text.
+ */
 export function txColorHexValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const value: unknown = control.value;

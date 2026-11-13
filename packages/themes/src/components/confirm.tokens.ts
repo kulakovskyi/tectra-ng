@@ -5,6 +5,10 @@ function badge(color: string, base: string, tint = '14%') {
   return { color, background: joinCss('color-mix(in srgb, ', tokenRef(`${base}-500`), ' ', tint, ', transparent)') };
 }
 
+/**
+ * Design tokens of `tx-confirm-dialog` and `tx-confirm-popup`: colors, sizes and spacing of its root, icon,
+ * message and popup, plus the severity variants.
+ */
 export const confirmTokens = {
   root: {
     gap: '14px',
@@ -43,4 +47,5 @@ export const confirmTokens = {
   danger: badge(lightDark(tokenRef('red-600'), tokenRef('red-400')), 'red'),
 };
 
+/** Type of `confirmTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraConfirmTokens = typeof confirmTokens;

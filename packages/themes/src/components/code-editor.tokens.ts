@@ -1,5 +1,9 @@
 import { extendTokens, lightDark, tokenRef } from './token-helpers';
 
+/**
+ * Syntax colors of the code editor and the static code highlight: comments, keywords, strings, numbers and
+ * other token kinds.
+ */
 export const codeSyntaxTokens = {
   comment: lightDark('#008000', '#6a9955'),
   keyword: lightDark('#0000ff', '#569cd6'),
@@ -48,11 +52,16 @@ const highlightGutter = {
   gap: '26px',
 };
 
+/** Design tokens of `tx-code-highlight`: colors, sizes and spacing of its root and gutter. */
 export const codeHighlightTokens = {
   root: highlightRoot,
   gutter: highlightGutter,
 };
 
+/**
+ * Design tokens of `tx-code-editor`: colors, sizes and spacing of its root, gutter, cursor, selection, active
+ * line and other parts.
+ */
 export const codeEditorTokens = {
   root: extendTokens(highlightRoot, {
     focusBorderColor: tokenRef('surface-border'),
@@ -94,6 +103,10 @@ export const codeEditorTokens = {
   },
 };
 
+/**
+ * Design tokens of `tx-code-diff`: colors, sizes and spacing of its root, gutter, syntax, inserted, removed
+ * and other parts.
+ */
 export const codeDiffTokens = {
   root: extendTokens(highlightRoot, {
     splitGap: '0',
@@ -123,7 +136,11 @@ export const codeDiffTokens = {
   },
 };
 
+/** Type of `codeSyntaxTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraCodeSyntaxTokens = typeof codeSyntaxTokens;
+/** Type of `codeHighlightTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraCodeHighlightTokens = typeof codeHighlightTokens;
+/** Type of `codeEditorTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraCodeEditorTokens = typeof codeEditorTokens;
+/** Type of `codeDiffTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraCodeDiffTokens = typeof codeDiffTokens;

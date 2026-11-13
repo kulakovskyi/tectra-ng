@@ -116,10 +116,12 @@ function convertQuillCode(container: Element): void {
   replaceNode(container, pre);
 }
 
+/** Tells whether the HTML carries Quill 2 markup. */
 export function isQuillHtml(html: string | null | undefined): boolean {
   return !!html && QUILL_MARKERS.test(html);
 }
 
+/** Converts Quill 2 markup to the clean HTML of the editor; other HTML passes through. */
 export function fromQuillHtml(html: string | null | undefined, document?: Document | null): string {
   if (!html) {
     return '';
@@ -211,6 +213,7 @@ function flattenList(list: Element, level: number, out: HTMLElement): void {
   }
 }
 
+/** Converts the clean HTML of the editor to Quill 2 markup. */
 export function toQuillHtml(html: string | null | undefined, document?: Document | null): string {
   if (!html) {
     return '';
@@ -292,10 +295,12 @@ export function toQuillHtml(html: string | null | undefined, document?: Document
   return body.innerHTML;
 }
 
+/** Brings saved text, from the editor or from Quill, to the clean HTML the editor reads. */
 export function toEditorHtml(html: string | null | undefined, document?: Document | null): string {
   return fromQuillHtml(html, document);
 }
 
+/** Writes the editor HTML in the chosen format: unchanged for `html`, converted for `quill`. */
 export function formatEditorHtml(html: string, format: TxEditorFormat, document?: Document | null): string {
   return format === 'quill' ? toQuillHtml(html, document) : html;
 }

@@ -2,6 +2,10 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { TxPanelMenuItem } from '@tectra-ng/ui/panel-menu';
 import { TxCommandPaletteItem } from './command-palette.types';
 
+/**
+ * Keeps the palette items whose label or sublabel contains the query, ignoring case; all items for an
+ * empty query.
+ */
 export function filterPaletteItems<T extends TxCommandPaletteItem>(items: readonly T[], query: string | null | undefined): T[] {
   const term = (query ?? '').trim().toLowerCase();
   if (!term) {
@@ -10,6 +14,10 @@ export function filterPaletteItems<T extends TxCommandPaletteItem>(items: readon
   return items.filter((item) => item.label.toLowerCase().includes(term) || (item.sublabel ?? '').toLowerCase().includes(term));
 }
 
+/**
+ * Turns a sidebar menu into palette items for its pages; hidden, disabled and separator entries are
+ * left out. The group is `pages` by default.
+ */
 export function menuPaletteItems(menu: readonly TxPanelMenuItem[] | null | undefined, group = 'pages'): TxCommandPaletteItem[] {
   const items = new Map<string, TxCommandPaletteItem>();
   const walk = (nodes: readonly TxPanelMenuItem[], parent: string) => {
@@ -40,6 +48,7 @@ export function menuPaletteItems(menu: readonly TxPanelMenuItem[] | null | undef
   return [...items.values()];
 }
 
+/** `commandPaletteFilter`: keeps the palette items that match a query, see `filterPaletteItems`. */
 @Pipe({ name: 'commandPaletteFilter' })
 export class TxCommandPaletteFilterPipe implements PipeTransform {
   transform<T extends TxCommandPaletteItem>(items: readonly T[], query: string | null | undefined): T[] {
@@ -47,6 +56,7 @@ export class TxCommandPaletteFilterPipe implements PipeTransform {
   }
 }
 
+/** `menuPaletteItems`: turns a sidebar menu into palette items, see `menuPaletteItems`. */
 @Pipe({ name: 'menuPaletteItems' })
 export class TxMenuPaletteItemsPipe implements PipeTransform {
   transform(menu: readonly TxPanelMenuItem[] | null | undefined, group = 'pages'): TxCommandPaletteItem[] {

@@ -1,5 +1,6 @@
 import { joinCss, tokenRef } from './token-helpers';
 
+/** Design tokens of `tx-field`: colors, sizes and spacing of its root and horizontal. */
 export const fieldTokens = {
   root: {
     gap: '0px',
@@ -11,4 +12,5 @@ export const fieldTokens = {
   },
 };
 
+/** Type of `fieldTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraFieldTokens = typeof fieldTokens;

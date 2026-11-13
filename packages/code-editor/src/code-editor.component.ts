@@ -41,6 +41,7 @@ import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { CODE_EDITOR_ICON_DEFAULTS } from './code-editor.icons';
 import { CODE_EDITOR_THEME } from './code-editor.theme';
 
+/** Design tokens of `tx-code-editor` for `dt`: the `codeEditor` group and `syntax` colours. */
 export type TxCodeEditorTokens = TectraCodeEditorTokens & { syntax: TectraCodeSyntaxTokens };
 
 const isMac = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform);

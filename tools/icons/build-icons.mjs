@@ -22,11 +22,11 @@ const missing = NAMES.filter((name) => !icons[name]);
 const ordered = NAMES.filter((name) => icons[name]);
 
 const serialize = (p) => (typeof p === 'string' ? JSON.stringify(p) : `{ d: ${JSON.stringify(p.d)}, fill: true }`);
-const constants = ordered.map((name) => `export const ${iconConstant(name)}: TxIconPath[] = [${icons[name].map(serialize).join(', ')}];`).join('\n');
+const constants = ordered.map((name) => `/** The \`${name}\` icon. */\nexport const ${iconConstant(name)}: TxIconPath[] = [${icons[name].map(serialize).join(', ')}];`).join('\n');
 const set = ordered.map((name) => `  '${name}': ${iconConstant(name)},`).join('\n');
 writeFileSync(
   join(root, 'packages/icons/src/icons.ts'),
-  `import { TxIconPath } from './icon.types';\n\nexport type TxIconName =\n${ordered.map((n) => `  | '${n}'`).join('\n')};\n\n${constants}\n\nexport const TX_ICONS: Record<TxIconName, TxIconPath[]> = {\n${set}\n};\n`,
+  `import { TxIconPath } from './icon.types';\n\n/** Name of an icon of the tectra set, e.g. \`'plus'\`; a \`pi-\` prefix is accepted too. */\nexport type TxIconName =\n${ordered.map((n) => `  | '${n}'`).join('\n')};\n\n${constants}\n\n/** Every icon of the set by name: \`provideTxIcons(TX_ICONS)\` registers them all. */\nexport const TX_ICONS: Record<TxIconName, TxIconPath[]> = {\n${set}\n};\n`,
 );
 
 const sheetDir = process.env.ICON_SHEET_DIR;

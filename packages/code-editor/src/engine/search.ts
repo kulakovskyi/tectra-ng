@@ -1,21 +1,33 @@
 import { EditorState, StateEffect, StateField } from '@codemirror/state';
 import { Decoration, DecorationSet, EditorView } from '@codemirror/view';
 
+/** What the search panel of the code editor looks for. */
 export interface TxCodeSearchQuery {
+  /** The text or, with `regexp`, the pattern to find. */
   readonly text: string;
+  /** Distinguishes upper and lower case. */
   readonly matchCase: boolean;
+  /** Matches only whole words. */
   readonly wholeWord: boolean;
+  /** Reads `text` as a regular expression. */
   readonly regexp: boolean;
 }
 
+/** One found occurrence in the document. */
 export interface TxCodeSearchMatch {
+  /** Offset of the first character of the match. */
   readonly from: number;
+  /** Offset after the last character of the match. */
   readonly to: number;
 }
 
+/** Everything a search found in a text. */
 export interface TxCodeSearchResult {
+  /** All matches in document order (at most 10000). */
   readonly matches: readonly TxCodeSearchMatch[];
+  /** `false` when the query is a regular expression that does not compile. */
   readonly valid: boolean;
+  /** The compiled expression behind the search; `null` for an empty or invalid query. */
   readonly pattern: RegExp | null;
 }
 
@@ -27,6 +39,7 @@ function escapeRegExp(text: string): string {
   return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+/** Builds the regular expression of a query; `null` when the text is empty or the expression is invalid. */
 export function searchPattern(query: TxCodeSearchQuery): RegExp | null {
   if (!query.text) {
     return null;
@@ -42,6 +55,7 @@ export function searchPattern(query: TxCodeSearchQuery): RegExp | null {
   }
 }
 
+/** Finds every non-empty match of a query in a text. */
 export function findMatches(text: string, query: TxCodeSearchQuery): TxCodeSearchResult {
   if (!query.text) {
     return { matches: [], valid: true, pattern: null };
@@ -62,6 +76,9 @@ export function findMatches(text: string, query: TxCodeSearchQuery): TxCodeSearc
   return { matches, valid: true, pattern };
 }
 
+/**
+ * Gives the text that replaces a match; with `regexp` the groups of the match fill `$1`, `$2` and so on in the replacement.
+ */
 export function replacementFor(state: EditorState, match: TxCodeSearchMatch, query: TxCodeSearchQuery, replacement: string): string {
   if (!query.regexp) {
     return replacement;
@@ -74,8 +91,12 @@ export function replacementFor(state: EditorState, match: TxCodeSearchMatch, que
   return text.replace(new RegExp(pattern.source, pattern.flags.replace('g', '')), replacement);
 }
 
+/**
+ * Effect that sets the highlighted matches and which of them is the current one; used by `tx-code-editor`.
+ */
 export const setSearchMarks = StateEffect.define<{ matches: readonly TxCodeSearchMatch[]; current: number }>();
 
+/** Editor state that draws the matches of the search panel and keeps them in place while the text changes. */
 export const searchMarks = StateField.define<DecorationSet>({
   create: () => Decoration.none,
   update(value, transaction) {

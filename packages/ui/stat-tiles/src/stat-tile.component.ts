@@ -10,6 +10,10 @@ import { TxStatTileCommands, TxStatTilePart, TxStatTileTone } from './stat-tiles
 import { STAT_TILES_ICON_DEFAULTS } from './stat-tiles.icons';
 import { STAT_TILES_THEME } from './stat-tiles.theme';
 
+/**
+ * One key number: a tinted icon, label, value with unit, meta line, optional share bar and aside; can
+ * be a link.
+ */
 @Component({
   selector: 'tx-stat-tile',
   imports: [NgTemplateOutlet, RouterLink, TxIcon],

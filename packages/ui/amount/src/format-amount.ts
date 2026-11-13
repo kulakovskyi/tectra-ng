@@ -2,6 +2,9 @@ import { TxAmountFormatOptions, TxAmountSegment } from './amount.types';
 
 const DIGITS_INFO = /^(\d+)?(?:\.(\d+))?(?:-(\d+))?$/;
 
+/**
+ * Reads a digits-info string like `1.2-2` (integer digits, minimum and maximum fraction digits) into number format options; an invalid string gives no options.
+ */
 export function parseDigitsInfo(format: string | undefined): Pick<Intl.NumberFormatOptions, 'minimumIntegerDigits' | 'minimumFractionDigits' | 'maximumFractionDigits'> {
   const match = DIGITS_INFO.exec((format ?? '').trim());
   if (!match) {
@@ -31,6 +34,9 @@ function toSegments(parts: Intl.NumberFormatPart[]): TxAmountSegment[] {
   return segments;
 }
 
+/**
+ * Formats a number as money in the given locale and currency and splits the result into currency and number segments.
+ */
 export function formatAmount(amount: number, options: TxAmountFormatOptions): TxAmountSegment[] {
   const base: Intl.NumberFormatOptions = {
     ...parseDigitsInfo(options.format),

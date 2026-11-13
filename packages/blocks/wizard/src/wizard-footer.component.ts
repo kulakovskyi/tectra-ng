@@ -9,6 +9,7 @@ import { TxWizardFooterPart } from './wizard.types';
 import { WIZARD_ICON_DEFAULTS } from './wizard.icons';
 import { WIZARD_THEME } from './wizard.theme';
 
+/** The back, skip and next buttons of a wizard. */
 @Component({
   selector: 'tx-wizard-footer',
   imports: [TxButton],

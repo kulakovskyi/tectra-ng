@@ -11,6 +11,7 @@ function dayKey(day: number): string {
   return new Date(day * DAY).toISOString().slice(0, 10);
 }
 
+/** Turns day values into a calendar heatmap: a band per month, a column per week and a row per weekday. */
 export function heatmapCalendar(values: readonly TxHeatmapCalendarValue[], options: TxHeatmapCalendarOptions): TxHeatmapCalendar {
   const intl = options.intl ?? 'en-US';
   const firstDay = ((options.firstDayOfWeek ?? 1) % 7 + 7) % 7;

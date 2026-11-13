@@ -1,5 +1,6 @@
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { stampVersion } from './stamp-version.mjs';
 
 const dist = 'dist/packages';
 const repo = 'https://github.com/kulakovskyi/tectra-ng';
@@ -59,4 +60,26 @@ for (const folder of readdirSync(dist)) {
   }
   const { name } = JSON.parse(readFileSync(packagePath, 'utf8'));
   writeFileSync(readmePath, header(name) + readme);
+}
+
+for (const folder of readdirSync(dist)) {
+  const packagePath = join(dist, folder, 'package.json');
+  if (!existsSync(packagePath)) {
+    continue;
+  }
+  const { version } = JSON.parse(readFileSync(packagePath, 'utf8'));
+  for (const sub of ['fesm2022', 'types']) {
+    const dir = join(dist, folder, sub);
+    if (!existsSync(dir)) {
+      continue;
+    }
+    for (const file of readdirSync(dir).filter((name) => name.endsWith('.mjs') || name.endsWith('.d.ts'))) {
+      const path = join(dir, file);
+      const text = readFileSync(path, 'utf8');
+      const stamped = stampVersion(text, version);
+      if (stamped !== text) {
+        writeFileSync(path, stamped);
+      }
+    }
+  }
 }

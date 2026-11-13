@@ -13,6 +13,7 @@ function lightSeverity(scale: TectraColorScale, base: 600 | 700, surface: Tectra
   };
 }
 
+/** Builds the semantic tokens of the light color scheme from the accent and surface palettes. */
 export function createLightSemantic({ accent, surface }: TectraPalettes): TectraSemanticTokens {
   return {
     primary: { ...lightSeverity(accent, primaryBaseStep(accent), surface), softText: accent[700] },

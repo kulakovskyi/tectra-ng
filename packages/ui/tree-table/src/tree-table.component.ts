@@ -33,6 +33,7 @@ import { TxTreeTableFilterMode, TxTreeTableNode, TxTreeTableNodeEvent } from './
 
 const COLLAPSE_DURATION = 400;
 
+/** Lists every node depth-first, parents before their children, in one flat array. */
 export function flattenTreeTable<T>(nodes: readonly TxTreeTableNode<T>[]): TxTreeTableNode<T>[] {
   const result: TxTreeTableNode<T>[] = [];
   const walk = (items: readonly TxTreeTableNode<T>[]) =>
@@ -44,6 +45,10 @@ export function flattenTreeTable<T>(nodes: readonly TxTreeTableNode<T>[]): TxTre
   return result;
 }
 
+/**
+ * Keeps the nodes the `matches` callback accepts, and the parents of matches; the mode
+ * decides what stays under a match.
+ */
 export function filterTreeTable<T>(nodes: readonly TxTreeTableNode<T>[], matches: (node: TxTreeTableNode<T>) => boolean, mode: TxTreeTableFilterMode = 'lenient'): TxTreeTableNode<T>[] {
   const visit = (node: TxTreeTableNode<T>): TxTreeTableNode<T> | null => {
     const own = matches(node);

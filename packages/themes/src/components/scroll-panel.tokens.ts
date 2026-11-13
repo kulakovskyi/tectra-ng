@@ -1,5 +1,6 @@
 import { lightDark, tokenRef } from './token-helpers';
 
+/** Design tokens of `tx-scroll-panel`: colors, sizes and spacing of its root and bar. */
 export const scrollPanelTokens = {
   root: {
     transitionDuration: tokenRef('motion-duration'),
@@ -17,4 +18,5 @@ export const scrollPanelTokens = {
   },
 };
 
+/** Type of `scrollPanelTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraScrollPanelTokens = typeof scrollPanelTokens;

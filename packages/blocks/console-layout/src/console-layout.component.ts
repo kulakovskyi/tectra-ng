@@ -15,6 +15,7 @@ import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { CONSOLE_LAYOUT_ICON_DEFAULTS } from './console-layout.icons';
 import { CONSOLE_LAYOUT_THEME } from './console-layout.theme';
 
+/** The frame of a console: a header with brand and crumbs, an icon rail, the page and a footer. */
 @Component({
   selector: 'tx-console-layout',
   imports: [NgTemplateOutlet, RouterLink, TxConsoleRail, TxAppFooter],

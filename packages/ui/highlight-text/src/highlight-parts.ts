@@ -5,6 +5,10 @@ function fold(value: string, caseSensitive: boolean): string {
   return caseSensitive ? plain : plain.toLocaleLowerCase();
 }
 
+/**
+ * Splits text into plain and matched parts for the given terms, ignoring case and diacritics unless
+ * told otherwise.
+ */
 export function highlightParts(text: string | null | undefined, terms: TxHighlightTerms, options: TxHighlightOptions = {}): TxHighlightPart[] {
   const source = text ?? '';
   const caseSensitive = options.caseSensitive ?? false;

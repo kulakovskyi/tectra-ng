@@ -5,11 +5,15 @@ import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { CORE_ICON_DEFAULTS } from './core.icons';
 import { CORE_THEME } from './core.theme';
 
+/** Last shown band of `tx-chart-hover-band` and whether it slides from the previous one. */
 interface TxBandState {
+  /** Band rectangle kept while the band fades out. */
   rect: TxChartRect | null;
+  /** `true` when the band moves from an earlier position instead of fading in. */
   slide: boolean;
 }
 
+/** Rectangle of the hover band behind the category at `index`; `inset` is the gap at its sides in px. */
 export function chartBandRect(band: TxBandScale, index: number, plot: TxChartPlot, horizontal = false, inset = 2): TxChartRect {
   const gap = Math.min(inset, band.step * 0.08);
   const start = band.start(index) - (band.step - band.bandwidth) / 2 + gap;
@@ -17,6 +21,10 @@ export function chartBandRect(band: TxBandScale, index: number, plot: TxChartPlo
   return horizontal ? { x: plot.left, y: start, width: plot.width, height: size } : { x: start, y: plot.top, width: size, height: plot.height };
 }
 
+/**
+ * The soft band under the hovered category of a bar-like chart; it fades in and slides between
+ * categories.
+ */
 @Component({
   selector: 'g[tx-chart-hover-band]',
   template: `

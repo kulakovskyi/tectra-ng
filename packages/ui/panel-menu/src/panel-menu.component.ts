@@ -36,23 +36,37 @@ import {
 import { PANEL_MENU_ICON_DEFAULTS } from './panel-menu.icons';
 import { PANEL_MENU_THEME } from './panel-menu.theme';
 
+/** Internal tree node of `tx-panel-menu`: an item with its key, depth, ancestors and children. */
 export interface TxPanelMenuNode {
+  /** The menu item behind the node. */
   item: TxPanelMenuItem;
+  /** Key of the node: the item `id` or its position path; used in `expandedKeys`. */
   key: string;
+  /** DOM id of the node element. */
   id: string;
+  /** Nesting depth of the node, from `0` at the top. */
   level: number;
+  /** Keys of the parent nodes, outermost first. */
   ancestors: string[];
+  /** Parent node, or `null` at the top level. */
   parent: TxPanelMenuNode | null;
+  /** Child nodes shown in the submenu. */
   children: TxPanelMenuNode[];
+  /** Whether the node is a separator line, not an item. */
   separator: boolean;
 }
 
+/** Internal render block of `tx-panel-menu`: a top-level node and the nodes shown under it. */
 interface TxPanelMenuBlock {
+  /** The top-level node of the block. */
   node: TxPanelMenuNode;
+  /** Nodes rendered inside the block. */
   tree: TxPanelMenuNode[];
+  /** Whether the block shows its node as a section title. */
   titled: boolean;
 }
 
+/** How a node navigates: through the router, as a plain URL, or not at all. */
 type TxPanelMenuLink = 'router' | 'url' | 'none';
 
 const SUBSET_MATCH: IsActiveMatchOptions = { paths: 'subset', queryParams: 'ignored', matrixParams: 'ignored', fragment: 'ignored' };
