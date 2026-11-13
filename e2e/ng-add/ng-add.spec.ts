@@ -16,7 +16,9 @@ function rgb(hex: string): string {
 test.describe('ng add tectra-ng in a new Angular app', () => {
   test('installs the kit and its peers', () => {
     const { dependencies } = JSON.parse(read('package.json')) as { dependencies: Record<string, string> };
-    expect(Object.keys(dependencies)).toEqual(expect.arrayContaining(['tectra-ng', '@angular/cdk', '@angular/forms', '@angular/router']));
+    expect(Object.keys(dependencies)).toEqual(
+      expect.arrayContaining(['tectra-ng', '@tectra-ng/core', '@tectra-ng/themes', '@tectra-ng/ui', '@tectra-ng/blocks', '@angular/cdk', '@angular/forms', '@angular/router']),
+    );
     expect(dependencies['@angular/cdk']).toBe(dependencies['@angular/core']);
   });
 

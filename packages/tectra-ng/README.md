@@ -44,13 +44,21 @@
 ng add tectra-ng
 ```
 
-It installs every tectra package at the same version with the Angular peers, adds `provideTectra` with the preset you pick (`--style`, `--primary`, `--surface`) to `app.config.ts` and the fonts to `index.html`.
+It installs every tectra package at the same version with the Angular peers and lists them in `package.json` — every package manager and editor then resolves the imports from them. It adds `provideTectra` with the preset you pick (`--style`, `--primary`, `--surface`) to `app.config.ts` and the fonts to `index.html`.
 
 Without the Angular CLI, install it and provide a theme by hand:
 
 ```bash
 npm i tectra-ng
 ```
+
+pnpm lets an app import only the packages its `package.json` lists, so name them all:
+
+```bash
+pnpm add tectra-ng @tectra-ng/tokens @tectra-ng/themes @tectra-ng/core @tectra-ng/icons @tectra-ng/brand-icons @tectra-ng/flags @tectra-ng/qr @tectra-ng/ui @tectra-ng/charts @tectra-ng/utils @tectra-ng/blocks
+```
+
+`ng update tectra-ng` updates all of them together.
 
 Then import components from the packages themselves:
 
@@ -92,7 +100,7 @@ export class SaveAction {
 | `@tectra-ng/utils` | Pipes, directives, validators and helpers next to the components, one entry point per utility: `@tectra-ng/utils/date`, … |
 | `@tectra-ng/qr` | QR codes with no dependencies — the engine of `@tectra-ng/blocks/qr-code`, usable without Angular too |
 
-Need only part of it? Install a package on its own — `npm i @tectra-ng/ui` brings `core`, `themes`, `tokens` and `icons` with it.
+Need only part of it? Install the packages on their own, with the ones the app imports the theme and icons from: `npm i @tectra-ng/ui @tectra-ng/core @tectra-ng/themes @tectra-ng/icons`.
 
 The rich text editor is not part of `tectra-ng` — it carries the ProseMirror engine, so it is installed only where it is used:
 

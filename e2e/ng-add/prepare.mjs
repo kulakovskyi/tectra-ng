@@ -42,7 +42,18 @@ run('npm', ['install', '--no-audit', '--no-fund', packed['tectra-ng'], packed['@
 
 const { version } = JSON.parse(readFileSync(join(dist, 'tectra-ng/package.json'), 'utf8'));
 const options = Object.entries(answers).map(([key, value]) => `--${key}=${value}`);
-run('npx', ['ng', 'add', `tectra-ng@${version}`, '--skip-confirmation', ...options], appDir);
+run('npx', ['ng', 'add', `tectra-ng@${version}`, '--skip-confirmation', '--skip-install', ...options], appDir);
+const added = JSON.parse(readFileSync(manifestPath, 'utf8'));
+const kit = Object.keys(added.overrides).filter((name) => name.startsWith('@tectra-ng/'));
+const undeclared = kit.filter((name) => !added.dependencies[name]);
+if (undeclared.length > 0) {
+  throw new Error(`ng add did not list ${undeclared.join(', ')} in the dependencies of the app`);
+}
+for (const name of kit) {
+  added.dependencies[name] = added.overrides[name];
+}
+writeFileSync(manifestPath, JSON.stringify(added, null, 2) + '\n');
+run('npm', ['install', '--no-audit', '--no-fund'], appDir);
 run('npx', ['ng', 'generate', 'tectra-ng:ng-add', '--primary=teal'], appDir);
 
 writeFileSync(

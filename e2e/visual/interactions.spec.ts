@@ -1063,6 +1063,23 @@ test('getting started offers ng add as one command and copies it', async ({ page
   await expect.poll(() => page.evaluate(() => navigator.clipboard.readText())).toBe('ng add tectra-ng');
 });
 
+test('getting started lists every imported package for pnpm and with picked packages', async ({ page }) => {
+  await page.goto('/getting-started');
+  const install = page.locator('.step').first();
+  const command = install.locator('.command__text');
+  const note = install.locator('.panel__note');
+  await expect(command).toHaveText('npm install tectra-ng');
+  await expect(note).toHaveCount(0);
+
+  await install.getByRole('tab', { name: 'pnpm', exact: true }).click();
+  await expect(command).toContainText('pnpm add tectra-ng @tectra-ng/tokens @tectra-ng/themes @tectra-ng/core @tectra-ng/icons');
+  await expect(command).toContainText('@tectra-ng/ui @tectra-ng/charts @tectra-ng/utils @tectra-ng/blocks');
+  await expect(note).toBeVisible();
+
+  await install.getByRole('tab', { name: 'Pick packages' }).click();
+  await expect(command).toHaveText('pnpm add @tectra-ng/ui @tectra-ng/core @tectra-ng/themes @tectra-ng/icons @tectra-ng/blocks');
+});
+
 test('theme picker in the header swaps primary, surface and theme, remembers them and switches the ripple', async ({ page }) => {
   await page.goto('/getting-started');
   const variable = (name: string) => page.evaluate((key) => getComputedStyle(document.documentElement).getPropertyValue(key).trim(), name);

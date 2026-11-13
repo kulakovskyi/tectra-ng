@@ -13,11 +13,13 @@ import { DocsSwatches } from '../../doc-ui/swatches/swatches';
 import {
   INSTALL_ALL,
   INSTALL_EXTRAS,
+  INSTALL_KIT,
   INSTALL_MANAGERS,
   INSTALL_NEXT,
   INSTALL_NG_ADD,
   INSTALL_PACKAGES,
   INSTALL_REQUIREMENTS,
+  INSTALL_STRICT_NOTE,
   INSTALL_USE_CODE,
   InstallManager,
 } from '../../data/install.data';
@@ -42,6 +44,7 @@ export default class GettingStartedPage {
   readonly next = INSTALL_NEXT;
   readonly useCode = INSTALL_USE_CODE;
   readonly ngAdd = INSTALL_NG_ADD;
+  readonly strictNote = INSTALL_STRICT_NOTE;
   readonly managers: TxTabItem[] = INSTALL_MANAGERS.map(({ value, label }) => ({ value, label }));
   readonly modes: TxTabItem[] = [
     { value: 'all', label: 'Everything' },
@@ -60,13 +63,16 @@ export default class GettingStartedPage {
   readonly primary = signal<TectraPrimary>('blue');
   readonly surface = signal<TectraSurface>('ink');
 
+  readonly managerOption = computed(() => INSTALL_MANAGERS.find((item) => item.value === (this.manager() as InstallManager)) ?? INSTALL_MANAGERS[0]);
+
   readonly command = computed(() => {
-    const manager = INSTALL_MANAGERS.find((item) => item.value === (this.manager() as InstallManager)) ?? INSTALL_MANAGERS[0];
+    const manager = this.managerOption();
     const picked = this.picked();
+    const separate = INSTALL_PACKAGES.filter((item) => item.separate && picked[item.name]).map((item) => item.name);
     const names =
       this.mode() === 'all'
-        ? [INSTALL_ALL, ...INSTALL_PACKAGES.filter((item) => item.separate && picked[item.name]).map((item) => item.name)]
-        : INSTALL_PACKAGES.filter((item) => item.required || picked[item.name]).map((item) => item.name);
+        ? [INSTALL_ALL, ...(manager.strict ? INSTALL_KIT : []), ...separate]
+        : INSTALL_PACKAGES.filter((item) => item.required || picked[item.name]).flatMap((item) => [item.name, ...(item.with ?? [])]);
     return `${manager.add} ${names.join(' ')}`;
   });
 

@@ -56,6 +56,7 @@
     "utils",
     "icons"
   ],
+  "types": "./index.d.ts",
   "dependencies": {
     "@tectra-ng/tokens": "^0.4.0",
     "@tectra-ng/themes": "^0.4.0",
@@ -72,6 +73,23 @@
   "schematics": "./schematics/collection.json",
   "ng-add": {
     "save": "dependencies"
+  },
+  "ng-update": {
+    "migrations": "./schematics/migrations.json",
+    "packageGroup": [
+      "tectra-ng",
+      "@tectra-ng/tokens",
+      "@tectra-ng/themes",
+      "@tectra-ng/core",
+      "@tectra-ng/icons",
+      "@tectra-ng/brand-icons",
+      "@tectra-ng/flags",
+      "@tectra-ng/qr",
+      "@tectra-ng/ui",
+      "@tectra-ng/charts",
+      "@tectra-ng/utils",
+      "@tectra-ng/blocks"
+    ]
   },
   "publishConfig": {
     "access": "public"
