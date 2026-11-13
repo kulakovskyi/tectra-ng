@@ -9,6 +9,7 @@ export interface InstallPackage {
   text: string;
   required?: boolean;
   separate?: boolean;
+  with?: string[];
 }
 
 export interface InstallNote {
@@ -23,19 +24,41 @@ export interface InstallExtra extends InstallNote {
   language: CodeLanguage;
 }
 
-export const INSTALL_MANAGERS: { value: InstallManager; label: string; add: string }[] = [
+export const INSTALL_MANAGERS: { value: InstallManager; label: string; add: string; strict?: boolean }[] = [
   { value: 'npm', label: 'npm', add: 'npm install' },
-  { value: 'pnpm', label: 'pnpm', add: 'pnpm add' },
+  { value: 'pnpm', label: 'pnpm', add: 'pnpm add', strict: true },
   { value: 'yarn', label: 'yarn', add: 'yarn add' },
   { value: 'bun', label: 'bun', add: 'bun add' },
 ];
 
 export const INSTALL_ALL = 'tectra-ng';
 
+export const INSTALL_KIT = [
+  '@tectra-ng/tokens',
+  '@tectra-ng/themes',
+  '@tectra-ng/core',
+  '@tectra-ng/icons',
+  '@tectra-ng/brand-icons',
+  '@tectra-ng/flags',
+  '@tectra-ng/qr',
+  '@tectra-ng/ui',
+  '@tectra-ng/charts',
+  '@tectra-ng/utils',
+  '@tectra-ng/blocks',
+];
+
+export const INSTALL_STRICT_NOTE = 'pnpm lets an app import only the packages its package.json lists, so the command names each of them.';
+
 export const INSTALL_NG_ADD = 'ng add tectra-ng';
 
 export const INSTALL_PACKAGES: InstallPackage[] = [
-  { name: '@tectra-ng/ui', title: 'Components', text: 'Every component, one entry point each. Core, themes, tokens and icons come with it.', required: true },
+  {
+    name: '@tectra-ng/ui',
+    title: 'Components',
+    text: 'Every component, one entry point each, with core, themes and icons — the app imports the theme and icons from them.',
+    required: true,
+    with: ['@tectra-ng/core', '@tectra-ng/themes', '@tectra-ng/icons'],
+  },
   { name: '@tectra-ng/blocks', title: 'Blocks', text: 'Layouts, filters, kanban, wizard, command palette and more.' },
   { name: '@tectra-ng/brand-icons', title: 'Brand logos', text: 'Logos of well-known brands for the icon component.' },
   { name: '@tectra-ng/flags', title: 'Country flags', text: 'Flags for the country select, loaded one by one.' },

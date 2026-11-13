@@ -62,6 +62,12 @@ Or set it up by hand:
 npm install tectra-ng
 ```
 
+pnpm lets an app import only the packages its `package.json` lists, so name them all (`ng add` does this with every package manager):
+
+```bash
+pnpm add tectra-ng @tectra-ng/tokens @tectra-ng/themes @tectra-ng/core @tectra-ng/icons @tectra-ng/brand-icons @tectra-ng/flags @tectra-ng/qr @tectra-ng/ui @tectra-ng/charts @tectra-ng/utils @tectra-ng/blocks
+```
+
 Provide a theme in `app.config.ts`:
 
 ```ts

@@ -3,10 +3,10 @@
 Angular components of tectra — standalone, signals, OnPush, accessible, themable with design tokens. One npm package, one entry point per component: `import { TxSelect } from '@tectra-ng/ui/select'` puts only the select into the bundle.
 
 ```bash
-npm i @tectra-ng/ui
+npm i @tectra-ng/ui @tectra-ng/core @tectra-ng/themes @tectra-ng/icons
 ```
 
-`@tectra-ng/core`, `@tectra-ng/themes`, `@tectra-ng/tokens` and `@tectra-ng/icons` come with it as peer dependencies; `@angular/cdk`, `@angular/forms` and `@angular/common` are needed too, `@angular/router` only for router links.
+`@tectra-ng/core`, `@tectra-ng/themes`, `@tectra-ng/tokens` and `@tectra-ng/icons` are its peer dependencies; the app imports the theme and icons from `core`, `themes` and `icons`, so list them too; `@angular/cdk`, `@angular/forms` and `@angular/common` are needed too, `@angular/router` only for router links.
 
 ```ts
 // app.config.ts

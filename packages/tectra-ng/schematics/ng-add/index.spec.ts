@@ -1,12 +1,17 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { logging } from '@angular-devkit/core';
-import { Schematic, SchematicContext, Tree, callRule } from '@angular-devkit/schematics';
+import { Rule, Schematic, SchematicContext, Tree, callRule } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { ProjectDefinition } from '@schematics/angular/utility';
 import { TECTRA_STYLES } from '@tectra-ng/themes';
 import { PRIMARY_ORDER, SURFACE_PALETTES } from '@tectra-ng/tokens';
 import { lastValueFrom, of } from 'rxjs';
+import manifest from '../../package.json';
 import collection from '../collection.json';
-import { FONT_LINKS, MIN_ANGULAR_MAJOR, indexPath, insertFontLinks, ngAdd, presetOptions } from './index';
+import migrations from '../migrations.json';
+import { migrateDeclareKitPackages } from '../migrations/declare-kit-packages/index';
+import { FONT_LINKS, MIN_ANGULAR_MAJOR, declareKitPackages, indexPath, insertFontLinks, kitPackages, ngAdd, presetOptions } from './index';
 import { TectraNgAddOptions } from './ng-add.types';
 import schema from './schema.json';
 
@@ -20,7 +25,7 @@ async function application(tree?: UnitTestTree, name = 'app', options: Record<st
   return runner.runExternalSchematic('@schematics/angular', 'application', { name, skipTests: true, ...options }, tree ?? (await workspace()));
 }
 
-async function run(tree: Tree, options: TectraNgAddOptions = {}): Promise<{ tree: UnitTestTree; logs: logging.LogEntry[]; tasks: string[] }> {
+async function run(tree: Tree, options: TectraNgAddOptions = {}, rule?: Rule): Promise<{ tree: UnitTestTree; logs: logging.LogEntry[]; tasks: string[] }> {
   const logs: logging.LogEntry[] = [];
   const tasks: string[] = [];
   const logger = new logging.Logger('ng-add');
@@ -33,7 +38,7 @@ async function run(tree: Tree, options: TectraNgAddOptions = {}): Promise<{ tree
       return { id: tasks.length };
     },
   };
-  const result = await lastValueFrom(callRule(ngAdd(options), of(tree), context));
+  const result = await lastValueFrom(callRule(rule ?? ngAdd(options), of(tree), context));
   return { tree: new UnitTestTree(result), logs, tasks };
 }
 
@@ -177,6 +182,7 @@ describe('ng add tectra-ng', () => {
     it('keeps peers the app already has, also in devDependencies', async () => {
       const app = await application();
       editPackage(app, (manifest) => {
+        Object.assign(manifest.dependencies, kitPackages());
         manifest.dependencies['@angular/cdk'] = '~22.0.1';
         manifest.devDependencies = { ...manifest.devDependencies, '@angular/router': '~22.0.2' };
         delete manifest.dependencies['@angular/router'];
@@ -220,6 +226,75 @@ describe('ng add tectra-ng', () => {
       const app = await application();
       editPackage(app, (manifest) => (manifest.dependencies['@angular/core'] = 'latest'));
       await expect(run(app)).rejects.toThrow(`tectra needs Angular ${MIN_ANGULAR_MAJOR} or newer`);
+    });
+  });
+
+  describe('kit packages', () => {
+    const kit = kitPackages();
+
+    function dependencies(tree: Tree): Record<string, string> {
+      return (tree.readJson('/package.json') as { dependencies: Record<string, string> }).dependencies;
+    }
+
+    it('are the @tectra-ng dependencies of tectra-ng, at its version', () => {
+      expect(Object.keys(kit)).toEqual(Object.keys(manifest.dependencies));
+      expect(Object.values(kit).every((range) => range === `^${manifest.version}`)).toBe(true);
+    });
+
+    it('are listed in the dependencies of the app and installed', async () => {
+      const { tree, tasks, logs } = await run(await application());
+      expect(dependencies(tree)).toMatchObject(kit);
+      expect(tasks).toContain('node-package');
+      expect(messages(logs, 'info').join('\n')).toContain('@tectra-ng/ui');
+    });
+
+    it('keeps the versions the app already lists, also in devDependencies', async () => {
+      const app = await application();
+      editPackage(app, (manifest) => {
+        manifest.dependencies['@tectra-ng/ui'] = '~0.1.0';
+        manifest.devDependencies = { ...manifest.devDependencies, '@tectra-ng/tokens': '~0.1.0' };
+      });
+      const { tree } = await run(app);
+      expect(dependencies(tree)['@tectra-ng/ui']).toBe('~0.1.0');
+      expect(dependencies(tree)['@tectra-ng/tokens']).toBeUndefined();
+      expect(dependencies(tree)['@tectra-ng/blocks']).toBe(kit['@tectra-ng/blocks']);
+    });
+
+    it('adds and logs nothing when the app lists them all', async () => {
+      const app = await application();
+      editPackage(app, (manifest) => Object.assign(manifest.dependencies, kit));
+      const { tree, tasks, logs } = await run(app, {}, declareKitPackages());
+      expect(dependencies(tree)).toMatchObject(kit);
+      expect(tasks).toEqual([]);
+      expect(logs).toEqual([]);
+    });
+
+    it('reads only @tectra-ng packages, also from a manifest without dependencies', () => {
+      expect(Object.keys(kitPackages(join(__dirname, '../../../../package.json'))).every((name) => name.startsWith('@tectra-ng/'))).toBe(true);
+      expect(kitPackages(join(__dirname, '../collection.json'))).toEqual({});
+    });
+
+    it('get an entry point for types, so editors index them as dependencies of tectra-ng', () => {
+      expect(manifest.types).toBe('./index.d.ts');
+      expect(readFileSync(join(__dirname, '../..', manifest.types), 'utf8')).toContain('export {}');
+    });
+
+    it('are the packages the docs install with pnpm', () => {
+      const data = readFileSync(join(__dirname, '../../../../apps/docs/src/app/data/install.data.ts'), 'utf8');
+      const list = /export const INSTALL_KIT = \[([^\]]*)\]/.exec(data)?.[1] ?? '';
+      expect([...list.matchAll(/'([^']+)'/g)].map((match) => match[1])).toEqual(Object.keys(kit));
+    });
+
+    it('update together with tectra-ng', () => {
+      expect(manifest['ng-update'].packageGroup).toEqual([manifest.name, ...Object.keys(kit)]);
+    });
+
+    it('are listed by ng update in apps set up before', async () => {
+      expect(manifest['ng-update'].migrations).toBe('./schematics/migrations.json');
+      expect(migrations.schematics['declare-kit-packages'].factory).toBe('./migrations/declare-kit-packages/index#migrateDeclareKitPackages');
+      const { tree, tasks } = await run(await application(), {}, migrateDeclareKitPackages());
+      expect(dependencies(tree)).toMatchObject(kit);
+      expect(tasks).toContain('node-package');
     });
   });
 

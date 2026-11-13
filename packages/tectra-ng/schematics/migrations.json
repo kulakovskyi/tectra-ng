@@ -1,0 +1,10 @@
+{
+  "$schema": "../../../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "declare-kit-packages": {
+      "version": "0.4.1",
+      "description": "Lists the @tectra-ng packages in the dependencies of the app, so every package manager and editor resolves the imports from them.",
+      "factory": "./migrations/declare-kit-packages/index#migrateDeclareKitPackages"
+    }
+  }
+}

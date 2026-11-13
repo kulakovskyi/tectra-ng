@@ -57,6 +57,9 @@
           <code class="command__text">{{ command() }}</code>
           <docs-copy-button label="Copy the install command" [text]="command()" />
         </div>
+        @if (managerOption().strict) {
+          <p class="panel__note">{{ strictNote }}</p>
+        }
       </div>
     </div>
   </li>

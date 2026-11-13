@@ -12,8 +12,8 @@
         "parallel": false,
         "commands": [
           "rm -rf dist/packages/tectra-ng && mkdir -p dist/packages/tectra-ng/schematics/ng-add",
-          "cp packages/tectra-ng/package.json packages/tectra-ng/README.md LICENSE dist/packages/tectra-ng/",
-          "cp packages/tectra-ng/schematics/collection.json dist/packages/tectra-ng/schematics/ && cp packages/tectra-ng/schematics/ng-add/schema.json dist/packages/tectra-ng/schematics/ng-add/",
+          "cp packages/tectra-ng/package.json packages/tectra-ng/README.md packages/tectra-ng/index.d.ts LICENSE dist/packages/tectra-ng/",
+          "cp packages/tectra-ng/schematics/collection.json packages/tectra-ng/schematics/migrations.json dist/packages/tectra-ng/schematics/ && cp packages/tectra-ng/schematics/ng-add/schema.json dist/packages/tectra-ng/schematics/ng-add/",
           "tsc -p packages/tectra-ng/tsconfig.schematics.json"
         ]
       }

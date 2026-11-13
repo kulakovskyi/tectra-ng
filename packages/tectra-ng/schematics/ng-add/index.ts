@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { Rule, SchematicContext, SchematicsException, Tree, chain, noop } from '@angular-devkit/schematics';
 import {
   DependencyType,
@@ -26,6 +28,11 @@ interface PackageManifest {
   devDependencies?: Record<string, string>;
 }
 
+export function kitPackages(manifestPath = join(__dirname, '../../package.json')): Record<string, string> {
+  const manifest = JSON.parse(readFileSync(manifestPath, 'utf8')) as PackageManifest;
+  return Object.fromEntries(Object.entries(manifest.dependencies ?? {}).filter(([name]) => name.startsWith('@tectra-ng/')));
+}
+
 export function ngAdd(options: TectraNgAddOptions): Rule {
   return async (tree: Tree) => {
     const workspace = await readWorkspace(tree);
@@ -34,6 +41,7 @@ export function ngAdd(options: TectraNgAddOptions): Rule {
     const angularRange = readAngularRange(tree);
     return chain([
       addPeers(tree, angularRange, options.skipInstall === true),
+      declareKitPackages(options.skipInstall === true),
       addProvider(tree, projectName, project, options),
       options.icons === false ? noop() : addIcons(tree, projectName, project),
       options.fonts === false ? noop() : addFonts(project),
@@ -77,11 +85,14 @@ export function readAngularRange(tree: Tree): string {
   return range;
 }
 
-function addPeers(tree: Tree, range: string, skipInstall: boolean): Rule {
+function missingPackages(tree: Tree, names: string[]): string[] {
   const manifest = tree.readJson('/package.json') as PackageManifest;
-  const missing = ANGULAR_PEERS.filter((name) => !manifest.dependencies?.[name] && !manifest.devDependencies?.[name]);
+  return names.filter((name) => !manifest.dependencies?.[name] && !manifest.devDependencies?.[name]);
+}
+
+function addPackages(entries: [string, string][], skipInstall: boolean): Rule {
   return chain(
-    missing.map((name) =>
+    entries.map(([name, range]) =>
       addDependency(name, range, {
         type: DependencyType.Default,
         existing: ExistingBehavior.Skip,
@@ -89,6 +100,27 @@ function addPeers(tree: Tree, range: string, skipInstall: boolean): Rule {
       }),
     ),
   );
+}
+
+function addPeers(tree: Tree, range: string, skipInstall: boolean): Rule {
+  return addPackages(
+    missingPackages(tree, ANGULAR_PEERS).map((name) => [name, range]),
+    skipInstall,
+  );
+}
+
+export function declareKitPackages(skipInstall = false, packages = kitPackages()): Rule {
+  return (tree: Tree, context: SchematicContext) => {
+    const missing = missingPackages(tree, Object.keys(packages));
+    if (missing.length === 0) {
+      return noop();
+    }
+    context.logger.info(`Added ${missing.join(', ')} to dependencies: the app imports from them, so every package manager and editor has to see them in package.json.`);
+    return addPackages(
+      missing.map((name) => [name, packages[name]]),
+      skipInstall,
+    );
+  };
 }
 
 function addProvider(tree: Tree, projectName: string, project: ProjectDefinition, options: TectraNgAddOptions): Rule {
