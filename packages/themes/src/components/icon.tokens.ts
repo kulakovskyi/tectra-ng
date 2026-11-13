@@ -6,5 +6,7 @@ export const iconTokens = {
   },
 };
 
+type IconTokensShape = typeof iconTokens;
+
 /** Type of `iconTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraIconTokens = typeof iconTokens;
+export interface TectraIconTokens extends IconTokensShape {}

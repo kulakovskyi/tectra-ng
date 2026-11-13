@@ -37,5 +37,7 @@ export const imageTokens = {
   },
 };
 
+type ImageTokensShape = typeof imageTokens;
+
 /** Type of `imageTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraImageTokens = typeof imageTokens;
+export interface TectraImageTokens extends ImageTokensShape {}

@@ -20,5 +20,7 @@ export const confettiTokens = {
   },
 };
 
+type ConfettiTokensShape = typeof confettiTokens;
+
 /** Type of `confettiTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraConfettiTokens = typeof confettiTokens;
+export interface TectraConfettiTokens extends ConfettiTokensShape {}

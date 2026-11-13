@@ -75,5 +75,7 @@ export const avatarTokens = {
   },
 };
 
+type AvatarTokensShape = typeof avatarTokens;
+
 /** Type of `avatarTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraAvatarTokens = typeof avatarTokens;
+export interface TectraAvatarTokens extends AvatarTokensShape {}

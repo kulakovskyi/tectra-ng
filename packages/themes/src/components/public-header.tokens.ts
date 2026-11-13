@@ -61,5 +61,7 @@ export const publicHeaderTokens = {
   },
 };
 
+type PublicHeaderTokensShape = typeof publicHeaderTokens;
+
 /** Type of `publicHeaderTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraPublicHeaderTokens = typeof publicHeaderTokens;
+export interface TectraPublicHeaderTokens extends PublicHeaderTokensShape {}

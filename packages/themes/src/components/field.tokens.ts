@@ -12,5 +12,7 @@ export const fieldTokens = {
   },
 };
 
+type FieldTokensShape = typeof fieldTokens;
+
 /** Type of `fieldTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraFieldTokens = typeof fieldTokens;
+export interface TectraFieldTokens extends FieldTokensShape {}

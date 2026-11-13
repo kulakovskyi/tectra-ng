@@ -42,5 +42,7 @@ export const pillTokens = {
   contrast: { color: tokenRef('text-primary'), solidBackground: tokenRef('text-primary'), solidColor: tokenRef('surface-card') },
 };
 
+type PillTokensShape = typeof pillTokens;
+
 /** Type of `pillTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraPillTokens = typeof pillTokens;
+export interface TectraPillTokens extends PillTokensShape {}

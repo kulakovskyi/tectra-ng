@@ -69,5 +69,7 @@ export const accordionTokens = {
   },
 };
 
+type AccordionTokensShape = typeof accordionTokens;
+
 /** Type of `accordionTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraAccordionTokens = typeof accordionTokens;
+export interface TectraAccordionTokens extends AccordionTokensShape {}

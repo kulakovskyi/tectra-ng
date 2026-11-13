@@ -136,11 +136,19 @@ export const codeDiffTokens = {
   },
 };
 
+type CodeSyntaxTokensShape = typeof codeSyntaxTokens;
+
 /** Type of `codeSyntaxTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraCodeSyntaxTokens = typeof codeSyntaxTokens;
+export interface TectraCodeSyntaxTokens extends CodeSyntaxTokensShape {}
+type CodeHighlightTokensShape = typeof codeHighlightTokens;
+
 /** Type of `codeHighlightTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraCodeHighlightTokens = typeof codeHighlightTokens;
+export interface TectraCodeHighlightTokens extends CodeHighlightTokensShape {}
+type CodeEditorTokensShape = typeof codeEditorTokens;
+
 /** Type of `codeEditorTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraCodeEditorTokens = typeof codeEditorTokens;
+export interface TectraCodeEditorTokens extends CodeEditorTokensShape {}
+type CodeDiffTokensShape = typeof codeDiffTokens;
+
 /** Type of `codeDiffTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraCodeDiffTokens = typeof codeDiffTokens;
+export interface TectraCodeDiffTokens extends CodeDiffTokensShape {}

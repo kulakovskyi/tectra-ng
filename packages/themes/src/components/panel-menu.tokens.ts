@@ -109,5 +109,7 @@ export const panelMenuTokens = {
   },
 };
 
+type PanelMenuTokensShape = typeof panelMenuTokens;
+
 /** Type of `panelMenuTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraPanelMenuTokens = typeof panelMenuTokens;
+export interface TectraPanelMenuTokens extends PanelMenuTokensShape {}

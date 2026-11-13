@@ -35,5 +35,7 @@ export const badgeTokens = {
   contrast: severity('contrast'),
 };
 
+type BadgeTokensShape = typeof badgeTokens;
+
 /** Type of `badgeTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraBadgeTokens = typeof badgeTokens;
+export interface TectraBadgeTokens extends BadgeTokensShape {}

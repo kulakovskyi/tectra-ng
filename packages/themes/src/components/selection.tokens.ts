@@ -15,8 +15,10 @@ export const listboxTokens = {
   },
 };
 
+type ListboxTokensShape = typeof listboxTokens;
+
 /** Type of `listboxTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraListboxTokens = typeof listboxTokens;
+export interface TectraListboxTokens extends ListboxTokensShape {}
 
 /** Design tokens of `tx-chips-input`: its colors, sizes and spacing. */
 export const chipsInputTokens = {
@@ -30,8 +32,10 @@ export const chipsInputTokens = {
   },
 };
 
+type ChipsInputTokensShape = typeof chipsInputTokens;
+
 /** Type of `chipsInputTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraChipsInputTokens = typeof chipsInputTokens;
+export interface TectraChipsInputTokens extends ChipsInputTokensShape {}
 
 /** Design tokens of `tx-country`: its colors, sizes and spacing. */
 export const countryTokens = {
@@ -51,8 +55,10 @@ export const countryTokens = {
   },
 };
 
+type CountryTokensShape = typeof countryTokens;
+
 /** Type of `countryTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraCountryTokens = typeof countryTokens;
+export interface TectraCountryTokens extends CountryTokensShape {}
 
 /**
  * Design tokens of `tx-color-picker`: colors, sizes and spacing of its root, dot, panel, area, hue and other
@@ -106,8 +112,10 @@ export const colorPickerTokens = {
   },
 };
 
+type ColorPickerTokensShape = typeof colorPickerTokens;
+
 /** Type of `colorPickerTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraColorPickerTokens = typeof colorPickerTokens;
+export interface TectraColorPickerTokens extends ColorPickerTokensShape {}
 
 /** Design tokens of `tx-mention-textarea`: its colors, sizes and spacing. */
 export const mentionTokens = {
@@ -119,8 +127,10 @@ export const mentionTokens = {
   },
 };
 
+type MentionTokensShape = typeof mentionTokens;
+
 /** Type of `mentionTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraMentionTokens = typeof mentionTokens;
+export interface TectraMentionTokens extends MentionTokensShape {}
 
 /** Design tokens of `tx-cascade-select`: its colors, sizes and spacing. */
 export const cascadeSelectTokens = {
@@ -131,8 +141,10 @@ export const cascadeSelectTokens = {
   },
 };
 
+type CascadeSelectTokensShape = typeof cascadeSelectTokens;
+
 /** Type of `cascadeSelectTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraCascadeSelectTokens = typeof cascadeSelectTokens;
+export interface TectraCascadeSelectTokens extends CascadeSelectTokensShape {}
 
 /** Design tokens of `tx-email-suggestion`: its colors, sizes and spacing. */
 export const emailSuggestionTokens = {
@@ -143,5 +155,7 @@ export const emailSuggestionTokens = {
   },
 };
 
+type EmailSuggestionTokensShape = typeof emailSuggestionTokens;
+
 /** Type of `emailSuggestionTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraEmailSuggestionTokens = typeof emailSuggestionTokens;
+export interface TectraEmailSuggestionTokens extends EmailSuggestionTokensShape {}

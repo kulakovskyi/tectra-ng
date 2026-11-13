@@ -20,5 +20,7 @@ export const skeletonTokens = {
   },
 };
 
+type SkeletonTokensShape = typeof skeletonTokens;
+
 /** Type of `skeletonTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraSkeletonTokens = typeof skeletonTokens;
+export interface TectraSkeletonTokens extends SkeletonTokensShape {}

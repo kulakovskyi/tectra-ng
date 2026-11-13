@@ -80,12 +80,18 @@ export const iconLinkTokens = {
   },
 };
 
+type HighlightTextTokensShape = typeof highlightTextTokens;
+
 /** Type of `highlightTextTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraHighlightTextTokens = typeof highlightTextTokens;
+export interface TectraHighlightTextTokens extends HighlightTextTokensShape {}
+type AmountTokensShape = typeof amountTokens;
+
 /** Type of `amountTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraAmountTokens = typeof amountTokens;
+export interface TectraAmountTokens extends AmountTokensShape {}
+type StatusIconTokensShape = typeof statusIconTokens;
+
 /** Type of `statusIconTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraStatusIconTokens = typeof statusIconTokens;
+export interface TectraStatusIconTokens extends StatusIconTokensShape {}
 /** Design tokens of `tx-truncate-text`: its colors, sizes and spacing. */
 export const truncateTextTokens = {
   root: {
@@ -101,9 +107,15 @@ export const truncateTextTokens = {
   },
 };
 
+type LinkTokensShape = typeof linkTokens;
+
 /** Type of `linkTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraLinkTokens = typeof linkTokens;
+export interface TectraLinkTokens extends LinkTokensShape {}
+type TruncateTextTokensShape = typeof truncateTextTokens;
+
 /** Type of `truncateTextTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraTruncateTextTokens = typeof truncateTextTokens;
+export interface TectraTruncateTextTokens extends TruncateTextTokensShape {}
+type IconLinkTokensShape = typeof iconLinkTokens;
+
 /** Type of `iconLinkTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraIconLinkTokens = typeof iconLinkTokens;
+export interface TectraIconLinkTokens extends IconLinkTokensShape {}

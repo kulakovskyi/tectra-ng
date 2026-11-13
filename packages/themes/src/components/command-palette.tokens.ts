@@ -106,5 +106,7 @@ export const commandPaletteTokens = {
   },
 };
 
+type CommandPaletteTokensShape = typeof commandPaletteTokens;
+
 /** Type of `commandPaletteTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraCommandPaletteTokens = typeof commandPaletteTokens;
+export interface TectraCommandPaletteTokens extends CommandPaletteTokensShape {}

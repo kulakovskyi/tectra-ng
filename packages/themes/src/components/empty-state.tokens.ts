@@ -65,5 +65,7 @@ export const emptyStateTokens = {
   },
 };
 
+type EmptyStateTokensShape = typeof emptyStateTokens;
+
 /** Type of `emptyStateTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraEmptyStateTokens = typeof emptyStateTokens;
+export interface TectraEmptyStateTokens extends EmptyStateTokensShape {}

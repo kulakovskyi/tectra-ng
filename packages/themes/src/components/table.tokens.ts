@@ -161,5 +161,7 @@ export const tableTokens = {
   },
 };
 
+type TableTokensShape = typeof tableTokens;
+
 /** Type of `tableTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraTableTokens = typeof tableTokens;
+export interface TectraTableTokens extends TableTokensShape {}

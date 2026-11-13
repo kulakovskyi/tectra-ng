@@ -43,5 +43,7 @@ export const pinnedTabsTokens = {
   },
 };
 
+type PinnedTabsTokensShape = typeof pinnedTabsTokens;
+
 /** Type of `pinnedTabsTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraPinnedTabsTokens = typeof pinnedTabsTokens;
+export interface TectraPinnedTabsTokens extends PinnedTabsTokensShape {}

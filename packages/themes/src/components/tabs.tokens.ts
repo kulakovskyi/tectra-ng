@@ -137,5 +137,7 @@ export const tabsTokens = {
   },
 };
 
+type TabsTokensShape = typeof tabsTokens;
+
 /** Type of `tabsTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraTabsTokens = typeof tabsTokens;
+export interface TectraTabsTokens extends TabsTokensShape {}

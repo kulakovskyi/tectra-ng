@@ -36,5 +36,7 @@ export const formFieldTokens = {
   },
 };
 
+type FormFieldTokensShape = typeof formFieldTokens;
+
 /** Type of `formFieldTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraFormFieldTokens = typeof formFieldTokens;
+export interface TectraFormFieldTokens extends FormFieldTokensShape {}

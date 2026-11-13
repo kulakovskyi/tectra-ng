@@ -34,8 +34,10 @@ export const topbarPreferencesTokens = {
   },
 };
 
+type TopbarPreferencesTokensShape = typeof topbarPreferencesTokens;
+
 /**
  * Type of `topbarPreferencesTokens`: the shape of the component tokens that presets and `dt` overrides can
  * change.
  */
-export type TectraTopbarPreferencesTokens = typeof topbarPreferencesTokens;
+export interface TectraTopbarPreferencesTokens extends TopbarPreferencesTokensShape {}

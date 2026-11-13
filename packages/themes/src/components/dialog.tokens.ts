@@ -63,5 +63,7 @@ export const dialogTokens = {
   },
 };
 
+type DialogTokensShape = typeof dialogTokens;
+
 /** Type of `dialogTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraDialogTokens = typeof dialogTokens;
+export interface TectraDialogTokens extends DialogTokensShape {}

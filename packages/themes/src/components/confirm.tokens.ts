@@ -47,5 +47,7 @@ export const confirmTokens = {
   danger: badge(lightDark(tokenRef('red-600'), tokenRef('red-400')), 'red'),
 };
 
+type ConfirmTokensShape = typeof confirmTokens;
+
 /** Type of `confirmTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraConfirmTokens = typeof confirmTokens;
+export interface TectraConfirmTokens extends ConfirmTokensShape {}

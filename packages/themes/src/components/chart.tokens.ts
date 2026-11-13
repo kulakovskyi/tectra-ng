@@ -637,5 +637,7 @@ export const chartTokens = {
   },
 };
 
+type ChartTokensShape = typeof chartTokens;
+
 /** Type of `chartTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraChartTokens = typeof chartTokens;
+export interface TectraChartTokens extends ChartTokensShape {}

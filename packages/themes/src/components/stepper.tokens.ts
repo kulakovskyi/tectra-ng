@@ -140,7 +140,11 @@ export const stepsTokens = {
   },
 };
 
+type StepperTokensShape = typeof stepperTokens;
+
 /** Type of `stepperTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraStepperTokens = typeof stepperTokens;
+export interface TectraStepperTokens extends StepperTokensShape {}
+type StepsTokensShape = typeof stepsTokens;
+
 /** Type of `stepsTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraStepsTokens = typeof stepsTokens;
+export interface TectraStepsTokens extends StepsTokensShape {}

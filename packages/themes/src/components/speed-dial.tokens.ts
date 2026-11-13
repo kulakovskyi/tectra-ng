@@ -12,5 +12,7 @@ export const speedDialTokens = {
   },
 };
 
+type SpeedDialTokensShape = typeof speedDialTokens;
+
 /** Type of `speedDialTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraSpeedDialTokens = typeof speedDialTokens;
+export interface TectraSpeedDialTokens extends SpeedDialTokensShape {}

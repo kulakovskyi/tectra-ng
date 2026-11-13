@@ -75,5 +75,7 @@ export const toastTokens = {
   contrast: { tone: tokenRef('text-primary') },
 };
 
+type ToastTokensShape = typeof toastTokens;
+
 /** Type of `toastTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraToastTokens = typeof toastTokens;
+export interface TectraToastTokens extends ToastTokensShape {}

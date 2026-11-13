@@ -19,5 +19,7 @@ export const knobTokens = {
   },
 };
 
+type KnobTokensShape = typeof knobTokens;
+
 /** Type of `knobTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraKnobTokens = typeof knobTokens;
+export interface TectraKnobTokens extends KnobTokensShape {}

@@ -24,5 +24,7 @@ export const splitterTokens = {
   },
 };
 
+type SplitterTokensShape = typeof splitterTokens;
+
 /** Type of `splitterTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraSplitterTokens = typeof splitterTokens;
+export interface TectraSplitterTokens extends SplitterTokensShape {}

@@ -11,5 +11,7 @@ export const mascotTokens = {
   },
 };
 
+type MascotTokensShape = typeof mascotTokens;
+
 /** Type of `mascotTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraMascotTokens = typeof mascotTokens;
+export interface TectraMascotTokens extends MascotTokensShape {}

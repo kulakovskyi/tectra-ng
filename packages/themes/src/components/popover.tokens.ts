@@ -50,5 +50,7 @@ export const popoverTokens = {
   },
 };
 
+type PopoverTokensShape = typeof popoverTokens;
+
 /** Type of `popoverTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraPopoverTokens = typeof popoverTokens;
+export interface TectraPopoverTokens extends PopoverTokensShape {}

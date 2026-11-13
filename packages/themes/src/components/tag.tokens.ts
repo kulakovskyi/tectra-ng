@@ -68,7 +68,11 @@ export const chipTokens = {
   },
 };
 
+type TagTokensShape = typeof tagTokens;
+
 /** Type of `tagTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraTagTokens = typeof tagTokens;
+export interface TectraTagTokens extends TagTokensShape {}
+type ChipTokensShape = typeof chipTokens;
+
 /** Type of `chipTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraChipTokens = typeof chipTokens;
+export interface TectraChipTokens extends ChipTokensShape {}

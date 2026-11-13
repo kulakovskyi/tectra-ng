@@ -34,5 +34,7 @@ export const pageHeaderTokens = {
   },
 };
 
+type PageHeaderTokensShape = typeof pageHeaderTokens;
+
 /** Type of `pageHeaderTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraPageHeaderTokens = typeof pageHeaderTokens;
+export interface TectraPageHeaderTokens extends PageHeaderTokensShape {}

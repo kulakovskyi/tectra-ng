@@ -201,5 +201,7 @@ export const COMPONENT_TOKENS = {
   chart: chartTokens,
 };
 
+type ComponentTokensShape = typeof COMPONENT_TOKENS;
+
 /** Type of `COMPONENT_TOKENS`: the component tokens by component name. */
-export type TectraComponentTokens = typeof COMPONENT_TOKENS;
+export interface TectraComponentTokens extends ComponentTokensShape {}

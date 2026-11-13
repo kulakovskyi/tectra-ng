@@ -7,5 +7,7 @@ export const hoverEffectTokens = {
   },
 };
 
+type HoverEffectTokensShape = typeof hoverEffectTokens;
+
 /** Type of `hoverEffectTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraHoverEffectTokens = typeof hoverEffectTokens;
+export interface TectraHoverEffectTokens extends HoverEffectTokensShape {}

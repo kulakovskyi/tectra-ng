@@ -203,7 +203,11 @@ export const editorTokens = {
   },
 };
 
+type EditorContentTokensShape = typeof editorContentTokens;
+
 /** Type of `editorContentTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraEditorContentTokens = typeof editorContentTokens;
+export interface TectraEditorContentTokens extends EditorContentTokensShape {}
+type EditorTokensShape = typeof editorTokens;
+
 /** Type of `editorTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraEditorTokens = typeof editorTokens;
+export interface TectraEditorTokens extends EditorTokensShape {}

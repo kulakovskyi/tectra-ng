@@ -40,8 +40,10 @@ export const dataViewTokens = {
   },
 };
 
+type DataViewTokensShape = typeof dataViewTokens;
+
 /** Type of `dataViewTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraDataViewTokens = typeof dataViewTokens;
+export interface TectraDataViewTokens extends DataViewTokensShape {}
 
 /** Design tokens of `tx-virtual-scroller`: colors, sizes and spacing of its root and loader. */
 export const virtualScrollerTokens = {
@@ -57,8 +59,10 @@ export const virtualScrollerTokens = {
   },
 };
 
+type VirtualScrollerTokensShape = typeof virtualScrollerTokens;
+
 /** Type of `virtualScrollerTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraVirtualScrollerTokens = typeof virtualScrollerTokens;
+export interface TectraVirtualScrollerTokens extends VirtualScrollerTokensShape {}
 
 /**
  * Design tokens of `tx-timeline`: colors, sizes and spacing of its event, horizontal, vertical, event marker
@@ -91,8 +95,10 @@ export const timelineTokens = {
   },
 };
 
+type TimelineTokensShape = typeof timelineTokens;
+
 /** Type of `timelineTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraTimelineTokens = typeof timelineTokens;
+export interface TectraTimelineTokens extends TimelineTokensShape {}
 
 /** Design tokens of `tx-stat-tiles`: its colors, sizes and spacing, plus the `compact` size. */
 export const statTilesTokens = {
@@ -106,8 +112,10 @@ export const statTilesTokens = {
   },
 };
 
+type StatTilesTokensShape = typeof statTilesTokens;
+
 /** Type of `statTilesTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraStatTilesTokens = typeof statTilesTokens;
+export interface TectraStatTilesTokens extends StatTilesTokensShape {}
 
 /**
  * Design tokens of `tx-stat-tile`: colors, sizes and spacing of its root, icon, label, value, unit and other
@@ -194,8 +202,10 @@ export const statTileTokens = {
   },
 };
 
+type StatTileTokensShape = typeof statTileTokens;
+
 /** Type of `statTileTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraStatTileTokens = typeof statTileTokens;
+export interface TectraStatTileTokens extends StatTileTokensShape {}
 
 /** Design tokens of `tx-sparkline`: its colors, sizes and spacing, plus the tone variants. */
 export const sparklineTokens = {
@@ -213,8 +223,10 @@ export const sparklineTokens = {
   },
 };
 
+type SparklineTokensShape = typeof sparklineTokens;
+
 /** Type of `sparklineTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraSparklineTokens = typeof sparklineTokens;
+export interface TectraSparklineTokens extends SparklineTokensShape {}
 
 /** Design tokens of `tx-countdown`: its colors, sizes and spacing. */
 export const countdownTokens = {
@@ -227,8 +239,10 @@ export const countdownTokens = {
   },
 };
 
+type CountdownTokensShape = typeof countdownTokens;
+
 /** Type of `countdownTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraCountdownTokens = typeof countdownTokens;
+export interface TectraCountdownTokens extends CountdownTokensShape {}
 
 /**
  * Design tokens of `tx-analog-clock`: colors, sizes and spacing of its root, tick, hour hand, minute hand,
@@ -275,5 +289,7 @@ export const analogClockTokens = {
   },
 };
 
+type AnalogClockTokensShape = typeof analogClockTokens;
+
 /** Type of `analogClockTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraAnalogClockTokens = typeof analogClockTokens;
+export interface TectraAnalogClockTokens extends AnalogClockTokensShape {}

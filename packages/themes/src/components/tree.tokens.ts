@@ -62,8 +62,10 @@ export const treeTokens = {
   },
 };
 
+type TreeTokensShape = typeof treeTokens;
+
 /** Type of `treeTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraTreeTokens = typeof treeTokens;
+export interface TectraTreeTokens extends TreeTokensShape {}
 
 /** Design tokens of `tx-tree-table`: colors, sizes and spacing of its node. */
 export const treeTableTokens = {
@@ -73,5 +75,7 @@ export const treeTableTokens = {
   },
 };
 
+type TreeTableTokensShape = typeof treeTableTokens;
+
 /** Type of `treeTableTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraTreeTableTokens = typeof treeTableTokens;
+export interface TectraTreeTableTokens extends TreeTableTokensShape {}

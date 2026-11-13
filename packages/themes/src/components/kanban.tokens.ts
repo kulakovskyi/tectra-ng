@@ -66,5 +66,7 @@ export const kanbanTokens = {
   },
 };
 
+type KanbanTokensShape = typeof kanbanTokens;
+
 /** Type of `kanbanTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraKanbanTokens = typeof kanbanTokens;
+export interface TectraKanbanTokens extends KanbanTokensShape {}

@@ -12,5 +12,7 @@ export const inputGroupTokens = {
   },
 };
 
+type InputGroupTokensShape = typeof inputGroupTokens;
+
 /** Type of `inputGroupTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraInputGroupTokens = typeof inputGroupTokens;
+export interface TectraInputGroupTokens extends InputGroupTokensShape {}

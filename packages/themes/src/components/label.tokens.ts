@@ -52,9 +52,15 @@ export const iftaLabelTokens = {
   input: { paddingTop: '22px', paddingBottom: '6px' },
 };
 
+type LabelTokensShape = typeof labelTokens;
+
 /** Type of `labelTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraLabelTokens = typeof labelTokens;
+export interface TectraLabelTokens extends LabelTokensShape {}
+type FloatLabelTokensShape = typeof floatLabelTokens;
+
 /** Type of `floatLabelTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraFloatLabelTokens = typeof floatLabelTokens;
+export interface TectraFloatLabelTokens extends FloatLabelTokensShape {}
+type IftaLabelTokensShape = typeof iftaLabelTokens;
+
 /** Type of `iftaLabelTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraIftaLabelTokens = typeof iftaLabelTokens;
+export interface TectraIftaLabelTokens extends IftaLabelTokensShape {}

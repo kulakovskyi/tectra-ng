@@ -46,7 +46,11 @@ export const progressSpinnerTokens = {
   lg: { size: '48px' },
 };
 
+type ProgressBarTokensShape = typeof progressBarTokens;
+
 /** Type of `progressBarTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraProgressBarTokens = typeof progressBarTokens;
+export interface TectraProgressBarTokens extends ProgressBarTokensShape {}
+type ProgressSpinnerTokensShape = typeof progressSpinnerTokens;
+
 /** Type of `progressSpinnerTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraProgressSpinnerTokens = typeof progressSpinnerTokens;
+export interface TectraProgressSpinnerTokens extends ProgressSpinnerTokensShape {}

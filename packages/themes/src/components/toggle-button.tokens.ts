@@ -41,5 +41,7 @@ export const toggleButtonTokens = {
   },
 };
 
+type ToggleButtonTokensShape = typeof toggleButtonTokens;
+
 /** Type of `toggleButtonTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraToggleButtonTokens = typeof toggleButtonTokens;
+export interface TectraToggleButtonTokens extends ToggleButtonTokensShape {}

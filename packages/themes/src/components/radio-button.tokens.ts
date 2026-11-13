@@ -51,5 +51,7 @@ export const radioButtonTokens = {
   group: { gap: '10px', horizontalGap: '20px' },
 };
 
+type RadioButtonTokensShape = typeof radioButtonTokens;
+
 /** Type of `radioButtonTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
-export type TectraRadioButtonTokens = typeof radioButtonTokens;
+export interface TectraRadioButtonTokens extends RadioButtonTokensShape {}
