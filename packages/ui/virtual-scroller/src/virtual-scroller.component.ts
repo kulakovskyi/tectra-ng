@@ -35,23 +35,38 @@ import {
 import { VIRTUAL_SCROLLER_ICON_DEFAULTS } from './virtual-scroller.icons';
 import { VIRTUAL_SCROLLER_THEME } from './virtual-scroller.theme';
 
+/** Rendered span of one axis and the visible span inside it, as indexes. */
 interface TxAxisRange {
+  /** Index of the first rendered item. */
   first: number;
+  /** Index after the last rendered item. */
   last: number;
+  /** Index of the first visible item. */
   viewFirst: number;
+  /** Index after the last visible item. */
   viewLast: number;
 }
 
+/** One rendered item with its index. */
 interface TxRenderedCell<T> {
+  /** Index of the item on its axis. */
   index: number;
+  /** The item; `undefined` while it is not loaded. */
   item: T | undefined;
 }
 
+/** One rendered row of a `both` grid. */
 interface TxRenderedRow<T> {
+  /** Index of the row. */
   index: number;
+  /** The rendered cells of the row. */
   cells: TxRenderedCell<T>[];
 }
 
+/**
+ * Renders only the items that fit in its scroll area, so long lists scroll smoothly;
+ * vertical, horizontal or as a grid.
+ */
 @Component({
   selector: 'tx-virtual-scroller',
   imports: [NgTemplateOutlet, TxIcon],

@@ -1,6 +1,7 @@
 import { TxColumnFilter, TxFilterMatchMode, TxFilterRule, TxTableColumn, TxTableFilterType, TxTableFilters } from './table.types';
 import { resolveField } from './table.utils';
 
+/** Match modes offered for each filter type; the first one is the default. */
 export const TX_FILTER_MATCH_MODES: Record<TxTableFilterType, TxFilterMatchMode[]> = {
   text: ['startsWith', 'contains', 'notContains', 'endsWith', 'equals', 'notEquals'],
   numeric: ['equals', 'notEquals', 'lt', 'lte', 'gt', 'gte'],
@@ -8,11 +9,13 @@ export const TX_FILTER_MATCH_MODES: Record<TxTableFilterType, TxFilterMatchMode[
   boolean: ['equals'],
 };
 
+/** Match mode a column filter starts with: `in` with options, otherwise the first mode of its type. */
 export function defaultMatchMode(column: TxTableColumn): TxFilterMatchMode {
   if (column.filterOptions?.length) return 'in';
   return (column.filterMatchModes ?? TX_FILTER_MATCH_MODES[column.filterType ?? 'text'])[0];
 }
 
+/** Whether a filter value is set: not empty, not blank text and not an empty list. */
 export function isFilled(value: unknown): boolean {
   if (value === null || value === undefined) return false;
   if (typeof value === 'string') return value.trim() !== '';
@@ -20,6 +23,7 @@ export function isFilled(value: unknown): boolean {
   return true;
 }
 
+/** Whether a column filter has at least one rule with a value. */
 export function isFilterActive(filter: TxColumnFilter | undefined): boolean {
   return !!filter?.rules.some((rule) => isFilled(rule.value));
 }
@@ -55,6 +59,7 @@ function compare(value: unknown, filter: unknown): number | null {
   return String(value).localeCompare(String(filter), undefined, { numeric: true, sensitivity: 'base' });
 }
 
+/** Whether a cell value passes one filter rule; an empty rule passes everything. */
 export function matchesRule(value: unknown, rule: TxFilterRule, locale?: string): boolean {
   const filter = rule.value;
   if (!isFilled(filter)) return true;
@@ -112,12 +117,14 @@ export function matchesRule(value: unknown, rule: TxFilterRule, locale?: string)
   }
 }
 
+/** Whether a cell value passes the rules of a column filter, joined by its operator. */
 export function matchesFilter(value: unknown, filter: TxColumnFilter, locale?: string): boolean {
   const rules = filter.rules.filter((rule) => isFilled(rule.value));
   if (!rules.length) return true;
   return filter.operator === 'or' ? rules.some((rule) => matchesRule(value, rule, locale)) : rules.every((rule) => matchesRule(value, rule, locale));
 }
 
+/** Returns the rows that pass the column filters and the global search; case and accents are ignored. */
 export function filterRows<T>(
   rows: readonly T[],
   filters: TxTableFilters,

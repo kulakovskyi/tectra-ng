@@ -27,7 +27,7 @@ export default class CoreLocalePage {
     { label: 'Number', value: this.txLocaleService.formatNumber(1234567.89) },
     { label: 'Currency', value: this.txLocaleService.formatNumber(1999, { style: 'currency', currency: 'USD' }) },
     { label: 'Date', value: this.txLocaleService.formatDate(new Date(2026, 10, 5), { dateStyle: 'full' }) },
-    { label: 'Page report', value: this.txLocaleService.translate('pageReport', { first: 1, last: 10, total: 42 }) },
+    { label: 'Page report', value: this.txLocaleService.translate('currentPageReport', { currentPage: 1, totalPages: 5 }) },
   ]);
 
   constructor() {

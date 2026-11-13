@@ -7,6 +7,10 @@ import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { WIZARD_ICON_DEFAULTS } from './wizard.icons';
 import { WIZARD_THEME } from './wizard.theme';
 
+/**
+ * The frame of a full-screen wizard: the step with its header, body and footer, and a visual stage
+ * beside it.
+ */
 @Component({
   selector: 'tx-wizard-layout',
   template: `

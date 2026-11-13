@@ -1,5 +1,6 @@
 import { fade, joinCss, lightDark, tokenRef } from './token-helpers';
 
+/** Design tokens of `tx-slider`: colors, sizes and spacing of its root, handle and mark. */
 export const sliderTokens = {
   root: {
     trackSize: '4px',
@@ -33,4 +34,5 @@ export const sliderTokens = {
   },
 };
 
+/** Type of `sliderTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraSliderTokens = typeof sliderTokens;

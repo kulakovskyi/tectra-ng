@@ -7,9 +7,15 @@ const PORT = /:\d+$/;
 const TRAILING_DOT = /\.$/;
 const EMAIL_LOCAL = /^[^\s@<>()[\]\\,;:"]+$/;
 
+/** Separator that splits a pasted text into entries at whitespace, commas and semicolons. */
 export const TX_LIST_INPUT_WORDS = /[\s,;]+/;
+/**
+ * Separator that splits a pasted text into entries at line breaks, commas and semicolons; spaces stay
+ * inside an entry.
+ */
 export const TX_LIST_INPUT_LINES = /[\r\n,;]+/;
 
+/** Reads a domain name from a token, dropping protocol, path and port, and lower-cases it; `null` when invalid. */
 export function txParseDomain(token: string): string | null {
   const host = token.toLowerCase().replace(PROTOCOL, '');
   const pathIndex = host.search(PATH_START);
@@ -17,6 +23,10 @@ export function txParseDomain(token: string): string | null {
   return DOMAIN_PATTERN.test(domain) ? domain : null;
 }
 
+/**
+ * Reads an email address from a token, dropping `mailto:` and angle brackets, and lower-cases it;
+ * `null` when invalid.
+ */
 export function txParseEmail(token: string): string | null {
   const email = token
     .replace(/^mailto:/i, '')
@@ -31,6 +41,7 @@ export function txParseEmail(token: string): string | null {
   return EMAIL_LOCAL.test(local) && DOMAIN_PATTERN.test(domain) ? `${local}@${domain}` : null;
 }
 
+/** Reads an http or https URL from a token, adding `https://` when missing; `null` when invalid. */
 export function txParseUrl(token: string): string | null {
   let url: URL;
   try {
@@ -44,10 +55,12 @@ export function txParseUrl(token: string): string | null {
   return url.pathname === '/' && !url.search && !url.hash ? url.origin : url.href;
 }
 
+/** Accepts any token as it is. */
 export function txParseText(token: string): string | null {
   return token;
 }
 
+/** Parser of every `TxListInputType`. */
 export const TX_LIST_INPUT_PARSERS: Record<TxListInputType, TxListInputParser> = {
   domain: txParseDomain,
   email: txParseEmail,
@@ -55,6 +68,10 @@ export const TX_LIST_INPUT_PARSERS: Record<TxListInputType, TxListInputParser> =
   text: txParseText,
 };
 
+/**
+ * Splits a text into entries with a parser; collects valid unique items, the invalid tokens and the
+ * number of duplicates.
+ */
 export function txParseList(text: string | null | undefined, parser: TxListInputParser, separator: RegExp = TX_LIST_INPUT_WORDS): TxListInputResult {
   const items = new Set<string>();
   const invalid = new Set<string>();

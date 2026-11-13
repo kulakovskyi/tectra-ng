@@ -1,7 +1,10 @@
+/** How series stack: `normal` adds values, `100%` turns each category into shares. */
 export type TxChartStackType = 'normal' | '100%';
 
+/** `[from, to]` of a stacked value, or `null` for a gap. */
 export type TxStackedValue = [number, number] | null;
 
+/** Stacks series on top of each other; positive and negative values stack apart. */
 export function stackValues(series: readonly (readonly (number | null)[])[], type: TxChartStackType = 'normal'): TxStackedValue[][] {
   const length = Math.max(0, ...series.map((values) => values.length));
   const totals = Array.from({ length }, (_, index) => series.reduce((sum, values) => sum + Math.abs(values[index] ?? 0), 0));
@@ -26,6 +29,7 @@ export function stackValues(series: readonly (readonly (number | null)[])[], typ
   );
 }
 
+/** Smallest and largest edge of all stacked values, zero included. */
 export function stackExtent(stacked: readonly TxStackedValue[][]): [number, number] {
   let min = 0;
   let max = 0;
@@ -40,6 +44,10 @@ export function stackExtent(stacked: readonly TxStackedValue[][]): [number, numb
   return [min, max];
 }
 
+/**
+ * Index of the topmost series with a positive (`1`) or negative (`-1`) value at a category; `-1` when
+ * none.
+ */
 export function topOfStack(stacked: readonly TxStackedValue[][], index: number, sign: 1 | -1): number {
   let found = -1;
   stacked.forEach((values, seriesIndex) => {

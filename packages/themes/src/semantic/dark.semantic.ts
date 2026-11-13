@@ -12,6 +12,7 @@ function darkSeverity(scale: TectraColorScale, surface: TectraSurfaceScale): Tec
   };
 }
 
+/** Builds the semantic tokens of the dark color scheme from the accent and surface palettes. */
 export function createDarkSemantic({ accent, surface }: TectraPalettes): TectraSemanticTokens {
   return {
     primary: {

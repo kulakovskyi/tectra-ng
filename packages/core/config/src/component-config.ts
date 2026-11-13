@@ -8,6 +8,10 @@ import {
 } from './pass-through.interface';
 import { TECTRA_CONFIG } from './tectra-config.token';
 
+/**
+ * Signal that tells whether a component is unstyled: its own `unstyled` input, else the global config, else
+ * `false`.
+ */
 export function injectUnstyled(local: Signal<boolean | undefined>): Signal<boolean> {
   const config = inject(TECTRA_CONFIG, { optional: true });
   return computed(() => local() ?? config?.unstyled ?? false);
@@ -24,6 +28,7 @@ function mergeParts(global: TxPassThroughPart, local: TxPassThroughPart): TxPass
   };
 }
 
+/** Signal with the pass-through of a component, merging the global config and the local `pt` by the merge options. */
 export function injectPassThrough<TPart extends string, TInstance>(
   component: string,
   instance: TInstance,

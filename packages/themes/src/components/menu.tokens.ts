@@ -1,5 +1,9 @@
 import { joinCss, lightDark, tokenRef } from './token-helpers';
 
+/**
+ * Design tokens of `tx-menu`: colors, sizes and spacing of its root, item, icon, shortcut, group label and
+ * other parts.
+ */
 export const menuTokens = {
   root: {
     background: tokenRef('surface-card'),
@@ -81,4 +85,5 @@ export const menuTokens = {
   },
 };
 
+/** Type of `menuTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraMenuTokens = typeof menuTokens;

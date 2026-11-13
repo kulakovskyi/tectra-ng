@@ -6,6 +6,7 @@ import { TxRippleStyles } from './ripple.styles';
 import { TxRippleRef } from './ripple.types';
 import { RIPPLE_THEME } from './ripple.theme';
 
+/** Adds the click ripple effect to an element; on by default only when the ripple is turned on in the config. */
 @Directive({
   selector: '[txRipple]',
   host: {

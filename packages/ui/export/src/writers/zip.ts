@@ -1,7 +1,10 @@
 import { compress, concatBytes, utf8 } from './bytes';
 
+/** One file in a zip archive. */
 export interface TxZipEntry {
+  /** Path of the file in the archive. */
   name: string;
+  /** Content of the file: bytes, or text written as UTF-8. */
   data: Uint8Array | string;
 }
 
@@ -15,6 +18,7 @@ const CRC_TABLE = (() => {
   return table;
 })();
 
+/** Computes the CRC-32 checksum of the bytes, as the zip format needs. */
 export function crc32(bytes: Uint8Array): number {
   let crc = 0xffffffff;
   for (let index = 0; index < bytes.length; index++) crc = CRC_TABLE[(crc ^ bytes[index]) & 0xff] ^ (crc >>> 8);
@@ -27,6 +31,7 @@ function dosDateTime(date: Date): [number, number] {
   return [time, day];
 }
 
+/** Packs the entries into a zip archive, deflated unless `deflate` is `false`. */
 export async function zip(entries: readonly TxZipEntry[], date = new Date(), deflate = true): Promise<Uint8Array> {
   const [time, day] = dosDateTime(date);
   const locals: Uint8Array[] = [];

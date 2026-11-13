@@ -1,3 +1,4 @@
+/** Codes of every flag in the set, lower case: ISO 3166-1 alpha-2 country codes, regions such as `gb-sct` and groups such as `eu`. */
 export const TX_FLAG_CODES = [
   "ad",
   "ae",
@@ -272,10 +273,13 @@ export const TX_FLAG_CODES = [
   "zw",
 ] as const;
 
+/** Code of a country flag in the set, e.g. `'ua'`. */
 export type TxFlagCode = (typeof TX_FLAG_CODES)[number];
 
+/** Loads the SVG of one flag as its own lazy chunk. */
 export type TxFlagModule = () => Promise<{ default: string }>;
 
+/** Loaders of the rectangle flags by code. */
 export const TX_FLAG_RECTANGLES: Record<TxFlagCode, TxFlagModule> = {
   "ad": () => import('./rectangle/ad'),
   "ae": () => import('./rectangle/ae'),
@@ -550,6 +554,7 @@ export const TX_FLAG_RECTANGLES: Record<TxFlagCode, TxFlagModule> = {
   "zw": () => import('./rectangle/zw'),
 };
 
+/** Loaders of the round flags by code. */
 export const TX_FLAG_CIRCLES: Record<TxFlagCode, TxFlagModule> = {
   "ad": () => import('./circle/ad'),
   "ae": () => import('./circle/ae'),

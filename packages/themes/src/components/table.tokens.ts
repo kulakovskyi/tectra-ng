@@ -2,6 +2,10 @@ import { joinCss, lightDark, mix, tokenRef } from './token-helpers';
 
 const borderColor = tokenRef('surface-border');
 
+/**
+ * Design tokens of `tx-table`: colors, sizes and spacing of its root, toolbar, scroller, header cell, sort
+ * icon and other parts.
+ */
 export const tableTokens = {
   root: {
     borderColor,
@@ -157,4 +161,5 @@ export const tableTokens = {
   },
 };
 
+/** Type of `tableTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraTableTokens = typeof tableTokens;

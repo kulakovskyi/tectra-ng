@@ -8,12 +8,17 @@ import { printHtml } from './writers/print';
 import { htmlTable, printPageCss, writeCsv, writeHtml, writeJson, writeMarkdown, writeTsv } from './writers/text';
 import { writeXlsx } from './writers/xlsx';
 
+/** Default export options for the app or a subtree; set it with `provideTxExport`. */
 export const TX_EXPORT_OPTIONS = new InjectionToken<TxExportOptions>('TX_EXPORT_OPTIONS', { providedIn: 'root', factory: () => ({}) });
 
+/**
+ * Sets default export options that every export button and `TxExportService` merges under their own options.
+ */
 export function provideTxExport(options: TxExportOptions): Provider {
   return { provide: TX_EXPORT_OPTIONS, useValue: options };
 }
 
+/** File extension of every format; `null` for copy and print, which make no file. */
 export const TX_EXPORT_EXTENSIONS: Record<TxExportFormat, string | null> = {
   csv: 'csv',
   excel: 'xlsx',
@@ -28,6 +33,9 @@ export const TX_EXPORT_EXTENSIONS: Record<TxExportFormat, string | null> = {
 
 const FORMAT_KEYS = ['csv', 'excel', 'word', 'pdf', 'json', 'html', 'markdown', 'copy', 'print'] as const;
 
+/**
+ * Merges export options in order, later layers winning; the per-format objects such as `csv` are merged key by key.
+ */
 export function mergeExportOptions(...layers: (TxExportOptions | undefined)[]): TxExportOptions {
   const merged: Record<string, unknown> = {};
   for (const layer of layers) {
@@ -40,16 +48,21 @@ export function mergeExportOptions(...layers: (TxExportOptions | undefined)[]): 
   return merged as TxExportOptions;
 }
 
+/**
+ * Loads the Onest font from `@tectra-ng/ui/export-font` for PDF files; it is fetched on the first PDF export.
+ */
 export function loadDefaultExportFont(): Promise<TxExportFont> {
   return import('@tectra-ng/ui/export-font').then((module) => module.TX_EXPORT_FONT);
 }
 
+/** Exports rows from code to a file, the clipboard or the printer; the export buttons use it. */
 @Injectable({ providedIn: 'root' })
 export class TxExportService {
   private document = inject(DOCUMENT);
   private defaults = inject(TX_EXPORT_OPTIONS);
   private locale = inject(TxLocaleService);
 
+  /** Runs an export and saves, copies or prints the result; resolves to what was done. */
   async export<T>(request: TxExportRequest<T>): Promise<TxExportResult> {
     const options = mergeExportOptions(this.defaults, request.options);
     const table = buildExportTable(request.rows, request.fields, request.format);
@@ -67,6 +80,7 @@ export class TxExportService {
     return { format: request.format, filename: file.filename, rows: table.rows.length };
   }
 
+  /** Builds the file of a format from a prepared table without saving it. */
   async file(format: Exclude<TxExportFormat, 'copy' | 'print'>, table: TxExportTable, options: TxExportOptions = {}, context = this.textContext(options)): Promise<{ blob: Blob; filename: string }> {
     const filename = withExtension(options.filename || 'ExportedData', TX_EXPORT_EXTENSIONS[format] as string);
     const document = { title: options.title, subtitle: options.subtitle, showDate: options.showDate };
@@ -93,6 +107,7 @@ export class TxExportService {
     }
   }
 
+  /** Gives the locale and the yes and no texts used to write cell values. */
   textContext(options: TxExportOptions = {}): TxExportTextContext {
     const translations = this.locale.translations();
     return { locale: options.locale ?? this.locale.locale().intl, yes: translations.yes, no: translations.no };

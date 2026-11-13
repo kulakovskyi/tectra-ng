@@ -181,7 +181,6 @@ class SvgHost {
     axes: [
       {
         position: 'left',
-        line: { x1: 0, y1: 0, x2: 0, y2: 100 },
         labels: [
           {
             text: 'Long label',
@@ -197,7 +196,6 @@ class SvgHost {
       },
       {
         position: 'bottom',
-        line: null,
         labels: [],
         title: { text: 'Day', x: 50, y: 95, rotate: 0 },
       },
@@ -210,12 +208,11 @@ class SvgHost {
 }
 
 describe('chart svg parts', () => {
-  it('draws axis lines, rotated titles and full label titles', async () => {
+  it('draws rotated titles and full label titles', async () => {
     const fixture = TestBed.createComponent(SvgHost);
     fixture.autoDetectChanges();
     await fixture.whenStable();
     const root = fixture.nativeElement as HTMLElement;
-    expect(root.querySelectorAll('.tx-chart-axes__line')).toHaveLength(1);
     expect(root.querySelector('.tx-chart-axes__label title')?.textContent).toBe(
       'Long label in full',
     );

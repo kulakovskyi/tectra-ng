@@ -1,9 +1,14 @@
+/** A point of a series with its index in the original data. */
 export interface TxDecimatePoint {
+  /** Horizontal value. */
   x: number;
+  /** Vertical value. */
   y: number;
+  /** Index in the original series. */
   index: number;
 }
 
+/** Thins points down to `threshold` and keeps the shape of the line (largest-triangle-three-buckets). */
 export function largestTriangleThreeBuckets(points: readonly TxDecimatePoint[], threshold: number): TxDecimatePoint[] {
   const count = points.length;
   if (threshold >= count || threshold < 3) {
@@ -44,6 +49,7 @@ export function largestTriangleThreeBuckets(points: readonly TxDecimatePoint[], 
   return sampled;
 }
 
+/** Thins a series that has gaps down to about `threshold` points, run by run; `null` gaps stay. */
 export function decimateSeries(points: readonly ({ x: number; y: number } | null)[], threshold: number): (TxDecimatePoint | null)[] {
   if (points.length <= threshold) {
     return points.map((point, index) => (point ? { ...point, index } : null));

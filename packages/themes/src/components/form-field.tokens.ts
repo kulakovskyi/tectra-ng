@@ -1,5 +1,9 @@
 import { lightDark, tokenRef } from './token-helpers';
 
+/**
+ * Shared tokens of the text-like form fields (`txInput`, `tx-select`, `tx-datepicker` and others):
+ * background, border, text and placeholder colors in every state, and the focus ring.
+ */
 export const formFieldTokens = {
   root: {
     background: tokenRef('field-background'),
@@ -32,4 +36,5 @@ export const formFieldTokens = {
   },
 };
 
+/** Type of `formFieldTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraFormFieldTokens = typeof formFieldTokens;

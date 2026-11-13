@@ -1,5 +1,6 @@
 import { tokenRef } from './token-helpers';
 
+/** Design tokens of `tx-splitter`: colors, sizes and spacing of its root, gutter and handle. */
 export const splitterTokens = {
   root: {
     background: tokenRef('surface-card'),
@@ -23,4 +24,5 @@ export const splitterTokens = {
   },
 };
 
+/** Type of `splitterTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraSplitterTokens = typeof splitterTokens;

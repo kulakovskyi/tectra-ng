@@ -1,23 +1,33 @@
 import { seriesColor } from '@tectra-ng/charts/core';
 import { TxSankeyAlign, TxSankeyLayout, TxSankeyLayoutLink, TxSankeyLayoutNode, TxSankeyLink, TxSankeyNode } from './sankey-chart.types';
 
+/** Size and spacing settings of `sankeyLayout`. */
 export interface TxSankeyOptions {
+  /** Width of the area, in px. */
   width: number;
+  /** Height of the area, in px. */
   height: number;
+  /** Width of a node, in px. */
   nodeWidth: number;
+  /** Vertical gap between nodes of a column, in px. */
   nodePadding: number;
+  /** Where nodes without outgoing links go (default `justify`). */
   align?: TxSankeyAlign;
+  /** Number of passes that move nodes towards their linked nodes (default 24). */
   iterations?: number;
+  /** Offset added to every vertical position, in px (default 0). */
   top?: number;
 }
 
 const round = (value: number) => Math.round(value * 100) / 100;
 
+/** SVG path of a smooth centre line between two points, for a flow of no width. */
 export function sankeyLinkPath(x0: number, y0: number, x1: number, y1: number): string {
   const middle = (x0 + x1) / 2;
   return `M${round(x0)},${round(y0)}C${round(middle)},${round(y0)} ${round(middle)},${round(y1)} ${round(x1)},${round(y1)}`;
 }
 
+/** SVG path of a flow ribbon of the given width between two points. */
 export function sankeyRibbonPath(x0: number, y0: number, x1: number, y1: number, width: number): string {
   const middle = (x0 + x1) / 2;
   const half = width / 2;
@@ -27,6 +37,7 @@ export function sankeyRibbonPath(x0: number, y0: number, x1: number, y1: number,
   );
 }
 
+/** Vertical position of the link centre line at a horizontal position `x`. */
 export function sankeyLinkY(x0: number, y0: number, x1: number, y1: number, x: number): number {
   if (x <= x0) return y0;
   if (x >= x1) return y1;
@@ -42,6 +53,7 @@ export function sankeyLinkY(x0: number, y0: number, x1: number, y1: number, x: n
   return (1 - t) ** 3 * y0 + 3 * (1 - t) ** 2 * t * y0 + 3 * (1 - t) * t ** 2 * y1 + t ** 3 * y1;
 }
 
+/** Positions nodes in columns and sizes the links; cycles are broken and invalid links dropped. */
 export function sankeyLayout(nodesInput: readonly TxSankeyNode[], linksInput: readonly TxSankeyLink[], options: TxSankeyOptions): TxSankeyLayout {
   const ids: string[] = [];
   const add = (id: string) => {

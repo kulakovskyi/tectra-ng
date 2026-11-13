@@ -25,6 +25,7 @@ function snapshot(control: AbstractControl): unknown {
   return structuredClone(raw);
 }
 
+/** Remembers the initial value of a form and tells whether it changed; provide it per component. */
 @Injectable()
 export class TxFormChangeTracker {
   private initial: unknown = null;
@@ -55,9 +56,13 @@ export class TxFormChangeTracker {
   }
 }
 
+/** Change tracking of one form, created by `trackFormChanges`. */
 export interface TxFormChanges {
+  /** `true` while the form value differs from the saved one. */
   readonly changed: Signal<boolean>;
+  /** Takes the current value as the new initial one. */
   commit(): void;
+  /** Resets the form to the initial value. */
   revert(): void;
 }
 

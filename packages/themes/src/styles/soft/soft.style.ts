@@ -7,6 +7,10 @@ import { softDisplayTokens } from './display.tokens';
 import { softOverlaysTokens } from './overlays.tokens';
 import { softDataTokens } from './data.tokens';
 
+/**
+ * Soft look: pill buttons, tags and segments, filled borderless fields, tonal secondary buttons, large radii
+ * on cards and overlays, glow focus.
+ */
 export const softStyle: TectraStyle = {
   name: 'soft',
   label: 'Soft',

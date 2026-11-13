@@ -1,5 +1,6 @@
 import { tokenRef } from './token-helpers';
 
+/** Design tokens of `tx-password`: colors, sizes and spacing of its root, panel and meter. */
 export const passwordTokens = {
   root: {
     actionGap: '2px',
@@ -26,4 +27,5 @@ export const passwordTokens = {
   },
 };
 
+/** Type of `passwordTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraPasswordTokens = typeof passwordTokens;

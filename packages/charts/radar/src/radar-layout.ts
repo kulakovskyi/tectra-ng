@@ -3,16 +3,22 @@ import { TxRadarAxis, TxRadarChartShape, TxRadarPoint } from './radar-chart.type
 
 const round = (value: number) => Math.round(value * 100) / 100;
 
+/** Centre and radius of the radar inside its box, in px. */
 export interface TxRadarFit {
+  /** Horizontal centre, in px. */
   cx: number;
+  /** Vertical centre, in px. */
   cy: number;
+  /** Radius of the outer ring, in px. */
   radius: number;
 }
 
+/** Angle of an axis, in radians clockwise from the top, with the axes spread evenly over the circle. */
 export function radarAngle(index: number, count: number): number {
   return count > 0 ? (index / count) * TX_FULL_CIRCLE : 0;
 }
 
+/** Finds the centre and the largest radius that keeps all axis labels inside the box. */
 export function radarFit(width: number, height: number, labels: readonly string[], fontSize: number, gap: number): TxRadarFit {
   const count = labels.length;
   const line = fontSize * 1.3;
@@ -30,6 +36,7 @@ export function radarFit(width: number, height: number, labels: readonly string[
   return { cx: width / 2, cy: height / 2, radius: Math.max(10, radius) };
 }
 
+/** Lays out the axes with the end points, label positions and text alignment. */
 export function radarAxes(labels: readonly string[], fit: TxRadarFit, gap: number): TxRadarAxis[] {
   return labels.map((label, index) => {
     const angle = radarAngle(index, labels.length);
@@ -51,11 +58,13 @@ export function radarAxes(labels: readonly string[], fit: TxRadarFit, gap: numbe
   });
 }
 
+/** Radius in px of a value on the scale; values outside the domain are clamped. */
 export function radarRadius(value: number, domain: TxRange, radius: number): number {
   const span = domain[1] - domain[0] || 1;
   return Math.max(0, Math.min(1, (value - domain[0]) / span)) * radius;
 }
 
+/** SVG path of one grid ring, a polygon or a circle (always a circle under three axes). */
 export function radarShapePath(fit: TxRadarFit, radius: number, count: number, shape: TxRadarChartShape): string {
   if (radius <= 0) return '';
   if (shape === 'circle' || count < 3) {
@@ -70,6 +79,7 @@ export function radarShapePath(fit: TxRadarFit, radius: number, count: number, s
   );
 }
 
+/** Positions of the values of one series; `null` where a value is missing. */
 export function radarPoints(values: readonly (number | null)[], domain: TxRange, fit: TxRadarFit): (TxRadarPoint | null)[] {
   return values.map((value, index) => {
     if (value === null || value === undefined || !Number.isFinite(value)) return null;
@@ -78,12 +88,14 @@ export function radarPoints(values: readonly (number | null)[], domain: TxRange,
   });
 }
 
+/** SVG path of a series polygon; missing points fall to the centre. */
 export function radarPolygonPath(points: readonly (TxRadarPoint | null)[], fit: TxRadarFit): string {
   const drawn = points.map((point) => point ?? { x: fit.cx, y: fit.cy });
   if (!drawn.length) return '';
   return drawn.map((point, index) => `${index ? 'L' : 'M'}${point.x},${point.y}`).join('') + 'Z';
 }
 
+/** Index of the axis nearest to a point, or `-1` when the point is farther than `reach` outside the radar. */
 export function radarAxisAt(x: number, y: number, fit: TxRadarFit, count: number, reach: number): number {
   const dx = x - fit.cx;
   const dy = y - fit.cy;

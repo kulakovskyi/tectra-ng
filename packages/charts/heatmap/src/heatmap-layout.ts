@@ -1,5 +1,6 @@
 import { TxHeatmapCell, TxHeatmapColumnGroup, TxHeatmapRow, TxHeatmapRowGroup, TxHeatmapScale } from './heatmap.types';
 
+/** Splits the cells of a row into the column bands, one slot per column. */
 export function heatmapRowGroups(cells: readonly (TxHeatmapCell | null)[], groups: readonly TxHeatmapColumnGroup[]): TxHeatmapRowGroup[] {
   let offset = 0;
   return groups.map((group) => {
@@ -9,6 +10,9 @@ export function heatmapRowGroups(cells: readonly (TxHeatmapCell | null)[], group
   });
 }
 
+/**
+ * Builds the color scale from the values of all cells; `min` and `max` override the found range and `steps` is at least 1.
+ */
 export function heatmapScale(rows: readonly TxHeatmapRow[], steps: number, min?: number, max?: number): TxHeatmapScale {
   let low = Infinity;
   let high = -Infinity;
@@ -28,6 +32,7 @@ export function heatmapScale(rows: readonly TxHeatmapRow[], steps: number, min?:
   };
 }
 
+/** Color level of a value from 0 (empty) to 1 (full), in `steps` equal parts of the scale. */
 export function heatmapLevel(value: number | null | undefined, scale: TxHeatmapScale): number {
   if (typeof value !== 'number' || !Number.isFinite(value) || value <= scale.min) {
     return 0;
@@ -37,6 +42,7 @@ export function heatmapLevel(value: number | null | undefined, scale: TxHeatmapS
   return Math.max(1, Math.ceil(ratio * scale.steps)) / scale.steps;
 }
 
+/** Accessible name of a cell: its `ariaLabel`, else its tooltip, else `null`. */
 export function heatmapCellLabel(cell: TxHeatmapCell): string | null {
   return cell.ariaLabel || cell.tooltip || null;
 }

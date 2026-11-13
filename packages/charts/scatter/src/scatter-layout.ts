@@ -5,6 +5,7 @@ function isTuple(point: TxScatterPoint | TxScatterTuple): point is TxScatterTupl
   return Array.isArray(point);
 }
 
+/** Parses series into numeric points; dates become ms and points without a finite x or y are dropped. */
 export function scatterData(series: readonly TxScatterSeries[]): TxScatterDatum[][] {
   return series.map((item, seriesIndex) =>
     item.data.flatMap((point, index) => {
@@ -18,18 +19,25 @@ export function scatterData(series: readonly TxScatterSeries[]): TxScatterDatum[
   );
 }
 
+/** Radius of a bubble in px: the area follows `size` relative to `maxSize`, between `min` and `max`. */
 export function bubbleRadius(size: number | null, maxSize: number, min: number, max: number): number {
   if (size === null || !(maxSize > 0) || size <= 0) return min;
   return Math.max(min, max * Math.sqrt(size / maxSize));
 }
 
+/** Result of `linearTrend`: a least squares line with the x range of the points. */
 export interface TxScatterTrendFit {
+  /** Slope of the line. */
   slope: number;
+  /** Y value of the line at x = 0. */
   intercept: number;
+  /** Smallest x of the points. */
   from: number;
+  /** Largest x of the points. */
   to: number;
 }
 
+/** Least squares line through points; `null` for fewer than two points or no spread in x. */
 export function linearTrend(points: readonly { x: number; y: number }[]): TxScatterTrendFit | null {
   if (points.length < 2) return null;
   const n = points.length;
@@ -50,6 +58,7 @@ export function linearTrend(points: readonly { x: number; y: number }[]): TxScat
   return { slope, intercept: meanY - slope * meanX, from, to };
 }
 
+/** The dot closest to a point within its radius plus `slack`, or `null`; on a tie the smaller dot wins. */
 export function nearestDot<T extends { cx: number; cy: number; r: number }>(dots: readonly T[], x: number, y: number, slack: number): T | null {
   let best: T | null = null;
   let distance = Infinity;

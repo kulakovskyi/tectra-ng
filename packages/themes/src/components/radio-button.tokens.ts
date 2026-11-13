@@ -1,5 +1,9 @@
 import { lightDark, tokenRef } from './token-helpers';
 
+/**
+ * Design tokens of `tx-radio-button`: colors, sizes and spacing of its root, tile and group, plus the `sm`
+ * and `lg` sizes.
+ */
 export const radioButtonTokens = {
   root: {
     size: '18px',
@@ -47,4 +51,5 @@ export const radioButtonTokens = {
   group: { gap: '10px', horizontalGap: '20px' },
 };
 
+/** Type of `radioButtonTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraRadioButtonTokens = typeof radioButtonTokens;

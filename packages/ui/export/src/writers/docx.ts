@@ -21,6 +21,7 @@ function jc(align: string): string | undefined {
   return align === 'end' ? 'right' : align === 'center' ? 'center' : undefined;
 }
 
+/** Builds the XML body of the Word document for the table. */
 export function docxDocument(table: TxExportTable, options: TxExportWordOptions, context: TxExportTextContext, date: Date): string {
   const fontSize = options.fontSize ?? 10;
   const half = Math.round(fontSize * 2);
@@ -78,6 +79,7 @@ function docxFooter(options: TxExportWordOptions): string {
   return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<w:ftr xmlns:w="${W}" xmlns:r="${R}"><w:p><w:pPr><w:jc w:val="center"/></w:pPr>${field('PAGE')}<w:r><w:rPr>${props}</w:rPr><w:t xml:space="preserve"> / </w:t></w:r>${field('NUMPAGES')}</w:p></w:ftr>`;
 }
 
+/** Writes the table as a Word `.docx` file blob. */
 export async function writeDocx(table: TxExportTable, options: TxExportWordOptions = {}, context: TxExportTextContext = { yes: 'Yes', no: 'No' }, date = new Date()): Promise<Blob> {
   const pageNumbers = options.pageNumbers !== false;
   const created = date.toISOString().replace(/\.\d{3}Z$/, 'Z');

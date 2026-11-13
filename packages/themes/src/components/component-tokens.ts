@@ -82,6 +82,7 @@ import { hoverEffectTokens } from './hover-effect.tokens';
 import { mascotTokens } from './mascot.tokens';
 import { chartTokens } from './chart.tokens';
 
+/** Default component tokens of every tectra component, by component name; presets override parts of it. */
 export const COMPONENT_TOKENS = {
   icon: iconTokens,
   ripple: rippleTokens,
@@ -200,4 +201,5 @@ export const COMPONENT_TOKENS = {
   chart: chartTokens,
 };
 
+/** Type of `COMPONENT_TOKENS`: the component tokens by component name. */
 export type TectraComponentTokens = typeof COMPONENT_TOKENS;

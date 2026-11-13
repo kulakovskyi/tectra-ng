@@ -9,14 +9,21 @@ import { currentList, liftCurrentItem, sinkCurrentItem, toggleList } from './eng
 import { txEditorSchema as schema } from './engine/schema';
 import { insertTable, tableContext } from './engine/tables';
 
+/** How one toolbar tool looks and works: icon, label, shortcut and command. */
 export interface TxEditorToolSpec {
+  /** Name of the toolbar icon. */
   icon: string;
+  /** Translation key of the tool name, used as tooltip and accessible name. */
   label: keyof TxTranslations;
+  /** Keyboard shortcut written with `Mod` for Ctrl or Cmd, such as `Mod+B`. */
   shortcut?: string;
+  /** Runs when the tool is pressed; missing for tools that open a menu or a popover. */
   command?: Command;
+  /** Tells whether the tool is on at the current selection, which shows it pressed. */
   active?: (state: EditorState) => boolean;
 }
 
+/** The groups of tools of each toolbar preset. */
 export const TX_EDITOR_TOOLBARS: Record<Exclude<TxEditorToolbarPreset, 'none'>, readonly (readonly TxEditorTool[])[]> = {
   full: [
     ['blockStyle'],
@@ -32,6 +39,7 @@ export const TX_EDITOR_TOOLBARS: Record<Exclude<TxEditorToolbarPreset, 'none'>, 
 
 const { marks, nodes } = schema;
 
+/** Icon, label, shortcut and command of every toolbar tool. */
 export const TX_EDITOR_TOOLS: Record<TxEditorTool, TxEditorToolSpec> = {
   undo: { icon: 'undo', label: 'editorUndo', shortcut: 'Mod+Z', command: undo },
   redo: { icon: 'tx-editor-redo', label: 'editorRedo', shortcut: 'Mod+Shift+Z', command: redo },
@@ -73,8 +81,10 @@ function wrappedIn(state: EditorState, name: string): boolean {
   return false;
 }
 
+/** Icon name of each text alignment. */
 export const TX_EDITOR_ALIGN_ICONS = { left: 'align-left', center: 'align-center', right: 'align-right', justify: 'align-justify' } as const;
 
+/** Choices of the font size menu: a translation key and the CSS size in `em`, `null` for the normal size. */
 export const TX_EDITOR_FONT_SIZES = [
   { label: 'editorSizeSmall', value: '0.75em' },
   { label: 'editorSizeNormal', value: null },
@@ -82,6 +92,7 @@ export const TX_EDITOR_FONT_SIZES = [
   { label: 'editorSizeHuge', value: '2.5em' },
 ] as const;
 
+/** Palette of the text colour tool. */
 export const TX_EDITOR_TEXT_COLORS: readonly TxEditorColor[] = [
   { label: 'editorColorGray', value: '#6b7280' },
   { label: 'editorColorRed', value: '#dc2626' },
@@ -94,6 +105,7 @@ export const TX_EDITOR_TEXT_COLORS: readonly TxEditorColor[] = [
   { label: 'editorColorPink', value: '#db2777' },
 ];
 
+/** Palette of the highlight tool, in translucent colours that work on light and dark backgrounds. */
 export const TX_EDITOR_HIGHLIGHT_COLORS: readonly TxEditorColor[] = [
   { label: 'editorColorGray', value: 'rgba(107, 114, 128, 0.2)' },
   { label: 'editorColorRed', value: 'rgba(239, 68, 68, 0.22)' },
@@ -106,6 +118,7 @@ export const TX_EDITOR_HIGHLIGHT_COLORS: readonly TxEditorColor[] = [
   { label: 'editorColorPink', value: 'rgba(236, 72, 153, 0.22)' },
 ];
 
+/** Writes a shortcut for display: `Mod` becomes the Cmd symbol on Mac and `Ctrl` elsewhere. */
 export function shortcutLabel(shortcut: string, mac: boolean): string {
   return shortcut
     .split('+')
@@ -113,6 +126,7 @@ export function shortcutLabel(shortcut: string, mac: boolean): string {
     .join(mac ? '' : '+');
 }
 
+/** Icons the editor draws itself; register them once to use their names elsewhere. */
 export const TX_EDITOR_ICONS: TxIconSet = {
   'tx-editor-redo': [
     { d: 'M8.5 14L4 9.5L8.5 5', transform: 'matrix(-1 0 0 1 24 0)' },

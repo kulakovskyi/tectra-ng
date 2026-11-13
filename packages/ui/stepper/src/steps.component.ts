@@ -10,20 +10,30 @@ import { TxStepsItem, TxStepsItemContext, TxStepsPart, TxStepsVariant } from './
 import { STEPPER_ICON_DEFAULTS } from './stepper.icons';
 import { STEPPER_THEME } from './stepper.theme';
 
+/** Internal view model of one step of `tx-steps`: the item with its state and icon. */
 interface TxStepsEntry {
+  /** The item behind the entry. */
   item: TxStepsItem;
+  /** Position of the entry. */
   index: number;
+  /** Whether the entry is the current step. */
   active: boolean;
+  /** Whether the entry comes before the current step. */
   done: boolean;
+  /** Whether the step can be clicked: not `readonly`, not disabled and has a `command`. */
   clickable: boolean;
+  /** Registered icon name, or `null`. */
   icon: string | null;
+  /** CSS class used as an icon when the name is not a registered icon, or `null`. */
   iconClass: string | null;
+  /** Context given to the `txStepsItem` template. */
   context: TxStepsItemContext;
 }
 
 const NEXT_KEYS = ['ArrowRight', 'ArrowDown'];
 const PREVIOUS_KEYS = ['ArrowLeft', 'ArrowUp'];
 
+/** A step indicator built from an `items` array, without panels. */
 @Component({
   selector: 'tx-steps',
   imports: [NgTemplateOutlet, TxIcon],

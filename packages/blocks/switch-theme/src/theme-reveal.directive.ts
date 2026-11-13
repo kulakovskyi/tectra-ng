@@ -9,8 +9,13 @@ import { SWITCH_THEME_THEME } from './switch-theme.theme';
 
 const REVEAL_CLASS = 'tx-theme-reveal';
 
+/** Default easing of the circle that reveals the new theme. */
 export const TX_THEME_REVEAL_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
 
+/**
+ * On any element that changes the theme: grows the new theme as a circle from the click, then emits
+ * `themeChange`.
+ */
 @Directive({
   selector: '[txThemeReveal]',
   host: { '(click)': 'reveal($event)' },

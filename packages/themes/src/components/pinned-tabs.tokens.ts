@@ -1,5 +1,6 @@
 import { joinCss, mix, tokenRef } from './token-helpers';
 
+/** Design tokens of `tx-pinned-tabs`: colors, sizes and spacing of its root, dialog, option and check. */
 export const pinnedTabsTokens = {
   root: {
     gap: '7px',
@@ -42,4 +43,5 @@ export const pinnedTabsTokens = {
   },
 };
 
+/** Type of `pinnedTabsTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraPinnedTabsTokens = typeof pinnedTabsTokens;

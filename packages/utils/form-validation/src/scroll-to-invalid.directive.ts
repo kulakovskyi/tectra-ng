@@ -2,6 +2,7 @@ import { Directive, ElementRef, booleanAttribute, inject, input, output } from '
 import { ControlContainer } from '@angular/forms';
 import { TxFormValidation } from './form-validation.service';
 
+/** On a form: on submit, scrolls to and focuses the first invalid field, or reports a valid submit. */
 @Directive({
   selector: 'form[txScrollToInvalid]',
   host: { '(submit)': 'check()' },

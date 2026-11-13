@@ -2,6 +2,10 @@ import { DOCUMENT } from '@angular/common';
 import { InjectionToken, inject } from '@angular/core';
 import { TxStorageKind } from './filter-state.types';
 
+/**
+ * A `Storage` that lives in memory; used when the browser storage is missing or blocked, and on the
+ * server.
+ */
 export class TxMemoryStorage implements Storage {
   private readonly items = new Map<string, string>();
 
@@ -17,26 +21,32 @@ export class TxMemoryStorage implements Storage {
     }
   }
 
+  /** Number of stored items. */
   get length(): number {
     return this.items.size;
   }
 
+  /** Removes all items. */
   clear(): void {
     this.items.clear();
   }
 
+  /** Returns the value of a key, or `null`. */
   getItem(key: string): string | null {
     return this.items.get(key) ?? null;
   }
 
+  /** Returns the key at the given position, or `null`. */
   key(index: number): string | null {
     return Array.from(this.items.keys())[index] ?? null;
   }
 
+  /** Removes a key. */
   removeItem(key: string): void {
     this.items.delete(key);
   }
 
+  /** Stores a value under a key. */
   setItem(key: string, value: string): void {
     this.items.set(key, String(value));
   }
@@ -76,6 +86,7 @@ export function readJson<T>(storage: Storage, key: string): T | null {
   }
 }
 
+/** Saves a value as JSON in the storage; ignores a full or blocked storage. */
 export function writeJson(storage: Storage, key: string, value: unknown): void {
   try {
     storage.setItem(key, JSON.stringify(value));

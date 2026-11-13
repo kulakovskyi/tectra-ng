@@ -9,6 +9,7 @@ import { PINNED_TABS_ICON_DEFAULTS } from './pinned-tabs.icons';
 import { injectTokens } from '@tectra-ng/core/config';
 import { PINNED_TABS_THEME } from './pinned-tabs.theme';
 
+/** The dialog where the user picks the values to pin as tabs; opened by `tx-pinned-tabs`. */
 @Component({
   selector: 'tx-pinned-tabs-dialog',
   imports: [TxDialogHeader, TxDialogContent, TxDialogFooter, TxButton, TxIcon, TxMessage],

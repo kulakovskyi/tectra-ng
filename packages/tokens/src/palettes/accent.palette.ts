@@ -1,5 +1,6 @@
 import { TectraColorScale } from '../types/color-scale.interface';
 
+/** Accent color scales by name, usable as the primary color. */
 export const ACCENT_PALETTES = {
   blue: {
     50: '#f3f7fe',
@@ -211,10 +212,13 @@ export const ACCENT_PALETTES = {
   },
 } satisfies Record<string, TectraColorScale>;
 
+/** Name of an accent palette. */
 export type TectraAccent = keyof typeof ACCENT_PALETTES;
 
+/** Name a primary color can have: an accent palette, or `noir` for black and white. */
 export type TectraPrimary = TectraAccent | 'noir';
 
+/** Every primary colour a preset accepts, in the order the theme pickers list them, `noir` first. */
 export const PRIMARY_ORDER: readonly TectraPrimary[] = [
   'noir',
   'emerald',

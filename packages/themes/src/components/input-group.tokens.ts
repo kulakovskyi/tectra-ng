@@ -1,5 +1,6 @@
 import { tokenRef } from './token-helpers';
 
+/** Design tokens of `tx-input-group`: colors, sizes and spacing of its addon. */
 export const inputGroupTokens = {
   addon: {
     background: tokenRef('form-field-filled-background'),
@@ -11,4 +12,5 @@ export const inputGroupTokens = {
   },
 };
 
+/** Type of `inputGroupTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraInputGroupTokens = typeof inputGroupTokens;

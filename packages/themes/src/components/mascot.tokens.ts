@@ -1,5 +1,6 @@
 import { tokenRef } from './token-helpers';
 
+/** Design tokens of `tx-mascot`: its colors, sizes and spacing. */
 export const mascotTokens = {
   root: {
     size: '48px',
@@ -10,4 +11,5 @@ export const mascotTokens = {
   },
 };
 
+/** Type of `mascotTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraMascotTokens = typeof mascotTokens;

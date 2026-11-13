@@ -5,6 +5,7 @@ import { TABLE_ICON_DEFAULTS } from './table.icons';
 import { injectTokens } from '@tectra-ng/core/config';
 import { TABLE_THEME } from './table.theme';
 
+/** Tells `tx-table` that an editor element is ready so it can take focus. */
 @Directive({
   selector: '[txTableEditorFocus]',
   providers: [provideTxIconDefaults(TABLE_ICON_DEFAULTS)],

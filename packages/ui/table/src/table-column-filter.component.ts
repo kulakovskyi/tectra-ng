@@ -25,6 +25,7 @@ function toDate(value: unknown): Date | null {
   return value instanceof Date && !Number.isNaN(value.getTime()) ? value : null;
 }
 
+/** The filter editor of one column of `tx-table`, shown in a menu or in the filter row. */
 @Component({
   selector: 'tx-table-column-filter',
   imports: [NgTemplateOutlet, FormsModule, TxButton, TxDatePicker, TxInput, TxInputNumber, TxSelect, TxMultiselect, TxPopover, TxPopoverTrigger, TxMenu, TxMenuTrigger],

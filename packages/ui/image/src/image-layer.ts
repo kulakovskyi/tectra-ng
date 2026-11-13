@@ -5,16 +5,25 @@ import { DOCUMENT, Injector, TemplateRef, ViewContainerRef } from '@angular/core
 
 const LEAVE_LIMIT = 450;
 
+/** Options of `openImageLayer`. */
 export interface TxImageLayerOptions {
+  /** Injector used to create the overlay and the focus trap. */
   injector: Injector;
+  /** View container the layer template is attached through. */
   viewContainerRef: ViewContainerRef;
+  /** CSS selector of the element to focus first; the first focusable one when empty. */
   focus?: string;
+  /** Called when Escape is pressed in the layer. */
   onEscape?: () => void;
+  /** Called when the layer is removed by something other than `close`, such as navigation. */
   onDetach?: () => void;
 }
 
+/** Handle of an open image layer. */
 export interface TxImageLayer {
+  /** Overlay element that holds the layer content. */
   readonly element: HTMLElement;
+  /** Fades the layer out, removes it and returns focus; resolves when it is gone. */
   close(): Promise<void>;
 }
 
@@ -22,6 +31,10 @@ function animationsOf(element: HTMLElement): Animation[] {
   return typeof element.getAnimations === 'function' ? element.getAnimations({ subtree: true }) : [];
 }
 
+/**
+ * Opens a full-screen layer from a template with focus trap, scroll lock and fade-out; used by `tx-
+ * image` previews.
+ */
 export function openImageLayer(template: TemplateRef<unknown>, options: TxImageLayerOptions): TxImageLayer {
   const { injector } = options;
   const document = injector.get(DOCUMENT);

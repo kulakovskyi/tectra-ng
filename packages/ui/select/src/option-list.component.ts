@@ -21,18 +21,28 @@ import { TxSelectGroupRow, TxSelectItem, TxSelectOptionContext, TxSelectPart, Tx
 import { SELECT_ICON_DEFAULTS } from './select.icons';
 import { SELECT_THEME } from './select.theme';
 
+/** A group heading with the rows below it, as the option list lays them out. */
 interface TxOptionSection {
+  /** The group heading, or `null` for rows without a group. */
   group: TxSelectGroupRow | null;
+  /** Rows of the section with their position in the list. */
   rows: { row: TxSelectRow; index: number }[];
 }
 
+/** Range of rows rendered by the virtual scroll of the option list. */
 export interface TxOptionRange {
+  /** Index of the first rendered row. */
   start: number;
+  /** Index after the last rendered row. */
   end: number;
 }
 
 const DEFAULT_LIST_HEIGHT = 200;
 
+/**
+ * The list of options, groups and loaders inside the panel of select-like components; renders virtual
+ * scroll when asked.
+ */
 @Component({
   selector: 'tx-option-list',
   imports: [CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf, NgTemplateOutlet, TxIcon, TxSkeleton],

@@ -3,6 +3,10 @@ import { joinCss, lightDark, mix, tokenRef } from './token-helpers';
 /* @__NO_SIDE_EFFECTS__ */
 const tint = (amount: string) => mix(tokenRef('primary-base'), amount, 'transparent');
 
+/**
+ * Design tokens of `tx-kanban`: colors, sizes and spacing of its root, column, handle, list, placeholder and
+ * other parts.
+ */
 export const kanbanTokens = {
   root: {
     gap: '14px',
@@ -62,4 +66,5 @@ export const kanbanTokens = {
   },
 };
 
+/** Type of `kanbanTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraKanbanTokens = typeof kanbanTokens;

@@ -1,10 +1,16 @@
+/** The category and series a chart currently highlights. */
 export interface TxChartActive {
+  /** Index of the category. */
   index: number;
+  /** Index of the series. */
   series: number;
+  /** Pointer y inside the plot, in px; `null` for the keyboard. */
   pointerY: number | null;
+  /** `true` when the keyboard, not the pointer, set it. */
   keyboard: boolean;
 }
 
+/** Copy of a set with the key added, or removed if it was there; used to hide and show series. */
 export function toggleKey(keys: ReadonlySet<string>, key: string): Set<string> {
   const next = new Set(keys);
   if (next.has(key)) {
@@ -15,6 +21,7 @@ export function toggleKey(keys: ReadonlySet<string>, key: string): Set<string> {
   return next;
 }
 
+/** Next index for an arrow, `Home` or `End` key; `-1` when there is nothing to step through. */
 export function stepIndex(key: string, index: number, count: number, forward = 'ArrowRight', back = 'ArrowLeft'): number {
   if (count <= 0) {
     return -1;
@@ -27,6 +34,7 @@ export function stepIndex(key: string, index: number, count: number, forward = '
   return index;
 }
 
+/** Moves `step` places through the allowed indexes and wraps around; `-1` when none are allowed. */
 export function cycleIndex(index: number, step: number, allowed: readonly number[]): number {
   if (!allowed.length) {
     return -1;

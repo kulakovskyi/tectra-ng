@@ -1,5 +1,9 @@
 import { joinCss, lightDark, mix, tokenRef } from './token-helpers';
 
+/**
+ * Design tokens of `tx-editor-content`: colors, sizes and spacing of its root, heading, link, list, task and
+ * other parts.
+ */
 export const editorContentTokens = {
   root: {
     color: tokenRef('text-primary'),
@@ -103,6 +107,10 @@ export const editorContentTokens = {
   },
 };
 
+/**
+ * Design tokens of `tx-editor`: colors, sizes and spacing of its root, toolbar, tool, ai, content and other
+ * parts.
+ */
 export const editorTokens = {
   root: {
     borderRadius: tokenRef('radius-lg'),
@@ -195,5 +203,7 @@ export const editorTokens = {
   },
 };
 
+/** Type of `editorContentTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraEditorContentTokens = typeof editorContentTokens;
+/** Type of `editorTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraEditorTokens = typeof editorTokens;

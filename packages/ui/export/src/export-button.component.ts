@@ -34,6 +34,7 @@ const HOST = {
   '[attr.data-format]': 'resolvedFormat()',
 };
 
+/** Base of the single-format export buttons: the format, icon and tooltip. */
 @Directive()
 abstract class TxExportButtonBase<T = TxExportRow> extends TxExportAction<T> {
   readonly pt = input<TxPassThrough<TxExportPart, TxExportButtonBase<T>> | undefined>(undefined);
@@ -46,6 +47,7 @@ abstract class TxExportButtonBase<T = TxExportRow> extends TxExportAction<T> {
   readonly ariaLabel = computed(() => (this.label() ? null : this.resolvedTooltip()));
 }
 
+/** Icon button that exports to the format given by `format`. */
 @Component({
   selector: 'tx-export-button',
   imports: [TxButton, TxTooltip],
@@ -59,6 +61,7 @@ export class TxExportButton<T = TxExportRow> extends TxExportButtonBase<T> {
   readonly resolvedFormat = computed(() => this.format());
 }
 
+/** Icon button that exports to CSV. */
 @Component({
   selector: 'tx-export-csv',
   imports: [TxButton, TxTooltip],
@@ -71,6 +74,7 @@ export class TxExportCsv<T = TxExportRow> extends TxExportButtonBase<T> {
   readonly resolvedFormat = () => 'csv' as const;
 }
 
+/** Icon button that exports to Excel. */
 @Component({
   selector: 'tx-export-excel',
   imports: [TxButton, TxTooltip],
@@ -83,6 +87,7 @@ export class TxExportExcel<T = TxExportRow> extends TxExportButtonBase<T> {
   readonly resolvedFormat = () => 'excel' as const;
 }
 
+/** Icon button that exports to Word. */
 @Component({
   selector: 'tx-export-word',
   imports: [TxButton, TxTooltip],
@@ -95,6 +100,7 @@ export class TxExportWord<T = TxExportRow> extends TxExportButtonBase<T> {
   readonly resolvedFormat = () => 'word' as const;
 }
 
+/** Icon button that exports to PDF. */
 @Component({
   selector: 'tx-export-pdf',
   imports: [TxButton, TxTooltip],

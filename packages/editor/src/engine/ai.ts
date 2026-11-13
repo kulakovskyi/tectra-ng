@@ -1,9 +1,13 @@
 import { Plugin, PluginKey, Transaction } from 'prosemirror-state';
 import { Decoration, DecorationSet } from 'prosemirror-view';
 
+/** The text an AI action works on, marked while it is pending and when its answer is in. */
 export interface TxAiRange {
+  /** Start position in the document. */
   from: number;
+  /** End position in the document. */
   to: number;
+  /** `true` once the answer replaced the text, `false` while it is awaited. */
   done: boolean;
 }
 

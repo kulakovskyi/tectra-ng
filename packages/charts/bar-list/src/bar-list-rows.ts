@@ -1,6 +1,9 @@
 import { TxChartValueFormatter } from '@tectra-ng/charts/core';
 import { TxBarListItem, TxBarListRow } from './bar-list.types';
 
+/**
+ * Sorts items from the biggest value, drops zero and negative ones, keeps the first `limit` rows and formats their values and percents.
+ */
 export function barListRows(
   items: readonly TxBarListItem[] | null | undefined,
   limit: number,

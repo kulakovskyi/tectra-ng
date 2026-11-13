@@ -2,6 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { seriesColor } from '@tectra-ng/charts/core';
 import { TxPieData, TxPieLegendItem } from './pie-chart.types';
 
+/** Rows of a pie legend (label, value, share and colour) in series order; the `txPieLegend` pipe calls it. */
 export function pieLegend(data: TxPieData | null | undefined): TxPieLegendItem[] {
   if (!data) {
     return [];
@@ -15,6 +16,7 @@ export function pieLegend(data: TxPieData | null | undefined): TxPieLegendItem[]
   }));
 }
 
+/** Pipe `txPieLegend`: the legend rows of a `TxPieData`, with the same colours as the chart. */
 @Pipe({ name: 'txPieLegend' })
 export class TxPieLegendPipe implements PipeTransform {
   transform(data: TxPieData | null | undefined): TxPieLegendItem[] {

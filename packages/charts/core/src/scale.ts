@@ -4,6 +4,10 @@ const E10 = Math.sqrt(50);
 const E5 = Math.sqrt(10);
 const E2 = Math.sqrt(2);
 
+/**
+ * Round step (1, 2, 5 times a power of ten) that gives about `count` ticks between two numbers; `0`
+ * when it cannot.
+ */
 export function tickStep(start: number, stop: number, count: number): number {
   const span = Math.abs(stop - start);
   if (!span || count <= 0 || !Number.isFinite(span)) {
@@ -17,6 +21,7 @@ export function tickStep(start: number, stop: number, count: number): number {
   return factor * base;
 }
 
+/** Number of decimals a step needs to be written exactly. */
 export function decimalsOf(step: number): number {
   if (!step || !Number.isFinite(step)) {
     return 0;
@@ -29,6 +34,7 @@ function clean(value: number, decimals: number): number {
   return Object.is(rounded, -0) ? 0 : rounded;
 }
 
+/** Widens a range to round numbers, for example `[3, 97]` to `[0, 100]`. */
 export function niceDomain(min: number, max: number, count = 5): TxRange {
   if (!Number.isFinite(min) || !Number.isFinite(max)) {
     return [0, 1];
@@ -55,6 +61,7 @@ export function niceDomain(min: number, max: number, count = 5): TxRange {
   return [start, stop];
 }
 
+/** Round tick values between `min` and `max`, about `count` of them. */
 export function linearTicks(min: number, max: number, count = 5): number[] {
   const step = tickStep(min, max, count);
   if (!step) {
@@ -70,6 +77,7 @@ export function linearTicks(min: number, max: number, count = 5): number[] {
   return ticks;
 }
 
+/** Linear scale from a value domain to a pixel range. */
 export function linearScale(domain: TxRange, range: TxRange): TxContinuousScale {
   const [d0, d1] = domain;
   const [r0, r1] = range;
@@ -85,6 +93,7 @@ export function linearScale(domain: TxRange, range: TxRange): TxContinuousScale 
   };
 }
 
+/** Widens a range to whole powers of ten for a logarithmic scale. */
 export function logDomain(min: number, max: number): TxRange {
   const low = Math.max(min, Number.MIN_VALUE);
   const lowPower = Math.floor(Math.log10(low));
@@ -92,6 +101,7 @@ export function logDomain(min: number, max: number): TxRange {
   return [10 ** lowPower, 10 ** Math.max(highPower, lowPower + 1)];
 }
 
+/** Tick values of a logarithmic scale: powers of ten, with 2 and 5 between them when there is room. */
 export function logTicks(min: number, max: number, count = 5): number[] {
   const low = Math.floor(Math.log10(min));
   const high = Math.ceil(Math.log10(max));
@@ -113,6 +123,7 @@ export function logTicks(min: number, max: number, count = 5): number[] {
   return ticks;
 }
 
+/** Logarithmic scale from a value domain to a pixel range. */
 export function logScale(domain: TxRange, range: TxRange): TxContinuousScale {
   const [d0, d1] = domain.map((value) => Math.max(value, Number.MIN_VALUE)) as TxRange;
   const [r0, r1] = range;
@@ -128,6 +139,10 @@ export function logScale(domain: TxRange, range: TxRange): TxContinuousScale {
   };
 }
 
+/**
+ * Equal bands for `count` categories inside a pixel range, with optional inner and outer padding as a
+ * share of a band.
+ */
 export function bandScale(count: number, range: TxRange, paddingInner = 0, paddingOuter = 0): TxBandScale {
   const [r0, r1] = range;
   const slots = Math.max(1, count - paddingInner + paddingOuter * 2);
@@ -146,6 +161,7 @@ export function bandScale(count: number, range: TxRange, paddingInner = 0, paddi
   };
 }
 
+/** `count` evenly spaced points from the start to the end of a pixel range. */
 export function pointScale(count: number, range: TxRange): TxPointScale {
   const [r0, r1] = range;
   const step = count > 1 ? (r1 - r0) / (count - 1) : 0;
@@ -165,6 +181,7 @@ const MINUTE = 60 * SECOND;
 const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
 
+/** Calendar steps a time axis chooses from, from one second to one year. */
 export const TX_TIME_INTERVALS: readonly TxTimeInterval[] = [
   { unit: 'second', step: 1, duration: SECOND },
   { unit: 'second', step: 5, duration: 5 * SECOND },
@@ -188,6 +205,7 @@ export const TX_TIME_INTERVALS: readonly TxTimeInterval[] = [
   { unit: 'year', step: 1, duration: 365 * DAY },
 ];
 
+/** Picks the calendar step that gives about `count` ticks between two times. */
 export function timeInterval(start: number, stop: number, count = 6): TxTimeInterval {
   const span = Math.abs(stop - start);
   const target = span / Math.max(1, count);
@@ -199,6 +217,7 @@ export function timeInterval(start: number, stop: number, count = 6): TxTimeInte
   return { unit: 'year', step: Math.max(1, Math.round(years)), duration: Math.max(1, Math.round(years)) * 365 * DAY };
 }
 
+/** Rounds a time down to the start of the calendar step in local time. */
 export function floorTime(time: number, interval: TxTimeInterval): Date {
   const date = new Date(time);
   const { unit, step } = interval;
@@ -224,6 +243,7 @@ export function floorTime(time: number, interval: TxTimeInterval): Date {
   return new Date(Math.floor(time / (step * SECOND)) * step * SECOND);
 }
 
+/** Moves a date forward by one calendar step. */
 export function addTime(date: Date, interval: TxTimeInterval): Date {
   const { unit, step } = interval;
   const next = new Date(date.getTime());
@@ -237,6 +257,7 @@ export function addTime(date: Date, interval: TxTimeInterval): Date {
   return next;
 }
 
+/** Tick times on calendar steps between two times, with the step used. */
 export function timeTicks(start: number, stop: number, count = 6): { ticks: number[]; interval: TxTimeInterval } {
   const interval = timeInterval(start, stop, count);
   const ticks: number[] = [];
@@ -251,6 +272,7 @@ export function timeTicks(start: number, stop: number, count = 6): { ticks: numb
   return { ticks, interval };
 }
 
+/** Scale from time in ms to a pixel range, with calendar ticks. */
 export function timeScale(domain: TxRange, range: TxRange): TxTimeScale {
   const linear = linearScale(domain, range);
   return {
@@ -261,6 +283,10 @@ export function timeScale(domain: TxRange, range: TxRange): TxTimeScale {
   };
 }
 
+/**
+ * Reads an ISO string (a date-only string is local midnight), a `Date` or a timestamp as ms; `null`
+ * when it is not a valid time.
+ */
 export function toTime(value: string | number | Date | null | undefined): number | null {
   if (value === null || value === undefined || value === '') {
     return null;
@@ -276,6 +302,7 @@ export function toTime(value: string | number | Date | null | undefined): number
   return Number.isNaN(time) ? null : time;
 }
 
+/** Smallest and largest finite number of a list; `null` when there is none. */
 export function extent(values: Iterable<number | null | undefined>): TxRange | null {
   let min = Infinity;
   let max = -Infinity;

@@ -56,6 +56,9 @@
         [attr.aria-multiselectable]="rowSelection() || treeCheckbox() ? selectionMode() !== 'single' : null"
         [attr.role]="isTree ? 'treegrid' : rowSelection() ? 'grid' : null"
       >
+        @if (caption(); as caption) {
+          <caption class="tx-table__sr-only">{{ caption }}</caption>
+        }
         <thead class="tx-table__thead" [class]="passThrough().thead?.class" [style]="passThrough().thead?.style">
           <tr
             #headerRow

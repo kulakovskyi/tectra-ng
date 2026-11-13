@@ -17,12 +17,17 @@ import { orderByRoom, placementFromPosition, txPositions } from './placements';
 import { TxOverlayCloseReason, TxOverlayOptions, TxOverlayRef, TxOverlayScroll } from './overlay.types';
 import { TxOverlayInsets, txConnectedMargin, txOverlayBounds, watchOrigin } from './overlay-insets.service';
 
+/**
+ * Opens a template or a component in an overlay next to an origin element, with flipping, scroll handling and
+ * open and close animation.
+ */
 @Injectable({ providedIn: 'root' })
 export class TxOverlay {
   private injector = inject(Injector);
   private document = inject(DOCUMENT);
   private overlayInsets = inject(TxOverlayInsets);
 
+  /** Opens the content in an overlay and returns its handle. */
   open<TInstance = unknown, TContext = unknown>(
     content: TemplateRef<TContext> | Type<TInstance>,
     options: TxOverlayOptions<TContext>,

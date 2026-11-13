@@ -17,6 +17,7 @@ function joinStyleCss(...parts: string[]): string {
   return parts.filter(Boolean).join('\n');
 }
 
+/** Paper look: filled fields with an underline, elevation shadows and focus halos. */
 export const paperStyle: TectraStyle = {
   name: 'paper',
   label: 'Paper',

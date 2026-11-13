@@ -7,6 +7,7 @@ import { TxExportFormat, TxExportRow } from './export.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { EXPORT_ICON_DEFAULTS } from './export.icons';
 
+/** Names of the parts of `tx-export` that `pt` can style. */
 export type TxExportMenuPart = 'root' | 'button';
 
 const FORMAT_NAMES: Partial<Record<TxExportFormat, string>> = {
@@ -19,8 +20,10 @@ const FORMAT_NAMES: Partial<Record<TxExportFormat, string>> = {
   markdown: 'Markdown',
 };
 
+/** Every format in the order the `tx-export` menu lists them by default. */
 export const TX_EXPORT_FORMATS: readonly TxExportFormat[] = ['excel', 'csv', 'word', 'pdf', 'json', 'html', 'markdown', 'copy', 'print'];
 
+/** Split button with a menu of export formats; the main button runs the first format. */
 @Component({
   selector: 'tx-export',
   imports: [TxSplitButton],

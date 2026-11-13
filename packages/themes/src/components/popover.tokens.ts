@@ -1,5 +1,9 @@
 import { fade, tokenRef } from './token-helpers';
 
+/**
+ * Design tokens of `tx-popover`: colors, sizes and spacing of its root, header, title, content, footer and
+ * other parts.
+ */
 export const popoverTokens = {
   root: {
     background: tokenRef('surface-overlay'),
@@ -46,4 +50,5 @@ export const popoverTokens = {
   },
 };
 
+/** Type of `popoverTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraPopoverTokens = typeof popoverTokens;

@@ -8,6 +8,10 @@ function tone(palette: string) {
   };
 }
 
+/**
+ * Design tokens of `tx-avatar`: colors, sizes and spacing of its root, group, editor and list, plus the `sm`,
+ * `lg` and `xl` sizes and the tone variants.
+ */
 export const avatarTokens = {
   root: {
     size: '36px',
@@ -71,4 +75,5 @@ export const avatarTokens = {
   },
 };
 
+/** Type of `avatarTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraAvatarTokens = typeof avatarTokens;

@@ -2,6 +2,10 @@ import { DestroyRef, Injector, Signal, afterNextRender, computed, inject, signal
 import { AbstractControl, NgControl } from '@angular/forms';
 import { TX_FIELD_STATE } from './field-state';
 
+/**
+ * Signal that tells whether a field shows its invalid state: the own `invalid` input, else the enclosing
+ * field, else an invalid form control that was touched or changed.
+ */
 export function injectFieldInvalid(local: Signal<boolean | undefined>): Signal<boolean> {
   const injector = inject(Injector);
   const destroyRef = inject(DestroyRef);

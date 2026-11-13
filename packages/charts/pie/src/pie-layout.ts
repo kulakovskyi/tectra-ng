@@ -5,6 +5,9 @@ export { arcBounds, arcPath, maxCornerRadius, polar, toRadians } from '@tectra-n
 
 const round = (value: number) => Math.round(value * 100) / 100;
 
+/**
+ * Splits a circle into start and end angles, in radians, proportional to the values; negative values get no angle.
+ */
 export function pieAngles(values: readonly number[], startAngle = 0, endAngle = 360): { start: number; end: number; value: number; index: number }[] {
   const start = toRadians(startAngle);
   const span = toRadians(Math.min(360, Math.max(0, endAngle - startAngle)));
@@ -19,6 +22,7 @@ export function pieAngles(values: readonly number[], startAngle = 0, endAngle = 
   });
 }
 
+/** Finds the centre and the largest radius of a pie or half donut that fits a box. */
 export function fitPie(width: number, height: number, startAngle = 0, endAngle = 360, padding = 4): TxPieFit {
   const start = toRadians(startAngle);
   const end = toRadians(Math.max(startAngle, Math.min(startAngle + 360, endAngle)));
@@ -33,6 +37,7 @@ export function fitPie(width: number, height: number, startAngle = 0, endAngle =
   };
 }
 
+/** Lays out the segments of a pie or donut: fit, hole radius and one arc per value. */
 export function pieArcs(
   values: readonly number[],
   options: { width: number; height: number; startAngle?: number; endAngle?: number; donutSize?: number; padding?: number; cornerRadius?: number },
@@ -59,6 +64,7 @@ export function pieArcs(
   return { fit, inner, arcs };
 }
 
+/** Index of the arc under a point, or `-1` when the point is outside the ring. */
 export function arcAt(arcs: readonly TxPieArc[], fit: TxPieFit, inner: number, x: number, y: number): number {
   const dx = x - fit.cx;
   const dy = y - fit.cy;

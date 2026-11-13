@@ -1,5 +1,6 @@
 import { tokenRef } from './token-helpers';
 
+/** Design tokens of `tx-label`: colors, sizes and spacing of its root and subtle. */
 export const labelTokens = {
   root: {
     color: tokenRef('text-primary'),
@@ -17,6 +18,7 @@ export const labelTokens = {
   },
 };
 
+/** Design tokens of `tx-float-label`: colors, sizes and spacing of its root, over, in and on. */
 export const floatLabelTokens = {
   root: {
     color: tokenRef('form-field-placeholder-color'),
@@ -35,6 +37,7 @@ export const floatLabelTokens = {
   on: { borderRadius: tokenRef('radius-xs'), active: { background: tokenRef('form-field-background'), padding: '0 4px' } },
 };
 
+/** Design tokens of `tx-ifta-label`: colors, sizes and spacing of its root and input. */
 export const iftaLabelTokens = {
   root: {
     color: tokenRef('text-muted'),
@@ -49,6 +52,9 @@ export const iftaLabelTokens = {
   input: { paddingTop: '22px', paddingBottom: '6px' },
 };
 
+/** Type of `labelTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraLabelTokens = typeof labelTokens;
+/** Type of `floatLabelTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraFloatLabelTokens = typeof floatLabelTokens;
+/** Type of `iftaLabelTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraIftaLabelTokens = typeof iftaLabelTokens;

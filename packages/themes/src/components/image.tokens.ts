@@ -1,5 +1,6 @@
 import { tokenRef } from './token-helpers';
 
+/** Design tokens of `tx-image`: colors, sizes and spacing of its root, preview, toolbar and action. */
 export const imageTokens = {
   root: {
     transitionDuration: tokenRef('motion-duration'),
@@ -36,4 +37,5 @@ export const imageTokens = {
   },
 };
 
+/** Type of `imageTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraImageTokens = typeof imageTokens;

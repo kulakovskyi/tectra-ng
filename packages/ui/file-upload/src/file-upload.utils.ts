@@ -7,13 +7,16 @@ const KINDS: Record<Exclude<TxFileKind, 'image' | 'media' | 'other'>, readonly s
   archive: ['zip', 'rar', '7z', 'tar', 'gz', 'tgz', 'bz2'],
 };
 
+/** Unit names for file sizes, from byte to terabyte, as `Intl.NumberFormat` unit identifiers. */
 export const TX_FILE_SIZE_UNITS = ['byte', 'kilobyte', 'megabyte', 'gigabyte', 'terabyte'] as const;
 
+/** Lower-case extension of a file name without the dot; empty when it has none. */
 export function fileExtension(file: Pick<File, 'name'>): string {
   const dot = file.name.lastIndexOf('.');
   return dot > 0 ? file.name.slice(dot + 1).toLowerCase() : '';
 }
 
+/** Sorts a file into a `TxFileKind` by its MIME type and extension. */
 export function fileKind(file: Pick<File, 'name' | 'type'>): TxFileKind {
   if (file.type.startsWith('image/')) {
     return 'image';
@@ -26,6 +29,10 @@ export function fileKind(file: Pick<File, 'name' | 'type'>): TxFileKind {
   return match ?? (file.type === 'application/pdf' ? 'pdf' : 'other');
 }
 
+/**
+ * Checks a file against an `accept` list of extensions, MIME types and `type/*` wildcards; an empty
+ * list accepts everything.
+ */
 export function fileMatchesAccept(file: Pick<File, 'name' | 'type'>, accept: string | undefined): boolean {
   const rules = (accept ?? '')
     .split(',')
@@ -47,6 +54,7 @@ export function fileMatchesAccept(file: Pick<File, 'name' | 'type'>, accept: str
   });
 }
 
+/** Scales a byte count to the largest unit that keeps the value under 1024. */
 export function fileSizeParts(bytes: number): { value: number; unit: (typeof TX_FILE_SIZE_UNITS)[number] } {
   let value = Math.max(0, bytes);
   let index = 0;
@@ -57,10 +65,12 @@ export function fileSizeParts(bytes: number): { value: number; unit: (typeof TX_
   return { value, unit: TX_FILE_SIZE_UNITS[index] };
 }
 
+/** Tells whether two `File` objects are the same file by name, size, type and modified time. */
 export function sameFile(a: File, b: File): boolean {
   return a.name === b.name && a.size === b.size && a.type === b.type && a.lastModified === b.lastModified;
 }
 
+/** Turns an `accept` list into a short readable label such as `PNG, JPEG`. */
 export function acceptLabel(accept: string | undefined): string {
   const labels = (accept ?? '')
     .split(',')

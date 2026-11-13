@@ -1,6 +1,7 @@
 import { Pipe, PipeTransform, inject } from '@angular/core';
 import { TxLocaleService } from '@tectra-ng/core/i18n';
 
+/** How `txCurrencySymbol` shows a currency: the short sign, the sign, the ISO code or the full name. */
 export type TxCurrencyDisplay = 'narrowSymbol' | 'symbol' | 'code' | 'name';
 
 const cache = new Map<string, string>();

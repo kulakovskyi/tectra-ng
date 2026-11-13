@@ -1,3 +1,4 @@
+/** Design tokens of `tx-hover-effect`: its colors, sizes and spacing. */
 export const hoverEffectTokens = {
   root: {
     perspective: '100px',
@@ -6,4 +7,5 @@ export const hoverEffectTokens = {
   },
 };
 
+/** Type of `hoverEffectTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraHoverEffectTokens = typeof hoverEffectTokens;

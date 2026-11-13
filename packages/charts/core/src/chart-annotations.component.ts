@@ -5,6 +5,7 @@ import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { CORE_ICON_DEFAULTS } from './core.icons';
 import { CORE_THEME } from './core.theme';
 
+/** Draws lines, bands, points and their labels over the plot of a cartesian chart. */
 @Component({
   selector: 'g[tx-chart-annotations]',
   template: `

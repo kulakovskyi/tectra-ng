@@ -1,5 +1,6 @@
 import { fade, lightDark, tokenRef } from './token-helpers';
 
+/** Design tokens of `tx-skeleton`: colors, sizes and spacing of its root and table. */
 export const skeletonTokens = {
   root: {
     background: lightDark(tokenRef('surface-200'), tokenRef('surface-700')),
@@ -19,4 +20,5 @@ export const skeletonTokens = {
   },
 };
 
+/** Type of `skeletonTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraSkeletonTokens = typeof skeletonTokens;

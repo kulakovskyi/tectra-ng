@@ -5,13 +5,18 @@ import { FILTERS_PANEL_ICON_DEFAULTS } from './filters-panel.icons';
 import { injectTokens } from '@tectra-ng/core/config';
 import { FILTERS_PANEL_THEME } from './filters-panel.theme';
 
+/** What a `txFilterField` asks its panel: whether it is hidden and where it sits. */
 export interface TxFiltersPanelContext {
+  /** Tells whether the field with this key is hidden. */
   isFieldHidden(key: string): boolean;
+  /** Position of the field with this key, or `null` when the order is not customised. */
   fieldOrder(key: string): number | null;
 }
 
+/** Injection token through which `txFilterField` finds its `tx-filters-panel`. */
 export const TX_FILTERS_PANEL = new InjectionToken<TxFiltersPanelContext>('TX_FILTERS_PANEL');
 
+/** Marks a field inside `tx-filters-panel` so the user can show, hide and reorder it. */
 @Directive({
   selector: '[txFilterField]',
   providers: [provideTxIconDefaults(FILTERS_PANEL_ICON_DEFAULTS), { provide: TxFluid, useFactory: () => new TxFluid() }],

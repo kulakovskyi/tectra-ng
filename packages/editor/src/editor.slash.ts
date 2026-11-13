@@ -1,5 +1,6 @@
 import { TxTranslations } from '@tectra-ng/core/config';
 
+/** A block the `/` menu can insert. */
 export type TxEditorSlashCommand =
   | 'paragraph'
   | 'heading1'
@@ -16,12 +17,19 @@ export type TxEditorSlashCommand =
   | 'image'
   | 'video';
 
+/** One entry of the `/` block menu. */
 export interface TxEditorSlashItem {
+  /** The block the entry inserts. */
   id: TxEditorSlashCommand;
+  /** Translation key of the entry name. */
   label: keyof TxTranslations;
+  /** Heading level that fills `{level}` in the label. */
   level?: number;
+  /** Icon name of the entry. */
   icon: string;
+  /** Extra words that find the entry when typed after `/`. */
   keywords: readonly string[];
+  /** Keyboard shortcut of the block, shown at the end of the row. */
   shortcut?: string;
 }
 

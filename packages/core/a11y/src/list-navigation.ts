@@ -21,6 +21,10 @@ function edge(start: number, delta: number, options: TxListNavigationOptions): n
   return options.isDisabled?.(start) ? step(start, delta, { ...options, loop: false }) : start;
 }
 
+/**
+ * Index a list moves to for a navigation key (arrows, `Home`, `End`, `PageUp`, `PageDown`), skipping disabled
+ * items; `null` for any other key or an empty list.
+ */
 export function nextListIndex(key: string, options: TxListNavigationOptions): number | null {
   const { count, current, pageSize = 10 } = options;
   if (!count) {

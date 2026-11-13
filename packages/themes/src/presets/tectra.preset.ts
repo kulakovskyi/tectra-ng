@@ -9,12 +9,17 @@ import { tectraStyle } from '../styles/tectra.style';
 import { TectraStyle } from '../types/style.interface';
 import { TectraPreset } from '../types/preset.interface';
 
+/** Options of `createTectraPreset`: the style, the primary color and the surface palette. */
 export interface TectraPresetOptions {
+  /** Style object such as `softStyle` (default `tectraStyle`); pass the object, not its name. */
   style?: TectraStyle;
+  /** Primary accent color, or `noir` for a color that follows the surface (default `blue`). */
   primary?: TectraPrimary;
+  /** Neutral surface palette (default `ink`). */
   surface?: TectraSurface;
 }
 
+/** Builds the `noir` accent scale from a surface scale, so the primary color is black and white. */
 /* @__NO_SIDE_EFFECTS__ */
 export function noirScale(surface: TectraSurfaceScale): TectraColorScale {
   return {
@@ -32,6 +37,7 @@ export function noirScale(surface: TectraSurfaceScale): TectraColorScale {
   };
 }
 
+/** Builds a preset from a style, a primary color and a surface palette. */
 /* @__NO_SIDE_EFFECTS__ */
 export function createTectraPreset({ style = tectraStyle, primary = 'blue', surface = 'ink' }: TectraPresetOptions = {}): TectraPreset {
   if (typeof style === 'string') {
@@ -50,7 +56,11 @@ export function createTectraPreset({ style = tectraStyle, primary = 'blue', surf
   };
 }
 
+/** Ready preset with the default style, blue primary and ink surface. */
 export const Tectra = createTectraPreset();
+/** Ready preset with the soft style, blue primary and ink surface. */
 export const Soft = createTectraPreset({ style: softStyle });
+/** Ready preset with the edge style, blue primary and ink surface. */
 export const Edge = createTectraPreset({ style: edgeStyle });
+/** Ready preset with the paper style, blue primary and ink surface. */
 export const Paper = createTectraPreset({ style: paperStyle });

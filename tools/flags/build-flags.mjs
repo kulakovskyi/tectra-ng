@@ -35,16 +35,21 @@ for (const [shape, folder] of Object.entries(SETS)) {
 const loaders = (shape) => codes.map((code) => `  ${JSON.stringify(code)}: () => import('./${shape}/${code}'),`).join('\n');
 writeFileSync(
   join(outDir, 'flag-loaders.ts'),
-  `export const TX_FLAG_CODES = [\n${codes.map((code) => `  ${JSON.stringify(code)},`).join('\n')}\n] as const;
+  `/** Codes of every flag in the set, lower case: ISO 3166-1 alpha-2 country codes, regions such as \`gb-sct\` and groups such as \`eu\`. */
+export const TX_FLAG_CODES = [\n${codes.map((code) => `  ${JSON.stringify(code)},`).join('\n')}\n] as const;
 
+/** Code of a country flag in the set, e.g. \`'ua'\`. */
 export type TxFlagCode = (typeof TX_FLAG_CODES)[number];
 
+/** Loads the SVG of one flag as its own lazy chunk. */
 export type TxFlagModule = () => Promise<{ default: string }>;
 
+/** Loaders of the rectangle flags by code. */
 export const TX_FLAG_RECTANGLES: Record<TxFlagCode, TxFlagModule> = {
 ${loaders('rectangle')}
 };
 
+/** Loaders of the round flags by code. */
 export const TX_FLAG_CIRCLES: Record<TxFlagCode, TxFlagModule> = {
 ${loaders('circle')}
 };

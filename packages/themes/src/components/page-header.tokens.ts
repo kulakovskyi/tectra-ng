@@ -1,5 +1,9 @@
 import { tokenRef } from './token-helpers';
 
+/**
+ * Design tokens of `tx-page-header`: colors, sizes and spacing of its root, heading, title, subtitle, actions
+ * and other parts.
+ */
 export const pageHeaderTokens = {
   root: {
     gap: '14px',
@@ -30,4 +34,5 @@ export const pageHeaderTokens = {
   },
 };
 
+/** Type of `pageHeaderTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraPageHeaderTokens = typeof pageHeaderTokens;

@@ -1,5 +1,6 @@
 import { joinCss, mix, tokenRef } from './token-helpers';
 
+/** Design tokens of `tx-switch-theme`: colors, sizes and spacing of its root and icon. */
 export const switchThemeTokens = {
   root: {
     size: '37px',
@@ -21,4 +22,5 @@ export const switchThemeTokens = {
   },
 };
 
+/** Type of `switchThemeTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraSwitchThemeTokens = typeof switchThemeTokens;

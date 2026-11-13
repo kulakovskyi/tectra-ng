@@ -1,5 +1,9 @@
 import { joinCss, mix, tokenRef } from './token-helpers';
 
+/**
+ * Design tokens of `tx-command-palette`: colors, sizes and spacing of its trigger, overlay, panel, search,
+ * results and other parts.
+ */
 export const commandPaletteTokens = {
   trigger: {
     height: '37px',
@@ -102,4 +106,5 @@ export const commandPaletteTokens = {
   },
 };
 
+/** Type of `commandPaletteTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraCommandPaletteTokens = typeof commandPaletteTokens;

@@ -2,13 +2,22 @@ import { TxCodeSegment, TxCodeToken, guideLevels, highlightCode, lineIndent, tok
 import { detectTabSize } from '../engine/commands';
 import { TxCodeDiffChange, TxTextRange, rangesByLine, splitDiffLines } from './diff';
 
+/**
+ * Kind of a diff row: unchanged, inserted, removed, or an empty `filler` that keeps the two sides of a split view aligned.
+ */
 export type TxDiffRowKind = 'equal' | 'inserted' | 'removed' | 'filler';
 
+/** One rendered line of `tx-code-diff`. */
 export interface TxDiffRow {
+  /** How the row differs between the versions. */
   readonly kind: TxDiffRowKind;
+  /** Line number shown in the gutter; `null` for a filler row. */
   readonly number: number | null;
+  /** The text of the line cut into highlighted pieces. */
   readonly segments: readonly TxCodeSegment[];
+  /** Indent as a CSS length (`4ch`) used to align wrapped lines; `null` for an unindented or blank line. */
   readonly indent: string | null;
+  /** Number of indent guides to draw on the line. */
   readonly guides: number;
 }
 

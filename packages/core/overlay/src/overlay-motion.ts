@@ -29,6 +29,7 @@ function pointAlong(start: number, size: number, target: number | undefined): st
   return `${Math.min(Math.max(target - start, 0), size)}px`;
 }
 
+/** CSS `transform-origin` for the pop animation: the edge of the overlay facing its side, at the anchor center. */
 export function txPopOrigin(element: Element, side: TxPlacementSide, anchor?: Element): string {
   const box = element.getBoundingClientRect();
   const target = anchor?.getBoundingClientRect();
@@ -49,6 +50,7 @@ function popFrames(element: HTMLElement, placement: TxPlacement, anchor: Element
   ];
 }
 
+/** Plays the open animation of an overlay; does nothing under reduced motion. */
 export function txAnimateEnter(element: Element, placement: TxPlacement, motion: TxOverlayMotion = 'slide', anchor?: Element): void {
   if (!canAnimate(element)) {
     return;
@@ -60,6 +62,7 @@ export function txAnimateEnter(element: Element, placement: TxPlacement, motion:
   element.animate(slideFrames(element, placement), { duration: 160, easing: 'cubic-bezier(0.2, 0, 0, 1)' });
 }
 
+/** Plays the close animation of an overlay and resolves when it ends; resolves at once under reduced motion. */
 export function txAnimateLeave(element: Element, placement: TxPlacement, motion: TxOverlayMotion = 'slide', anchor?: Element): Promise<void> {
   if (!canAnimate(element)) {
     return Promise.resolve();

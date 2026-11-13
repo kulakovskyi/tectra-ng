@@ -1,5 +1,6 @@
 import { lightDark, tokenRef } from './token-helpers';
 
+/** Design tokens of `tx-list-input`: colors, sizes and spacing of its root, field, footer, hint and unrecognized. */
 export const listInputTokens = {
   root: {
     background: tokenRef('surface-card'),
@@ -45,4 +46,5 @@ export const listInputTokens = {
   },
 };
 
+/** Type of `listInputTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraListInputTokens = typeof listInputTokens;

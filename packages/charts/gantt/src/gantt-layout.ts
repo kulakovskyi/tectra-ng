@@ -1,12 +1,15 @@
 import { dateFormat, seriesColor, toTime } from '@tectra-ng/charts/core';
 import { TxGanttDate, TxGanttFold, TxGanttLayout, TxGanttRow, TxGanttSpan, TxGanttTask, TxGanttTick, TxGanttZoom } from './gantt-chart.types';
 
+/** Length of a day in ms. */
 export const TX_GANTT_DAY = 86_400_000;
 
+/** Width of one day in px on each zoom level. */
 export const TX_GANTT_DAY_WIDTH: Record<TxGanttZoom, number> = { day: 40, week: 16, month: 5, quarter: 2 };
 
 const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
 
+/** Midnight of the local day that contains the time, in ms. */
 export function startOfDay(time: number): number {
   const date = new Date(time);
   return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
@@ -21,12 +24,18 @@ function daysBetween(from: number, to: number): number {
   return Math.round((startOfDay(to) - startOfDay(from)) / TX_GANTT_DAY) + ((to - startOfDay(to)) - (from - startOfDay(from))) / TX_GANTT_DAY;
 }
 
+/**
+ * Converts a Gantt date to ms; `null` when it is empty or invalid. With `inclusiveEnd` a date-only string points to the end of that day.
+ */
 export function ganttTime(value: TxGanttDate | null | undefined, inclusiveEnd = false): number | null {
   const time = toTime(value ?? null);
   if (time === null) return null;
   return inclusiveEnd && typeof value === 'string' && DATE_ONLY.test(value) ? addDays(time, 1) : time;
 }
 
+/**
+ * Start and end of a task in ms; a milestone has equal ends and a task without `end` lasts one day. `null` when the start is invalid.
+ */
 export function ganttTaskRange(task: TxGanttTask): [number, number] | null {
   const start = ganttTime(task.start);
   if (start === null) return null;
@@ -35,6 +44,9 @@ export function ganttTaskRange(task: TxGanttTask): [number, number] | null {
   return [start, Math.max(start, end)];
 }
 
+/**
+ * Range of the scale in ms: from `from` or the earliest task to `to` or the latest one, widened by `padding` days on both sides.
+ */
 export function ganttRange(tasks: readonly TxGanttTask[], padding: number, from?: TxGanttDate | null, to?: TxGanttDate | null): [number, number] {
   const ranges = tasks.map(ganttTaskRange).filter((range): range is [number, number] => range !== null);
   const min = ganttTime(from ?? null) ?? (ranges.length ? Math.min(...ranges.map((range) => range[0])) : startOfDay(Date.now()));
@@ -43,10 +55,14 @@ export function ganttRange(tasks: readonly TxGanttTask[], padding: number, from?
   return [addDays(startOfDay(min), -padding), addDays(lastDay, padding)];
 }
 
+/** Horizontal position in px of a time on the scale that starts at `rangeStart`. */
 export function ganttX(time: number, rangeStart: number, dayWidth: number): number {
   return daysBetween(rangeStart, time) * dayWidth;
 }
 
+/**
+ * Cells of the two header lines of the scale for a zoom level: months over days or weeks, years over months or quarters.
+ */
 export function ganttTicks(range: [number, number], zoom: TxGanttZoom, intl: string): { top: TxGanttTick[]; bottom: TxGanttTick[] } {
   const width = TX_GANTT_DAY_WIDTH[zoom];
   const [start, end] = range;
@@ -114,6 +130,9 @@ export function ganttTicks(range: [number, number], zoom: TxGanttZoom, intl: str
   return { top: years(), bottom };
 }
 
+/**
+ * Builds the rows for a layout: a row per task and a header per group (`tasks`), or a lane per group (`timeline`).
+ */
 export function ganttRows(
   tasks: readonly TxGanttTask[],
   layout: TxGanttLayout,
@@ -160,6 +179,7 @@ export function ganttRows(
   return rows;
 }
 
+/** Gathers rows into folds, each a group header with the rows under it. */
 export function ganttFolds(rows: readonly TxGanttRow[]): TxGanttFold[] {
   const folds: TxGanttFold[] = [];
   for (const row of rows) {
@@ -171,6 +191,7 @@ export function ganttFolds(rows: readonly TxGanttRow[]): TxGanttFold[] {
   return folds;
 }
 
+/** Number of days between two times, never negative. */
 export function ganttDays(start: number, end: number): number {
   return Math.max(0, Math.round(daysBetween(start, end)));
 }

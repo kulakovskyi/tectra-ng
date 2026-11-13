@@ -2,6 +2,10 @@ import { lightDark, tokenRef } from './token-helpers';
 
 const focusRing = { width: '2px', style: 'solid', color: tokenRef('focus-ring-color'), offset: '2px', shadow: 'none' };
 
+/**
+ * Design tokens of `tx-datepicker`: colors, sizes and spacing of its root, panel, header, title, dropdown and
+ * other parts.
+ */
 export const datePickerTokens = {
   root: {
     transitionDuration: tokenRef('motion-duration'),
@@ -133,4 +137,5 @@ export const datePickerTokens = {
   },
 };
 
+/** Type of `datePickerTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraDatePickerTokens = typeof datePickerTokens;

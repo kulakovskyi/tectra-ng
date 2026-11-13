@@ -1,5 +1,6 @@
 import { mix, tokenRef } from './token-helpers';
 
+/** Design tokens of `tx-topbar-preferences`: colors, sizes and spacing of its root, raised, divider and stacked. */
 export const topbarPreferencesTokens = {
   root: {
     gap: '3.5px',
@@ -33,4 +34,8 @@ export const topbarPreferencesTokens = {
   },
 };
 
+/**
+ * Type of `topbarPreferencesTokens`: the shape of the component tokens that presets and `dt` overrides can
+ * change.
+ */
 export type TectraTopbarPreferencesTokens = typeof topbarPreferencesTokens;

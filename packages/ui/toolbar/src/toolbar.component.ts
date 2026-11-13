@@ -5,15 +5,19 @@ import { TectraDeepPartial, TectraToolbarTokens, toStyleObject } from '@tectra-n
 import { TxToolbarOrientation, TxToolbarPart } from './toolbar.types';
 import { TOOLBAR_THEME } from './toolbar.theme';
 
+/** Marks content of `tx-toolbar` that goes to the start group. */
 @Directive({ selector: '[txToolbarStart]' })
 export class TxToolbarStart {}
 
+/** Marks content of `tx-toolbar` that goes to the centre group. */
 @Directive({ selector: '[txToolbarCenter]' })
 export class TxToolbarCenter {}
 
+/** Marks content of `tx-toolbar` that goes to the end group. */
 @Directive({ selector: '[txToolbarEnd]' })
 export class TxToolbarEnd {}
 
+/** A bar that groups actions and controls at the start, centre and end; wraps when space runs out. */
 @Component({
   selector: 'tx-toolbar',
   template: `

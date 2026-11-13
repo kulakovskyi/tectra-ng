@@ -1,14 +1,20 @@
 import { DOMOutputSpec, Mark, MarkSpec, Node as ProseNode, NodeSpec, Schema } from 'prosemirror-model';
 
+/** Width of one indent level, in `em`. */
 export const INDENT_STEP_EM = 3;
+/** Deepest indent level of a block. */
 export const MAX_INDENT = 8;
 const ALIGNMENTS = ['left', 'center', 'right', 'justify'];
 const SAFE_LINK = /^(https?:|mailto:|tel:|sms:|#|\/(?!\/))/i;
 const SAFE_IMAGE = /^(https?:|data:image\/(png|jpe?g|gif|webp|avif|bmp|svg\+xml);base64,|blob:|\/(?!\/))/i;
 
+/** Block-level formatting shared by paragraphs and headings: alignment, indent and direction. */
 export interface TxBlockAttrs {
+  /** Text alignment: `center`, `right` or `justify`; `null` for the default left. */
   align: string | null;
+  /** Indent level, from 0 to `MAX_INDENT`. */
   indent: number;
+  /** `rtl` for right-to-left text; `null` for the default direction. */
   dir: string | null;
 }
 
@@ -73,6 +79,9 @@ function youtubeId(url: URL): string | null {
   return first === 'embed' || first === 'shorts' ? (second ?? null) : null;
 }
 
+/**
+ * Turns a YouTube or Vimeo link into its embed address; any other `https` link is kept, anything else gives `null`.
+ */
 export function toVideoEmbed(value: string): string | null {
   const url = value.trim();
   const parsed = parseVideoUrl(url);
@@ -100,6 +109,7 @@ function styleAttrs(element: HTMLElement): Record<string, string | null> | null 
   return Object.values(attrs).some(Boolean) ? attrs : null;
 }
 
+/** Tones a callout block can take. */
 export const CALLOUT_TONES = ['info', 'success', 'warn', 'danger'];
 
 function readColwidth(element: HTMLElement): number | null {
@@ -389,6 +399,8 @@ const marks: Record<string, MarkSpec> = {
   },
 };
 
+/** Document model of the editor: its blocks, such as lists, tables, callouts and mentions, and its marks. */
 export const txEditorSchema = new Schema({ nodes, marks });
 
+/** Type of `txEditorSchema`. */
 export type TxEditorSchema = typeof txEditorSchema;

@@ -1,5 +1,9 @@
 import { lightDark, tokenRef } from './token-helpers';
 
+/**
+ * Design tokens of `tx-dialog` and drawers: colors, sizes and spacing of its root, mask, header, title,
+ * subtitle and other parts, plus the `sm`, `md`, `lg` and `xl` sizes.
+ */
 export const dialogTokens = {
   root: {
     background: tokenRef('surface-overlay'),
@@ -59,4 +63,5 @@ export const dialogTokens = {
   },
 };
 
+/** Type of `dialogTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraDialogTokens = typeof dialogTokens;

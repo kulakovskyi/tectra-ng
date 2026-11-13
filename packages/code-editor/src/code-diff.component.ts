@@ -36,6 +36,7 @@ import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { CODE_EDITOR_ICON_DEFAULTS } from './code-editor.icons';
 import { CODE_EDITOR_THEME } from './code-editor.theme';
 
+/** Design tokens of `tx-code-diff` for `dt`: the `codeDiff` group and `syntax` colours. */
 export type TxCodeDiffTokens = TectraCodeDiffTokens & { syntax: TectraCodeSyntaxTokens };
 
 const RECOMPUTE_DELAY = 150;

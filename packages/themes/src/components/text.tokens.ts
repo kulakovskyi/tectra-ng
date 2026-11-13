@@ -1,5 +1,6 @@
 import { fade, lightDark, tokenRef } from './token-helpers';
 
+/** Design tokens of `tx-highlight-text`: colors, sizes and spacing of its mark. */
 export const highlightTextTokens = {
   mark: {
     background: lightDark(tokenRef('yellow-200'), fade(tokenRef('yellow-400'), '72%')),
@@ -10,6 +11,7 @@ export const highlightTextTokens = {
   },
 };
 
+/** Design tokens of `tx-amount`: colors, sizes and spacing of its root and currency. */
 export const amountTokens = {
   root: {
     color: tokenRef('text-primary'),
@@ -27,6 +29,7 @@ export const amountTokens = {
   },
 };
 
+/** Design tokens of `tx-status-icon`: its colors, sizes and spacing, plus the severity variants. */
 export const statusIconTokens = {
   root: {
     size: '16px',
@@ -40,6 +43,7 @@ export const statusIconTokens = {
   secondary: { color: tokenRef('text-muted') },
 };
 
+/** Design tokens of `tx-link`: its colors, sizes and spacing. */
 export const linkTokens = {
   root: {
     color: tokenRef('primary-soft-text'),
@@ -57,6 +61,7 @@ export const linkTokens = {
   },
 };
 
+/** Design tokens of `tx-icon-link`: its colors, sizes and spacing. */
 export const iconLinkTokens = {
   root: {
     color: tokenRef('text-muted'),
@@ -75,9 +80,13 @@ export const iconLinkTokens = {
   },
 };
 
+/** Type of `highlightTextTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraHighlightTextTokens = typeof highlightTextTokens;
+/** Type of `amountTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraAmountTokens = typeof amountTokens;
+/** Type of `statusIconTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraStatusIconTokens = typeof statusIconTokens;
+/** Design tokens of `tx-truncate-text`: its colors, sizes and spacing. */
 export const truncateTextTokens = {
   root: {
     gap: '8px',
@@ -92,6 +101,9 @@ export const truncateTextTokens = {
   },
 };
 
+/** Type of `linkTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraLinkTokens = typeof linkTokens;
+/** Type of `truncateTextTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraTruncateTextTokens = typeof truncateTextTokens;
+/** Type of `iconLinkTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraIconLinkTokens = typeof iconLinkTokens;

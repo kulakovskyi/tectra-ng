@@ -1,6 +1,9 @@
 import { TxChartValueFormatter } from '@tectra-ng/charts/core';
 import { TxSegmentedBarItem, TxSegmentedBarSegment } from './segmented-bar.types';
 
+/**
+ * Turns items into segments with shares and formatted value and percent texts; `percentFormat` defaults to `format`.
+ */
 export function segmentedBarSegments(
   items: readonly TxSegmentedBarItem[] | null | undefined,
   format: TxChartValueFormatter,

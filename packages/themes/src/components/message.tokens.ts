@@ -8,6 +8,10 @@ function tone(palette: string) {
   };
 }
 
+/**
+ * Design tokens of `tx-message`: colors, sizes and spacing of its root, icon and close button, plus the `sm`
+ * and `lg` sizes and the severity variants.
+ */
 export const messageTokens = {
   root: {
     borderRadius: tokenRef('radius-lg'),
@@ -52,6 +56,10 @@ export const messageTokens = {
   contrast: { tone: tokenRef('text-primary'), text: tokenRef('text-primary') },
 };
 
+/**
+ * Design tokens of `tx-field-hint` and `tx-field-error`: colors, sizes and spacing of its root, hint and
+ * error, plus the severity variants.
+ */
 export const fieldMessageTokens = {
   root: {
     fontSize: tokenRef('font-size-sm'),
@@ -66,5 +74,7 @@ export const fieldMessageTokens = {
   error: { color: lightDark(tokenRef('red-700'), tokenRef('red-400')) },
 };
 
+/** Type of `messageTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraMessageTokens = typeof messageTokens;
+/** Type of `fieldMessageTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraFieldMessageTokens = typeof fieldMessageTokens;

@@ -1,5 +1,6 @@
 import { lightDark, tokenRef } from './token-helpers';
 
+/** Design tokens of `tx-confetti`: colors, sizes and spacing of its piece, colors and motion. */
 export const confettiTokens = {
   piece: {
     size: '10.5px',
@@ -19,4 +20,5 @@ export const confettiTokens = {
   },
 };
 
+/** Type of `confettiTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraConfettiTokens = typeof confettiTokens;

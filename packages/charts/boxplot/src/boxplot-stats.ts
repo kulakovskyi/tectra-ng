@@ -1,5 +1,8 @@
 import { TxBoxStats } from './boxplot-chart.types';
 
+/**
+ * Value at fraction `p` (0 to 1) of an ascending list, interpolated between neighbours; `NaN` for an empty list.
+ */
 export function quantile(sorted: readonly number[], p: number): number {
   if (!sorted.length) return NaN;
   const at = (sorted.length - 1) * p;
@@ -8,6 +11,9 @@ export function quantile(sorted: readonly number[], p: number): number {
   return sorted[low] + (sorted[high] - sorted[low]) * (at - low);
 }
 
+/**
+ * Computes the five numbers and the outliers from raw values: whiskers reach the last values within 1.5 times the interquartile range; `null` when no value is finite.
+ */
 export function boxStats(values: readonly number[]): TxBoxStats | null {
   const sorted = values.filter((value) => Number.isFinite(value)).sort((a, b) => a - b);
   if (!sorted.length) return null;
@@ -26,6 +32,9 @@ export function boxStats(values: readonly number[]): TxBoxStats | null {
   };
 }
 
+/**
+ * Turns a series entry (raw values or ready numbers) into `TxBoxStats`; `null` when it is empty or has a non-finite number.
+ */
 export function toBoxStats(entry: TxBoxStats | readonly number[] | null | undefined): TxBoxStats | null {
   if (!entry) return null;
   if (Array.isArray(entry)) return boxStats(entry as readonly number[]);

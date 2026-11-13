@@ -41,11 +41,13 @@ export function parsePrice(value: unknown): number | null {
   return Number(value.trim().replace(',', '.'));
 }
 
+/** A fixed number of digits, such as a code from a message (default 6); error `invalidCodeFormat`. */
 function numericCode(length = 6): ValidatorFn {
   const pattern = new RegExp(`^\\d{${length}}$`);
   return (control) => (isEmpty(control.value) || pattern.test(String(control.value)) ? null : { invalidCodeFormat: { length } });
 }
 
+/** A real calendar date as `YYYY-MM-DD`; error `invalidDate`. */
 function isoDate(): ValidatorFn {
   return (control) => {
     const value = control.value;
@@ -63,6 +65,7 @@ function isoDate(): ValidatorFn {
   };
 }
 
+/** A date and time not in the past, compared to the minute; errors `invalidDate`, `pastDate`. */
 function futureDate(): ValidatorFn {
   return (control) => {
     if (isEmpty(control.value)) {
@@ -79,6 +82,10 @@ function futureDate(): ValidatorFn {
   };
 }
 
+/**
+ * A web address with no spaces; `https` only unless `https: false`, optionally for one host or its
+ * subdomains; error `invalidUrl`.
+ */
 function url(options: TxUrlValidatorOptions = {}): ValidatorFn {
   const { https = true, host } = options;
   return (control) => {
@@ -97,6 +104,10 @@ function url(options: TxUrlValidatorOptions = {}): ValidatorFn {
   };
 }
 
+/**
+ * Checks the password length and the kinds of characters it needs; error `weakPassword` lists what is
+ * missing.
+ */
 function strongPassword(options: TxStrongPasswordOptions = {}): ValidatorFn {
   const { minLength = 6, upper = true, lower = true, digit = false, symbol = true } = options;
   return (control) => {
@@ -116,6 +127,10 @@ function strongPassword(options: TxStrongPasswordOptions = {}): ValidatorFn {
   };
 }
 
+/**
+ * For a group: the confirm field must equal another field; sets the error on the confirm field too
+ * (default key `mismatch`).
+ */
 function matchFields(field: string, confirmField: string, errorKey = 'mismatch'): ValidatorFn {
   return (group) => {
     const confirm = group.get(confirmField);
@@ -134,6 +149,7 @@ function matchFields(field: string, confirmField: string, errorKey = 'mismatch')
   };
 }
 
+/** For a group: two enabled fields must differ; error `distinctControls`. */
 function distinctFields(first: string, second: string): ValidatorFn {
   return (group) => {
     const left = group.get(first);
@@ -145,6 +161,7 @@ function distinctFields(first: string, second: string): ValidatorFn {
   };
 }
 
+/** An IPv4 address, optionally with a CIDR suffix or as IPv6; error `invalidIp`. */
 function ip(options: TxIpValidatorOptions = {}): ValidatorFn {
   const pattern = options.cidr ? IPV4_CIDR : IPV4;
   return (control) => {
@@ -156,10 +173,12 @@ function ip(options: TxIpValidatorOptions = {}): ValidatorFn {
   };
 }
 
+/** A domain name such as `example.com`; error `invalidDomain`. */
 function domain(): ValidatorFn {
   return (control) => (isEmpty(control.value) || DOMAIN.test(String(control.value)) ? null : { invalidDomain: true });
 }
 
+/** The value must not be in the list of taken values, which can be a function; error `duplicate`. */
 function duplicate(taken: readonly string[] | (() => readonly string[]), options: TxDuplicateValidatorOptions = {}): ValidatorFn {
   const { message, caseSensitive = false, trim = true } = options;
   const normalize = (raw: unknown): string => {
@@ -178,10 +197,12 @@ function duplicate(taken: readonly string[] | (() => readonly string[]), options
   };
 }
 
+/** A time as `HH:mm` on the 24-hour clock; error `invalidTime`. */
 function time24(): ValidatorFn {
   return (control) => (isEmpty(control.value) || TIME_24.test(String(control.value)) ? null : { invalidTime: true });
 }
 
+/** Rejects control characters and the angle brackets `<` and `>`; error `pattern`. */
 function noUnsafeChars(): ValidatorFn {
   return (control) => {
     const value = control.value;
@@ -198,6 +219,7 @@ function noUnsafeChars(): ValidatorFn {
   };
 }
 
+/** A JSON text whose value is an object, not an array or a primitive; error `invalidJson`. */
 function jsonObject(): ValidatorFn {
   return (control) => {
     const value = text(control.value);
@@ -213,6 +235,7 @@ function jsonObject(): ValidatorFn {
   };
 }
 
+/** The value must equal the expected text, as in a delete confirmation; error `valueMismatch`. */
 function exactValue(expected: string, message?: string): ValidatorFn {
   return (control) => {
     const value = text(control.value);
@@ -223,6 +246,7 @@ function exactValue(expected: string, message?: string): ValidatorFn {
   };
 }
 
+/** A simple class or id selector such as `.title` or `#main`; error `pattern`. */
 function cssSelector(options: TxCssSelectorValidatorOptions = {}): ValidatorFn {
   const { allowClass = true, allowId = true } = options;
   const prefixes = `${allowClass ? '.' : ''}${allowId ? '#' : ''}`;
@@ -237,6 +261,10 @@ function cssSelector(options: TxCssSelectorValidatorOptions = {}): ValidatorFn {
   };
 }
 
+/**
+ * The control is required while a sibling control's value passes the check (default: it is truthy);
+ * error `required`.
+ */
 function requiredWhen(field: string, isRequired: (value: unknown) => boolean = Boolean): ValidatorFn {
   return (control) => {
     const sibling = control.parent?.get(field);
@@ -247,6 +275,7 @@ function requiredWhen(field: string, isRequired: (value: unknown) => boolean = B
   };
 }
 
+/** For a form array: the sum of one field over its items must not exceed a maximum; error `sumExceeded`. */
 function arraySumMax(field: string, max: number): ValidatorFn {
   return (control) => {
     if (!(control instanceof FormArray)) {
@@ -257,6 +286,7 @@ function arraySumMax(field: string, max: number): ValidatorFn {
   };
 }
 
+/** A positive number with a point or comma as the decimal sign; errors `priceFormat`, `pricePositive`. */
 function price(): ValidatorFn {
   return (control): ValidationErrors | null => {
     if (isEmpty(control.value)) {

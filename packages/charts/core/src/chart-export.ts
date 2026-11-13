@@ -1,12 +1,18 @@
 import { TxChartLegendItem, TxChartTable } from './chart.types';
 import { textWidth } from './format';
 
+/** File format of a chart export. */
 export type TxChartExportFormat = 'svg' | 'png' | 'csv';
 
+/** Options of the exported SVG. */
 export interface TxChartSvgOptions {
+  /** Legend items drawn above the chart; hidden items are left out. */
   legend?: readonly TxChartLegendItem[];
+  /** Background colour of the image; transparent when not set. */
   background?: string;
+  /** Colour of the legend text (default `currentColor`). */
   textColor?: string;
+  /** Font family of the image (default `sans-serif`). */
   fontFamily?: string;
 }
 
@@ -48,11 +54,19 @@ function escapeCsv(value: string): string {
   return /[",\n\r]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value;
 }
 
+/**
+ * CSV text of a chart table with a byte order mark, so spreadsheets read it as UTF-8; `categoryLabel`
+ * heads the first column.
+ */
 export function chartCsv(table: TxChartTable, categoryLabel = ''): string {
   const rows = [[categoryLabel, ...table.columns.map((column) => column.label)], ...table.rows.map((row) => [row.label, ...row.cells])];
   return `${BOM}${rows.map((row) => row.map((cell) => escapeCsv(cell ?? '')).join(',')).join('\r\n')}`;
 }
 
+/**
+ * File name for an export: the chart name as a safe slug (up to 60 characters) with the format as
+ * extension.
+ */
 export function chartFileName(name: string, format: TxChartExportFormat): string {
   const base =
     name
@@ -85,6 +99,7 @@ function inlineStyles(source: Element, target: Element, view: Window): void {
   });
 }
 
+/** Standalone SVG markup of a chart with computed styles inlined and the legend drawn above it. */
 export function chartSvgString(svg: SVGSVGElement, options: TxChartSvgOptions = {}): string {
   const document = svg.ownerDocument;
   const view = document.defaultView;
@@ -136,11 +151,13 @@ export function chartSvgString(svg: SVGSVGElement, options: TxChartSvgOptions = 
   return Serializer ? new Serializer().serializeToString(root) : root.outerHTML;
 }
 
+/** Width and height read from the `viewBox` of exported SVG markup. */
 export function chartSvgSize(markup: string): { width: number; height: number } {
   const match = /viewBox="0 0 ([\d.]+) ([\d.]+)"/.exec(markup);
   return { width: Number(match?.[1] ?? 0), height: Number(match?.[2] ?? 0) };
 }
 
+/** Renders exported SVG markup to a PNG blob; `scale` is the pixel ratio (default 2). */
 export function chartPngBlob(document: Document, markup: string, scale = 2): Promise<Blob> {
   const view = document.defaultView;
   const { width, height } = chartSvgSize(markup);
@@ -168,6 +185,7 @@ export function chartPngBlob(document: Document, markup: string, scale = 2): Pro
   });
 }
 
+/** Saves a blob as a file through a temporary download link. */
 export function downloadChartFile(document: Document, data: Blob, filename: string): void {
   const view = document.defaultView;
   if (!view) return;

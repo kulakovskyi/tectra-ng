@@ -1,5 +1,8 @@
 import { TxWaterfallItem, TxWaterfallStep } from './waterfall-chart.types';
 
+/**
+ * Turns items into steps with a running total; a total item shows the sum so far and missing values count as zero.
+ */
 export function waterfallSteps(items: readonly TxWaterfallItem[]): TxWaterfallStep[] {
   let running = 0;
   return items.map((item, index) => {
@@ -13,6 +16,7 @@ export function waterfallSteps(items: readonly TxWaterfallItem[]): TxWaterfallSt
   });
 }
 
+/** Smallest and largest running total, always including 0. */
 export function waterfallExtent(steps: readonly TxWaterfallStep[]): [number, number] {
   let min = 0;
   let max = 0;

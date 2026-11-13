@@ -56,6 +56,10 @@ export class TxTableEmpty {
   readonly templateRef = inject<TemplateRef<TxTableEmptyContext>>(TemplateRef);
 }
 
+/**
+ * A row action button marked with `*txTableAction`; the table lists it in the settings and the right-
+ * click menu.
+ */
 @Directive({ selector: '[txTableAction]' })
 export class TxTableAction {
   readonly templateRef = inject<TemplateRef<unknown>>(TemplateRef);

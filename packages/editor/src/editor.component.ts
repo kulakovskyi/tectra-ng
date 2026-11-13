@@ -84,29 +84,47 @@ import { toVideoEmbed, txEditorSchema as schema } from './engine/schema';
 import { EDITOR_ICON_DEFAULTS } from './editor.icons';
 import { EDITOR_THEME } from './editor.theme';
 
+/** One row of the suggestion list under the caret, for a mention, a block or an emoji. */
 export interface TxEditorSuggestionOption {
+  /** Identifier of the row. */
   id: string;
+  /** Main text of the row. */
   label: string;
+  /** Second line under the label. */
   description?: string;
+  /** Image URL of a round picture before the label. */
   avatar?: string;
+  /** Icon name before the label. */
   icon?: string;
+  /** Character shown before the label, used for emoji. */
   glyph?: string;
+  /** Keyboard shortcut shown at the end of the row. */
   shortcut?: string;
+  /** The mention item, slash item or emoji behind the row, handed back when it is picked. */
   value: TxEditorMentionItem | TxEditorSlashItem | TxEditorEmoji;
 }
 
+/** A toolbar tool with its position among all tools, used for keyboard navigation. */
 interface TxToolView {
+  /** The tool. */
   tool: TxEditorTool;
+  /** Position of the tool in the toolbar, counted across groups. */
   index: number;
 }
 
+/** Position and size of the box an overlay is anchored to, in pixels. */
 interface TxAnchorBox {
+  /** Distance from the left edge. */
   left: number;
+  /** Distance from the top edge. */
   top: number;
+  /** Width of the box. */
   width: number;
+  /** Height of the box. */
   height: number;
 }
 
+/** The popovers of the toolbar: link, text colour, highlight and video address. */
 type TxEditorPopover = 'link' | 'textColor' | 'highlight' | 'video';
 
 const NO_BOX: TxAnchorBox = { left: 0, top: 0, width: 0, height: 0 };

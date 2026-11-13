@@ -8,6 +8,7 @@ import { CONFIRM_ICON_DEFAULTS } from './confirm.icons';
 import { injectTokens } from '@tectra-ng/core/config';
 import { CONFIRM_THEME } from './confirm.theme';
 
+/** Content of the confirmation question opened by `TxConfirmService.dialog()`. */
 @Component({
   selector: 'tx-confirm-dialog',
   imports: [TxDialogHeader, TxDialogContent, TxDialogFooter, TxButton, TxIcon],

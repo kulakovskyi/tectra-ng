@@ -1,5 +1,9 @@
 import { joinCss, lightDark, tokenRef } from './token-helpers';
 
+/**
+ * Design tokens of `tx-tree`: colors, sizes and spacing of its root, node, node icon, node label, node toggle
+ * button and other parts.
+ */
 export const treeTokens = {
   root: {
     background: tokenRef('surface-card'),
@@ -58,8 +62,10 @@ export const treeTokens = {
   },
 };
 
+/** Type of `treeTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraTreeTokens = typeof treeTokens;
 
+/** Design tokens of `tx-tree-table`: colors, sizes and spacing of its node. */
 export const treeTableTokens = {
   node: {
     indent: '16px',
@@ -67,4 +73,5 @@ export const treeTableTokens = {
   },
 };
 
+/** Type of `treeTableTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraTreeTableTokens = typeof treeTableTokens;

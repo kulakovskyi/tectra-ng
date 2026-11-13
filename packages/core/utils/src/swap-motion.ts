@@ -1,15 +1,22 @@
+/** Animation used when one view swaps for another. */
 export type TxSwapEffect = 'slide' | 'fade' | 'zoom' | 'blur' | 'flip' | 'none';
 
+/** Direction of a swap animation: horizontal (`x`) or vertical (`y`). */
 export type TxSwapAxis = 'x' | 'y';
 
+/** Keyframes of a swap animation for the entering and the leaving view. */
 export interface TxSwapMotion {
+  /** Keyframes of the entering view. */
   enter: Keyframe[];
+  /** Keyframes of the leaving view. */
   leave: Keyframe[];
+  /** Whether the leaving view must finish before the entering one starts. */
   sequential: boolean;
 }
 
 const NONE = 'translate3d(0, 0, 0)';
 
+/** Keyframes of a swap effect; `direction` is `1` forward and `-1` back, `null` for `none`. */
 export function txSwapMotion(effect: TxSwapEffect, direction: 1 | -1, axis: TxSwapAxis = 'x'): TxSwapMotion | null {
   const shift = (amount: number) => (axis === 'x' ? `translate3d(${amount}%, 0, 0)` : `translate3d(0, ${amount}%, 0)`);
   const turn = (degrees: number) => `perspective(1200px) ${axis === 'x' ? 'rotateY' : 'rotateX'}(${axis === 'x' ? degrees : -degrees}deg)`;
@@ -63,6 +70,10 @@ export function txSwapMotion(effect: TxSwapEffect, direction: 1 | -1, axis: TxSw
   }
 }
 
+/**
+ * Tells whether an element can be animated: it supports the Web Animations API and the user has not asked for
+ * reduced motion.
+ */
 export function txCanAnimate(element: Element | null | undefined): element is HTMLElement {
   if (!element || typeof (element as HTMLElement).animate !== 'function') {
     return false;
@@ -70,6 +81,7 @@ export function txCanAnimate(element: Element | null | undefined): element is HT
   return !element.ownerDocument.defaultView?.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 }
 
+/** Reads a CSS time custom property of an element in ms, or returns the fallback when it is not a number. */
 export function txCssTime(element: Element, property: string, fallback: number): number {
   const value = element.ownerDocument.defaultView?.getComputedStyle(element).getPropertyValue(property).trim() ?? '';
   const amount = parseFloat(value);

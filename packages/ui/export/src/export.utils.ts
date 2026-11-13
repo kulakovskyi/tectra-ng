@@ -4,6 +4,7 @@ const FORMULA = /^[=+\-@\t\r]/;
 const NUMBER = /^[+-]?\d+([.,]\d+)?$/;
 const INDEX_FIELDS = new Set(['number', 'place']);
 
+/** Reads a value from a row by key or by a path like `team.title`. */
 export function readExportField(row: unknown, field: string): unknown {
   if (row === null || row === undefined) return undefined;
   const record = row as Record<string, unknown>;
@@ -11,15 +12,20 @@ export function readExportField(row: unknown, field: string): unknown {
   return field.split('.').reduce<unknown>((value, key) => (value === null || value === undefined ? undefined : (value as Record<string, unknown>)[key]), row);
 }
 
+/** Keeps the fields that take part in the format; a field with `formats` is left out of the others. */
 export function fieldsFor<T>(fields: readonly TxExportField<T>[], format?: TxExportFormat): TxExportField<T>[] {
   return fields.filter((field) => !format || !field.formats || field.formats.includes(format));
 }
 
+/** Builds the table as a matrix of values whose first row is the column titles. */
 export function exportMatrix<T>(rows: readonly T[], fields: readonly TxExportField<T>[], format?: TxExportFormat): unknown[][] {
   const table = buildExportTable(rows, fields, format);
   return [table.columns.map((column) => column.title), ...table.rows];
 }
 
+/**
+ * Reads the rows through the fields into columns and rows of values, with types and alignment worked out for the format.
+ */
 export function buildExportTable<T>(rows: readonly T[], fields: readonly TxExportField<T>[], format?: TxExportFormat): TxExportTable {
   const used = fieldsFor(fields, format);
   const body = rows.map((row, index) =>
@@ -43,6 +49,9 @@ export function buildExportTable<T>(rows: readonly T[], fields: readonly TxExpor
   return { columns, rows: body };
 }
 
+/**
+ * Guesses the column type from its values: number, boolean, date, datetime, or text when they are mixed or empty.
+ */
 export function inferType(values: readonly unknown[]): TxExportValueType {
   const present = values.filter((value) => value !== null && value !== undefined && value !== '');
   if (!present.length) return 'text';
@@ -64,6 +73,7 @@ function hasTime(date: Date): boolean {
   return date.getHours() !== 0 || date.getMinutes() !== 0 || date.getSeconds() !== 0 || date.getMilliseconds() !== 0;
 }
 
+/** Turns a `Date`, a date string or milliseconds into a `Date`; `null` when it is not a valid date. */
 export function toDate(value: unknown): Date | null {
   if (value instanceof Date) return Number.isNaN(value.getTime()) ? null : value;
   if (typeof value === 'string' || typeof value === 'number') {
@@ -73,12 +83,17 @@ export function toDate(value: unknown): Date | null {
   return null;
 }
 
+/** Locale and texts used to turn cell values into text. */
 export interface TxExportTextContext {
+  /** Locale for dates; the runtime default when not set. */
   locale?: string;
+  /** Text for `true`. */
   yes: string;
+  /** Text for `false`. */
   no: string;
 }
 
+/** Writes a cell as display text: booleans as the yes and no texts, dates in the locale, objects as JSON. */
 export function cellText(value: unknown, column: TxExportColumn, context: TxExportTextContext): string {
   if (value === null || value === undefined) return '';
   if (column.type === 'boolean' && typeof value === 'boolean') return value ? context.yes : context.no;
@@ -94,6 +109,7 @@ export function cellText(value: unknown, column: TxExportColumn, context: TxExpo
   return String(value);
 }
 
+/** Writes a date as local `yyyy-MM-dd`, with the time when it has one; any other value comes back unchanged. */
 export function localIso(value: unknown, type: TxExportValueType): unknown {
   if (!(value instanceof Date) || Number.isNaN(value.getTime())) return value;
   const pad = (part: number) => String(part).padStart(2, '0');
@@ -102,10 +118,16 @@ export function localIso(value: unknown, type: TxExportValueType): unknown {
   return `${day} ${pad(value.getHours())}:${pad(value.getMinutes())}${value.getSeconds() ? `:${pad(value.getSeconds())}` : ''}`;
 }
 
+/**
+ * Puts a quote before text that a spreadsheet would run as a formula (starting with `=`, `+`, `-` or `@`); plain signed numbers stay as they are.
+ */
 export function safeExportText(text: string): string {
   return FORMULA.test(text) && text.length > 1 && !NUMBER.test(text) ? `'${text}` : text;
 }
 
+/**
+ * Writes one value as a CSV cell, quoting it when needed and guarding formulas unless `formulaGuard` is `false`.
+ */
 export function csvCell(value: unknown, separator = ',', options: { quoteAll?: boolean; formulaGuard?: boolean } = {}): string {
   if (value === null || value === undefined) return options.quoteAll ? '""' : '';
   const raw = value instanceof Date ? value.toISOString() : typeof value === 'object' ? JSON.stringify(value) : String(value);
@@ -113,14 +135,19 @@ export function csvCell(value: unknown, separator = ',', options: { quoteAll?: b
   return options.quoteAll || /["\r\n]/.test(text) || text.includes(separator) ? `"${text.replace(/"/g, '""')}"` : text;
 }
 
+/** Joins a matrix of values into CSV text with `\r\n` line endings. */
 export function matrixToCsv(matrix: readonly (readonly unknown[])[], separator = ','): string {
   return matrix.map((row) => row.map((cell) => csvCell(cell, separator)).join(separator)).join('\r\n');
 }
 
+/** Adds the extension to a file name unless it already ends with it. */
 export function withExtension(filename: string, extension: string): string {
   return filename.toLowerCase().endsWith(`.${extension}`) ? filename : `${filename}.${extension}`;
 }
 
+/**
+ * Saves a blob as a file with the given name through a temporary link; does nothing without a browser window.
+ */
 export function downloadBlob(document: Document, blob: Blob, filename: string): void {
   const view = document.defaultView;
   if (!view?.URL?.createObjectURL) return;
@@ -135,10 +162,12 @@ export function downloadBlob(document: Document, blob: Blob, filename: string): 
   view.setTimeout(() => view.URL.revokeObjectURL(url), 1000);
 }
 
+/** Saves CSV text as a UTF-8 file with a byte order mark, adding `.csv` to the name when missing. */
 export function downloadCsv(document: Document, csv: string, filename: string): void {
   downloadBlob(document, new Blob(['\ufeff', csv], { type: 'text/csv;charset=utf-8' }), withExtension(filename, 'csv'));
 }
 
+/** Escapes text for XML and drops characters XML cannot hold. */
 export function escapeXml(text: string): string {
   return text
     .replace(/[^\t\n\r -퟿-�\u{10000}-\u{10FFFF}]/gu, '')
@@ -148,6 +177,7 @@ export function escapeXml(text: string): string {
     .replace(/"/g, '&quot;');
 }
 
+/** Normalizes a hex colour to six upper-case digits without `#`; the fallback when it is not a hex colour. */
 export function hexColor(color: string | undefined, fallback: string): string {
   const value = (color ?? fallback).replace('#', '').trim();
   const full = value.length === 3 ? value.replace(/./g, (char) => char + char) : value;

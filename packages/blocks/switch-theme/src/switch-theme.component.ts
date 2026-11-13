@@ -9,6 +9,7 @@ import { TX_THEME_REVEAL_EASING, TxThemeReveal } from './theme-reveal.directive'
 import { SWITCH_THEME_ICON_DEFAULTS } from './switch-theme.icons';
 import { SWITCH_THEME_THEME } from './switch-theme.theme';
 
+/** A round button that switches between the light and the dark theme. */
 @Component({
   selector: 'tx-switch-theme',
   imports: [TxIcon, TxThemeReveal],

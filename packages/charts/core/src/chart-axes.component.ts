@@ -5,6 +5,7 @@ import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { CORE_ICON_DEFAULTS } from './core.icons';
 import { CORE_THEME } from './core.theme';
 
+/** Draws the grid, zero line, tick labels and titles of a cartesian chart from `cartesianLayout().axes`. */
 @Component({
   selector: 'g[tx-chart-axes]',
   template: `
@@ -18,9 +19,6 @@ import { CORE_THEME } from './core.theme';
     }
     @for (axis of model().axes; track axis.position) {
       <svg:g class="tx-chart-axes__axis" [attr.data-position]="axis.position" [class]="axisPart()?.class" [style]="axisPart()?.style">
-        @if (axis.line; as line) {
-          <svg:line class="tx-chart-axes__line" [attr.x1]="line.x1" [attr.y1]="line.y1" [attr.x2]="line.x2" [attr.y2]="line.y2" />
-        }
         @for (label of axis.labels; track $index) {
           <svg:text
             class="tx-chart-axes__label"

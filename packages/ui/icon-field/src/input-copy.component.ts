@@ -6,6 +6,7 @@ import { ICON_FIELD_ICON_DEFAULTS } from './icon-field.icons';
 import { injectTokens } from '@tectra-ng/core/config';
 import { ICON_FIELD_THEME } from './icon-field.theme';
 
+/** Button inside `tx-icon-field` that copies the field value to the clipboard. */
 @Component({
   selector: 'tx-input-copy',
   imports: [TxIcon],

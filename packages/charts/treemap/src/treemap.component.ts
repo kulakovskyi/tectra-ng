@@ -138,7 +138,7 @@ export class TxTreemap {
     const value = custom ? custom(tile.value, { seriesIndex: tile.path[0], dataPointIndex: index }) : this.valueFormatter()(tile.value);
     return {
       title: tile.group ?? '',
-      rows: [{ label: tile.label, value, share: this.percentFormatter()(Number(tile.share.toFixed(1))), color: tile.color, raw: tile.value, seriesIndex: tile.path[0], active: true }],
+      rows: [{ label: tile.label, value, share: this.percentFormatter()(Number((tile.share * 100).toFixed(1))), color: tile.color, raw: tile.value, seriesIndex: tile.path[0], active: true }],
       index,
       x: tile.x + tile.width / 2,
       y: tile.y,
@@ -163,7 +163,7 @@ export class TxTreemap {
       ],
       rows: this.layout().tiles.map((tile) => ({
         label: tile.group ? `${tile.group} / ${tile.label}` : tile.label,
-        cells: [format(tile.value), percent(Number(tile.share.toFixed(1)))],
+        cells: [format(tile.value), percent(Number((tile.share * 100).toFixed(1)))],
       })),
     };
   });
@@ -174,7 +174,7 @@ export class TxTreemap {
       tile,
       label: tile.label,
       value: tile.valueText,
-      share: this.percentFormatter()(Number(tile.share.toFixed(1))),
+      share: this.percentFormatter()(Number((tile.share * 100).toFixed(1))),
       color: tile.color,
       width: tile.width,
       height: tile.height,
@@ -206,7 +206,7 @@ export class TxTreemap {
     const next = event.key === 'Home' ? 0 : event.key === 'End' ? count - 1 : current === null ? (forward ? 0 : count - 1) : (current + (forward ? 1 : -1) + count) % count;
     this.hovered.set(next);
     const tile = this.layout().tiles[next];
-    this.frame()?.announce(`${tile.group ? `${tile.group}, ` : ''}${tile.label}: ${this.valueFormatter()(tile.value)}, ${this.percentFormatter()(Number(tile.share.toFixed(1)))}`);
+    this.frame()?.announce(`${tile.group ? `${tile.group}, ` : ''}${tile.label}: ${this.valueFormatter()(tile.value)}, ${this.percentFormatter()(Number((tile.share * 100).toFixed(1)))}`);
   }
 
   private tile(node: { x: number; y: number; width: number; height: number; value: number }, path: number[], label: string, group: string | null, color: string, total: number): TxTreemapTile {
@@ -220,7 +220,7 @@ export class TxTreemap {
       label,
       group,
       value: node.value,
-      share: (node.value / total) * 100,
+      share: node.value / total,
       color,
       x: node.x,
       y: node.y,

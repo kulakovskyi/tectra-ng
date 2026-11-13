@@ -14,6 +14,7 @@ import { TxConsolePanelPart } from './console-layout.types';
 import { CONSOLE_LAYOUT_ICON_DEFAULTS } from './console-layout.icons';
 import { CONSOLE_LAYOUT_THEME } from './console-layout.theme';
 
+/** A sticky list or tree at the left of a console page; below 1024px it folds into a bar above the page. */
 @Component({
   selector: 'tx-console-panel',
   imports: [TxAppFooter, TxIcon],

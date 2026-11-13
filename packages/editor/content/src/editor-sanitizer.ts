@@ -107,6 +107,9 @@ function cleanNode(node: Node): void {
   }
 }
 
+/**
+ * Cleans HTML with an allowlist: keeps colours, alignment and indents, drops scripts, handlers and unsafe links.
+ */
 export function sanitizeEditorHtml(html: string | null | undefined, document?: Document | null): string {
   if (!html) {
     return '';

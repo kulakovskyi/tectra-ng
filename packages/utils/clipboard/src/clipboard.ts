@@ -3,8 +3,11 @@ import { Injectable, inject } from '@angular/core';
 import { TxLocaleService } from '@tectra-ng/core/i18n';
 import { TxToastService } from '@tectra-ng/ui/toast';
 
+/** Toasts shown after a copy. */
 export interface TxCopyOptions {
+  /** Success toast text; `false` shows none (default: the translated "copied" text). */
   message?: string | false;
+  /** Error toast text; `false` shows none (default: the translated "copy failed" text). */
   errorMessage?: string | false;
 }
 
@@ -45,6 +48,7 @@ function copyWithSelection(text: string, document: Document): boolean {
   return copied;
 }
 
+/** Copies text to the clipboard and tells the user with a kit toast; needs `<tx-toast />` in the app shell. */
 @Injectable({ providedIn: 'root' })
 export class TxClipboard {
   private readonly document = inject(DOCUMENT);

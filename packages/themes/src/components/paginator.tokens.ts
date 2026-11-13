@@ -1,5 +1,9 @@
 import { tokenRef } from './token-helpers';
 
+/**
+ * Design tokens of `tx-paginator`: colors, sizes and spacing of its root, nav button, current page report,
+ * jump to page input and total.
+ */
 export const paginatorTokens = {
   root: {
     padding: '7px',
@@ -41,4 +45,5 @@ export const paginatorTokens = {
   },
 };
 
+/** Type of `paginatorTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraPaginatorTokens = typeof paginatorTokens;

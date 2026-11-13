@@ -28,6 +28,7 @@ export class TxSelection<T> {
     return items.length > 0 && items.every((item) => this.selected().has(this.getKey(item)));
   }
 
+  /** Whether every item that passes the predicate is selected. */
   areAllSelectedWithPredicate(items: readonly T[], predicate: (item: T) => boolean): boolean {
     return this.areAllSelected(items.filter(predicate));
   }
@@ -45,6 +46,7 @@ export class TxSelection<T> {
     this.selected.set(new Set(ids));
   }
 
+  /** Unselects everything. */
   clear(): void {
     this.selected.set(new Set());
   }

@@ -2,6 +2,10 @@ import { mix, tokenRef } from './token-helpers';
 
 const easeOut = 'cubic-bezier(0.16, 1, 0.3, 1)';
 
+/**
+ * Design tokens of `tx-wizard-layout`: colors, sizes and spacing of its layout, progress, step head, stage
+ * and footer.
+ */
 export const wizardTokens = {
   layout: {
     background: tokenRef('surface-card'),
@@ -80,4 +84,5 @@ export const wizardTokens = {
   },
 };
 
+/** Type of `wizardTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraWizardTokens = typeof wizardTokens;

@@ -1,6 +1,5 @@
 .tx-chart-axes__grid-line,
-.tx-chart-axes__zero,
-.tx-chart-axes__line {
+.tx-chart-axes__zero {
   fill: none;
   shape-rendering: crispEdges;
 }
@@ -20,10 +19,6 @@
   .tx-chart-axes__zero {
     stroke: var(--tx-chart-zero-line-color);
     stroke-width: var(--tx-chart-zero-line-width);
-  }
-
-  .tx-chart-axes__line {
-    stroke: var(--tx-chart-axis-line-color);
   }
 
   .tx-chart-axes__label {

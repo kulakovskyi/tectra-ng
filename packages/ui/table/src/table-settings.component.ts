@@ -15,8 +15,10 @@ import { TABLE_ICON_DEFAULTS } from './table.icons';
 import { injectTokens } from '@tectra-ng/core/config';
 import { TABLE_THEME } from './table.theme';
 
+/** Tab of the table settings popover: `columns` or `actions`. */
 type TxTableSettingsTab = 'columns' | 'actions';
 
+/** The settings popover of `tx-table`: show, hide and reorder columns and actions. */
 @Component({
   selector: 'tx-table-settings',
   imports: [FormsModule, CdkDropList, CdkDrag, CdkDragHandle, TxIcon, TxButton, TxCheckbox, TxPopover, TxPopoverTrigger, TxTooltip],

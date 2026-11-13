@@ -11,6 +11,9 @@ import { TxOrgChartNode } from './org-chart.types';
 import { ORG_CHART_ICON_DEFAULTS } from './org-chart.icons';
 import { ORG_CHART_THEME } from './org-chart.theme';
 
+/**
+ * The default card of `tx-org-chart`: avatar or icon, title, subtitle, pills and the chevron; reuse it inside your own `txOrgChartNode` template.
+ */
 @Component({
   selector: 'tx-org-chart-card',
   imports: [TxAvatar, TxButton, TxIcon, TxPill, TxTooltip],

@@ -8,17 +8,22 @@ const PKG_REL = 'http://schemas.openxmlformats.org/package/2006/relationships';
 const NUMBER = /^[+-]?\d+(\.\d+)?$/;
 const MAX_TEXT = 32767;
 
+/** Turns a zero-based column index into a spreadsheet letter: 0 is `A`, 26 is `AA`. */
 export function columnName(index: number): string {
   let name = '';
   for (let n = index + 1; n > 0; n = Math.floor((n - 1) / 26)) name = String.fromCharCode(65 + ((n - 1) % 26)) + name;
   return name;
 }
 
+/** Turns a date into an Excel serial number, keeping local time. */
 export function excelSerial(date: Date): number {
   const local = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
   return local / 86400000 + 25569;
 }
 
+/**
+ * Cleans a worksheet name: drops characters Excel rejects, cuts it to 31 characters and falls back to `Sheet1`.
+ */
 export function sheetName(name: string | undefined): string {
   const clean = (name ?? '').replace(/[[\]:*?/\\]/g, ' ').replace(/^'+|'+$/g, '').trim().slice(0, 31);
   return clean || 'Sheet1';
@@ -87,6 +92,7 @@ function textLength(value: unknown): number {
   return Math.max(...text.split('\n').map((line) => line.length));
 }
 
+/** Works out the width in characters of every column from its content within the min and max width. */
 export function excelWidths(table: TxExportTable, options: TxExportExcelOptions = {}): number[] {
   const min = options.minWidth ?? 8;
   const max = options.maxWidth ?? 60;
@@ -147,12 +153,14 @@ function xlsxSheet(table: TxExportTable, options: TxExportExcelOptions, styles: 
   return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<worksheet xmlns="${MAIN}" xmlns:r="${REL}">${freeze}<sheetFormatPr defaultRowHeight="15"/>${cols}<sheetData>${rows.join('')}</sheetData>${filter}</worksheet>`;
 }
 
+/** Builds the XML of the worksheet and its styles for the table. */
 export function xlsxParts(table: TxExportTable, options: TxExportExcelOptions = {}): { sheet: string; styles: string; sheetName: string } {
   const styles = new StyleBook();
   const sheet = xlsxSheet(table, options, styles);
   return { sheet, styles: styles.xml(options), sheetName: sheetName(options.sheetName) };
 }
 
+/** Writes the table as an Excel `.xlsx` file blob. */
 export async function writeXlsx(table: TxExportTable, options: TxExportExcelOptions = {}, date = new Date()): Promise<Blob> {
   const { sheet, styles, sheetName: name } = xlsxParts(table, options);
   const created = date.toISOString().replace(/\.\d{3}Z$/, 'Z');

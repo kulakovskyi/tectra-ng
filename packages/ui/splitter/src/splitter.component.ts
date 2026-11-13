@@ -41,6 +41,10 @@ interface TxSplitterDrag {
   initial: TxSplitterLayoutState;
 }
 
+/**
+ * Two or more panels with draggable gutters between them; sizes are percentages and can be kept in the
+ * browser storage.
+ */
 @Component({
   selector: 'tx-splitter',
   imports: [NgTemplateOutlet],

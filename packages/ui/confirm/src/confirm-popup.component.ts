@@ -9,15 +9,22 @@ import { CONFIRM_ICON_DEFAULTS } from './confirm.icons';
 import { injectTokens } from '@tectra-ng/core/config';
 import { CONFIRM_THEME } from './confirm.theme';
 
+/** Data of one popup question: its state, overlay and how to finish it. */
 export interface TxConfirmPopupData {
+  /** State of the question. */
   state: TxConfirmState;
+  /** Overlay of the popup; `null` until it is opened. */
   ref: Signal<TxOverlayRef | null>;
+  /** Size of the element the popup opened from. */
   originSize: { width: number; height: number };
+  /** Closes the popup with the answer. */
   finish: (accepted: boolean) => void;
 }
 
+/** Hands the data of one popup question to `TxConfirmPopup`. */
 export const TX_CONFIRM_POPUP = new InjectionToken<TxConfirmPopupData>('TX_CONFIRM_POPUP');
 
+/** Content of the confirmation question opened by `TxConfirmService.popup()`. */
 @Component({
   selector: 'tx-confirm-popup',
   imports: [TxButton, TxIcon],

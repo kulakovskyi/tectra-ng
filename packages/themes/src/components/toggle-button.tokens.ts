@@ -1,5 +1,6 @@
 import { lightDark, tokenRef } from './token-helpers';
 
+/** Design tokens of `tx-toggle-button`: colors, sizes and spacing of its root, icon and content. */
 export const toggleButtonTokens = {
   root: {
     padding: '4px',
@@ -40,4 +41,5 @@ export const toggleButtonTokens = {
   },
 };
 
+/** Type of `toggleButtonTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraToggleButtonTokens = typeof toggleButtonTokens;

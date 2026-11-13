@@ -1,3 +1,4 @@
+/** Font families, sizes and weights. */
 export const typography = {
   family: "'Onest', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
   mono: "'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace",

@@ -1,3 +1,4 @@
+/** `z-index` of the overlay layers: dropdown, popover, tooltip, modal and toast. */
 export const layers = {
   dropdown: '1000',
   popover: '1100',

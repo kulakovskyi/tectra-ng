@@ -1,5 +1,6 @@
 import { TxEmailSuggestionResult } from './email-suggestion.types';
 
+/** Domains of common mail providers that `tx-email-suggestion` checks for typos by default. */
 export const TX_COMMON_EMAIL_DOMAINS: readonly string[] = [
   'gmail.com',
   'googlemail.com',
@@ -18,6 +19,7 @@ export const TX_COMMON_EMAIL_DOMAINS: readonly string[] = [
 
 const LOCAL_PART = /^[^\s@]+$/;
 
+/** Counts the single-character edits (insert, delete, replace) that turn one text into the other. */
 export function editDistance(a: string, b: string): number {
   const table = Array.from({ length: a.length + 1 }, (_, i) => Array.from({ length: b.length + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0)));
   for (let i = 1; i <= a.length; i += 1) {
@@ -32,6 +34,9 @@ export function editDistance(a: string, b: string): number {
   return table[a.length][b.length];
 }
 
+/**
+ * Suggests a full address: your own domain completed, or a close match to a known domain for a typo; `null` when nothing fits.
+ */
 export function suggestEmail(value: string | null | undefined, domains: readonly string[], known: readonly string[] = TX_COMMON_EMAIL_DOMAINS): TxEmailSuggestionResult | null {
   const email = (value ?? '').trim();
   const own = domains.map((domain) => domain.trim().replace(/^@/, '').toLowerCase()).filter(Boolean);

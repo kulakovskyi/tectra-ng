@@ -1,10 +1,15 @@
 import { Pipe, PipeTransform, inject } from '@angular/core';
 import { TxLocaleService } from '@tectra-ng/core/i18n';
 
+/** Options of `txFileSize` and `formatFileSize`. */
 export interface TxFileSizeOptions {
+  /** Maximum digits after the point for sizes above 1 KB (default 1). */
   decimals?: number;
+  /** Size of a unit: `1024` (default) or `1000`. */
   base?: 1000 | 1024;
+  /** Locale of the number format (default `en-US`; the pipe uses the tectra locale). */
   locale?: string;
+  /** Text shown for a missing or negative size (default `-`). */
   empty?: string;
 }
 

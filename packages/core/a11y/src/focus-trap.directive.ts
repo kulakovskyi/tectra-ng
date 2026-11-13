@@ -1,6 +1,10 @@
 import { FocusTrap, FocusTrapFactory } from '@angular/cdk/a11y';
 import { DOCUMENT, Directive, ElementRef, OnDestroy, afterNextRender, booleanAttribute, effect, inject, input } from '@angular/core';
 
+/**
+ * Keeps Tab focus inside an element, moves focus into it on creation and returns it to the previous element
+ * on destroy.
+ */
 @Directive({ selector: '[txFocusTrap]' })
 export class TxFocusTrap implements OnDestroy {
   private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);

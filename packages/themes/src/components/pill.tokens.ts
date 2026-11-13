@@ -9,6 +9,10 @@ function tone(palette: string) {
   };
 }
 
+/**
+ * Design tokens of `tx-pill`: its colors, sizes and spacing, plus the `sm` and `lg` sizes and the severity
+ * variants.
+ */
 export const pillTokens = {
   root: {
     gap: '4px',
@@ -38,4 +42,5 @@ export const pillTokens = {
   contrast: { color: tokenRef('text-primary'), solidBackground: tokenRef('text-primary'), solidColor: tokenRef('surface-card') },
 };
 
+/** Type of `pillTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraPillTokens = typeof pillTokens;

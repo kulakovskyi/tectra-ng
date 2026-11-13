@@ -18,6 +18,10 @@ import { TxOptionsBase } from './options-base';
 import { isSelectableRow } from './select-options';
 import { TxFieldVariant, TxSelectItem, TxSelectSize } from './select.types';
 
+/**
+ * Shared base of `tx-select` and `tx-multiselect`: the field, its panel, size, variant and keyboard
+ * handling.
+ */
 @Directive()
 export abstract class TxSelectBase<T> extends TxOptionsBase<T> {
   readonly placeholder = input<string>('');

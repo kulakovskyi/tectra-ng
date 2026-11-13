@@ -1,7 +1,10 @@
 import { DestroyRef, Directive, ElementRef, booleanAttribute, inject, input, output, signal } from '@angular/core';
 
+/** How far the pointer moved during a pan, in px. */
 export interface TxDragPanDelta {
+  /** Horizontal move since the last event. */
   dx: number;
+  /** Vertical move since the last event. */
   dy: number;
 }
 

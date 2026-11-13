@@ -1,15 +1,25 @@
 const round = (value: number) => Math.round(value * 100) / 100;
 
+/** Full circle in radians. */
 export const TX_FULL_CIRCLE = Math.PI * 2;
 
+/** Converts degrees to radians. */
 export function toRadians(degrees: number): number {
   return (degrees * Math.PI) / 180;
 }
 
+/**
+ * Point at a radius and an angle from a centre; the angle is in radians, `0` is straight up and it
+ * grows clockwise.
+ */
 export function polar(cx: number, cy: number, radius: number, angle: number): { x: number; y: number } {
   return { x: cx + radius * Math.sin(angle), y: cy - radius * Math.cos(angle) };
 }
 
+/**
+ * Largest corner radius that fits an arc segment with the given inner and outer radius and sweep in
+ * radians.
+ */
 export function maxCornerRadius(inner: number, outer: number, sweep: number): number {
   const half = Math.min(Math.PI / 2, sweep / 2);
   const sin = Math.sin(half);
@@ -19,6 +29,10 @@ export function maxCornerRadius(inner: number, outer: number, sweep: number): nu
   return Math.max(0, Math.min(byThickness, byOuter, byInner));
 }
 
+/**
+ * SVG path of a pie or donut segment from `start` to `end` radians, with optional rounded corners;
+ * `inner` of `0` makes a pie slice.
+ */
 export function arcPath(cx: number, cy: number, inner: number, outer: number, start: number, end: number, corner = 0): string {
   const sweep = end - start;
   if (sweep <= 0 || outer <= 0) {
@@ -70,6 +84,7 @@ export function arcPath(cx: number, cy: number, inner: number, outer: number, st
   );
 }
 
+/** Bounding box of a unit-circle arc between two angles in radians. */
 export function arcBounds(start: number, end: number): { minX: number; maxX: number; minY: number; maxY: number } {
   const points = [polar(0, 0, 1, start), polar(0, 0, 1, end), { x: 0, y: 0 }];
   for (let quarter = Math.ceil(start / (Math.PI / 2)); quarter * (Math.PI / 2) <= end; quarter++) {
@@ -83,18 +98,27 @@ export function arcBounds(start: number, end: number): { minX: number; maxX: num
   };
 }
 
+/** Centre and radius that fit an arc into a box. */
 export interface TxArcFit {
+  /** Horizontal centre, in px. */
   cx: number;
+  /** Vertical centre, in px. */
   cy: number;
+  /** Outer radius, in px. */
   radius: number;
 }
 
+/** Start and end of an arc in radians from angles in degrees; the sweep is limited to 360 degrees. */
 export function arcSpan(startAngle: number, endAngle: number): [number, number] {
   const start = toRadians(startAngle);
   const end = toRadians(Math.max(startAngle, Math.min(startAngle + 360, endAngle)));
   return [start, end];
 }
 
+/**
+ * Centre and radius that fit the arc between two angles in degrees into a box, leaving `padding` px
+ * around it.
+ */
 export function fitArc(width: number, height: number, startAngle: number, endAngle: number, padding: number): TxArcFit {
   const [start, end] = arcSpan(startAngle, endAngle);
   const bounds = arcBounds(start, end);
@@ -108,6 +132,7 @@ export function fitArc(width: number, height: number, startAngle: number, endAng
   };
 }
 
+/** SVG path of an arc line (no fill) on a circle between two angles in radians. */
 export function strokeArc(cx: number, cy: number, radius: number, start: number, end: number): string {
   const sweep = end - start;
   if (sweep <= 0 || radius <= 0) return '';
@@ -123,6 +148,10 @@ export function strokeArc(cx: number, cy: number, radius: number, start: number,
   return `M${round(a.x)},${round(a.y)}A${r},${r} 0 ${sweep > Math.PI ? 1 : 0} 1 ${round(b.x)},${round(b.y)}`;
 }
 
+/**
+ * Angle in radians of a point as seen from a centre, in the range from `start` to `start` plus a full
+ * circle.
+ */
 export function angleFrom(x: number, y: number, cx: number, cy: number, start: number): number {
   let angle = Math.atan2(x - cx, -(y - cy));
   while (angle < start) angle += TX_FULL_CIRCLE;

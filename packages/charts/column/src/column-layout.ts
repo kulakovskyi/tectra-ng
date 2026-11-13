@@ -1,21 +1,35 @@
 import { TxBandScale, TxContinuousScale, TxStackedValue, seriesColor, textWidth } from '@tectra-ng/charts/core';
 import { TxColumnChartBar } from './column-chart.types';
 
+/** Everything `columnBars` needs to lay the bars out: scales, series values and label settings. */
 export interface TxColumnLayoutInput {
+  /** Category scale. */
   band: TxBandScale;
+  /** Value scale. */
   value: TxContinuousScale;
+  /** Draws horizontal bars with the categories on the left. */
   horizontal: boolean;
+  /** Stacks the series instead of placing them side by side. */
   stacked: boolean;
+  /** Share of the category band the bars of one category take (0.05 to 1). */
   widthRatio: number;
+  /** Gap in px between grouped bars of one category. */
   groupGap: number;
+  /** Values per series and category; `null` for a gap. */
   values: readonly (readonly (number | null)[])[];
+  /** Start and end of each value in a stack, per series and category. */
   stackedValues: readonly TxStackedValue[][];
+  /** Indexes of the series that are not hidden. */
   visible: readonly number[];
+  /** Own colors per series; the palette fills the gaps. */
   colors: readonly (string | undefined)[];
+  /** Formats the data label of a value; `null` draws no labels. */
   labels: ((value: number, series: number, index: number) => string) | null;
+  /** Font size of data labels in px, used to check whether they fit. */
   labelFontSize: number;
 }
 
+/** Lays out the bars of a grouped or stacked column chart, with their data labels. */
 export function columnBars(input: TxColumnLayoutInput): TxColumnChartBar[] {
   const { band, value, horizontal, stacked, visible } = input;
   const group = band.bandwidth * Math.min(1, Math.max(0.05, input.widthRatio));

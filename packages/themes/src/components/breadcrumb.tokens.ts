@@ -1,5 +1,6 @@
 import { lightDark, tokenRef } from './token-helpers';
 
+/** Design tokens of `tx-breadcrumb`: colors, sizes and spacing of its root, item, current, separator and slash. */
 export const breadcrumbTokens = {
   root: {
     padding: '0',
@@ -36,4 +37,5 @@ export const breadcrumbTokens = {
   },
 };
 
+/** Type of `breadcrumbTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraBreadcrumbTokens = typeof breadcrumbTokens;

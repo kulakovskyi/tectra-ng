@@ -20,6 +20,10 @@ interface Item {
   order: number;
 }
 
+/**
+ * Converts a date to a whole day number (days since 1970-01-01, local calendar day); `null` when empty
+ * or invalid.
+ */
 export function dayIndex(value: TxMonthCalendarDateInput | null | undefined): number | null {
   if (value === null || value === undefined || value === '') return null;
   let date: Date;
@@ -30,6 +34,7 @@ export function dayIndex(value: TxMonthCalendarDateInput | null | undefined): nu
   return Math.round(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) / DAY_MS);
 }
 
+/** Converts a day number from `dayIndex` back to a local `Date` at midnight. */
 export function indexToDate(index: number): Date {
   const utc = new Date(index * DAY_MS);
   return new Date(utc.getUTCFullYear(), utc.getUTCMonth(), utc.getUTCDate());
@@ -74,6 +79,7 @@ function allocate(lanes: boolean[][], from: number, to: number): number {
   return lane;
 }
 
+/** Lays out a month as weeks of days, with multi-day events as lane-packed segments and a count of hidden ones. */
 export function buildMonthLayout(request: TxMonthCalendarLayoutRequest): TxMonthCalendarWeek[] {
   const year = request.month.getFullYear();
   const month = request.month.getMonth();
@@ -138,6 +144,7 @@ export function buildMonthLayout(request: TxMonthCalendarLayoutRequest): TxMonth
   });
 }
 
+/** Lists the seven weekday headings starting at the given weekday, with short and narrow names in the locale. */
 export function monthWeekdays(weekStartsOn: number, locale: string): TxMonthCalendarWeekday[] {
   const short = new Intl.DateTimeFormat(locale, { weekday: 'short' });
   const narrow = new Intl.DateTimeFormat(locale, { weekday: 'narrow' });

@@ -124,6 +124,7 @@ export function autolinkPlugin(target: () => string | null): Plugin {
   });
 }
 
+/** Kind of suggestion list: `mention` after `@`, `slash` after `/` and `emoji` after `:`. */
 export type TxSuggestionKind = 'mention' | 'slash' | 'emoji';
 
 export interface TxSuggestionTrigger {
@@ -132,10 +133,15 @@ export interface TxSuggestionTrigger {
   minLength: number;
 }
 
+/** The trigger text under the caret that opens a suggestion list. */
 export interface TxSuggestionMatch {
+  /** Which list the text opens. */
   kind: TxSuggestionKind;
+  /** Document position of the trigger character. */
   from: number;
+  /** Document position of the caret, the end of the typed query. */
   to: number;
+  /** The text typed after the trigger character. */
   query: string;
 }
 

@@ -1,5 +1,6 @@
 import { joinCss, tokenRef } from './token-helpers';
 
+/** Design tokens of `tx-listbox`: its colors, sizes and spacing. */
 export const listboxTokens = {
   root: {
     background: tokenRef('form-field-background'),
@@ -14,8 +15,10 @@ export const listboxTokens = {
   },
 };
 
+/** Type of `listboxTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraListboxTokens = typeof listboxTokens;
 
+/** Design tokens of `tx-chips-input`: its colors, sizes and spacing. */
 export const chipsInputTokens = {
   root: {
     gap: '4px',
@@ -27,8 +30,10 @@ export const chipsInputTokens = {
   },
 };
 
+/** Type of `chipsInputTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraChipsInputTokens = typeof chipsInputTokens;
 
+/** Design tokens of `tx-country`: its colors, sizes and spacing. */
 export const countryTokens = {
   root: {
     gap: '7px',
@@ -46,8 +51,13 @@ export const countryTokens = {
   },
 };
 
+/** Type of `countryTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraCountryTokens = typeof countryTokens;
 
+/**
+ * Design tokens of `tx-color-picker`: colors, sizes and spacing of its root, dot, panel, area, hue and other
+ * parts.
+ */
 export const colorPickerTokens = {
   root: {
     gap: '8px',
@@ -96,8 +106,10 @@ export const colorPickerTokens = {
   },
 };
 
+/** Type of `colorPickerTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraColorPickerTokens = typeof colorPickerTokens;
 
+/** Design tokens of `tx-mention-textarea`: its colors, sizes and spacing. */
 export const mentionTokens = {
   root: {
     panelWidth: '280px',
@@ -107,8 +119,10 @@ export const mentionTokens = {
   },
 };
 
+/** Type of `mentionTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraMentionTokens = typeof mentionTokens;
 
+/** Design tokens of `tx-cascade-select`: its colors, sizes and spacing. */
 export const cascadeSelectTokens = {
   root: {
     columnWidth: '200px',
@@ -117,8 +131,10 @@ export const cascadeSelectTokens = {
   },
 };
 
+/** Type of `cascadeSelectTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraCascadeSelectTokens = typeof cascadeSelectTokens;
 
+/** Design tokens of `tx-email-suggestion`: its colors, sizes and spacing. */
 export const emailSuggestionTokens = {
   root: {
     offset: '6px',
@@ -127,4 +143,5 @@ export const emailSuggestionTokens = {
   },
 };
 
+/** Type of `emailSuggestionTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraEmailSuggestionTokens = typeof emailSuggestionTokens;

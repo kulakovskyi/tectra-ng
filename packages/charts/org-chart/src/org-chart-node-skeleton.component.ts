@@ -6,6 +6,7 @@ import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { ORG_CHART_ICON_DEFAULTS } from './org-chart.icons';
 import { ORG_CHART_THEME } from './org-chart.theme';
 
+/** Placeholder card shown in place of the children of a node while they load. */
 @Component({
   selector: 'tx-org-chart-node-skeleton',
   imports: [TxSkeleton],

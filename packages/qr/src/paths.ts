@@ -1,16 +1,26 @@
 import { TxQrDotStyle, TxQrEyeBallStyle, TxQrEyeFrameStyle, TxQrMatrix } from './types';
 
+/** Shapes for `qrPaths`: dots, eye rings, eye centres and an empty area in the middle. */
 export interface TxQrShapeOptions {
+  /** Shape of the data dots. */
   dotStyle: TxQrDotStyle;
+  /** Shape of the eye rings. */
   eyeFrameStyle: TxQrEyeFrameStyle;
+  /** Shape of the eye centres. */
   eyeBallStyle: TxQrEyeBallStyle;
+  /** Side in modules of the empty square in the middle that is left free for a logo (default 0). */
   clearSize?: number;
 }
 
+/** SVG path data of a QR code in module units. */
 export interface TxQrPaths {
+  /** Path of the data dots. */
   dots: string;
+  /** Path of the three eye rings; fill it with the `evenodd` rule. */
   eyeFrames: string;
+  /** Path of the three eye centres. */
   eyeBalls: string;
+  /** Top-left corner of each of the three eyes in modules. */
   eyes: readonly { x: number; y: number }[];
 }
 
@@ -25,6 +35,7 @@ function rect(x: number, y: number, width: number, height: number): string {
   return `M${round(x)} ${round(y)}h${round(width)}v${round(height)}h${round(-width)}z`;
 }
 
+/** SVG path data of a rectangle with rounded corners; the radius is cut to half of the shorter side. */
 export function roundedRect(x: number, y: number, width: number, height: number, radius: number): string {
   const r = Math.min(radius, width / 2, height / 2);
   if (r <= 0) {
@@ -84,6 +95,10 @@ function eyeBall(x: number, y: number, style: TxQrEyeBallStyle): string {
   }
 }
 
+/**
+ * Builds SVG path data (in module units) for the dots, eye rings and eye centres of a matrix in the
+ * chosen shapes.
+ */
 export function qrPaths(matrix: TxQrMatrix, options: TxQrShapeOptions): TxQrPaths {
   const size = matrix.size;
   const eyes = [

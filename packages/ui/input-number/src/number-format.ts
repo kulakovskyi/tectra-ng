@@ -1,12 +1,22 @@
+/** Options of `TxNumberFormat`: locale, currency, digits and affixes. */
 export interface TxNumberFormatOptions {
+  /** Locale that sets the decimal and group separators. */
   locale: string;
+  /** Plain number or currency. */
   mode: 'decimal' | 'currency';
+  /** ISO 4217 code used in `currency` mode (default `USD`). */
   currency?: string;
+  /** How the currency is written (default `symbol`). */
   currencyDisplay?: 'symbol' | 'narrowSymbol' | 'code' | 'name';
+  /** Separates thousands with the group separator. */
   useGrouping: boolean;
+  /** Fewest fraction digits shown; 0 for numbers, the currency default for amounts. */
   minFractionDigits?: number;
+  /** Most fraction digits allowed; 3 for numbers, the currency default for amounts. */
   maxFractionDigits?: number;
+  /** Text added before the number, ahead of any currency symbol. */
   prefix?: string;
+  /** Text added after the number, such as a unit. */
   suffix?: string;
 }
 
@@ -18,11 +28,17 @@ interface TxNumberRead {
 
 const NUMBER_PARTS = ['integer', 'group', 'decimal', 'fraction'];
 
+/** Formats and parses numbers as the user types them, keeping the caret in place; used by `tx-input-number`. */
 export class TxNumberFormat {
+  /** Decimal separator of the locale. */
   readonly decimal: string;
+  /** Group (thousands) separator of the locale. */
   readonly group: string;
+  /** Text shown before the number: prefix and leading currency symbol. */
   readonly before: string;
+  /** Text shown after the number: trailing currency symbol and suffix. */
   readonly after: string;
+  /** Most fraction digits the field accepts. */
   readonly maxFraction: number;
   private full: Intl.NumberFormat;
   private integer: Intl.NumberFormat;
@@ -50,6 +66,7 @@ export class TxNumberFormat {
     this.after = affix(sample.slice(last + 1)) + (options.suffix ?? '');
   }
 
+  /** Formats a value for display, with prefix, currency and suffix; empty text for `null`. */
   format(value: number | null): string {
     if (value === null || Number.isNaN(value)) {
       return '';
@@ -62,6 +79,7 @@ export class TxNumberFormat {
     return `${value < 0 ? '-' : ''}${this.before}${number}${this.after}`;
   }
 
+  /** Reformats text while typing and returns the display text with the parsed value. */
   formatTyping(text: string): { display: string; value: number | null } {
     const read = this.read(text);
     if (read.digits === '' && read.fraction === null) {
@@ -75,10 +93,12 @@ export class TxNumberFormat {
     return { display, value };
   }
 
+  /** Reads a number from text in this format; `null` when it holds no digits. */
   parse(text: string): number | null {
     return this.formatTyping(text).value;
   }
 
+  /** Counts the digits and the decimal separator before a caret position. */
   countBefore(text: string, caret: number): number {
     let count = 0;
     let decimalSeen = false;
@@ -93,6 +113,7 @@ export class TxNumberFormat {
     return count;
   }
 
+  /** Finds the caret position in the display text after a given count of digits and decimal separator. */
   caretFor(display: string, count: number): number {
     const start = (display.startsWith('-') ? 1 : 0) + this.before.length;
     if (count <= 0) {

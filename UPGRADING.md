@@ -1,5 +1,16 @@
 # Upgrading
 
+## From 0.3.2
+
+Small changes to the public types. Most apps need none of these steps; the compiler points to every place that does.
+
+- `TxFilterMatchMode` of `@tectra-ng/ui/select` is now `TxSelectFilterMatchMode`, so it no longer shares a name with the wider `TxFilterMatchMode` of `@tectra-ng/ui/table`.
+- `TxTreeRow` of `@tectra-ng/ui/tree-select` is now `TxTreeSelectRow`; `TxTreeRow` stays the row of `@tectra-ng/ui/tree`.
+- `share` of `tx-treemap` (`tileClick`, `TxTreemapTile`) is now 0–1, like the other charts. Multiply by 100 where you showed it as a percentage; the text of tooltips and tiles is unchanged.
+- Unused exports are gone: `TxMenuListOptions` (`@tectra-ng/ui/menu`), `TxCommandPaletteTranslate` (`@tectra-ng/blocks/command-palette`), the axis `line` of `TxChartAxisModel` and the `axis.lineColor` chart token (no axis line was ever drawn).
+- Translation keys no component used are gone: `pageReport`, `generatePassword`, `itemsLimit`, `editorLinkText`, `editorLinkOpen`, `codeDiffAdded`, `codeDiffRemoved`, `codeDiffNoChanges`, `filterFrom`, `filterTo`, `editCell`, `wizardSkip`, `chartOfSource`, `chartDrillUp`. Remove them from your own translations.
+- `TECTRA_CORE_VERSION`, `TECTRA_UI_VERSION`, `TECTRA_CHARTS_VERSION`, `TECTRA_UTILS_VERSION` and `TECTRA_BLOCKS_VERSION` now hold the installed version instead of `0.0.0`.
+
 ## From 0.3.1
 
 The packages need Angular and the CDK **22.2 or newer** (the peer ranges said 22.0, but the panel menu already used a router function that came with 22.2, so 22.0 and 22.1 did not build). On an older 22 minor run `ng update @angular/core@22 @angular/cli@22 @angular/cdk@22` first. CI now builds and tests the packages on the lowest versions they accept.

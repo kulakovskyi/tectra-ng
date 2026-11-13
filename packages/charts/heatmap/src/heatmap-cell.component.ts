@@ -8,6 +8,7 @@ import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { HEATMAP_ICON_DEFAULTS } from './heatmap.icons';
 import { HEATMAP_THEME } from './heatmap.theme';
 
+/** One cell of `tx-heatmap` and of its legend: draws the tone or the scale level, and the tooltip. */
 @Component({
   selector: 'tx-heatmap-cell',
   imports: [TxTooltip],

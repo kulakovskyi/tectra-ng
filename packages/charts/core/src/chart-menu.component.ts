@@ -6,15 +6,21 @@ import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { CORE_ICON_DEFAULTS } from './core.icons';
 import { CORE_THEME } from './core.theme';
 
+/** One entry of the chart export menu. */
 export interface TxChartMenuItem {
+  /** Identifies the entry in the `selected` output. */
   id: string;
+  /** Text of the entry. */
   label: string;
+  /** Name of an icon shown before the text. */
   icon?: string;
+  /** Makes the entry inactive. */
   disabled?: boolean;
 }
 
 const MENU_KEYS = new Set(['ArrowDown', 'ArrowUp', 'Home', 'End']);
 
+/** The export menu of a chart: a list of actions with arrow-key navigation. */
 @Component({
   selector: 'tx-chart-menu',
   imports: [TxIcon],

@@ -1,5 +1,9 @@
 import { fade, joinCss, lightDark, mix, tokenRef } from './token-helpers';
 
+/**
+ * Design tokens of `tx-tabs`: colors, sizes and spacing of its root, segmented, pills, raised, line and other
+ * parts.
+ */
 export const tabsTokens = {
   root: {
     transitionDuration: '0.2s',
@@ -133,4 +137,5 @@ export const tabsTokens = {
   },
 };
 
+/** Type of `tabsTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraTabsTokens = typeof tabsTokens;

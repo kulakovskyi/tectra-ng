@@ -87,10 +87,15 @@ import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { TABLE_ICON_DEFAULTS } from './table.icons';
 import { TABLE_THEME } from './table.theme';
 
+/** Field name of the internal selection column. */
 export const TX_TABLE_SELECT_FIELD = '__select';
+/** Field name of the internal row expansion column. */
 export const TX_TABLE_EXPAND_FIELD = '__expand';
+/** Field name of the internal row actions column. */
 export const TX_TABLE_ACTIONS_FIELD = '__actions';
+/** Field name of the internal column with the edit buttons of a row. */
 export const TX_TABLE_EDITOR_FIELD = '__editor';
+/** Field name of the internal row reorder handle column. */
 export const TX_TABLE_REORDER_FIELD = '__reorder';
 
 const DEFAULT_COLUMN_WIDTH = 100;
@@ -100,44 +105,77 @@ const EXPAND_COLUMN_WIDTH = '49px';
 const EDITOR_COLUMN_WIDTH = '92px';
 const EXPANSION_DURATION = 400;
 
+/** A column as the table renders it: data or an internal column, with style and frozen position. */
 interface TxTableRenderColumn {
+  /** The column definition. */
   column: TxTableColumn;
+  /** Whether it is a data column or an internal one: selection, expansion, actions, editor or reorder. */
   kind: 'data' | 'select' | 'expand' | 'actions' | 'editor' | 'reorder';
+  /** Inline styles of the column cells, such as widths. */
   style: Record<string, string>;
+  /** Side the column is frozen to, or `null`. */
   frozen: 'start' | 'end' | null;
+  /** Whether it is the last column frozen to the start; it gets the divider. */
   lastFrozenStart: boolean;
+  /** Whether it is the first column frozen to the end; it gets the divider. */
   firstFrozenEnd: boolean;
 }
 
+/** Position and state of a row in a tree table. */
 export interface TxTableTreeInfo {
+  /** Nesting depth, from `0` at the top. */
   level: number;
+  /** Whether the row has no children. */
   leaf: boolean;
+  /** Whether the children are shown. */
   expanded: boolean;
+  /** Whether the row is hidden because a parent is collapsed. */
   hidden: boolean;
+  /** Whether the children are being loaded. */
   loading: boolean;
+  /** Whether only some of the children are selected. */
   partial: boolean;
+  /** Number of siblings, for `aria-setsize`. */
   setSize: number;
+  /** Position among the siblings, for `aria-posinset`. */
   posInSet: number;
+  /** Key of the parent row. */
   parentKey: unknown;
 }
 
+/** A row as the table renders it: the data with its key, state and group. */
 export interface TxTableRenderRow<T> {
+  /** The row data. */
   row: T;
+  /** Position of the row. */
   index: number;
+  /** Key of the row from `dataKey`. */
   key: unknown;
+  /** Whether the row is selected. */
   selected: boolean;
+  /** Whether the row can be selected. */
   selectable: boolean;
+  /** Whether the row expansion is open. */
   expanded: boolean;
+  /** Group the row belongs to, or `null`. */
   group: TxTableRenderGroup | null;
+  /** Tree position of the row, when the table shows a tree. */
   tree?: TxTableTreeInfo;
 }
 
+/** A row group as the table renders it. */
 export interface TxTableRenderGroup {
+  /** Value of the field the rows are grouped by. */
   value: unknown;
+  /** Key of the group. */
   key: string;
+  /** Whether the row is the first of its group. */
   first: boolean;
+  /** Whether the row is the last of its group. */
   last: boolean;
+  /** Number of rows in the group. */
   size: number;
+  /** Whether the group is collapsed. */
   collapsed: boolean;
 }
 

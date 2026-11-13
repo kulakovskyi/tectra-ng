@@ -5,6 +5,10 @@ function fill(palette: string) {
   return lightDark(tokenRef(`${palette}-600`), tokenRef(`${palette}-400`));
 }
 
+/**
+ * Design tokens of `tx-progress-bar`: its colors, sizes and spacing, plus the `sm` and `lg` sizes and the
+ * severity variants.
+ */
 export const progressBarTokens = {
   root: {
     height: '6px',
@@ -29,6 +33,7 @@ export const progressBarTokens = {
   contrast: tokenRef('text-primary'),
 };
 
+/** Design tokens of `tx-progress-spinner`: its colors, sizes and spacing, plus the `sm` and `lg` sizes. */
 export const progressSpinnerTokens = {
   root: {
     color: tokenRef('primary-base'),
@@ -41,5 +46,7 @@ export const progressSpinnerTokens = {
   lg: { size: '48px' },
 };
 
+/** Type of `progressBarTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraProgressBarTokens = typeof progressBarTokens;
+/** Type of `progressSpinnerTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraProgressSpinnerTokens = typeof progressSpinnerTokens;

@@ -1,5 +1,6 @@
 import { tokenRef } from './token-helpers';
 
+/** Design tokens of `tx-speed-dial`: colors, sizes and spacing of its root and mask. */
 export const speedDialTokens = {
   root: {
     gap: '7px',
@@ -11,4 +12,5 @@ export const speedDialTokens = {
   },
 };
 
+/** Type of `speedDialTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraSpeedDialTokens = typeof speedDialTokens;

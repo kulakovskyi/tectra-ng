@@ -1,12 +1,14 @@
 import { TX_FULL_CIRCLE, seriesColor } from '@tectra-ng/charts/core';
 import { TxSunburstArc, TxSunburstItem } from './sunburst-chart.types';
 
+/** Value of an item: its own value, or the sum of its children when it has none. */
 export function sunburstValue(item: TxSunburstItem): number {
   const own = item.value !== null && item.value !== undefined && Number.isFinite(item.value) ? Math.max(0, item.value) : null;
   const children = (item.children ?? []).reduce((sum, child) => sum + sunburstValue(child), 0);
   return own ?? children;
 }
 
+/** Slices shown after zooming into an index path, and the items along that path. */
 export function sunburstFocus(roots: readonly TxSunburstItem[], path: readonly number[]): { items: readonly TxSunburstItem[]; trail: TxSunburstItem[] } {
   let items = roots;
   const trail: TxSunburstItem[] = [];
@@ -19,13 +21,19 @@ export function sunburstFocus(roots: readonly TxSunburstItem[], path: readonly n
   return { items, trail };
 }
 
+/** Settings of `sunburstArcs`. */
 export interface TxSunburstOptions {
+  /** Number of rings drawn. */
   levels: number;
+  /** Outer radius, in px. */
   radius: number;
+  /** Size of the empty centre as a share of the radius, 0 to 0.9. */
   hole: number;
+  /** Index path of the slice zoomed into; empty shows the top level. */
   focus: readonly number[];
 }
 
+/** Lays out the visible rings of a sunburst as arcs; slices without a positive value are skipped. */
 export function sunburstArcs(roots: readonly TxSunburstItem[], options: TxSunburstOptions): TxSunburstArc[] {
   const { items, trail } = sunburstFocus(roots, options.focus);
   const levels = Math.max(1, Math.floor(options.levels));
@@ -72,6 +80,7 @@ export function sunburstArcs(roots: readonly TxSunburstItem[], options: TxSunbur
   return arcs;
 }
 
+/** The arc under a point, or `null` outside all arcs. */
 export function sunburstArcAt(arcs: readonly TxSunburstArc[], x: number, y: number, cx: number, cy: number): TxSunburstArc | null {
   const distance = Math.hypot(x - cx, y - cy);
   let angle = Math.atan2(x - cx, -(y - cy));

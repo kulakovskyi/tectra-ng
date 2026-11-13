@@ -24,6 +24,7 @@ import { STEPPER_THEME } from './stepper.theme';
 const NEXT_KEYS = ['ArrowRight', 'ArrowDown'];
 const PREVIOUS_KEYS = ['ArrowLeft', 'ArrowUp'];
 
+/** A multi-step flow with its own panels: a row of numbered steps above the panels, or vertical items. */
 @Component({
   selector: 'tx-stepper',
   template: '<ng-content />',

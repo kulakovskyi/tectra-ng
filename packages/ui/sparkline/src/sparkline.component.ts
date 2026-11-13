@@ -11,6 +11,10 @@ const WIDTH = 120;
 const HEIGHT = 36;
 const PADDING = 3;
 
+/**
+ * Scales values between their smallest and largest into drawing points; fewer than two finite numbers
+ * give no points.
+ */
 export function sparklinePoints(values: readonly number[]): TxSparklinePoint[] {
   const numbers = values.filter((value) => Number.isFinite(value));
   if (numbers.length < 2) {

@@ -1,5 +1,6 @@
 import { lightDark, tokenRef } from './token-helpers';
 
+/** Design tokens of `tx-carousel`: colors, sizes and spacing of its root, content, indicator list and indicator. */
 export const carouselTokens = {
   root: {
     transitionDuration: tokenRef('motion-duration'),
@@ -27,4 +28,5 @@ export const carouselTokens = {
   },
 };
 
+/** Type of `carouselTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraCarouselTokens = typeof carouselTokens;

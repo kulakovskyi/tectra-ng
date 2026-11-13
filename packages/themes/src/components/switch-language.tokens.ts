@@ -1,5 +1,6 @@
 import { joinCss, mix, tokenRef } from './token-helpers';
 
+/** Design tokens of `tx-switch-language`: colors, sizes and spacing of its root, thumb and option. */
 export const switchLanguageTokens = {
   root: {
     height: '37px',
@@ -29,4 +30,5 @@ export const switchLanguageTokens = {
   },
 };
 
+/** Type of `switchLanguageTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export type TectraSwitchLanguageTokens = typeof switchLanguageTokens;
