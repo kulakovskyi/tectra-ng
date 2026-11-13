@@ -1,6 +1,6 @@
 {
   "name": "@tectra-ng/tokens",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Design tokens for tectra: palettes, radius, typography, shadows, spacing and motion as plain data.",
   "license": "MIT",
   "homepage": "https://tectra-ng.com",

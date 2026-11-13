@@ -1,3 +1,13 @@
+## 0.4.1 (2026-11-13)
+
+### 🩹 Fixes
+
+- resolve the kit packages with every package manager and editor ([#34](https://github.com/kulakovskyi/tectra-ng/pull/34))
+
+### ❤️ Thank You
+
+- Andriy @kulakovskyi
+
 ## 0.4.0 (2026-11-13)
 
 ### 🚀 Features
