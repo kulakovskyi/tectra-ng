@@ -1,6 +1,6 @@
 import { DOCUMENT, DestroyRef, Directive, ElementRef, afterNextRender, inject, input, numberAttribute, signal } from '@angular/core';
 
-export type DocsScrollMode = 'sticky' | 'view' | 'leave';
+export type DocsScrollMode = 'sticky' | 'view' | 'leave' | 'enter';
 
 @Directive({
   selector: '[docsScrollProgress]',
@@ -12,6 +12,7 @@ export class DocsScrollProgress {
 
   readonly docsScrollProgress = input<DocsScrollMode>('view');
   readonly steps = input<number, unknown>(1, { transform: numberAttribute });
+  readonly offset = input<number, unknown>(0, { transform: numberAttribute });
 
   readonly progress = signal(0);
   readonly step = signal(0);
@@ -45,7 +46,13 @@ export class DocsScrollProgress {
     const height = this.document.documentElement.clientHeight;
     const mode = this.docsScrollProgress();
     const raw =
-      mode === 'sticky' ? -rect.top / Math.max(rect.height - height, 1) : mode === 'leave' ? -rect.top / Math.max(rect.height, 1) : (height - rect.top) / (height * 0.75);
+      mode === 'sticky'
+        ? -rect.top / Math.max(rect.height - height, 1)
+        : mode === 'leave'
+          ? -rect.top / Math.max(rect.height, 1)
+          : mode === 'enter'
+            ? (height - rect.top) / Math.max(height - this.offset(), 1)
+            : (height - rect.top) / (height * 0.75);
     const progress = Math.min(Math.max(raw, 0), 1);
     element.style.setProperty('--p', progress.toFixed(4));
     this.progress.set(progress);

@@ -1,0 +1,48 @@
+<div class="theme">
+  <div class="theme__row" role="group" aria-label="Style">
+    @for (style of styles; track style) {
+      <button
+        txButton
+        type="button"
+        size="small"
+        rounded
+        class="theme__style"
+        [outlined]="settings.style() !== style"
+        [severity]="settings.style() === style ? 'primary' : 'secondary'"
+        [attr.aria-pressed]="settings.style() === style"
+        (click)="settings.update({ style })"
+      >
+        {{ style }}
+      </button>
+    }
+  </div>
+
+  <div class="theme__row" role="group" aria-label="Primary colour">
+    @for (primary of primaries; track primary.name) {
+      <button
+        type="button"
+        class="theme__swatch"
+        [style.--swatch]="primary.color"
+        [class.theme__swatch--on]="settings.primary() === primary.name"
+        [attr.aria-pressed]="settings.primary() === primary.name"
+        [attr.aria-label]="primary.name"
+        (click)="settings.update({ primary: primary.name })"
+      ></button>
+    }
+    <button txButton text rounded size="small" severity="secondary" class="theme__mode" txThemeReveal [icon]="dark() ? 'sun' : 'moon'" (themeChange)="settings.toggleMode()">
+      {{ dark() ? 'Light' : 'Dark' }}
+    </button>
+  </div>
+
+  <div class="theme__preview">
+    <div class="theme__head">
+      <strong>Release 0.4</strong>
+      <tx-tag rounded severity="success">On track</tx-tag>
+    </div>
+    <tx-progress-bar ariaLabel="Release progress" [value]="68" [showValue]="true" />
+    <div class="theme__actions">
+      <button txButton type="button" icon="send">Publish</button>
+      <button txButton type="button" outlined severity="secondary">Preview</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,76 @@
+<section class="features" aria-labelledby="features-title">
+  <header class="features__head">
+    <span class="features__label">What's inside</span>
+    <h2 class="features__title" id="features-title">Everything around your UI, handled.</h2>
+  </header>
+
+  <div class="features__stack">
+    @for (feature of features; track feature.label; let index = $index) {
+      <article
+        class="card"
+        docsScrollProgress="enter"
+        [offset]="stickyTop(index)"
+        [attr.data-tone]="feature.tone"
+        [style.--i]="index"
+        [style.--c]="covered()[index]"
+        [attr.aria-labelledby]="'feature-' + index"
+      >
+        <div class="card__copy">
+          <span class="card__number">{{ number(index) }} / {{ total }} · {{ feature.label }}</span>
+          <h3 class="card__title" [id]="'feature-' + index">{{ feature.title }}</h3>
+          <p class="card__text">{{ feature.text }}</p>
+          <ul class="card__points">
+            @for (point of feature.points; track point) {
+              <li>{{ point }}</li>
+            }
+          </ul>
+          <a class="card__more" [routerLink]="feature.link">{{ feature.linkLabel }} <tx-icon name="angle-right" /></a>
+        </div>
+        <div class="card__stage">
+          <div class="card__window" [class.card__window--shot]="feature.demo === 'editor' || feature.demo === 'board'">
+            @switch (feature.demo) {
+              @case ('table') {
+                @defer (on viewport; prefetch on idle) {
+                  <docs-landing-table-demo />
+                } @placeholder {
+                  <div class="card__placeholder"></div>
+                }
+              }
+              @case ('form') {
+                @defer (on viewport; prefetch on idle) {
+                  <docs-landing-form-demo />
+                } @placeholder {
+                  <div class="card__placeholder"></div>
+                }
+              }
+              @case ('chart') {
+                @defer (on viewport; prefetch on idle) {
+                  <docs-landing-chart-demo />
+                } @placeholder {
+                  <div class="card__placeholder"></div>
+                }
+              }
+              @case ('theme') {
+                @defer (on viewport; prefetch on idle) {
+                  <docs-landing-theme-demo />
+                } @placeholder {
+                  <div class="card__placeholder"></div>
+                }
+              }
+              @default {
+                <img
+                  [src]="'/images/landing/' + feature.demo + '-' + mode() + '.png'"
+                  [alt]="feature.demo === 'editor' ? 'A document in the rich text editor with headings, a list and a quote' : 'A roadmap board with four columns of cards'"
+                  width="1440"
+                  height="900"
+                  loading="lazy"
+                  decoding="async"
+                />
+              }
+            }
+          </div>
+        </div>
+      </article>
+    }
+  </div>
+</section>

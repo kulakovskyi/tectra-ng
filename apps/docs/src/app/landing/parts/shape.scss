@@ -1,0 +1,95 @@
+:host {
+  --shape-fill: var(--l-sky);
+
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 1;
+  color: var(--l-on-block);
+}
+
+:host([data-tone='green']) {
+  --shape-fill: var(--l-green);
+}
+
+:host([data-tone='orange']) {
+  --shape-fill: var(--l-orange);
+}
+
+:host([data-tone='amber']) {
+  --shape-fill: var(--l-amber);
+}
+
+:host([data-tone='purple']) {
+  --shape-fill: var(--l-purple);
+}
+
+:host([data-tone='blue']) {
+  --shape-fill: var(--l-blue);
+}
+
+:host([data-tone='brand']) {
+  --shape-fill: var(--tx-primary-base);
+
+  color: var(--tx-primary-contrast);
+}
+
+:host([data-tone='ink']) {
+  --shape-fill: var(--l-on-block);
+
+  color: var(--l-sky);
+}
+
+.shape__body {
+  position: absolute;
+  inset: 0;
+  border-radius: 14%;
+  background: var(--shape-fill);
+}
+
+.shape__icon {
+  position: relative;
+  font-size: clamp(14px, 32%, 28px);
+}
+
+:host([data-kind='circle']) .shape__body {
+  border-radius: 50%;
+}
+
+:host([data-kind='arch']) .shape__body {
+  border-radius: 50% 50% 0 0 / 50% 50% 0 0;
+}
+
+:host([data-kind='bowl']) .shape__body {
+  border-radius: 0 0 50% 50% / 0 0 50% 50%;
+}
+
+:host([data-kind='quarter']) .shape__body {
+  border-radius: 100% 0 0;
+}
+
+:host([data-kind='drop']) .shape__body {
+  border-radius: 0 50% 50%;
+}
+
+:host([data-kind='leaf']) .shape__body {
+  border-radius: 0 50%;
+}
+
+:host([data-kind='diamond']) .shape__body {
+  inset: 15%;
+  border-radius: 10%;
+  transform: rotate(45deg);
+}
+
+:host([data-kind='triangle']) .shape__body {
+  border-radius: 0;
+  clip-path: polygon(0 100%, 100% 0, 100% 100%);
+}
+
+:host([data-kind='ring']) .shape__body {
+  border: max(6px, 14%) solid var(--shape-fill);
+  border-radius: 50%;
+  background: transparent;
+}

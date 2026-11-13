@@ -9,14 +9,9 @@ const port = Number(process.env.TX_STUDIO_PORT ?? 4302);
 const base = `http://localhost:${port}`;
 
 const DESKTOP = { width: 1440, height: 900, scale: 1.5 };
-const PHONE = { width: 390, height: 844, scale: 2 };
 const SHOTS = [
-  { scene: 'overview', size: DESKTOP, type: 'png' },
   { scene: 'board', size: DESKTOP, type: 'png' },
   { scene: 'editor', size: DESKTOP, type: 'png' },
-  { scene: 'calendar', size: DESKTOP, type: 'png' },
-  { scene: 'palette', size: DESKTOP, type: 'jpeg' },
-  { scene: 'overview', name: 'phone', size: PHONE, type: 'png' },
 ];
 
 async function waitForServer(server) {
