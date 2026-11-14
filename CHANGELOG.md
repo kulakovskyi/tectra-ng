@@ -1,3 +1,13 @@
+## 0.4.2 (2026-11-14)
+
+### 🚀 Features
+
+- theme configurator, typed templates and overlay, layout and form fixes ([#36](https://github.com/kulakovskyi/tectra-ng/pull/36))
+
+### ❤️ Thank You
+
+- Andriy @kulakovskyi
+
 ## 0.4.1 (2026-11-13)
 
 ### 🩹 Fixes

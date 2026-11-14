@@ -1,6 +1,6 @@
 {
   "name": "@tectra-ng/blocks",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Ready page blocks for Angular consoles and admin apps on the tectra components: filters panel, page header, empty state, layouts, wizard, command palette and more.",
   "license": "MIT",
   "homepage": "https://tectra-ng.com",
@@ -29,11 +29,11 @@
     "@angular/core": "^22.2.0",
     "@angular/forms": "^22.2.0",
     "@angular/router": "^22.2.0",
-    "@tectra-ng/core": "^0.4.1",
-    "@tectra-ng/icons": "^0.4.1",
-    "@tectra-ng/qr": "^0.4.1",
-    "@tectra-ng/themes": "^0.4.1",
-    "@tectra-ng/ui": "^0.4.1"
+    "@tectra-ng/core": "^0.4.2",
+    "@tectra-ng/icons": "^0.4.2",
+    "@tectra-ng/qr": "^0.4.2",
+    "@tectra-ng/themes": "^0.4.2",
+    "@tectra-ng/ui": "^0.4.2"
   },
   "peerDependenciesMeta": {
     "@angular/router": {

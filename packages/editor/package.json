@@ -1,6 +1,6 @@
 {
   "name": "@tectra-ng/editor",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Rich text editor for tectra: toolbar, menus, links, images, mentions and a renderer for saved HTML.",
   "license": "MIT",
   "homepage": "https://tectra-ng.com",
@@ -32,10 +32,10 @@
     "@angular/common": "^22.2.0",
     "@angular/core": "^22.2.0",
     "@angular/forms": "^22.2.0",
-    "@tectra-ng/core": "^0.4.1",
-    "@tectra-ng/icons": "^0.4.1",
-    "@tectra-ng/themes": "^0.4.1",
-    "@tectra-ng/ui": "^0.4.1",
+    "@tectra-ng/core": "^0.4.2",
+    "@tectra-ng/icons": "^0.4.2",
+    "@tectra-ng/themes": "^0.4.2",
+    "@tectra-ng/ui": "^0.4.2",
     "@angular/platform-browser": "^22.2.0"
   },
   "dependencies": {
