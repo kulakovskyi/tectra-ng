@@ -1,6 +1,6 @@
 import { expect, test } from './fixtures';
 
-test('split button runs its action and opens its menu under the whole button', async ({ page }) => {
+test('split button runs its action and opens its menu under it with the arrow on the menu button', async ({ page }) => {
   await page.goto('/components/split-button');
   const example = page.locator('split-button-basic-example');
   await example.getByRole('button', { name: 'Save', exact: true }).click();
@@ -10,11 +10,14 @@ test('split button runs its action and opens its menu under the whole button', a
   await page.keyboard.press('ArrowDown');
   const menu = page.getByRole('menu', { name: 'More actions' });
   await expect(menu.getByRole('menuitem', { name: 'Save as draft' })).toBeFocused();
-  const [group, panel] = await Promise.all(
-    [example.locator('tx-split-button'), menu].map((locator) => locator.evaluate((element) => element.getBoundingClientRect().toJSON())),
+  const [group, panel, button, arrow] = await Promise.all(
+    [example.locator('tx-split-button'), menu, toggle, page.locator('.tx-menu-popup__arrow').last()].map((locator) =>
+      locator.evaluate((element) => element.getBoundingClientRect().toJSON()),
+    ),
   );
-  expect(Math.abs(panel.right - group.right)).toBeLessThan(1);
+  expect(panel.right).toBeGreaterThanOrEqual(group.right - 1);
   expect(panel.top).toBeGreaterThanOrEqual(group.bottom);
+  expect(Math.abs(arrow.left + arrow.width / 2 - (button.left + button.width / 2))).toBeLessThan(1);
   await page.keyboard.press('ArrowDown');
   await page.keyboard.press('Enter');
   await expect(menu).toHaveCount(0);
