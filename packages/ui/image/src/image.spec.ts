@@ -4,6 +4,7 @@ import { ChangeDetectionStrategy, Component, Injector, TemplateRef, ViewContaine
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TxImage } from './image.component';
 import { TxImageIndicatorTemplate, TxImagePreviewTemplate } from './image.templates';
+import { TxOverlayStack } from '@tectra-ng/core/overlay';
 import { openImageLayer } from './image-layer';
 
 @Component({
@@ -87,6 +88,18 @@ describe('TxImage', () => {
     fixture.componentInstance.preview.set(false);
     await fixture.whenStable();
     expect(el('.tx-image__preview')).toBeNull();
+  });
+
+  it('closes open transient overlays when the preview opens', async () => {
+    const stack = TestBed.inject(TxOverlayStack);
+    const raise = vi.spyOn(stack, 'raise');
+    const closed: string[] = [];
+    stack.addTransient(() => closed.push('menu'));
+    el('.tx-image__preview').click();
+    await fixture.whenStable();
+    expect(closed).toEqual(['menu']);
+    expect(raise).toHaveBeenCalled();
+    raise.mockRestore();
   });
 
   it('opens the preview with the large source, toolbar and focus on close', async () => {

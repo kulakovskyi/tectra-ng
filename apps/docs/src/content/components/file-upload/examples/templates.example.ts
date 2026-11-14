@@ -11,12 +11,7 @@ import {
   selector: 'file-upload-templates-example',
   imports: [TxFileUpload, TxFileUploadDropzoneTemplate, TxFileUploadFileTemplate, TxIcon, TxButton],
   template: `
-    <tx-file-upload
-      multiple
-      accept="image/*"
-     
-      [dt]="{ dropzone: { minHeight: '120px' } }"
-    >
+    <tx-file-upload multiple accept="image/*" [dt]="{ dropzone: { minHeight: '120px' } }">
       <ng-template txFileUploadDropzone let-dragging>
         <span class="zone">
           <tx-icon [name]="dragging ? 'arrow-down' : 'images'" />

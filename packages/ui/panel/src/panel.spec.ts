@@ -38,6 +38,7 @@ describe('TxPanel', () => {
     const title = el('#members .tx-panel__title');
     expect(panel.getAttribute('role')).toBe('region');
     expect(panel.getAttribute('aria-labelledby')).toBe(title.id);
+    expect(panel.hasAttribute('title')).toBe(false);
     expect(title.getAttribute('aria-level')).toBe('2');
     expect(el('#members .tx-panel__icon tx-icon').getAttribute('data-icon')).toBe('users');
     expect(el('#members .tx-panel__subtitle').textContent).toBe('People in the project');

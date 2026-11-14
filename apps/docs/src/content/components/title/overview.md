@@ -3,7 +3,7 @@ category: Utilities
 source: packages/utils/title
 package: @tectra-ng/utils/title
 import: provideTxTitle
-examples: prefix
+examples: prefix, detail-page
 ---
 # Title
 

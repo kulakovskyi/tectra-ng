@@ -35,7 +35,7 @@
 </span>
 <span class="tx-checkbox__text">
   <label class="tx-checkbox__label" [for]="resolvedId()" [class]="passThrough().label?.class" [style]="passThrough().label?.style"
-    >{{ label() }}<ng-content
+    >@if (label()) {{{ label() }}}<ng-content
   /></label>
   @if (description()) {
     <span class="tx-checkbox__description" [id]="descriptionId" [class]="passThrough().description?.class" [style]="passThrough().description?.style">{{

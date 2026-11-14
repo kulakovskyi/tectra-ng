@@ -26,4 +26,15 @@ test.describe('network status', () => {
     expect(Math.abs(box.x + box.width / 2 - (frame.x + frame.width / 2))).toBeLessThan(2);
     expect(Math.round(frame.y + frame.height - 1 - (box.y + box.height))).toBe(21);
   });
+
+  test('tells other bottom overlays how much room the pill takes', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/components/network-status');
+    const root = page.locator('network-status-basic-example');
+    const offset = () => page.evaluate(() => document.body.style.getPropertyValue('--tx-bottom-overlay-offset'));
+    expect(await offset()).toBe('');
+    await root.getByRole('button', { name: 'Go offline' }).click();
+    await expect(root.locator('.tx-network-status__pill')).toBeVisible();
+    await expect.poll(async () => parseFloat(await offset())).toBeGreaterThan(30);
+  });
 });

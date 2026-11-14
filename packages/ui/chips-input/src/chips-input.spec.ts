@@ -249,3 +249,10 @@ describe('TxChipsInput recompiled by TestBed', () => {
     expect(fixture.nativeElement.querySelector('tx-chip').textContent.trim()).toBe('#x');
   });
 });
+
+describe('chips input item directive', () => {
+  it('narrows its template context', () => {
+    expect(TxChipsInputItemTemplate.ngTemplateContextGuard({} as TxChipsInputItemTemplate, { $implicit: 'a', index: 0 })).toBe(true);
+    expect(TxChipsInputItemTemplate.ngTemplateContextGuard({} as TxChipsInputItemTemplate, undefined)).toBe(false);
+  });
+});

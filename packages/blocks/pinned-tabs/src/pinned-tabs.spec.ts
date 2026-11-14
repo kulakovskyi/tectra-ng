@@ -180,3 +180,56 @@ describe('TxPinnedTabs dialog and storage edges', () => {
     expect(tabs.pinned()).toEqual([]);
   });
 });
+
+@Component({
+  imports: [TxPinnedTabs],
+  template: `<tx-pinned-tabs [stateKey]="key" [options]="options" [defaultPinned]="['sales']" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class DefaultHost {
+  readonly key = KEY;
+  readonly options = [
+    { value: 'design', label: 'Design' },
+    { value: 'sales', label: 'Sales' },
+  ];
+}
+
+describe('TxPinnedTabs default pins and pins from code', () => {
+  beforeEach(() => localStorage.clear());
+
+  async function setup() {
+    const fixture = TestBed.createComponent(DefaultHost);
+    await fixture.whenStable();
+    const root = fixture.nativeElement.querySelector('tx-pinned-tabs') as HTMLElement;
+    const tabs = fixture.debugElement.query(By.directive(TxPinnedTabs)).componentInstance as TxPinnedTabs;
+    const labels = () => Array.from(root.querySelectorAll('[role="tab"]')).map((tab) => tab.textContent?.trim());
+    return { fixture, tabs, labels };
+  }
+
+  it('shows the default pins until a choice is saved', async () => {
+    const { tabs, labels } = await setup();
+    expect(tabs.pinned()).toEqual(['sales']);
+    expect(labels()).toEqual(['All', 'Sales']);
+    expect(localStorage.getItem(KEY)).toBeNull();
+  });
+
+  it('prefers the saved choice, also an empty one', async () => {
+    localStorage.setItem(KEY, JSON.stringify([]));
+    const { tabs } = await setup();
+    expect(tabs.pinned()).toEqual([]);
+  });
+
+  it('pins and unpins from code and saves the choice', async () => {
+    const { fixture, tabs, labels } = await setup();
+    tabs.pin('design');
+    tabs.pin('design');
+    await fixture.whenStable();
+    expect(labels()).toEqual(['All', 'Design', 'Sales']);
+    expect(JSON.parse(localStorage.getItem(KEY) ?? '[]')).toEqual(['sales', 'design']);
+    tabs.unpin('sales');
+    tabs.unpin('sales');
+    await fixture.whenStable();
+    expect(labels()).toEqual(['All', 'Design']);
+    expect(JSON.parse(localStorage.getItem(KEY) ?? '[]')).toEqual(['design']);
+  });
+});

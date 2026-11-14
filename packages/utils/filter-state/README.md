@@ -13,6 +13,8 @@ readonly orders = httpResource(() => ({ url: '/api/orders', params: buildHttpPar
 <button txButton label="Reset" [disabled]="filters.isInitial()" (click)="filters.reset()"></button>
 ```
 
+With `url: true` every change is a router navigation that only changes the query string. Add `provideTxScrolling()` from `@tectra-ng/utils/scrolling` next to `provideRouter` and keep `scrollPositionRestoration` at `'disabled'`: the router's `'enabled'` or `'top'` scrolls to the top on each of those navigations — on every page, sort or filter change — while `provideTxScrolling()` leaves the page in place, starts a new path at the top and restores the position on back and forward.
+
 Pages built on a base class keep their code: extend `TxUrlFilters<T>` (or `TxSaveFilters<T>` for storage only), set `localStorageKey` and `initialFilters()`, call `storeFilters()` / `getStoredFilters()`, override `applyUrlFilters()` to react to back and forward.
 
 ## Functions
@@ -28,9 +30,9 @@ Pages built on a base class keep their code: extend `TxUrlFilters<T>` (or `TxSav
 ## Methods
 | Name | Description |
 |---|---|
-| value | Signal of the current filters |
+| value | Signal of the current filters; keeps the same object while the values stay equal |
 | isInitial | Signal: nothing differs from `initial` |
 | changed | Signal: keys that differ from `initial` — for a "3 filters" badge |
-| set(filters) | Replaces the filters and saves them |
-| patch(filters) | Changes some keys |
+| set(filters) | Replaces the filters and saves them; does nothing when every value equals the current one |
+| patch(filters) | Changes some keys; does nothing when every patched value equals the current one, so a repeated patch never reloads a list |
 | reset() | Back to `initial`; removes the stored copy and the query params |

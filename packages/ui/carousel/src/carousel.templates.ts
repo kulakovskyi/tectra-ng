@@ -1,9 +1,14 @@
-import { Directive, TemplateRef, inject } from '@angular/core';
+import { Directive, TemplateRef, inject, input } from '@angular/core';
 import { TxCarouselIndicatorContext, TxCarouselItemContext } from './carousel.types';
 
 @Directive({ selector: 'ng-template[txCarouselItem]' })
-export class TxCarouselItemTemplate {
-  readonly template = inject<TemplateRef<TxCarouselItemContext>>(TemplateRef);
+export class TxCarouselItemTemplate<T> {
+  readonly template = inject<TemplateRef<TxCarouselItemContext<T>>>(TemplateRef);
+  readonly txCarouselItemOf = input<readonly T[] | null | undefined>(undefined);
+
+  static ngTemplateContextGuard<T>(_directive: TxCarouselItemTemplate<T>, context: unknown): context is TxCarouselItemContext<T> {
+    return !!context;
+  }
 }
 
 @Directive({ selector: 'ng-template[txCarouselIndicator]' })

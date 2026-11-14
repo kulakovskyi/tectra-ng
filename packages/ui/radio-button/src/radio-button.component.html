@@ -25,7 +25,7 @@
 </span>
 <span class="tx-radio-button__text">
   <label class="tx-radio-button__label" [for]="resolvedId()" [class]="passThrough().label?.class" [style]="passThrough().label?.style"
-    >{{ label() }}<ng-content
+    >@if (label()) {{{ label() }}}<ng-content
   /></label>
   @if (description()) {
     <span

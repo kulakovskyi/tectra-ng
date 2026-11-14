@@ -1,5 +1,5 @@
 /** Names of the parts of `tx-breadcrumb` that `pt` can style. */
-export type TxBreadcrumbPart = 'root' | 'list' | 'item' | 'link' | 'icon' | 'label' | 'separator';
+export type TxBreadcrumbPart = 'root' | 'list' | 'item' | 'link' | 'text' | 'icon' | 'label' | 'separator';
 
 /** Mark between items: `chevron` or `slash`. */
 export type TxBreadcrumbSeparator = 'chevron' | 'slash';

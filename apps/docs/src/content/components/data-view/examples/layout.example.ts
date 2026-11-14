@@ -49,7 +49,7 @@ const PRODUCTS: Product[] = [
           <tx-data-view-layout [(layout)]="layout" />
         </div>
       </ng-template>
-      <ng-template txDataViewList let-items>
+      <ng-template txDataViewList [txDataViewListOf]="products" let-items>
         <ul class="list">
           @for (product of items; track product.id) {
             <li class="row">
@@ -63,7 +63,7 @@ const PRODUCTS: Product[] = [
           }
         </ul>
       </ng-template>
-      <ng-template txDataViewGrid let-items>
+      <ng-template txDataViewGrid [txDataViewGridOf]="products" let-items>
         <ul class="cards">
           @for (product of items; track product.id) {
             <li class="card">

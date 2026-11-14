@@ -1,7 +1,7 @@
 ---
 category: Overlay
 tokens: popover
-examples: basic, form, arrow, target, nested, design-tokens
+examples: basic, form, header-actions, arrow, target, nested, design-tokens
 ---
 # Popover
 

@@ -52,6 +52,15 @@ Items with `src` (`TxGalleriaImage`: `src`, `thumbnailSrc`, `alt`, `title`, `des
 | txGalleriaHeader | Content above the gallery |
 | txGalleriaFooter | Content below the gallery |
 
+The item templates take the items only for typing — `<ng-template txGalleriaItem [txGalleriaItemOf]="photos" let-photo>` gives `photo` the item type in strict templates; without it the item stays untyped.
+
+## Inputs — item templates
+| Name | Description |
+|---|---|
+| txGalleriaItemOf | `txGalleriaItem`: the items, only for the type of `let-item` |
+| txGalleriaThumbnailOf | `txGalleriaThumbnail`: the items, only for the type of `let-item` |
+| txGalleriaCaptionOf | `txGalleriaCaption`: the items, only for the type of `let-item` |
+
 ## Keyboard
 | Key | Action |
 |---|---|

@@ -123,10 +123,26 @@ describe('TxAutocomplete', () => {
     key('Enter');
     expect(host.control.value).toEqual(['Kyiv', 'Odesa']);
     expect(input().value).toBe('');
-    const chips = Array.from(fixture.nativeElement.querySelectorAll('.tx-select__chip')) as HTMLElement[];
+    const chips = Array.from(fixture.nativeElement.querySelectorAll('.tx-select__chip:not(.tx-select__chip--more)')) as HTMLElement[];
     expect(chips.map((chip) => chip.textContent?.trim())).toEqual(['Kyiv', 'Odesa']);
     key('Backspace');
     expect(host.control.value).toEqual(['Kyiv']);
+  });
+
+  it('keeps chips on one line until the field has focus', () => {
+    host.multiple.set(true);
+    host.control.setValue(['Kyiv', 'Odesa']);
+    render();
+    const list = () => fixture.nativeElement.querySelector('.tx-autocomplete__chips') as HTMLElement;
+    const more = () => fixture.nativeElement.querySelector('.tx-select__chip--more') as HTMLElement;
+    expect(list().classList).toContain('tx-autocomplete__chips--fit');
+    expect(more().classList).toContain('tx-select__chip--hidden');
+    input().dispatchEvent(new FocusEvent('focus'));
+    render();
+    expect(list().classList).not.toContain('tx-autocomplete__chips--fit');
+    input().dispatchEvent(new FocusEvent('blur'));
+    render();
+    expect(list().classList).toContain('tx-autocomplete__chips--fit');
   });
 
   it('shows the written value and clears it', () => {
@@ -343,13 +359,13 @@ describe('TxAutocomplete features', () => {
   it('labels chips of unknown values and clears them to an empty list', () => {
     set(() => host.multiple.set(true));
     set(() => host.control.setValue(['odesa', 'rivne']));
-    const chips = Array.from(fixture.nativeElement.querySelectorAll('.tx-select__chip')) as HTMLElement[];
+    const chips = Array.from(fixture.nativeElement.querySelectorAll('.tx-select__chip:not(.tx-select__chip--more)')) as HTMLElement[];
     expect(chips.map((chip) => chip.textContent?.trim())).toEqual(['Odesa', 'rivne']);
     component().clear();
     render();
     expect(host.control.value).toEqual([]);
     expect(host.changes.at(-1)).toEqual({ value: [], option: null, selected: false });
-    expect(fixture.nativeElement.querySelectorAll('.tx-select__chip')).toHaveLength(0);
+    expect(fixture.nativeElement.querySelectorAll('.tx-select__chip:not(.tx-select__chip--more)')).toHaveLength(0);
   });
 
   it('settles the text on Tab', () => {

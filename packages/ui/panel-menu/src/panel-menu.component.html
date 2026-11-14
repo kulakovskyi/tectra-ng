@@ -225,7 +225,7 @@
     <span class="tx-panel-menu__label" [class]="passThrough().label?.class" [style]="passThrough().label?.style">{{ node.item.label }}</span>
     @if (badgeText(node.item); as badge) {
       @if (variant() === 'sidebar') {
-        <span class="tx-panel-menu__badge" [class]="passThrough().badge?.class" [style]="passThrough().badge?.style">{{ badge }}</span>
+        <span class="tx-panel-menu__badge" [txAnimationReplay]="badge" [class]="passThrough().badge?.class" [style]="passThrough().badge?.style">{{ badge }}</span>
       } @else {
         <tx-badge class="tx-panel-menu__badge" size="small" severity="secondary" [value]="badge" [unstyled]="isUnstyled()" />
       }

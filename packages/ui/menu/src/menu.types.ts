@@ -3,7 +3,7 @@ export type TxMenuItemSeverity = 'danger';
 /** Color of the icon button of an item in `tx-context-menu`. */
 export type TxMenuIconSeverity = 'primary' | 'secondary' | 'success' | 'info' | 'warn' | 'danger' | 'help' | 'contrast';
 /** Parts of `tx-menu` and its variants that `pt` can style. */
-export type TxMenuPart = 'root' | 'item' | 'icon' | 'label' | 'shortcut' | 'badge' | 'separator' | 'groupLabel' | 'submenuIcon';
+export type TxMenuPart = 'root' | 'item' | 'icon' | 'label' | 'shortcut' | 'badge' | 'separator' | 'groupLabel' | 'submenuIcon' | 'arrow';
 
 /** Event of a menu item click or command. */
 export interface TxMenuItemEvent<TData = unknown> {
@@ -24,7 +24,7 @@ export interface TxMenuItem<TData = unknown> {
   /** Color of the icon button in `tx-context-menu` (default `primary`). */
   iconSeverity?: TxMenuIconSeverity;
   /** Called when the item is activated. */
-  command?: (event: TxMenuItemEvent<TData>) => void;
+  command?(event: TxMenuItemEvent<TData>): void;
   /** Router commands the item links to. */
   routerLink?: string | readonly unknown[];
   /** Query parameters of the `routerLink`. */

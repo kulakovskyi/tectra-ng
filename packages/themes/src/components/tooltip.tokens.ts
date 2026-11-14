@@ -18,8 +18,10 @@ export const tooltipTokens = {
     lineHeight: '1.5',
   },
   arrow: {
-    size: '5px',
+    size: '3.5px',
     inset: '10px',
+    background: 'initial',
+    shadow: 'drop-shadow(0 1.5px 1.5px rgba(12, 16, 21, 0.1))',
   },
 };
 

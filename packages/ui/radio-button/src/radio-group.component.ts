@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, booleanAttribute, computed, forwardRef, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, booleanAttribute, computed, contentChildren, forwardRef, inject, input, output } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { uniqueId } from '@tectra-ng/core/a11y';
 import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
@@ -6,6 +6,7 @@ import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraRadioButtonTokens, toStyleObject } from '@tectra-ng/themes';
 import { TX_RADIO_GROUP, TxRadioGroupContext } from './radio-group.token';
+import { TxRadioButton } from './radio-button.component';
 import { TxRadioButtonSize, TxRadioButtonVariant, TxRadioGroupOrientation, TxRadioGroupPart } from './radio-button.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { RADIO_BUTTON_ICON_DEFAULTS } from './radio-button.icons';
@@ -19,6 +20,10 @@ import { RADIO_BUTTON_THEME } from './radio-button.theme';
       display: flex;
       flex-direction: column;
       align-items: flex-start;
+    }
+
+    :host([data-tiles]) {
+      align-items: stretch;
     }
 
     :host([data-styled]) {
@@ -46,6 +51,7 @@ import { RADIO_BUTTON_THEME } from './radio-button.theme';
     '[style]': 'hostStyle()',
     '[attr.data-styled]': '!isUnstyled() || null',
     '[attr.data-orientation]': 'orientation()',
+    '[attr.data-tiles]': 'hasTiles() || null',
     '[attr.aria-label]': 'ariaLabel() ?? null',
     '[attr.aria-labelledby]': 'ariaLabelledBy() ?? null',
     '[attr.aria-invalid]': 'isInvalid() || null',
@@ -82,6 +88,8 @@ export class TxRadioGroup extends TxFormControlBase<unknown> {
   readonly isDisabled = computed(() => this.disabled() || this.disabledInput());
   readonly resolvedName = computed(() => this.name() ?? this.generatedName);
   readonly hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-radio-button'), ...this.passThrough().root?.style }));
+  private readonly buttons = contentChildren(TxRadioButton, { descendants: true });
+  readonly hasTiles = computed(() => this.buttons().some((button) => button.tile()));
 
   readonly context: TxRadioGroupContext = {
     name: this.resolvedName,

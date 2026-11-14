@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -12,15 +13,14 @@ import {
   effect,
   inject,
   input,
-  numberAttribute,
   output,
   signal,
   viewChild,
 } from '@angular/core';
 import { uniqueId } from '@tectra-ng/core/a11y';
 import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
-import { TxOverlay, TxOverlayRef, TxPlacement } from '@tectra-ng/core/overlay';
-import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TxOverlay, TxOverlayRef, TxPlacement, parsePlacement, txArrowInset, txArrowOffset } from '@tectra-ng/core/overlay';
+import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraMenuTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxMenuFocus, TxMenuList, TxMenuVariant } from './menu-list.component';
 import { TxMenuItem, TxMenuItemContext, TxMenuItemEvent, TxMenuPart } from './menu.types';
@@ -29,13 +29,18 @@ import { MENU_ICON_DEFAULTS } from './menu.icons';
 import { MENU_THEME } from './menu.theme';
 
 @Directive({ selector: 'ng-template[txMenuItem]' })
-export class TxMenuItemTemplate {
-  readonly template = inject<TemplateRef<TxMenuItemContext>>(TemplateRef);
+export class TxMenuItemTemplate<T> {
+  readonly template = inject<TemplateRef<TxMenuItemContext<T>>>(TemplateRef);
+  readonly txMenuItemOf = input<readonly TxMenuItem<T>[] | null | undefined>(undefined);
+
+  static ngTemplateContextGuard<T>(_directive: TxMenuItemTemplate<T>, context: unknown): context is TxMenuItemContext<T> {
+    return !!context;
+  }
 }
 
 @Component({
   selector: 'tx-menu, tx-tiered-menu',
-  imports: [TxMenuList],
+  imports: [NgTemplateOutlet, TxMenuList],
   template: `
     @if (!popup()) {
       <tx-menu-list
@@ -52,6 +57,22 @@ export class TxMenuItemTemplate {
       />
     }
     <ng-template #panel let-focus="focus">
+      @if (arrow()) {
+        <div
+          class="tx-menu-popup"
+          [style]="arrowStyle()"
+          [attr.data-styled]="!isUnstyled() || null"
+          [attr.data-side]="side()"
+          [attr.data-placement]="currentPlacement()"
+        >
+          <span class="tx-menu-popup__arrow" aria-hidden="true" [class]="passThrough().arrow?.class" [style]="passThrough().arrow?.style"></span>
+          <ng-container [ngTemplateOutlet]="menuList" [ngTemplateOutletContext]="{ focus }" />
+        </div>
+      } @else {
+        <ng-container [ngTemplateOutlet]="menuList" [ngTemplateOutletContext]="{ focus }" />
+      }
+    </ng-template>
+    <ng-template #menuList let-focus="focus">
       <tx-menu-list
         panel="popup"
         [variant]="variant()"
@@ -70,6 +91,7 @@ export class TxMenuItemTemplate {
       />
     </ng-template>
   `,
+  styleUrl: './menu.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'tx-menu-host',
@@ -90,7 +112,8 @@ export class TxMenu {
   readonly popup = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly tiered = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
   readonly placement = input<TxPlacement>('bottom-start');
-  readonly offset = input<number, unknown>(4, { transform: numberAttribute });
+  readonly offset = input<number | undefined, unknown>(undefined, { transform: optionalNumber });
+  readonly arrow = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly variant = input<TxMenuVariant>('default');
   readonly ariaLabel = input<string | undefined>(undefined);
   readonly ariaLabelledBy = input<string | undefined>(undefined);
@@ -113,9 +136,17 @@ export class TxMenu {
   readonly tokens = computed(() => toStyleObject(this.dt(), '--tx-menu'));
 
   private readonly ref = signal<TxOverlayRef | null>(null);
+  private readonly shown = signal<TxOverlayRef | null>(null);
   private readonly anchor = signal<Element | null>(null);
+  private readonly anchorSize = signal({ width: 0, height: 0 });
   private destroyed = false;
   readonly isOpen = computed(() => this.ref() !== null);
+  readonly currentPlacement = computed(() => this.shown()?.placement() ?? this.placement());
+  readonly side = computed(() => parsePlacement(this.currentPlacement()).side);
+  readonly arrowStyle = computed(() => ({
+    ...this.tokens(),
+    '--tx-menu-arrow-offset': txArrowOffset(this.currentPlacement(), this.anchorSize(), 'var(--tx-menu-arrow-inset)'),
+  }));
 
   constructor() {
     effect(() => {
@@ -141,14 +172,17 @@ export class TxMenu {
       this.ref()?.close('api');
     }
     this.anchor.set(anchor);
+    const { width, height } = anchor.getBoundingClientRect();
+    this.anchorSize.set({ width, height });
     const ref = this.overlay.open(this.panel(), {
       origin: anchor,
       viewContainerRef: this.viewContainerRef,
       context: { focus },
       placement: this.placement(),
-      offset: this.offset(),
+      offset: this.offset() ?? (this.arrow() ? 10 : 4),
       layer: 'dropdown',
       closeOnOutsideClick: !closeOnPointerDown,
+      arrowInset: (pane) => txArrowInset(pane.querySelector('.tx-menu'), pane.querySelector('.tx-menu-popup__arrow')),
     });
     const stopWatching = closeOnPointerDown ? this.closeOnPointerDownOutside(ref) : () => undefined;
     ref.closed.subscribe(() => {
@@ -160,6 +194,7 @@ export class TxMenu {
         this.closed.emit();
       }
     });
+    this.shown.set(ref);
     this.ref.set(ref);
     this.opened.emit();
   }

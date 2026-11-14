@@ -42,9 +42,15 @@
     } @else if (summarized()) {
       <span class="tx-select__value" [class]="passThrough().value?.class" [style]="passThrough().value?.style">{{ summary() }}</span>
     } @else if (display() === 'chip') {
-      <span class="tx-select__value tx-select__chips" [class]="passThrough().value?.class" [style]="passThrough().value?.style">
-        @for (item of selectedItems(); track item.id) {
-          <span class="tx-select__chip" [class]="passThrough().chip?.class" [style]="passThrough().chip?.style">
+      <span #fit="txSelectChipsFit" class="tx-select__value tx-select__chips" [txSelectChipsFit]="selectedItems()" [class]="passThrough().value?.class" [style]="passThrough().value?.style">
+        @for (item of selectedItems(); track item.id; let index = $index) {
+          <span
+            class="tx-select__chip"
+            [class.tx-select__chip--hidden]="index >= fit.visible()"
+            [attr.aria-hidden]="index >= fit.visible() || null"
+            [class]="passThrough().chip?.class"
+            [style]="passThrough().chip?.style"
+          >
             <span class="tx-select__chip-label">{{ item.label }}</span>
             @if (!disabled() && !readonly()) {
               <span class="tx-select__chip-remove" aria-hidden="true" (click)="removeItem(item, $event)">
@@ -53,6 +59,9 @@
             }
           </span>
         }
+        <span class="tx-select__chip tx-select__chip--more" [class.tx-select__chip--hidden]="!fit.hidden()" [class]="passThrough().chip?.class" [style]="passThrough().chip?.style"
+          ><span class="tx-select__chip-label">+{{ fit.hidden() }}</span></span
+        >
       </span>
     } @else {
       <span class="tx-select__value" [class]="passThrough().value?.class" [style]="passThrough().value?.style">{{ commaText() }}</span>

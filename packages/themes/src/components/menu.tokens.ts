@@ -66,6 +66,14 @@ export const menuTokens = {
     fontWeight: tokenRef('font-weight-medium'),
     itemBorderWidth: '1px',
   },
+  arrow: {
+    size: '14px',
+    inset: '15.75px',
+    background: 'initial',
+    borderColor: 'initial',
+    borderWidth: '1px',
+    shadow: 'none',
+  },
   context: {
     background: joinCss('color-mix(in srgb, ', tokenRef('surface-card'), ' 92%, transparent)'),
     borderColor: tokenRef('surface-border'),

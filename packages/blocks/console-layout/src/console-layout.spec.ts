@@ -74,6 +74,7 @@ describe('TxConsoleLayout', () => {
     const root = fixture.nativeElement.querySelector('tx-console-layout') as HTMLElement;
     expect(root.hasAttribute('data-styled')).toBe(true);
     expect(root.getAttribute('data-responsive')).toBe('viewport');
+    expect(root.hasAttribute('title')).toBe(false);
     expect(root.querySelector('tx-console-rail')?.getAttribute('data-responsive')).toBe('viewport');
     expect(root.style.getPropertyValue('--tx-console-layout-rail-width')).toBe('90px');
     const brand = root.querySelector('a.tx-console-layout__brand') as HTMLAnchorElement;

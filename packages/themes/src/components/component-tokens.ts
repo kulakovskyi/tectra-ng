@@ -18,6 +18,7 @@ import { pillTokens } from './pill.tokens';
 import { progressBarTokens, progressSpinnerTokens } from './progress.tokens';
 import { radioButtonTokens } from './radio-button.tokens';
 import { ratingTokens } from './rating.tokens';
+import { colorSwatchesTokens } from './color-swatches.tokens';
 import { selectTokens } from './select.tokens';
 import { cascadeSelectTokens, chipsInputTokens, colorPickerTokens, countryTokens, emailSuggestionTokens, listboxTokens, mentionTokens } from './selection.tokens';
 import { treeTableTokens, treeTokens } from './tree.tokens';
@@ -71,6 +72,7 @@ import { kanbanTokens } from './kanban.tokens';
 import { actionsMenuTokens } from './actions-menu.tokens';
 import { actionTileTokens } from './action-tile.tokens';
 import { switchThemeTokens } from './switch-theme.tokens';
+import { themeConfiguratorTokens } from './theme-configurator.tokens';
 import { switchLanguageTokens } from './switch-language.tokens';
 import { topbarPreferencesTokens } from './topbar-preferences.tokens';
 import { publicHeaderTokens } from './public-header.tokens';
@@ -97,6 +99,7 @@ export const COMPONENT_TOKENS = {
   chipsInput: chipsInputTokens,
   country: countryTokens,
   colorPicker: colorPickerTokens,
+  colorSwatches: colorSwatchesTokens,
   mention: mentionTokens,
   tree: treeTokens,
   cascadeSelect: cascadeSelectTokens,
@@ -189,6 +192,7 @@ export const COMPONENT_TOKENS = {
   actionsMenu: actionsMenuTokens,
   actionTile: actionTileTokens,
   switchTheme: switchThemeTokens,
+  themeConfigurator: themeConfiguratorTokens,
   switchLanguage: switchLanguageTokens,
   topbarPreferences: topbarPreferencesTokens,
   publicHeader: publicHeaderTokens,

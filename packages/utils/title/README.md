@@ -12,6 +12,7 @@ bootstrapApplication(App, {
 export const routes: Routes = [{ path: 'orders', title: 'orders', component: OrdersPage }];
 
 inject(TxTitle).setPrefix(unread ? `(${unread})` : '');
+inject(TxTitle).setPage(order.number, { translate: false });
 ```
 
 ## Providers
@@ -23,4 +24,4 @@ inject(TxTitle).setPrefix(unread ? `(${unread})` : '');
 | Name | Description |
 |---|---|
 | TxTitle.setPrefix(prefix) | Text before every title, `''` to remove it |
-| TxTitle.setPage(page) | Sets the page part by hand, for a title that is not on a route (a record name) |
+| TxTitle.setPage(page, { translate? }) | Sets the page part by hand, for a title that is not on a route; `{ translate: false }` shows ready text (a record name) as it is, without the `translate` function |

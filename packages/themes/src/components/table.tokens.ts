@@ -49,7 +49,7 @@ export const tableTokens = {
     color: tokenRef('text-primary'),
     stripedBackground: lightDark(tokenRef('surface-50'), tokenRef('surface-950')),
     selectedBackground: tokenRef('highlight-background'),
-    selectedColor: tokenRef('highlight-color'),
+    selectedColor: tokenRef('text-primary'),
     menuBackground: mix(tokenRef('primary-base'), '8%', tokenRef('surface-card')),
     focusRing: { width: '2px', style: 'solid', color: tokenRef('focus-ring-color'), offset: '-2px', shadow: 'none' },
   },

@@ -143,8 +143,10 @@ describe('TxMultiselect', () => {
     host.maxLabels.set(5);
     host.display.set('chip');
     render();
-    const chips = Array.from(fixture.nativeElement.querySelectorAll('.tx-select__chip')) as HTMLElement[];
+    const chips = Array.from(fixture.nativeElement.querySelectorAll('.tx-select__chip:not(.tx-select__chip--more)')) as HTMLElement[];
     expect(chips.map((chip) => chip.textContent?.trim())).toEqual(['Design', 'Backend', 'Frontend']);
+    expect(chips.some((chip) => chip.classList.contains('tx-select__chip--hidden'))).toBe(false);
+    expect(fixture.nativeElement.querySelector('.tx-select__chip--more').classList).toContain('tx-select__chip--hidden');
     expect(chips[0].classList).toContain('own-chip');
     (chips[1].querySelector('.tx-select__chip-remove') as HTMLElement).click();
     render();
@@ -152,6 +154,78 @@ describe('TxMultiselect', () => {
     expect(trigger().getAttribute('aria-expanded')).toBe('false');
     key(trigger(), 'Backspace');
     expect(host.control.value).toEqual(['design']);
+  });
+
+  it('keeps chips on one line and counts the ones that do not fit in a +N chip', async () => {
+    const observers: { callback: () => void; disconnected: boolean }[] = [];
+    vi.stubGlobal(
+      'ResizeObserver',
+      class {
+        readonly entry = { callback: () => undefined as void, disconnected: false };
+        constructor(callback: () => void) {
+          this.entry.callback = callback;
+          observers.push(this.entry);
+        }
+        observe(): void {
+          return;
+        }
+        disconnect(): void {
+          this.entry.disconnected = true;
+        }
+      },
+    );
+    let available = 150;
+    const chipWidth = (element: HTMLElement) => (element.classList.contains('tx-select__chip--more') ? 30 : element.classList.contains('tx-select__chip') ? 60 : 0);
+    const labelWidth = (element: HTMLElement) => (element.classList.contains('tx-select__chip-label') ? (element.textContent?.trim().length ?? 0) * 5 : 0);
+    vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockImplementation(function (this: HTMLElement) {
+      return chipWidth(this);
+    });
+    vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockImplementation(function (this: HTMLElement) {
+      return this.classList.contains('tx-select__chips') ? available : labelWidth(this);
+    });
+    vi.spyOn(HTMLElement.prototype, 'scrollWidth', 'get').mockImplementation(function (this: HTMLElement) {
+      return labelWidth(this);
+    });
+    try {
+      host.maxLabels.set(10);
+      host.display.set('chip');
+      host.control.setValue(['design', 'backend', 'frontend']);
+      render();
+      await fixture.whenStable();
+      const chips = () => Array.from(fixture.nativeElement.querySelectorAll('.tx-select__chip:not(.tx-select__chip--more)')) as HTMLElement[];
+      const more = () => fixture.nativeElement.querySelector('.tx-select__chip--more') as HTMLElement;
+      const hidden = () => chips().map((chip) => chip.classList.contains('tx-select__chip--hidden'));
+      expect(hidden()).toEqual([false, false, true]);
+      expect(chips()[2].getAttribute('aria-hidden')).toBe('true');
+      expect(more().classList).not.toContain('tx-select__chip--hidden');
+      expect(more().textContent?.trim()).toBe('+1');
+
+      available = 40;
+      observers.at(-1)?.callback();
+      render();
+      expect(hidden()).toEqual([false, true, true]);
+      expect(more().textContent?.trim()).toBe('+2');
+
+      available = 200;
+      (fixture.nativeElement.querySelector('.tx-select__chips') as HTMLElement).style.columnGap = '4px';
+      observers.at(-1)?.callback();
+      render();
+      expect(hidden()).toEqual([false, false, false]);
+      expect(more().classList).toContain('tx-select__chip--hidden');
+
+      available = 140;
+      observers.at(-1)?.callback();
+      render();
+      expect(hidden()).toEqual([false, true, true]);
+
+      host.display.set('comma');
+      render();
+      await fixture.whenStable();
+      expect(observers.every((observer) => observer.disconnected)).toBe(true);
+    } finally {
+      vi.restoreAllMocks();
+      vi.unstubAllGlobals();
+    }
   });
 
   it('clears to an empty array and treats null as empty', () => {

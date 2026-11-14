@@ -123,4 +123,6 @@ export const edgeControlsTokens: TectraDeepPartial<TectraComponentTokens> = {
     root: { trackBackground: steps('surface', 300, 600), trackBorderRadius: tokenRef('radius-xs') },
     handle: { size: '16px', background: tokenRef('primary-base'), shadow: 'none' },
   },
+  filtersPanel: { button: { borderRadius: tokenRef('radius-xs') } },
+  commandPalette: { trigger: { borderRadius: tokenRef('radius-xs') } },
 };

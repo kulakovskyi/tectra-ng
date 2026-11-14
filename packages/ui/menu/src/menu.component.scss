@@ -1,0 +1,22 @@
+@use '../../styles/overlay-arrow' as arrow;
+
+.tx-menu-popup {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.tx-menu-popup[data-styled] {
+  @include arrow.bordered(
+    '.tx-menu-popup__arrow',
+    var(--tx-menu-arrow-size),
+    var(--tx-menu-arrow-offset),
+    var(--tx-menu-border-radius),
+    var(--tx-menu-arrow-border-width),
+    var(--tx-menu-arrow-border-color, var(--tx-menu-popup-border-color)),
+    var(--tx-menu-arrow-background, var(--tx-menu-popup-background)),
+    var(--tx-menu-arrow-shadow),
+    var(--tx-menu-arrow-border-width)
+  );
+}

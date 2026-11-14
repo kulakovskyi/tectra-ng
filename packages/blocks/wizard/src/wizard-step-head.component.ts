@@ -35,6 +35,7 @@ import { WIZARD_THEME } from './wizard.theme';
     '[class]': 'passThrough().root?.class',
     '[style]': 'hostStyle()',
     '[attr.data-styled]': '!isUnstyled() || null',
+    '[attr.title]': 'null',
   },
   viewProviders: [provideTxIconDefaults(WIZARD_ICON_DEFAULTS)],
 })

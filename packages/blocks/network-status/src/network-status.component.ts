@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, afterNextRender, computed, effect, inject, input, numberAttribute, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DOCUMENT, ElementRef, afterRenderEffect, computed, effect, inject, input, numberAttribute, output, untracked, viewChild } from '@angular/core';
 import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
@@ -6,15 +6,17 @@ import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraNetworkStatusTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxNetworkState, TxNetworkStatusPart } from './network-status.types';
 import { NETWORK_STATUS_ICON_DEFAULTS } from './network-status.icons';
+import { TxNetworkService } from './network.service';
 import { NETWORK_STATUS_THEME } from './network-status.theme';
 
 @Component({
   selector: 'tx-network-status',
   imports: [TxIcon],
   template: `
-    <div class="tx-network-status__region" role="status" aria-live="polite">
+    <div #region class="tx-network-status__region" role="status" aria-live="polite">
       @if (visible()) {
         <div
+          #pill
           class="tx-network-status__pill"
           animate.enter="tx-network-status__pill--enter"
           animate.leave="tx-network-status__pill--leave"
@@ -44,7 +46,9 @@ export class TxNetworkStatus {
   private readonly networkStatusTheme = injectTokens(NETWORK_STATUS_THEME);
 
   private readonly document = inject(DOCUMENT);
-  private restoreTimer: ReturnType<typeof setTimeout> | undefined;
+  private readonly network = inject(TxNetworkService);
+  private readonly region = viewChild.required<ElementRef<HTMLElement>>('region');
+  private readonly pill = viewChild<ElementRef<HTMLElement>>('pill');
 
   readonly offlineText = input<string | undefined>(undefined);
   readonly restoredText = input<string | undefined>(undefined);
@@ -62,30 +66,21 @@ export class TxNetworkStatus {
   protected readonly translations = injectTranslations();
   readonly hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-network-status'), ...this.passThrough().root?.style }));
 
-  readonly status = signal<TxNetworkState>('online');
+  readonly status = this.network.status;
   protected readonly visible = computed(() => this.status() !== 'online');
   protected readonly message = computed(() =>
     this.status() === 'restored' ? (this.restoredText() ?? this.translations().connectionRestored) : (this.offlineText() ?? this.translations().offline),
   );
 
   constructor() {
-    const destroyRef = inject(DestroyRef);
-    afterNextRender(() => {
-      const view = this.document.defaultView;
-      if (!view) {
-        return;
+    effect(() => this.network.restoredDuration.set(this.restoredDuration()));
+    let last = this.status();
+    effect(() => {
+      const status = this.status();
+      if (status !== last) {
+        last = status;
+        untracked(() => this.statusChange.emit(status));
       }
-      if (view.navigator?.onLine === false) {
-        this.setStatus('offline');
-      }
-      const offline = () => this.onOffline();
-      const online = () => this.onOnline();
-      view.addEventListener('offline', offline);
-      view.addEventListener('online', online);
-      destroyRef.onDestroy(() => {
-        view.removeEventListener('offline', offline);
-        view.removeEventListener('online', online);
-      });
     });
     effect((onCleanup) => {
       const name = this.bodyClass();
@@ -96,31 +91,26 @@ export class TxNetworkStatus {
       body.classList.toggle(name, this.visible());
       onCleanup(() => body.classList.remove(name));
     });
-    destroyRef.onDestroy(() => clearTimeout(this.restoreTimer));
+    afterRenderEffect((onCleanup) => {
+      const body = this.document.body;
+      const pill = this.visible() ? this.pill()?.nativeElement : undefined;
+      if (!body || !pill) {
+        return;
+      }
+      const view = this.document.defaultView;
+      const bottom = Number.parseFloat(view?.getComputedStyle(this.region().nativeElement).bottom ?? '') || 0;
+      body.style.setProperty(BOTTOM_OFFSET, `${Math.round(bottom + pill.offsetHeight)}px`);
+      onCleanup(() => body.style.removeProperty(BOTTOM_OFFSET));
+    });
   }
 
   onOffline(): void {
-    clearTimeout(this.restoreTimer);
-    this.setStatus('offline');
+    this.network.markOffline();
   }
 
   onOnline(): void {
-    if (this.status() !== 'offline') {
-      return;
-    }
-    this.setStatus('restored');
-    clearTimeout(this.restoreTimer);
-    this.restoreTimer = setTimeout(() => {
-      if (this.status() === 'restored') {
-        this.setStatus('online');
-      }
-    }, this.restoredDuration());
-  }
-
-  private setStatus(status: TxNetworkState): void {
-    if (this.status() !== status) {
-      this.status.set(status);
-      this.statusChange.emit(status);
-    }
+    this.network.markOnline();
   }
 }
+
+const BOTTOM_OFFSET = '--tx-bottom-overlay-offset';

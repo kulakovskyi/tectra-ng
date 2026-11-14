@@ -13,7 +13,7 @@ A text field that suggests values while you type. Free text, or only a suggestio
 | optionGroupLabel | Field of a group shown as its header |
 | optionGroupChildren | Field of a group that holds its items |
 | dataKey | Field that identifies an object value |
-| multiple | Several values shown as chips; the value is an array |
+| multiple | Several values shown as chips; the value is an array. Without focus the chips stay on one line and the ones that do not fit are counted in a `+N` chip; with focus they wrap so every value shows |
 | dropdown | Button that shows suggestions without typing |
 | dropdownMode | `blank` (asks with an empty query) or `current` (with the typed text) |
 | dropdownIcon | Icon name of the dropdown button |

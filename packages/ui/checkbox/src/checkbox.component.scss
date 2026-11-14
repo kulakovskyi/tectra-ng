@@ -138,6 +138,10 @@
   display: none;
 }
 
+.tx-checkbox__text:has(> .tx-checkbox__label:empty):not(:has(> .tx-checkbox__description)) {
+  display: none;
+}
+
 :host([data-styled]) .tx-checkbox__label {
   color: var(--tx-checkbox-label-color);
   font-size: var(--_label-font-size);

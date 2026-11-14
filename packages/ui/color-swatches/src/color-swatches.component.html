@@ -1,0 +1,35 @@
+<div
+  class="tx-color-swatches__group"
+  role="radiogroup"
+  [class]="passThrough().group?.class"
+  [style]="groupStyle()"
+  [attr.data-columns]="columns() ? true : null"
+  [attr.aria-label]="ariaLabel() ?? null"
+  [attr.aria-labelledby]="ariaLabelledBy() ?? null"
+  [attr.aria-disabled]="isDisabled() || null"
+  [attr.aria-readonly]="readonly() || null"
+  [attr.aria-invalid]="isInvalid() || null"
+>
+  @for (option of options(); track option.value; let index = $index) {
+    <button
+      #swatch
+      type="button"
+      role="radio"
+      class="tx-color-swatches__swatch"
+      [class.tx-color-swatches__swatch--selected]="index === selectedIndex()"
+      [class]="passThrough().swatch?.class"
+      [style]="passThrough().swatch?.style"
+      [style.--_color]="option.color"
+      [attr.aria-checked]="index === selectedIndex()"
+      [attr.aria-label]="option.label"
+      [attr.title]="option.label"
+      [attr.tabindex]="index === focusIndex() ? 0 : -1"
+      [disabled]="isDisabled() || option.disabled"
+      (click)="select(index, $event)"
+      (keydown)="onKeydown($event, index)"
+      (blur)="onBlur()"
+    >
+      <tx-icon class="tx-color-swatches__check" name="check" aria-hidden="true" [class]="passThrough().check?.class" [style]="passThrough().check?.style" />
+    </button>
+  }
+</div>

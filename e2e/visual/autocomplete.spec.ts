@@ -53,10 +53,28 @@ test('forced selection clears unknown text on Tab and takes a match', async ({ p
 test('chips are added from suggestions and removed with Backspace', async ({ page }) => {
   const frame = example(page, 'Multiple');
   const input = frame.getByRole('combobox');
-  await input.pressSequentially('taras');
-  await page.getByRole('option', { name: 'taras@example.com' }).click();
-  await expect(frame.locator('.tx-select__chip')).toHaveText(['olena@example.com', 'taras@example.com']);
+  const chips = frame.locator('.tx-select__chip:not(.tx-select__chip--more)');
+  await input.pressSequentially('mykola');
+  await page.getByRole('option', { name: 'mykola@example.com' }).click();
+  await expect(chips).toHaveText(['olena@example.com', 'taras@example.com', 'iryna@example.com', 'mykola@example.com']);
   await expect(input).toBeFocused();
   await page.keyboard.press('Backspace');
-  await expect(frame.locator('.tx-select__chip')).toHaveText(['olena@example.com']);
+  await expect(chips).toHaveText(['olena@example.com', 'taras@example.com', 'iryna@example.com']);
+});
+
+test('chips stay on one line with a +N chip until the field has focus', async ({ page }) => {
+  const frame = example(page, 'Multiple');
+  const input = frame.getByRole('combobox');
+  const box = frame.locator('.tx-select__box');
+  const shown = frame.locator('.tx-select__chip:not(.tx-select__chip--more):not(.tx-select__chip--hidden)');
+  const more = frame.locator('.tx-select__chip--more');
+  await expect(more).toHaveText(/^\+\d$/);
+  const folded = (await box.boundingBox())?.height ?? 0;
+  expect(await shown.count()).toBeLessThan(3);
+  await input.focus();
+  await expect(shown).toHaveCount(3);
+  await expect(more).toHaveClass(/tx-select__chip--hidden/);
+  expect((await box.boundingBox())?.height ?? 0).toBeGreaterThan(folded);
+  await input.blur();
+  await expect(more).not.toHaveClass(/tx-select__chip--hidden/);
 });

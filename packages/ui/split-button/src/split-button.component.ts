@@ -56,13 +56,14 @@ import { SPLIT_BUTTON_THEME } from './split-button.theme';
         [attr.aria-label]="menuLabel()"
         [attr.aria-expanded]="menu().isOpen()"
         [attr.aria-controls]="menu().isOpen() ? menu().id : null"
-        (click)="menu().toggle(group().nativeElement)"
+        (click)="menu().toggle($event)"
         (keydown.arrowdown)="open($event, 'first')"
         (keydown.arrowup)="open($event, 'last')"
       ></button>
     </tx-button-group>
     <tx-tiered-menu
       popup
+      arrow
       placement="bottom-end"
       [model]="model()"
       [ariaLabel]="menuLabel()"
@@ -120,6 +121,6 @@ export class TxSplitButton {
 
   open(event: Event, focus: TxMenuFocus): void {
     event.preventDefault();
-    this.menu().show(this.group().nativeElement, focus);
+    this.menu().show(event, focus);
   }
 }

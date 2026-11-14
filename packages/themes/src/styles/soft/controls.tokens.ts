@@ -49,4 +49,6 @@ export const softControlsTokens: TectraDeepPartial<TectraComponentTokens> = {
   rating: { root: glowRing },
   knob: { root: glowRing },
   slider: { handle: glowRing },
+  filtersPanel: { button: { borderRadius: '22px' } },
+  commandPalette: { trigger: { borderRadius: tokenRef('radius-xl') } },
 };

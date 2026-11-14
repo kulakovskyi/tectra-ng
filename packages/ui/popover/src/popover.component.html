@@ -18,12 +18,12 @@
     }
     @if (hasTitle()) {
       <div class="tx-popover__header" [class]="passThrough().header?.class" [style]="passThrough().header?.style">
-        <div class="tx-popover__title" [id]="titleId" [class]="passThrough().title?.class" [style]="passThrough().title?.style">
-          @if (header()) {
+        @if (header()) {
+          <div class="tx-popover__title" [id]="titleId" [class]="passThrough().title?.class" [style]="passThrough().title?.style">
             {{ header() }}
-          }
-          <ng-content select="[txPopoverHeader]" />
-        </div>
+          </div>
+        }
+        <ng-content select="[txPopoverHeader]" />
         @if (closeButton()) {
           <ng-container [ngTemplateOutlet]="close" />
         }

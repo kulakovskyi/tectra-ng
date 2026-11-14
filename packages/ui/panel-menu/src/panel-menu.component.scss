@@ -204,6 +204,9 @@
     color: var(--tx-panel-menu-sidebar-section-color);
     font-size: var(--tx-panel-menu-sidebar-section-font-size);
     font-weight: var(--tx-panel-menu-sidebar-section-font-weight);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .tx-panel-menu__item {
@@ -214,11 +217,23 @@
     border-radius: var(--tx-panel-menu-sidebar-item-border-radius);
     color: var(--tx-panel-menu-sidebar-item-color);
     font-weight: var(--tx-panel-menu-sidebar-item-font-weight);
+    position: relative;
+    isolation: isolate;
     transition:
       background-color var(--_duration),
-      color var(--_duration),
       box-shadow var(--_duration),
       padding-inline-start var(--tx-panel-menu-sidebar-reveal-duration) var(--tx-panel-menu-sidebar-reveal-easing);
+
+    &::before {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border-radius: inherit;
+      background: var(--tx-panel-menu-sidebar-active-background);
+      opacity: 0;
+      pointer-events: none;
+      content: '';
+    }
 
     &[data-level='1'] {
       padding-inline-start: var(--tx-panel-menu-sidebar-indent1);
@@ -235,10 +250,19 @@
     &:not([aria-disabled='true']):hover {
       background: var(--tx-panel-menu-sidebar-item-hover-background);
       color: var(--tx-panel-menu-sidebar-item-hover-color);
+      transition:
+        background-color var(--_duration),
+        color var(--_duration),
+        box-shadow var(--_duration),
+        padding-inline-start var(--tx-panel-menu-sidebar-reveal-duration) var(--tx-panel-menu-sidebar-reveal-easing);
 
       .tx-panel-menu__icon,
       .tx-panel-menu__submenu-icon {
         color: var(--tx-panel-menu-sidebar-item-hover-color);
+      }
+
+      .tx-panel-menu__icon {
+        transition: color var(--_duration);
       }
     }
 
@@ -253,16 +277,29 @@
 
   .tx-panel-menu__item--active,
   .tx-panel-menu__item--active:not([aria-disabled='true']):hover {
-    background: var(--tx-panel-menu-sidebar-active-background);
+    background: transparent;
     color: var(--tx-panel-menu-sidebar-active-color);
     font-weight: var(--tx-panel-menu-sidebar-active-font-weight);
+    transition:
+      background-color var(--_duration),
+      color var(--_duration),
+      box-shadow var(--_duration),
+      padding-inline-start var(--tx-panel-menu-sidebar-reveal-duration) var(--tx-panel-menu-sidebar-reveal-easing);
+
+    &::before {
+      opacity: 1;
+      transition:
+        opacity var(--_duration),
+        background-color var(--_duration);
+    }
 
     .tx-panel-menu__icon {
       color: var(--tx-panel-menu-sidebar-active-color);
+      transition: color var(--_duration);
     }
   }
 
-  .tx-panel-menu__item--active:not([aria-disabled='true']):hover {
+  .tx-panel-menu__item--active:not([aria-disabled='true']):hover::before {
     background: var(--tx-panel-menu-sidebar-active-hover-background);
   }
 
@@ -272,7 +309,6 @@
     margin-inline-end: var(--tx-panel-menu-sidebar-icon-gap);
     color: var(--tx-panel-menu-sidebar-icon-color);
     font-size: var(--tx-panel-menu-sidebar-icon-size);
-    transition: color var(--_duration);
   }
 
   .tx-panel-menu__label {
@@ -337,12 +373,10 @@
 
   .tx-panel-menu__section {
     opacity: 0;
-    white-space: nowrap;
     transition-duration: var(--tx-panel-menu-sidebar-hide-duration);
   }
 
   .tx-panel-menu__item {
-    position: relative;
     overflow: hidden;
   }
 
@@ -362,7 +396,6 @@
   }
 
   .tx-panel-menu__badge {
-    animation-name: tx-panel-menu-settle-collapsed;
     position: absolute;
     top: var(--tx-panel-menu-sidebar-collapsed-badge-top);
     inset-inline-start: var(--tx-panel-menu-sidebar-collapsed-badge-start);
@@ -395,16 +428,20 @@
   }
 }
 
-@keyframes tx-panel-menu-settle-collapsed {
-  from {
-    opacity: 0;
-    scale: 0.6;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   :host([data-styled]) .tx-panel-menu__badge {
     animation: none;
+  }
+
+  :host([data-styled][data-variant='sidebar']) {
+    .tx-panel-menu__item:not([aria-disabled='true']):hover,
+    .tx-panel-menu__item:not([aria-disabled='true']):hover .tx-panel-menu__icon,
+    .tx-panel-menu__item--active,
+    .tx-panel-menu__item--active:not([aria-disabled='true']):hover,
+    .tx-panel-menu__item--active::before,
+    .tx-panel-menu__item--active .tx-panel-menu__icon {
+      transition: none;
+    }
   }
 
   :host([data-styled]) {

@@ -5,7 +5,7 @@ import { injectTxIcons, provideTxIconDefaults, TxIcon, TxIconName } from '@tectr
 import { TxTooltip } from '@tectra-ng/ui/tooltip';
 import { TectraAvatarTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TX_AVATAR_GROUP } from './avatar-group.token';
-import { TxAvatarPart, TxAvatarShape, TxAvatarSize, TxAvatarTone } from './avatar.types';
+import { TxAvatarPart, TxAvatarShape, TxAvatarSize, TxAvatarTone, TxAvatarTooltip } from './avatar.types';
 import { AVATAR_ICON_DEFAULTS } from './avatar.icons';
 import { AVATAR_THEME } from './avatar.theme';
 
@@ -44,7 +44,7 @@ const TONES: TxAvatarTone[] = ['blue', 'green', 'sky', 'orange', 'purple', 'red'
     '[attr.role]': 'accessibleName() ? "img" : null',
     '[attr.aria-label]': 'accessibleName()',
     '[attr.aria-hidden]': 'accessibleName() ? null : true',
-    '[attr.title]': 'showsTooltip() ? null : (name() ?? null)',
+    '[attr.title]': 'showsTooltip() || tooltip() === "none" ? null : (name() ?? null)',
     '[hidden]': 'isHidden()',
   },
   viewProviders: [provideTxIconDefaults(AVATAR_ICON_DEFAULTS)],
@@ -63,7 +63,7 @@ export class TxAvatar {
   readonly shape = input<TxAvatarShape | undefined>(undefined);
   readonly tone = input<TxAvatarTone | undefined>(undefined);
   readonly ariaLabel = input<string | undefined>(undefined);
-  readonly tooltip = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
+  readonly tooltip = input<TxAvatarTooltip | undefined, unknown>(undefined, { transform: avatarTooltip });
   readonly dt = input<TectraDeepPartial<TectraAvatarTokens> | undefined>(undefined);
   readonly pt = input<TxPassThrough<TxAvatarPart, TxAvatar> | undefined>(undefined);
   readonly ptOptions = input<TxPassThroughOptions | undefined>(undefined);
@@ -81,7 +81,10 @@ export class TxAvatar {
   readonly resolvedShape = computed(() => this.shape() ?? this.group?.shape() ?? 'circle');
   readonly resolvedTone = computed(() => this.tone() ?? (this.name() || this.label() ? TONES[hash(this.name() ?? this.label() ?? '') % TONES.length] : null));
   readonly accessibleName = computed(() => this.ariaLabel() ?? this.name() ?? null);
-  readonly showsTooltip = computed(() => (this.tooltip() ?? this.group?.tooltips() ?? false) && !!this.tooltipText());
+  readonly showsTooltip = computed(() => {
+    const tooltip = this.tooltip();
+    return tooltip !== 'none' && (tooltip ?? this.group?.tooltips() ?? false) && !!this.tooltipText();
+  });
   readonly tooltipText = computed(() => this.name() || this.ariaLabel() || '');
   readonly isHidden = computed(() => !!this.group?.isHidden(this));
   readonly iconName = computed(() => (this.txIconRegistry.has(this.icon()) ? this.icon() : null));
@@ -106,6 +109,10 @@ export class TxAvatar {
     this.failed.set(true);
     this.imageError.emit(event);
   }
+}
+
+function avatarTooltip(value: unknown): TxAvatarTooltip | undefined {
+  return value === 'none' ? 'none' : optionalBoolean(value);
 }
 
 function initialsOf(name: string | null | undefined): string {

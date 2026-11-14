@@ -975,3 +975,13 @@ describe('TxSelect recompiled by TestBed', () => {
     document.querySelector('.cdk-overlay-container')?.replaceChildren();
   });
 });
+
+describe('select template directives', () => {
+  it('narrow their template contexts', () => {
+    const context = { $implicit: 'a', selected: false, disabled: false, index: 0 };
+    expect(TxSelectOptionTemplate.ngTemplateContextGuard({} as TxSelectOptionTemplate<string>, context)).toBe(true);
+    expect(TxSelectValueTemplate.ngTemplateContextGuard({} as TxSelectValueTemplate<string>, context)).toBe(true);
+    expect(TxSelectGroupTemplate.ngTemplateContextGuard({} as TxSelectGroupTemplate<string>, { $implicit: 'g' })).toBe(true);
+    expect(TxSelectEmptyFilterTemplate.ngTemplateContextGuard({} as TxSelectEmptyFilterTemplate, undefined)).toBe(false);
+  });
+});

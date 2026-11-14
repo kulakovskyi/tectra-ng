@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform, inject } from '@angular/core';
-import { TxLocaleService } from '@tectra-ng/core/i18n';
+import { TxLocaleService, formatBytes } from '@tectra-ng/core/i18n';
 
 /** Options of `txFileSize` and `formatFileSize`. */
 export interface TxFileSizeOptions {
@@ -7,23 +7,18 @@ export interface TxFileSizeOptions {
   decimals?: number;
   /** Size of a unit: `1024` (default) or `1000`. */
   base?: 1000 | 1024;
-  /** Locale of the number format (default `en-US`; the pipe uses the tectra locale). */
+  /** Locale of the number format and the unit names (default `en-US`; the pipe uses the tectra locale). */
   locale?: string;
   /** Text shown for a missing or negative size (default `-`). */
   empty?: string;
 }
 
-const UNITS = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
-
 export function formatFileSize(bytes: number | null | undefined, options: TxFileSizeOptions = {}): string {
-  const { decimals = 1, base = 1024, locale = 'en-US', empty = '-' } = options;
+  const { empty = '-', ...format } = options;
   if (bytes === null || bytes === undefined || !Number.isFinite(bytes) || bytes < 0) {
     return empty;
   }
-  const exponent = bytes < base ? 0 : Math.min(UNITS.length - 1, Math.floor(Math.log(bytes) / Math.log(base)));
-  const value = bytes / base ** exponent;
-  const number = new Intl.NumberFormat(locale, { maximumFractionDigits: exponent === 0 ? 0 : decimals }).format(value);
-  return `${number} ${UNITS[exponent]}`;
+  return formatBytes(bytes, format);
 }
 
 export function downloadBlob(blob: Blob, filename = 'file', document: Document | undefined = globalThis.document): void {

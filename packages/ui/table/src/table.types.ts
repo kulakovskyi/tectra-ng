@@ -231,12 +231,18 @@ export interface TxTableRowReorderEvent<T = unknown> {
   value: T[];
 }
 
+/**
+ * Type of a template context field that has no type of its own: as loose as before in a template without
+ * a typing input (`txTableCellOf` …), `unknown` once the rows are typed.
+ */
+export type TxTableLoose<T> = 0 extends 1 & T ? T : unknown;
+
 /** Context of the group header and group footer templates. */
 export interface TxTableGroupContext<T = unknown> {
   /** First row of the group. */
   $implicit: T;
   /** Value of the field the rows are grouped by. */
-  value: unknown;
+  value: TxTableLoose<T>;
   /** Number of rows in the group. */
   count: number;
   /** Rows of the group. */
@@ -333,7 +339,7 @@ export interface TxTableEditorContext<T = unknown> {
   /** The column being edited. */
   column: TxTableColumn;
   /** Current value of the editor. */
-  value: unknown;
+  value: TxTableLoose<T>;
   /** Sets the value of the editor. */
   set: (value: unknown) => void;
   /** Saves the edit. */
@@ -349,13 +355,13 @@ export interface TxTableCellContext<T = unknown> {
   /** The row. */
   row: T;
   /** The tree node of the row, when the table shows a tree. */
-  node: unknown;
+  node: TxTableLoose<T>;
   /** Position of the row. */
   index: number;
   /** The column of the cell. */
   column: TxTableColumn;
   /** Value of the column field in the row. */
-  value: unknown;
+  value: TxTableLoose<T>;
 }
 
 /** Context of the header and footer cell templates. */
@@ -369,7 +375,7 @@ export interface TxTableRowContext<T = unknown> {
   /** The row. */
   $implicit: T;
   /** The tree node of the row, when the table shows a tree. */
-  node: unknown;
+  node: TxTableLoose<T>;
   /** Position of the row. */
   index: number;
 }

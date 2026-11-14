@@ -67,3 +67,21 @@ test('total sits at the start of a wide paginator', async ({ page }) => {
   expect(layout.sameRow).toBe(true);
   expect(Math.abs(layout.barCentre)).toBeLessThan(2);
 });
+
+test('the page that loses the selection clears at once while the new one fades in', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  const frame = example(page, 'Basic');
+  const first = frame.getByRole('button', { name: 'Page 1', exact: true });
+  const second = frame.getByRole('button', { name: 'Page 2', exact: true });
+  await expect(first).toHaveAttribute('aria-current', 'page');
+  await second.click();
+  await expect(second).toHaveAttribute('aria-current', 'page');
+  const fading = await first.evaluate((button) =>
+    document
+      .getAnimations()
+      .filter((animation) => (animation.effect as KeyframeEffect | null)?.target === button)
+      .map((animation) => (animation as CSSTransition).transitionProperty),
+  );
+  expect(fading).not.toContain('opacity');
+  expect(fading).not.toContain('color');
+});

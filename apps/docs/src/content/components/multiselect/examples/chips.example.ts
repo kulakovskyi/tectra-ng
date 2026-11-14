@@ -13,6 +13,12 @@ import { TxMultiselect } from '@tectra-ng/ui/multiselect';
     [maxSelectedLabels]="10"
     [placeholder]="'Skills'"
   />`,
+  styles: `
+    tx-multiselect {
+      width: 20rem;
+      max-width: 100%;
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class MultiselectChipsExample {
@@ -25,5 +31,11 @@ export default class MultiselectChipsExample {
     { label: 'Docker', value: 'docker' },
     { label: 'Figma', value: 'figma' },
   ];
-  readonly selected = new FormControl<string[]>(['angular', 'rxjs', 'docker']);
+  readonly selected = new FormControl<string[]>([
+    'angular',
+    'typescript',
+    'rxjs',
+    'postgres',
+    'docker',
+  ]);
 }

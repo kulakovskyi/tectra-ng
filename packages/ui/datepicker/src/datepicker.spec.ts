@@ -1036,3 +1036,12 @@ describe('TxDatePicker templates', () => {
     expect($('.tx-datepicker__decade')?.textContent?.trim()).toBe('2020s');
   });
 });
+
+describe('datepicker template directives', () => {
+  it('narrow their template contexts', () => {
+    expect(TxDatePickerDate.ngTemplateContextGuard({} as TxDatePickerDate, { $implicit: {}, selected: false, inRange: false })).toBe(true);
+    expect(TxDatePickerDecade.ngTemplateContextGuard({} as TxDatePickerDecade, { $implicit: [] })).toBe(true);
+    expect(TxDatePickerButtonBar.ngTemplateContextGuard({} as TxDatePickerButtonBar, { today: () => undefined, clear: () => undefined })).toBe(true);
+    expect(TxDatePickerInputIcon.ngTemplateContextGuard({} as TxDatePickerInputIcon, undefined)).toBe(false);
+  });
+});

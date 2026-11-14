@@ -10,7 +10,7 @@ import { Tectra } from '@tectra-ng/themes';
 import { routes } from './app.routes';
 import { skipViewTransitionsWhileHidden } from './hidden-view-transitions';
 import { scrollToTopOnPageChange, snapshotPath } from './page-scroll';
-import { DocsThemeSettings } from './layout/theme-settings';
+import { DOCS_THEME_STORAGE_KEY, DOCS_THEME_STYLES, DocsThemeSettings } from './layout/theme-settings';
 import { DocsSeo } from './seo/docs-seo';
 
 export const appConfig: ApplicationConfig = {
@@ -33,7 +33,7 @@ export const appConfig: ApplicationConfig = {
       }),
     ),
     { provide: TitleStrategy, useExisting: DocsSeo },
-    provideTectra({ preset: Tectra, ripple: true }),
+    provideTectra({ preset: Tectra, ripple: true, storageKey: DOCS_THEME_STORAGE_KEY, styles: DOCS_THEME_STYLES }),
     provideTxIcons(TX_ICONS),
     provideTxBrandIcons(),
     provideTxFlags(txFlagImages(loadTxFlag)),

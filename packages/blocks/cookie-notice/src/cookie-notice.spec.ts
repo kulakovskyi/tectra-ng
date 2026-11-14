@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { TxCookieNotice } from './cookie-notice.component';
@@ -48,7 +48,7 @@ describe('TxCookieNotice', () => {
 
 @Component({
   imports: [TxCookieNotice],
-  template: `<tx-cookie-notice cookieName="test-shared" sharedDomain="example.com" />`,
+  template: `<tx-cookie-notice cookieName="test-shared" sharedDomain="example.com" title="Cookies" />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class SharedHost {
@@ -70,6 +70,7 @@ describe('TxCookieNotice on another host', () => {
       writes.push(value);
       descriptor.set?.call(document, value);
     });
+    expect(fixture.nativeElement.querySelector('tx-cookie-notice').hasAttribute('title')).toBe(false);
     fixture.componentInstance.notice().dismiss();
     vi.restoreAllMocks();
     expect(writes).toHaveLength(1);
@@ -89,5 +90,56 @@ describe('TxCookieNotice with no router provided', () => {
     const root = fixture.nativeElement.querySelector('tx-cookie-notice') as HTMLElement;
     expect(root.querySelector('[role="region"]')).not.toBeNull();
     expect(root.querySelector('.tx-cookie-notice__link')).toBeNull();
+  });
+});
+
+@Component({
+  imports: [TxCookieNotice],
+  template: `<tx-cookie-notice cookieName="test-preview" [autoShow]="autoShow()" [preview]="preview()" (dismissed)="dismissals = dismissals + 1" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class PreviewHost {
+  readonly notice = viewChild.required(TxCookieNotice);
+  readonly autoShow = signal(false);
+  readonly preview = signal(false);
+  dismissals = 0;
+}
+
+describe('TxCookieNotice autoShow and preview', () => {
+  beforeEach(() => TestBed.configureTestingModule({ providers: [provideRouter([])] }));
+  afterEach(() => {
+    document.cookie = 'test-preview=; max-age=0; path=/';
+  });
+
+  it('stays closed without autoShow until show() is called', async () => {
+    const fixture = TestBed.createComponent(PreviewHost);
+    await fixture.whenStable();
+    expect(fixture.componentInstance.notice().visible()).toBe(false);
+    fixture.componentInstance.notice().show();
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('[role="region"]')).not.toBeNull();
+  });
+
+  it('shows a preview whatever the cookie says and keeps no choice on dismiss', async () => {
+    document.cookie = 'test-preview=1; path=/';
+    const fixture = TestBed.createComponent(PreviewHost);
+    fixture.componentInstance.autoShow.set(true);
+    await fixture.whenStable();
+    const notice = fixture.componentInstance.notice();
+    expect(notice.visible()).toBe(false);
+
+    fixture.componentInstance.preview.set(true);
+    await fixture.whenStable();
+    expect(notice.visible()).toBe(true);
+
+    document.cookie = 'test-preview=; max-age=0; path=/';
+    notice.dismiss();
+    expect(notice.visible()).toBe(false);
+    expect(fixture.componentInstance.dismissals).toBe(1);
+    expect(document.cookie).not.toContain('test-preview=1');
+
+    fixture.componentInstance.preview.set(false);
+    await fixture.whenStable();
+    expect(notice.visible()).toBe(true);
   });
 });

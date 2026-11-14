@@ -9,3 +9,6 @@ export class TxMessageIconTemplate {
 export class TxMessageCloseIconTemplate {
   readonly templateRef = inject(TemplateRef);
 }
+
+@Directive({ selector: '[txMessageActions]' })
+export class TxMessageActions {}

@@ -1,0 +1,1 @@
+The page number goes to the query string, so every page is a link and Back steps through them. With `provideTxScrolling()` in the app config the paginator stays under the pointer while the query changes; a link to another page starts at the top, and Back returns to the same spot of this list.

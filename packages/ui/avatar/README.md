@@ -23,7 +23,7 @@ A person or an item as a small picture: a photo, otherwise initials from the nam
 | shape | `circle` or `square` (inherits the group) |
 | tone | Own colour instead of the one picked from the name: `blue`, `green`, `sky`, `orange`, `purple`, `red` |
 | ariaLabel | Accessible name instead of `name`; without both the avatar is decorative |
-| tooltip | Shows `name` (or `ariaLabel`) in a tooltip instead of the native title; inherits `tooltips` of the group, off on its own |
+| tooltip | Shows `name` (or `ariaLabel`) in a tooltip instead of the native title; `none` shows no hint at all (neither tooltip nor title); inherits `tooltips` of the group, off on its own |
 | tooltipPlacement | Where the name tooltip opens (`top` by default) |
 | max | `tx-avatar-group`: shows this many avatars and a `+N` button; it opens a popover that lists the hidden ones (avatar + name) |
 | tooltips | `tx-avatar-group`: name tooltip on every avatar (on by default) |

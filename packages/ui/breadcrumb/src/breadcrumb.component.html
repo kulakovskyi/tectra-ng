@@ -63,6 +63,17 @@
               <ng-container [ngTemplateOutlet]="content" [ngTemplateOutletContext]="{ $implicit: entry, index }" />
             </button>
           }
+          @case ('text') {
+            <span
+              class="tx-breadcrumb__text"
+              [attr.title]="entry.item.title ?? null"
+              [attr.aria-label]="entry.item.ariaLabel ?? null"
+              [class]="passThrough().text?.class"
+              [style]="passThrough().text?.style"
+            >
+              <ng-container [ngTemplateOutlet]="content" [ngTemplateOutletContext]="{ $implicit: entry, index }" />
+            </span>
+          }
           @default {
             <span
               class="tx-breadcrumb__link"

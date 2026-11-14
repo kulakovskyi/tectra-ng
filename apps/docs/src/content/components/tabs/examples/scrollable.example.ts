@@ -6,7 +6,7 @@ import { TxTabItem, TxTabValue, TxTabs } from '@tectra-ng/ui/tabs';
   imports: [TxTabs],
   template: `
     <div class="column">
-      <tx-tabs class="tabs" variant="line" [scrollable]="true" [tabs]="tabs" [(value)]="line" />
+      <tx-tabs class="tabs" variant="line" [tabs]="tabs" [(value)]="line" />
       <tx-tabs class="tabs" variant="pills" [scrollable]="true" [tabs]="tabs" [(value)]="pills" />
     </div>
   `,

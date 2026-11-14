@@ -77,3 +77,10 @@ describe('TxProgressBar recompiled by TestBed', () => {
   });
 });
 
+
+describe('progress bar template directives', () => {
+  it('narrow their template contexts', () => {
+    expect(TxProgressBarValueTemplate.ngTemplateContextGuard({} as TxProgressBarValueTemplate, { $implicit: 0, percent: 0 })).toBe(true);
+    expect(TxProgressBarValueTemplate.ngTemplateContextGuard({} as TxProgressBarValueTemplate, undefined)).toBe(false);
+  });
+});

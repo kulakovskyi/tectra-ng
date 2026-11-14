@@ -95,6 +95,7 @@ describe('export components', () => {
     expect(button('pdf').getAttribute('aria-label')).toBe('Save as PDF');
     expect(button('copy').getAttribute('aria-label')).toBe('Copy table');
     expect(fixture.nativeElement.querySelector('#excel').getAttribute('data-format')).toBe('excel');
+    expect(fixture.nativeElement.querySelector('#menu').hasAttribute('title')).toBe(false);
     fixture.componentInstance.label.set('Export');
     await fixture.whenStable();
     expect(button('csv').hasAttribute('aria-label')).toBe(false);

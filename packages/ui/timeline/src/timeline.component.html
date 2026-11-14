@@ -7,15 +7,17 @@
 >
   @for (event of events(); track $index) {
     <li class="tx-timeline__event" [class]="passThrough().event?.class" [style]="passThrough().event?.style">
-      <div
-        class="tx-timeline__opposite"
-        [class]="passThrough().eventOpposite?.class"
-        [style]="passThrough().eventOpposite?.style"
-      >
-        @if (oppositeTemplate(); as opposite) {
-          <ng-container *ngTemplateOutlet="opposite.templateRef; context: event" />
-        }
-      </div>
+      @if (hasOpposite()) {
+        <div
+          class="tx-timeline__opposite"
+          [class]="passThrough().eventOpposite?.class"
+          [style]="passThrough().eventOpposite?.style"
+        >
+          @if (oppositeTemplate(); as opposite) {
+            <ng-container *ngTemplateOutlet="opposite.templateRef; context: event" />
+          }
+        </div>
+      }
       <div
         class="tx-timeline__separator"
         [class]="passThrough().eventSeparator?.class"

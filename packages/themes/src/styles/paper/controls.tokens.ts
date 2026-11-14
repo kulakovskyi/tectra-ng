@@ -95,4 +95,5 @@ export const paperControlsTokens: TectraDeepPartial<TectraComponentTokens> = {
     root: { trackSize: '2px', trackBorderRadius: tokenRef('radius-xs') },
     handle: mergeTokens({ background: tokenRef('primary-base'), borderWidth: '0px', shadow: '0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12)', hoverRing: joinCss('0 0 1px 10px ', fade(tokenRef('primary-base'), '92%')) }, noFocusRing),
   },
+  filtersPanel: { button: { borderRadius: tokenRef('radius-sm') } },
 };

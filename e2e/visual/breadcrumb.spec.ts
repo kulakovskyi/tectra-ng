@@ -29,13 +29,13 @@ test.describe('breadcrumb', () => {
   test('items are centred on one line and router links navigate', async ({ page }) => {
     const frame = example(page, 'Basic');
     const items = frame.getByRole('listitem');
-    await expect(items).toHaveCount(4);
+    await expect(items).toHaveCount(5);
     const middle = async (index: number) => {
       const box = await items.nth(index).boundingBox();
       return (box?.y ?? 0) + (box?.height ?? 0) / 2;
     };
     const first = await middle(0);
-    for (const index of [1, 2, 3]) {
+    for (const index of [1, 2, 3, 4]) {
       expect(Math.abs((await middle(index)) - first)).toBeLessThan(1);
     }
     await frame.getByRole('link', { name: 'Theming' }).click();

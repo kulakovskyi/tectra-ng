@@ -1,1 +1,1 @@
-With `url: true` the changed values also go to the address bar of this page — copy the link, or press Back to step through the earlier filters.
+With `url: true` the changed values also go to the address bar of this page — copy the link, or press Back to step through the earlier filters. In an app, add `provideTxScrolling()` from `@tectra-ng/utils/scrolling` so these query changes never scroll the page to the top.

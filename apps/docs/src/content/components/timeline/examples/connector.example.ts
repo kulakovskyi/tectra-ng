@@ -10,11 +10,11 @@ interface Step {
   selector: 'timeline-connector-example',
   imports: [TxTimeline, TxTimelineContent, TxTimelineConnector],
   template: `
-    <tx-timeline ariaLabel="Setup progress" [value]="steps" [pt]="pt">
-      <ng-template txTimelineConnector let-step>
+    <tx-timeline ariaLabel="Setup progress" [value]="steps">
+      <ng-template txTimelineConnector [txTimelineConnectorOf]="steps" let-step>
         <span class="line" [class.line--done]="step.done" aria-hidden="true"></span>
       </ng-template>
-      <ng-template txTimelineContent let-step>
+      <ng-template txTimelineContent [txTimelineContentOf]="steps" let-step>
         <span [class.muted]="!step.done">{{ step.title }}</span>
       </ng-template>
     </tx-timeline>
@@ -35,7 +35,6 @@ interface Step {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class TimelineConnectorExample {
-  readonly pt = { eventOpposite: { style: { flex: '0' } } };
   readonly steps: Step[] = [
     { title: 'Account created', done: true },
     { title: 'Domain verified', done: true },

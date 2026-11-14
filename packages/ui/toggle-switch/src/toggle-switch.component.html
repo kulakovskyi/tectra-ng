@@ -36,7 +36,7 @@
 </span>
 <span class="tx-toggle-switch__text">
   <label class="tx-toggle-switch__label" [for]="resolvedId()" [class]="passThrough().label?.class" [style]="passThrough().label?.style"
-    >{{ label() }}<ng-content
+    >@if (label()) {{{ label() }}}<ng-content
   /></label>
   @if (description()) {
     <span

@@ -145,6 +145,10 @@
   display: none;
 }
 
+.tx-radio-button__text:has(> .tx-radio-button__label:empty):not(:has(> .tx-radio-button__description)) {
+  display: none;
+}
+
 :host([data-styled]) .tx-radio-button__label {
   color: var(--tx-radio-button-label-color);
   font-size: var(--_label-font-size);

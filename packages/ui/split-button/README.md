@@ -6,7 +6,7 @@ A button with a main action and a menu of related ones — Save with Save as dra
 <tx-split-button label="Save" icon="check" [model]="saveOptions" (clicked)="save()" />
 ```
 
-The menu takes the same `TxMenuItem` items as `tx-menu` (sub-menus included) and opens under the button, aligned to its end.
+The menu takes the same `TxMenuItem` items as `tx-menu` (sub-menus included) and opens under the menu button, aligned to its end, with an arrow that points at the menu button.
 
 ## Inputs
 | Name | Description |

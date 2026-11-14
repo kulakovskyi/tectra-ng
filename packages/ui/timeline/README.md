@@ -26,11 +26,19 @@ Shows events in order along a line — an order history, a release log, the step
 | Name | Description |
 |---|---|
 | txTimelineContent | `<ng-template txTimelineContent let-event let-index="index">` — content of an event |
-| txTimelineOpposite | `<ng-template txTimelineOpposite let-event>` — content on the other side of the line, e.g. the date |
+| txTimelineOpposite | `<ng-template txTimelineOpposite let-event>` — content on the other side of the line, e.g. the date; without it the content takes the whole width (except in `alternate`) |
 | txTimelineMarker | `<ng-template txTimelineMarker let-event>` — own marker, e.g. an icon in a tinted circle |
 | txTimelineConnector | `<ng-template txTimelineConnector let-event>` — own line to the next event; the last event has none |
 
-Every template gets the event as `$implicit` plus `index`, `first` and `last`.
+Every template gets the event as `$implicit` plus `index`, `first` and `last`. Give a template the events for typing — `<ng-template txTimelineContent [txTimelineContentOf]="events" let-event>` — and `event` gets their type in strict templates; without it the event stays untyped.
+
+## Inputs — event templates
+| Name | Description |
+|---|---|
+| txTimelineContentOf | `txTimelineContent`: the events, only for the type of `let-event` |
+| txTimelineOppositeOf | `txTimelineOpposite`: the events, only for the type of `let-event` |
+| txTimelineMarkerOf | `txTimelineMarker`: the events, only for the type of `let-event` |
+| txTimelineConnectorOf | `txTimelineConnector`: the events, only for the type of `let-event` |
 
 ## Keyboard
 | Key | Action |

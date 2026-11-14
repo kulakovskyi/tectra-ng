@@ -13,19 +13,21 @@ import { txAnchorPane } from './overlay-anchor';
 import { txLayoutRect } from './overlay-viewport';
 import { txScrollStrategy } from './overlay-scroll';
 import { txAnimateEnter, txAnimateLeave } from './overlay-motion';
-import { orderByRoom, placementFromPosition, txPositions } from './placements';
+import { orderByRoom, placementFromPosition, txArrowPositions, txPositions } from './placements';
+import { TxOverlayStack } from './overlay-stack';
 import { TxOverlayCloseReason, TxOverlayOptions, TxOverlayRef, TxOverlayScroll } from './overlay.types';
 import { TxOverlayInsets, txConnectedMargin, txOverlayBounds, watchOrigin } from './overlay-insets.service';
 
 /**
  * Opens a template or a component in an overlay next to an origin element, with flipping, scroll handling and
- * open and close animation.
+ * open and close animation; the overlay is transient: it closes when a modal dialog opens.
  */
 @Injectable({ providedIn: 'root' })
 export class TxOverlay {
   private injector = inject(Injector);
   private document = inject(DOCUMENT);
   private overlayInsets = inject(TxOverlayInsets);
+  private stack = inject(TxOverlayStack);
 
   /** Opens the content in an overlay and returns its handle. */
   open<TInstance = unknown, TContext = unknown>(
@@ -38,7 +40,8 @@ export class TxOverlay {
     const previousFocus = this.document.activeElement as HTMLElement | null;
 
     const margin = options.viewportMargin ?? 8;
-    const positions = txPositions(placement, options.offset ?? 4);
+    const basePositions = txPositions(placement, options.offset ?? 4);
+    let positions = basePositions;
     let insets = this.overlayInsets.measure();
     const positionStrategy = createFlexibleConnectedPositionStrategy(injector, origin)
       .withPositions(positions)
@@ -57,6 +60,7 @@ export class TxOverlay {
     const currentPlacement = signal(placement);
     const closed = new Subject<TxOverlayCloseReason>();
     let isClosed = false;
+    const forget = this.stack.addTransient(() => close('api'));
 
     const animate = options.animate !== false;
     const motion = options.motion ?? 'slide';
@@ -66,6 +70,7 @@ export class TxOverlay {
         return;
       }
       isClosed = true;
+      forget();
       subscriptions.forEach((subscription) => subscription.unsubscribe());
       stopWatchingOrigin();
       if (options.restoreFocus !== false && reason !== 'outside' && previousFocus?.isConnected) {
@@ -115,6 +120,14 @@ export class TxOverlay {
           })
         : () => undefined;
 
+    const makeRoomForArrow = () => {
+      const inset = typeof options.arrowInset === 'function' ? options.arrowInset(overlayRef.overlayElement) : (options.arrowInset ?? 0);
+      if (inset > 0 || positions !== basePositions) {
+        const pane = { width: overlayRef.overlayElement.offsetWidth, height: overlayRef.overlayElement.offsetHeight };
+        const bounds = txOverlayBounds(insets, margin, this.document);
+        positions = txArrowPositions(basePositions, { inset, origin: txLayoutRect(origin), pane, bounds, rtl: overlayRef.getDirection() === 'rtl' });
+      }
+    };
     const preferRoom = () => {
       const pane = overlayRef.overlayElement;
       const size = { width: pane.offsetWidth, height: pane.offsetHeight };
@@ -122,6 +135,7 @@ export class TxOverlay {
     };
     const reposition = () => {
       if (!overlayRef.hasAttached()) return;
+      makeRoomForArrow();
       preferRoom();
       overlayRef.updatePosition();
     };

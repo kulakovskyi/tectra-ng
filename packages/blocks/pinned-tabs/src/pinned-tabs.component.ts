@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, computed, inject, input, linkedSignal, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, afterNextRender, computed, inject, input, linkedSignal, model, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
@@ -75,6 +75,7 @@ export class TxPinnedTabs {
 
   readonly stateKey = input.required<string>();
   readonly options = input.required<readonly TxPinnedTabOption[]>();
+  readonly defaultPinned = input<readonly string[]>([]);
   readonly allLabel = input<string | undefined>(undefined);
   readonly selected = model<readonly string[]>([]);
   readonly dialogTitle = input<string | undefined>(undefined);
@@ -90,7 +91,13 @@ export class TxPinnedTabs {
   protected readonly translations = injectTranslations();
   readonly hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-pinned-tabs'), ...this.passThrough().root?.style }));
 
-  readonly pinned = linkedSignal<readonly string[]>(() => this.readPinned(this.stateKey()));
+  private readonly storageReady = signal(false);
+
+  readonly pinned = linkedSignal<readonly string[]>(() => {
+    const key = this.stateKey();
+    const fallback = this.defaultPinned();
+    return this.storageReady() ? (this.readPinned(key) ?? fallback) : fallback;
+  });
 
   readonly tabs = computed<TxTabItem[]>(() => {
     const pinned = this.pinned();
@@ -108,6 +115,22 @@ export class TxPinnedTabs {
     return selected.length === 1 ? selected[0] : undefined;
   });
 
+  constructor() {
+    afterNextRender(() => this.storageReady.set(true));
+  }
+
+  pin(value: string): void {
+    if (!this.pinned().includes(value)) {
+      this.savePinned([...this.pinned(), value]);
+    }
+  }
+
+  unpin(value: string): void {
+    if (this.pinned().includes(value)) {
+      this.savePinned(this.pinned().filter((item) => item !== value));
+    }
+  }
+
   protected pick(value: TxTabValue): void {
     this.selected.set(value === ALL ? [] : [String(value)]);
   }
@@ -123,11 +146,9 @@ export class TxPinnedTabs {
       .open<TxPinnedTabsDialog, TxPinnedTabsDialogData, string[]>(TxPinnedTabsDialog, { data, size: 'medium' })
       .closed.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((pinned) => {
-        if (!pinned) {
-          return;
+        if (pinned) {
+          this.savePinned(pinned);
         }
-        this.pinned.set(pinned);
-        this.writePinned(pinned);
       });
   }
 
@@ -139,13 +160,22 @@ export class TxPinnedTabs {
     }
   }
 
-  private readPinned(key: string): string[] {
+  private readPinned(key: string): string[] | null {
     try {
-      const parsed: unknown = JSON.parse(this.storage()?.getItem(key) ?? '[]');
+      const stored = this.storage()?.getItem(key);
+      if (stored === null || stored === undefined) {
+        return null;
+      }
+      const parsed: unknown = JSON.parse(stored);
       return Array.isArray(parsed) ? parsed.map(String) : [];
     } catch {
       return [];
     }
+  }
+
+  private savePinned(pinned: readonly string[]): void {
+    this.pinned.set(pinned);
+    this.writePinned(pinned);
   }
 
   private writePinned(pinned: readonly string[]): void {

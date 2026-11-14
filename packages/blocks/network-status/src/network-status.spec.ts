@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ApplicationRef, ChangeDetectionStrategy, Component, DOCUMENT, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { TxNetworkStatus } from './network-status.component';
+import { TxNetworkService } from './network.service';
 import { TxNetworkState } from './network-status.types';
 
 @Component({
@@ -93,5 +94,52 @@ describe('TxNetworkStatus start state and texts', () => {
     expect(document.body.classList).not.toContain('own-offline');
     window.dispatchEvent(new Event('online'));
     expect(fixture.componentInstance.states).toEqual(['offline', 'restored', 'offline']);
+  });
+});
+
+describe('TxNetworkService', () => {
+  it('is set from code and drives the pill and the bottom offset on the body', async () => {
+    const fixture = TestBed.createComponent(TextHost);
+    fixture.componentInstance.bodyClass.set('tx-offline');
+    await fixture.whenStable();
+    const network = TestBed.inject(TxNetworkService);
+    expect(network.status()).toBe('online');
+    expect(document.body.style.getPropertyValue('--tx-bottom-overlay-offset')).toBe('');
+
+    network.markOffline();
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('.tx-network-status__pill')?.textContent?.trim()).toBe('You are offline');
+    expect(document.body.style.getPropertyValue('--tx-bottom-overlay-offset')).toMatch(/^\d+px$/);
+    expect(fixture.componentInstance.states).toEqual(['offline']);
+
+    network.restoredDuration.set(10);
+    network.markOnline();
+    expect(network.status()).toBe('restored');
+    await new Promise((resolve) => setTimeout(resolve, 30));
+    expect(network.status()).toBe('online');
+    await fixture.whenStable();
+    expect(document.body.style.getPropertyValue('--tx-bottom-overlay-offset')).toBe('');
+    expect(fixture.componentInstance.states).toEqual(['offline', 'restored', 'online']);
+  });
+
+  it('marks the state through the component methods', async () => {
+    const fixture = TestBed.createComponent(TextHost);
+    await fixture.whenStable();
+    const status = fixture.debugElement.children[0].componentInstance as TxNetworkStatus;
+    status.onOffline();
+    expect(status.status()).toBe('offline');
+    status.onOnline();
+    expect(status.status()).toBe('restored');
+    status.onOffline();
+    expect(status.status()).toBe('offline');
+  });
+
+  it('listens to nothing without a window', async () => {
+    const detached = document.implementation.createHTMLDocument('');
+    TestBed.configureTestingModule({ providers: [{ provide: DOCUMENT, useValue: detached }] });
+    const network = TestBed.inject(TxNetworkService);
+    TestBed.inject(ApplicationRef).tick();
+    window.dispatchEvent(new Event('offline'));
+    expect(network.status()).toBe('online');
   });
 });

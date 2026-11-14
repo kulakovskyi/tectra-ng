@@ -18,6 +18,7 @@ export const edgeDataTokens: TectraDeepPartial<TectraComponentTokens> = {
   },
   table: {
     root: { borderColor: lightDark(tokenRef('surface-300'), tokenRef('surface-600')) },
+    row: { selectedColor: tokenRef('highlight-color') },
     headerCell: { fontWeight: tokenRef('font-weight-bold') },
     footerCell: { fontWeight: tokenRef('font-weight-bold') },
   },

@@ -63,6 +63,7 @@ describe('TxPageHeader', () => {
     await fixture.whenStable();
     const root = fixture.nativeElement.querySelector('tx-page-header') as HTMLElement;
     expect(root.hasAttribute('data-styled')).toBe(false);
+    expect(root.hasAttribute('title')).toBe(false);
     expect(root.querySelector('.tx-page-header__actions')?.children).toHaveLength(0);
   });
 });

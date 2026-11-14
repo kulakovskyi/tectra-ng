@@ -56,6 +56,7 @@
 
 @mixin readonly {
   background-color: var(--tx-form-field-readonly-background);
+  caret-color: transparent;
   cursor: default;
 }
 

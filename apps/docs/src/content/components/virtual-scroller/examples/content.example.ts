@@ -11,7 +11,12 @@ import { TxVirtualScroller, TxVirtualScrollerContent } from '@tectra-ng/ui/virtu
       [items]="contacts"
       [itemSize]="48"
     >
-      <ng-template txVirtualScrollerContent let-items let-first="first">
+      <ng-template
+        txVirtualScrollerContent
+        [txVirtualScrollerContentOf]="contacts"
+        let-items
+        let-first="first"
+      >
         <ul class="list">
           @for (contact of items; track $index) {
             <li

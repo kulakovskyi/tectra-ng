@@ -118,9 +118,41 @@
     opacity: var(--tx-paginator-nav-button-disabled-opacity);
   }
 
+  .tx-paginator__page {
+    isolation: isolate;
+    transition:
+      background var(--tx-paginator-transition-duration),
+      outline-color var(--tx-paginator-transition-duration),
+      box-shadow var(--tx-paginator-transition-duration);
+
+    &::before {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border-radius: inherit;
+      background: var(--tx-paginator-nav-button-selected-background);
+      opacity: 0;
+      pointer-events: none;
+      content: '';
+    }
+  }
+
+  .tx-paginator__page:not(:disabled):hover,
   .tx-paginator__page--selected {
-    background: var(--tx-paginator-nav-button-selected-background);
+    transition:
+      background var(--tx-paginator-transition-duration),
+      color var(--tx-paginator-transition-duration),
+      outline-color var(--tx-paginator-transition-duration),
+      box-shadow var(--tx-paginator-transition-duration);
+  }
+
+  .tx-paginator__page--selected {
     color: var(--tx-paginator-nav-button-selected-color);
+
+    &::before {
+      opacity: 1;
+      transition: opacity var(--tx-paginator-transition-duration);
+    }
   }
 
   .tx-paginator__icon {
@@ -141,7 +173,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  :host([data-styled]) .tx-paginator__nav {
-    transition: none;
+  :host([data-styled]) {
+    .tx-paginator__nav,
+    .tx-paginator__page:not(:disabled):hover,
+    .tx-paginator__page--selected,
+    .tx-paginator__page--selected::before {
+      transition: none;
+    }
   }
 }

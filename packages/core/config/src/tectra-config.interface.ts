@@ -1,4 +1,4 @@
-import { TectraPreset } from '@tectra-ng/themes';
+import { TectraDeepPartial, TectraPreset, TectraStyle } from '@tectra-ng/themes';
 import { TxLocaleCode, TxLocaleDefinition, TxTranslations } from '@tectra-ng/core/i18n/types';
 import { TxGlobalPassThrough, TxPassThroughOptions } from './pass-through.interface';
 
@@ -26,10 +26,19 @@ export interface TxOverlayConfig {
   viewportInsets?: TxViewportInsets;
 }
 
+/** Overrides merged into the preset with `definePreset`, or a function that builds them from the preset. */
+export type TxPresetOverrides = TectraDeepPartial<TectraPreset> | ((preset: TectraPreset) => TectraDeepPartial<TectraPreset>);
+
 /** Config passed to `provideTectra`: theme, locale, ripple, pass-through and validation texts. */
 export interface TectraConfig {
   /** Theme preset to apply. */
   preset: TectraPreset;
+  /** The app's own changes to the preset; applied at start and again after every `TxThemeService.updateTheme`. */
+  presetOverrides?: TxPresetOverrides;
+  /** Local storage key that remembers the style, primary, surface, ripple and color scheme and restores them before the first render. */
+  storageKey?: string;
+  /** Styles a remembered choice may name; the style of `preset` is always known. */
+  styles?: TectraStyle[];
   /** Initial color scheme (default `light`). */
   mode?: TxThemeMode;
   /** Extra CSS selector that also turns on dark tokens, e.g. `.app-dark`. */

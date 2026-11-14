@@ -151,6 +151,10 @@
   display: none;
 }
 
+.tx-toggle-switch__text:has(> .tx-toggle-switch__label:empty):not(:has(> .tx-toggle-switch__description)) {
+  display: none;
+}
+
 :host([data-styled]) .tx-toggle-switch__label {
   color: var(--tx-toggle-switch-label-color);
   font-size: var(--_label-font-size);

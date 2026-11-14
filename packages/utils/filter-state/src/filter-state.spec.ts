@@ -164,6 +164,24 @@ describe('txFilterState', () => {
     expect(localStorage.getItem('orders')).toBeNull();
   });
 
+  it('keeps the current object when a patch or set changes nothing', async () => {
+    const router = await setup();
+    const { filters } = TestBed.createComponent(ListPage).componentInstance;
+    const navigate = vi.spyOn(router, 'navigateByUrl');
+    const first = filters.value();
+    filters.patch({ search: '', page: 1 });
+    filters.set({ search: '', status: [], page: 1 });
+    expect(filters.value()).toBe(first);
+    expect(navigate).not.toHaveBeenCalled();
+
+    filters.patch({ status: ['paid'] });
+    const changed = filters.value();
+    filters.patch({ status: ['paid'] });
+    expect(filters.value()).toBe(changed);
+    expect(navigate).toHaveBeenCalledTimes(1);
+    await new Promise((resolve) => setTimeout(resolve));
+  });
+
   it('prefers the URL, then storage merged with new keys', async () => {
     localStorage.setItem('orders', JSON.stringify({ search: 'stored' }));
     await setup('/orders?page=4');
@@ -250,6 +268,7 @@ describe('filters and browser history', () => {
     const { router, page } = await historySetup();
     const navigate = vi.spyOn(router, 'navigateByUrl');
     page.filters.set(INITIAL);
+    page.legacy.save(INITIAL);
     expect(navigate).not.toHaveBeenCalled();
   });
 });

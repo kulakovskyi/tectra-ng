@@ -43,6 +43,10 @@ export const popoverTokens = {
   arrow: {
     size: '14px',
     inset: '15.75px',
+    background: 'initial',
+    borderColor: 'initial',
+    borderWidth: 'initial',
+    shadow: 'none',
   },
   focusRing: {
     width: '2px',

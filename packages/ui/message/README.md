@@ -16,7 +16,7 @@ Error texts: `messages` on the field, then `provideTectra({ validationMessages }
 | Name | Description |
 |---|---|
 | severity | `tx-message`: `primary`, `secondary`, `success`, `info`, `warn`, `danger`, `help`, `contrast`. `tx-field-hint`: `secondary` or `success` |
-| text | `tx-message`: the text; without it the content is shown |
+| text | `tx-message`: the text; the projected content follows it |
 | icon | Icon name (`exclamation-triangle`, also `pi-exclamation-triangle`) or an icon class; no icon by default |
 | size | `tx-message`: `small`, `medium`, `large` |
 | variant | `tx-message`: tinted box by default, `outlined` without the fill, `text` without the box, `simple` without the box and padding |
@@ -31,7 +31,7 @@ Error texts: `messages` on the field, then `provideTectra({ validationMessages }
 | for | `tx-field-hint`, `tx-field-error`: id of the field; adds this text to its `aria-describedby` |
 | id | `tx-field-hint`, `tx-field-error`: own id instead of a generated one |
 | dt | Design tokens of this instance (`message` or `fieldMessage`) |
-| pt | Classes and styles of the parts: `root`, `icon`, `content`, `closeButton` (message); `root`, `icon`, `text` (hint, error) |
+| pt | Classes and styles of the parts: `root`, `icon`, `content`, `actions`, `closeButton` (message); `root`, `icon`, `text` (hint, error) |
 | ptOptions | How `pt` merges with the global pass-through |
 | unstyled | Removes the tectra styles, keeps behaviour and ARIA |
 
@@ -43,7 +43,8 @@ Error texts: `messages` on the field, then `provideTectra({ validationMessages }
 ## Slots
 | Name | Description |
 |---|---|
-| default | `tx-message`: content when there is no `text`; `tx-field-hint`: the hint |
+| default | `tx-message`: content after the `text`; `tx-field-hint`: the hint |
+| txMessageActions | `tx-message`: buttons or links at the end of the message, before the close button (`<button txButton txMessageActions>`) |
 | txMessageIcon | `<ng-template txMessageIcon>` — own icon |
 | txMessageCloseIcon | `<ng-template txMessageCloseIcon>` — own close icon |
 

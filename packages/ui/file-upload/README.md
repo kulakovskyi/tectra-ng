@@ -33,6 +33,7 @@ The value of a form control is the `File` (or `null`), or the `File[]` with `mul
 | headers | Request headers, `HttpHeaders` or a plain object |
 | withCredentials | Sends cookies with the request |
 | customUpload | Hands the files to `uploadHandler` instead of sending them |
+| keepUploaded | `false` drops a file from the list a moment after it shows "Uploaded"; `true` (default) keeps uploaded files until they are removed or `clearUploaded()` runs |
 | description | Hint under the prompt, e.g. the types and the size limit |
 | chooseLabel | Text of the browse link and the basic button |
 | uploadLabel | Text of the Upload button |
@@ -52,7 +53,7 @@ The value of a form control is the `File` (or `null`), or the `File[]` with `mul
 | ptOptions | How `pt` merges with the global pass-through |
 | unstyled | Removes the tectra styles |
 
-`choose()` opens the file dialog, `upload()` sends the waiting files, `clear()` removes them (and stops a running request); `entries()` and `uploadedEntries()` read the files with their status and progress, `uploading()` tells whether a request runs.
+`choose()` opens the file dialog, `upload()` sends the waiting files, `clear()` removes them (and stops a running request), `clearUploaded()` empties the list of uploaded files; `entries()` and `uploadedEntries()` read the files with their status and progress, `uploading()` tells whether a request runs.
 
 ## Outputs
 | Name | Description |

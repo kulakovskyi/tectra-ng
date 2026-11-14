@@ -1,1 +1,1 @@
-`display="chip"` shows every value as a chip with a remove icon; Backspace on the field removes the last one.
+`display="chip"` shows every value as a chip with a remove icon; Backspace on the field removes the last one. The chips stay on one line: the ones that do not fit the field are counted in a `+N` chip.

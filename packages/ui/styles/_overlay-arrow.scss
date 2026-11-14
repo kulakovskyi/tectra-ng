@@ -1,0 +1,78 @@
+@mixin bordered($arrow, $size, $offset, $radius, $border-width, $border-color, $background, $shadow: none, $edge: 0px) {
+  #{$arrow} {
+    position: absolute;
+    width: $size;
+    height: $size;
+    filter: $shadow;
+    transform: rotate(45deg);
+
+    &::before {
+      position: absolute;
+      inset: 0;
+      box-sizing: border-box;
+      border: $border-width solid transparent;
+      background: $background;
+      content: '';
+    }
+  }
+
+  &[data-side='top'] #{$arrow},
+  &[data-side='bottom'] #{$arrow} {
+    inset-inline-start: clamp(
+      min(#{$radius} + #{$size}, 50%),
+      #{$offset},
+      max(100% - #{$radius} - #{$size}, 50%)
+    );
+    margin-inline-start: calc(#{$size} / -2);
+  }
+
+  &[data-side='left'] #{$arrow},
+  &[data-side='right'] #{$arrow} {
+    top: clamp(min(#{$radius} + #{$size}, 50%), #{$offset}, max(100% - #{$radius} - #{$size}, 50%));
+    margin-top: calc(#{$size} / -2);
+  }
+
+  &[data-side='bottom'] #{$arrow} {
+    top: calc(#{$size} / -2 + #{$edge});
+    clip-path: polygon(-50% -50%, 150% -50%, 150% calc(1px - 50%), calc(1px - 50%) 150%, -50% 150%);
+
+    &::before {
+      border-top-color: $border-color;
+      border-left-color: $border-color;
+      clip-path: polygon(0 0, 100% 0, 100% 1px, 1px 100%, 0 100%);
+    }
+  }
+
+  &[data-side='top'] #{$arrow} {
+    bottom: calc(#{$size} / -2 + #{$edge});
+    clip-path: polygon(150% -50%, 150% 150%, -50% 150%, -50% calc(150% - 1px), calc(150% - 1px) -50%);
+
+    &::before {
+      border-right-color: $border-color;
+      border-bottom-color: $border-color;
+      clip-path: polygon(100% 0, 100% 100%, 0 100%, 0 calc(100% - 1px), calc(100% - 1px) 0);
+    }
+  }
+
+  &[data-side='right'] #{$arrow} {
+    left: calc(#{$size} / -2 + #{$edge});
+    clip-path: polygon(-50% -50%, calc(1px - 50%) -50%, 150% calc(150% - 1px), 150% 150%, -50% 150%);
+
+    &::before {
+      border-bottom-color: $border-color;
+      border-left-color: $border-color;
+      clip-path: polygon(0 0, 1px 0, 100% calc(100% - 1px), 100% 100%, 0 100%);
+    }
+  }
+
+  &[data-side='left'] #{$arrow} {
+    right: calc(#{$size} / -2 + #{$edge});
+    clip-path: polygon(-50% -50%, 150% -50%, 150% 150%, calc(150% - 1px) 150%, -50% calc(1px - 50%));
+
+    &::before {
+      border-top-color: $border-color;
+      border-right-color: $border-color;
+      clip-path: polygon(0 0, 100% 0, 100% 100%, calc(100% - 1px) 100%, 0 1px);
+    }
+  }
+}

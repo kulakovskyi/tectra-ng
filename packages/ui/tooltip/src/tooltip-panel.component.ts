@@ -89,7 +89,7 @@ export class TxTooltipPanel {
   });
   readonly side = computed(() => parsePlacement(this.state.placement()).side);
   readonly rootClass = computed(() => [this.state.passThrough().root?.class, this.state.panelClass()].filter(Boolean).join(' '));
-  readonly arrowOffset = computed(() => txArrowOffset(this.state.placement(), this.originSize()));
+  readonly arrowOffset = computed(() => txArrowOffset(this.state.placement(), this.originSize(), 'var(--tx-tooltip-arrow-inset)'));
   readonly hostStyle = computed(() => ({
     ...this.state.style(),
     '--tx-tooltip-arrow-offset': this.arrowOffset(),

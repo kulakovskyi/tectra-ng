@@ -174,3 +174,10 @@ describe('TxRating recompiled by TestBed', () => {
   });
 });
 
+
+describe('rating template directives', () => {
+  it('narrow their template contexts', () => {
+    expect(TxRatingOnIconTemplate.ngTemplateContextGuard({} as TxRatingOnIconTemplate, { $implicit: 0 })).toBe(true);
+    expect(TxRatingOffIconTemplate.ngTemplateContextGuard({} as TxRatingOffIconTemplate, undefined)).toBe(false);
+  });
+});

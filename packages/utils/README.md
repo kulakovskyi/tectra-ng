@@ -10,12 +10,13 @@ Part of `tectra-ng`. One entry point per utility, so you only bundle what you im
 
 | Entry point | What it holds |
 |---|---|
-| `@tectra-ng/utils/date` | `txDate` and `txDateRange` pipes, `provideTxDateFormat`, calendar functions (`addDays`, `startOfWeek`, `calendarDaysBetween` …), format presets and time constants |
+| `@tectra-ng/utils/date` | `txDate` (in the tectra locale) and `txDateRange` pipes, `provideTxDateFormat`, calendar functions (`addDays`, `startOfWeek`, `calendarDaysBetween` …), format presets and time constants |
 | `@tectra-ng/utils/plural` | `txPluralForm` (`one` / `few` / `many` for translation keys) and `txPlural` pipes in the tectra locale |
 | `@tectra-ng/utils/debounce-input` | `txDebounceInput` — reports a field's value after a pause, at once on Enter |
 | `@tectra-ng/utils/form-validation` | `TxFormValidation.scrollToFirstInvalid`, `txScrollToInvalid` on a form, `markAllTouched` |
 | `@tectra-ng/utils/filter-state` | `txFilterState` — filters in local storage and the URL; `TxUrlFilters` / `TxSaveFilters` base classes; `injectStorage`, `TxMemoryStorage` |
 | `@tectra-ng/utils/http` | `buildHttpParams`, `retryHttpReads` (back-off, `Retry-After`), `txHttpStatusTone` / `txHttpStatusLabel` pipes |
+| `@tectra-ng/utils/number` | `txNumber` — numbers in the tectra locale with any `Intl.NumberFormat` option, `formatLocaleNumber` |
 | `@tectra-ng/utils/relative-time` | `txRelativeTime` — "5 minutes ago", "yesterday", "in 3 days" in the tectra locale |
 | `@tectra-ng/utils/validators` | `TxValidators` — code, date, link, password, match, IP, domain, duplicate, time, JSON, price and more, with translated messages in `tx-field-error` |
 | `@tectra-ng/utils/clipboard` | `txCopy` — copies on click with a kit toast; `TxClipboard`, `copyToClipboard` |
@@ -25,6 +26,7 @@ Part of `tectra-ng`. One entry point per utility, so you only bundle what you im
 | `@tectra-ng/utils/currency` | `txCurrencySymbol` — the sign, code or name of any ISO currency in the tectra locale |
 | `@tectra-ng/utils/in-view` | `txInView` (enter / leave classes, `entered` / `left`), `txVisibleOnScroll` (items seen in a scrolling list) |
 | `@tectra-ng/utils/file` | `txFileSize`, `formatFileSize`, `downloadFile`, `downloadBlob` |
+| `@tectra-ng/utils/scrolling` | `provideTxScrolling` — back / forward restore the scroll position, a new path starts at the top, query-only navigations (filters, paging) stay in place |
 | `@tectra-ng/utils/title` | `provideTxTitle` — "Page · App" tab titles, a prefix for counters, translated keys |
 | `@tectra-ng/utils/breakpoint` | `TxBreakpoints` — `isMobile`, `isTablet` and any media query as signals |
 | `@tectra-ng/utils/selection` | `TxSelection` — checked rows by key with header checkbox state |

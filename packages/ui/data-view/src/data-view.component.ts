@@ -152,7 +152,6 @@ export class TxDataView<T = unknown> {
   readonly empty = computed(() => this.pageItems().length === 0);
   readonly itemsContext = computed<TxDataViewItemsContext<T>>(() => ({ $implicit: this.pageItems(), items: this.pageItems(), first: this.first() }));
   readonly activeTemplate = computed(() => (this.layout() === 'grid' ? (this.gridTemplate() ?? this.listTemplate()) : (this.listTemplate() ?? this.gridTemplate())));
-  readonly layoutKey = computed(() => [this.layout()]);
   readonly showPaginatorTop = computed(() => this.paginator() && this.paginatorPosition() !== 'bottom');
   readonly showPaginatorBottom = computed(() => this.paginator() && this.paginatorPosition() !== 'top');
 

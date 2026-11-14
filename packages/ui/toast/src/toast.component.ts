@@ -17,7 +17,8 @@ import {
 } from '@angular/core';
 import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
-import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TxOverlayStack } from '@tectra-ng/core/overlay';
+import { TxAnimationReplay, optionalBoolean } from '@tectra-ng/core/utils';
 import { injectTxIcons, provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraToastTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxProgressSpinner } from '@tectra-ng/ui/progress-spinner';
@@ -48,7 +49,7 @@ interface TxToastSwipe {
 
 @Component({
   selector: 'tx-toast',
-  imports: [NgTemplateOutlet, TxIcon, TxProgressSpinner],
+  imports: [NgTemplateOutlet, TxIcon, TxProgressSpinner, TxAnimationReplay],
   templateUrl: './toast.component.html',
   styleUrl: './toast.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -76,6 +77,8 @@ export class TxToast {
   private iconRegistry = injectTxIcons();
   private host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private document = inject(DOCUMENT);
+  private stack = inject(TxOverlayStack);
+  private leaveTop: () => void = () => undefined;
   private swipe: TxToastSwipe | null = null;
   private pausedIds: number[] = [];
 
@@ -119,6 +122,7 @@ export class TxToast {
     afterNextRender(() => {
       if (!this.inPlace()) {
         this.document.body.appendChild(this.host);
+        this.leaveTop = this.stack.keepOnTop(this.host);
       }
     });
     afterRenderEffect(() => {
@@ -148,6 +152,7 @@ export class TxToast {
     });
     inject(DestroyRef).onDestroy(() => {
       this.resumeAll();
+      this.leaveTop();
       this.host.remove();
     });
   }

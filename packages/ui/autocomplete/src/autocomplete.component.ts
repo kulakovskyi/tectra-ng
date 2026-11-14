@@ -18,14 +18,14 @@ import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassT
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraSelectTokens, toStyleObject } from '@tectra-ng/themes';
-import { TxOptionList, TxSelectBase, TxSelectItem, foldText, isSelectableRow, readOptionField } from '@tectra-ng/ui/select';
+import { TxOptionList, TxSelectBase, TxSelectChipsFit, TxSelectItem, foldText, isSelectableRow, readOptionField } from '@tectra-ng/ui/select';
 import { TxAutocompleteChangeEvent, TxAutocompleteCompleteEvent, TxAutocompleteDropdownMode, TxAutocompletePart } from './autocomplete.types';
 import { AUTOCOMPLETE_ICON_DEFAULTS } from './autocomplete.icons';
 import { AUTOCOMPLETE_THEME } from './autocomplete.theme';
 
 @Component({
   selector: 'tx-autocomplete',
-  imports: [CdkOverlayOrigin, CdkConnectedOverlay, TxOverlayAnchor, NgTemplateOutlet, TxIcon, TxOptionList],
+  imports: [CdkOverlayOrigin, CdkConnectedOverlay, TxOverlayAnchor, NgTemplateOutlet, TxIcon, TxOptionList, TxSelectChipsFit],
   templateUrl: './autocomplete.component.html',
   styleUrl: './autocomplete.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -103,6 +103,7 @@ export class TxAutocomplete extends TxSelectBase<unknown> {
     );
   });
   readonly hasValue = computed(() => this.selectedValues().length > 0);
+  protected readonly focused = signal(false);
   readonly showPanel = computed(() => this.isPanelMounted() && (this.rows().length > 0 || this.loading() || this.showEmptyMessage()));
   readonly tokenStyle = computed(() => toStyleObject(this.dt(), '--tx-select'));
   readonly hostStyle = computed(() => ({ ...this.tokenStyle(), ...this.passThrough().root?.style }));
@@ -152,6 +153,7 @@ export class TxAutocomplete extends TxSelectBase<unknown> {
   }
 
   onFocus(): void {
+    this.focused.set(true);
     if (this.completeOnFocus() && !this.isOpen()) {
       this.search(this.query());
     }
@@ -162,6 +164,7 @@ export class TxAutocomplete extends TxSelectBase<unknown> {
     if (next && (this.panel()?.nativeElement.contains(next) || this.box().nativeElement.contains(next))) {
       return;
     }
+    this.focused.set(false);
     this.settleText();
   }
 

@@ -60,9 +60,10 @@ export const commandPaletteTokens = {
   results: {
     padding: '7px',
     groupPadding: '10.5px 10.5px 5.25px',
-    groupFontSize: '9.625px',
+    groupFontSize: tokenRef('font-size-xs'),
     groupFontWeight: tokenRef('font-weight-semibold'),
-    groupLetterSpacing: '0.05em',
+    groupLetterSpacing: 'normal',
+    groupTextTransform: 'none',
     groupColor: tokenRef('text-muted'),
     statusGap: '7px',
     statusPadding: '28px 14px',

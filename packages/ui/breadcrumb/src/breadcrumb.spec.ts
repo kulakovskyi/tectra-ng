@@ -131,7 +131,7 @@ describe('TxBreadcrumb', () => {
 
 @Component({
   imports: [TxBreadcrumb],
-  template: `<tx-breadcrumb id="plain" [model]="items" (itemClick)="clicked.push($event)" />`,
+  template: `<tx-breadcrumb id="plain" [model]="items" [pt]="{ text: { class: 'own-text' } }" (itemClick)="clicked.push($event)" />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class PlainHost {
@@ -156,7 +156,11 @@ describe('TxBreadcrumb without a router', () => {
 
   it('renders router links as plain links and items without an action as text', () => {
     const [root, team, board] = items();
-    expect(root.querySelector('.tx-breadcrumb__link')?.tagName).toBe('SPAN');
+    const text = root.querySelector('.tx-breadcrumb__text') as HTMLElement;
+    expect(text.tagName).toBe('SPAN');
+    expect(text.classList).toContain('own-text');
+    expect(text.hasAttribute('aria-current')).toBe(false);
+    expect(root.querySelector('.tx-breadcrumb__link')).toBeNull();
     expect(root.querySelector('span.tx-breadcrumb__icon.own-root-icon')).not.toBeNull();
     expect(team.querySelector('a')?.getAttribute('href')).toBe('teams/core');
     expect(board.querySelector('a')?.getAttribute('href')).toBe('/board');

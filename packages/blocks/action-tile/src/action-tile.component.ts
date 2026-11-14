@@ -43,6 +43,7 @@ import { ACTION_TILE_THEME } from './action-tile.theme';
     '[class]': 'passThrough().root?.class',
     '[style]': 'hostStyle()',
     '[attr.data-styled]': '!isUnstyled() || null',
+    '[attr.title]': 'null',
     '[class.tx-action-tile--loading]': 'loading()',
     '[class.tx-action-tile--disabled]': 'disabled()',
   },

@@ -6,7 +6,19 @@ A pill at the bottom of the window that says "No internet connection" while the 
 <tx-network-status />
 ```
 
-It listens to the browser `offline` / `online` events and checks `navigator.onLine` on start — in the browser only, so nothing shows on the server. While the pill is shown the body gets the `bodyClass` class (`tx-offline`), e.g. to dim actions that need the network. The pill sits in a polite live region, so screen readers announce both messages.
+The state lives in the root `TxNetworkService`: it listens to the browser `offline` / `online` events and checks `navigator.onLine` on start — in the browser only, so nothing shows on the server. Read `status` anywhere, or set it from code, e.g. when requests fail although the browser says it is online:
+
+```ts
+private readonly network = inject(TxNetworkService);
+
+readonly offline = computed(() => this.network.status() === 'offline');
+
+onRequestFailed(): void {
+  this.network.markOffline();
+}
+```
+
+While the pill is shown the body gets the `bodyClass` class (`tx-offline`), e.g. to dim actions that need the network, and the `--tx-bottom-overlay-offset` variable: the space the pill takes at the bottom of the window. `tx-cookie-notice` moves up by it, and any own bottom overlay can add it to its `bottom`. The pill sits in a polite live region, so screen readers announce both messages.
 
 ## Inputs
 | Name | Description |
@@ -28,6 +40,10 @@ It listens to the browser `offline` / `online` events and checks `navigator.onLi
 ## Methods
 | Name | Description |
 |---|---|
-| onOffline() | Shows the offline pill, as the browser `offline` event does |
-| onOnline() | Shows "Connection restored", as the browser `online` event does |
-| status | Signal: `online`, `offline` or `restored` |
+| onOffline() | Shows the offline pill, as the browser `offline` event does (`TxNetworkService.markOffline()`) |
+| onOnline() | Shows "Connection restored", as the browser `online` event does (`TxNetworkService.markOnline()`) |
+| status | Signal: `online`, `offline` or `restored` — the `status` of `TxNetworkService` |
+| TxNetworkService.status | Signal of the root service: `online`, `offline` or `restored` |
+| TxNetworkService.markOffline() | Sets the state to `offline`, e.g. after requests failed |
+| TxNetworkService.markOnline() | Sets `restored` when it was `offline`, then `online` after `restoredDuration` |
+| TxNetworkService.restoredDuration | Signal: how long `restored` lasts, in ms; the `restoredDuration` input of the pill sets it |

@@ -10,6 +10,8 @@ import {
   effect,
   inject,
   input,
+  Renderer2,
+  viewChild,
 } from '@angular/core';
 import { optionalNumber } from '@tectra-ng/core/utils';
 import { injectTranslations } from '@tectra-ng/core/i18n';
@@ -43,7 +45,7 @@ import { TABLE_THEME } from './table.theme';
         [txPopoverTrigger]="overflow"
       ></button>
       <tx-popover #overflow placement="bottom-end">
-        <div class="tx-table-actions__overflow">
+        <div #overflowPanel class="tx-table-actions__overflow">
           @for (action of overflowActions(); track action.id()) {
             <ng-container [ngTemplateOutlet]="action.templateRef" />
           }
@@ -74,11 +76,14 @@ export class TxTableActions implements TxTableRowActionsSource {
 
   private table = inject(TX_TABLE, { optional: true });
   private host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private renderer = inject(Renderer2);
   private row: Element | null = null;
 
   readonly inlineCount = input<number | undefined, unknown>(undefined, { transform: optionalNumber });
 
   readonly actions = contentChildren(TxTableAction, { descendants: true });
+  private readonly overflow = viewChild<TxPopover>('overflow');
+  private readonly overflowPanel = viewChild<ElementRef<HTMLElement>>('overflowPanel');
   readonly translations = injectTranslations();
 
   private readonly present = computed(() => this.actions().filter((action) => !!action.id()));
@@ -113,6 +118,11 @@ export class TxTableActions implements TxTableRowActionsSource {
       const items = this.present().map((action) => ({ id: action.id(), label: action.label() }));
       this.table?.actionsStore.register(items);
     });
+    effect((onCleanup) => {
+      const panel = this.overflowPanel()?.nativeElement;
+      if (!panel) return;
+      onCleanup(this.renderer.listen(panel, 'click', (event: MouseEvent) => this.closeAfterAction(panel, event), { capture: true }));
+    });
     afterNextRender(() => {
       this.row = this.host.nativeElement.closest('tr, .tx-table__card');
       if (this.row) this.table?.registerRowActions(this.row, this);
@@ -120,5 +130,10 @@ export class TxTableActions implements TxTableRowActionsSource {
     inject(DestroyRef).onDestroy(() => {
       if (this.row) this.table?.unregisterRowActions(this.row, this);
     });
+  }
+
+  private closeAfterAction(panel: HTMLElement, event: MouseEvent): void {
+    const control = (event.target as Element | null)?.closest('button, a[href], [role="button"], [role="menuitem"]');
+    if (control && panel.contains(control)) this.overflow()?.hide();
   }
 }

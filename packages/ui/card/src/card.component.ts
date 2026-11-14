@@ -30,6 +30,7 @@ import { CARD_THEME } from './card.theme';
     '[class]': 'passThrough().root?.class',
     '[style]': 'hostStyle()',
     '[attr.data-styled]': '!isUnstyled() || null',
+    '[attr.title]': 'null',
   },
   viewProviders: [provideTxIconDefaults(CARD_ICON_DEFAULTS)],
 })

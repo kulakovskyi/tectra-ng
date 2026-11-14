@@ -15,7 +15,7 @@ Texts come from the tectra locale — `selectAll`, `selectedOfTotal`, `selectedI
 | optionGroupLabel | Field of a group shown as its header |
 | optionGroupChildren | Field of a group that holds its items |
 | dataKey | Field that identifies an object value |
-| display | `comma` (text) or `chip` (removable chips) |
+| display | `comma` (text) or `chip` (removable chips on one line; the ones that do not fit are counted in a `+N` chip) |
 | maxSelectedLabels | Above this many values the field shows "N selected" |
 | selectedItemsLabel | Own summary text, `{count}` is replaced |
 | selectAllLabel | Own text of the select-all checkbox (the translated "Select all" by default) |

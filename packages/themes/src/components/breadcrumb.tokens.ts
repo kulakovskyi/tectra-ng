@@ -11,6 +11,12 @@ export const breadcrumbTokens = {
   item: {
     color: tokenRef('text-muted'),
     hoverColor: tokenRef('text-primary'),
+    textColor: tokenRef('text-muted'),
+    linkDecoration: 'underline',
+    linkDecorationColor: lightDark(tokenRef('surface-300'), tokenRef('surface-600')),
+    linkHoverDecorationColor: 'currentColor',
+    linkDecorationThickness: '1px',
+    linkUnderlineOffset: '3px',
     borderRadius: tokenRef('radius-lg'),
     gap: '7px',
     fontSize: tokenRef('font-size-md'),

@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { TxLocaleService } from '@tectra-ng/core/i18n';
 import { provideTxDateFormat } from './date.config';
-import { MS_IN_DAY, TX_DATE_FORMATS } from './date.constants';
+import { MS_IN_DAY, TX_DATE_FORMATS, TX_DATE_STYLES } from './date.constants';
 import {
   addDays,
   addMonths,
@@ -20,7 +21,7 @@ import {
   toIsoString,
 } from './date.functions';
 import { TxDatePipe, TxDateRangePipe } from './date.pipe';
-import { TxDateInput } from './date.types';
+import { TxDateFormat, TxDateInput } from './date.types';
 
 @Component({
   imports: [TxDatePipe, TxDateRangePipe],
@@ -29,7 +30,7 @@ import { TxDateInput } from './date.types';
 })
 class DateHost {
   readonly value = signal<TxDateInput>(new Date(2026, 10, 11, 9, 5));
-  readonly format = signal<string | undefined>(TX_DATE_FORMATS.dateTime);
+  readonly format = signal<TxDateFormat | undefined>(TX_DATE_FORMATS.dateTime);
   readonly range = signal<TxDateInput[]>([new Date(Date.UTC(2026, 0, 1)), new Date(Date.UTC(2026, 0, 31))]);
 }
 
@@ -47,11 +48,42 @@ describe('txDate pipe', () => {
     expect(text('.value')).toBe('11.11.26 09:05');
   });
 
-  it('uses mediumDate by default', () => {
+  it('uses a medium date in the tectra locale by default and follows a locale switch', async () => {
     const { fixture, text } = render();
     fixture.componentInstance.format.set(undefined);
     fixture.detectChanges();
     expect(text('.value')).toBe('Nov 11, 2026');
+    await TestBed.inject(TxLocaleService).setLocale('ua');
+    fixture.detectChanges();
+    expect(text('.value')).toBe(new Intl.DateTimeFormat('uk-UA', { dateStyle: 'medium' }).format(new Date(2026, 10, 11)));
+    fixture.componentInstance.format.set('d MMMM');
+    fixture.detectChanges();
+    expect(text('.value')).toBe('11 November');
+    fixture.componentInstance.format.set(TX_DATE_FORMATS.dateTime);
+    fixture.detectChanges();
+    expect(text('.value')).toBe('11.11.26 09:05');
+  });
+
+  it('formats with Intl styles and options', () => {
+    const { fixture, text } = render();
+    fixture.componentInstance.format.set(TX_DATE_STYLES.dateTime);
+    fixture.detectChanges();
+    expect(text('.value')).toBe(new Intl.DateTimeFormat('en-US', TX_DATE_STYLES.dateTime).format(new Date(2026, 10, 11, 9, 5)));
+    fixture.componentInstance.format.set({ month: 'long', day: 'numeric' });
+    fixture.detectChanges();
+    expect(text('.value')).toBe('November 11');
+    fixture.detectChanges();
+    expect(text('.value')).toBe('November 11');
+  });
+
+  it('formats Intl styles in an offset, UTC or a named time zone', () => {
+    const pipe = TestBed.runInInjectionContext(() => new TxDatePipe());
+    const time = { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' } as const;
+    expect(pipe.transform('2026-11-11T22:30:00Z', time, '+0200')).toBe('00:30');
+    expect(pipe.transform('2026-11-11T22:30:00Z', time, 'GMT-03:30')).toBe('19:00');
+    expect(pipe.transform('2026-11-11T22:30:00Z', time, 'UTC')).toBe('22:30');
+    expect(pipe.transform('2026-11-11T22:30:00Z', time, 'Asia/Tokyo')).toBe('07:30');
+    expect(pipe.transform('2026-11-11T22:30:00Z', time, 'Not/AZone')).toBe('-');
   });
 
   it('shows the empty text for empty and broken values', () => {

@@ -41,6 +41,18 @@ describe('provideTxTitle', () => {
     await TestBed.inject(Router).navigateByUrl('/orders');
     expect(TestBed.inject(Title).getTitle()).toBe('Замовлення — Console');
   });
+  it('shows ready text as it is with translate: false', async () => {
+    TestBed.configureTestingModule({ providers: [provideRouter(routes), provideTxTitle({ appName: 'Console', translate: (page) => page.toUpperCase() })] });
+    const txTitle = TestBed.inject(TxTitle);
+    const title = TestBed.inject(Title);
+    txTitle.setPage('Order 1042', { translate: false });
+    expect(title.getTitle()).toBe('Order 1042 · Console');
+    txTitle.setPage('orders', { translate: true });
+    expect(title.getTitle()).toBe('ORDERS · Console');
+    txTitle.setPage(undefined, { translate: false });
+    expect(title.getTitle()).toBe('Console');
+  });
+
   it('takes a plain translated string', async () => {
     TestBed.configureTestingModule({ providers: [provideRouter(routes), provideTxTitle({ appName: 'Console', translate: (page) => page.toUpperCase() })] });
     await TestBed.inject(Router).navigateByUrl('/orders');

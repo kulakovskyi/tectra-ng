@@ -34,6 +34,7 @@ import { EMPTY_STATE_THEME } from './empty-state.theme';
     '[class]': 'passThrough().root?.class',
     '[style]': 'hostStyle()',
     '[attr.data-styled]': '!isUnstyled() || null',
+    '[attr.title]': 'null',
     '[attr.data-variant]': 'variant()',
     '[attr.data-size]': 'size()',
     '[attr.data-tone]': 'tone()',

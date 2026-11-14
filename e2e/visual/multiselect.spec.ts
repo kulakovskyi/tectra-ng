@@ -50,14 +50,21 @@ test('select all picks the filtered options and keeps the panel open', async ({ 
 test('chips are removed by click and by Backspace without moving the page', async ({ page }) => {
   const frame = example(page, 'Chips');
   const trigger = frame.getByRole('combobox');
-  const chips = frame.locator('.tx-select__chip');
-  await expect(chips).toHaveText(['Angular', 'RxJS', 'Docker']);
-  await chips.nth(1).locator('.tx-select__chip-remove').click();
-  await expect(chips).toHaveText(['Angular', 'Docker']);
+  const chips = frame.locator('.tx-select__chip:not(.tx-select__chip--more)');
+  const shown = frame.locator('.tx-select__chip:not(.tx-select__chip--more):not(.tx-select__chip--hidden)');
+  const more = frame.locator('.tx-select__chip--more');
+  await expect(chips).toHaveText(['Angular', 'TypeScript', 'RxJS', 'PostgreSQL', 'Docker']);
+  await expect(shown).toHaveText(['Angular', 'TypeScript']);
+  await expect(more).toHaveText('+3');
+  const height = (await trigger.boundingBox())?.height;
+  await shown.nth(1).locator('.tx-select__chip-remove').click();
+  await expect(chips).toHaveText(['Angular', 'RxJS', 'PostgreSQL', 'Docker']);
+  await expect(more).toHaveText('+2');
   await expect(panel(page)).toHaveCount(0);
   await trigger.focus();
   await page.keyboard.press('Backspace');
-  await expect(chips).toHaveText(['Angular']);
+  await expect(chips).toHaveText(['Angular', 'RxJS', 'PostgreSQL']);
+  expect((await trigger.boundingBox())?.height).toBe(height);
 });
 
 test('the selection limit disables the remaining options', async ({ page }) => {

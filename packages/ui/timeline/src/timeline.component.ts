@@ -47,6 +47,7 @@ export class TxTimeline<T = unknown> {
   readonly passThrough = injectPassThrough('timeline', this, this.pt, this.ptOptions);
   readonly hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-timeline'), ...this.passThrough().root?.style }));
   readonly resolvedAlign = computed<TxTimelineAlign>(() => this.align() ?? (this.layout() === 'horizontal' ? 'top' : 'left'));
+  protected readonly hasOpposite = computed(() => !!this.oppositeTemplate() || this.resolvedAlign() === 'alternate');
 
   protected readonly events = computed(() => {
     const items = this.value() ?? [];

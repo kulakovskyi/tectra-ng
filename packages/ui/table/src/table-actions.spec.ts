@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { TxPopover } from '@tectra-ng/ui/popover';
 import { TxTableActions } from './table-actions.component';
 import { TxTableActionsStore } from './table-actions.store';
 import { TxTable } from './table.component';
@@ -111,6 +113,71 @@ describe('TxTableActions outside a table', () => {
     await fixture.whenStable();
     expect(inline()).toEqual(['Edit', 'Copy', 'Delete']);
     expect(fixture.nativeElement.querySelector('.tx-table-actions__more')).toBeNull();
+  });
+});
+
+@Component({
+  imports: [TxTableActions, TxTableAction],
+  template: `
+    <tx-table-actions [inlineCount]="0">
+      @if (canEdit()) {
+        <button *txTableAction="{ label: 'Edit' }" class="edit" type="button" (click)="clicks.push('edit')">Edit</button>
+      }
+      <button *txTableAction="{ label: 'Delete' }" class="delete" type="button" (click)="clicks.push('delete')"><span class="inner">Delete</span></button>
+      <span *txTableAction="{ label: 'Note' }" class="note">Note</span>
+      <button *txTableAction="undefined" class="bare" type="button">Bare</button>
+    </tx-table-actions>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class WrappedHost {
+  readonly canEdit = signal(true);
+  readonly clicks: string[] = [];
+}
+
+describe('TxTableActions with wrapped actions', () => {
+  let fixture: ComponentFixture<WrappedHost>;
+  const overlay = () => document.querySelector('.tx-table-actions__overflow');
+  const stable = async () => {
+    await fixture.whenStable();
+    await new Promise((resolve) => setTimeout(resolve));
+    await fixture.whenStable();
+  };
+
+  beforeEach(async () => {
+    fixture = TestBed.createComponent(WrappedHost);
+    fixture.autoDetectChanges();
+    await stable();
+  });
+
+  afterEach(() => {
+    fixture.destroy();
+    document.querySelector('.cdk-overlay-container')?.remove();
+  });
+
+  it('registers an action inside @if once its config is set and drops it when hidden', async () => {
+    const actions = fixture.debugElement.query(By.directive(TxTableActions)).componentInstance as TxTableActions;
+    expect(actions.menuActions().map((action) => action.label())).toEqual(['Edit', 'Delete', 'Note']);
+    const bare = actions.actions().at(-1);
+    expect([bare?.id(), bare?.label()]).toEqual(['', '']);
+    fixture.componentInstance.canEdit.set(false);
+    await stable();
+    expect(actions.menuActions().map((action) => action.label())).toEqual(['Delete', 'Note']);
+  });
+
+  it('closes the overflow popover when an action in it is activated', async () => {
+    const more = fixture.nativeElement.querySelector('.tx-table-actions__more') as HTMLButtonElement;
+    more.focus();
+    more.click();
+    await stable();
+    const popover = fixture.debugElement.query(By.directive(TxPopover)).componentInstance as TxPopover;
+    expect(popover.open()).toBe(true);
+    (overlay()?.querySelector('.note') as HTMLElement).click();
+    expect(popover.open()).toBe(true);
+    (overlay()?.querySelector('.delete .inner') as HTMLElement).click();
+    expect(popover.open()).toBe(false);
+    expect(fixture.componentInstance.clicks).toEqual(['delete']);
+    expect(document.activeElement).toBe(more);
   });
 });
 

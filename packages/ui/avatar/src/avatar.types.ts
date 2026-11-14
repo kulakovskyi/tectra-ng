@@ -4,6 +4,8 @@ export type TxAvatarSize = 'small' | 'medium' | 'large' | 'xlarge';
 export type TxAvatarShape = 'circle' | 'square';
 /** Background colour of an avatar with initials. */
 export type TxAvatarTone = 'blue' | 'green' | 'sky' | 'orange' | 'purple' | 'red';
+/** Name hint of an avatar: `true` the kit tooltip, `false` the native title, `none` no hint at all. */
+export type TxAvatarTooltip = boolean | 'none';
 /** Names of the parts of `tx-avatar` that `pt` can style. */
 export type TxAvatarPart = 'root' | 'image' | 'label' | 'icon';
 /** Names of the parts of `tx-avatar-group` that `pt` can style. */

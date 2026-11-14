@@ -44,6 +44,7 @@ const PICKED = 'a[href], [role="treeitem"]:not([aria-expanded])';
     '[class]': 'passThrough().root?.class',
     '[style]': 'hostStyle()',
     '[attr.data-styled]': '!isUnstyled() || null',
+    '[attr.title]': 'null',
     '[attr.data-responsive]': 'responsive()',
     '[class.tx-app-layout--plain]': '!sidebar()',
     '[class.tx-app-layout--anchored]': 'sidebar() && anchored()',

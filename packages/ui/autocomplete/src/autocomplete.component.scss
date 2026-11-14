@@ -3,6 +3,7 @@
 
 @include select-field.styles('.tx-autocomplete');
 @include select-field.chips;
+@include select-field.chips-fit('.tx-autocomplete__chips--fit');
 
 :host .tx-select__box {
   cursor: text;

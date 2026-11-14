@@ -18,7 +18,7 @@ import {
 } from '@angular/core';
 import { linkAriaReference, uniqueId } from '@tectra-ng/core/a11y';
 import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
-import { TxOverlay, TxOverlayRef, TxPlacement } from '@tectra-ng/core/overlay';
+import { TxOverlay, TxOverlayRef, TxPlacement, txArrowInset } from '@tectra-ng/core/overlay';
 import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraTooltipTokens, toStyleObject } from '@tectra-ng/themes';
 import { TX_TOOLTIP_DEFAULTS, TX_TOOLTIP_OPTIONS } from './tooltip.options';
@@ -292,6 +292,7 @@ export class TxTooltip implements TxTooltipHandle {
       motion: 'pop',
       closeOnOutsideClick: false,
       restoreFocus: false,
+      arrowInset: (pane) => txArrowInset(pane.querySelector('.tx-tooltip'), pane.querySelector('.tx-tooltip__arrow')),
       panelClass: 'tx-tooltip-pane',
     });
     ref.closed.subscribe((reason) => {

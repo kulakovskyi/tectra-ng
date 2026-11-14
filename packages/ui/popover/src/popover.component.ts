@@ -1,4 +1,4 @@
-import { InteractivityChecker } from '@angular/cdk/a11y';
+import { InputModalityDetector, InteractivityChecker } from '@angular/cdk/a11y';
 import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -23,7 +23,7 @@ import {
 import { nextTabbable, tabbableElements, uniqueId } from '@tectra-ng/core/a11y';
 import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
-import { TxOverlay, TxOverlayRef, TxOverlayScroll, TxPlacement, parsePlacement, txArrowOffset } from '@tectra-ng/core/overlay';
+import { TxOverlay, TxOverlayRef, TxOverlayScroll, TxPlacement, parsePlacement, txArrowInset, txArrowOffset } from '@tectra-ng/core/overlay';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraPopoverTokens, toStyleObject } from '@tectra-ng/themes';
@@ -49,6 +49,7 @@ export class TxPopover {
   private overlay = inject(TxOverlay);
   private viewContainerRef = inject(ViewContainerRef);
   private checker = inject(InteractivityChecker);
+  private modality = inject(InputModalityDetector);
   private document = inject(DOCUMENT);
 
   readonly placement = input<TxPlacement>('bottom-start');
@@ -96,7 +97,7 @@ export class TxPopover {
   readonly currentPlacement = computed(() => this.shown()?.placement() ?? this.placement());
   readonly side = computed(() => parsePlacement(this.currentPlacement()).side);
   readonly hasTitle = computed(() => Boolean(this.header()) || Boolean(this.headerSlot()));
-  readonly labelledBy = computed(() => this.ariaLabelledBy() ?? (this.hasTitle() && !this.ariaLabel() ? this.titleId : null));
+  readonly labelledBy = computed(() => this.ariaLabelledBy() ?? (this.header() && !this.ariaLabel() ? this.titleId : null));
   readonly panelStyle = computed(() => ({
     ...toStyleObject(this.dt(), '--tx-popover'),
     '--tx-popover-arrow-offset': this.arrowOffset(),
@@ -148,6 +149,7 @@ export class TxPopover {
       closeOnEscape: this.closeOnEscape(),
       closeOnOutsideClick: this.dismissable(),
       restoreFocus: this.restoreFocus(),
+      arrowInset: (pane) => txArrowInset(pane.querySelector('.tx-popover'), pane.querySelector('.tx-popover__arrow')),
       panelClass: ['tx-popover-pane', ...(this.panelClass() ? [this.panelClass() as string] : [])],
     });
     ref.closed.subscribe((reason) => {
@@ -233,6 +235,7 @@ export class TxPopover {
             .map((part) => (part ? tabbableElements(part, this.checker)[0] : undefined))
             .find(Boolean)
         : undefined;
+    panel.toggleAttribute('data-keyboard', this.modality.mostRecentModality === 'keyboard');
     (first ?? panel).focus({ preventScroll: true });
   }
 

@@ -32,3 +32,11 @@ export const TX_DATE_FORMATS = {
   day: 'dd',
   dayMonth: 'dd.MM',
 } as const;
+
+export const TX_DATE_STYLES = {
+  date: { dateStyle: 'medium' },
+  dateTime: { dateStyle: 'medium', timeStyle: 'short' },
+  time: { timeStyle: 'short' },
+  shortDate: { dateStyle: 'short' },
+  longDate: { dateStyle: 'long' },
+} as const satisfies Record<string, Intl.DateTimeFormatOptions>;

@@ -222,7 +222,7 @@ describe('TxTabs from parts', () => {
 @Component({
   imports: [TxTabs, TxTabList, TxTab],
   template: `
-    <tx-tabs id="scroll" variant="line" scrollable [orientation]="orientation()" [(value)]="active">
+    <tx-tabs id="scroll" variant="line" [scrollable]="scrollable()" [orientation]="orientation()" [(value)]="active">
       <tx-tab-list ariaLabelledBy="heading">
         <tx-tab value="one" icon="custom-glyph">One</tx-tab>
         <button txTab value="two">Two</button>
@@ -239,6 +239,7 @@ describe('TxTabs from parts', () => {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class ScrollHost {
+  readonly scrollable = signal<boolean | undefined>(true);
   readonly orientation = signal<'horizontal' | 'vertical'>('horizontal');
   readonly active = signal<TxTabValue | undefined>('one');
 }
@@ -317,6 +318,26 @@ describe('TxTabs scrolling', () => {
     expect(scrollLeft).toBe(0);
     fixture.destroy();
     expect(observer.disconnected).toBe(true);
+  });
+
+  it('shows the scroll buttons by itself only while the tabs do not fit', async () => {
+    const content = el('#scroll [role="tablist"]');
+    const observer = FakeResizeObserver.all.find((each) => each.observed.includes(content)) as FakeResizeObserver;
+    fixture.componentInstance.scrollable.set(undefined);
+    await fixture.whenStable();
+    expect(el('#scroll .tx-tab-list').classList).toContain('tx-tab-list--scrollable');
+    expect(el('.tx-tab-list__nav--next').classList).not.toContain('tx-tab-list__nav--hidden');
+    Object.defineProperty(content, 'clientWidth', { value: 500, configurable: true });
+    observer.callback();
+    await fixture.whenStable();
+    expect(el('#scroll .tx-tab-list').classList).not.toContain('tx-tab-list--scrollable');
+    expect(el('.tx-tab-list__nav--next')).toBeNull();
+    Object.defineProperty(content, 'clientWidth', { value: 200, configurable: true });
+    fixture.componentInstance.scrollable.set(false);
+    await fixture.whenStable();
+    observer.callback();
+    await fixture.whenStable();
+    expect(el('.tx-tab-list__nav--next')).toBeNull();
   });
 
   it('scrolls the active tab into view from either side', async () => {

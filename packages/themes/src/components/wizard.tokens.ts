@@ -24,9 +24,9 @@ export const wizardTokens = {
   progress: {
     gap: '7px',
     labelColor: tokenRef('text-muted'),
-    labelFontSize: '10.5px',
+    labelFontSize: tokenRef('font-size-xs'),
     labelFontWeight: tokenRef('font-weight-medium'),
-    labelLetterSpacing: '0.08em',
+    labelLetterSpacing: 'normal',
     segmentGap: '5.25px',
     segmentHeight: '5.25px',
     segmentBackground: tokenRef('surface-border'),

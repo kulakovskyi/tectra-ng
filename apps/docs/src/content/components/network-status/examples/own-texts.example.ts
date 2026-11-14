@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TxNetworkStatus } from '@tectra-ng/blocks/network-status';
+import { TxNetworkService, TxNetworkStatus } from '@tectra-ng/blocks/network-status';
 import { TxButton } from '@tectra-ng/ui/button';
 
 @Component({
   selector: 'network-status-own-texts-example',
   imports: [TxNetworkStatus, TxButton],
+  providers: [TxNetworkService],
   template: `
     <div class="screen">
       <div class="actions">
