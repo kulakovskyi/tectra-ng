@@ -68,7 +68,7 @@ const INVOICES: Invoice[] = [
       [columns]="columns"
       [actionsInlineCount]="2"
     >
-      <ng-template txTableActions let-invoice>
+      <ng-template txTableActions [txTableActionsOf]="invoices()" let-invoice>
         <tx-table-actions>
           <button
             *txTableAction="{ label: 'Open' }"
@@ -89,16 +89,18 @@ const INVOICES: Invoice[] = [
             aria-label="Download"
             (click)="toast.success('Downloaded ' + invoice.number)"
           ></button>
-          <button
-            *txTableAction="{ label: 'Send reminder' }"
-            txButton
-            size="small"
-            severity="info"
-            icon="send"
-            txTooltip="Send reminder"
-            aria-label="Send reminder"
-            (click)="toast.success('Reminder sent for ' + invoice.number)"
-          ></button>
+          @if (invoice.status !== 'Paid') {
+            <button
+              *txTableAction="{ label: 'Send reminder' }"
+              txButton
+              size="small"
+              severity="info"
+              icon="send"
+              txTooltip="Send reminder"
+              aria-label="Send reminder"
+              (click)="toast.success('Reminder sent for ' + invoice.number)"
+            ></button>
+          }
           <button
             *txTableAction="{ label: 'Delete' }"
             txButton

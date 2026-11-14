@@ -1,1 +1,1 @@
-`dt` changes the tokens of one popover; override `popover` in the preset for all of them.
+`dt` changes the tokens of one popover; override `popover` in the preset for all of them. The arrow follows the panel colours by itself; its own `arrow` tokens — `background`, `borderColor`, `borderWidth`, `shadow`, `size` — paint it apart from the panel.

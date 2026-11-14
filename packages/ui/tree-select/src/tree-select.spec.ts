@@ -99,7 +99,7 @@ describe('TxTreeSelect', () => {
     render();
     expect(host.control.value).toEqual(['docs', 'cv', 'tax', 't24', 't25']);
     expect(items()[0].getAttribute('aria-checked')).toBe('true');
-    expect(Array.from(fixture.nativeElement.querySelectorAll('.tx-select__chip')).map((chip) => (chip as HTMLElement).textContent?.trim())).toEqual(['Documents']);
+    expect(Array.from(fixture.nativeElement.querySelectorAll('.tx-select__chip:not(.tx-select__chip--more)')).map((chip) => (chip as HTMLElement).textContent?.trim())).toEqual(['Documents']);
     items()[3].click();
     render();
     expect(host.control.value).toEqual(['cv', 't25']);
@@ -429,8 +429,9 @@ describe('TxTreeSelect interactions', () => {
     row('Documents').click();
     render();
     key('Escape');
-    const chips = () => Array.from(fixture.nativeElement.querySelectorAll('.tx-select__chip-label')).map((chip) => (chip as HTMLElement).textContent);
+    const chips = () => Array.from(fixture.nativeElement.querySelectorAll('.tx-select__chip:not(.tx-select__chip--more) .tx-select__chip-label')).map((chip) => (chip as HTMLElement).textContent);
     expect(chips()).toEqual(['Photos', 'Documents']);
+    expect(fixture.nativeElement.querySelector('.tx-select__chip--more').classList).toContain('tx-select__chip--hidden');
     expect(key('Backspace').defaultPrevented).toBe(true);
     expect(chips()).toEqual(['Photos']);
     (fixture.nativeElement.querySelector('.tx-select__chip-remove') as HTMLElement).click();

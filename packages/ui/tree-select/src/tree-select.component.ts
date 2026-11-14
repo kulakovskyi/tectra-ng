@@ -36,7 +36,7 @@ import {
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraSelectTokens, toStyleObject } from '@tectra-ng/themes';
-import { TxFieldVariant, TxSelectSize, foldText } from '@tectra-ng/ui/select';
+import { TxFieldVariant, TxSelectChipsFit, TxSelectSize, foldText } from '@tectra-ng/ui/select';
 import { TxTreeNode, TxTreeSelectionMode, descendantKeys, findNode, nodeMatches, normalizeChecked, parentMap } from '@tectra-ng/ui/tree';
 import { TxTreeBranch, TxTreeSelectRow, TxTreeSelectChangeEvent, TxTreeSelectDisplay, TxTreeSelectPart } from './tree-select.types';
 import { TREE_SELECT_ICON_DEFAULTS } from './tree-select.icons';
@@ -44,7 +44,7 @@ import { TREE_SELECT_THEME } from './tree-select.theme';
 
 @Component({
   selector: 'tx-tree-select',
-  imports: [CdkOverlayOrigin, CdkConnectedOverlay, TxOverlayAnchor, NgTemplateOutlet, TxIcon],
+  imports: [CdkOverlayOrigin, CdkConnectedOverlay, TxOverlayAnchor, NgTemplateOutlet, TxIcon, TxSelectChipsFit],
   templateUrl: './tree-select.component.html',
   styleUrl: './tree-select.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

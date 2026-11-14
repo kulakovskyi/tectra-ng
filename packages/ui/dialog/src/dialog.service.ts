@@ -2,6 +2,7 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { createBlockScrollStrategy, createGlobalPositionStrategy, createNoopScrollStrategy, createOverlayRef } from '@angular/cdk/overlay';
 import { DOCUMENT, Injectable, Injector, TemplateRef, Type, inject, signal } from '@angular/core';
 import { uniqueId } from '@tectra-ng/core/a11y';
+import { TxOverlayStack } from '@tectra-ng/core/overlay';
 import { TX_DIALOG_CURRENT, TX_DIALOG_DATA, TxDialogRef } from './dialog-ref';
 import { TxDialogContainer } from './dialog-container.component';
 import { TxDialogConfig, TxDialogTemplateContext } from './dialog.types';
@@ -11,6 +12,7 @@ import { TxDialogConfig, TxDialogTemplateContext } from './dialog.types';
 export class TxDialogService {
   private injector = inject(Injector);
   private document = inject(DOCUMENT);
+  private stack = inject(TxOverlayStack);
   private readonly dialogs = signal<TxDialogRef[]>([]);
 
   /** The dialogs that are open now, the last opened last. */
@@ -22,15 +24,17 @@ export class TxDialogService {
     config: TxDialogConfig<D, R> = {},
   ): TxDialogRef<R, C> {
     const parent = config.injector ?? config.viewContainerRef?.injector ?? this.injector;
-    const previousFocus = this.document.activeElement as HTMLElement | null;
     const modal = config.modal !== false;
+    if (modal) {
+      this.stack.closeTransient();
+    }
+    const previousFocus = this.document.activeElement as HTMLElement | null;
     const overlayRef = createOverlayRef(parent, {
       positionStrategy: createGlobalPositionStrategy(parent).top('0').left('0'),
       scrollStrategy: modal && config.blockScroll !== false ? createBlockScrollStrategy(parent) : createNoopScrollStrategy(),
       width: '100%',
       height: '100%',
       panelClass: 'tx-dialog-pane',
-      usePopover: false,
       disposeOnNavigation: true,
     });
     overlayRef.hostElement.style.zIndex = 'var(--tx-layer-modal)';
@@ -80,6 +84,9 @@ export class TxDialogService {
     });
 
     this.dialogs.update((dialogs) => [...dialogs, ref as TxDialogRef]);
+    if (modal) {
+      this.stack.raise();
+    }
     container.instance.enter();
     ref.markOpened();
     return ref;

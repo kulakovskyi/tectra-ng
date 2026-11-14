@@ -666,6 +666,14 @@ export interface TxTranslations {
   language: string;
   /** Label of the theme row of topbar preferences. */
   theme: string;
+  /** Label of the primary color swatches of the theme configurator. */
+  themePrimary: string;
+  /** Label of the surface palette swatches of the theme configurator. */
+  themeSurface: string;
+  /** Label of the style buttons of the theme configurator. */
+  themeStyle: string;
+  /** Label of the ripple switch of the theme configurator. */
+  themeRipple: string;
   /** Accessible name of the button that opens the navigation menu. */
   openMenu: string;
   /** Accessible name of the button that closes the navigation menu. */

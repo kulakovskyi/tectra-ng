@@ -174,3 +174,10 @@ describe('TxKnob recompiled by TestBed', () => {
     expect(fixture.nativeElement.querySelector('#custom .own').textContent).toBe('7 pts');
   });
 });
+
+describe('knob template directive', () => {
+  it('narrows its template context', () => {
+    expect(TxKnobValueTemplate.ngTemplateContextGuard({} as TxKnobValueTemplate, { $implicit: 0 })).toBe(true);
+    expect(TxKnobValueTemplate.ngTemplateContextGuard({} as TxKnobValueTemplate, undefined)).toBe(false);
+  });
+});

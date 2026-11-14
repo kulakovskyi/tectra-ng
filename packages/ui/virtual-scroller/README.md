@@ -44,6 +44,14 @@ Renders only the items that fit in its scroll area, so lists of thousands of ite
 | txVirtualScrollerLoadingIcon | `<ng-template txVirtualScrollerLoadingIcon>` — own icon of the loading mask |
 | txVirtualScrollerContent | `<ng-template txVirtualScrollerContent let-items let-first="first">` — renders the whole range yourself (rows of a table, for example) |
 
+Give the item or content template the items for typing — `<ng-template txVirtualScrollerItem [txVirtualScrollerItemOf]="people" let-person>` — and `person` gets their type in strict templates; without it the item stays untyped. In a grid, pass one row of items.
+
+## Inputs — item templates
+| Name | Description |
+|---|---|
+| txVirtualScrollerItemOf | `txVirtualScrollerItem`: the items, only for the type of `let-item` |
+| txVirtualScrollerContentOf | `txVirtualScrollerContent`: the items, only for the type of `let-items` |
+
 ## Methods
 | Name | Description |
 |---|---|

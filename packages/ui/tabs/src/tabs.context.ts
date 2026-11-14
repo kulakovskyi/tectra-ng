@@ -24,8 +24,8 @@ export interface TxTabsContext {
   readonly orientation: Signal<TxTabsOrientation>;
   /** Whether the tabs have a card background, ring and shadow. */
   readonly raised: Signal<boolean>;
-  /** Whether the list scrolls when the tabs do not fit. */
-  readonly scrollable: Signal<boolean>;
+  /** Whether the list shows the scroll buttons: `true` always, `false` never, `undefined` when the tabs do not fit. */
+  readonly scrollable: Signal<boolean | undefined>;
   /** Whether a scrollable list shows the previous / next buttons. */
   readonly showNavigators: Signal<boolean>;
   /** Whether only the active panel is rendered. */

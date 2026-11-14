@@ -19,11 +19,12 @@ Utilities live in `@tectra-ng/utils/<name>` — own package, one flat entry poin
 
 ## 12.1 Dates — `utils/date` (check-date 318, date 42, date-range 34, is-expiring-within 1) ✅
 
-- [x] `txDate` pipe: Angular date patterns (`'dd.MM.yy HH:mm'`, `'mediumDate'` by default), `'-'` (or own text) for an empty or broken value instead of an error, a locale (`en-US` by default, as the first app), time zone
+- [x] `txDate` pipe: Angular date patterns (`'dd.MM.yy HH:mm'`, `'mediumDate'` by default), `'-'` (or own text) for an empty or broken value instead of an error, the active tectra locale by default (follows a language switch; `Intl.DateTimeFormat` styles without a pattern), time zone
 - [x] Global defaults: `provideTxDateFormat({ format, empty, locale, timezone })`
 - [x] Format presets as constants (`TX_DATE_FORMATS`: date-time, date, time, ISO day, ISO month, day-month) and time constants (`MS_IN_SECOND` … `MS_IN_DAY`, `DAYS_IN_WEEK`)
 - [x] Functions: `addDays`, `addMonths`, `addYears`, `startOfDay`, `endOfDay`, `middleOfDay`, `startOfWeek` (first day of week from the locale), `calendarDaysBetween`, `isSameDay`, `toIsoDay`, `toIsoString`, `isExpiringWithin`
 - [x] `txDateRange` pipe + `toIsoRange()` — `[start, end]` from a range datepicker → `{ start, end }` ISO strings or `null`
+- [x] `txNumber` pipe + `formatLocaleNumber()` (`utils/number`) in the active tectra locale
 
 ## 12.2 Plural forms — `utils/plural` (plural-form 173) ✅
 
@@ -44,6 +45,7 @@ Utilities live in `@tectra-ng/utils/<name>` — own package, one flat entry poin
 - [x] `TxSaveFilters` / `TxUrlFilters` base classes with the first app's protected API (`storeFilters`, `getStoredFilters`, `applyUrlFilters`, `localStorageKey`, `initialFilters`) for a drop-in switch
 - [x] Pure functions: `filtersToQueryParams`, `queryParamsToFilters`, `encodeUrlFilterValue`, `decodeUrlFilterValue`
 - [x] Storage on the server and with blocked storage: `TxMemoryStorage`, `injectStorage('local' | 'session')`
+- [x] `set` / `patch` that change no value keep the same object; `provideTxScrolling()` (`utils/scrolling`) keeps the page where it is on query-only navigations
 
 ## 12.6 HTTP — `utils/http` (http-params 53, http-status 41, http-retry 4) ✅
 

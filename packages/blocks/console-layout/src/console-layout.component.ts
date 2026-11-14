@@ -28,6 +28,7 @@ import { CONSOLE_LAYOUT_THEME } from './console-layout.theme';
     '[class]': 'passThrough().root?.class',
     '[style]': 'hostStyle()',
     '[attr.data-styled]': '!isUnstyled() || null',
+    '[attr.title]': 'null',
     '[attr.data-responsive]': 'responsive()',
   },
   viewProviders: [provideTxIconDefaults(CONSOLE_LAYOUT_ICON_DEFAULTS)],

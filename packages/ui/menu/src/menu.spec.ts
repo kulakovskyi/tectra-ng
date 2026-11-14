@@ -60,6 +60,8 @@ class Host {
     <button id="other">Other</button>
     <tx-menu #popup popup ariaLabel="Popup" [model]="flat" (opened)="events.push('opened')" (closed)="events.push('closed')" />
     <tx-menu #empty popup ariaLabel="Empty" [model]="[]" />
+    <tx-menu #arrowed popup arrow placement="top" ariaLabel="Arrowed" [model]="flat" [pt]="{ arrow: { class: 'own-arrow' } }" />
+    <tx-menu #bare popup arrow unstyled [offset]="2" ariaLabel="Bare" [model]="flat" />
     <tx-context-menu #global global ariaLabel="Page" [model]="flat" (closed)="events.push('context closed')" />
     <tx-context-menu ariaLabel="Detached" [model]="flat" />
   `,
@@ -68,6 +70,8 @@ class Host {
 class MoreHost {
   readonly popup = viewChild.required<TxMenu>('popup');
   readonly empty = viewChild.required<TxMenu>('empty');
+  readonly arrowed = viewChild.required<TxMenu>('arrowed');
+  readonly bare = viewChild.required<TxMenu>('bare');
   readonly global = viewChild.required<TxContextMenu>('global');
   readonly picked: string[] = [];
   readonly events: string[] = [];
@@ -372,6 +376,30 @@ describe('TxMenu', () => {
       expect(host.popup().isOpen()).toBe(false);
     });
 
+    it('draws an arrow that points at the element when asked', async () => {
+      const host = more.componentInstance;
+      const other = el('#other');
+      host.arrowed().show(other);
+      await calm();
+      const popup = popupOf('Arrowed')?.parentElement as HTMLElement;
+      expect(popup.classList).toContain('tx-menu-popup');
+      expect(popup.getAttribute('data-side')).toBe(host.arrowed().side());
+      expect(['top', 'bottom']).toContain(popup.getAttribute('data-placement'));
+      expect(popup.hasAttribute('data-styled')).toBe(true);
+      expect(popup.style.getPropertyValue('--tx-menu-arrow-offset')).toContain('50%');
+      expect(popup.querySelector('.tx-menu-popup__arrow')?.classList).toContain('own-arrow');
+      host.arrowed().hide();
+      await calm();
+      host.bare().show(other);
+      await calm();
+      const bare = popupOf('Bare')?.parentElement as HTMLElement;
+      expect(bare.hasAttribute('data-styled')).toBe(false);
+      expect(bare.getAttribute('data-side')).toBe('bottom');
+      host.bare().hide();
+      await calm();
+      expect(popupOf('Empty')).toBeNull();
+    });
+
     it('opens an empty popup without focusing anything', async () => {
       const other = el('#other');
       other.focus();
@@ -411,5 +439,12 @@ describe('TxMenu', () => {
       await calm();
       expect(popupOf('Page')).toBeNull();
     });
+  });
+});
+
+describe('menu item template directive', () => {
+  it('narrows its template context', () => {
+    expect(TxMenuItemTemplate.ngTemplateContextGuard({} as TxMenuItemTemplate<string>, { $implicit: { label: 'A' }, hasSubmenu: false })).toBe(true);
+    expect(TxMenuItemTemplate.ngTemplateContextGuard({} as TxMenuItemTemplate<string>, undefined)).toBe(false);
   });
 });

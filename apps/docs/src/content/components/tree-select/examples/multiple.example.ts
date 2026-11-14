@@ -17,6 +17,12 @@ import { TxTreeNode, TxTreeSelect } from '@tectra-ng/ui/tree-select';
       <span class="hint">Value: {{ team.value ?? '—' }}</span>
     </div>
   `,
+  styles: `
+    tx-tree-select {
+      width: 20rem;
+      max-width: 100%;
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class TreeSelectMultipleExample {
@@ -50,5 +56,5 @@ export default class TreeSelectMultipleExample {
     },
     { key: 'board', label: 'Board', icon: 'users', disabled: true },
   ];
-  readonly team = new FormControl<string[]>(['web-ui', 'sales']);
+  readonly team = new FormControl<string[]>(['web-ui', 'api', 'sales', 'support']);
 }

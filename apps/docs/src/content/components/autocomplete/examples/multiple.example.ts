@@ -21,11 +21,21 @@ const PEOPLE = [
     [placeholder]="'Recipients'"
     (completed)="search($event)"
   />`,
+  styles: `
+    tx-autocomplete {
+      width: 22rem;
+      max-width: 100%;
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class AutocompleteMultipleExample {
   readonly suggestions = signal<string[]>([]);
-  readonly recipients = new FormControl<string[]>(['olena@example.com']);
+  readonly recipients = new FormControl<string[]>([
+    'olena@example.com',
+    'taras@example.com',
+    'iryna@example.com',
+  ]);
 
   search(event: TxAutocompleteCompleteEvent): void {
     this.suggestions.set(PEOPLE.filter((email) => email.includes(event.query.toLowerCase())));

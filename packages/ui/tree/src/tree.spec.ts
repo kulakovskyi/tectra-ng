@@ -992,3 +992,12 @@ describe('TxTree drag and drop', () => {
     expect(service.state()).toBeNull();
   });
 });
+
+describe('tree template directives', () => {
+  it('narrow their template contexts', () => {
+    expect(TxTreeNodeTemplate.ngTemplateContextGuard({} as TxTreeNodeTemplate<string>, { $implicit: { key: 'a', label: 'A' } })).toBe(true);
+    expect(TxTreeFilter.ngTemplateContextGuard({} as TxTreeFilter, { $implicit: '' })).toBe(true);
+    expect(TxTreeToggleIcon.ngTemplateContextGuard({} as TxTreeToggleIcon, { $implicit: true })).toBe(true);
+    expect(TxTreeCheckboxIcon.ngTemplateContextGuard({} as TxTreeCheckboxIcon, undefined)).toBe(false);
+  });
+});

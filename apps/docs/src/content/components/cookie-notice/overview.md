@@ -4,7 +4,7 @@ tokens: cookieNotice
 source: packages/blocks/cookie-notice
 package: @tectra-ng/blocks/cookie-notice
 import: TxCookieNotice
-examples: basic, own-texts, design-tokens
+examples: basic, manual, preview, own-texts, design-tokens
 ---
 # Cookie Notice
 

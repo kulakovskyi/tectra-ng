@@ -1,0 +1,1 @@
+With `keepUploaded` off a file leaves the list a moment after it shows "Uploaded", so the zone is ready for the next batch. Kept files stay until they are removed one by one or `clearUploaded()` empties the list.

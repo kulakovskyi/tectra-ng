@@ -23,7 +23,7 @@ export const TX_EXPORT_ICONS: Record<TxExportFormat, string> = {
 };
 
 /** Base of the export buttons: the data, fields and options, the run of an export and its state. */
-@Directive()
+@Directive({ host: { '[attr.title]': 'null' } })
 export abstract class TxExportAction<T = TxExportRow> {
   private exporter = inject(TxExportService);
   private defaults = inject(TX_EXPORT_OPTIONS);

@@ -63,6 +63,12 @@ export interface TxOverlayOptions<TContext = unknown> {
   motion?: TxOverlayMotion;
   /** CSS class or classes added to the overlay pane. */
   panelClass?: string | string[];
+  /**
+   * Smallest distance in px from the overlay edge to its arrow centre, or a function that measures it on the
+   * pane (see `txArrowInset`); a `-start` / `-end` overlay moves outward so that the arrow still points at the
+   * origin centre.
+   */
+  arrowInset?: number | ((pane: HTMLElement) => number);
 }
 
 /** Handle of an open overlay. */

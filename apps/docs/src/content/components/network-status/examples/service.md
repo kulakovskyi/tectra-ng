@@ -1,0 +1,1 @@
+`TxNetworkService` holds the state for the whole app: read `status()` anywhere and call `markOffline()` / `markOnline()` when your requests tell more than the browser does. While the pill shows, the cookie notice moves up so the two never overlap. This example has its own service, so the other examples stay online.

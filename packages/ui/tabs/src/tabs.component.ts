@@ -70,7 +70,7 @@ export class TxTabs implements TxTabsContext {
   readonly size = input<TxTabsSize>('medium');
   readonly orientation = input<TxTabsOrientation>('horizontal');
   readonly raised = input<boolean, unknown>(false, { transform: booleanAttribute });
-  readonly scrollable = input<boolean, unknown>(false, { transform: booleanAttribute });
+  readonly scrollable = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
   readonly showNavigators = input<boolean, unknown>(true, { transform: booleanAttribute });
   readonly lazy = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly selectOnFocus = input<boolean, unknown>(false, { transform: booleanAttribute });

@@ -191,3 +191,12 @@ describe('TxPassword recompiled by TestBed', () => {
   });
 });
 
+
+describe('password template directives', () => {
+  it('narrow their template contexts', () => {
+    const context = { $implicit: null, value: '' };
+    expect(TxPasswordHeaderTemplate.ngTemplateContextGuard({} as TxPasswordHeaderTemplate, context)).toBe(true);
+    expect(TxPasswordContentTemplate.ngTemplateContextGuard({} as TxPasswordContentTemplate, context)).toBe(true);
+    expect(TxPasswordFooterTemplate.ngTemplateContextGuard({} as TxPasswordFooterTemplate, undefined)).toBe(false);
+  });
+});

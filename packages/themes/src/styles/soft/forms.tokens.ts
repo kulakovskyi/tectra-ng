@@ -1,5 +1,5 @@
 import { TectraComponentTokens } from '../../components/component-tokens';
-import { lightDark, tokenRef } from '../../components/token-helpers';
+import { fade, lightDark, tokenRef } from '../../components/token-helpers';
 import { TectraDeepPartial } from '../../types/deep-partial.type';
 import { softFill, softFillHover, softFocusShadow, softLine } from './soft.shared';
 
@@ -30,7 +30,7 @@ export const softFormsTokens: TectraDeepPartial<TectraComponentTokens> = {
     overlay: { borderRadius: tokenRef('radius-xl') },
     list: { padding: '6px', gap: '2px' },
     option: { padding: '8px 12px', borderRadius: tokenRef('radius-lg') },
-    chip: { borderRadius: tokenRef('radius-full') },
+    chip: { borderRadius: tokenRef('radius-full'), background: lightDark(fade(tokenRef('surface-950'), '90%'), fade(tokenRef('surface-0'), '88%')) },
     checkbox: { borderRadius: '6px', borderColor: softLine },
     optionGroup: { color: tokenRef('text-muted') },
   },

@@ -1,1 +1,1 @@
-`txTimelineOpposite` fills the other side of the line — a date or a time next to each event.
+`txTimelineOpposite` fills the other side of the line — a date or a time next to each event. `[txTimelineContentOf]` and `[txTimelineOppositeOf]` take the events only for typing, so `let-event` has their type in strict templates.

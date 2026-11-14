@@ -68,6 +68,7 @@ import {
   TxTableColumnResizeMode,
   TxTableEditMode,
   TxTableGroupContext,
+  TxTableLoose,
   TxTableRowGroupMode,
   TxTableRowReorderEvent,
   TxTableRowEditEvent,
@@ -363,6 +364,7 @@ export class TxTable<T = unknown> implements TxTableContext {
   readonly scrollTop = signal(0);
   readonly viewportHeight = signal(0);
   private lastRange = '';
+  private lastLazyLoad = '';
   private readonly rowActionSources = new Map<Element, TxTableRowActionsSource>();
   private restored = false;
   private anchor: HTMLElement | null = null;
@@ -722,8 +724,15 @@ export class TxTable<T = unknown> implements TxTableContext {
 
   emitLazyLoad(): void {
     if (!this.lazy()) return;
+    const event = this.lazyEvent();
+    if (JSON.stringify(event) === this.lastLazyLoad) return;
     this.lastRange = '';
-    this.lazyLoad.emit(this.lazyEvent());
+    this.sendLazyLoad(event);
+  }
+
+  private sendLazyLoad(event: TxTableLazyLoadEvent): void {
+    this.lastLazyLoad = JSON.stringify(event);
+    this.lazyLoad.emit(event);
   }
 
   private lazyEvent(): TxTableLazyLoadEvent {
@@ -1168,7 +1177,7 @@ export class TxTable<T = unknown> implements TxTableContext {
     const rows = this.renderRows()
       .filter((other) => other.group?.key === group.key)
       .map((other) => other.row);
-    return { $implicit: item.row, value: group.value, count: group.size, rows, collapsed: group.collapsed, toggle: () => this.toggleGroup(item) };
+    return { $implicit: item.row, value: group.value as TxTableLoose<T>, count: group.size, rows, collapsed: group.collapsed, toggle: () => this.toggleGroup(item) };
   }
 
   toggleGroup(item: TxTableRenderRow<T>): void {
@@ -1243,7 +1252,7 @@ export class TxTable<T = unknown> implements TxTableContext {
     const range = `${start}:${end}`;
     if (!missing || range === this.lastRange) return;
     this.lastRange = range;
-    this.lazyLoad.emit({ ...this.lazyEvent(), first: start, rows: end - start });
+    this.sendLazyLoad({ ...this.lazyEvent(), first: start, rows: end - start });
   }
 
   exportCSV(options: { selectionOnly?: boolean; filename?: string } = {}): string {

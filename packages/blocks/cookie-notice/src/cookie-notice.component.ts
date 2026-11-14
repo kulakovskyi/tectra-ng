@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DOCUMENT, afterNextRender, computed, inject, input, numberAttribute, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DOCUMENT, afterNextRender, booleanAttribute, computed, effect, inject, input, numberAttribute, output, signal, untracked } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
@@ -23,6 +23,7 @@ const DAY_SECONDS = 86400;
     '[class]': 'passThrough().root?.class',
     '[style]': 'hostStyle()',
     '[attr.data-styled]': '!isUnstyled() || null',
+    '[attr.title]': 'null',
   },
   viewProviders: [provideTxIconDefaults(COOKIE_NOTICE_ICON_DEFAULTS)],
 })
@@ -43,6 +44,8 @@ export class TxCookieNotice {
   readonly cookieName = input<string>('cookieNoticeDismissed');
   readonly maxAgeDays = input<number, unknown>(365, { transform: numberAttribute });
   readonly sharedDomain = input<string | undefined>(undefined);
+  readonly autoShow = input(true, { transform: booleanAttribute });
+  readonly preview = input(false, { transform: booleanAttribute });
   readonly dt = input<TectraDeepPartial<TectraCookieNoticeTokens> | undefined>(undefined);
   readonly pt = input<TxPassThrough<TxCookieNoticePart, TxCookieNotice> | undefined>(undefined);
   readonly ptOptions = input<TxPassThroughOptions | undefined>(undefined);
@@ -56,9 +59,17 @@ export class TxCookieNotice {
   readonly hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-cookie-notice'), ...this.passThrough().root?.style }));
 
   readonly visible = signal(false);
+  private readonly rendered = signal(false);
 
   constructor() {
-    afterNextRender(() => this.visible.set(!this.readDismissed()));
+    afterNextRender(() => this.rendered.set(true));
+    effect(() => {
+      if (!this.rendered()) {
+        return;
+      }
+      const preview = this.preview();
+      untracked(() => this.visible.set(preview || (this.autoShow() && !this.readDismissed())));
+    });
   }
 
   show(): void {
@@ -66,7 +77,9 @@ export class TxCookieNotice {
   }
 
   dismiss(): void {
-    this.writeDismissed();
+    if (!this.preview()) {
+      this.writeDismissed();
+    }
     this.visible.set(false);
     this.dismissed.emit();
   }

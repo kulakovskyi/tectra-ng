@@ -45,6 +45,7 @@ describe('TxAppLayout', () => {
     const root = fixture.nativeElement.querySelector('tx-app-layout') as HTMLElement;
     expect(root.hasAttribute('data-styled')).toBe(true);
     expect(root.getAttribute('data-responsive')).toBe('viewport');
+    expect(root.hasAttribute('title')).toBe(false);
     expect(root.style.getPropertyValue('--tx-app-layout-sidebar-width')).toBe('240px');
     expect(root.querySelector('.tx-app-layout__backdrop')?.getAttribute('data-variant')).toBe('accent');
     const aside = root.querySelector('aside') as HTMLElement;

@@ -1,7 +1,7 @@
 ---
 category: Feedback
 tokens: message, fieldMessage
-examples: severities, variants, sizes, icons, content, closable, life, field-hint, field-error, custom-messages, success, design-tokens, pass-through
+examples: severities, variants, sizes, icons, content, actions, closable, life, field-hint, field-error, custom-messages, success, design-tokens, pass-through
 ---
 # Message
 

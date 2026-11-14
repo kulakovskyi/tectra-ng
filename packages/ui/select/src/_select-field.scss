@@ -324,3 +324,26 @@
     }
   }
 }
+
+@mixin chips-fit($list: '.tx-select__chips') {
+  #{$list} {
+    position: relative;
+    flex-wrap: nowrap;
+    overflow: hidden;
+  }
+
+  #{$list} > .tx-select__chip {
+    flex: none;
+
+    &:first-child {
+      flex-shrink: 1;
+      min-width: 0;
+    }
+  }
+
+  .tx-select__chip--hidden {
+    position: absolute;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}

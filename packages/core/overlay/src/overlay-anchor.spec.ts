@@ -4,6 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { Subject } from 'rxjs';
 import { TxOverlayAnchor, scrollTracksOf, scrollersOf, txAnchorPane } from './overlay-anchor';
 import { TxOverlayInsets } from './overlay-insets.service';
+import { TxOverlayStack } from './overlay-stack';
 
 class FakeScrollTimeline {
   constructor(readonly options: { source: Element; axis: string }) {}
@@ -581,5 +582,54 @@ describe('TxOverlayAnchor', () => {
     expect(scrollersOf(document.querySelector('.inside') as HTMLElement)).toContain(scroller);
     fixture.destroy();
     fixture.nativeElement.remove();
+  });
+});
+
+@Component({
+  imports: [CdkConnectedOverlay, CdkOverlayOrigin, TxOverlayAnchor],
+  template: `
+    <button cdkOverlayOrigin #trigger="cdkOverlayOrigin">Open</button>
+    <ng-template cdkConnectedOverlay txOverlayAnchor [cdkConnectedOverlayOrigin]="trigger" [cdkConnectedOverlayOpen]="open()" (detach)="open.set(false)">
+      <button class="listed">Listed</button>
+    </ng-template>
+    <ng-template cdkConnectedOverlay txOverlayAnchor [cdkConnectedOverlayOrigin]="trigger" [cdkConnectedOverlayOpen]="bubble()">
+      <button class="bubble">Bubble</button>
+    </ng-template>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class TransientHost {
+  readonly open = signal(false);
+  readonly bubble = signal(false);
+}
+
+describe('TxOverlayAnchor as a transient overlay', () => {
+  afterEach(() => document.querySelector('.cdk-overlay-container')?.remove());
+
+  it('closes a panel that handles detach when a modal layer opens, and leaves others alone', async () => {
+    const fixture = TestBed.createComponent(TransientHost);
+    fixture.autoDetectChanges();
+    const stack = TestBed.inject(TxOverlayStack);
+    const close = vi.spyOn(stack, 'addTransient');
+    fixture.componentInstance.open.set(true);
+    fixture.componentInstance.bubble.set(true);
+    await fixture.whenStable();
+    expect(close).toHaveBeenCalledTimes(1);
+    stack.closeTransient();
+    await fixture.whenStable();
+    expect(fixture.componentInstance.open()).toBe(false);
+    expect(document.querySelector('.listed')).toBeNull();
+    expect(document.querySelector('.bubble')).not.toBeNull();
+
+    fixture.componentInstance.open.set(true);
+    await fixture.whenStable();
+    fixture.componentInstance.open.set(false);
+    await fixture.whenStable();
+    stack.closeTransient();
+    expect(document.querySelector('.listed')).toBeNull();
+    fixture.componentInstance.open.set(true);
+    await fixture.whenStable();
+    fixture.destroy();
+    close.mockRestore();
   });
 });

@@ -8,3 +8,4 @@ export * from './src/overlay-room';
 export * from './src/overlay-anchor';
 export * from './src/overlay-scroll';
 export * from './src/overlay-viewport';
+export * from './src/overlay-stack';

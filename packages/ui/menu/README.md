@@ -27,7 +27,8 @@ A popup menu opens from `[txMenuTrigger]` (click, Arrow Down / Up), or from code
 | popup | Opens as a popup from a trigger instead of showing in place |
 | tiered | Nested items open as sub-menus (on by default for `tx-tiered-menu`) |
 | placement | Popup placement, `bottom-start` by default; flips when there is no room |
-| offset | Gap between the popup and its trigger in px |
+| offset | Gap between the popup and its trigger in px (default 4, 10 with `arrow`) |
+| arrow | Gives the popup an arrow that points at the trigger: at its middle for a centred placement, near its start or end for `-start` / `-end`; next to a small trigger the popup moves out a little so that the arrow points at its centre |
 | variant | `default`, or `context` for the look of a context menu (set by `tx-context-menu`) |
 | ariaLabel | Name of the menu |
 | ariaLabelledBy | Id of the element that names the menu |
@@ -35,7 +36,7 @@ A popup menu opens from `[txMenuTrigger]` (click, Arrow Down / Up), or from code
 | global | `tx-context-menu`: opens on right-click anywhere on the page |
 | txMenuTrigger | On a button: the popup menu it opens |
 | dt | Design tokens of this menu (`menu`) |
-| pt | Classes and styles of the parts: `root`, `item`, `icon`, `label`, `shortcut`, `badge`, `separator`, `groupLabel`, `submenuIcon` |
+| pt | Classes and styles of the parts: `root`, `item`, `icon`, `label`, `shortcut`, `badge`, `separator`, `groupLabel`, `submenuIcon`, `arrow` |
 | ptOptions | How `pt` merges with the global pass-through |
 | unstyled | Removes the tectra styles |
 
@@ -50,6 +51,13 @@ A popup menu opens from `[txMenuTrigger]` (click, Arrow Down / Up), or from code
 | Name | Description |
 |---|---|
 | txMenuItem | `<ng-template txMenuItem let-item let-hasSubmenu="hasSubmenu">` — own content of every item |
+
+The item template takes the items only for typing — `<ng-template txMenuItem [txMenuItemOf]="items" let-item>` gives `item.data` the type of the items in strict templates; without it `data` stays untyped.
+
+## Inputs — item template
+| Name | Description |
+|---|---|
+| txMenuItemOf | `txMenuItem`: the items of `model`, only for the type of `let-item` |
 
 ## Keyboard
 | Key | Action |

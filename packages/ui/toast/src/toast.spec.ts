@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TxAnnouncer } from '@tectra-ng/core/a11y';
+import { TxOverlayStack } from '@tectra-ng/core/overlay';
 import { TxToastTemplate } from './toast-template.directive';
 import { TxToast } from './toast.component';
 import { TxToastService } from './toast.service';
@@ -56,6 +57,22 @@ describe('TxToast', () => {
 
   it('moves its outlet to the end of the page', () => {
     expect(document.querySelector('#main')?.parentElement).toBe(document.body);
+  });
+
+  it('keeps a page outlet above modal layers and lets go of it when destroyed', async () => {
+    fixture.destroy();
+    const stack = TestBed.inject(TxOverlayStack);
+    const stop = vi.fn();
+    const keepOnTop = vi.spyOn(stack, 'keepOnTop').mockReturnValue(stop);
+    fixture = TestBed.createComponent(Host);
+    await render();
+    const outlets = keepOnTop.mock.calls.map(([element]) => element.id);
+    expect(outlets).toEqual(['main', 'side']);
+    fixture.destroy();
+    expect(stop).toHaveBeenCalled();
+    keepOnTop.mockRestore();
+    fixture = TestBed.createComponent(Host);
+    await render();
   });
 
   it('shows a toast in a named region, announces it and closes it after its life', async () => {
@@ -307,5 +324,12 @@ describe('TxToast', () => {
     expect(announce).not.toHaveBeenCalled();
     toasts.run(toasts.toasts()[0].id, { label: 'Done' });
     expect(toasts.toasts()).toEqual([]);
+  });
+});
+
+describe('toast template directive', () => {
+  it('narrows its template context', () => {
+    expect(TxToastTemplate.ngTemplateContextGuard({} as TxToastTemplate, { $implicit: {}, close: () => undefined })).toBe(true);
+    expect(TxToastTemplate.ngTemplateContextGuard({} as TxToastTemplate, undefined)).toBe(false);
   });
 });

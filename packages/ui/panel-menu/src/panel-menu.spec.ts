@@ -535,3 +535,81 @@ describe('TxPanelMenu router link target', () => {
     expect(item('Daily').getAttribute('target')).toBe('_blank');
   });
 });
+
+@Component({
+  imports: [TxPanelMenu],
+  template: `<tx-panel-menu variant="sidebar" [model]="model()" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class PendingHost {
+  readonly badge = signal(3);
+  readonly model = computed<TxPanelMenuItem[]>(() => [
+    { label: 'Home', routerLink: '/home' },
+    { label: 'Tasks', routerLink: '/tasks', badge: this.badge() },
+  ]);
+}
+
+describe('TxPanelMenu pending navigation', () => {
+  let release: (allowed: boolean) => void = () => undefined;
+  let fixture: ComponentFixture<PendingHost>;
+  const item = (label: string) =>
+    (Array.from(fixture.nativeElement.querySelectorAll('.tx-panel-menu__item')) as HTMLElement[]).find(
+      (element) => element.querySelector('.tx-panel-menu__label')?.textContent?.trim() === label,
+    ) as HTMLElement;
+  const active = () => (Array.from(fixture.nativeElement.querySelectorAll('.tx-panel-menu__item--active')) as HTMLElement[]).map((element) => element.textContent?.trim());
+
+  beforeEach(async () => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideRouter([
+          { path: 'home', component: Blank },
+          { path: 'tasks', component: Blank, canActivate: [() => new Promise<boolean>((resolve) => (release = resolve))] },
+        ]),
+      ],
+    });
+    fixture = TestBed.createComponent(PendingHost);
+    fixture.autoDetectChanges();
+    await TestBed.inject(Router).navigateByUrl('/home');
+    await fixture.whenStable();
+  });
+
+  it('marks the target active while the navigation runs and goes back when it is cancelled', async () => {
+    expect(active()).toEqual(['Home']);
+    const navigation = TestBed.inject(Router).navigateByUrl('/tasks');
+    await new Promise((resolve) => setTimeout(resolve));
+    fixture.detectChanges();
+    expect(active()).toEqual(['Tasks3']);
+    release(false);
+    await navigation;
+    await fixture.whenStable();
+    expect(active()).toEqual(['Home']);
+  });
+
+  it('keeps the target active once the navigation ends', async () => {
+    const navigation = TestBed.inject(Router).navigateByUrl('/tasks');
+    await new Promise((resolve) => setTimeout(resolve));
+    release(true);
+    await navigation;
+    await fixture.whenStable();
+    expect(active()).toEqual(['Tasks3']);
+  });
+
+  it('replays the badge entrance only when its value changes', async () => {
+    const badge = item('Tasks').querySelector('.tx-panel-menu__badge') as HTMLElement;
+    fixture.componentInstance.badge.set(4);
+    await fixture.whenStable();
+    expect(badge.textContent).toBe('4');
+    const names: string[] = [];
+    Object.defineProperty(badge, 'getAnimations', { configurable: true, value: () => [] });
+    Object.defineProperty(badge, 'offsetWidth', { configurable: true, get: () => (names.push(badge.style.animationName), 0) });
+    fixture.componentInstance.badge.set(4);
+    await fixture.whenStable();
+    expect(names).toEqual([]);
+    fixture.componentInstance.badge.set(5);
+    await fixture.whenStable();
+    expect(names).toEqual(['none']);
+    Reflect.deleteProperty(badge, 'getAnimations');
+    Reflect.deleteProperty(badge, 'offsetWidth');
+  });
+
+});

@@ -68,6 +68,13 @@ Shows a hierarchy — folders, categories, menus — as a WAI-ARIA tree (`role="
 | txTreeToggleIcon | `<ng-template txTreeToggleIcon let-expanded>` — own toggler icon (`loading` in the context) |
 | txTreeCheckboxIcon | `<ng-template txTreeCheckboxIcon let-checked let-partial="partial">` — own checkbox icon |
 
+The node template takes the tree nodes only for typing — `<ng-template txTreeNode [txTreeNodeOf]="nodes()" let-node>` gives `node.data` the type of the nodes in strict templates; without it `data` stays untyped.
+
+## Inputs — node template
+| Name | Description |
+|---|---|
+| txTreeNodeOf | `txTreeNode`: the nodes of the tree, only for the type of `let-node` |
+
 ## Methods
 | Name | Description |
 |---|---|

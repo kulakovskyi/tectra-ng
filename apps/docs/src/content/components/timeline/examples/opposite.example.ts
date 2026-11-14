@@ -11,10 +11,12 @@ interface OrderEvent {
   imports: [TxTimeline, TxTimelineContent, TxTimelineOpposite],
   template: `
     <tx-timeline ariaLabel="Order history" [value]="events">
-      <ng-template txTimelineOpposite let-event>
+      <ng-template txTimelineOpposite [txTimelineOppositeOf]="events" let-event>
         <span class="date">{{ event.date }}</span>
       </ng-template>
-      <ng-template txTimelineContent let-event>{{ event.status }}</ng-template>
+      <ng-template txTimelineContent [txTimelineContentOf]="events" let-event>{{
+        event.status
+      }}</ng-template>
     </tx-timeline>
   `,
   styles: `

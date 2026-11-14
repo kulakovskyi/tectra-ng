@@ -14,6 +14,10 @@ import { TxRadioGroup } from './radio-group.component';
     </tx-radio-group>
     <tx-radio-button id="alone-a" value="a" label="A" [(ngModel)]="letter" [readonly]="readonly()" [dt]="{ root: { size: '24px' } }" [pt]="{ dot: { class: 'own-dot' } }" />
     <tx-radio-button id="alone-b" value="b" label="B" [(ngModel)]="letter" />
+    <tx-radio-group id="sizes" ariaLabel="Size">
+      <tx-radio-button id="bare" value="s" ariaLabel="Small" />
+      <tx-radio-button id="projected" value="m">Medium</tx-radio-button>
+    </tx-radio-group>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -52,6 +56,18 @@ describe('TxRadioButton', () => {
     expect(fixture.componentInstance.plan.value).toBe('team');
     expect(el('#plan tx-radio-button:nth-child(2)').classList).toContain('tx-radio-button--checked');
     expect(el(`#${radios()[1].getAttribute('aria-describedby')}`).textContent).toContain('Up to 20 people');
+  });
+
+  it('stretches the buttons of a group that holds tiles', () => {
+    expect(el('#plan').hasAttribute('data-tiles')).toBe(true);
+    expect(el('#sizes').hasAttribute('data-tiles')).toBe(false);
+  });
+
+  it('drops the text and its gap when there is no label, description or content', () => {
+    expect(getComputedStyle(el('#bare .tx-radio-button__text')).display).toBe('none');
+    expect(getComputedStyle(el('#projected .tx-radio-button__text')).display).not.toBe('none');
+    expect(getComputedStyle(el('#alone-a .tx-radio-button__text')).display).not.toBe('none');
+    expect(getComputedStyle(el('#plan tx-radio-button:nth-child(2) .tx-radio-button__text')).display).not.toBe('none');
   });
 
   it('selects a tile from anywhere on the card', async () => {

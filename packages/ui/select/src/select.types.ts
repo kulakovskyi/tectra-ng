@@ -94,15 +94,21 @@ export interface TxSelectLazyLoadEvent {
 }
 
 /** Context of the option template of select-like components. */
-export interface TxSelectOptionContext {
+export interface TxSelectOptionContext<T = unknown> {
   /** The option item. */
-  $implicit: unknown;
+  $implicit: T;
   /** Whether the option is selected. */
   selected: boolean;
   /** Whether the option cannot be picked. */
   disabled: boolean;
   /** Position of the option in the option list. */
   index: number;
+}
+
+/** Context of the group header template of select-like components. */
+export interface TxSelectGroupContext<T = unknown> {
+  /** The group item of `options`. */
+  $implicit: T;
 }
 
 /** Names of the option fields that a select-like component reads. */

@@ -16,7 +16,7 @@ A panel of content next to an element — a share box, a small form, a list of n
 |---|---|
 | placement | `bottom-start` (default) or any of the 12 placements; flips when there is no room |
 | offset | Gap to the element in px (default 10, the arrow fills it) |
-| arrow | Shows the arrow: at the middle of the element for a centred placement, near its start or end for `-start` / `-end` (default on; `[arrow]="false"` hides it) |
+| arrow | Shows the arrow: at the middle of the element for a centred placement, near its start or end for `-start` / `-end`, always clear of the rounded corners — next to a small element the panel moves out a little so that the arrow points at its centre (default on; `[arrow]="false"` hides it) |
 | header | Title text; also names the dialog |
 | closeButton | Shows a close button (translated "Close" label) |
 | dismissable | Closes on a click outside (default on) |
@@ -44,7 +44,7 @@ A panel of content next to an element — a share box, a small form, a list of n
 | Name | Description |
 |---|---|
 | default | Content of the popover |
-| txPopoverHeader | `<div txPopoverHeader>` — header content after the `header` text |
+| txPopoverHeader | `<div txPopoverHeader>` — header content (badges, actions) between the title and the close button; only the `header` text names the dialog |
 | txPopoverFooter | `<div txPopoverFooter>` — actions at the bottom, aligned to the end |
 | txPopoverContent | `<ng-template txPopoverContent let-close>` — content created on open; `close()` hides the popover |
 | txPopoverTrigger | `[txPopoverTrigger]="popover"` on a button — toggles the popover |

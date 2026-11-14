@@ -1,6 +1,7 @@
 import { CdkConnectedOverlay, OverlayRef } from '@angular/cdk/overlay';
 import { DestroyRef, Directive, ElementRef, inject } from '@angular/core';
 import { TxOverlayInsets } from './overlay-insets.service';
+import { TxOverlayStack } from './overlay-stack';
 import { ScrollAxis, scrollTimeline } from './overlay-scroll';
 import { txCrossShift, txHostGap, txLayoutOrigin, txLayoutShift } from './overlay-viewport';
 
@@ -277,26 +278,46 @@ export function txAnchorPane(overlayRef: OverlayRef, origin: Element, chrome?: T
   return release;
 }
 
-/** Applies `txAnchorPane` to a `cdkConnectedOverlay`, so it follows its origin on scroll. */
+/**
+ * Applies `txAnchorPane` to a `cdkConnectedOverlay`, so it follows its origin on scroll; when the overlay
+ * handles `(detach)`, it also closes as a transient overlay once a modal dialog opens.
+ */
 @Directive({ selector: '[cdkConnectedOverlay][txOverlayAnchor]' })
 export class TxOverlayAnchor {
   private connectedOverlay = inject(CdkConnectedOverlay);
   private chrome = inject(TxOverlayInsets);
+  private stack = inject(TxOverlayStack);
   private release: () => void = () => undefined;
+  private forget: () => void = () => undefined;
 
   constructor() {
     const subscription = this.connectedOverlay.attach.subscribe(() => {
       this.release();
+      this.forget();
       const overlayRef = this.connectedOverlay.overlayRef;
       const origin = this.originElement();
       if (overlayRef && origin) {
         this.release = txAnchorPane(overlayRef, origin, this.chrome);
       }
+      if (overlayRef && this.connectedOverlay.detach.observed) {
+        this.watchAsTransient(overlayRef);
+      }
     });
     inject(DestroyRef).onDestroy(() => {
       subscription.unsubscribe();
       this.release();
+      this.forget();
     });
+  }
+
+  private watchAsTransient(overlayRef: OverlayRef): void {
+    const remove = this.stack.addTransient(() => overlayRef.detach());
+    const detached = overlayRef.detachments().subscribe(() => this.forget());
+    this.forget = () => {
+      remove();
+      detached.unsubscribe();
+      this.forget = () => undefined;
+    };
   }
 
   private originElement(): Element | null {

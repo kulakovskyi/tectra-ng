@@ -61,6 +61,14 @@ Shows a collection with your own list and grid templates — cards of products, 
 | txDataViewPaginatorStart | `<ng-template txDataViewPaginatorStart let-state>` — content at the start of the paginator |
 | txDataViewPaginatorEnd | `<ng-template txDataViewPaginatorEnd let-state>` — content at the end of the paginator |
 
+Give the list and grid templates the items for typing — `<ng-template txDataViewList [txDataViewListOf]="products" let-items>` — and `items` gets their type in strict templates; without it they stay untyped.
+
+## Inputs — item templates
+| Name | Description |
+|---|---|
+| txDataViewListOf | `txDataViewList`: the items, only for the type of `let-items` |
+| txDataViewGridOf | `txDataViewGrid`: the items, only for the type of `let-items` |
+
 ## Layout switch
 `<tx-data-view-layout [(layout)]="layout" />` — two toggle buttons (list, grid) with `aria-pressed`.
 

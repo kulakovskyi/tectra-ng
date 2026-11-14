@@ -31,7 +31,7 @@ class Host {
 
 @Component({
   imports: [TxEmptyState],
-  template: `<tx-empty-state unstyled />`,
+  template: `<tx-empty-state title="Nothing here" unstyled />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class PlainHost {}
@@ -78,6 +78,8 @@ describe('TxEmptyState', () => {
     const root = fixture.nativeElement.querySelector('tx-empty-state') as HTMLElement;
     expect(root.hasAttribute('data-styled')).toBe(false);
     expect(root.getAttribute('data-variant')).toBe('plain');
+    expect(root.hasAttribute('title')).toBe(false);
+    expect(root.querySelector('.tx-empty-state__title')?.textContent?.trim()).toBe('Nothing here');
     expect(root.querySelector('tx-icon')?.getAttribute('data-icon')).toBe('inbox');
   });
 });

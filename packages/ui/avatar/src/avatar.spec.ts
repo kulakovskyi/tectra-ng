@@ -22,6 +22,10 @@ import { provideTxTooltip } from '@tectra-ng/ui/tooltip';
       <tx-avatar name="Eve Stone" />
     </tx-avatar-group>
     <tx-avatar id="tipped" name="Fay Lin" tooltip />
+    <tx-avatar id="silent" name="Hal Moor" tooltip="none" />
+    <tx-avatar-group id="quiet">
+      <tx-avatar name="Jo Park" tooltip="none" />
+    </tx-avatar-group>
     <tx-avatar-group id="static" [max]="1" [morePopover]="false">
       <tx-avatar name="Gus Hale" />
       <tx-avatar name="Ida Webb" />
@@ -138,6 +142,14 @@ describe('TxAvatar', () => {
     await settle();
     expect(tooltip()).toBeNull();
     expect(el('#photo').getAttribute('title')).toBe('Olena Kovalenko');
+
+    for (const silent of [el('#silent'), el('#quiet tx-avatar')]) {
+      expect(silent.hasAttribute('title')).toBe(false);
+      expect(silent.getAttribute('aria-label')).toBeTruthy();
+      fire(silent, 'mouseenter');
+      await settle();
+      expect(tooltip()).toBeNull();
+    }
   });
 
   it('lists the hidden people in a popover from +N', async () => {

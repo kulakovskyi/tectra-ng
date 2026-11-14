@@ -3,6 +3,8 @@
 @include select-field.styles('.tx-multiselect');
 @include select-field.chips;
 
+@include select-field.chips-fit;
+
 .tx-multiselect__toggle-all {
   display: flex;
   flex: none;

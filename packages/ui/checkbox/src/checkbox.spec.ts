@@ -57,6 +57,13 @@ describe('TxCheckbox', () => {
     expect(el(`#${native.getAttribute('aria-describedby')}`).textContent).toContain('Read the terms first');
   });
 
+  it('drops the text and its gap when there is no label, description or content', () => {
+    expect(getComputedStyle(el('#own-icon .tx-checkbox__text')).display).toBe('none');
+    expect(getComputedStyle(el('#array .tx-checkbox__text')).display).toBe('none');
+    expect(getComputedStyle(el('#terms .tx-checkbox__text')).display).not.toBe('none');
+    expect(getComputedStyle(el('#values .tx-checkbox__text')).display).not.toBe('none');
+  });
+
   it('toggles a binary form control and reports the change', async () => {
     await click('terms');
     expect(host().terms.value).toBe(true);
@@ -241,5 +248,12 @@ describe('TxCheckbox recompiled by TestBed', () => {
     (fixture.nativeElement.querySelectorAll('#group input')[2] as HTMLInputElement).click();
     await fixture.whenStable();
     expect(fixture.componentInstance.permissions.value).toEqual(['read', 'write']);
+  });
+});
+
+describe('checkbox template directive', () => {
+  it('narrows its template context', () => {
+    expect(TxCheckboxIconTemplate.ngTemplateContextGuard({} as TxCheckboxIconTemplate, { $implicit: true, indeterminate: false })).toBe(true);
+    expect(TxCheckboxIconTemplate.ngTemplateContextGuard({} as TxCheckboxIconTemplate, undefined)).toBe(false);
   });
 });

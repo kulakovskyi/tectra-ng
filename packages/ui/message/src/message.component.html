@@ -12,10 +12,14 @@
 <div class="tx-message__content" [class]="passThrough().content?.class" [style]="passThrough().content?.style">
   @if (text()) {
     {{ text() }}
-  } @else {
-    <ng-content />
   }
+  <ng-content />
 </div>
+@if (actions()) {
+  <div class="tx-message__actions" [class]="passThrough().actions?.class" [style]="passThrough().actions?.style">
+    <ng-content select="[txMessageActions]" />
+  </div>
+}
 @if (closable()) {
   <button
     type="button"

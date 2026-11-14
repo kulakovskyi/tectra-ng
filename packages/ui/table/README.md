@@ -135,7 +135,7 @@ Filtering, sorting and pagination run on `value` unless `lazy` is on — then `l
 | txTableCell | `<ng-template txTableCell="field" let-row let-value="value" let-index="index">` — content of the cells of a column |
 | txTableHeaderCell | `<ng-template txTableHeaderCell="field" let-column>` — own header content |
 | txTableFooterCell | `<ng-template txTableFooterCell="field" let-column>` — footer content of a column |
-| txTableActions | `<ng-template txTableActions let-row>` — actions column; put `tx-table-actions` with buttons marked `*txTableAction="{ label }"` inside |
+| txTableActions | `<ng-template txTableActions let-row>` — actions column; put `tx-table-actions` with buttons marked `*txTableAction="{ label }"` inside; the `…` popover closes once an action in it is clicked |
 | txTableExpansion | `<ng-template txTableExpansion let-row>` — content of an expanded row; adds the expand column |
 | txTableCard | `<ng-template txTableCard let-row let-index="index">` — own card for a row on narrow screens |
 | txTableEmpty | `<ng-template txTableEmpty>` — own content of an empty table |
@@ -143,6 +143,19 @@ Filtering, sorting and pagination run on `value` unless `lazy` is on — then `l
 | txTableGroupHeader | `<ng-template txTableGroupHeader let-row let-value="value" let-count="count" let-toggle="toggle">` — content of a group header |
 | txTableGroupFooter | `<ng-template txTableGroupFooter let-value="value" let-count="count" let-rows="rows">` — row after a group, e.g. its total |
 | txTableToolbar | `<div txTableToolbar>` — content on the left of the toolbar row, next to the settings gear |
+
+The row templates take the table rows only for typing — `<ng-template txTableCell="name" [txTableCellOf]="deals()" let-deal>` gives `deal` the row type in strict templates; without it the row stays untyped.
+
+## Inputs — row templates
+| Name | Description |
+|---|---|
+| txTableCellOf | `txTableCell`: the rows of the table, only for the type of `let-row` |
+| txTableEditorOf | `txTableEditor`: the rows of the table, only for the type of `let-row` |
+| txTableActionsOf | `txTableActions`: the rows of the table, only for the type of `let-row` |
+| txTableExpansionOf | `txTableExpansion`: the rows of the table, only for the type of `let-row` |
+| txTableCardOf | `txTableCard`: the rows of the table, only for the type of `let-row` |
+| txTableGroupHeaderOf | `txTableGroupHeader`: the rows of the table, only for the type of `let-row` and `rows` |
+| txTableGroupFooterOf | `txTableGroupFooter`: the rows of the table, only for the type of `let-row` and `rows` |
 
 ## Methods
 | Name | Description |
@@ -159,7 +172,7 @@ Filtering, sorting and pagination run on `value` unless `lazy` is on — then `l
 ## Inputs — *txTableAction
 | Name | Description |
 |---|---|
-| txTableAction | `{ label, id? }` — the label is used in the settings and the right-click menu; `id` defaults to a slug of the label |
+| txTableAction | `{ label, id? }` — the label is used in the settings and the right-click menu; `id` defaults to a slug of the label. Works inside `@if` and other blocks; an action without a config is left out |
 
 ## Keyboard
 | Key | Action |

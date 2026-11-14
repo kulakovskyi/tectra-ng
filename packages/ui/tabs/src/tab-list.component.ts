@@ -37,7 +37,7 @@ const SCROLL_GAP = 8;
     '[attr.data-size]': 'tabs.size()',
     '[attr.data-orientation]': 'tabs.orientation()',
     '[class.tx-tab-list--raised]': 'tabs.raised()',
-    '[class.tx-tab-list--scrollable]': 'tabs.scrollable()',
+    '[class.tx-tab-list--scrollable]': 'scrolls()',
   },
   viewProviders: [provideTxIconDefaults(TABS_ICON_DEFAULTS)],
 })
@@ -55,8 +55,10 @@ export class TxTabList {
   protected readonly canScrollPrevious = signal(false);
   protected readonly canScrollNext = signal(false);
   protected readonly bar = signal<{ start: number; size: number } | null>(null);
+  private readonly overflowing = signal(false);
   protected readonly vertical = computed(() => this.tabs.orientation() === 'vertical');
-  protected readonly navigators = computed(() => this.tabs.scrollable() && this.tabs.showNavigators() && !this.vertical());
+  protected readonly scrolls = computed(() => this.tabs.scrollable() ?? this.overflowing());
+  protected readonly navigators = computed(() => this.scrolls() && this.tabs.showNavigators() && !this.vertical());
 
   constructor() {
     afterRenderEffect(() => {
@@ -151,13 +153,14 @@ export class TxTabList {
   }
 
   protected updateNavigators(): void {
+    const content = this.content().nativeElement;
+    const max = content.scrollWidth - content.clientWidth;
+    this.overflowing.set(!this.vertical() && max > 1);
     if (!this.navigators()) {
       this.canScrollPrevious.set(false);
       this.canScrollNext.set(false);
       return;
     }
-    const content = this.content().nativeElement;
-    const max = content.scrollWidth - content.clientWidth;
     this.canScrollPrevious.set(content.scrollLeft > 1);
     this.canScrollNext.set(max - content.scrollLeft > 1);
   }

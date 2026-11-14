@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { Tectra } from '@tectra-ng/themes';
 import { TECTRA_CONFIG } from '@tectra-ng/core/config';
 import { TxOverlay } from './overlay.service';
+import { TxOverlayStack } from './overlay-stack';
 import { TxOverlayCloseReason } from './overlay.types';
 
 @Component({
@@ -135,6 +136,45 @@ describe('TxOverlay', () => {
     expect(ref.element.textContent).toContain('Just text');
     fixture.destroy();
     await vi.waitFor(() => expect(reasons).toEqual(['detached']));
+  });
+
+  it('moves an aligned panel outward so that its arrow points at the middle of a small origin', () => {
+    const { origin, overlay } = setup();
+    const root = document.documentElement;
+    Object.defineProperty(root, 'clientWidth', { value: 1024, configurable: true });
+    Object.defineProperty(root, 'clientHeight', { value: 768, configurable: true });
+    origin.getBoundingClientRect = () => ({ top: 100, bottom: 140, left: 500, right: 540, width: 40, height: 40, x: 500, y: 100, toJSON: () => ({}) });
+    const sized = (pane: HTMLElement) => {
+      Object.defineProperty(pane, 'offsetWidth', { value: 200, configurable: true });
+      Object.defineProperty(pane, 'offsetHeight', { value: 100, configurable: true });
+      return 30;
+    };
+    const plain = overlay.open(Panel, { origin, placement: 'bottom-end', animate: false });
+    expect(plain.element.style.transform).not.toContain('translateX');
+    plain.close();
+    const arrowed = overlay.open(Panel, { origin, placement: 'bottom-end', animate: false, arrowInset: sized });
+    expect(arrowed.element.style.transform).toContain('translateX(10px)');
+    arrowed.updatePosition();
+    expect(arrowed.element.style.transform).toContain('translateX(10px)');
+    arrowed.close();
+    const fixed = overlay.open(Panel, { origin, placement: 'bottom-end', animate: false, arrowInset: 0 });
+    expect(fixed.element.style.transform).not.toContain('translateX');
+    fixed.close();
+    delete (root as { clientWidth?: number }).clientWidth;
+    delete (root as { clientHeight?: number }).clientHeight;
+  });
+
+  it('closes as a transient overlay when a modal layer asks', () => {
+    const { origin, overlay } = setup();
+    const reasons: TxOverlayCloseReason[] = [];
+    const ref = overlay.open(Panel, { origin });
+    ref.closed.subscribe((reason) => reasons.push(reason));
+    TestBed.inject(TxOverlayStack).closeTransient();
+    expect(reasons).toEqual(['api']);
+    const kept = overlay.open(Panel, { origin });
+    kept.close('escape');
+    TestBed.inject(TxOverlayStack).closeTransient();
+    expect(reasons).toEqual(['api']);
   });
 
   it('needs a view container for templates', () => {

@@ -53,6 +53,7 @@ export function createTectraPreset({ style = tectraStyle, primary = 'blue', surf
     dark: deepMerge(createDarkSemantic(palettes), definition.dark?.(palettes)),
     components: definition.components ?? {},
     css: definition.css,
+    source: { style: definition, primary, surface },
   };
 }
 

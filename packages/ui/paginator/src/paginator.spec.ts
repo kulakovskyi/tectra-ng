@@ -341,3 +341,11 @@ describe('TxPaginator recompiled by TestBed', () => {
   });
 });
 
+
+describe('paginator template directives', () => {
+  it('narrow their template contexts', () => {
+    const context = { $implicit: { page: 0, first: 0, rows: 10, pageCount: 1 } };
+    expect(TxPaginatorStart.ngTemplateContextGuard({} as TxPaginatorStart, context)).toBe(true);
+    expect(TxPaginatorEnd.ngTemplateContextGuard({} as TxPaginatorEnd, undefined)).toBe(false);
+  });
+});

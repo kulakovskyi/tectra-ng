@@ -6,7 +6,7 @@ A small card in the bottom-left corner that tells the visitor the site keeps onl
 <tx-cookie-notice [link]="['/privacy']" sharedDomain="example.com" />
 ```
 
-The texts are translated and can be replaced. It renders nothing on the server and appears in the browser after a short delay, so it never moves the page. With `sharedDomain` the choice is kept for every subdomain of that domain.
+The texts are translated and can be replaced. It renders nothing on the server and appears in the browser after a short delay, so it never moves the page. With `sharedDomain` the choice is kept for every subdomain of that domain. While `tx-network-status` shows its pill, the card moves up by the `--tx-bottom-overlay-offset` the pill writes on `<body>`, so the two never cover each other; any other bottom overlay can set that variable too.
 
 ## Inputs
 | Name | Description |
@@ -22,6 +22,8 @@ The texts are translated and can be replaced. It renders nothing on the server a
 | cookieName | Name of the cookie that keeps the choice (default `cookieNoticeDismissed`) |
 | maxAgeDays | How long the choice is kept (default 365) |
 | sharedDomain | Parent domain to keep the choice for all its subdomains, e.g. `example.com` |
+| autoShow | `false` keeps it closed until `show()` is called; `true` (default) shows it on start unless it was dismissed |
+| preview | Shows it whatever the cookie says, and the button hides it without keeping the choice — for a settings page or a theme preview |
 | dt | Design tokens of this instance (`cookieNotice`) |
 | pt | Classes and styles of the parts: `root`, `icon`, `body`, `title`, `text`, `actions`, `link`, `accept` |
 | ptOptions | How `pt` merges with the global pass-through |

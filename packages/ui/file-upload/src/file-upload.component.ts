@@ -23,7 +23,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TxAnnouncer, uniqueId } from '@tectra-ng/core/a11y';
 import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
-import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
+import { TxLocaleService, formatBytes, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
 import { provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraFileUploadTokens, toStyleObject } from '@tectra-ng/themes';
@@ -48,7 +48,7 @@ import {
   TxFileUploadSelectEvent,
   TxFileUploadedRemoveEvent,
 } from './file-upload.types';
-import { acceptLabel, fileExtension, fileKind, fileMatchesAccept, fileSizeParts, sameFile } from './file-upload.utils';
+import { acceptLabel, fileExtension, fileKind, fileMatchesAccept, sameFile } from './file-upload.utils';
 import { FILE_UPLOAD_ICON_DEFAULTS } from './file-upload.icons';
 import { FILE_UPLOAD_THEME } from './file-upload.theme';
 
@@ -64,6 +64,8 @@ const KIND_ICONS: Record<TxFileKind, TxIconName> = {
 
 /** Value of `tx-file-upload`: one file, or an array of files when several are allowed. */
 type TxFileUploadValue = File | File[];
+
+const UPLOADED_FLASH_MS = 1500;
 
 @Component({
   selector: 'tx-file-upload',
@@ -111,6 +113,7 @@ export class TxFileUpload extends TxFormControlBase<TxFileUploadValue> {
   readonly headers = input<HttpHeaders | Record<string, string> | undefined>(undefined);
   readonly withCredentials = input(false, { transform: booleanAttribute });
   readonly customUpload = input(false, { transform: booleanAttribute });
+  readonly keepUploaded = input(true, { transform: booleanAttribute });
   readonly description = input<string | undefined>(undefined);
   readonly chooseLabel = input<string | undefined>(undefined);
   readonly uploadLabel = input<string | undefined>(undefined);
@@ -203,6 +206,7 @@ export class TxFileUpload extends TxFormControlBase<TxFileUploadValue> {
   private dragDepth = 0;
   private messageId = 0;
   private abort: (() => void) | null = null;
+  private readonly dropTimers = new Set<number>();
 
   constructor() {
     super();
@@ -220,6 +224,7 @@ export class TxFileUpload extends TxFormControlBase<TxFileUploadValue> {
     });
     inject(DestroyRef).onDestroy(() => {
       this.abort?.();
+      this.dropTimers.forEach((timer) => this.document.defaultView?.clearTimeout(timer));
       [...this.entries(), ...this.uploadedEntries()].forEach((entry) => this.revoke(entry));
     });
   }
@@ -268,6 +273,11 @@ export class TxFileUpload extends TxFormControlBase<TxFileUploadValue> {
     this.messages.set([]);
     this.commit();
     this.cleared.emit();
+  }
+
+  clearUploaded(): void {
+    this.uploadedEntries().forEach((entry) => this.revoke(entry));
+    this.uploadedEntries.set([]);
   }
 
   protected onInputChange(event: Event): void {
@@ -387,8 +397,7 @@ export class TxFileUpload extends TxFormControlBase<TxFileUploadValue> {
   }
 
   formatSize(bytes: number): string {
-    const { value, unit } = fileSizeParts(bytes);
-    return this.localeService.formatNumber(value, { style: 'unit', unit, unitDisplay: 'short', maximumFractionDigits: unit === 'byte' ? 0 : 1 });
+    return formatBytes(bytes, { locale: this.localeService.locale().intl });
   }
 
   private add(files: File[], event: Event): void {
@@ -521,11 +530,29 @@ export class TxFileUpload extends TxFormControlBase<TxFileUploadValue> {
       return;
     }
     this.entries.update((entries) => entries.filter((entry) => !done.includes(entry)));
-    this.uploadedEntries.update((entries) => [...entries, ...done.map((entry) => ({ ...entry, status: 'uploaded' as const, progress: 100 }))]);
+    const uploaded = done.map((entry) => ({ ...entry, status: 'uploaded' as const, progress: 100 }));
+    this.uploadedEntries.update((entries) => [...entries, ...uploaded]);
     this.commit();
+    if (!this.keepUploaded()) {
+      this.dropLater(uploaded);
+    }
     const files = done.map((entry) => entry.file);
     this.uploaded.emit({ originalEvent, files });
     this.announcer.announce(this.translations().filesUploaded);
+  }
+
+  private dropLater(uploaded: TxFileUploadEntry[]): void {
+    const view = this.document.defaultView;
+    if (!view) {
+      return;
+    }
+    const timer = view.setTimeout(() => {
+      this.dropTimers.delete(timer);
+      const gone = this.uploadedEntries().filter((entry) => uploaded.some((item) => item.id === entry.id));
+      gone.forEach((entry) => this.revoke(entry));
+      this.uploadedEntries.update((entries) => entries.filter((entry) => !gone.includes(entry)));
+    }, UPLOADED_FLASH_MS);
+    this.dropTimers.add(timer);
   }
 
   private fail(ids: ReadonlySet<string>, message: string, error: unknown): void {

@@ -5,7 +5,7 @@ import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
 import { injectTxIcons, provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraMessageTokens, toStyleObject } from '@tectra-ng/themes';
-import { TxMessageCloseIconTemplate, TxMessageIconTemplate } from './message-templates.directive';
+import { TxMessageActions, TxMessageCloseIconTemplate, TxMessageIconTemplate } from './message-templates.directive';
 import { TxMessagePart, TxMessageSeverity, TxMessageSize, TxMessageVariant } from './message.types';
 import { MESSAGE_ICON_DEFAULTS } from './message.icons';
 import { MESSAGE_THEME } from './message.theme';
@@ -52,6 +52,7 @@ export class TxMessage {
 
   readonly iconTemplate = contentChild(TxMessageIconTemplate);
   readonly closeIconTemplate = contentChild(TxMessageCloseIconTemplate);
+  readonly actions = contentChild(TxMessageActions);
 
   readonly translations = injectTranslations();
   readonly isUnstyled = injectUnstyled(this.unstyled);

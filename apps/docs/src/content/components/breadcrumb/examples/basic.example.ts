@@ -12,6 +12,7 @@ export default class BreadcrumbBasicExample {
   readonly items: TxBreadcrumbItem[] = [
     { label: 'Getting started', routerLink: '/getting-started' },
     { label: 'Theming', routerLink: '/theming' },
+    { label: 'Components' },
     { label: 'Breadcrumb' },
   ];
 }

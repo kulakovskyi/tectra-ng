@@ -19,6 +19,7 @@ import { PAGE_HEADER_THEME } from './page-header.theme';
     '[class]': 'passThrough().root?.class',
     '[style]': 'hostStyle()',
     '[attr.data-styled]': '!isUnstyled() || null',
+    '[attr.title]': 'null',
   },
   viewProviders: [provideTxIconDefaults(PAGE_HEADER_ICON_DEFAULTS)],
 })

@@ -14,6 +14,12 @@ export interface TxTitleConfig {
   translate?: (page: string) => string | Observable<string>;
 }
 
+/** Options of `TxTitle.setPage`. */
+export interface TxTitlePageOptions {
+  /** `false` shows the text as it is, without the `translate` function of the config (default `true`). */
+  translate?: boolean;
+}
+
 /** App name, separator and translation of page titles; set with `provideTxTitle`. */
 export const TX_TITLE_CONFIG = new InjectionToken<TxTitleConfig>('TX_TITLE_CONFIG');
 
@@ -22,12 +28,12 @@ export const TX_TITLE_CONFIG = new InjectionToken<TxTitleConfig>('TX_TITLE_CONFI
 export class TxTitle {
   private readonly title = inject(Title);
   private readonly config = inject(TX_TITLE_CONFIG);
-  private readonly page$ = new BehaviorSubject<string | undefined>(undefined);
+  private readonly page$ = new BehaviorSubject<{ text: string | undefined; translate: boolean }>({ text: undefined, translate: true });
   private readonly prefix$ = new BehaviorSubject<string>('');
   private touched = false;
 
   constructor() {
-    combineLatest([this.page$.pipe(switchMap((page) => this.translate(page))), this.prefix$])
+    combineLatest([this.page$.pipe(switchMap(({ text, translate }) => (translate ? this.translate(text) : of(text)))), this.prefix$])
       .pipe(
         filter(() => this.touched),
         takeUntilDestroyed(inject(DestroyRef)),
@@ -39,9 +45,9 @@ export class TxTitle {
       });
   }
 
-  setPage(page: string | undefined): void {
+  setPage(page: string | undefined, options?: TxTitlePageOptions): void {
     this.touched = true;
-    this.page$.next(page);
+    this.page$.next({ text: page, translate: options?.translate ?? true });
   }
 
   setPrefix(prefix: string): void {

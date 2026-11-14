@@ -45,8 +45,8 @@ const PRODUCTS: Product[] = [
     (lazyLoad)="loads.push($event)"
   >
     <ng-template txDataViewHeader><tx-data-view-layout [(layout)]="layout" /></ng-template>
-    <ng-template txDataViewList let-items><ul class="list">@for (item of items; track item.name) {<li>{{ item.name }}</li>}</ul></ng-template>
-    <ng-template txDataViewGrid let-items><div class="grid">@for (item of items; track item.name) {<span>{{ item.name }}</span>}</div></ng-template>
+    <ng-template txDataViewList [txDataViewListOf]="value()" let-items><ul class="list">@for (item of items; track item.name) {<li>{{ item.name }}</li>}</ul></ng-template>
+    <ng-template txDataViewGrid [txDataViewGridOf]="value()" let-items><div class="grid">@for (item of items; track item.name) {<span>{{ item.name }}</span>}</div></ng-template>
     <ng-template txDataViewEmpty><p class="none">Nothing</p></ng-template>
   </tx-data-view>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -84,6 +84,27 @@ describe('TxDataView', () => {
     expect(view.dataset['layout']).toBe('list');
     expect(view.style.getPropertyValue('--tx-data-view-header-padding')).toBe('20px');
     expect(fixture.nativeElement.querySelector('.tx-data-view__content').classList).toContain('own-content');
+  });
+
+  it('narrows the context of the list and grid templates', () => {
+    const context = { $implicit: PRODUCTS, items: PRODUCTS, first: 0 };
+    expect(TxDataViewList.ngTemplateContextGuard({} as TxDataViewList<Product>, context)).toBe(true);
+    expect(TxDataViewGrid.ngTemplateContextGuard({} as TxDataViewGrid<Product>, undefined)).toBe(false);
+  });
+
+  it('draws the content anew on a layout change without a warning', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    const before = fixture.nativeElement.querySelector('.tx-data-view__content');
+    host.layout.set('grid');
+    await render();
+    const after = fixture.nativeElement.querySelector('.tx-data-view__content');
+    expect(after).not.toBe(before);
+    expect(fixture.nativeElement.querySelectorAll('.tx-data-view__content')).toHaveLength(1);
+    host.layout.set('list');
+    await render();
+    expect(fixture.nativeElement.querySelector('.tx-data-view__content')).not.toBe(after);
+    expect(warn).not.toHaveBeenCalled();
+    warn.mockRestore();
   });
 
   it('switches to the grid with the layout switch', async () => {
@@ -182,9 +203,9 @@ describe('TxDataView', () => {
     ariaLabel="Products"
   >
     @if (withList()) {
-      <ng-template txDataViewList let-items><ul class="list">@for (item of items; track item.name) {<li>{{ item.name }}</li>}</ul></ng-template>
+      <ng-template txDataViewList [txDataViewListOf]="value()" let-items><ul class="list">@for (item of items; track item.name) {<li>{{ item.name }}</li>}</ul></ng-template>
     } @else {
-      <ng-template txDataViewGrid let-items><div class="grid">@for (item of items; track item.name) {<span>{{ item.name }}</span>}</div></ng-template>
+      <ng-template txDataViewGrid [txDataViewGridOf]="value()" let-items><div class="grid">@for (item of items; track item.name) {<span>{{ item.name }}</span>}</div></ng-template>
     }
     <ng-template txDataViewFooter><p class="foot">Footer</p></ng-template>
     <ng-template txDataViewLoading><p class="wait">Wait</p></ng-template>
@@ -239,5 +260,13 @@ describe('TxDataView parts', () => {
     fixture.componentInstance.value.set(null);
     await fixture.whenStable();
     expect(el('.tx-data-view__empty')?.textContent?.trim()).toBe('No results found');
+  });
+});
+
+describe('data view paginator template directives', () => {
+  it('narrow their template contexts', () => {
+    const context = { $implicit: { page: 0, first: 0, rows: 10, pageCount: 1 } };
+    expect(TxDataViewPaginatorStart.ngTemplateContextGuard({} as TxDataViewPaginatorStart, context)).toBe(true);
+    expect(TxDataViewPaginatorEnd.ngTemplateContextGuard({} as TxDataViewPaginatorEnd, undefined)).toBe(false);
   });
 });

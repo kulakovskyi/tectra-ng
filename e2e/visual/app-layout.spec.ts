@@ -187,4 +187,69 @@ test.describe('app layout', () => {
     expect(await folding).toBeLessThanOrEqual(0.5);
     await expect(menu).toHaveClass(/tx-panel-menu--collapsed/);
   });
+
+  test('the open rail stays above sticky and transformed page content and does not flicker', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    const root = example(page, 'rail');
+    await root.scrollIntoViewIfNeeded();
+    const sidebar = root.locator('aside');
+    await expect.poll(async () => Math.round((await box(sidebar)).width)).toBe(74);
+    await root.locator('.tx-app-layout__content').evaluate((content) => {
+      const sticky = document.createElement('div');
+      sticky.className = 'probe';
+      sticky.style.cssText = 'position: sticky; top: 0; height: 600px; background: red';
+      const moved = document.createElement('div');
+      moved.className = 'probe';
+      moved.style.cssText = 'transform: translateZ(0); height: 600px; background: blue';
+      content.prepend(sticky, moved);
+    });
+    const rail = await box(sidebar);
+    await page.mouse.move(rail.x + 30, rail.y + 200);
+    await page.mouse.move(rail.x + 150, rail.y + 200, { steps: 4 });
+    await expect.poll(async () => Math.round((await box(sidebar)).width)).toBe(224);
+    await page.waitForTimeout(300);
+    expect(Math.round((await box(sidebar)).width)).toBe(224);
+    const covered = await page.evaluate(({ x, y }) => !!document.elementFromPoint(x, y)?.closest('aside'), { x: rail.x + 150, y: rail.y + 200 });
+    expect(covered).toBe(true);
+  });
+
+  test('section titles stay on one line while the rail opens, and badges do not replay', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    const root = example(page, 'rail');
+    await root.scrollIntoViewIfNeeded();
+    const sidebar = root.locator('aside');
+    await expect.poll(async () => Math.round((await box(sidebar)).width)).toBe(74);
+    const badge = sidebar.locator('.tx-panel-menu__badge').first();
+    await expect.poll(() => badge.evaluate((element) => element.getAnimations().length)).toBe(0);
+    await sidebar.evaluate((aside) => {
+      const section = aside.querySelector('.tx-panel-menu__section') as HTMLElement;
+      section.textContent = 'A rather long section title for the workspace';
+      const start = section.getBoundingClientRect().height;
+      const state = window as unknown as { sectionFrames: number[]; sectionStart: number };
+      state.sectionStart = start;
+      state.sectionFrames = [];
+      const begin = performance.now();
+      const tick = () => {
+        state.sectionFrames.push(section.getBoundingClientRect().height);
+        if (performance.now() - begin < 450) {
+          requestAnimationFrame(tick);
+        }
+      };
+      requestAnimationFrame(tick);
+    });
+    const rail = await box(sidebar);
+    await page.mouse.move(rail.x + 30, rail.y + 200);
+    await expect.poll(async () => Math.round((await box(sidebar)).width)).toBe(224);
+    expect(await badge.evaluate((element) => element.getAnimations().length)).toBe(0);
+    await page.waitForTimeout(300);
+    const { sectionFrames, sectionStart } = await page.evaluate(() => {
+      const state = window as unknown as { sectionFrames: number[]; sectionStart: number };
+      return { sectionFrames: state.sectionFrames, sectionStart: state.sectionStart };
+    });
+    expect(sectionFrames.length).toBeGreaterThan(5);
+    expect(Math.max(...sectionFrames)).toBeLessThanOrEqual(sectionStart + 0.5);
+    await page.mouse.move(5, 5);
+    await expect.poll(async () => Math.round((await box(sidebar)).width)).toBe(74);
+    expect(await badge.evaluate((element) => element.getAnimations().length)).toBe(0);
+  });
 });

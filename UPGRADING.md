@@ -1,5 +1,26 @@
 # Upgrading
 
+## From 0.4.1
+
+Mostly fixes; a few defaults and types changed. The compiler points to every type change.
+
+- **Selected table rows** keep the normal text colour (`table.row.selectedColor` is now `text-primary`); only the background marks the state. The edge style keeps the highlight colour on its solid highlight. Set the token back to `var(--tx-highlight-color)` to keep the old look.
+- **Overlays stack in the order they open.** Dialogs, drawers and the image preview now open in the browser top layer like popovers, menus and tooltips, and opening a modal closes the open popovers, menus, select panels and tooltips first. Fixed elements that are not overlays (a cookie notice, a network pill, a speed dial) now stay under a modal's backdrop.
+- **`tx-message`** shows `text` and projected content together; before, content was dropped when `text` was set. Put buttons into the new `[txMessageActions]` slot.
+- **`txPopoverHeader`** content now sits next to the title instead of inside it, so it no longer names the dialog. A popover that used only the slot as its title needs `ariaLabel`.
+- **`tx-tooltip`**: `tooltip.arrow.size` is now how far the arrow sticks out (default `3.5px`, the same look as the old `5px`). Halve an override you set before.
+- **`tx-menu`**: a popup menu with the new `arrow` input defaults to `offset` 10.
+- **`tx-tabs`**: `scrollable` is unset by default and the scroll buttons appear by themselves when the tabs overflow; `true` and `false` still win. `TxTabsContext.scrollable` is now `Signal<boolean | undefined>`.
+- **`tx-table`**: `txTableAction` is no longer a required input (an action without a config is skipped), and a `lazyLoad` that asks for the same data as the last one is not emitted again. In a template typed with the new `txTableCellOf` (and the other `…Of` inputs) the untyped context fields `value` and `node` are `unknown`.
+- **Chips** of `tx-multiselect` and `tx-tree-select` (`display="chip"`) stay on one line and count the rest in a `+N` chip; `tx-autocomplete` with `multiple` does the same until the field has focus, then wraps. Set `display="comma"` where you want plain text.
+- **`txFilterState`**: `set()` and `patch()` that change no value keep the same `value()` object.
+- **File sizes**: `formatFileSize`, `txFileSize` and `tx-file-upload` share one formatter (`formatBytes` of `@tectra-ng/core/i18n`) with unit names in the active language: `512 byte`, `1.5 kB` in English. `fileSizeParts` and `TX_FILE_SIZE_UNITS` are gone from `@tectra-ng/ui/file-upload`.
+- **`txDate`** follows the active locale; without a format it shows a medium date in that locale. `TX_DATE_FORMAT_CONFIG.format` also takes `Intl.DateTimeFormat` options.
+- **Labels in capitals:** `tx-wizard-progress`, the group titles of `tx-command-palette` and the menu title of `tx-filters-panel` no longer force capitals (a capital letter can read as a digit in some languages); they are 12px, without letter spacing. `commandPalette.results.groupTextTransform` and `filtersPanel.menu.titleTextTransform` bring capitals back.
+- **`tx-breadcrumb`**: links carry a light underline that darkens on hover, and an item without a link or command is plain text, so the two are told apart before hover (`breadcrumb.item.linkDecoration: 'none'` removes the underline).
+- **`@tectra-ng/blocks`** has a new peer dependency on `@angular/forms` (the theme configurator uses it); it is already in every Angular app.
+- **Apps that keep list state in the URL** (`txFilterState({ url: true })`): add `provideTxScrolling()` of `@tectra-ng/utils/scrolling` and keep the router's `scrollPositionRestoration` at `'disabled'` (the default), so paging and sorting no longer scroll the page to the top.
+
 ## From 0.3.2
 
 Small changes to the public types. Most apps need none of these steps; the compiler points to every place that does.

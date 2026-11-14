@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, TemplateRef, input, signal, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { firstValueFrom, of } from 'rxjs';
+import { TxOverlayStack } from '@tectra-ng/core/overlay';
 import { TxDialogContent, TxDialogClose, TxDialogFooter, TxDialogHeader, TxDialogTitle } from './dialog-parts.component';
 import { TxDialogRef, injectDialogData, injectDialogRef } from './dialog-ref';
 import { TxDialog } from './dialog.component';
@@ -141,6 +142,7 @@ describe('TxDialog', () => {
     expect(dialog.getAttribute('data-size')).toBe('small');
     expect(document.getElementById(dialog.getAttribute('aria-labelledby') ?? '')?.textContent).toBe('Rename project');
     expect(dialog.querySelector('.tx-dialog-header__subtitle')?.textContent).toBe('Visible to the whole team');
+    expect(dialog.querySelector('tx-dialog-header')?.hasAttribute('title')).toBe(false);
     expect((dialog.querySelector('.name') as HTMLInputElement).value).toBe('Atlas');
     expect(dialog.querySelector('.note')?.textContent).toBe('Shared');
     expect(dialog.contains(document.activeElement)).toBe(true);
@@ -350,6 +352,30 @@ describe('TxDialog', () => {
     (document.querySelector('.tx-dialog-mask') as HTMLElement).click();
     await settle();
     expect(panel()).not.toBeNull();
+  });
+
+  it('closes open transient overlays before a modal opens and raises the layers kept on top after it', async () => {
+    const stack = TestBed.inject(TxOverlayStack);
+    const opener = document.getElementById('opener') as HTMLButtonElement;
+    const order: string[] = [];
+    const raise = vi.spyOn(stack, 'raise').mockImplementation(() => order.push('raise'));
+    stack.addTransient(() => {
+      order.push('closed');
+      opener.focus();
+    });
+    const ref = dialogs.open(RenameDialog, { data: { name: 'A' } });
+    await settle();
+    expect(order).toEqual(['closed', 'raise']);
+    await ref.close();
+    await settle();
+    expect(document.activeElement).toBe(opener);
+
+    stack.addTransient(() => order.push('closed again'));
+    dialogs.open(RenameDialog, { data: { name: 'B' }, modal: false });
+    await settle();
+    expect(order).toEqual(['closed', 'raise']);
+    stack.closeTransient();
+    raise.mockRestore();
   });
 
   it('closes from the header close button', async () => {

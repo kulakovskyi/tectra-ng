@@ -1,0 +1,1 @@
+`arrow` gives the popup an arrow that points at the button — at its middle for a centred placement, near its start or end for `-start` / `-end`. Next to a small button the menu moves out a little so that the arrow still points at its centre, clear of the rounded corner.

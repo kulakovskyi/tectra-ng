@@ -4,7 +4,7 @@ tokens: networkStatus
 source: packages/blocks/network-status
 package: @tectra-ng/blocks/network-status
 import: TxNetworkStatus
-examples: basic, own-texts, design-tokens
+examples: basic, service, own-texts, design-tokens
 ---
 # Network Status
 

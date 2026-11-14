@@ -1,1 +1,1 @@
-Tabs that do not fit scroll sideways and the active one scrolls into view. `scrollable` adds previous / next buttons at the edges; `showNavigators` hides them.
+Tabs that do not fit scroll sideways and the active one scrolls into view. The previous / next buttons appear by themselves while the tabs overflow (the line tabs); `[scrollable]="true"` keeps them on (the pills), `false` turns them off, `showNavigators` hides them.

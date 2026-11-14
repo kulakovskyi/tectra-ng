@@ -97,6 +97,7 @@
 
 .tx-app-layout__name {
   white-space: nowrap;
+  text-box: trim-both cap alphabetic;
 }
 
 .tx-app-layout__anchor {
@@ -212,6 +213,7 @@
 
   .tx-app-layout__slot {
     top: var(--tx-app-layout-top-offset);
+    z-index: var(--tx-app-layout-sidebar-z-index);
     width: var(--tx-app-layout-sidebar-rail-width);
     height: calc(var(--tx-app-layout-viewport-height) - var(--tx-app-layout-top-offset));
     transition: width var(--tx-app-layout-sidebar-duration) var(--tx-app-layout-sidebar-easing);

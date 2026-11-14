@@ -114,6 +114,10 @@
   height: auto;
 }
 
+.tx-public-header__name {
+  text-box: trim-both cap alphabetic;
+}
+
 .tx-public-header__panel {
   display: flex;
   flex: 1;

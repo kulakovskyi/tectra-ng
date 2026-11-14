@@ -45,6 +45,12 @@ describe('TxToggleSwitch', () => {
     expect(el(`#${native.getAttribute('aria-describedby')}`).textContent).toContain('Sent by email');
   });
 
+  it('drops the text and its gap when there is no label, description or content', () => {
+    expect(getComputedStyle(el('#custom .tx-toggle-switch__text')).display).toBe('none');
+    expect(getComputedStyle(el('#notify .tx-toggle-switch__text')).display).not.toBe('none');
+    expect(getComputedStyle(el('#mode .tx-toggle-switch__text')).display).not.toBe('none');
+  });
+
   it('toggles the form control, shows the handle icon and reports the change', async () => {
     expect(el('#notify .tx-toggle-switch__handle tx-icon').getAttribute('data-icon')).toBe('times');
     input('notify').click();
@@ -133,3 +139,10 @@ describe('TxToggleSwitch recompiled by TestBed', () => {
   });
 });
 
+
+describe('toggle switch template directive', () => {
+  it('narrows its template context', () => {
+    expect(TxToggleSwitchHandleTemplate.ngTemplateContextGuard({} as TxToggleSwitchHandleTemplate, { $implicit: true })).toBe(true);
+    expect(TxToggleSwitchHandleTemplate.ngTemplateContextGuard({} as TxToggleSwitchHandleTemplate, undefined)).toBe(false);
+  });
+});

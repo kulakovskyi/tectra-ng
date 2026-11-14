@@ -21,10 +21,10 @@ interface Step {
       [dt]="{ eventMarker: { size: '20px' } }"
       [pt]="{ event: { class: 'own-event' }, eventContent: { style: { color: 'red' } } }"
     >
-      <ng-template txTimelineContent let-event let-index="index" let-last="last">
+      <ng-template txTimelineContent [txTimelineContentOf]="events()" let-event let-index="index" let-last="last">
         <span class="status">{{ index }}:{{ event.status }}:{{ last }}</span>
       </ng-template>
-      <ng-template txTimelineOpposite let-event><span class="date">{{ event.date }}</span></ng-template>
+      <ng-template txTimelineOpposite [txTimelineOppositeOf]="events()" let-event><span class="date">{{ event.date }}</span></ng-template>
     </tx-timeline>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -42,8 +42,8 @@ class Host {
 @Component({
   imports: [TxTimeline, TxTimelineMarker, TxTimelineConnector],
   template: `
-    <tx-timeline [value]="events" unstyled>
-      <ng-template txTimelineMarker let-event><i class="own-marker">{{ event }}</i></ng-template>
+    <tx-timeline [value]="events" [align]="align()" unstyled>
+      <ng-template txTimelineMarker [txTimelineMarkerOf]="events" let-event><i class="own-marker">{{ event }}</i></ng-template>
       <ng-template txTimelineConnector let-first="first"><i class="own-connector" [attr.data-first]="first"></i></ng-template>
     </tx-timeline>
   `,
@@ -51,6 +51,7 @@ class Host {
 })
 class TemplatesHost {
   readonly events = ['a', 'b', 'c'];
+  readonly align = signal<TxTimelineAlign | undefined>(undefined);
 }
 
 describe('TxTimeline', () => {
@@ -116,6 +117,26 @@ describe('TxTimeline', () => {
     expect(Array.from(root.querySelectorAll('.own-marker')).map((node) => node.textContent)).toEqual(['a', 'b', 'c']);
     expect(root.querySelectorAll('.tx-timeline__marker')).toHaveLength(0);
     expect(Array.from(root.querySelectorAll('.own-connector')).map((node) => node.getAttribute('data-first'))).toEqual(['true', 'false']);
+  });
+
+  it('draws the opposite side only with its template or in the alternate alignment', async () => {
+    expect(all('#plain .tx-timeline__opposite')).toHaveLength(3);
+    const templates = TestBed.createComponent(TemplatesHost);
+    templates.autoDetectChanges();
+    await templates.whenStable();
+    const root = templates.nativeElement as HTMLElement;
+    expect(root.querySelectorAll('.tx-timeline__opposite')).toHaveLength(0);
+    templates.componentInstance.align.set('alternate');
+    await templates.whenStable();
+    expect(root.querySelectorAll('.tx-timeline__opposite')).toHaveLength(3);
+  });
+
+  it('narrows the context of every event template', () => {
+    const context = { $implicit: 'a', index: 0, first: true, last: false };
+    expect(TxTimelineContent.ngTemplateContextGuard({} as TxTimelineContent<string>, context)).toBe(true);
+    expect(TxTimelineOpposite.ngTemplateContextGuard({} as TxTimelineOpposite<string>, context)).toBe(true);
+    expect(TxTimelineMarker.ngTemplateContextGuard({} as TxTimelineMarker<string>, context)).toBe(true);
+    expect(TxTimelineConnector.ngTemplateContextGuard({} as TxTimelineConnector<string>, undefined)).toBe(false);
   });
 });
 

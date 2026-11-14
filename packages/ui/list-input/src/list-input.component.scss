@@ -67,6 +67,10 @@
     &::placeholder {
       color: var(--tx-list-input-field-placeholder-color);
     }
+
+    &[readonly] {
+      caret-color: transparent;
+    }
   }
 
   .tx-list-input__footer {

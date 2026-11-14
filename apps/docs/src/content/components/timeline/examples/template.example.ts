@@ -21,15 +21,15 @@ interface OrderEvent {
   imports: [TxTimeline, TxTimelineContent, TxTimelineMarker, TxTimelineOpposite, TxIcon, TxPill],
   template: `
     <tx-timeline ariaLabel="Order history" align="alternate" [value]="events" [pt]="pt">
-      <ng-template txTimelineMarker let-event>
+      <ng-template txTimelineMarker [txTimelineMarkerOf]="events" let-event>
         <span class="marker" [attr.data-tone]="event.tone" aria-hidden="true">
           <tx-icon [name]="event.icon" />
         </span>
       </ng-template>
-      <ng-template txTimelineOpposite let-event>
+      <ng-template txTimelineOpposite [txTimelineOppositeOf]="events" let-event>
         <span class="date">{{ event.date }}</span>
       </ng-template>
-      <ng-template txTimelineContent let-event>
+      <ng-template txTimelineContent [txTimelineContentOf]="events" let-event>
         <article class="card">
           <header class="head">
             <strong>{{ event.status }}</strong>

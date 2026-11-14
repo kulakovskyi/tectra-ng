@@ -1,5 +1,5 @@
 import { ConnectedPosition } from '@angular/cdk/overlay';
-import { TxOverlayBounds, TxOverlaySize, TxPlacement, TxPlacementAlign, TxPlacementSide } from './overlay.types';
+import { TxOverlayBounds, TxOverlayBox, TxOverlaySize, TxPlacement, TxPlacementAlign, TxPlacementSide } from './overlay.types';
 
 const OPPOSITE: Record<TxPlacementSide, TxPlacementSide> = { top: 'bottom', bottom: 'top', left: 'right', right: 'left' };
 const ALIGNS: TxPlacementAlign[] = ['start', 'center', 'end'];
@@ -94,4 +94,69 @@ export function fitsInBounds(position: ConnectedPosition, origin: TxBox, size: T
 export function orderByRoom(positions: ConnectedPosition[], origin: TxBox, size: TxOverlaySize, bounds: TxOverlayBounds): ConnectedPosition[] {
   const index = positions.findIndex((position) => fitsInBounds(position, origin, size, bounds));
   return index > 0 ? [positions[index], ...positions.filter((_, other) => other !== index)] : positions;
+}
+
+/** What `txArrowPositions` needs: the arrow inset, the origin, the overlay size and the room around them. */
+export interface TxArrowRoom {
+  /** Smallest distance in px from an overlay edge to the arrow centre (see `txArrowInset`). */
+  inset: number;
+  /** Position and size of the origin element, in px. */
+  origin: TxOverlayBox;
+  /** Size of the overlay pane, in px. */
+  pane: TxOverlaySize;
+  /** Edges the overlay must stay inside; a move never pushes it past them. */
+  bounds?: TxOverlayBounds;
+  /** Whether the overlay is laid out right to left. */
+  rtl?: boolean;
+}
+
+function roomOutward(room: TxArrowRoom, across: boolean, towardStart: boolean): number {
+  const { origin, bounds } = room;
+  if (!bounds) {
+    return Infinity;
+  }
+  if (across) {
+    return towardStart ? origin.left - bounds.left : bounds.right - origin.left - origin.width;
+  }
+  return towardStart ? origin.top - bounds.top : bounds.bottom - origin.top - origin.height;
+}
+
+/**
+ * Moves `-start` and `-end` positions outward when the arrow, kept `inset` px away from the overlay edge,
+ * would miss the origin centre, so that it still points at it; other positions stay as they are.
+ */
+export function txArrowPositions(positions: ConnectedPosition[], room: TxArrowRoom): ConnectedPosition[] {
+  return positions.map((position) => {
+    const placement = placementFromPosition(position);
+    if (!placement) {
+      return position;
+    }
+    const { side, align } = parsePlacement(placement);
+    const across = side === 'top' || side === 'bottom';
+    const reach = Math.min(room.inset, (across ? room.pane.width : room.pane.height) / 2);
+    const direction = (align === 'start' ? -1 : 1) * (across && room.rtl ? -1 : 1);
+    const wanted = Math.max(0, reach - (across ? room.origin.width : room.origin.height) / 2);
+    const shift = Math.min(wanted, Math.max(0, roomOutward(room, across, direction < 0)));
+    if (align === 'center' || shift === 0) {
+      return position;
+    }
+    const outward = direction * shift;
+    return across ? { ...position, offsetX: (position.offsetX ?? 0) + outward } : { ...position, offsetY: (position.offsetY ?? 0) + outward };
+  });
+}
+
+/**
+ * Smallest distance in px from an overlay edge to the centre of its arrow that keeps the arrow off the
+ * rounded corner: the corner radius of the panel (plus its border when the arrow is drawn inside it) and the
+ * width of the arrow; 0 without an arrow.
+ */
+export function txArrowInset(panel: Element | null | undefined, arrow: Element | null | undefined): number {
+  if (!panel || !(arrow instanceof HTMLElement) || !arrow.offsetWidth) {
+    return 0;
+  }
+  const style = panel.ownerDocument.defaultView?.getComputedStyle(panel);
+  const radius = parseFloat(style?.borderTopLeftRadius ?? '');
+  const border = parseFloat(style?.borderTopWidth ?? '');
+  const inside = panel.contains(arrow) && Number.isFinite(border) ? border : 0;
+  return (Number.isFinite(radius) ? radius : 0) + inside + arrow.offsetWidth;
 }

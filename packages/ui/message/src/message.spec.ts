@@ -7,13 +7,13 @@ import { Tectra } from '@tectra-ng/themes';
 import { TxInput } from '@tectra-ng/ui/input';
 import { TxFieldError } from './field-error.component';
 import { TxFieldHint } from './field-hint.component';
-import { TxMessageCloseIconTemplate, TxMessageIconTemplate } from './message-templates.directive';
+import { TxMessageActions, TxMessageCloseIconTemplate, TxMessageIconTemplate } from './message-templates.directive';
 import { TxMessage } from './message.component';
 import { TxMessageSeverity } from './message.types';
 import { TX_ICONS, provideTxIcons } from '@tectra-ng/icons';
 
 @Component({
-  imports: [TxMessage, TxMessageIconTemplate, TxMessageCloseIconTemplate],
+  imports: [TxMessage, TxMessageIconTemplate, TxMessageCloseIconTemplate, TxMessageActions],
   template: `
     <tx-message
       id="first"
@@ -25,9 +25,10 @@ import { TX_ICONS, provideTxIcons } from '@tectra-ng/icons';
       [closable]="true"
       [life]="life()"
       [dt]="{ root: { gap: '20px' } }"
-      [pt]="{ root: { class: 'own-root' }, content: { class: 'own-content' } }"
+      [pt]="{ root: { class: 'own-root' }, content: { class: 'own-content' }, actions: { class: 'own-actions' } }"
       (closed)="closedCount = closedCount + 1"
-      >Projected</tx-message
+      ><span class="extra">Projected</span><button type="button" class="retry" txMessageActions>Retry</button
+      ><button type="button" class="later" txMessageActions>Later</button></tx-message
     >
     <tx-message id="templated" [unstyled]="true" [closable]="true" (closed)="closedCount = closedCount + 1">
       <ng-template txMessageIcon><b class="own-icon">!</b></ng-template>
@@ -79,7 +80,8 @@ describe('TxMessage', () => {
     expect(host.getAttribute('data-size')).toBe('small');
     expect(host.getAttribute('data-variant')).toBe('outlined');
     expect(host.getAttribute('role')).toBe('alert');
-    expect(host.querySelector('.tx-message__content')?.textContent?.trim()).toBe('Domain is not verified');
+    expect(host.querySelector('.tx-message__content')?.textContent?.trim()).toBe('Domain is not verified Projected');
+    expect(host.querySelector('.tx-message__content .extra')).not.toBeNull();
     expect(host.querySelector('.tx-message__icon tx-icon')?.getAttribute('data-icon')).toBe('pi-exclamation-triangle');
     expect(host.querySelector('.tx-message__icon svg path')).not.toBeNull();
   });
@@ -128,6 +130,15 @@ describe('TxMessage', () => {
     fixture.detectChanges();
     expect(message().classList).toContain('tx-message--closing');
     vi.useRealTimers();
+  });
+
+  it('puts the actions at the end, before the close button, and leaves them out when there are none', () => {
+    const actions = message().querySelector('.tx-message__actions') as HTMLElement;
+    expect(Array.from(actions.children).map((child) => child.className)).toEqual(['retry', 'later']);
+    expect(actions.classList).toContain('own-actions');
+    expect(actions.previousElementSibling?.classList).toContain('tx-message__content');
+    expect(actions.nextElementSibling?.classList).toContain('tx-message__close');
+    expect(message('templated').querySelector('.tx-message__actions')).toBeNull();
   });
 
   it('applies dt and pt', () => {

@@ -28,7 +28,7 @@ const PRODUCTS: Product[] = [
   imports: [TxDataView, TxDataViewList, TxIcon, TxAmount],
   template: `
     <tx-data-view ariaLabel="Products" [value]="products">
-      <ng-template txDataViewList let-items>
+      <ng-template txDataViewList [txDataViewListOf]="products" let-items>
         <ul class="list">
           @for (product of items; track product.id) {
             <li class="row">

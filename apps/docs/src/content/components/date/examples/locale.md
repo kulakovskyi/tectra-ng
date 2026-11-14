@@ -1,0 +1,1 @@
+`txDate` follows the tectra locale. Without a pattern it shows a medium date; `TX_DATE_STYLES` and any `Intl.DateTimeFormat` options give the other forms in the same language. This example has its own `TxLocaleService`, so switching it here leaves the rest of the site alone.

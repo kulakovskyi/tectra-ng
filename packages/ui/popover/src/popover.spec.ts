@@ -158,8 +158,8 @@ describe('TxPopover', () => {
     <button id="before">Before</button>
     <button id="anchor" [txPopoverTrigger]="pop">Open</button>
     <button id="after">After</button>
-    <tx-popover #pop panelClass="own-pane" closeButton [autoFocus]="autoFocus()" (closed)="reasons.push($event)">
-      <span txPopoverHeader>Custom title</span>
+    <tx-popover #pop panelClass="own-pane" header="Custom title" closeButton [autoFocus]="autoFocus()" (closed)="reasons.push($event)">
+      <span txPopoverHeader class="header-extra">Beta</span>
       <button id="one">One</button>
       <button id="two">Two</button>
       <div txPopoverFooter><button id="three">Three</button></div>
@@ -215,13 +215,18 @@ describe('TxPopover focus and API', () => {
     document.querySelector('.cdk-overlay-container')?.remove();
   });
 
-  it('focuses the first content control, names itself by the header slot and adds the pane class', async () => {
+  it('focuses the first content control, names itself by the title only and adds the pane class', async () => {
     el('#anchor').click();
     await settle();
     const dialog = panel() as HTMLElement;
     expect(document.activeElement?.id).toBe('one');
     expect(dialog.closest('.tx-popover-pane')?.classList).toContain('own-pane');
     expect(document.getElementById(dialog.getAttribute('aria-labelledby') ?? '')?.textContent?.trim()).toBe('Custom title');
+    const extra = dialog.querySelector('.header-extra') as HTMLElement;
+    expect(extra.closest('.tx-popover__title')).toBeNull();
+    expect(extra.parentElement?.classList).toContain('tx-popover__header');
+    expect(extra.previousElementSibling?.classList).toContain('tx-popover__title');
+    expect(extra.nextElementSibling?.classList).toContain('tx-popover__close');
     expect(dialog.querySelector('.tx-popover__close')?.classList).not.toContain('tx-popover__close--floating');
     expect(fixture.componentInstance.pop().isOpen()).toBe(true);
     fixture.componentInstance.pop().updatePosition();
@@ -255,9 +260,18 @@ describe('TxPopover focus and API', () => {
   it('focuses the panel itself, or nothing', async () => {
     fixture.componentInstance.autoFocus.set('panel');
     await settle();
+    document.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, buttons: 1, detail: 1 }));
     el('#anchor').click();
     await settle();
     expect(document.activeElement).toBe(panel());
+    expect(panel()?.hasAttribute('data-keyboard')).toBe(false);
+    el('#anchor').click();
+    await settle();
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    el('#anchor').click();
+    await settle();
+    expect(document.activeElement).toBe(panel());
+    expect(panel()?.hasAttribute('data-keyboard')).toBe(true);
     el('#anchor').click();
     await settle();
     fixture.componentInstance.autoFocus.set('none');
@@ -304,5 +318,13 @@ describe('TxPopover focus and API', () => {
     expect(solo.isOpenFor(el('#spot-a'))).toBe(true);
     fixture.destroy();
     expect(fixture.componentInstance.soloReasons).toEqual([]);
+  });
+});
+
+describe('popover content directive', () => {
+  it('narrows its template context', () => {
+    const close = () => undefined;
+    expect(TxPopoverContent.ngTemplateContextGuard({} as TxPopoverContent, { $implicit: close, close })).toBe(true);
+    expect(TxPopoverContent.ngTemplateContextGuard({} as TxPopoverContent, undefined)).toBe(false);
   });
 });

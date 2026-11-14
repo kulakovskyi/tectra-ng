@@ -556,3 +556,10 @@ describe('TxCarousel recompiled by TestBed', () => {
     expect(Array.from(plain.nativeElement.querySelectorAll('.dot')).map((dot) => (dot as HTMLElement).textContent)).toEqual(['1*', '2']);
   });
 });
+
+describe('carousel item template directive', () => {
+  it('narrows its template context', () => {
+    expect(TxCarouselItemTemplate.ngTemplateContextGuard({} as TxCarouselItemTemplate<string>, { $implicit: 'a', index: 0, active: true })).toBe(true);
+    expect(TxCarouselItemTemplate.ngTemplateContextGuard({} as TxCarouselItemTemplate<string>, undefined)).toBe(false);
+  });
+});

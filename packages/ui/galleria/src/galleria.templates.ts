@@ -1,19 +1,34 @@
-import { Directive, TemplateRef, inject } from '@angular/core';
+import { Directive, TemplateRef, inject, input } from '@angular/core';
 import { TxGalleriaIndicatorContext, TxGalleriaItemContext, TxGalleriaThumbnailContext } from './galleria.types';
 
 @Directive({ selector: 'ng-template[txGalleriaItem]' })
-export class TxGalleriaItemTemplate {
-  readonly template = inject<TemplateRef<TxGalleriaItemContext>>(TemplateRef);
+export class TxGalleriaItemTemplate<T> {
+  readonly template = inject<TemplateRef<TxGalleriaItemContext<T>>>(TemplateRef);
+  readonly txGalleriaItemOf = input<readonly T[] | null | undefined>(undefined);
+
+  static ngTemplateContextGuard<T>(_directive: TxGalleriaItemTemplate<T>, context: unknown): context is TxGalleriaItemContext<T> {
+    return !!context;
+  }
 }
 
 @Directive({ selector: 'ng-template[txGalleriaThumbnail]' })
-export class TxGalleriaThumbnailTemplate {
-  readonly template = inject<TemplateRef<TxGalleriaThumbnailContext>>(TemplateRef);
+export class TxGalleriaThumbnailTemplate<T> {
+  readonly template = inject<TemplateRef<TxGalleriaThumbnailContext<T>>>(TemplateRef);
+  readonly txGalleriaThumbnailOf = input<readonly T[] | null | undefined>(undefined);
+
+  static ngTemplateContextGuard<T>(_directive: TxGalleriaThumbnailTemplate<T>, context: unknown): context is TxGalleriaThumbnailContext<T> {
+    return !!context;
+  }
 }
 
 @Directive({ selector: 'ng-template[txGalleriaCaption]' })
-export class TxGalleriaCaptionTemplate {
-  readonly template = inject<TemplateRef<TxGalleriaItemContext>>(TemplateRef);
+export class TxGalleriaCaptionTemplate<T> {
+  readonly template = inject<TemplateRef<TxGalleriaItemContext<T>>>(TemplateRef);
+  readonly txGalleriaCaptionOf = input<readonly T[] | null | undefined>(undefined);
+
+  static ngTemplateContextGuard<T>(_directive: TxGalleriaCaptionTemplate<T>, context: unknown): context is TxGalleriaItemContext<T> {
+    return !!context;
+  }
 }
 
 @Directive({ selector: 'ng-template[txGalleriaIndicator]' })

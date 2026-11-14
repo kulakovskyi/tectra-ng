@@ -11,8 +11,10 @@ interface Release {
   imports: [TxTimeline, TxTimelineContent, TxTimelineOpposite],
   template: `
     <tx-timeline ariaLabel="Releases" [value]="releases" [pt]="pt">
-      <ng-template txTimelineOpposite let-release>{{ release.date }}</ng-template>
-      <ng-template txTimelineContent let-release>
+      <ng-template txTimelineOpposite [txTimelineOppositeOf]="releases" let-release>{{
+        release.date
+      }}</ng-template>
+      <ng-template txTimelineContent [txTimelineContentOf]="releases" let-release>
         <strong>{{ release.version }}</strong>
       </ng-template>
     </tx-timeline>

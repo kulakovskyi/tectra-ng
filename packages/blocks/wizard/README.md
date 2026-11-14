@@ -67,7 +67,7 @@ Give each step `animate.enter="tx-wizard-step--enter"` to rise in, and each scen
 | txWizardHeader | `tx-wizard-layout`: top of the step column — a brand row and the progress |
 | txWizardBody | `tx-wizard-layout`: the step |
 | txWizardFooter | `tx-wizard-layout`: under the step, usually `tx-wizard-footer` |
-| txWizardVisual | `tx-wizard-layout`: the sticky right column (a band on top below 1024px), usually `tx-wizard-stage` |
+| txWizardVisual | `tx-wizard-layout`: the right column, as tall as the step (a band on top below 1024px), usually `tx-wizard-stage`, which keeps its scene in view while a long step scrolls |
 | txWizardBackdrop | `tx-wizard-stage`: a decorative layer behind the scenes |
 | default | `tx-wizard-stage`: the scenes, hidden from screen readers |
 

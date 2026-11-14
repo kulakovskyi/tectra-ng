@@ -33,6 +33,7 @@ export const messageTokens = {
     transitionDuration: '0.2s',
   },
   icon: { size: '28px', fontSize: '14px', tint: '15%' },
+  actions: { gap: '8px' },
   closeButton: {
     size: '26px',
     borderRadius: tokenRef('radius-md'),

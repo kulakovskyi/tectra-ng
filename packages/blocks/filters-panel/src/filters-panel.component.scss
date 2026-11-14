@@ -398,7 +398,7 @@
   font-size: var(--tx-filters-panel-menu-title-font-size);
   font-weight: var(--tx-filters-panel-menu-title-font-weight);
   letter-spacing: var(--tx-filters-panel-menu-title-letter-spacing);
-  text-transform: uppercase;
+  text-transform: var(--tx-filters-panel-menu-title-text-transform);
 }
 
 .tx-filters-panel-menu[data-styled] .tx-filters-panel-menu__counter {

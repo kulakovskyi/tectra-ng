@@ -9,7 +9,9 @@ import { TxSteps, TxStepsItem, TxStepsItemTemplate } from '@tectra-ng/ui/stepper
     <tx-steps ariaLabel="Order status" [items]="items" [activeIndex]="2">
       <ng-template txStepsItem let-item let-done="done" let-active="active">
         <span class="own" [class.own--done]="done" [class.own--active]="active">
-          <span class="own__marker"><tx-icon [name]="done ? 'check' : active ? 'clock' : 'circle'" /></span>
+          <span class="own__marker"
+            ><tx-icon [name]="done ? 'check' : active ? 'clock' : 'circle'"
+          /></span>
           {{ item.label }}
         </span>
       </ng-template>

@@ -79,6 +79,12 @@ describe('TxVirtualScroller', () => {
     await render();
   });
 
+  it('narrows the context of the item and content templates', () => {
+    const context = { $implicit: 'a', index: 0, count: 1, first: true, last: true, even: true, odd: false };
+    expect(TxVirtualScrollerItem.ngTemplateContextGuard({} as TxVirtualScrollerItem<string>, context)).toBe(true);
+    expect(TxVirtualScrollerContent.ngTemplateContextGuard({} as TxVirtualScrollerContent<string>, undefined)).toBe(false);
+  });
+
   it('renders only the visible window with a spacer of the full size', () => {
     expect(scroller().getAttribute('role')).toBe('region');
     expect(scroller().getAttribute('tabindex')).toBe('0');
@@ -450,5 +456,12 @@ describe('TxVirtualScroller recompiled by TestBed', () => {
       '0/100/0/20/15',
     );
     expect(fixture.nativeElement.querySelector('.own-icon')?.textContent).toBe('Wait');
+  });
+});
+
+describe('virtual scroller loader directive', () => {
+  it('narrows its template context', () => {
+    expect(TxVirtualScrollerLoader.ngTemplateContextGuard({} as TxVirtualScrollerLoader, { $implicit: 0, index: 0, count: 1 })).toBe(true);
+    expect(TxVirtualScrollerLoader.ngTemplateContextGuard({} as TxVirtualScrollerLoader, undefined)).toBe(false);
   });
 });

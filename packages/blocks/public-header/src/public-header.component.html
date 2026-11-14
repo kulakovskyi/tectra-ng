@@ -5,7 +5,7 @@
     @if (logo(); as logo) {
       <img class="tx-public-header__logo" alt="" [src]="logo" [class]="passThrough().logo?.class" [style]="passThrough().logo?.style" />
     }
-    <span>{{ brand() }}</span>
+    <span class="tx-public-header__name">{{ brand() }}</span>
   }
 </ng-template>
 <header class="tx-public-header__bar" [class]="passThrough().bar?.class" [style]="passThrough().bar?.style">

@@ -33,6 +33,7 @@ describe('TxActionTile', () => {
     const root = fixture.nativeElement.querySelector('tx-action-tile') as HTMLElement;
     const button = root.querySelector('button') as HTMLButtonElement;
     expect(root.getAttribute('data-styled')).toBe('true');
+    expect(root.hasAttribute('title')).toBe(false);
     expect(root.style.getPropertyValue('--tx-action-tile-icon-size')).toBe('40px');
     expect(button.querySelector('.tx-action-tile__icon tx-icon')?.getAttribute('data-icon')).toBe('envelope');
     expect(button.querySelector('.tx-action-tile__title')?.classList).toContain('own-title');

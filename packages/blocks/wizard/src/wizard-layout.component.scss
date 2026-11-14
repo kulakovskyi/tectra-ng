@@ -10,8 +10,6 @@
   }
 
   :host(#{$mode}) .tx-wizard-layout__visual {
-    position: sticky;
-    top: 0;
     order: 0;
   }
 
@@ -22,7 +20,7 @@
     }
 
     .tx-wizard-layout__visual {
-      height: var(--tx-wizard-layout-min-height);
+      min-height: var(--tx-wizard-layout-min-height);
     }
   }
 }

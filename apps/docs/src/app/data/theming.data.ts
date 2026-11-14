@@ -84,15 +84,17 @@ provideTectra({ preset: Brand });`,
     icon: 'moon',
     title: 'Switch at runtime',
     file: 'theme.ts',
-    text: 'Swap the preset or the mode while the app runs; every component follows.',
+    text: 'Change the style, primary, surface or mode while the app runs; every component follows. presetOverrides keeps your own changes, storageKey remembers the choice, and the Theme Configurator block is a ready picker.',
     language: 'typescript',
-    code: `import { createTectraPreset, softStyle } from '@tectra-ng/themes';
+    code: `import { softStyle } from '@tectra-ng/themes';
+
+provideTectra({ preset: Tectra, storageKey: 'app-theme', styles: [softStyle] });
 
 const theme = inject(TxThemeService);
 
-theme.applyPreset(createTectraPreset({ style: softStyle, primary: 'violet' }));
+theme.updateTheme({ style: softStyle, primary: 'violet' });
 theme.setMode('dark');
-theme.toggleMode();`,
+theme.primary(); // 'violet'`,
   },
   {
     icon: 'file',

@@ -30,7 +30,7 @@
       [txPopoverTrigger]="themePanel"
     ></button>
     <tx-popover #themePanel [placement]="'bottom-end'" [arrow]="false" [ariaLabel]="'Theme settings'">
-      <docs-theme-configurator />
+      <tx-theme-configurator [styles]="themeStyles" />
     </tx-popover>
     <button
       txButton

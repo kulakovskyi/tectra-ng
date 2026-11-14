@@ -1,1 +1,1 @@
-Without `text` the message shows its content — links, buttons, several lines.
+The content follows the `text` (or stands alone without it) — links, buttons, several lines.

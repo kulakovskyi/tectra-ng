@@ -95,6 +95,7 @@ export class TxDialogTitle {
     '[class]': 'passThrough().header?.class',
     '[style]': 'passThrough().header?.style',
     '[attr.data-styled]': '!isUnstyled() || null',
+    '[attr.title]': 'null',
     '[class.tx-dialog-header--draggable]': 'draggable()',
     '[class.tx-dialog-header--drawer]': 'inDrawer()',
     '(pointerdown)': 'ref()?.dragFrom($event)',

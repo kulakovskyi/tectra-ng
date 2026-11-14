@@ -1,7 +1,7 @@
 ---
 category: Overlay
 tokens: menu
-examples: basic, popup, links, tiered, context-menu, template, design-tokens
+examples: basic, popup, arrow, links, tiered, context-menu, template, design-tokens
 ---
 # Menu
 

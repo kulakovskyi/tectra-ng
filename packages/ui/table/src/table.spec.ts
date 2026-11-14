@@ -1,10 +1,23 @@
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { BehaviorSubject } from 'rxjs';
 import { TxTableActions } from './table-actions.component';
 import { TxTable } from './table.component';
-import { TxTableAction, TxTableActionsTemplate, TxTableCell, TxTableEmpty, TxTableExpansion } from './table.templates';
+import {
+  TxTableAction,
+  TxTableActionsTemplate,
+  TxTableCard,
+  TxTableCell,
+  TxTableEditor,
+  TxTableEmpty,
+  TxTableExpansion,
+  TxTableFooterCell,
+  TxTableGroupFooter,
+  TxTableGroupHeader,
+  TxTableHeaderCell,
+} from './table.templates';
 import { TxSortMeta, TxSortOrder, TxTableColumn, TxTableLazyLoadEvent, TxTableSelectionMode, TxTableSortEvent } from './table.types';
 import { actionIdOf, columnLabel, compareValues, mergeColumnOrder, nextSortOrder, pxOf, resolveField, rowKeyOf, sortRows, writeField } from './table.utils';
 
@@ -59,7 +72,7 @@ const PEOPLE: Person[] = [
       (selectAllChange)="selectAll.push($event)"
     >
       <span txTableToolbar class="toolbar-content">Filters</span>
-      <ng-template txTableCell="name" let-person>
+      <ng-template txTableCell="name" [txTableCellOf]="rows()" let-person>
         <strong class="name">{{ person.name }}</strong>
       </ng-template>
       <ng-template txTableCell="team.name" let-value="value">
@@ -112,6 +125,23 @@ class Host {
   readonly edited: number[] = [];
   readonly deleted: number[] = [];
 }
+
+describe('table template directives', () => {
+  it('narrow their template contexts', () => {
+    const context = { $implicit: PEOPLE[0] };
+    expect(TxTableCell.ngTemplateContextGuard({} as TxTableCell<Person>, context)).toBe(true);
+    expect(TxTableEditor.ngTemplateContextGuard({} as TxTableEditor<Person>, context)).toBe(true);
+    expect(TxTableCard.ngTemplateContextGuard({} as TxTableCard<Person>, context)).toBe(true);
+    expect(TxTableExpansion.ngTemplateContextGuard({} as TxTableExpansion<Person>, context)).toBe(true);
+    expect(TxTableActionsTemplate.ngTemplateContextGuard({} as TxTableActionsTemplate<Person>, context)).toBe(true);
+    expect(TxTableGroupHeader.ngTemplateContextGuard({} as TxTableGroupHeader<Person>, context)).toBe(true);
+    expect(TxTableGroupFooter.ngTemplateContextGuard({} as TxTableGroupFooter<Person>, context)).toBe(true);
+    expect(TxTableGroupFooter.ngTemplateContextGuard({} as TxTableGroupFooter<Person>, undefined)).toBe(false);
+    expect(TxTableHeaderCell.ngTemplateContextGuard({} as TxTableHeaderCell, { $implicit: { field: 'name' } })).toBe(true);
+    expect(TxTableFooterCell.ngTemplateContextGuard({} as TxTableFooterCell, { $implicit: { field: 'name' } })).toBe(true);
+    expect(TxTableEmpty.ngTemplateContextGuard({} as TxTableEmpty, { $implicit: 3 })).toBe(true);
+  });
+});
 
 describe('table utils', () => {
   it('reads nested fields and compares values', () => {
@@ -306,6 +336,16 @@ describe('TxTable', () => {
       { first: 2, rows: 2, sortField: 'age', sortOrder: 'asc', multiSortMeta: [{ field: 'age', order: 'asc' }], filters: {}, globalFilter: '' },
     ]);
     expect(names()).toEqual(['Olena', 'Andrii']);
+  });
+
+  it('skips a lazyLoad that asks for the same data as the last one', async () => {
+    host.lazy.set(true);
+    await stable();
+    const table = fixture.debugElement.query(By.directive(TxTable)).componentInstance as TxTable<Person>;
+    table.emitLazyLoad();
+    table.emitLazyLoad();
+    table.clearFilters();
+    expect(host.loads.length).toBe(1);
   });
 
   it('selects rows with checkboxes and the select-all checkbox', async () => {

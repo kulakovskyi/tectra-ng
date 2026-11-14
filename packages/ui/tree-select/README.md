@@ -7,7 +7,7 @@ Pick from a hierarchy — folders, categories, org units. A select whose panel i
 |---|---|
 | options | Nodes: `{ key, label, children?, icon?, selectable?, disabled?, data? }` |
 | selectionMode | `single`, `multiple` or `checkbox` (a parent checks its branch; partly checked parents show a dash) |
-| display | With several values: `comma` or `chip` |
+| display | With several values: `comma` or `chip` (removable chips on one line; the ones that do not fit are counted in a `+N` chip) |
 | expandedKeys | Keys of the open nodes; two-way with `[(expandedKeys)]` |
 | filter | Search field in the panel |
 | filterBy | Fields searched, comma separated (`label` by default, e.g. `label, data.code`) |

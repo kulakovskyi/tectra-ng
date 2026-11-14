@@ -1,7 +1,8 @@
-import { DOCUMENT, Injectable, inject, signal } from '@angular/core';
+import { DOCUMENT, Injectable, PLATFORM_ID, computed, effect, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { TxThemeMode, TxThemeService } from '@tectra-ng/core/config';
-import { TECTRA_STYLES, TectraStyleName, createTectraPreset } from '@tectra-ng/themes';
-import { PRIMARY_ORDER, SEVERITY_PALETTES, SURFACE_PALETTES, TectraPrimary, TectraSurface } from '@tectra-ng/tokens';
+import { TECTRA_STYLES, Tectra, TectraStyleName } from '@tectra-ng/themes';
+import { SEVERITY_PALETTES, TectraPrimary, TectraSurface } from '@tectra-ng/tokens';
 import { logoSvg } from './logo-mark/logo-blocks.data';
 
 export interface DocsThemeChoice {
@@ -12,7 +13,8 @@ export interface DocsThemeChoice {
   mode: TxThemeMode;
 }
 
-const STORAGE_KEY = 'tx-docs-theme';
+export const DOCS_THEME_STORAGE_KEY = 'tx-docs-theme';
+export const DOCS_THEME_STYLES = Object.values(TECTRA_STYLES);
 
 function mixHex(first: string, second: string, weight: number): string {
   const channel = (hex: string, index: number) => parseInt(hex.slice(1 + index * 2, 3 + index * 2), 16);
@@ -25,90 +27,38 @@ function mixHex(first: string, second: string, weight: number): string {
 export class DocsThemeSettings {
   private txThemeService = inject(TxThemeService);
   private document = inject(DOCUMENT);
+  private browser = isPlatformBrowser(inject(PLATFORM_ID));
 
-  readonly style = signal<TectraStyleName>('tectra');
-  readonly primary = signal<TectraPrimary>('blue');
-  readonly surface = signal<TectraSurface>('ink');
+  readonly style = computed(() => this.txThemeService.style().name as TectraStyleName);
+  readonly primary = this.txThemeService.primary;
+  readonly surface = this.txThemeService.surface;
   readonly ripple = this.txThemeService.ripple;
   readonly mode = this.txThemeService.mode;
 
-  restore(): void {
-    this.document.documentElement.style.removeProperty('color-scheme');
-    const saved = this.read();
-    if (!saved) {
-      return;
-    }
-    if (saved.mode === 'light' || saved.mode === 'dark') {
-      this.txThemeService.setMode(saved.mode);
-    }
-    if (saved.style && saved.style in TECTRA_STYLES) {
-      this.style.set(saved.style);
-    }
-    if (saved.primary && PRIMARY_ORDER.includes(saved.primary)) {
-      this.primary.set(saved.primary);
-    }
-    if (saved.surface && saved.surface in SURFACE_PALETTES) {
-      this.surface.set(saved.surface);
-    }
-    if (typeof saved.ripple === 'boolean') {
-      this.txThemeService.setRipple(saved.ripple);
-    }
-    this.apply();
+  constructor() {
+    effect(() => {
+      const preset = this.txThemeService.preset();
+      if (this.browser && preset && preset !== Tectra) {
+        const { base, contrast } = preset.light.primary;
+        const svg = logoSvg({ tile: base, contrast, soft: mixHex(contrast, base, 0.72), accent: SEVERITY_PALETTES.orange[300] });
+        this.document.querySelector('link[rel="icon"][type="image/svg+xml"]')?.setAttribute('href', `data:image/svg+xml,${encodeURIComponent(svg)}`);
+      }
+    });
   }
 
-  update(choice: Partial<Omit<DocsThemeChoice, 'ripple'>>): void {
-    if (choice.style) {
-      this.style.set(choice.style);
-    }
-    if (choice.primary) {
-      this.primary.set(choice.primary);
-    }
-    if (choice.surface) {
-      this.surface.set(choice.surface);
-    }
-    this.apply();
-    this.save();
+  restore(): void {
+    this.document.documentElement.style.removeProperty('color-scheme');
+  }
+
+  update(choice: Partial<Omit<DocsThemeChoice, 'ripple' | 'mode'>>): void {
+    this.txThemeService.updateTheme({ style: choice.style && TECTRA_STYLES[choice.style], primary: choice.primary, surface: choice.surface });
   }
 
   setRipple(enabled: boolean): void {
     this.txThemeService.setRipple(enabled);
-    this.save();
   }
 
   toggleMode(): void {
     this.txThemeService.toggleMode();
-    this.save();
-  }
-
-  private apply(): void {
-    const preset = createTectraPreset({ style: TECTRA_STYLES[this.style()], primary: this.primary(), surface: this.surface() });
-    this.txThemeService.applyPreset(preset);
-    const { base, contrast } = preset.light.primary;
-    const svg = logoSvg({ tile: base, contrast, soft: mixHex(contrast, base, 0.72), accent: SEVERITY_PALETTES.orange[300] });
-    this.document.querySelector('link[rel="icon"][type="image/svg+xml"]')?.setAttribute('href', `data:image/svg+xml,${encodeURIComponent(svg)}`);
-  }
-
-  private read(): Partial<DocsThemeChoice> | null {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? (JSON.parse(raw) as Partial<DocsThemeChoice>) : null;
-    } catch {
-      return null;
-    }
-  }
-
-  private save(): void {
-    const choice: DocsThemeChoice = {
-      style: this.style(),
-      primary: this.primary(),
-      surface: this.surface(),
-      ripple: this.ripple(),
-      mode: this.mode(),
-    };
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(choice));
-    } catch {
-      return;
-    }
   }
 }

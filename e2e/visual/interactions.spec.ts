@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import type { Locator } from '@playwright/test';
 import { expect, test } from './fixtures';
 import { layoutViewport } from './helpers';
 
@@ -1277,4 +1278,73 @@ test('copy buttons turn the copy icon into a check', async ({ page, context }) =
   await button.click();
   await expect.poll(() => opacity('.tx-copy-swap__icon--done')).toBe('1');
   await expect.poll(() => opacity('.tx-copy-swap__icon--idle')).toBe('0');
+});
+
+test.describe('overlay arrows', () => {
+  const arrowGeometry = (arrowSelector: string, panelSelector: string) =>
+    async (pane: Locator) =>
+      pane.evaluate(
+        (element, selectors) => {
+          const arrow = element.querySelector(selectors.arrow) as HTMLElement;
+          const panel = element.querySelector(selectors.panel) as HTMLElement;
+          const box = arrow.getBoundingClientRect();
+          const frame = panel.getBoundingClientRect();
+          const radius = parseFloat(getComputedStyle(panel).borderTopLeftRadius);
+          return { center: box.left + box.width / 2, left: frame.left, right: frame.right, radius, size: arrow.offsetWidth };
+        },
+        { arrow: arrowSelector, panel: panelSelector },
+      );
+
+  test('the split button menu points its arrow at the menu button, clear of the rounded corner', async ({ page }) => {
+    await page.goto('/components/split-button');
+    const button = page.locator('split-button-basic-example .tx-split-button__menu-button');
+    await button.click();
+    const pane = page.locator('.tx-overlay-pane').filter({ has: page.locator('.tx-menu-popup') }).last();
+    await expect(pane.getByRole('menu')).toBeVisible();
+    const origin = await button.boundingBox();
+    const geometry = await arrowGeometry('.tx-menu-popup__arrow', 'tx-menu-list')(pane);
+    expect(Math.abs(geometry.center - ((origin?.x ?? 0) + (origin?.width ?? 0) / 2))).toBeLessThan(1);
+    expect(geometry.right - geometry.center).toBeGreaterThanOrEqual(geometry.radius + geometry.size - 1);
+    await page.keyboard.press('Escape');
+    await expect(button).toBeFocused();
+  });
+
+  test('a row action popover next to a small button keeps its arrow off the corner and on the button centre', async ({ page }) => {
+    await page.goto('/components/table');
+    const more = page.locator('table-row-actions-example .tx-table-actions__more').first();
+    await more.scrollIntoViewIfNeeded();
+    await more.click();
+    const pane = page.locator('.tx-popover-pane').last();
+    await expect(pane.locator('.tx-popover')).toBeVisible();
+    const origin = await more.boundingBox();
+    const geometry = await arrowGeometry('.tx-popover__arrow', '.tx-popover')(pane);
+    expect(Math.abs(geometry.center - ((origin?.x ?? 0) + (origin?.width ?? 0) / 2))).toBeLessThan(1);
+    expect(geometry.right - geometry.center).toBeGreaterThanOrEqual(geometry.radius + geometry.size - 1);
+  });
+
+  test('a tooltip arrow sits clear of the rounded corner in every placement', async ({ page }) => {
+    await page.goto('/components/tooltip');
+    const placements = ['top-start', 'top', 'top-end', 'bottom-start', 'bottom', 'bottom-end', 'left-start', 'left', 'left-end', 'right-start', 'right', 'right-end'];
+    for (const name of placements) {
+      const origin = page.locator('tooltip-placements-example').getByRole('button', { name, exact: true });
+      await origin.scrollIntoViewIfNeeded();
+      await origin.hover();
+      const tooltip = page.locator('tx-tooltip');
+      await expect(tooltip).toHaveCount(1);
+      const fit = await tooltip.evaluate((element) => {
+        const arrow = (element.querySelector('.tx-tooltip__arrow') as HTMLElement).getBoundingClientRect();
+        const body = element.getBoundingClientRect();
+        const radius = Math.min(parseFloat(getComputedStyle(element).borderTopLeftRadius), body.height / 2, body.width / 2);
+        const side = element.getAttribute('data-side');
+        const across = side === 'top' || side === 'bottom';
+        const center = across ? arrow.left + arrow.width / 2 - body.left : arrow.top + arrow.height / 2 - body.top;
+        const length = across ? body.width : body.height;
+        const half = (across ? arrow.width : arrow.height) / 2;
+        return { onStraight: center - half >= radius - 0.5 && center + half <= length - radius + 0.5, middle: Math.abs(center - length / 2) < 0.5 };
+      });
+      expect(fit.onStraight || fit.middle).toBe(true);
+      await page.mouse.move(0, 0);
+      await expect(tooltip).toHaveCount(0);
+    }
+  });
 });

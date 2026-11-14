@@ -2,6 +2,7 @@
 
 @include select-field.styles('.tx-tree-select');
 @include select-field.chips;
+@include select-field.chips-fit;
 
 .tx-tree-select__tree {
   overflow-y: auto;

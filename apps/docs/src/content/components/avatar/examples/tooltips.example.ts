@@ -16,6 +16,7 @@ import { TxAvatar, TxAvatarGroup } from '@tectra-ng/ui/avatar';
         <tx-avatar name="Sofia Melnyk" />
       </tx-avatar-group>
       <tx-avatar name="Andrii Koval" size="large" tooltip tooltipPlacement="right" />
+      <tx-avatar name="Oksana Lysenko" size="large" tooltip="none" />
     </div>
   `,
   styles: `

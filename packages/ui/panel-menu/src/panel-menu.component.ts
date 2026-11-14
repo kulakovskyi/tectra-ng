@@ -16,10 +16,21 @@ import {
   untracked,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, IsActiveMatchOptions, NavigationEnd, Router, RouterLink, containsTree } from '@angular/router';
+import {
+  ActivatedRoute,
+  IsActiveMatchOptions,
+  NavigationCancel,
+  NavigationEnd,
+  NavigationError,
+  NavigationSkipped,
+  NavigationStart,
+  Router,
+  RouterLink,
+  containsTree,
+} from '@angular/router';
 import { uniqueId } from '@tectra-ng/core/a11y';
 import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
-import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TxAnimationReplay, optionalBoolean } from '@tectra-ng/core/utils';
 import { injectTxIcons, provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraPanelMenuTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxBadge } from '@tectra-ng/ui/badge';
@@ -74,7 +85,7 @@ const EXACT_MATCH: IsActiveMatchOptions = { paths: 'exact', queryParams: 'exact'
 
 @Component({
   selector: 'tx-panel-menu',
-  imports: [NgTemplateOutlet, RouterLink, TxIcon, TxBadge],
+  imports: [NgTemplateOutlet, RouterLink, TxIcon, TxBadge, TxAnimationReplay],
   templateUrl: './panel-menu.component.html',
   styleUrl: './panel-menu.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -131,8 +142,15 @@ export class TxPanelMenu {
   private readonly url = this.router
     ? toSignal(
         this.router.events.pipe(
-          filter((event) => event instanceof NavigationEnd),
-          map(() => this.router?.url ?? ''),
+          filter(
+            (event) =>
+              event instanceof NavigationStart ||
+              event instanceof NavigationEnd ||
+              event instanceof NavigationCancel ||
+              event instanceof NavigationError ||
+              event instanceof NavigationSkipped,
+          ),
+          map((event) => (event instanceof NavigationStart ? event.url : (this.router?.url ?? ''))),
         ),
         { initialValue: this.router.url },
       )

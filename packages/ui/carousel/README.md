@@ -43,6 +43,13 @@ Shows a list of items a few at a time and pages through them with buttons, indic
 | txCarouselHeader | Content above the carousel |
 | txCarouselFooter | Content below the carousel |
 
+The item template takes the items only for typing — `<ng-template txCarouselItem [txCarouselItemOf]="products" let-product>` gives `product` the item type in strict templates; without it the item stays untyped.
+
+## Inputs — item template
+| Name | Description |
+|---|---|
+| txCarouselItemOf | `txCarouselItem`: the items, only for the type of `let-item` |
+
 ## Keyboard
 | Key | Action |
 |---|---|

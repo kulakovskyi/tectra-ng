@@ -4,4 +4,8 @@ import { TxToggleSwitchHandleContext } from './toggle-switch.types';
 @Directive({ selector: 'ng-template[txToggleSwitchHandle]' })
 export class TxToggleSwitchHandleTemplate {
   readonly templateRef = inject<TemplateRef<TxToggleSwitchHandleContext>>(TemplateRef);
+
+  static ngTemplateContextGuard(_directive: TxToggleSwitchHandleTemplate, context: unknown): context is TxToggleSwitchHandleContext {
+    return !!context;
+  }
 }

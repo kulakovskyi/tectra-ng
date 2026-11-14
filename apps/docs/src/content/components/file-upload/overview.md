@@ -2,7 +2,7 @@
 category: Form
 tokens: fileUpload
 import: TxFileUpload
-examples: basic, multiple, upload, auto, validation, basic-mode, form, templates, disabled, design-tokens
+examples: basic, multiple, upload, auto, uploaded-files, validation, basic-mode, form, templates, disabled, design-tokens
 ---
 # File upload
 

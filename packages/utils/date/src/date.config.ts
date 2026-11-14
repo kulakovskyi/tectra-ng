@@ -1,11 +1,12 @@
 import { InjectionToken, Provider } from '@angular/core';
+import { TX_DATE_STYLES } from './date.constants';
 import { TxDateFormatConfig } from './date.types';
 
-/** Default date format settings: `mediumDate`, `-` for an empty value, `en-US`, the local time zone. */
+/** Default date format settings: a medium date in the tectra locale, `-` for an empty value, the local time zone. */
 export const TX_DATE_FORMAT_DEFAULTS: TxDateFormatConfig = {
-  format: 'mediumDate',
+  format: TX_DATE_STYLES.date,
   empty: '-',
-  locale: 'en-US',
+  locale: undefined,
   timezone: undefined,
 };
 

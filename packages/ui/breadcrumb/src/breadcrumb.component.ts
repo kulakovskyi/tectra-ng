@@ -12,7 +12,7 @@ import { BREADCRUMB_ICON_DEFAULTS } from './breadcrumb.icons';
 import { BREADCRUMB_THEME } from './breadcrumb.theme';
 
 /** How an item is rendered: the current page, a router link, a plain link, a command button or plain text. */
-type TxBreadcrumbKind = 'current' | 'router' | 'url' | 'command' | 'text';
+type TxBreadcrumbKind = 'current' | 'disabled' | 'router' | 'url' | 'command' | 'text';
 
 /** An item prepared for rendering, with its kind and resolved icon. */
 interface TxBreadcrumbEntry {
@@ -92,7 +92,7 @@ export class TxBreadcrumb {
 
   private kindOf(item: TxBreadcrumbItem, current: boolean): TxBreadcrumbKind {
     if (current) return 'current';
-    if (item.disabled) return 'text';
+    if (item.disabled) return 'disabled';
     if (item.routerLink !== undefined && this.hasRouter) return 'router';
     if (item.url !== undefined || item.routerLink !== undefined) return 'url';
     if (item.command) return 'command';

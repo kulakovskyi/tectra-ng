@@ -28,21 +28,30 @@
       }
     </div>
   } @else {
-    @for (mode of layoutKey(); track mode) {
-      <div
-        class="tx-data-view__content"
-        [attr.aria-label]="ariaLabel() ?? null"
-        [attr.role]="ariaLabel() ? 'region' : null"
-        [class]="passThrough().content?.class"
-        [style]="passThrough().content?.style"
-      >
-        @if (activeTemplate(); as template) {
-          <ng-container [ngTemplateOutlet]="template.templateRef" [ngTemplateOutletContext]="itemsContext()" />
-        }
-      </div>
+    @switch (layout()) {
+      @case ('grid') {
+        <ng-container [ngTemplateOutlet]="content" />
+      }
+      @default {
+        <ng-container [ngTemplateOutlet]="content" />
+      }
     }
   }
 </div>
+
+<ng-template #content>
+  <div
+    class="tx-data-view__content"
+    [attr.aria-label]="ariaLabel() ?? null"
+    [attr.role]="ariaLabel() ? 'region' : null"
+    [class]="passThrough().content?.class"
+    [style]="passThrough().content?.style"
+  >
+    @if (activeTemplate(); as template) {
+      <ng-container [ngTemplateOutlet]="template.templateRef" [ngTemplateOutletContext]="itemsContext()" />
+    }
+  </div>
+</ng-template>
 
 @if (showPaginatorBottom()) {
   <ng-container [ngTemplateOutlet]="pager" [ngTemplateOutletContext]="{ $implicit: 'bottom' }" />

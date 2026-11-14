@@ -57,6 +57,10 @@ describe('TxSplitButton', () => {
     const menu = el('.cdk-overlay-container tx-menu-list');
     expect(menu.getAttribute('aria-label')).toBe('More actions');
     expect(toggle.getAttribute('aria-controls')).toBe(menu.id);
+    const popup = el('.cdk-overlay-container .tx-menu-popup');
+    expect(popup.getAttribute('data-side')).toBe('bottom');
+    expect(popup.querySelector('.tx-menu-popup__arrow')?.getAttribute('aria-hidden')).toBe('true');
+    expect(popup.style.getPropertyValue('--tx-menu-arrow-offset')).toContain('100% -');
     (menu.querySelectorAll('[role="menuitem"]')[1] as HTMLElement).click();
     await settle();
     expect(fixture.componentInstance.picked).toEqual(['template']);
@@ -76,13 +80,18 @@ describe('TxSplitButton', () => {
     expect(el('#outlined').hasAttribute('data-filled')).toBe(false);
   });
 
-  it('opens at the first item with Arrow Down', async () => {
+  it('opens at the first item with Arrow Down and gives focus back on Escape', async () => {
     const toggle = el('tx-split-button .tx-split-button__menu-button');
+    toggle.focus();
     toggle.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true }));
     await settle();
     const items = [...document.querySelectorAll('.cdk-overlay-container [role="menuitem"]')];
     expect(toggle.getAttribute('aria-expanded')).toBe('true');
     expect(document.activeElement).toBe(items[0]);
+    items[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+    await settle();
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+    expect(document.activeElement).toBe(toggle);
   });
 });
 

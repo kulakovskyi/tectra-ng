@@ -30,7 +30,7 @@ Switch between views, modes or filters. Three looks: `segmented` (equal items in
 | size | `small` or `medium` (segmented) |
 | orientation | `horizontal` or `vertical` (full-width tabs in a column) |
 | raised | Card background, ring and shadow — for tabs on the page background |
-| scrollable | Previous / next buttons when the tabs do not fit |
+| scrollable | Previous / next buttons: shown by themselves while the tabs do not fit; `true` keeps them on, `false` turns them off |
 | showNavigators | Shows the previous / next buttons of a scrollable list |
 | lazy | Renders only the active panel |
 | selectOnFocus | The arrow keys pick the tab at once |

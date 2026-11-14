@@ -5,7 +5,7 @@ export type TxMessageSize = 'small' | 'medium' | 'large';
 /** Look of `tx-message`: outlined, text only or simple. */
 export type TxMessageVariant = 'outlined' | 'text' | 'simple';
 /** Parts of `tx-message` that `pt` can style. */
-export type TxMessagePart = 'root' | 'icon' | 'content' | 'closeButton';
+export type TxMessagePart = 'root' | 'icon' | 'content' | 'actions' | 'closeButton';
 /** Tone of a field hint: neutral (`secondary`) or `success`. */
 export type TxFieldHintSeverity = 'secondary' | 'success';
 /** Parts of a field hint or error that `pt` can style. */

@@ -19,7 +19,7 @@ items: TxBreadcrumbItem[] = [{ label: 'Projects', routerLink: '/projects' }, { l
 | separator | `chevron` (default) or `slash` |
 | ariaLabel | Label of the navigation landmark ("Breadcrumb" by default, translated) |
 | dt | Design tokens of this instance (`breadcrumb`) |
-| pt | Classes and styles of the parts: `root`, `list`, `item`, `link`, `icon`, `label`, `separator` |
+| pt | Classes and styles of the parts: `root`, `list`, `item`, `link` (links, commands, the current page and disabled items), `text` (an item without a link or command), `icon`, `label`, `separator` |
 | ptOptions | How `pt` merges with the global pass-through |
 | unstyled | Removes the tectra styles |
 

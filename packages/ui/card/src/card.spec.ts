@@ -32,6 +32,7 @@ describe('TxCard', () => {
     expect(title.getAttribute('role')).toBe('heading');
     expect(title.getAttribute('aria-level')).toBe('2');
     expect(title.textContent).toBe('Weekly report');
+    expect(el('#report').hasAttribute('title')).toBe(false);
     expect(el('#report .tx-card__subtitle').textContent).toBe('Nov 3 – 9');
     expect(el('#report .tx-card__content').textContent).toContain('Visitors grew 12%.');
     expect(el('#report .tx-card__footer button')).not.toBeNull();

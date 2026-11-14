@@ -105,6 +105,7 @@ describe('TxWizard parts on their own', () => {
     const fixture = TestBed.createComponent(BareHost);
     await fixture.whenStable();
     const root = fixture.nativeElement as HTMLElement;
+    expect(root.querySelector('tx-wizard-step-head')?.hasAttribute('title')).toBe(false);
     expect(root.querySelector('.tx-wizard-progress__label')).toBeNull();
     expect(root.querySelector('.tx-wizard-progress__segments')?.getAttribute('aria-label')).toBe('Progress');
     const segments = Array.from(root.querySelectorAll('.tx-wizard-progress__segment'));
@@ -129,5 +130,31 @@ describe('TxWizard parts on their own', () => {
     expect(stage.querySelector('.tx-wizard-stage__number')).toBeNull();
     expect(stage.querySelector('.tx-wizard-stage__title')?.textContent?.trim()).toBe('Hello');
     expect(root.querySelectorAll('.tx-wizard-progress__segment')).toHaveLength(0);
+  });
+
+  it('keeps the caption element and replays its rise when the text changes', async () => {
+    const fixture = TestBed.createComponent(BareHost);
+    fixture.componentInstance.caption.set('First');
+    await fixture.whenStable();
+    const stage = (fixture.nativeElement as HTMLElement).querySelector('tx-wizard-stage') as HTMLElement;
+    const caption = stage.querySelector('.tx-wizard-stage__caption') as HTMLElement;
+    caption.classList.remove('tx-wizard-stage__caption--enter');
+
+    fixture.componentInstance.caption.set('Second');
+    await fixture.whenStable();
+    expect(stage.querySelector('.tx-wizard-stage__caption')).toBe(caption);
+    expect(caption.classList.contains('tx-wizard-stage__caption--enter')).toBe(true);
+    expect(caption.querySelector('.tx-wizard-stage__title')?.textContent?.trim()).toBe('Second');
+
+    caption.classList.remove('tx-wizard-stage__caption--enter');
+    fixture.componentInstance.total.set(3);
+    await fixture.whenStable();
+    expect(caption.classList.contains('tx-wizard-stage__caption--enter')).toBe(false);
+
+    fixture.componentInstance.caption.set(undefined);
+    await fixture.whenStable();
+    fixture.componentInstance.caption.set('Third');
+    await fixture.whenStable();
+    expect(stage.querySelector('.tx-wizard-stage__title')?.textContent?.trim()).toBe('Third');
   });
 });

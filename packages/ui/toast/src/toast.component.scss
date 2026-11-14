@@ -7,6 +7,16 @@
   width: var(--tx-toast-width);
 }
 
+:host([popover]) {
+  inset: auto;
+  overflow: visible;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+}
+
 :host([data-position^='top']) {
   top: var(--tx-toast-inset-top);
 }

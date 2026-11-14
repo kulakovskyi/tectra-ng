@@ -16,7 +16,7 @@ import {
   TxFileUploadSelectEvent,
   TxFileUploadedRemoveEvent,
 } from './file-upload.types';
-import { acceptLabel, fileKind, fileMatchesAccept, fileSizeParts } from './file-upload.utils';
+import { acceptLabel, fileKind, fileMatchesAccept } from './file-upload.utils';
 
 const csv = (name = 'report.csv', size = 1536) => new File(['x'.repeat(size)], name, { type: 'text/csv', lastModified: 1 });
 const png = (name = 'photo.png') => new File(['png'], name, { type: 'image/png', lastModified: 1 });
@@ -119,9 +119,6 @@ describe('file upload utils', () => {
     expect(fileKind(new File([''], 'a.zip'))).toBe('archive');
     expect(fileKind(new File([''], 'notes'))).toBe('other');
     expect(acceptLabel('image/png, image/jpeg,.pdf,application/vnd.ms-excel,image/*')).toBe('PNG, JPEG, PDF, EXCEL, image/*');
-    expect(fileSizeParts(512)).toEqual({ value: 512, unit: 'byte' });
-    expect(fileSizeParts(1536)).toEqual({ value: 1.5, unit: 'kilobyte' });
-    expect(fileSizeParts(5 * 1024 * 1024)).toEqual({ value: 5, unit: 'megabyte' });
   });
 });
 
@@ -343,6 +340,7 @@ describe('TxFileUpload modes and templates', () => {
       [showMessages]="showMessages()"
       [ariaLabel]="ariaLabel()"
       [chooseLabel]="chooseLabel()"
+      [keepUploaded]="keepUploaded()"
       [(files)]="files"
       (rejected)="rejections.push($event)"
       (uploadProgress)="progress.push($event.progress)"
@@ -364,6 +362,7 @@ class TargetHost {
   readonly showMessages = signal(true);
   readonly ariaLabel = signal<string | undefined>(undefined);
   readonly chooseLabel = signal<string | undefined>(undefined);
+  readonly keepUploaded = signal(true);
   readonly files = signal<File[]>([]);
   readonly rejections: TxFileRejection[][] = [];
   readonly progress: number[] = [];
@@ -560,6 +559,55 @@ describe('TxFileUpload with a target', () => {
     await fixture.whenStable();
     expect(fixture.componentInstance.uploadedRemovals.map((event) => [event.file.name, event.files.map((file) => file.name)])).toEqual([['report.csv', ['photo.png']]]);
     expect(all('.tx-file-upload__file')).toHaveLength(1);
+  });
+
+  it('empties the list of uploaded files with clearUploaded', async () => {
+    pick(input(), [csv(), png()]);
+    await fixture.whenStable();
+    uploadButton().click();
+    http.expectOne('/api/upload').flush({});
+    await fixture.whenStable();
+    expect(all('.tx-file-upload__file')).toHaveLength(2);
+    fixture.componentInstance.upload().clearUploaded();
+    await fixture.whenStable();
+    expect(fixture.componentInstance.upload().uploadedEntries()).toEqual([]);
+    expect(fixture.componentInstance.uploadedRemovals).toEqual([]);
+  });
+
+  it('drops uploaded files after a moment without keepUploaded', async () => {
+    fixture.componentInstance.keepUploaded.set(false);
+    pick(input(), [csv()]);
+    await fixture.whenStable();
+    uploadButton().click();
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    try {
+      http.expectOne('/api/upload').flush({});
+      expect(fixture.componentInstance.upload().uploadedEntries().map((entry) => entry.status)).toEqual(['uploaded']);
+      pick(input(), [png()]);
+      vi.advanceTimersByTime(1500);
+      expect(fixture.componentInstance.upload().uploadedEntries()).toEqual([]);
+      expect(fixture.componentInstance.upload().entries().map((entry) => entry.file.name)).toEqual(['photo.png']);
+    } finally {
+      vi.useRealTimers();
+    }
+    await fixture.whenStable();
+    expect(all('.tx-file-upload__file').map((row) => row.getAttribute('data-status'))).toEqual(['pending']);
+  });
+
+  it('stops the drop timer when it is destroyed', async () => {
+    fixture.componentInstance.keepUploaded.set(false);
+    pick(input(), [csv()]);
+    await fixture.whenStable();
+    uploadButton().click();
+    const set = vi.spyOn(window, 'setTimeout');
+    const clear = vi.spyOn(window, 'clearTimeout');
+    http.expectOne('/api/upload').flush({});
+    const timer = set.mock.results[set.mock.calls.findIndex((call) => call[1] === 1500)]?.value;
+    fixture.destroy();
+    expect(timer).toBeDefined();
+    expect(clear).toHaveBeenCalledWith(timer);
+    set.mockRestore();
+    clear.mockRestore();
   });
 
   it('drops the limit message once a file is removed, also with an own message', async () => {

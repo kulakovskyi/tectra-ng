@@ -7,9 +7,6 @@ const KINDS: Record<Exclude<TxFileKind, 'image' | 'media' | 'other'>, readonly s
   archive: ['zip', 'rar', '7z', 'tar', 'gz', 'tgz', 'bz2'],
 };
 
-/** Unit names for file sizes, from byte to terabyte, as `Intl.NumberFormat` unit identifiers. */
-export const TX_FILE_SIZE_UNITS = ['byte', 'kilobyte', 'megabyte', 'gigabyte', 'terabyte'] as const;
-
 /** Lower-case extension of a file name without the dot; empty when it has none. */
 export function fileExtension(file: Pick<File, 'name'>): string {
   const dot = file.name.lastIndexOf('.');
@@ -52,17 +49,6 @@ export function fileMatchesAccept(file: Pick<File, 'name' | 'type'>, accept: str
     }
     return rule === type;
   });
-}
-
-/** Scales a byte count to the largest unit that keeps the value under 1024. */
-export function fileSizeParts(bytes: number): { value: number; unit: (typeof TX_FILE_SIZE_UNITS)[number] } {
-  let value = Math.max(0, bytes);
-  let index = 0;
-  while (value >= 1024 && index < TX_FILE_SIZE_UNITS.length - 1) {
-    value /= 1024;
-    index++;
-  }
-  return { value, unit: TX_FILE_SIZE_UNITS[index] };
 }
 
 /** Tells whether two `File` objects are the same file by name, size, type and modified time. */

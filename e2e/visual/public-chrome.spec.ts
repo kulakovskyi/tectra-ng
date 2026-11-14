@@ -85,4 +85,16 @@ test.describe('cookie notice', () => {
     await root.getByRole('button', { name: 'Show the notice again' }).click();
     await expect(notice).toBeVisible();
   });
+
+  test('moves up by the space a bottom overlay takes on a phone', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/components/cookie-notice');
+    const root = page.locator('cookie-notice-manual-example');
+    await root.getByRole('button', { name: 'Cookie settings' }).click();
+    const notice = root.getByRole('region', { name: 'Cookie notice' });
+    await expect(notice).toBeVisible();
+    const before = await box(notice);
+    await page.evaluate(() => document.body.style.setProperty('--tx-bottom-overlay-offset', '60px'));
+    await expect.poll(async () => Math.round(before.y - (await box(notice)).y)).toBe(60);
+  });
 });

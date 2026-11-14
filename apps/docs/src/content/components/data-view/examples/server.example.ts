@@ -36,7 +36,7 @@ const PRODUCTS: Product[] = [
       [loading]="loading()"
       (lazyLoad)="load($event)"
     >
-      <ng-template txDataViewList let-items>
+      <ng-template txDataViewList [txDataViewListOf]="page()" let-items>
         <ul class="list">
           @for (product of items; track product.id) {
             <li class="row">

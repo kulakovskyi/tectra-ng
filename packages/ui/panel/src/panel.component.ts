@@ -19,6 +19,7 @@ import { PANEL_THEME } from './panel.theme';
     '[class]': 'passThrough().root?.class',
     '[style]': 'hostStyle()',
     '[attr.data-styled]': '!isUnstyled() || null',
+    '[attr.title]': 'null',
     '[attr.data-variant]': 'variant()',
     '[attr.data-align]': 'align()',
     '[class.tx-panel--collapsed]': 'toggleable() && collapsed()',

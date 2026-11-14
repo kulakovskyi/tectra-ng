@@ -75,15 +75,14 @@
       }
       @if (toast.showProgress && !toast.sticky && toast.life > 0) {
         <span class="tx-toast__progress-track" aria-hidden="true">
-          @for (version of [toast.version]; track version) {
-            <span
-              class="tx-toast__progress"
-              [class]="passThrough().progress?.class"
-              [style]="passThrough().progress?.style"
-              [style.animation-duration.ms]="toast.life"
-              [class.tx-toast__progress--paused]="toast.paused"
-            ></span>
-          }
+          <span
+            class="tx-toast__progress"
+            [txAnimationReplay]="toast.version"
+            [class]="passThrough().progress?.class"
+            [style]="passThrough().progress?.style"
+            [style.animation-duration.ms]="toast.life"
+            [class.tx-toast__progress--paused]="toast.paused"
+          ></span>
         </span>
       }
     </div>

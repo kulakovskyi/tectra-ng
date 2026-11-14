@@ -66,6 +66,15 @@ The option engine (`buildOptionRows`, `readOptionField`, `foldText`) is exported
 | txSelectEmpty | `<ng-template txSelectEmpty>` — own empty list |
 | txSelectEmptyFilter | `<ng-template txSelectEmptyFilter let-query>` — shown when the search found nothing, e.g. "Create «query»" |
 
+The option templates take the options only for typing — `<ng-template txSelectOption [txSelectOptionOf]="cities" let-city>` gives `city` the option type in strict templates; without it the option stays untyped.
+
+## Inputs — option templates
+| Name | Description |
+|---|---|
+| txSelectOptionOf | `txSelectOption`: the options, only for the type of `let-option` |
+| txSelectValueOf | `txSelectValue`: the options, only for the type of `let-option` |
+| txSelectGroupOf | `txSelectGroup`: the groups of `options`, only for the type of `let-group` |
+
 ## Keyboard
 | Key | Action |
 |---|---|

@@ -65,7 +65,7 @@ const INVOICES: Invoice[] = [
   ],
   template: `
     <tx-table ariaLabel="Invoices" dataKey="id" [value]="invoices" [columns]="columns">
-      <ng-template txTableCell="client" let-invoice>
+      <ng-template txTableCell="client" [txTableCellOf]="invoices" let-invoice>
         <span class="client">
           <strong>{{ invoice.client }}</strong>
           <button

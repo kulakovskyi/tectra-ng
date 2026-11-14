@@ -7,17 +7,17 @@ import { TxThemeService } from '@tectra-ng/core/config';
 import { TxOverlayInset } from '@tectra-ng/core/overlay';
 import { TxButton } from '@tectra-ng/ui/button';
 import { TxPopover, TxPopoverTrigger } from '@tectra-ng/ui/popover';
+import { TxThemeConfigurator } from '@tectra-ng/blocks/theme-configurator';
 import { HEADER_LINKS } from '../data/header-links.data';
 import { TECTRA_VERSION } from '../../generated/version';
 import { DocsLogo } from './logo/logo';
 import { DocsSidebar } from './sidebar/docs-sidebar';
 import { DocsSiteFooter } from './site-footer/site-footer';
-import { DocsThemeConfigurator } from './theme-configurator/theme-configurator';
-import { DocsThemeSettings } from './theme-settings';
+import { DOCS_THEME_STYLES, DocsThemeSettings } from './theme-settings';
 
 @Component({
   selector: 'docs-layout',
-  imports: [RouterOutlet, RouterLink, TxButton, TxPopover, TxPopoverTrigger, TxOverlayInset, DocsLogo, DocsSidebar, DocsSiteFooter, DocsThemeConfigurator],
+  imports: [RouterOutlet, RouterLink, TxButton, TxPopover, TxPopoverTrigger, TxOverlayInset, DocsLogo, DocsSidebar, DocsSiteFooter, TxThemeConfigurator],
   templateUrl: './docs-layout.html',
   styleUrl: './docs-layout.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,6 +31,7 @@ export class DocsLayout {
   readonly headerLinks = HEADER_LINKS;
   readonly version = TECTRA_VERSION;
   readonly mode = this.txThemeService.mode;
+  readonly themeStyles = DOCS_THEME_STYLES;
 
   readonly currentUrl = toSignal(
     this.router.events.pipe(

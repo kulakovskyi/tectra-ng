@@ -13,14 +13,16 @@ class SizeHost {
   readonly size = signal(1536);
 }
 
+const ukKilobytes = (value: number) => new Intl.NumberFormat('uk-UA', { style: 'unit', unit: 'kilobyte', unitDisplay: 'short' }).format(value);
+
 describe('file', () => {
   it('formats sizes with units and the locale', () => {
-    expect(formatFileSize(512)).toBe('512 B');
-    expect(formatFileSize(1536)).toBe('1.5 KB');
+    expect(formatFileSize(512)).toBe('512 byte');
+    expect(formatFileSize(1536)).toBe('1.5 kB');
     expect(formatFileSize(5 * 1024 * 1024)).toBe('5 MB');
     expect(formatFileSize(1.25 * 1024 ** 3, { decimals: 2 })).toBe('1.25 GB');
-    expect(formatFileSize(1500, { base: 1000 })).toBe('1.5 KB');
-    expect(formatFileSize(1536, { locale: 'uk-UA' })).toBe('1,5 KB');
+    expect(formatFileSize(1500, { base: 1000 })).toBe('1.5 kB');
+    expect(formatFileSize(1536, { locale: 'uk-UA' })).toBe(ukKilobytes(1.5));
     expect(formatFileSize(1024 ** 6)).toBe('1,024 PB');
     expect(formatFileSize(null)).toBe('-');
     expect(formatFileSize(-1, { empty: '—' })).toBe('—');
@@ -72,11 +74,11 @@ describe('file', () => {
     const fixture = TestBed.createComponent(SizeHost);
     fixture.detectChanges();
     const text = (selector: string) => (fixture.nativeElement.querySelector(selector) as HTMLElement).textContent;
-    expect(text('.auto')).toBe('1.5 KB');
+    expect(text('.auto')).toBe('1.5 kB');
     await TestBed.inject(TxLocaleService).setLocale('ua');
     fixture.detectChanges();
-    expect(text('.auto')).toBe('1,5 KB');
-    expect(text('.fixed')).toBe('1.5 KB');
+    expect(text('.auto')).toBe(ukKilobytes(1.5));
+    expect(text('.fixed')).toBe('1.5 kB');
   });
 
   it('lists the icons it draws', () => {

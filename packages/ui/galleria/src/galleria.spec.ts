@@ -656,3 +656,12 @@ describe('TxGalleria full screen motion', () => {
     await fixture.whenStable();
   });
 });
+
+describe('galleria item template directives', () => {
+  it('narrow their template contexts', () => {
+    const context = { $implicit: 'a', index: 0, active: true };
+    expect(TxGalleriaItemTemplate.ngTemplateContextGuard({} as TxGalleriaItemTemplate<string>, context)).toBe(true);
+    expect(TxGalleriaThumbnailTemplate.ngTemplateContextGuard({} as TxGalleriaThumbnailTemplate<string>, context)).toBe(true);
+    expect(TxGalleriaCaptionTemplate.ngTemplateContextGuard({} as TxGalleriaCaptionTemplate<string>, undefined)).toBe(false);
+  });
+});
