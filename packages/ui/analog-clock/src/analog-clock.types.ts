@@ -12,3 +12,6 @@ export interface TxAnalogClockHands {
   /** Angle of the second hand in degrees. */
   secondAngle: number;
 }
+
+/** A fixed time for `tx-analog-clock`: a `Date`, milliseconds or an ISO string; empty means the running clock. */
+export type TxAnalogClockTime = Date | number | string | null | undefined;

@@ -276,7 +276,7 @@ test.describe('charts', () => {
     if (!box) throw new Error('no bar');
     await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
     await expect(tooltip(page)).toContainText('Sales');
-    await expect(tooltip(page)).toContainText('+310K');
+    await expect(tooltip(page)).toContainText('+$310,000');
 
     await page.goto('/components/funnel-chart');
     const funnel = example(page, 'Basic').locator('tx-funnel-chart');
@@ -447,7 +447,7 @@ test.describe('charts', () => {
 
   test('column chart: hover anywhere in a category lays a band, the tooltip follows the cursor, horizontal bars fit', async ({ page }) => {
     await page.goto('/components/column-chart');
-    const chart = example(page, 'Basic').locator('tx-column-chart');
+    const chart = example(page, 'Stacked').locator('tx-column-chart');
     const plot = chart.locator('.tx-chart-frame__plot');
     await plot.scrollIntoViewIfNeeded();
     const bar = chart.locator('.tx-column-chart__bar[data-index="3"][data-end="top"]');
@@ -488,7 +488,7 @@ test.describe('charts', () => {
     const chart = example(page, 'Basic').locator('tx-pie-chart');
     await chart.scrollIntoViewIfNeeded();
     await expect(chart.locator('.tx-pie-chart__center-name')).toHaveText('Visits');
-    await hoverAt(page, chart.locator('.tx-chart-frame__plot'), 0.85, 0.5);
+    await hoverAt(page, chart.locator('.tx-pie-chart__segments'), 0.9, 0.5);
     await expect(chart.locator('.tx-pie-chart__center-name')).toHaveText('Search');
     await expect(tooltip(page)).toContainText('Search');
     await expect(tooltip(page)).toContainText('42%');
@@ -925,7 +925,7 @@ test.describe('chart tooltip on a touch screen', () => {
 
   test('a tap pins the tooltip above the column, the keyboard too', async ({ page }) => {
     await page.goto('/components/column-chart');
-    const chart = example(page, 'Basic').locator('tx-column-chart');
+    const chart = example(page, 'Stacked').locator('tx-column-chart');
     await chart.scrollIntoViewIfNeeded();
     const bar = chart.locator('.tx-column-chart__bar[data-index="3"][data-end="top"]');
     const box = await bar.boundingBox();

@@ -3,7 +3,7 @@ import { expect, test } from './fixtures';
 import { trackPage } from './helpers';
 import { PAGES } from './pages';
 
-const STYLES = ['soft', 'edge', 'paper'] as const;
+const STYLES = ['edge', 'paper'] as const;
 
 const THEMED_PAGES = [
   '/theming',
@@ -54,3 +54,13 @@ for (const style of STYLES) {
     }
   }
 }
+
+test('a remembered style that is no longer built in falls back to the default style', async ({ page }) => {
+  await page.addInitScript(() =>
+    localStorage.setItem('tx-docs-theme', JSON.stringify({ style: 'soft', primary: 'violet', surface: 'ink', ripple: true, mode: 'light' })),
+  );
+  await page.goto('/theming');
+  const styles = page.getByRole('tablist', { name: 'Style' });
+  await expect(styles.getByRole('tab', { name: 'Tectra' })).toHaveAttribute('aria-selected', 'true');
+  expect((await styles.getByRole('tab').allTextContents()).map((text) => text.trim())).toEqual(['Tectra', 'Edge', 'Paper']);
+});

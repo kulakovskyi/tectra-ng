@@ -21,7 +21,7 @@ import { TxBoxplotChart } from '@tectra-ng/charts/boxplot';
 | legendPosition | `top`, `bottom`, `left` or `right` |
 | legendAlign | `start`, `center` or `end` for a top or bottom legend |
 | showTooltip | Shows the five numbers and the count of outliers on hover and keyboard focus |
-| valueFormat | Value axis and tooltip format: `number`, `integer`, `compact`, `percent` or a function |
+| valueFormat | Value axis and tooltip format: `number`, `integer`, `compact`, `percent`, a currency (`{ currency: 'USD' }`) or a function |
 | yMin | Fixed start of the value axis |
 | yMax | Fixed end of the value axis |
 | xAxisTitle | Title of the category axis |

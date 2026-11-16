@@ -23,17 +23,26 @@ import { DocsClipboard } from '../../doc-ui/copy/clipboard.service';
 import { DocsSwatches } from '../../doc-ui/swatches/swatches';
 import { DocsThemeSettings } from '../../layout/theme-settings';
 
+type TokenPreview = 'color' | 'shadow' | 'radius';
+
 interface TokenRow {
   name: string;
   light: string;
   dark: string;
+  preview: TokenPreview;
 }
 
 interface TokenGroup {
   key: string;
   title: string;
-  shadow: boolean;
   rows: TokenRow[];
+}
+
+function tokenPreview(group: string, name: string): TokenPreview {
+  if (group === 'shadow' || name.endsWith('-shadow')) {
+    return 'shadow';
+  }
+  return name.endsWith('-radius') ? 'radius' : 'color';
 }
 
 const PRIMARY_STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
@@ -138,9 +147,14 @@ ${lines.map((line) => `      ${line}`).join('\n')}
         const light = toCssVariables(preset.light[key as keyof typeof preset.light], prefix);
         const dark = toCssVariables(preset.dark[key as keyof typeof preset.dark], prefix);
         const rows = light
-          .map((variable, index) => ({ name: variable.name, light: variable.value, dark: dark[index]?.value ?? variable.value }))
+          .map((variable, index) => ({
+            name: variable.name,
+            light: variable.value,
+            dark: dark[index]?.value ?? variable.value,
+            preview: tokenPreview(key, variable.name),
+          }))
           .filter((row) => !query || row.name.includes(query) || row.light.toLowerCase().includes(query));
-        return { key, title: title(key), shadow: key === 'shadow', rows };
+        return { key, title: title(key), rows };
       })
       .filter((group) => group.rows.length);
   });

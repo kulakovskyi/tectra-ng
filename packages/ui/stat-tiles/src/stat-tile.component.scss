@@ -19,7 +19,9 @@
 
   border-radius: var(--tx-stat-tile-border-radius);
   background: var(--tx-stat-tile-background);
-  box-shadow: 0 0 0 var(--_ring-width) var(--_ring);
+  box-shadow:
+    0 0 0 var(--_ring-width) var(--_ring),
+    var(--tx-stat-tile-shadow);
   font-family: var(--tx-font-family);
   font-variant-numeric: tabular-nums;
   transition: box-shadow var(--tx-stat-tile-transition-duration) var(--tx-motion-easing);
@@ -72,9 +74,12 @@
   }
 
   .tx-stat-tile__label {
+    overflow: hidden;
     color: var(--tx-stat-tile-label-color);
     font-size: var(--tx-stat-tile-label-font-size);
     font-weight: var(--tx-stat-tile-label-font-weight);
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   .tx-stat-tile__value {

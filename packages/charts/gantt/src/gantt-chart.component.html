@@ -69,6 +69,30 @@
             <span class="tx-gantt-chart__column" [class.tx-gantt-chart__column--weekend]="tick.weekend" [style.left.px]="tick.x" [style.width.px]="tick.width"></span>
           }
         </div>
+        @let links = linkLayout();
+        @if (links.paths.length) {
+          <svg
+            class="tx-gantt-chart__dependencies"
+            aria-hidden="true"
+            focusable="false"
+            preserveAspectRatio="none"
+            [attr.viewBox]="'0 0 ' + width() + ' ' + links.height"
+            [style.height]="'calc(var(--tx-gantt-chart-row-height) * ' + links.height + ')'"
+          >
+            @for (link of linkPaths(); track link.key) {
+              <g
+                class="tx-gantt-chart__dependency"
+                [class]="parts.dependency?.class"
+                [style]="parts.dependency?.style"
+                [class.tx-gantt-chart__dependency--active]="link.state === 'active'"
+                [class.tx-gantt-chart__dependency--dimmed]="link.state === 'dimmed'"
+              >
+                <path class="tx-gantt-chart__dependency-line" vector-effect="non-scaling-stroke" [attr.d]="link.path" />
+                <path class="tx-gantt-chart__dependency-head" [attr.d]="link.head" />
+              </g>
+            }
+          </svg>
+        }
         @for (fold of folds(); track fold.key; let foldIndex = $index) {
           @if (fold.head; as head) {
             <div class="tx-gantt-chart__row tx-gantt-chart__row--group" [class]="parts.group?.class" [style]="parts.group?.style">
@@ -87,7 +111,13 @@
               </div>
               <div class="tx-gantt-chart__lane" [class]="parts.lane?.class" [style]="parts.lane?.style">
                 @if (head.summary; as summary) {
-                  <span class="tx-gantt-chart__summary" aria-hidden="true" [style.left.px]="summary.x" [style.width.px]="summary.width"></span>
+                  <span
+                    class="tx-gantt-chart__summary"
+                    aria-hidden="true"
+                    [class.tx-gantt-chart__summary--dimmed]="isGroupDimmed(head.group)"
+                    [style.left.px]="summary.x"
+                    [style.width.px]="summary.width"
+                  ></span>
                 }
               </div>
             </div>
@@ -100,7 +130,7 @@
           >
             <div class="tx-gantt-chart__fold-content">
               @for (row of fold.rows; track row.key) {
-                <div class="tx-gantt-chart__row" [class]="parts.row?.class" [style]="parts.row?.style">
+                <div class="tx-gantt-chart__row" [class]="parts.row?.class" [style]="parts.row?.style" [style.--tx-gantt-chart-lanes]="row.lanes > 1 ? row.lanes : null">
                   <div class="tx-gantt-chart__label" [class]="parts.label?.class" [style]="parts.label?.style">
                     <span class="tx-gantt-chart__label-text" [attr.title]="row.label">{{ row.label }}</span>
                   </div>
@@ -114,17 +144,22 @@
                           [style]="parts.milestone?.style"
                           [attr.data-task]="span.task.id"
                           [style.left.px]="span.x"
+                          [style.--tx-gantt-chart-lane]="span.lane || null"
                           [style.--tx-gantt-chart-color]="span.task.color ?? null"
+                          [class.tx-gantt-chart__task--dimmed]="isDimmed(span.task.id)"
                           [tabindex]="tabStop() === span.task.id ? 0 : -1"
                           [attr.aria-label]="ariaFor(span)"
                           [txTooltip]="tooltipFor(span)"
                           (click)="onBarClick(span)"
                           (focus)="onBarFocus(span, $any($event.target))"
+                          (blur)="onBarBlur()"
+                          (mouseenter)="onBarHover(span)"
+                          (mouseleave)="onBarHover(null)"
                           (keydown)="onBarKeydown($event, span)"
                         >
                           <span class="tx-gantt-chart__diamond" aria-hidden="true"></span>
                           @if (labelsOutside()) {
-                            <span class="tx-gantt-chart__bar-label tx-gantt-chart__bar-label--outside">{{ span.task.label }}</span>
+                            <span class="tx-gantt-chart__bar-label tx-gantt-chart__bar-label--outside" [style.margin-inline-start.px]="labelShift(span) || null">{{ span.task.label }}</span>
                           }
                         </button>
                       } @else {
@@ -137,24 +172,37 @@
                           [attr.data-task]="span.task.id"
                           [style.left.px]="span.x"
                           [style.width.px]="span.width"
+                          [style.--tx-gantt-chart-lane]="span.lane || null"
                           [style.--tx-gantt-chart-color]="span.color"
                           [style.--tx-gantt-chart-progress]="progressOf(span) === null ? null : progressOf(span) + '%'"
+                          [class.tx-gantt-chart__task--dimmed]="isDimmed(span.task.id)"
                           [tabindex]="tabStop() === span.task.id ? 0 : -1"
                           [attr.aria-label]="ariaFor(span)"
                           [txTooltip]="tooltipFor(span)"
                           (click)="onBarClick(span)"
                           (focus)="onBarFocus(span, $any($event.target))"
+                          (blur)="onBarBlur()"
+                          (mouseenter)="onBarHover(span)"
+                          (mouseleave)="onBarHover(null)"
                           (keydown)="onBarKeydown($event, span)"
                         >
                           @if (progressOf(span) !== null) {
                             <span class="tx-gantt-chart__progress" aria-hidden="true"></span>
                           }
                           @if (labelsInside()) {
-                            <span class="tx-gantt-chart__bar-label">{{ span.task.label }}</span>
+                            <span class="tx-gantt-chart__bar-label tx-gantt-chart__bar-label--inside">{{ span.task.label }}</span>
                           }
                         </button>
                         @if (labelsOutside()) {
-                          <span class="tx-gantt-chart__bar-label tx-gantt-chart__bar-label--outside" aria-hidden="true" [style.left.px]="span.x + span.width">{{ span.task.label }}</span>
+                          <span
+                            class="tx-gantt-chart__bar-label tx-gantt-chart__bar-label--outside"
+                            aria-hidden="true"
+                            [class.tx-gantt-chart__task--dimmed]="isDimmed(span.task.id)"
+                            [style.left.px]="span.x + span.width + labelShift(span)"
+                            [style.--tx-gantt-chart-lane]="span.lane || null"
+                          >
+                            <span class="tx-gantt-chart__bar-label-text">{{ span.task.label }}</span>
+                          </span>
                         }
                       }
                     }

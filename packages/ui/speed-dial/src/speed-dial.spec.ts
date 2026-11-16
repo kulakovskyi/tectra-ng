@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Router, provideRouter } from '@angular/router';
 import { TxMenuItem } from '@tectra-ng/ui/menu';
 import { TxSpeedDial } from './speed-dial.component';
 import { TxSpeedDialDirection, TxSpeedDialType } from './speed-dial.types';
@@ -292,5 +293,68 @@ describe('TxSpeedDial layouts and keys', () => {
     expect(key(first, 'Tab').defaultPrevented).toBe(false);
     await fixture.whenStable();
     expect(fixture.componentInstance.open()).toBe(false);
+  });
+});
+
+@Component({ template: 'Page', changeDetection: ChangeDetectionStrategy.OnPush })
+class Page {}
+
+@Component({
+  imports: [TxSpeedDial],
+  template: `<tx-speed-dial ariaLabel="Go" [model]="items" (itemSelected)="picked.push($event.item.label ?? '')" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class LinkHost {
+  readonly picked: string[] = [];
+  readonly items: TxMenuItem[] = [
+    { label: 'Reports', icon: 'chart-bar', routerLink: '/reports', queryParams: { tab: 'week' }, fragment: 'top' },
+    { label: 'Help', icon: 'question', url: 'https://example.com/help', target: '_blank' },
+    { label: 'Docs', icon: 'book', url: '/docs' },
+    { label: 'Locked', icon: 'lock', routerLink: '/locked', disabled: true },
+  ];
+}
+
+describe('TxSpeedDial links', () => {
+  let fixture: ComponentFixture<LinkHost>;
+  const items = () => [...fixture.nativeElement.querySelectorAll('.tx-speed-dial__item')] as HTMLElement[];
+
+  beforeEach(async () => {
+    TestBed.configureTestingModule({ providers: [provideRouter([{ path: 'reports', component: Page }])] });
+    fixture = TestBed.createComponent(LinkHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+  });
+
+  afterEach(() => fixture.destroy());
+
+  it('renders router and url items as links and disabled ones as buttons', () => {
+    const [reports, help, docs, locked] = items();
+    expect(reports.tagName).toBe('A');
+    expect(reports.getAttribute('href')).toBe('/reports?tab=week#top');
+    expect(reports.getAttribute('role')).toBe('menuitem');
+    expect(help.getAttribute('href')).toBe('https://example.com/help');
+    expect(help.getAttribute('target')).toBe('_blank');
+    expect(help.getAttribute('rel')).toBe('noopener noreferrer');
+    expect(docs.getAttribute('target')).toBeNull();
+    expect(docs.getAttribute('rel')).toBeNull();
+    expect(locked.tagName).toBe('BUTTON');
+    expect(locked.hasAttribute('disabled')).toBe(true);
+  });
+
+  it('navigates with the router on click and on Space', async () => {
+    const router = TestBed.inject(Router);
+    fixture.nativeElement.querySelector('.tx-speed-dial__button').click();
+    await fixture.whenStable();
+    items()[0].click();
+    await fixture.whenStable();
+    expect(router.url).toBe('/reports?tab=week#top');
+    expect(fixture.componentInstance.picked).toEqual(['Reports']);
+    await router.navigateByUrl('/');
+    const event = new KeyboardEvent('keydown', { key: ' ', bubbles: true, cancelable: true });
+    items()[0].dispatchEvent(event);
+    await fixture.whenStable();
+    expect(event.defaultPrevented).toBe(true);
+    expect(router.url).toBe('/reports?tab=week#top');
+    expect(fixture.componentInstance.picked).toEqual(['Reports', 'Reports']);
   });
 });

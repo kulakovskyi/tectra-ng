@@ -87,3 +87,38 @@ export function sunburstArcAt(arcs: readonly TxSunburstArc[], x: number, y: numb
   if (angle < 0) angle += TX_FULL_CIRCLE;
   return arcs.find((arc) => distance >= arc.inner && distance <= arc.outer && angle >= arc.start && angle < arc.end) ?? null;
 }
+
+/**
+ * Tells whether a horizontal label box of `width` × `height` centred at (`x`, `y`) lies inside an arc, keeping `padding`
+ * px from its edges; points along the box outline are checked against both radii and both angles.
+ */
+export function sunburstLabelFits(
+  arc: Pick<TxSunburstArc, 'start' | 'end' | 'inner' | 'outer'>,
+  box: { x: number; y: number; width: number; height: number },
+  cx: number,
+  cy: number,
+  padding = 1,
+): boolean {
+  const halfWidth = box.width / 2 + padding;
+  const halfHeight = box.height / 2 + padding;
+  const fullCircle = arc.end - arc.start >= TX_FULL_CIRCLE - 1e-9;
+  const steps = 6;
+  for (let step = 0; step <= steps; step++) {
+    const along = -1 + (2 * step) / steps;
+    const points = [
+      [box.x + along * halfWidth, box.y - halfHeight],
+      [box.x + along * halfWidth, box.y + halfHeight],
+      [box.x - halfWidth, box.y + along * halfHeight],
+      [box.x + halfWidth, box.y + along * halfHeight],
+    ];
+    for (const [px, py] of points) {
+      const distance = Math.hypot(px - cx, py - cy);
+      if (distance < arc.inner || distance > arc.outer) return false;
+      if (fullCircle) continue;
+      let angle = Math.atan2(px - cx, -(py - cy));
+      if (angle < 0) angle += TX_FULL_CIRCLE;
+      if (angle < arc.start || angle > arc.end) return false;
+    }
+  }
+  return true;
+}

@@ -1,1 +1,1 @@
-`legendValues` lists the value and the share of each segment; `legendPosition="right"` puts the legend beside the chart. Items still toggle their segment.
+`legendValues` lists the value and the share of each segment; `legendPosition="right"` puts the legend beside the chart, and the labels take the room left beside the numbers. On a chart narrower than 420px the legend moves under the donut. Items still toggle their segment.

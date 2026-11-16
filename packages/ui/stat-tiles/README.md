@@ -12,15 +12,15 @@ A responsive grid of key numbers — totals, rates, counts — each tile with a 
 ## Inputs
 | Name | Description |
 |---|---|
-| minWidth | `tx-stat-tiles` — narrowest column before the grid wraps; never below the `floorWidth` token (210px) unless `compact` |
+| minWidth | `tx-stat-tiles` — narrowest column before the grid wraps; without it columns stay at least the `floorWidth` token (210px) unless `compact`, an explicit value wins over that floor |
 | compact | `tx-stat-tiles` — tighter gap, padding, icon and value; columns down to `minWidth` |
 | ariaLabel | `tx-stat-tiles` — accessible name of the list |
 | ariaLabelledBy | `tx-stat-tiles` — id of the element that names the list |
-| label | `tx-stat-tile` — what the number is |
+| label | `tx-stat-tile` — what the number is; one line, cut with an ellipsis and shown in full as a title, so values of a row stay on one line next to an aside |
 | value | `tx-stat-tile` — the number or text; `null` shows "-" |
 | unit | `tx-stat-tile` — small text after the value |
 | icon | `tx-stat-tile` — icon in a square tinted with the tone |
-| meta | `tx-stat-tile` — muted line under the value, cut with an ellipsis |
+| meta | `tx-stat-tile` — muted line under the value, cut with an ellipsis and shown in full as a title |
 | tone | `tx-stat-tile` — `neutral`, `primary`, `success`, `info`, `warn` or `danger`: icon, share bar, accent value and highlight |
 | share | `tx-stat-tile` — 0–100, draws a share bar (a `meter`) |
 | textValue | `tx-stat-tile` — the value is text: smaller, one line, cut with an ellipsis and a title |

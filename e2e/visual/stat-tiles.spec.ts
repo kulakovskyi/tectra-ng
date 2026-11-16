@@ -33,7 +33,7 @@ test.describe('stat tiles', () => {
     const tile = frame.getByRole('listitem').first();
     await expect
       .poll(() => tile.evaluate((element) => getComputedStyle(element).boxShadow))
-      .toMatch(/ 0px 0px 0px 2px$/);
+      .toMatch(/ 0px 0px 0px 2px(,|$)/);
     await page.keyboard.press('Enter');
     await expect(page).toHaveURL(/\/components\/table$/);
   });

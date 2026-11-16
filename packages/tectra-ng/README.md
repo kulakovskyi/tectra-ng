@@ -34,7 +34,7 @@
 - **Everything in one kit** — 80+ components, 22 page blocks, 23 SVG charts, 334 icons, brand logos and country flags.
 - **Modern Angular only** — standalone, signal inputs and models, OnPush, zoneless.
 - **Server rendering out of the box** — every component prerenders and hydrates without a layout jump.
-- **Your design, from tokens** — light and dark mode, 4 styles, 17 primary colours and 13 surfaces; `dt`, `pt` and `unstyled` on every component.
+- **Your design, from tokens** — light and dark mode, 3 styles, 17 primary colours and 13 surfaces; `dt`, `pt` and `unstyled` on every component.
 - **Accessible** — WAI-ARIA patterns, full keyboard support, axe-checked in light and dark.
 - **Tree-shakable** — one entry point per component, chart and utility.
 

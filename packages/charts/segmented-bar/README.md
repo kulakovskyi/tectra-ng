@@ -21,9 +21,10 @@ import { TxSegmentedBar } from '@tectra-ng/charts/segmented-bar';
 | hideEmptyInLegend | Leaves parts with no value out of the legend |
 | monoLabels | Writes the legend labels in the monospace font (codes, ids) |
 | valueFormat | Format of values: `number`, `integer`, `compact`, `percent` or a function |
+| loading | Shows a skeleton bar and legend of the same size |
 | ariaLabel | What the bar shows; names the legend list, or starts the summary read on the bar when the legend is hidden |
 | dt | Design tokens of this bar (`chart`, group `segmentedBar`) |
-| pt | Classes and styles of the parts: `root`, `track`, `segment`, `legend`, `legendItem`, `dot`, `label`, `value`, `percent`, `aside` |
+| pt | Classes and styles of the parts: `root`, `track`, `segment`, `legend`, `legendItem`, `dot`, `label`, `value`, `percent`, `aside`, `skeleton` |
 | ptOptions | How `pt` merges with the global pass-through |
 | unstyled | Removes the tectra styles and keeps the behaviour |
 

@@ -1,1 +1,1 @@
-`minWidth` sets the narrowest column before the grid wraps — here wider tiles that wrap sooner. It never goes below `210px` unless the grid is `compact`.
+`minWidth` sets the narrowest column before the grid wraps — here wider tiles that wrap sooner. Without it columns stay at least `210px` (the `floorWidth` token) unless the grid is `compact`; an explicit `minWidth` wins over that floor.

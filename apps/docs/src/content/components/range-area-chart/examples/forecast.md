@@ -1,1 +1,1 @@
-Dates with `xType="time"`. The forecast band widens with time while `null` keeps the past empty; an actual series with equal low and high draws a plain line.
+Dates with `xType="time"`. The forecast band widens with time while `null` keeps the past empty; an actual series with equal low and high draws a plain line. `annotations` mark the plot — here an `x-line` at today, where the forecast starts.

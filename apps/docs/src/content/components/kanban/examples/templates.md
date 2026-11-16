@@ -1,1 +1,1 @@
-`txKanbanColumnHeader` replaces the title and the count, `txKanbanColumnTop` adds a block under it — here a quick-add field — and `txKanbanEmpty` fills an empty column.
+`txKanbanColumnHeader` replaces the title and the count, `txKanbanColumnTop` adds a block under it — here a quick-add field — and `txKanbanEmpty` fills an empty column. `[txKanbanCardOf]` takes the columns only for typing, so `let-note` has the card type in strict templates (`txKanbanColumnHeaderOf` and the other `…Of` inputs do the same for the column templates).

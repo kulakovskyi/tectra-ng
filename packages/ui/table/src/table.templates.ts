@@ -1,25 +1,25 @@
 import { Directive, TemplateRef, computed, inject, input } from '@angular/core';
-import { TxTableActionConfig, TxTableCellContext, TxTableEditorContext, TxTableGroupContext, TxTableEmptyContext, TxTableHeaderContext, TxTableRowContext } from './table.types';
+import { TxTableActionConfig, TxTableCellContext, TxTableEditorContext, TxTableGroupContext, TxTableEmptyContext, TxTableHeaderContext, TxTableRowContext, TxTableRowData } from './table.types';
 import { actionIdOf } from './table.utils';
 
 @Directive({ selector: 'ng-template[txTableCell]' })
 export class TxTableCell<T> {
-  readonly templateRef = inject<TemplateRef<TxTableCellContext<T>>>(TemplateRef);
+  readonly templateRef = inject<TemplateRef<TxTableCellContext<TxTableRowData<T>, T>>>(TemplateRef);
   readonly txTableCell = input.required<string>();
   readonly txTableCellOf = input<readonly T[] | null | undefined>(undefined);
 
-  static ngTemplateContextGuard<T>(_directive: TxTableCell<T>, context: unknown): context is TxTableCellContext<T> {
+  static ngTemplateContextGuard<T>(_directive: TxTableCell<T>, context: unknown): context is TxTableCellContext<TxTableRowData<T>, T> {
     return !!context;
   }
 }
 
 @Directive({ selector: 'ng-template[txTableEditor]' })
 export class TxTableEditor<T> {
-  readonly templateRef = inject<TemplateRef<TxTableEditorContext<T>>>(TemplateRef);
+  readonly templateRef = inject<TemplateRef<TxTableEditorContext<TxTableRowData<T>>>>(TemplateRef);
   readonly txTableEditor = input.required<string>();
   readonly txTableEditorOf = input<readonly T[] | null | undefined>(undefined);
 
-  static ngTemplateContextGuard<T>(_directive: TxTableEditor<T>, context: unknown): context is TxTableEditorContext<T> {
+  static ngTemplateContextGuard<T>(_directive: TxTableEditor<T>, context: unknown): context is TxTableEditorContext<TxTableRowData<T>> {
     return !!context;
   }
 }
@@ -46,30 +46,30 @@ export class TxTableFooterCell {
 
 @Directive({ selector: 'ng-template[txTableCard]' })
 export class TxTableCard<T> {
-  readonly templateRef = inject<TemplateRef<TxTableRowContext<T>>>(TemplateRef);
+  readonly templateRef = inject<TemplateRef<TxTableRowContext<TxTableRowData<T>, T>>>(TemplateRef);
   readonly txTableCardOf = input<readonly T[] | null | undefined>(undefined);
 
-  static ngTemplateContextGuard<T>(_directive: TxTableCard<T>, context: unknown): context is TxTableRowContext<T> {
+  static ngTemplateContextGuard<T>(_directive: TxTableCard<T>, context: unknown): context is TxTableRowContext<TxTableRowData<T>, T> {
     return !!context;
   }
 }
 
 @Directive({ selector: 'ng-template[txTableExpansion]' })
 export class TxTableExpansion<T> {
-  readonly templateRef = inject<TemplateRef<TxTableRowContext<T>>>(TemplateRef);
+  readonly templateRef = inject<TemplateRef<TxTableRowContext<TxTableRowData<T>, T>>>(TemplateRef);
   readonly txTableExpansionOf = input<readonly T[] | null | undefined>(undefined);
 
-  static ngTemplateContextGuard<T>(_directive: TxTableExpansion<T>, context: unknown): context is TxTableRowContext<T> {
+  static ngTemplateContextGuard<T>(_directive: TxTableExpansion<T>, context: unknown): context is TxTableRowContext<TxTableRowData<T>, T> {
     return !!context;
   }
 }
 
 @Directive({ selector: 'ng-template[txTableActions]' })
 export class TxTableActionsTemplate<T> {
-  readonly templateRef = inject<TemplateRef<TxTableRowContext<T>>>(TemplateRef);
+  readonly templateRef = inject<TemplateRef<TxTableRowContext<TxTableRowData<T>, T>>>(TemplateRef);
   readonly txTableActionsOf = input<readonly T[] | null | undefined>(undefined);
 
-  static ngTemplateContextGuard<T>(_directive: TxTableActionsTemplate<T>, context: unknown): context is TxTableRowContext<T> {
+  static ngTemplateContextGuard<T>(_directive: TxTableActionsTemplate<T>, context: unknown): context is TxTableRowContext<TxTableRowData<T>, T> {
     return !!context;
   }
 }

@@ -17,7 +17,7 @@ const ukKilobytes = (value: number) => new Intl.NumberFormat('uk-UA', { style: '
 
 describe('file', () => {
   it('formats sizes with units and the locale', () => {
-    expect(formatFileSize(512)).toBe('512 byte');
+    expect(formatFileSize(512)).toBe('512 bytes');
     expect(formatFileSize(1536)).toBe('1.5 kB');
     expect(formatFileSize(5 * 1024 * 1024)).toBe('5 MB');
     expect(formatFileSize(1.25 * 1024 ** 3, { decimals: 2 })).toBe('1.25 GB');

@@ -16,12 +16,12 @@ import { TxFunnelChart } from '@tectra-ng/charts/funnel';
 | items | `{ label, value, color? }[]` — the steps from the top. An empty list shows "No data" |
 | height | Height in px (320), or a CSS size such as `'100%'` of a parent with a definite height |
 | colorful | Gives every step its own palette colour; by default the funnel is one colour |
-| showLabels | Writes the step names in a column on the left (on by default) |
+| showLabels | Writes the step names in a column on the left (on by default), as wide as the longest name up to 40% of the chart (`chart.funnel.labelWidth`); a longer name wraps onto two lines between words, then is cut with the full name in a hint |
 | showValues | Writes the values on the bars, or beside a bar that is too narrow (on by default) |
 | showConversion | Writes the conversion from the step before between the bars (on by default) |
 | connectors | Draws the soft shapes that join the bars (on by default) |
 | showTooltip | Shows the value, the share of the first step and the conversion on hover and keyboard focus |
-| valueFormat | Format of the values: `number`, `integer`, `compact`, `percent` or a function |
+| valueFormat | Format of the values: `number`, `integer`, `compact`, `percent`, a currency (`{ currency: 'USD' }`) or a function |
 | toolbar | Shows the chart menu: download SVG, PNG or CSV (the file is named after `ariaLabel`) |
 | loading | Shows a skeleton of the same size |
 | ariaLabel | What the chart shows; starts the summary read by screen readers |

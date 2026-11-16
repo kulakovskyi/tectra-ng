@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { TxFilterMatchMode, matchesRule, resolveField } from '@tectra-ng/ui/table';
+import { TxFilterMatchMode, matchesRule, resolveField } from '@tectra-ng/core/utils';
 
 /**
  * Own match rule for a filter: gets the value, the filter and the locale, returns whether the item

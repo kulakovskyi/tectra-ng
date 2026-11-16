@@ -116,29 +116,31 @@
 }
 @if (table(); as data) {
   @if (!empty() && !loading()) {
-    <table class="cdk-visually-hidden">
-      <caption>
-        {{ summary() || translations().chartDataTable }}
-      </caption>
-      <thead>
-        <tr>
-          <th scope="col">{{ translations().chartCategory }}</th>
-          @for (column of data.columns; track column.key) {
-            <th scope="col">{{ column.label }}</th>
-          }
-        </tr>
-      </thead>
-      <tbody>
-        @for (row of data.rows; track $index) {
+    <div class="cdk-visually-hidden">
+      <table>
+        <caption>
+          {{ summary() || translations().chartDataTable }}
+        </caption>
+        <thead>
           <tr>
-            <th scope="row">{{ row.label }}</th>
-            @for (cell of row.cells; track $index) {
-              <td>{{ cell }}</td>
+            <th scope="col">{{ translations().chartCategory }}</th>
+            @for (column of data.columns; track column.key) {
+              <th scope="col">{{ column.label }}</th>
             }
           </tr>
-        }
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          @for (row of data.rows; track $index) {
+            <tr>
+              <th scope="row">{{ row.label }}</th>
+              @for (cell of row.cells; track $index) {
+                <td>{{ cell }}</td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
   }
 }
 

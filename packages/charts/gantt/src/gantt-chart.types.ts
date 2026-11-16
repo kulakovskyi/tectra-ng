@@ -19,6 +19,69 @@ export interface TxGanttTask {
   milestone?: boolean;
   /** Color of the bar; by default the color of its group. */
   color?: string;
+  /** Tasks this one waits for: ids (finish-to-start) or `{ id, type }`. Unknown ids, self links and links that close a cycle are left out. */
+  dependsOn?: readonly (string | TxGanttDependency)[] | null;
+}
+
+/**
+ * How a task waits for its predecessor: `finish-to-start` (default) — starts after it ends, `start-to-start` — starts after it
+ * starts, `finish-to-finish` — ends after it ends, `start-to-finish` — ends after it starts.
+ */
+export type TxGanttDependencyType = 'finish-to-start' | 'start-to-start' | 'finish-to-finish' | 'start-to-finish';
+
+/** A predecessor of a task with the kind of link. */
+export interface TxGanttDependency {
+  /** Id of the predecessor task. */
+  id: string;
+  /** Kind of link; `finish-to-start` by default. */
+  type?: TxGanttDependencyType;
+}
+
+/** A checked dependency: both tasks exist, no self link, no duplicate and no cycle. */
+export interface TxGanttLink {
+  /** Id of the predecessor. */
+  from: string;
+  /** Id of the task that waits for it. */
+  to: string;
+  /** Kind of link. */
+  type: TxGanttDependencyType;
+}
+
+/** A point of a dependency route: x in px, y in rows from the top of the body. */
+export type TxGanttPoint = [x: number, y: number];
+
+/** A box a dependency route keeps out of: x in px, y in rows. */
+export interface TxGanttBox {
+  /** Left edge in px. */
+  x1: number;
+  /** Right edge in px. */
+  x2: number;
+  /** Top edge in rows. */
+  y1: number;
+  /** Bottom edge in rows. */
+  y2: number;
+}
+
+/** One end of a dependency route: a point on the left (`start`) or right (`finish`) edge of a bar. */
+export interface TxGanttLinkEnd {
+  /** Horizontal position in px. */
+  x: number;
+  /** Vertical position in rows. */
+  y: number;
+  /** Edge of the bar the route leaves or enters. */
+  side: 'start' | 'finish';
+}
+
+/** A dependency arrow ready to draw; x in px, y in rows. */
+export interface TxGanttLinkPath {
+  /** Stable key of the arrow. */
+  key: string;
+  /** Indexes of the links in the list of `ganttLinks` that the arrow stands for; several when they meet on a folded group. */
+  links: number[];
+  /** SVG path of the line. */
+  path: string;
+  /** SVG path of the arrowhead. */
+  head: string;
 }
 
 /** Width of a day on the scale: `day`, `week`, `month` or `quarter`. */
@@ -41,6 +104,7 @@ export type TxGanttPart =
   | 'lane'
   | 'bar'
   | 'milestone'
+  | 'dependency'
   | 'today'
   | 'empty';
 
@@ -74,6 +138,8 @@ export interface TxGanttSpan {
   width: number;
   /** Color of the bar. */
   color: string;
+  /** Sub-row of the bar inside its row, from 0; overlapping tasks of a timeline lane get their own sub-rows. */
+  lane: number;
 }
 
 /** A row of `tx-gantt-chart`: a group header, a task or a lane. */
@@ -94,6 +160,8 @@ export interface TxGanttRow {
   collapsed: boolean;
   /** How many tasks the row holds. */
   count: number;
+  /** Number of sub-rows the row needs for its overlapping bars; 1 for a single bar. */
+  lanes: number;
 }
 
 /** A group header with the rows it folds, or a run of rows without a group. */

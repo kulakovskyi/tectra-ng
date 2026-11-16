@@ -59,7 +59,7 @@ A table whose rows form a tree (`role="treegrid"`) and looks like the table: the
 ## Slots
 | Name | Description |
 |---|---|
-| txTableCell | `<ng-template txTableCell="field" let-data let-node="node">` — own cell content; `data` is the node data |
+| txTableCell | `<ng-template txTableCell="field" [txTableCellOf]="nodes()" let-data let-node="node">` — own cell content; `data` is the node data. `txTableCellOf` takes the nodes only for typing: `data` gets the type of the node `data`, `node` the node type |
 | txTableHeaderCell | `<ng-template txTableHeaderCell="field" let-column>` — own header content |
 | txTableFooterCell | `<ng-template txTableFooterCell="field">` — own footer content |
 | txTableEmpty | `<ng-template txTableEmpty>` — own empty state |

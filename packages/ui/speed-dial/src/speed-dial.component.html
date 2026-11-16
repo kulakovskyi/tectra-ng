@@ -30,26 +30,74 @@
   [attr.aria-label]="ariaLabel() ?? null"
 >
   @for (item of items(); track $index) {
-    <button
-      txButton
-      type="button"
-      role="menuitem"
-      class="tx-speed-dial__item"
-      [class]="passThrough().item?.class"
-      [style]="itemStyle($index)"
-      [icon]="item.icon"
-      [rounded]="true"
-      [tabindex]="-1"
-      [severity]="item.severity === 'danger' ? 'danger' : itemSeverity()"
-      [size]="itemSize()"
-      [disabled]="item.disabled ?? false"
-      [unstyled]="isUnstyled()"
-      [attr.aria-label]="item.label ?? null"
-      [txTooltip]="item.label"
-      [tooltipPlacement]="tooltipPlacement()"
-      [tooltipDisabled]="!visible()"
-      (click)="run(item, $event)"
-      (keydown)="onListKeydown($event)"
-    ></button>
+    @if (item.routerLink && !item.disabled) {
+      <a
+        txButton
+        role="menuitem"
+        class="tx-speed-dial__item"
+        [class]="passThrough().item?.class"
+        [style]="itemStyle($index)"
+        [icon]="item.icon"
+        [rounded]="true"
+        [tabindex]="-1"
+        [severity]="item.severity === 'danger' ? 'danger' : itemSeverity()"
+        [size]="itemSize()"
+        [unstyled]="isUnstyled()"
+        [routerLink]="item.routerLink"
+        [queryParams]="item.queryParams"
+        [fragment]="item.fragment"
+        [attr.aria-label]="item.label ?? null"
+        [txTooltip]="item.label"
+        [tooltipPlacement]="tooltipPlacement()"
+        [tooltipDisabled]="!visible()"
+        (click)="run(item, $event)"
+        (keydown)="onListKeydown($event)"
+      ></a>
+    } @else if (item.url && !item.disabled) {
+      <a
+        txButton
+        role="menuitem"
+        class="tx-speed-dial__item"
+        [class]="passThrough().item?.class"
+        [style]="itemStyle($index)"
+        [icon]="item.icon"
+        [rounded]="true"
+        [tabindex]="-1"
+        [severity]="item.severity === 'danger' ? 'danger' : itemSeverity()"
+        [size]="itemSize()"
+        [unstyled]="isUnstyled()"
+        [attr.href]="item.url"
+        [attr.target]="item.target ?? null"
+        [attr.rel]="item.target === '_blank' ? 'noopener noreferrer' : null"
+        [attr.aria-label]="item.label ?? null"
+        [txTooltip]="item.label"
+        [tooltipPlacement]="tooltipPlacement()"
+        [tooltipDisabled]="!visible()"
+        (click)="run(item, $event)"
+        (keydown)="onListKeydown($event)"
+      ></a>
+    } @else {
+      <button
+        txButton
+        type="button"
+        role="menuitem"
+        class="tx-speed-dial__item"
+        [class]="passThrough().item?.class"
+        [style]="itemStyle($index)"
+        [icon]="item.icon"
+        [rounded]="true"
+        [tabindex]="-1"
+        [severity]="item.severity === 'danger' ? 'danger' : itemSeverity()"
+        [size]="itemSize()"
+        [disabled]="item.disabled ?? false"
+        [unstyled]="isUnstyled()"
+        [attr.aria-label]="item.label ?? null"
+        [txTooltip]="item.label"
+        [tooltipPlacement]="tooltipPlacement()"
+        [tooltipDisabled]="!visible()"
+        (click)="run(item, $event)"
+        (keydown)="onListKeydown($event)"
+      ></button>
+    }
   }
 </div>

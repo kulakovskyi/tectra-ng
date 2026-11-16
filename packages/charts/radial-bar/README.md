@@ -23,12 +23,12 @@ import { TxRadialBar } from '@tectra-ng/charts/radial-bar';
 | centerValue | What the centre shows for an item: `percent` of its max (default) or the `value` |
 | totalLabel | With several items, shows this caption and the average share in the centre until one is hovered |
 | showLegend | Shows the legend; a single item never has one |
-| legendPosition | `top`, `bottom` (default), `left` or `right` |
+| legendPosition | `top`, `bottom` (default), `left` or `right`; a side legend moves under the chart when it is narrower than 420px |
 | legendAlign | `start`, `center` (default) or `end` for a top or bottom legend |
 | legendVariant | Look of the legend: `dot` (default), `line`, `pill` or `stat` (values in large type with the share; it replaces the tooltip) |
 | legendValues | Adds the value and the share to each legend item |
 | showTooltip | Shows the tooltip on hover and keyboard focus |
-| valueFormat | Format of the values: `number`, `integer`, `compact`, `percent` or a function |
+| valueFormat | Format of the values: `number`, `integer`, `compact`, `percent`, a currency (`{ currency: 'USD' }`) or a function |
 | toolbar | Shows the chart menu: download SVG, PNG or CSV (the file is named after `ariaLabel`) |
 | loading | Shows a skeleton of the same size |
 | ariaLabel | What the chart shows; starts the summary read by screen readers |

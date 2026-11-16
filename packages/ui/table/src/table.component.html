@@ -26,6 +26,7 @@
         [label]="translations().selectAll"
         [unstyled]="isUnstyled()"
         [ngModel]="allSelected()"
+        [ngModelOptions]="{ standalone: true }"
         [indeterminate]="someSelected()"
         (ngModelChange)="toggleAll($event)"
       />
@@ -103,6 +104,7 @@
                         [ariaLabel]="translations().selectAll"
                         [unstyled]="isUnstyled()"
                         [ngModel]="allSelected()"
+                        [ngModelOptions]="{ standalone: true }"
                         [indeterminate]="someSelected()"
                         (ngModelChange)="toggleAll($event)"
                       />
@@ -125,6 +127,7 @@
                           [ariaLabel]="translations().selectAll"
                           [unstyled]="isUnstyled()"
                           [ngModel]="allSelected()"
+                          [ngModelOptions]="{ standalone: true }"
                           [indeterminate]="someSelected()"
                           (ngModelChange)="toggleAll($event)"
                         />
@@ -353,58 +356,122 @@
   } @else if (!empty()) {
     <div class="tx-table__cards" role="list" [class]="passThrough().cards?.class" [style]="passThrough().cards?.style" [attr.aria-label]="ariaLabel() ?? null">
       @for (item of renderRows(); track item.key) {
-        <div
-          role="listitem"
-          class="tx-table__card"
-          [class]="passThrough().card?.class"
-          [style]="passThrough().card?.style"
-          [class.tx-table__card--selected]="item.selected"
-          [class.tx-table__card--custom]="!!cardTemplate()"
-        >
-          @if (cardTemplate(); as card) {
-            <ng-container [ngTemplateOutlet]="card.templateRef" [ngTemplateOutletContext]="{ $implicit: dataOf(item.row), node: item.row, index: item.index }" />
-          } @else {
-            @if (hasSelectColumn()) {
-              <div class="tx-table__card-select">
-                @if (selectionMode() === 'checkbox') {
-                  <tx-checkbox
-                    binary
-                    [ariaLabel]="translations().selectRow"
-                    [disabled]="!item.selectable"
-                    [unstyled]="isUnstyled()"
-                    [ngModel]="item.selected"
-                    (ngModelChange)="toggleRow(item)"
-                  />
-                } @else {
-                  <tx-radio-button
-                    [value]="item.key"
-                    [ariaLabel]="translations().selectRow"
-                    [disabled]="!item.selectable"
-                    [unstyled]="isUnstyled()"
-                    [ngModel]="radioValue()"
-                    (ngModelChange)="selectRadio(item)"
-                  />
-                }
-              </div>
+        @if (item.group?.first && rowGroupMode() === 'subheader') {
+          <div role="listitem" class="tx-table__card-group">
+            <div class="tx-table__group-content">
+              @if (expandableRowGroups()) {
+                <button
+                  type="button"
+                  class="tx-table__row-toggle"
+                  [attr.aria-expanded]="!item.group.collapsed"
+                  [attr.aria-label]="item.group.collapsed ? translations().expandRow : translations().collapseRow"
+                  (click)="toggleGroup(item)"
+                >
+                  <tx-icon aria-hidden="true" name="chevron-right" class="tx-table__row-toggle-icon" [class.tx-table__row-toggle-icon--open]="!item.group.collapsed" />
+                </button>
+              }
+              @if (groupHeaderTemplate(); as header) {
+                <ng-container [ngTemplateOutlet]="header.templateRef" [ngTemplateOutletContext]="groupContext(item)" />
+              } @else {
+                <span class="tx-table__group-title">{{ item.group.value }}</span>
+                <span class="tx-table__group-count">{{ translations().rowGroup.replace('{count}', '' + item.group.size) }}</span>
+              }
+            </div>
+          </div>
+        }
+        @if (!item.group?.collapsed) {
+          <div
+            role="listitem"
+            class="tx-table__card"
+            [class]="passThrough().card?.class"
+            [style]="passThrough().card?.style"
+            [class.tx-table__card--selected]="item.selected"
+            [class.tx-table__card--custom]="!!cardTemplate()"
+            [attr.data-key]="item.key"
+          >
+            @if (cardTemplate(); as card) {
+              <ng-container [ngTemplateOutlet]="card.templateRef" [ngTemplateOutletContext]="{ $implicit: dataOf(item.row), node: item.row, index: item.index }" />
+            } @else {
+              @if (hasSelectColumn()) {
+                <div class="tx-table__card-select">
+                  @if (selectionMode() === 'checkbox') {
+                    <tx-checkbox
+                      binary
+                      [ariaLabel]="translations().selectRow"
+                      [disabled]="!item.selectable"
+                      [unstyled]="isUnstyled()"
+                      [ngModel]="item.selected"
+                      [ngModelOptions]="{ standalone: true }"
+                      (ngModelChange)="toggleRow(item)"
+                    />
+                  } @else {
+                    <tx-radio-button
+                      [value]="item.key"
+                      [ariaLabel]="translations().selectRow"
+                      [disabled]="!item.selectable"
+                      [unstyled]="isUnstyled()"
+                      [ngModel]="radioValue()"
+                      [ngModelOptions]="{ standalone: true }"
+                      (ngModelChange)="selectRadio(item)"
+                    />
+                  }
+                </div>
+              }
+              @if (cardTitleColumn(); as title) {
+                <div class="tx-table__card-title" [class.tx-table__card-title--select]="hasSelectColumn()">
+                  <ng-container [ngTemplateOutlet]="cellContent" [ngTemplateOutletContext]="{ $implicit: item, column: title }" />
+                </div>
+              }
+              @for (column of cardFields(); track column.field) {
+                <div class="tx-table__card-field">
+                  <span class="tx-table__card-label">{{ label(column) }}</span>
+                  <span class="tx-table__card-value"><ng-container [ngTemplateOutlet]="cellContent" [ngTemplateOutletContext]="{ $implicit: item, column }" /></span>
+                </div>
+              }
             }
-            @if (cardTitleColumn(); as title) {
-              <div class="tx-table__card-title" [class.tx-table__card-title--select]="hasSelectColumn()">
-                <ng-container [ngTemplateOutlet]="cellContent" [ngTemplateOutletContext]="{ $implicit: item, column: title }" />
-              </div>
+            @if (expansionTemplate(); as expansion) {
+              @if (canExpand(item)) {
+                @let expansionId = cardExpansionId(item);
+                <button
+                  type="button"
+                  class="tx-table__card-toggle"
+                  [attr.aria-expanded]="item.expanded"
+                  [attr.aria-controls]="expansionId"
+                  (click)="toggleExpansion(item, $event)"
+                >
+                  <tx-icon aria-hidden="true" name="chevron-right" class="tx-table__row-toggle-icon" [class.tx-table__row-toggle-icon--open]="item.expanded" />
+                  <span>{{ item.expanded ? translations().collapseRow : translations().expandRow }}</span>
+                </button>
+                <div
+                  class="tx-table__expansion-body tx-table__card-expansion"
+                  [id]="expansionId"
+                  [class.tx-table__expansion-body--open]="item.expanded"
+                  (transitionend)="finishClosing(item.key, $event)"
+                >
+                  @if (item.expanded || isClosing(item.key)) {
+                    <div class="tx-table__expansion-inner">
+                      <div class="tx-table__expansion-content">
+                        <ng-container [ngTemplateOutlet]="expansion.templateRef" [ngTemplateOutletContext]="{ $implicit: dataOf(item.row), node: item.row, index: item.index }" />
+                      </div>
+                    </div>
+                  }
+                </div>
+              }
             }
-            @for (column of cardFields(); track column.field) {
-              <div class="tx-table__card-field">
-                <span class="tx-table__card-label">{{ label(column) }}</span>
-                <span class="tx-table__card-value"><ng-container [ngTemplateOutlet]="cellContent" [ngTemplateOutletContext]="{ $implicit: item, column }" /></span>
-              </div>
+            @if (!cardTemplate()) {
+              @if (actionsTemplate(); as actions) {
+                <div class="tx-table__card-actions">
+                  <ng-container [ngTemplateOutlet]="actions.templateRef" [ngTemplateOutletContext]="{ $implicit: dataOf(item.row), node: item.row, index: item.index }" />
+                </div>
+              }
             }
-            @if (actionsTemplate(); as actions) {
-              <div class="tx-table__card-actions">
-                <ng-container [ngTemplateOutlet]="actions.templateRef" [ngTemplateOutletContext]="{ $implicit: dataOf(item.row), node: item.row, index: item.index }" />
-              </div>
-            }
-          }
-        </div>
+          </div>
+        }
+        @if (item.group?.last && rowGroupMode() === 'subheader' && groupFooterTemplate(); as footer) {
+          <div role="listitem" class="tx-table__card-group tx-table__card-group--footer">
+            <ng-container [ngTemplateOutlet]="footer.templateRef" [ngTemplateOutletContext]="groupContext(item)" />
+          </div>
+        }
       }
     </div>
   }
@@ -544,6 +611,7 @@
           [disabled]="!item.selectable"
           [unstyled]="isUnstyled()"
           [ngModel]="item.selected"
+          [ngModelOptions]="{ standalone: true }"
           (ngModelChange)="toggleRow(item)"
         />
       } @else {
@@ -554,6 +622,7 @@
           [disabled]="!item.selectable"
           [unstyled]="isUnstyled()"
           [ngModel]="radioValue()"
+          [ngModelOptions]="{ standalone: true }"
           (ngModelChange)="selectRadio(item)"
         />
       }
@@ -648,6 +717,7 @@
               [disabled]="!item.selectable"
               [unstyled]="isUnstyled()"
               [ngModel]="item.selected"
+              [ngModelOptions]="{ standalone: true }"
               [indeterminate]="item.tree.partial"
               (ngModelChange)="toggleRow(item)"
             />
@@ -678,6 +748,7 @@
           [ariaLabel]="label(column.column)"
           [unstyled]="isUnstyled()"
           [ngModel]="draftValue(item, column.column)"
+          [ngModelOptions]="{ standalone: true }"
           (ngModelChange)="setDraft(item, column.column, $event)"
         />
       } @else {
@@ -691,6 +762,7 @@
                 [ariaLabel]="label(column.column)"
                 [unstyled]="isUnstyled()"
                 [ngModel]="draftValue(item, column.column)"
+                [ngModelOptions]="{ standalone: true }"
                 (ngModelChange)="setDraft(item, column.column, $event)"
               />
             } @placeholder {
@@ -703,6 +775,7 @@
               [ariaLabel]="label(column.column)"
               [unstyled]="isUnstyled()"
               [ngModel]="draftValue(item, column.column)"
+              [ngModelOptions]="{ standalone: true }"
               (ngModelChange)="setDraft(item, column.column, $event)"
             />
           }
@@ -715,6 +788,7 @@
                 [ariaLabel]="label(column.column)"
                 [unstyled]="isUnstyled()"
                 [ngModel]="dateDraft(draftValue(item, column.column))"
+                [ngModelOptions]="{ standalone: true }"
                 (ngModelChange)="setDraft(item, column.column, $event)"
               />
             } @placeholder {

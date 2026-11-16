@@ -4,7 +4,7 @@ tokens: chart
 source: packages/charts/gantt
 package: @tectra-ng/charts/gantt
 import: TxGanttChart
-examples: basic, timeline, zoom, events, compact, loading-and-empty, accessibility, design-tokens, pass-through, unstyled
+examples: basic, timeline, dependencies, zoom, events, compact, loading-and-empty, accessibility, design-tokens, pass-through, unstyled
 ---
 # Gantt Chart
 

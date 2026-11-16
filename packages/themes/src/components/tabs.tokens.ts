@@ -15,9 +15,9 @@ export const tabsTokens = {
     gap: '3.5px',
     padding: '3.5px',
     borderWidth: '1px',
-    borderColor: tokenRef('surface-border'),
+    borderColor: lightDark(tokenRef('surface-200'), tokenRef('surface-700')),
     borderRadius: '10.5px',
-    background: tokenRef('surface-ground'),
+    background: lightDark(tokenRef('surface-50'), tokenRef('surface-800')),
     focusRingOffset: '1px',
     tab: {
       padding: '8.75px 10.5px',
@@ -46,8 +46,8 @@ export const tabsTokens = {
     gap: '1.75px',
     padding: '3.5px',
     borderRadius: '10px',
-    background: tokenRef('surface-ground'),
-    ringColor: tokenRef('surface-border'),
+    background: lightDark(tokenRef('surface-50'), tokenRef('surface-800')),
+    ringColor: lightDark(tokenRef('surface-200'), tokenRef('surface-700')),
     focusRingOffset: '1px',
     transitionDuration: '0.15s',
     tab: {

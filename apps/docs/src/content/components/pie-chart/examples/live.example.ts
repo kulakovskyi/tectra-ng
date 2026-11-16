@@ -22,7 +22,7 @@ import { TxButton } from '@tectra-ng/ui/button';
       <tx-pie-chart
         [pieData]="data()"
         [chartWidth]="260"
-        [chartHeight]="320"
+        [height]="320"
         totalLabel="Hours"
         ariaLabel="Hours by activity"
         (segmentClick)="onClick($event)"

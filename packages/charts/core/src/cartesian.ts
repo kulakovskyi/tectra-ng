@@ -15,7 +15,7 @@ import {
   TxTimeScale,
 } from './chart.types';
 import { textWidth, tickFormatter, timeTickFormatter, truncateText } from './format';
-import { bandScale, linearScale, logDomain, logScale, niceDomain, pointScale, timeScale } from './scale';
+import { bandScale, linearScale, linearTicks, logDomain, logScale, niceDomain, pointScale, timeScale } from './scale';
 
 /** How the category axis is built: `band`, `point`, `time` or `linear`. */
 export type TxCategoryKind = 'band' | 'point' | 'time' | 'linear';
@@ -140,16 +140,21 @@ function valueDomain(options: TxValueAxisOptions, count: number): TxRange {
   const includeZero = options.includeZero ?? true;
   const min = options.min ?? (includeZero ? Math.min(0, rawMin) : rawMin);
   const max = options.max ?? (includeZero ? Math.max(0, rawMax) : rawMax);
-  const nice = niceDomain(min, max, count);
+  const nice = niceDomain(min, max, count, options.format === 'integer');
   return [options.min ?? nice[0], options.max ?? nice[1]];
+}
+
+function valueTicksOf(options: TxValueAxisOptions, domain: TxRange, count: number): number[] {
+  return options.scale === 'log' ? logScale(domain, [0, 1]).ticks(count) : linearTicks(domain[0], domain[1], count, options.format === 'integer');
 }
 
 const NICE_STEPS = [1, 2, 2.5, 5, 10];
 
-function niceStepAtLeast(raw: number): number {
+function niceStepAtLeast(raw: number, integer: boolean): number {
   if (!(raw > 0) || !Number.isFinite(raw)) return 1;
-  const base = 10 ** Math.floor(Math.log10(raw));
-  const factor = NICE_STEPS.find((step) => step * base >= raw * (1 - 1e-9)) ?? 10;
+  const wanted = integer ? Math.max(1, raw) : raw;
+  const base = 10 ** Math.floor(Math.log10(wanted));
+  const factor = NICE_STEPS.find((step) => (!integer || Number.isInteger(step * base)) && step * base >= wanted * (1 - 1e-9)) ?? 10;
   return factor * base;
 }
 
@@ -168,7 +173,8 @@ export function alignedDomain(options: TxValueAxisOptions, intervals: number, ze
     max = max < 0 ? 0 : max + 1;
   }
   const below = zeroAt !== null && zeroAt > 0 && zeroAt < intervals ? zeroAt : null;
-  let step = below !== null ? niceStepAtLeast(Math.max(max / (intervals - below), -min / below)) : niceStepAtLeast((max - min) / intervals);
+  const integer = options.format === 'integer';
+  let step = below !== null ? niceStepAtLeast(Math.max(max / (intervals - below), -min / below), integer) : niceStepAtLeast((max - min) / intervals, integer);
   for (let round = 0; round < 12; round++) {
     const start = below !== null ? -below * step : Math.floor(min / step + 1e-9) * step;
     const stop = start + intervals * step;
@@ -177,7 +183,7 @@ export function alignedDomain(options: TxValueAxisOptions, intervals: number, ze
       const ticks = Array.from({ length: intervals + 1 }, (_, index) => Number((start + index * step).toFixed(decimals)) || 0);
       return { domain: [ticks[0], ticks[intervals]], ticks };
     }
-    step = niceStepAtLeast(step * 1.0001);
+    step = niceStepAtLeast(step * 1.0001, integer);
   }
   return null;
 }
@@ -209,8 +215,7 @@ export function cartesianLayout(options: TxCartesianOptions): TxCartesianLayout 
   const valueLength = horizontal ? width * 0.75 : height - fontSize * 3;
   const tickCount = options.value.tickCount ?? Math.max(2, Math.min(horizontal ? 8 : 6, Math.round(valueLength / (horizontal ? 90 : 62))));
   const domain = valueDomain(options.value, tickCount);
-  const probe = options.value.scale === 'log' ? logScale(domain, [0, 1]) : linearScale(domain, [0, 1]);
-  const valueTicks = probe.ticks(tickCount);
+  const valueTicks = valueTicksOf(options.value, domain, tickCount);
   const valueFormat = tickFormatter(options.intl, valueTicks, options.value.format);
   const valueLabels = valueTicks.map((tick) => valueFormat(tick));
   const valueLabelWidth = showValueAxis ? Math.max(0, ...valueLabels.map((label) => textWidth(label, fontSize))) : 0;
@@ -221,7 +226,7 @@ export function cartesianLayout(options: TxCartesianOptions): TxCartesianLayout 
   const primaryZero = evenTicks ? valueTicks.indexOf(0) : -1;
   const aligned = second && evenTicks ? alignedDomain(second, valueTicks.length - 1, primaryZero > 0 ? primaryZero : null) : null;
   const secondDomain: TxRange | null = second ? (aligned?.domain ?? valueDomain(second, tickCount)) : null;
-  const secondTicks = second && secondDomain ? (aligned?.ticks ?? (second.scale === 'log' ? logScale(secondDomain, [0, 1]) : linearScale(secondDomain, [0, 1])).ticks(tickCount)) : [];
+  const secondTicks = second && secondDomain ? (aligned?.ticks ?? valueTicksOf(second, secondDomain, tickCount)) : [];
   const secondFormat = tickFormatter(options.intl, secondTicks, second?.format);
   const secondLabels = secondTicks.map((tick) => secondFormat(tick));
   const secondLabelWidth = second ? Math.max(0, ...secondLabels.map((label) => textWidth(label, fontSize))) : 0;

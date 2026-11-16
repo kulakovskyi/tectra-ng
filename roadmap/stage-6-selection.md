@@ -78,3 +78,12 @@ PrimeNG: ColorPicker (`inline`, `format` hex / rgb / hsb), TreeSelect, CascadeSe
 - [x] `ui/tree-select`: field + `role="tree"` panel (flat tree items with `aria-level` / `aria-setsize` / `aria-posinset`, keys from the field), `single` / `multiple` / `checkbox` (branch check, partial parents `aria-checked="mixed"`, normalized keys), `[(expandedKeys)]`, selected nodes revealed on open, search keeping ancestors, comma / chip display, clear, disabled / not selectable nodes, icons; `tree` tokens; tree helpers exported; docs, tests, e2e (arrows, branch check, axe on the open tree)
 - [x] `ui/cascade-select`: columns per level in one panel (`role="tree"`, a `role="group"` per column, `aria-level` / `aria-expanded`), hover or ArrowRight opens a group, ArrowLeft goes back, disabled items skipped, typeahead per column, `optionGroupChildren` per level, `showPath` + `pathSeparator`, `changed` with the path, opens at the current value, clear; `cascadeSelect` tokens; docs, tests, e2e (keys through three levels, axe on the open columns)
 - [x] Float / ifta label and input group know tree select and cascade select
+
+## 6.8 Select button — `ui/select-button` ✅
+
+PrimeNG: SelectButton (`options`, `optionLabel` / `optionValue` / `optionDisabled`, `multiple`, `allowEmpty`, `dataKey`, `size`, `fluid`, item template, `(onChange)`). First app: 0 tags (parity).
+
+- [x] `<tx-select-button>`: options as buttons in one track with the segmented `tx-tabs` look (surface-50 / surface-800 track with a ring, primary item, pop on select), objects or plain values (`optionLabel`, `optionValue`, `optionDisabled`, `optionIcon`, nested fields, `dataKey`), `multiple` (array value, click order), `allowEmpty`, `iconOnly` (text as accessible name + tooltip), sizes, `fluid` (+ `<tx-fluid>`), invalid / disabled / readonly / required, `changed` / `focused` / `blurred`, `focus()`, `[(value)]` and form control; `selectButton` tokens
+- [x] Single mode is a `radiogroup` (roving Tab stop on the picked option, arrows and Home / End move and pick, disabled skipped); `multiple` is a `group` of `aria-pressed` buttons with the same Tab stop, arrows move, Space / Enter toggles; `tx-field` names it
+- [x] `txSelectButtonItem` template typed with `txSelectButtonItemOf`
+- [x] Docs (basic, multiple, icons, template, states, sizes, fluid, reactive form, ngModel, design tokens, pass-through, unstyled, accessibility) + unit tests

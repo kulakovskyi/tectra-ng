@@ -23,7 +23,7 @@ import { TxTag } from '@tectra-ng/ui/tag';
         />
       </div>
       <tx-cookie-notice cookieName="docs-cookie-network" preview />
-      <tx-network-status bodyClass="" />
+      <tx-network-status contained />
     </div>
   `,
   styles: `
@@ -35,7 +35,7 @@ import { TxTag } from '@tectra-ng/ui/tag';
       border: 1px solid var(--tx-surface-border);
       border-radius: 12px;
       background: var(--tx-surface-ground);
-      contain: layout;
+      position: relative;
       overflow: hidden;
     }
 

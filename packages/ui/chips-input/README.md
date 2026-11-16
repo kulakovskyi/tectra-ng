@@ -5,6 +5,7 @@ A text field that turns what you type into chips — keywords, tags, emails, dom
 ## Inputs
 | Name | Description |
 |---|---|
+| text | Typed text that is not a chip yet; two-way with `[(text)]` — setting it updates the field |
 | placeholder | Text shown while the field is empty |
 | separator | Text or pattern that ends a chip while typing and splits pasted text (`,` by default); Enter always adds |
 | addOnBlur | Adds the typed text when the field loses focus (on by default) |
@@ -32,6 +33,15 @@ A text field that turns what you type into chips — keywords, tags, emails, dom
 | added | A chip was added: `{ value, values }` |
 | removed | A chip was removed: `{ value, values }` |
 | rejected | A value was not added — duplicate, over `max` or not matching `itemPattern`: `{ value, values }` |
+| textChange | The typed text changed |
+
+## Methods
+| Name | Description |
+|---|---|
+| add(value) | Adds a chip or a list of chips with the same checks as typing (duplicates, `max`, `maxLength`, `itemPattern`); emits `added` / `rejected`; does nothing when disabled or read-only. The typed text stays |
+| clearText() | Clears the typed text and keeps the chips |
+| clear() | Removes every chip and the typed text |
+| removeAt(index) | Removes the chip at the index |
 
 ## Slots
 | Name | Description |

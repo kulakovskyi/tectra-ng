@@ -13,6 +13,8 @@ import { KNOB_ICON_DEFAULTS } from './knob.icons';
 import { KNOB_THEME } from './knob.theme';
 
 const CENTER = 50;
+const TEXT_INSET = 12;
+const CHAR_WIDTH = 0.62;
 
 @Component({
   selector: 'tx-knob',
@@ -89,6 +91,12 @@ export class TxKnob extends TxFormControlBase<number> {
   readonly limitDash = computed(() => `0 ${this.limitFraction() * this.span()} ${(1 - this.limitFraction()) * this.span()} 100`);
   readonly handle = computed(() => this.point(this.fraction()));
   readonly text = computed(() => this.valueTemplate().replace('{value}', this.localeService.formatNumber(this.current())));
+  readonly textFit = computed(() => {
+    const chars = Array.from(this.text()).length;
+    if (this.template() || !chars) return null;
+    const room = 2 * (this.radius() - this.strokeWidth() / 2) - TEXT_INSET;
+    return Math.max(0, room / (chars * CHAR_WIDTH));
+  });
   readonly hostStyle = computed(() => ({
     ...toStyleObject(this.dt(), '--tx-knob'),
     width: `${this.size()}px`,

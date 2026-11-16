@@ -8,7 +8,7 @@ import { TxChartTooltipFormatter } from '@tectra-ng/charts/core';
   template: `<tx-pie-chart
     [pieData]="spend"
     [chartWidth]="260"
-    [chartHeight]="320"
+    [height]="320"
     totalLabel="This month"
     [totalFormatter]="money"
     [tooltipFormatter]="tooltip"

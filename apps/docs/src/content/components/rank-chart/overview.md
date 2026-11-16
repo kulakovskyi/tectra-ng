@@ -4,7 +4,7 @@ tokens: chart
 source: packages/charts/rank-line
 package: @tectra-ng/charts/rank-line
 import: TxRankChart
-examples: basic, notes, legend, depth, own-colors, loading-and-empty, design-tokens, pass-through
+examples: basic, notes, legend, depth, date-format, own-colors, loading-and-empty, design-tokens, pass-through
 ---
 # Rank Chart
 

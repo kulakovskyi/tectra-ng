@@ -92,6 +92,22 @@ export interface TxSankeyLayout {
   columns: number;
 }
 
+/** A placed node label of `tx-sankey-chart`. */
+export interface TxSankeyLabel {
+  /** Id of the node. */
+  key: string;
+  /** Horizontal position of the text anchor, in px. */
+  x: number;
+  /** Vertical centre of the text, in px. */
+  y: number;
+  /** `end` for a label left of its node, `start` for one on the right. */
+  anchor: 'start' | 'end';
+  /** Name shown, shortened with an ellipsis when it had to be. */
+  label: string;
+  /** Formatted value shown after the name; empty when hidden or when it does not fit. */
+  value: string;
+}
+
 /** Payload of the node click event of `tx-sankey-chart`. */
 export interface TxSankeyNodeEvent {
   /** Id of the node. */

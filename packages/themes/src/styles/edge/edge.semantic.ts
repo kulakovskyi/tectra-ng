@@ -3,6 +3,8 @@ import { TectraPalettes } from '../../types/preset.interface';
 import { TectraSemanticTokens } from '../../types/semantic-tokens.interface';
 import { primaryBaseStep } from '../../semantic/contrast';
 
+const content = { radius: 'var(--tx-radius-sm)', shadow: '0 1px 4px 0 rgba(0, 0, 0, 0.1)' };
+
 export function edgeLight({ accent, surface }: TectraPalettes): TectraDeepPartial<TectraSemanticTokens> {
   const base = primaryBaseStep(accent);
   return {
@@ -16,6 +18,7 @@ export function edgeLight({ accent, surface }: TectraPalettes): TectraDeepPartia
     },
     highlight: { background: accent[base], focusBackground: accent[base === 600 ? 700 : 800], color: surface[0], focusColor: surface[0] },
     list: { focusBackground: surface[200] },
+    content,
   };
 }
 
@@ -27,5 +30,6 @@ export function edgeDark({ accent, surface }: TectraPalettes): TectraDeepPartial
     highlight: { background: accent[500], focusBackground: accent[400], color: surface[950], focusColor: surface[950] },
     list: { focusBackground: surface[700] },
     focusRing: { color: accent[500] },
+    content,
   };
 }

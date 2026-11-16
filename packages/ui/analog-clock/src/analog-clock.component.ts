@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, DestroyRef, booleanAttribute, compu
 import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraAnalogClockTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
-import { TxAnalogClockPart } from './analog-clock.types';
-import { clockHands, forwardAngle } from './analog-clock.utils';
+import { TxAnalogClockPart, TxAnalogClockTime } from './analog-clock.types';
+import { clockHands, clockTime, forwardAngle } from './analog-clock.utils';
 import { ANALOG_CLOCK_THEME } from './analog-clock.theme';
 
 @Component({
@@ -59,7 +59,7 @@ export class TxAnalogClock {
   private readonly analogClockTheme = injectTokens(ANALOG_CLOCK_THEME);
 
   readonly timezone = input<string | null | undefined>(undefined);
-  readonly time = input<Date | number | null | undefined>(undefined);
+  readonly time = input<TxAnalogClockTime>(undefined);
   readonly showSeconds = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly ariaLabel = input<string | undefined>(undefined);
   readonly dt = input<TectraDeepPartial<TectraAnalogClockTokens> | undefined>(undefined);
@@ -75,7 +75,8 @@ export class TxAnalogClock {
   private readonly now = signal(Date.now());
   private timer: ReturnType<typeof setTimeout> | null = null;
 
-  readonly hands = computed(() => clockHands(this.time() ?? this.now(), this.timezone()));
+  private readonly fixedTime = computed(() => clockTime(this.time()));
+  readonly hands = computed(() => clockHands(this.fixedTime() ?? this.now(), this.timezone()));
   readonly label = computed(() => (this.ariaLabel() ? `${this.ariaLabel()}, ${this.hands().time}` : this.hands().time));
   readonly hourAngle = linkedSignal<number, number>({ source: () => this.hands().hourAngle, computation: (next, previous) => forwardAngle(previous?.value ?? null, next) });
   readonly minuteAngle = linkedSignal<number, number>({ source: () => this.hands().minuteAngle, computation: (next, previous) => forwardAngle(previous?.value ?? null, next) });
@@ -83,7 +84,7 @@ export class TxAnalogClock {
 
   private readonly schedule = effect((onCleanup) => {
     this.now();
-    if (this.time() !== undefined && this.time() !== null) return;
+    if (this.fixedTime() !== null) return;
     const step = this.showSeconds() ? 1000 : 60000;
     this.timer = setTimeout(() => this.now.set(Date.now()), step - (Date.now() % step) + 5);
     onCleanup(() => {

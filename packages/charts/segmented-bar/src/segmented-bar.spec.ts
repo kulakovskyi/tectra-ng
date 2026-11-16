@@ -16,6 +16,7 @@ import { TxSegmentedBarItem, TxSegmentedBarSize } from './segmented-bar.types';
       [showValue]="value()"
       [hideEmptyInLegend]="hideEmpty()"
       [monoLabels]="mono()"
+      [loading]="loading()"
       ariaLabel="Status"
       [dt]="{ segmentedBar: { trackHeight: '10px' } }"
       [pt]="{ segment: { class: 'own-segment' } }"
@@ -39,6 +40,7 @@ class Host {
   readonly value = signal(true);
   readonly hideEmpty = signal(false);
   readonly mono = signal(false);
+  readonly loading = signal(false);
 }
 
 describe('segmented bar segments', () => {
@@ -129,6 +131,29 @@ describe('TxSegmentedBar', () => {
     expect(main().querySelector('.tx-segmented-bar__legend')).toBeNull();
     expect(track().getAttribute('role')).toBe('img');
     expect(track().getAttribute('aria-label')).toBe('Status, Healthy: 6 (50%), Warning: 3 (25%), Unknown: 0 (0%), Down: 3 (25%)');
+  });
+
+  it('shows a skeleton bar and legend while loading', async () => {
+    host.loading.set(true);
+    await fixture.whenStable();
+    expect(main().getAttribute('aria-busy')).toBe('true');
+    expect(main().classList).toContain('tx-segmented-bar--loading');
+    expect(main().querySelector('.tx-segmented-bar__segment')).toBeNull();
+    expect(main().querySelector('.tx-segmented-bar__track')?.getAttribute('aria-label')).toBe('Loading chart');
+    expect(main().querySelectorAll('.tx-segmented-bar__skeleton')).toHaveLength(1);
+    expect(main().querySelectorAll('.tx-segmented-bar__legend-skeleton')).toHaveLength(3);
+    host.items.set([]);
+    host.legend.set(false);
+    await fixture.whenStable();
+    expect(main().querySelector('.tx-segmented-bar__legend')).toBeNull();
+    host.legend.set(true);
+    host.items.set([{ key: 'a', label: 'A', value: 1 }]);
+    await fixture.whenStable();
+    expect(main().querySelectorAll('.tx-segmented-bar__legend-skeleton')).toHaveLength(1);
+    host.loading.set(false);
+    await fixture.whenStable();
+    expect(main().hasAttribute('aria-busy')).toBe(false);
+    expect(main().querySelectorAll('.tx-segmented-bar__segment')).toHaveLength(1);
   });
 
   it('applies mono labels, dt and unstyled', async () => {

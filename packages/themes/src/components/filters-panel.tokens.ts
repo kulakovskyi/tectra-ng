@@ -10,7 +10,8 @@ export const filtersPanelTokens = {
   root: {
     background: tokenRef('surface-card'),
     borderColor: tokenRef('surface-border'),
-    borderRadius: tokenRef('radius-lg'),
+    borderRadius: tokenRef('content-radius'),
+    shadow: tokenRef('content-shadow'),
     padding: '17.5px',
     gap: '10.5px',
     color: tokenRef('text-primary'),

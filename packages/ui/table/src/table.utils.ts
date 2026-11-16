@@ -1,10 +1,5 @@
+import { resolveField } from '@tectra-ng/core/utils';
 import { TxSortMeta, TxTableActionConfig, TxTableColumn, TxTableRowKey } from './table.types';
-
-/** Reads a row value by field name, with dots for nested fields; `undefined` when a step is missing. */
-export function resolveField(row: unknown, field: string | undefined): unknown {
-  if (!field || row === null || row === undefined) return undefined;
-  return field.split('.').reduce<unknown>((value, key) => (value === null || value === undefined ? undefined : (value as Record<string, unknown>)[key]), row);
-}
 
 /** Writes a value into a row by field name, with dots for nested fields. */
 export function writeField(row: unknown, field: string, value: unknown): void {
@@ -104,3 +99,5 @@ export function mergeColumnOrder(columns: readonly TxTableColumn[], order: reado
   });
   return result;
 }
+
+export { resolveField };

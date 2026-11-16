@@ -12,12 +12,16 @@ import {
   model,
   numberAttribute,
   output,
+  Signal,
   signal,
   untracked,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
   ActivatedRoute,
+  ActivatedRouteSnapshot,
+  Event as RouterEvent,
+  GuardsCheckEnd,
   IsActiveMatchOptions,
   NavigationCancel,
   NavigationEnd,
@@ -75,6 +79,40 @@ interface TxPanelMenuBlock {
   tree: TxPanelMenuNode[];
   /** Whether the block shows its node as a section title. */
   titled: boolean;
+}
+
+function mayAskToLeave(router: Router): boolean {
+  const routes: ActivatedRouteSnapshot[] = [router.routerState.snapshot.root];
+  for (let route = routes.pop(); route; route = routes.pop()) {
+    if (route.routeConfig?.canDeactivate?.length) {
+      return true;
+    }
+    routes.push(...route.children);
+  }
+  return false;
+}
+
+function routeUrl(router: Router): Signal<string> {
+  return toSignal(
+    router.events.pipe(
+      map((event) => navigationUrl(router, event)),
+      filter((url): url is string => url !== null),
+    ),
+    { initialValue: router.url },
+  );
+}
+
+function navigationUrl(router: Router, event: RouterEvent): string | null {
+  if (event instanceof NavigationStart) {
+    return mayAskToLeave(router) ? null : event.url;
+  }
+  if (event instanceof GuardsCheckEnd) {
+    return event.shouldActivate ? event.urlAfterRedirects : null;
+  }
+  if (event instanceof NavigationEnd || event instanceof NavigationCancel || event instanceof NavigationError || event instanceof NavigationSkipped) {
+    return router.url;
+  }
+  return null;
 }
 
 /** How a node navigates: through the router, as a plain URL, or not at all. */
@@ -139,22 +177,7 @@ export class TxPanelMenu {
     ),
   );
 
-  private readonly url = this.router
-    ? toSignal(
-        this.router.events.pipe(
-          filter(
-            (event) =>
-              event instanceof NavigationStart ||
-              event instanceof NavigationEnd ||
-              event instanceof NavigationCancel ||
-              event instanceof NavigationError ||
-              event instanceof NavigationSkipped,
-          ),
-          map((event) => (event instanceof NavigationStart ? event.url : (this.router?.url ?? ''))),
-        ),
-        { initialValue: this.router.url },
-      )
-    : signal('');
+  private readonly url = this.router ? routeUrl(this.router) : signal('');
 
   readonly activeKeys = computed(() => {
     const active = new Set<string>();

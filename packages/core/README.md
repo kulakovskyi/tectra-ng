@@ -13,6 +13,6 @@ Behaviour without looks. Every component of `@tectra-ng/ui` stands on it. Built 
 | `@tectra-ng/core/styles` | `TxStyleLoader` — loads global styles of directive-based components once |
 | `@tectra-ng/core/ripple` | `txRipple` — ink wave: grows from the pointer while pressed, fades on release, starts from the centre on Enter / Space, calm fade with reduced motion. On with `provideTectra({ ripple: true })`, `TxThemeService.setRipple(true)` at runtime, or `[ripple]`; `rippleCentered`, `rippleColor`, `rippleDisabled`; tokens `--tx-ripple-{color,opacity,enter-duration,exit-duration,easing}` |
 | `@tectra-ng/core/fluid` | `<tx-fluid>` / `[txFluid]` — every fluid-aware component inside takes the full width |
-| `@tectra-ng/core/utils` | `optionalBoolean` input transform, `txAnimationReplay` (plays an element's CSS animation again when a key changes) |
+| `@tectra-ng/core/utils` | `optionalBoolean` input transform, `txAnimationReplay` (plays an element's CSS animation again when a key changes), the page math of the paginator (`firstToPage`, `pageToFirst`, `pageCountOf`, `pageLinksOf`) and the filter rules of the table (`resolveField`, `matchesRule`, `isFilled`), shared with `@tectra-ng/utils` without loading the components |
 
 Depends on: `@tectra-ng/themes`, `@angular/core`, `@angular/cdk`.

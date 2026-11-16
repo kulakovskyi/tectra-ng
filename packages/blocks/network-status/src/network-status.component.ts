@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DOCUMENT, ElementRef, afterRenderEffect, computed, effect, inject, input, numberAttribute, output, untracked, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DOCUMENT, ElementRef, afterRenderEffect, booleanAttribute, computed, effect, inject, input, numberAttribute, output, untracked, viewChild } from '@angular/core';
 import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
@@ -39,6 +39,7 @@ import { NETWORK_STATUS_THEME } from './network-status.theme';
     '[class]': 'passThrough().root?.class',
     '[style]': 'hostStyle()',
     '[attr.data-styled]': '!isUnstyled() || null',
+    '[class.tx-network-status--contained]': 'contained()',
   },
   viewProviders: [provideTxIconDefaults(NETWORK_STATUS_ICON_DEFAULTS)],
 })
@@ -54,6 +55,7 @@ export class TxNetworkStatus {
   readonly restoredText = input<string | undefined>(undefined);
   readonly restoredDuration = input<number, unknown>(3000, { transform: numberAttribute });
   readonly bodyClass = input<string>('tx-offline');
+  readonly contained = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly dt = input<TectraDeepPartial<TectraNetworkStatusTokens> | undefined>(undefined);
   readonly pt = input<TxPassThrough<TxNetworkStatusPart, TxNetworkStatus> | undefined>(undefined);
   readonly ptOptions = input<TxPassThroughOptions | undefined>(undefined);
@@ -85,7 +87,7 @@ export class TxNetworkStatus {
     effect((onCleanup) => {
       const name = this.bodyClass();
       const body = this.document.body;
-      if (!name || !body) {
+      if (!name || !body || this.contained()) {
         return;
       }
       body.classList.toggle(name, this.visible());
@@ -93,7 +95,7 @@ export class TxNetworkStatus {
     });
     afterRenderEffect((onCleanup) => {
       const body = this.document.body;
-      const pill = this.visible() ? this.pill()?.nativeElement : undefined;
+      const pill = this.visible() && !this.contained() ? this.pill()?.nativeElement : undefined;
       if (!body || !pill) {
         return;
       }

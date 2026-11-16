@@ -3,7 +3,8 @@ import { lightDark, tokenRef } from '../../components/token-helpers';
 import { TectraDeepPartial } from '../../types/deep-partial.type';
 
 /* @__NO_SIDE_EFFECTS__ */
-const steps = (palette: string, light: number, dark: number) => lightDark(tokenRef(`${palette}-${light}`), tokenRef(`${palette}-${dark}`));
+const steps = (palette: string, light: number, dark: number) =>
+  lightDark(tokenRef(`${palette}-${light}`), tokenRef(`${palette}-${dark}`));
 
 /* @__NO_SIDE_EFFECTS__ */
 const outlined = (palette: string) => ({
@@ -13,7 +14,10 @@ const outlined = (palette: string) => ({
 });
 
 /* @__NO_SIDE_EFFECTS__ */
-const outlinedWithColor = (palette: string) => ({ ...outlined(palette), color: steps(palette, 600, 500) });
+const outlinedWithColor = (palette: string) => ({
+  ...outlined(palette),
+  color: steps(palette, 600, 500),
+});
 
 export const edgeControlsTokens: TectraDeepPartial<TectraComponentTokens> = {
   button: {
@@ -125,4 +129,20 @@ export const edgeControlsTokens: TectraDeepPartial<TectraComponentTokens> = {
   },
   filtersPanel: { button: { borderRadius: tokenRef('radius-xs') } },
   commandPalette: { trigger: { borderRadius: tokenRef('radius-xs') } },
+  tabs: {
+    segmented: {
+      borderRadius: tokenRef('radius-xs'),
+      tab: { borderRadius: '1px' },
+      sm: { borderRadius: tokenRef('radius-xs'), tabBorderRadius: '1px' },
+    },
+    pills: { borderRadius: tokenRef('radius-xs'), tab: { borderRadius: '1px' } },
+  },
+  selectButton: {
+    root: {
+      borderRadius: tokenRef('radius-xs'),
+      sm: { borderRadius: tokenRef('radius-xs') },
+      lg: { borderRadius: tokenRef('radius-xs') },
+    },
+    item: { borderRadius: '1px', sm: { borderRadius: '1px' }, lg: { borderRadius: '1px' } },
+  },
 };

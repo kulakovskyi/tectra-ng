@@ -59,7 +59,7 @@ const INVOICES: Invoice[] = [
       [columns]="columns"
       [(expandedRowKeys)]="expanded"
     >
-      <ng-template txTableExpansion let-invoice>
+      <ng-template txTableExpansion [txTableExpansionOf]="invoices" let-invoice>
         <div class="details">
           <strong>{{ invoice.client }}</strong>
           <span>{{ invoice.city }} · {{ invoice.status }}</span>

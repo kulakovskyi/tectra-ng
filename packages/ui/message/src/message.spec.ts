@@ -266,3 +266,27 @@ describe('TxMessage recompiled by TestBed', () => {
   });
 });
 
+
+@Component({
+  imports: [TxFieldError, ReactiveFormsModule],
+  template: `<tx-field-error id="name-error" [control]="name" successText="Name is free" [showImmediately]="immediately()" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class ImmediateHost {
+  readonly name = new FormControl('Olena', Validators.required);
+  readonly immediately = signal(true);
+}
+
+describe('TxFieldError showImmediately', () => {
+  it('shows the success text of an untouched valid control', async () => {
+    const fixture = TestBed.createComponent(ImmediateHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    const error = () => fixture.nativeElement.querySelector('#name-error') as HTMLElement;
+    expect(error().getAttribute('data-state')).toBe('success');
+    expect(error().querySelector('.tx-field-message__text')?.textContent?.trim()).toBe('Name is free');
+    fixture.componentInstance.immediately.set(false);
+    await fixture.whenStable();
+    expect(error().getAttribute('data-state')).toBeNull();
+  });
+});

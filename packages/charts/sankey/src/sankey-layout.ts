@@ -1,5 +1,5 @@
-import { seriesColor } from '@tectra-ng/charts/core';
-import { TxSankeyAlign, TxSankeyLayout, TxSankeyLayoutLink, TxSankeyLayoutNode, TxSankeyLink, TxSankeyNode } from './sankey-chart.types';
+import { seriesColor, textWidth, truncateText } from '@tectra-ng/charts/core';
+import { TxSankeyAlign, TxSankeyLabel, TxSankeyLayout, TxSankeyLayoutLink, TxSankeyLayoutNode, TxSankeyLink, TxSankeyNode } from './sankey-chart.types';
 
 /** Size and spacing settings of `sankeyLayout`. */
 export interface TxSankeyOptions {
@@ -225,4 +225,100 @@ export function sankeyLayout(nodesInput: readonly TxSankeyNode[], linksInput: re
     };
   });
   return { nodes: layoutNodes, links: layoutLinks, columns };
+}
+
+/** Settings of `sankeyLabels`. */
+export interface TxSankeyLabelOptions {
+  /** Width of the area, in px. */
+  width: number;
+  /** Gap between a node and its label, in px. */
+  labelGap: number;
+  /** Font size of the labels, in px. */
+  fontSize: number;
+  /** Formatted value of each node by its index; empty strings hide values. */
+  values: readonly string[];
+  /** Narrowest shortened name worth showing, in px (default 40). */
+  minWidth?: number;
+}
+
+interface Box {
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
+}
+
+const VALUE_GAP = 5;
+
+interface Placed {
+  anchor: 'start' | 'end';
+  label: string;
+  value: string;
+  box: Box;
+}
+
+/**
+ * Places the node labels so they stay inside the area and clear of the nodes and of each other: the last column on
+ * the left of its nodes, the others on the right; a label that does not fit moves to the other side, drops its value,
+ * is shortened with an ellipsis or, when even that does not fit, is hidden.
+ */
+export function sankeyLabels(nodes: readonly TxSankeyLayoutNode[], options: TxSankeyLabelOptions): TxSankeyLabel[] {
+  const { width, labelGap, fontSize, values } = options;
+  const minWidth = options.minWidth ?? 40;
+  const last = Math.max(0, ...nodes.map((node) => node.depth));
+  const half = fontSize * 0.6;
+  const nodeBoxes: Box[] = nodes.map((node) => ({ left: node.x, right: node.x + node.width, top: node.y, bottom: node.y + node.height }));
+  const placed: Box[] = [];
+  const overlaps = (box: Box, others: readonly Box[]) => others.some((other) => box.left < other.right && box.right > other.left && box.top < other.bottom && box.bottom > other.top);
+  const order = nodes.map((_, index) => index).sort((a, b) => nodes[b].depth - nodes[a].depth || nodes[a].y - nodes[b].y);
+  const result = new Map<number, TxSankeyLabel>();
+
+  for (const index of order) {
+    const node = nodes[index];
+    const y = node.y + node.height / 2;
+    const value = values[index];
+    const preferBefore = node.depth === last && last > 0;
+    const sides: ('start' | 'end')[] = preferBefore ? ['end', 'start'] : ['start', 'end'];
+    const boxFor = (anchor: 'start' | 'end', textSize: number): Box => {
+      const x = anchor === 'end' ? node.x - labelGap : node.x + node.width + labelGap;
+      return { left: anchor === 'end' ? x - textSize : x, right: anchor === 'end' ? x : x + textSize, top: y - half, bottom: y + half };
+    };
+    const fits = (box: Box) => box.left >= 0 && box.right <= width && !overlaps(box, nodeBoxes) && !overlaps(box, placed);
+    const labelSize = textWidth(node.label, fontSize);
+    const variants = [...(value ? [{ value, size: labelSize + VALUE_GAP + textWidth(value, fontSize) }] : []), { value: '', size: labelSize }];
+    const whole = (): Placed | null => {
+      for (const variant of variants) {
+        for (const anchor of sides) {
+          const box = boxFor(anchor, variant.size);
+          if (fits(box)) return { anchor, label: node.label, value: variant.value, box };
+        }
+      }
+      return null;
+    };
+    const shortened = (): Placed | null => {
+      for (const anchor of sides) {
+        const start = boxFor(anchor, 0);
+        const room = roomFor(start, anchor, width, [...nodeBoxes, ...placed]);
+        if (room < minWidth || overlaps(start, placed)) continue;
+        const label = truncateText(node.label, room, fontSize);
+        return { anchor, label, value: '', box: boxFor(anchor, textWidth(label, fontSize)) };
+      }
+      return null;
+    };
+    const chosen = whole() ?? shortened();
+    if (chosen) placed.push(chosen.box);
+    const x = (chosen?.anchor ?? sides[0]) === 'end' ? node.x - labelGap : node.x + node.width + labelGap;
+    result.set(index, { key: node.id, x, y, anchor: chosen?.anchor ?? sides[0], label: chosen?.label ?? '', value: chosen?.value ?? '' });
+  }
+  return nodes.map((_, index) => result.get(index) as TxSankeyLabel);
+}
+
+function roomFor(start: Box, anchor: 'start' | 'end', width: number, others: readonly Box[]): number {
+  let limit = anchor === 'end' ? 0 : width;
+  for (const other of others) {
+    if (other.top >= start.bottom || other.bottom <= start.top) continue;
+    if (anchor === 'end' && other.right <= start.left) limit = Math.max(limit, other.right);
+    if (anchor === 'start' && other.left >= start.right) limit = Math.min(limit, other.left);
+  }
+  return anchor === 'end' ? start.left - limit : limit - start.right;
 }

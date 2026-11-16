@@ -4,7 +4,6 @@ import { InstallExtra } from './install.data';
 
 export const THEMING_STYLE_NOTES: Record<TectraStyleName, string> = {
   tectra: 'The default: crisp borders, medium radius, quiet shadows.',
-  soft: 'Pill shapes, filled borderless fields, a glow on focus.',
   edge: 'Sharp corners, strong borders, solid selection.',
   paper: 'Underlined filled fields, raised shadows, focus halos.',
 };
@@ -86,13 +85,13 @@ provideTectra({ preset: Brand });`,
     file: 'theme.ts',
     text: 'Change the style, primary, surface or mode while the app runs; every component follows. presetOverrides keeps your own changes, storageKey remembers the choice, and the Theme Configurator block is a ready picker.',
     language: 'typescript',
-    code: `import { softStyle } from '@tectra-ng/themes';
+    code: `import { paperStyle } from '@tectra-ng/themes';
 
-provideTectra({ preset: Tectra, storageKey: 'app-theme', styles: [softStyle] });
+provideTectra({ preset: Tectra, storageKey: 'app-theme', styles: [paperStyle] });
 
 const theme = inject(TxThemeService);
 
-theme.updateTheme({ style: softStyle, primary: 'violet' });
+theme.updateTheme({ style: paperStyle, primary: 'violet' });
 theme.setMode('dark');
 theme.primary(); // 'violet'`,
   },

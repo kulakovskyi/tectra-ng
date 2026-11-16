@@ -1,4 +1,4 @@
-import { TxChartValueFormat, TxChartValueFormatter, TxTimeInterval } from './chart.types';
+import { TxChartCurrencyFormat, TxChartValueFormat, TxChartValueFormatter, TxTimeInterval } from './chart.types';
 import { decimalsOf } from './scale';
 
 const NUMBER_CACHE = new Map<string, Intl.NumberFormat>();
@@ -26,13 +26,26 @@ export function dateFormat(intl: string, options: Intl.DateTimeFormatOptions): I
   return format;
 }
 
+function currencyOptions(format: TxChartCurrencyFormat): Intl.NumberFormatOptions {
+  return { style: 'currency', currency: format.currency, currencyDisplay: format.currencyDisplay ?? 'symbol' };
+}
+
+function currencyFormatter(intl: string, format: TxChartCurrencyFormat): TxChartValueFormatter {
+  const exact = numberFormat(intl, currencyOptions(format));
+  const whole = numberFormat(intl, { ...currencyOptions(format), minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  return (value) => (Number.isFinite(value) ? (Number.isInteger(value) ? whole : exact).format(value) : '');
+}
+
 /**
  * Builds the value formatter of a chart for a locale and a `TxChartValueFormat`; `percent` takes
- * values already in percent.
+ * values already in percent, a currency is written in full (`$36,400`).
  */
 export function chartNumberFormatter(intl: string, format: TxChartValueFormat = 'number'): TxChartValueFormatter {
   if (typeof format === 'function') {
     return format;
+  }
+  if (typeof format === 'object') {
+    return currencyFormatter(intl, format);
   }
   const options: Intl.NumberFormatOptions =
     format === 'integer'
@@ -48,16 +61,31 @@ export function chartNumberFormatter(intl: string, format: TxChartValueFormat = 
 
 /**
  * Like `chartNumberFormatter` but writes `number` and `integer` ticks with as many decimals as the
- * tick step needs.
+ * tick step needs, and a currency in compact form (`$36K`).
  */
 export function tickFormatter(intl: string, ticks: readonly number[], format: TxChartValueFormat = 'number'): TxChartValueFormatter {
   if (typeof format === 'function' || format === 'compact' || format === 'percent') {
     return chartNumberFormatter(intl, format);
   }
+  if (typeof format === 'object') {
+    return compactValueFormatter(intl, format);
+  }
   const step = ticks.length > 1 ? Math.abs(ticks[1] - ticks[0]) : 0;
   const decimals = Math.min(2, decimalsOf(step));
   const formatter = numberFormat(intl, { minimumFractionDigits: format === 'integer' ? 0 : decimals, maximumFractionDigits: format === 'integer' ? 0 : decimals });
   return (value) => formatter.format(value);
+}
+
+/**
+ * Short formatter for axes and tight labels: a currency in compact form (`$36K`), `percent` and
+ * `integer` as they are, other formats as `compact`.
+ */
+export function compactValueFormatter(intl: string, format: TxChartValueFormat = 'number'): TxChartValueFormatter {
+  if (typeof format === 'object') {
+    const formatter = numberFormat(intl, { ...currencyOptions(format), notation: 'compact', minimumFractionDigits: 0, maximumFractionDigits: 1 });
+    return (value) => (Number.isFinite(value) ? formatter.format(value) : '');
+  }
+  return chartNumberFormatter(intl, format === 'number' ? 'compact' : format);
 }
 
 /** Writes a number in compact form, for example `1234567` as `1.2M`. */

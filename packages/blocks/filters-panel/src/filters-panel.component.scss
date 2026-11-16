@@ -208,7 +208,9 @@
   padding: var(--tx-filters-panel-padding);
   border-radius: var(--tx-filters-panel-border-radius);
   background: var(--tx-filters-panel-background);
-  box-shadow: 0 0 0 1px var(--tx-filters-panel-border-color);
+  box-shadow:
+    0 0 0 1px var(--tx-filters-panel-border-color),
+    var(--tx-filters-panel-shadow);
   color: var(--tx-filters-panel-color);
   font-family: var(--tx-font-family);
 }

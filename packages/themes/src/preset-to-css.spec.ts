@@ -1,5 +1,5 @@
 import { COMPONENT_TOKENS } from './components/component-tokens';
-import { Soft, Tectra } from './presets/tectra.preset';
+import { Edge, Paper, Tectra } from './presets/tectra.preset';
 import { componentTokensCss, presetBaseCss, presetToCss, toCssVariables, toStyleObject } from './preset-to-css';
 
 describe('toCssVariables', () => {
@@ -56,20 +56,45 @@ describe('presetToCss', () => {
 describe('presets without component tokens', () => {
   it('keep only the overrides of their style', () => {
     expect(Tectra.components).toEqual({});
-    expect(Object.keys(Soft.components)).toContain('button');
-    expect(Soft.components.button).not.toEqual(COMPONENT_TOKENS.button);
+    expect(Object.keys(Paper.components)).toContain('button');
+    expect(Paper.components.button).not.toEqual(COMPONENT_TOKENS.button);
   });
 
   it('write the base without components and every component with presetToCss', () => {
-    const base = presetBaseCss(Soft);
+    const base = presetBaseCss(Paper);
     expect(base).toContain('--tx-primary-base:');
     expect(base).not.toContain('--tx-button-');
-    const full = presetToCss(Soft);
-    expect(full).toContain(`--tx-button-padding-x: ${Soft.components.button?.root?.paddingX};`);
+    const full = presetToCss(Paper);
+    expect(full).toContain(`--tx-button-padding-x: ${Paper.components.button?.root?.paddingX};`);
     expect(full).toContain('--tx-toggle-button-checked-color:');
   });
 
   it('write one group as a :root block', () => {
     expect(componentTokensCss('toggleButton', { root: { gap: '4px' } })).toBe(':root { --tx-toggle-button-gap: 4px; }');
+  });
+});
+
+describe('content surface tokens', () => {
+  it('give every page one radius and one shadow for content surfaces', () => {
+    const base = presetBaseCss(Tectra);
+    expect(base).toContain('--tx-content-radius: var(--tx-radius-lg);');
+    expect(base).toMatch(/--tx-content-shadow: 0 1px 2px color-mix\(in srgb, #[0-9a-f]{6}, transparent 95%\);/);
+  });
+
+  it('frame cards, panels, stat tiles, data views and filters panels with them', () => {
+    for (const group of [COMPONENT_TOKENS.card, COMPONENT_TOKENS.panel, COMPONENT_TOKENS.statTile, COMPONENT_TOKENS.dataView, COMPONENT_TOKENS.filtersPanel]) {
+      expect(group.root).toMatchObject({ borderRadius: 'var(--tx-content-radius)', shadow: 'var(--tx-content-shadow)' });
+    }
+  });
+
+  it('change together with the style', () => {
+    for (const preset of [Edge, Paper]) {
+      for (const scheme of [preset.light, preset.dark]) {
+        expect(scheme.content.radius).toBe('var(--tx-radius-sm)');
+        expect(scheme.content.shadow).not.toBe(Tectra.light.content.shadow);
+      }
+      expect(preset.components.card?.root?.borderRadius).toBeUndefined();
+      expect(preset.components.panel?.root?.borderRadius).toBeUndefined();
+    }
   });
 });

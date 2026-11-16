@@ -80,7 +80,7 @@ describe('ng add tectra-ng', () => {
   describe('preset options', () => {
     it('keeps only what differs from the defaults, with the primary colour always written', () => {
       expect(presetOptions({})).toBe("primary: 'blue'");
-      expect(presetOptions({ style: 'soft', primary: 'violet', surface: 'slate' })).toBe("style: softStyle, primary: 'violet', surface: 'slate'");
+      expect(presetOptions({ style: 'paper', primary: 'violet', surface: 'slate' })).toBe("style: paperStyle, primary: 'violet', surface: 'slate'");
       expect(presetOptions({ style: 'tectra', primary: 'noir', surface: 'ink' })).toBe("primary: 'noir'");
     });
   });

@@ -16,6 +16,7 @@ import {
   viewChild,
 } from '@angular/core';
 import {
+  TX_CHART_FALLBACK_WIDTH,
   TX_CHART_LEGEND_ROW,
   TX_CHART_LEGEND_SIDE,
   TxChartFrame,
@@ -35,6 +36,7 @@ import {
   chartNumberFormatter,
   chartSummary,
   injectChartEntrance,
+  injectLegendPlace,
   numberFormat,
   parseRatio,
   readTokenNumber,
@@ -88,7 +90,8 @@ export class TxPieChart {
   readonly translations = injectTranslations();
 
   readonly pieData = input.required<TxPieData | null | undefined>();
-  readonly chartWidth = input<number | string>(200);
+  readonly chartWidth = input<number | string>('100%');
+  readonly height = input<TxChartHeight | undefined>(undefined);
   readonly chartHeight = input<TxChartHeight>(400);
   readonly showLegend = input<boolean, unknown>(true, { transform: booleanAttribute });
   readonly legendPosition = input<TxChartLegendPosition>('bottom');
@@ -128,10 +131,12 @@ export class TxPieChart {
   readonly hostStyle = computed(() => ({
     ...this.tokenStyle(),
     width: this.cssSize(this.chartWidth()),
-    height: this.cssSize(this.chartHeight()),
+    height: this.cssSize(this.boxHeight()),
     ...this.passThrough().root?.style,
   }));
   readonly entrance = injectChartEntrance();
+  readonly legendPlace = injectLegendPlace(() => this.legendPosition());
+  readonly boxHeight = computed(() => this.height() ?? this.chartHeight());
   readonly morph = signal(false);
 
   readonly hidden = signal<ReadonlySet<string>>(new Set());
@@ -148,20 +153,20 @@ export class TxPieChart {
   readonly total = computed(() => this.values().reduce((sum, value, index) => sum + (value > 0 && !this.hidden().has(this.keys()[index]) ? value : 0), 0));
   readonly isEmpty = computed(() => !this.values().length || this.values().every((value) => !(value > 0)));
   readonly legendShown = computed(() => this.showLegend() && this.values().length > 0);
-  readonly sideLegend = computed(() => this.legendPosition() === 'left' || this.legendPosition() === 'right');
+  readonly sideLegend = computed(() => this.legendPlace() === 'left' || this.legendPlace() === 'right');
 
   readonly size = linkedSignal(() => {
-    const width = typeof this.chartWidth() === 'number' ? (this.chartWidth() as number) : 200;
+    const width = chartHeightValue(this.chartWidth(), TX_CHART_FALLBACK_WIDTH);
     return { width: this.legendShown() && this.sideLegend() ? Math.max(80, width - TX_CHART_LEGEND_SIDE) : width, height: width };
   });
 
   readonly plotHeight = computed(() => {
     const width = this.size().width;
-    const height = this.chartHeight();
+    const height = this.boxHeight();
     if (typeof height === 'string' && !/px$/.test(height.trim())) {
       return Math.round(width);
     }
-    const toolbarRow = this.toolbar() && !(this.legendShown() && this.legendPosition() === 'top') ? TX_CHART_LEGEND_ROW : 0;
+    const toolbarRow = this.toolbar() && !(this.legendShown() && this.legendPlace() === 'top') ? TX_CHART_LEGEND_ROW : 0;
     const available = chartHeightValue(height) - (this.legendShown() && !this.sideLegend() ? this.legendReserve() : 0) - toolbarRow;
     return Math.max(40, Math.round(Math.min(width, available)));
   });

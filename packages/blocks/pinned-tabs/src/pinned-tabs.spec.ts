@@ -7,11 +7,12 @@ const KEY = 'tx-spec-pinned';
 
 @Component({
   imports: [TxPinnedTabs],
-  template: `<tx-pinned-tabs [stateKey]="key" [options]="options" allLabel="All teams" [(selected)]="selected" />`,
+  template: `<tx-pinned-tabs [stateKey]="key" [options]="options" allLabel="All teams" [raised]="raised()" [(selected)]="selected" />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class Host {
   readonly key = KEY;
+  readonly raised = signal(false);
   readonly options = [
     { value: 'design', label: 'Design' },
     { value: 'sales', label: 'Sales' },
@@ -55,6 +56,17 @@ describe('TxPinnedTabs', () => {
     tabs()[0].click();
     await fixture.whenStable();
     expect(fixture.componentInstance.selected()).toEqual([]);
+  });
+
+  it('passes raised to its tabs', async () => {
+    localStorage.setItem(KEY, JSON.stringify(['design']));
+    const fixture = TestBed.createComponent(Host);
+    await fixture.whenStable();
+    const tabs = fixture.nativeElement.querySelector('tx-tabs') as HTMLElement;
+    expect(tabs.classList).not.toContain('tx-tabs--raised');
+    fixture.componentInstance.raised.set(true);
+    await fixture.whenStable();
+    expect(tabs.classList).toContain('tx-tabs--raised');
   });
 
   it('pins values in the dialog and saves them', async () => {

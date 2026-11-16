@@ -191,13 +191,14 @@ describe('TxChipsInput', () => {
 @Component({
   imports: [TxChipsInput],
   template: `
-    <tx-chips-input id="plain" ariaLabel="Tags" caseSensitive [addOnBlur]="false" (added)="added.push($event.value)" />
+    <tx-chips-input id="plain" ariaLabel="Tags" caseSensitive [addOnBlur]="false" [(text)]="text" (added)="added.push($event.value)" />
     <tx-chips-input id="locked" ariaLabel="Locked" readonly />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class PlainHost {
   added: string[] = [];
+  readonly text = signal('');
 }
 
 describe('TxChipsInput without a form control', () => {
@@ -236,6 +237,32 @@ describe('TxChipsInput without a form control', () => {
     component('locked').writeValue(['kept']);
     component('locked').removeAt(0);
     expect(component('locked').values()).toEqual(['kept']);
+  });
+
+  it('adds chips from code and keeps the typed text', () => {
+    field('plain').value = 'draft';
+    field('plain').dispatchEvent(new Event('input'));
+    component('plain').add('One');
+    component('plain').add(['Two', ' ', 'One']);
+    fixture.detectChanges();
+    expect(component('plain').values()).toEqual(['One', 'Two']);
+    expect(fixture.componentInstance.added).toEqual(['One', 'Two']);
+    expect(field('plain').value).toBe('draft');
+    component('locked').add('nope');
+    expect(component('locked').values()).toEqual([]);
+  });
+
+  it('syncs the text model with the field and clears only the text', () => {
+    component('plain').text.set('typed');
+    fixture.detectChanges();
+    expect(field('plain').value).toBe('typed');
+    expect(fixture.componentInstance.text()).toBe('typed');
+    component('plain').add('Kept');
+    component('plain').clearText();
+    fixture.detectChanges();
+    expect(field('plain').value).toBe('');
+    expect(component('plain').text()).toBe('');
+    expect(component('plain').values()).toEqual(['Kept']);
   });
 });
 

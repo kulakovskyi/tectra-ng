@@ -42,7 +42,7 @@ import { TxToggleSwitch } from '@tectra-ng/ui/toggle-switch';
 })
 export default class ColumnChartLiveExample {
   readonly stores = ['Downtown', 'Airport', 'Harbor', 'Mall'];
-  readonly stacked = signal(true);
+  readonly stacked = signal(false);
   readonly horizontal = signal(false);
   private step = 0;
   readonly series = signal<TxChartSeries[]>(this.build(0));

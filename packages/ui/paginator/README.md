@@ -8,7 +8,7 @@ Page navigation for long lists: first / previous / page / next / last buttons, a
 
 `pageChange` gets `TxPageState` — `page` (0-based), `first`, `rows`, `pageCount`. Below 40rem the paginator is compact: fewer page links and no first / last buttons, so it fits one line on a phone.
 
-For requests and responses of paginated lists use `TxPaginationParams` (`page` is 1-based, `limit` is the page size, `total` the number of records) and the helpers `pageToFirst`, `firstToPage`, `pageCountOf`.
+For requests and responses of paginated lists use `TxPaginationParams` (`page` is 1-based, `limit` is the page size, `total` the number of records) and the helpers `pageToFirst`, `firstToPage`, `pageCountOf`. Code that only needs this math imports it from `@tectra-ng/utils/pagination`, which does not load the paginator component.
 
 ## Inputs
 | Name | Description |

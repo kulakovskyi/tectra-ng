@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TxCandlestickChart } from './candlestick-chart.component';
 import { TxCandle, TxCandleEvent, TxCandlestickVariant } from './candlestick-chart.types';
-import { candleExtent, candleLabels, candleTimes } from './candlestick-layout';
+import { candleExtent, candleLabels, candleStep, candleTimes } from './candlestick-layout';
 
 @Component({
   imports: [TxCandlestickChart],
@@ -36,6 +36,24 @@ describe('candlestick layout', () => {
     expect(candleLabels([{ x: new Date(0), open: 1, high: 2, low: 0, close: 1 }], 'en-US').axis).toHaveLength(1);
     expect(candleExtent([{ x: 1, open: 10, high: 10, low: 10, close: 10 }], 0.5)).toEqual([9, 10]);
     expect(candleExtent([{ x: 1, open: 0, high: 0, low: 0, close: 0 }], 0.5)).toEqual([-1, 0]);
+  });
+
+  it('labels weekly candles by day, so months do not repeat', () => {
+    const weeks = Array.from({ length: 12 }, (_, week) => ({ x: new Date(2026, 4, 4 + week * 7), open: 1, high: 2, low: 0, close: 1 }));
+    const { axis } = candleLabels(weeks, 'en-US');
+    expect(axis.slice(0, 3)).toEqual(['May 4', 'May 11', 'May 18']);
+    expect(new Set(axis).size).toBe(axis.length);
+    expect(candleStep(weeks.map((week) => week.x.getTime())).unit).toBe('week');
+  });
+
+  it('labels monthly candles by month and writes the full date when the step format repeats', () => {
+    const months = Array.from({ length: 4 }, (_, month) => ({ x: new Date(2026, month, 1), open: 1, high: 2, low: 0, close: 1 }));
+    expect(candleLabels(months, 'en-US').axis).toEqual(['Jan', 'Feb', 'Mar', 'Apr']);
+    const hours = [new Date(2026, 2, 2, 9), new Date(2026, 2, 2, 15), new Date(2026, 2, 3, 9)].map((x) => ({ x, open: 1, high: 2, low: 0, close: 1 }));
+    expect(candleLabels(hours, 'en-US').axis[2]).toContain('Mar 3');
+    const same = [new Date(2026, 2, 2), new Date(2026, 2, 2)].map((x) => ({ x, open: 1, high: 2, low: 0, close: 1 }));
+    expect(candleLabels(same, 'en-US').axis).toEqual(['Mar 2, 2026', '']);
+    expect(candleStep([5]).unit).toBe('day');
   });
 });
 

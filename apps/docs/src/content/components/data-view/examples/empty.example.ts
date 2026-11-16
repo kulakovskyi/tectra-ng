@@ -62,7 +62,6 @@ import { TxDataView, TxDataViewEmpty, TxDataViewList } from '@tectra-ng/ui/data-
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
       gap: 12px;
-      padding: 12px;
     }
     .card {
       display: grid;

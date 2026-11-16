@@ -13,6 +13,13 @@ class Host {
   readonly states: TxNetworkState[] = [];
 }
 
+@Component({
+  imports: [TxNetworkStatus],
+  template: `<tx-network-status contained />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class ContainedHost {}
+
 describe('TxNetworkStatus', () => {
   it('shows the offline pill, then "Connection restored" for a while, and marks the body', async () => {
     const fixture = TestBed.createComponent(Host);
@@ -120,6 +127,18 @@ describe('TxNetworkService', () => {
     await fixture.whenStable();
     expect(document.body.style.getPropertyValue('--tx-bottom-overlay-offset')).toBe('');
     expect(fixture.componentInstance.states).toEqual(['offline', 'restored', 'online']);
+  });
+
+  it('leaves the body alone while it is contained', async () => {
+    const fixture = TestBed.createComponent(ContainedHost);
+    await fixture.whenStable();
+    const root = fixture.nativeElement.querySelector('tx-network-status') as HTMLElement;
+    expect(root.classList).toContain('tx-network-status--contained');
+    TestBed.inject(TxNetworkService).markOffline();
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('.tx-network-status__pill')).not.toBeNull();
+    expect(document.body.style.getPropertyValue('--tx-bottom-overlay-offset')).toBe('');
+    expect(document.body.classList.contains('tx-offline')).toBe(false);
   });
 
   it('marks the state through the component methods', async () => {

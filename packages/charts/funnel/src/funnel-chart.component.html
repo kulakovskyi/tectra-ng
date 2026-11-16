@@ -70,7 +70,13 @@
         [attr.x]="text.labelX"
         [attr.y]="text.y"
       >
-        {{ text.label }}
+        @if (text.lines.length > 1) {
+          @for (line of text.lines; track $index) {
+            <svg:tspan [attr.x]="text.labelX" [attr.dy]="$first ? '-0.6em' : '1.2em'">{{ line }}</svg:tspan>
+          }
+        } @else {
+          {{ text.label }}
+        }
         @if (text.label !== text.full) {
           <svg:title>{{ text.full }}</svg:title>
         }

@@ -492,3 +492,35 @@ describe('TxTreeSelect interactions', () => {
     expect(fixture.nativeElement.querySelector('.tx-select__clear')).toBeNull();
   });
 });
+
+@Component({
+  imports: [TxTreeSelect],
+  template: `<tx-tree-select ariaLabel="Folder" [options]="tree()" [(expandedKeys)]="expanded" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class ExpandedHost {
+  readonly tree = signal<TxTreeNode[]>([
+    { key: 'docs', label: 'Documents', expanded: true, children: [{ key: 'cv', label: 'Resume.pdf' }] },
+    { key: 'photos', label: 'Photos', children: [{ key: 'sea', label: 'Sea.png' }] },
+  ]);
+  readonly expanded = signal<string[]>(['photos']);
+}
+
+describe('TxTreeSelect expanded nodes', () => {
+  afterEach(() => document.querySelector('.cdk-overlay-container')?.replaceChildren());
+
+  it('opens nodes with expanded: true on first sight and keeps them closable', () => {
+    const fixture = TestBed.createComponent(ExpandedHost);
+    const host = fixture.componentInstance;
+    fixture.detectChanges();
+    expect(host.expanded()).toEqual(['photos', 'docs']);
+    host.expanded.set([]);
+    host.tree.set([...host.tree(), { key: 'music', label: 'Music', expanded: true, children: [{ key: 'song', label: 'Song.mp3' }] }]);
+    fixture.detectChanges();
+    expect(host.expanded()).toEqual(['music']);
+    (fixture.nativeElement.querySelector('.tx-select__trigger') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    expect(Array.from(document.querySelectorAll('.tx-tree-select__label')).map((label) => label.textContent)).toEqual(['Documents', 'Photos', 'Music', 'Song.mp3']);
+    fixture.destroy();
+  });
+});

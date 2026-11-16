@@ -8,6 +8,7 @@ import { TxChartSeries } from '@tectra-ng/charts/core';
   template: `<tx-column-chart
     [series]="series"
     [categories]="months"
+    stacked
     ariaLabel="Cash flow by month"
   />`,
   styles: `

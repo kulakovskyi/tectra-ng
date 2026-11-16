@@ -29,7 +29,7 @@ Switch between views, modes or filters. Three looks: `segmented` (equal items in
 | variant | `segmented`, `pills` or `line` |
 | size | `small` or `medium` (segmented) |
 | orientation | `horizontal` or `vertical` (full-width tabs in a column) |
-| raised | Card background, ring and shadow — for tabs on the page background |
+| raised | Card background, ring and shadow on the track — lifts the tabs off the page background next to cards. Without it the `segmented` and `pills` track is a light well with a ring that shows both on the page background and inside a card |
 | scrollable | Previous / next buttons: shown by themselves while the tabs do not fit; `true` keeps them on, `false` turns them off |
 | showNavigators | Shows the previous / next buttons of a scrollable list |
 | lazy | Renders only the active panel |

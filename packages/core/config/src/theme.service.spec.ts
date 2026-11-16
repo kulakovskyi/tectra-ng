@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { Soft, Tectra, buttonTokens, createTectraPreset, edgeStyle, paperStyle, softStyle, tagTokens, tectraStyle } from '@tectra-ng/themes';
+import { Paper, Tectra, buttonTokens, createTectraPreset, edgeStyle, paperStyle, tagTokens, tectraStyle } from '@tectra-ng/themes';
 import { provideTectra } from './provide-tectra';
 import { TxThemeService, injectTokens } from './theme.service';
 
@@ -30,10 +30,10 @@ describe('TxThemeService component tokens', () => {
     service.registerTokens({ button: buttonTokens });
     expect(document.getElementById('tectra-tokens-button')?.textContent).toContain(`--tx-button-padding-x: ${buttonTokens.root.paddingX};`);
 
-    service.applyPreset(Soft);
-    const soft = (Soft.components.button?.root?.paddingX ?? '') as string;
-    expect(soft).not.toBe(buttonTokens.root.paddingX);
-    expect(document.getElementById('tectra-tokens-button')?.textContent).toContain(`--tx-button-padding-x: ${soft};`);
+    service.applyPreset(Paper);
+    const paper = (Paper.components.button?.root?.paddingX ?? '') as string;
+    expect(paper).not.toBe(buttonTokens.root.paddingX);
+    expect(document.getElementById('tectra-tokens-button')?.textContent).toContain(`--tx-button-padding-x: ${paper};`);
     expect(tokenStyles()).toHaveLength(1);
   });
 
@@ -81,14 +81,14 @@ describe('TxThemeService theme choice', () => {
 
   it('rebuilds the preset from a new choice and keeps the overrides of the app', () => {
     TestBed.configureTestingModule({
-      providers: [provideTectra({ preset: createTectraPreset({ style: softStyle }), presetOverrides: { light: { primary: { contrast: 'black' } } } })],
+      providers: [provideTectra({ preset: createTectraPreset({ style: paperStyle }), presetOverrides: { light: { primary: { contrast: 'black' } } } })],
     });
     const service = TestBed.inject(TxThemeService);
-    expect(service.style()).toBe(softStyle);
+    expect(service.style()).toBe(paperStyle);
     expect(service.preset()?.light.primary.contrast).toBe('black');
 
     service.updateTheme({ primary: 'teal' });
-    expect(service.preset()?.name).toBe('soft-teal-ink');
+    expect(service.preset()?.name).toBe('paper-teal-ink');
     expect(service.preset()?.light.primary.contrast).toBe('black');
     service.updateTheme({ style: edgeStyle, surface: 'zinc' });
     expect(service.preset()?.name).toBe('edge-teal-zinc');
@@ -119,7 +119,7 @@ describe('TxThemeService theme choice', () => {
   it('restores a remembered choice before the first render', () => {
     localStorage.setItem(key, JSON.stringify({ style: 'paper', primary: 'violet', surface: 'zinc', ripple: false, mode: 'dark' }));
     TestBed.configureTestingModule({
-      providers: [provideTectra({ preset: Tectra, storageKey: key, styles: [softStyle, paperStyle], ripple: true, presetOverrides: { css: '.own {}' } })],
+      providers: [provideTectra({ preset: Tectra, storageKey: key, styles: [edgeStyle, paperStyle], ripple: true, presetOverrides: { css: '.own {}' } })],
     });
     const service = TestBed.inject(TxThemeService);
     expect(service.preset()?.name).toBe('paper-violet-zinc');
@@ -127,6 +127,14 @@ describe('TxThemeService theme choice', () => {
     expect(service.ripple()).toBe(false);
     expect(service.mode()).toBe('dark');
     expect(document.documentElement.getAttribute('data-tx-theme')).toBe('dark');
+  });
+
+  it('falls back to the default style when the remembered style is no longer built in', () => {
+    localStorage.setItem(key, JSON.stringify({ style: 'soft', primary: 'violet', surface: 'ink', ripple: false, mode: 'light' }));
+    TestBed.configureTestingModule({ providers: [provideTectra({ preset: Tectra, storageKey: key, styles: [edgeStyle, paperStyle] })] });
+    const service = TestBed.inject(TxThemeService);
+    expect(service.style()).toBe(tectraStyle);
+    expect(service.preset()?.name).toBe('tectra-violet-ink');
   });
 
   it('keeps the preset of the config when the remembered choice is the same or unknown', () => {

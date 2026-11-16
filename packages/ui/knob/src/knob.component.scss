@@ -24,6 +24,7 @@
   inset: 0;
   display: grid;
   place-items: center;
+  white-space: nowrap;
   pointer-events: none;
 }
 
@@ -70,7 +71,7 @@
 :host([data-styled]) .tx-knob__text {
   color: var(--tx-knob-text-color);
   font-family: var(--tx-font-family);
-  font-size: var(--tx-knob-text-font-size);
+  font-size: min(var(--tx-knob-text-font-size), calc(var(--_text-fit, 100) * 1cqw));
   font-weight: var(--tx-knob-text-font-weight);
 }
 

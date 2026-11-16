@@ -56,5 +56,8 @@ export interface TxRankLineEvent {
   note?: string;
 }
 
+/** How `tx-rank-chart` writes a date: `Intl.DateTimeFormat` options or a function of the time in ms. */
+export type TxRankDateFormat = Intl.DateTimeFormatOptions | ((time: number) => string);
+
 /** Parts of `tx-rank-line` that `pt` can style. */
 export type TxRankLinePart = TxChartPart | 'line' | 'marker';

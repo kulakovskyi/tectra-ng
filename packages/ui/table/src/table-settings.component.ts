@@ -101,6 +101,7 @@ type TxTableSettingsTab = 'columns' | 'actions';
                     [label]="label(column)"
                     [disabled]="column.hideable === false"
                     [ngModel]="!hidden().has(column.field)"
+                    [ngModelOptions]="{ standalone: true }"
                     (ngModelChange)="columnToggled.emit({ field: column.field, visible: $event })"
                     (keydown.alt.arrowup)="moveColumn(column, -1, $event)"
                     (keydown.alt.arrowdown)="moveColumn(column, 1, $event)"
@@ -119,6 +120,7 @@ type TxTableSettingsTab = 'columns' | 'actions';
                     binary
                     [label]="action.label"
                     [ngModel]="store.isPinned(action.id)"
+                    [ngModelOptions]="{ standalone: true }"
                     (ngModelChange)="store.setPinned(action.id, $event)"
                     (keydown.alt.arrowup)="moveAction(index, -1, $event)"
                     (keydown.alt.arrowdown)="moveAction(index, 1, $event)"

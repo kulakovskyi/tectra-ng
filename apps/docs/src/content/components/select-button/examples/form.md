@@ -1,0 +1,1 @@
+`Validators.required` with `[formControl]` inside `tx-field`: the field names the group, the error shows after Continue and the track turns red. A click on the picked option clears it, so the error comes back.

@@ -43,7 +43,7 @@ export class TxStatTiles {
     const minWidth = this.minWidth();
     return {
       ...toStyleObject(this.dt(), '--tx-stat-tiles'),
-      ...(minWidth ? { '--tx-stat-tiles-min-width': minWidth } : {}),
+      ...(minWidth ? { '--tx-stat-tiles-min-width': minWidth, '--tx-stat-tiles-floor-width': '0px' } : {}),
       ...this.passThrough().root?.style,
     };
   });

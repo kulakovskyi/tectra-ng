@@ -27,14 +27,13 @@ test.describe('network status', () => {
     expect(Math.round(frame.y + frame.height - 1 - (box.y + box.height))).toBe(21);
   });
 
-  test('tells other bottom overlays how much room the pill takes', async ({ page }) => {
+  test('a contained preview leaves the page body alone', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/components/network-status');
     const root = page.locator('network-status-basic-example');
-    const offset = () => page.evaluate(() => document.body.style.getPropertyValue('--tx-bottom-overlay-offset'));
-    expect(await offset()).toBe('');
+    const body = () => page.evaluate(() => [document.body.style.getPropertyValue('--tx-bottom-overlay-offset'), document.body.classList.contains('tx-offline')]);
     await root.getByRole('button', { name: 'Go offline' }).click();
     await expect(root.locator('.tx-network-status__pill')).toBeVisible();
-    await expect.poll(async () => parseFloat(await offset())).toBeGreaterThan(30);
+    expect(await body()).toEqual(['', false]);
   });
 });

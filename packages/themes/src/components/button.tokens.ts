@@ -136,3 +136,16 @@ type ButtonTokensShape = typeof buttonTokens;
 
 /** Type of `buttonTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
 export interface TectraButtonTokens extends ButtonTokensShape {}
+
+/** Design tokens of `tx-button-group`: the divider between two solid buttons. */
+export const buttonGroupTokens = {
+  root: {
+    dividerColor: fade('currentColor', '68%'),
+    dividerWidth: '1px',
+  },
+};
+
+type ButtonGroupTokensShape = typeof buttonGroupTokens;
+
+/** Type of `buttonGroupTokens`: the shape of the component tokens that presets and `dt` overrides can change. */
+export interface TectraButtonGroupTokens extends ButtonGroupTokensShape {}

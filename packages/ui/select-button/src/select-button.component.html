@@ -1,0 +1,42 @@
+@for (item of items(); track $index; let index = $index) {
+  @let iconAlone = iconOnly() && !itemTemplate() && !!item.icon;
+  <button
+    #button
+    type="button"
+    class="tx-select-button__item"
+    [class.tx-select-button__item--selected]="item.selected"
+    [class.tx-select-button__item--disabled]="item.disabled"
+    [class]="passThrough().item?.class"
+    [style]="passThrough().item?.style"
+    [attr.role]="multiple() ? null : 'radio'"
+    [attr.aria-checked]="multiple() ? null : item.selected"
+    [attr.aria-pressed]="multiple() ? item.selected : null"
+    [attr.aria-label]="iconAlone ? item.label : null"
+    [attr.tabindex]="index === tabStop() ? 0 : -1"
+    [disabled]="isDisabled() || item.disabled"
+    [txTooltip]="iconAlone ? item.label : undefined"
+    tooltipPlacement="top"
+    (click)="onItemClick(index, $event)"
+    (keydown)="onKeydown(index, $event)"
+    (focus)="onItemFocus(index)"
+  >
+    @if (itemTemplate(); as template) {
+      <ng-container
+        *ngTemplateOutlet="template.templateRef; context: { $implicit: item.option, label: item.label, selected: item.selected, disabled: item.disabled, index }"
+      />
+    } @else {
+      @if (item.icon; as icon) {
+        <span class="tx-select-button__icon" aria-hidden="true" [class]="passThrough().icon?.class" [style]="passThrough().icon?.style">
+          @if (hasIcon(icon)) {
+            <tx-icon [name]="icon" />
+          } @else {
+            <span [class]="icon"></span>
+          }
+        </span>
+      }
+      @if (!iconAlone) {
+        <span class="tx-select-button__label" [class]="passThrough().label?.class" [style]="passThrough().label?.style">{{ item.label }}</span>
+      }
+    }
+  </button>
+}

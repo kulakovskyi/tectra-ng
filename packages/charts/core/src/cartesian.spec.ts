@@ -166,6 +166,17 @@ describe('cartesian layout', () => {
     expect(fallback.categoryPosition(1)).toBe(fallback.plot.left + fallback.plot.width);
   });
 
+  it('never repeats tick labels of a small integer axis, on both value axes', () => {
+    const layout = cartesianLayout(options({ value: { extent: [0, 3], format: 'integer' }, secondaryValue: { extent: [0, 2], format: 'integer' } }));
+    expect(layout.valueTicks).toEqual([0, 1, 2, 3]);
+    expect(layout.secondaryValueTicks.every(Number.isInteger)).toBe(true);
+    const labels = layout.axes.axes.find((axis) => axis.position === 'left')?.labels.map((label) => label.text) ?? [];
+    expect(new Set(labels).size).toBe(labels.length);
+    const free = cartesianLayout(options({ value: { extent: [0, 13], format: 'integer' }, secondaryValue: { extent: [0, 1.4], format: 'integer', min: 0 } }));
+    expect(free.valueTicks.every(Number.isInteger)).toBe(true);
+    expect(free.secondaryValueTicks).toEqual([0, 1, 2]);
+  });
+
   it('counts categories from the labels or nothing', () => {
     const empty = cartesianLayout(options({ category: { kind: 'band' }, showValueAxis: false }));
     expect(empty.axes.axes).toHaveLength(1);
@@ -184,6 +195,12 @@ describe('aligned secondary domain', () => {
     expect(alignedDomain({ extent: [5, 5], includeZero: false }, 2)?.domain).toEqual([0, 10]);
     expect(alignedDomain({ extent: [-5, -5], includeZero: false }, 2)?.domain).toEqual([-10, 0]);
     expect(alignedDomain({ extent: null }, 4)?.ticks).toEqual([0, 0.25, 0.5, 0.75, 1]);
+  });
+
+  it('keeps whole-number steps for an integer axis', () => {
+    expect(alignedDomain({ extent: [0, 3], format: 'integer' }, 6)?.ticks).toEqual([0, 1, 2, 3, 4, 5, 6]);
+    expect(alignedDomain({ extent: [0, 14], format: 'integer' }, 4)?.ticks).toEqual([0, 5, 10, 15, 20]);
+    expect(alignedDomain({ extent: [0, 14] }, 6)?.ticks).toEqual([0, 2.5, 5, 7.5, 10, 12.5, 15]);
   });
 
   it('puts zero on the same tick as the primary axis', () => {

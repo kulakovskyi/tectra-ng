@@ -18,7 +18,7 @@ export interface TxRangeSeries {
 export type TxRangeAreaXType = 'category' | 'time';
 
 /** Parts of `tx-range-area-chart` that `pt` can style. */
-export type TxRangeAreaChartPart = TxChartPart | 'band' | 'edge' | 'line' | 'marker' | 'crosshair';
+export type TxRangeAreaChartPart = TxChartPart | 'band' | 'edge' | 'line' | 'marker' | 'crosshair' | 'annotation';
 
 /** SVG paths of one drawn series. */
 export interface TxRangeAreaPath {

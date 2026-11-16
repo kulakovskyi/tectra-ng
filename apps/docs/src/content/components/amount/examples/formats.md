@@ -1,1 +1,1 @@
-`format` sets the digits: `1.0-2` (default), `1.2-2`, `1.0-0`, `1.2-4` for small prices.
+`format` sets the digits: `1.0-2`, `1.2-2`, `1.0-0`, `1.2-4` for small prices. Without `format` a sum of money keeps the digits of its currency (`$1,234.50`, `¥1,235`), a plain number shows up to two decimals.

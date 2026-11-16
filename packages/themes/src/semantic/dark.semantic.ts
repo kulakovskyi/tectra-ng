@@ -55,5 +55,6 @@ export function createDarkSemantic({ accent, surface }: TectraPalettes): TectraS
     mask: { background: 'rgba(0, 0, 0, 0.6)' },
     focusRing: { color: accent[400] },
     shadow: { ...shadows },
+    content: { radius: 'var(--tx-radius-lg)', shadow: `0 1px 2px color-mix(in srgb, ${surface[950]}, transparent 95%)` },
   };
 }

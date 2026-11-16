@@ -3,8 +3,10 @@ import { fade, joinCss, lightDark, mergeTokens, tokenRef } from '../../component
 import { TectraDeepPartial } from '../../types/deep-partial.type';
 
 /* @__NO_SIDE_EFFECTS__ */
-const steps = (palette: string, light: number, dark: number) => lightDark(tokenRef(`${palette}-${light}`), tokenRef(`${palette}-${dark}`));
-const elevation = '0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12)';
+const steps = (palette: string, light: number, dark: number) =>
+  lightDark(tokenRef(`${palette}-${light}`), tokenRef(`${palette}-${dark}`));
+const elevation =
+  '0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12)';
 const noFocusRing = { focusRingColor: 'transparent', focusRingWidth: '0', focusRingOffset: '0' };
 
 export const paperControlsTokens: TectraDeepPartial<TectraComponentTokens> = {
@@ -66,16 +68,46 @@ export const paperControlsTokens: TectraDeepPartial<TectraComponentTokens> = {
     },
   },
   checkbox: {
-    root: mergeTokens({ borderRadius: tokenRef('radius-xs'), borderWidth: '2px', checkedHoverBackground: tokenRef('primary-base'), checkedHoverBorderColor: tokenRef('primary-base') }, noFocusRing),
+    root: mergeTokens(
+      {
+        borderRadius: tokenRef('radius-xs'),
+        borderWidth: '2px',
+        checkedHoverBackground: tokenRef('primary-base'),
+        checkedHoverBorderColor: tokenRef('primary-base'),
+      },
+      noFocusRing,
+    ),
     sm: { size: '14px' },
   },
   radioButton: {
-    root: mergeTokens({ size: '20px', borderWidth: '2px', checkedBackground: tokenRef('primary-contrast'), checkedHoverBackground: tokenRef('primary-contrast'), checkedHoverBorderColor: tokenRef('primary-base'), dotSize: '10px', dotColor: tokenRef('primary-base') }, noFocusRing),
+    root: mergeTokens(
+      {
+        size: '20px',
+        borderWidth: '2px',
+        checkedBackground: tokenRef('primary-contrast'),
+        checkedHoverBackground: tokenRef('primary-contrast'),
+        checkedHoverBorderColor: tokenRef('primary-base'),
+        dotSize: '10px',
+        dotColor: tokenRef('primary-base'),
+      },
+      noFocusRing,
+    ),
     sm: { dotSize: '8px' },
     lg: { size: '24px', dotSize: '12px' },
   },
   toggleSwitch: {
-    root: mergeTokens({ width: '33.25px', height: '12.25px', gutter: '0px', hoverBackground: steps('surface', 300, 700), checkedBackground: lightDark(tokenRef('primary-200'), tokenRef('primary-base')), checkedHoverBackground: lightDark(tokenRef('primary-200'), tokenRef('primary-base')), disabledBackground: steps('surface', 400, 600) }, noFocusRing),
+    root: mergeTokens(
+      {
+        width: '33.25px',
+        height: '12.25px',
+        gutter: '0px',
+        hoverBackground: steps('surface', 300, 700),
+        checkedBackground: lightDark(tokenRef('primary-200'), tokenRef('primary-base')),
+        checkedHoverBackground: lightDark(tokenRef('primary-200'), tokenRef('primary-base')),
+        disabledBackground: steps('surface', 400, 600),
+      },
+      noFocusRing,
+    ),
     handle: {
       size: '17.5px',
       checkedBackground: lightDark(tokenRef('primary-base'), tokenRef('primary-200')),
@@ -89,11 +121,40 @@ export const paperControlsTokens: TectraDeepPartial<TectraComponentTokens> = {
     root: { gap: '7px', iconSize: '15.75px' },
   },
   knob: {
-    root: { focusRingColor: steps('surface', 200, 700), focusRingWidth: '4px', focusRingOffset: '0' },
+    root: {
+      focusRingColor: steps('surface', 200, 700),
+      focusRingWidth: '4px',
+      focusRingOffset: '0',
+    },
   },
   slider: {
     root: { trackSize: '2px', trackBorderRadius: tokenRef('radius-xs') },
-    handle: mergeTokens({ background: tokenRef('primary-base'), borderWidth: '0px', shadow: '0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12)', hoverRing: joinCss('0 0 1px 10px ', fade(tokenRef('primary-base'), '92%')) }, noFocusRing),
+    handle: mergeTokens(
+      {
+        background: tokenRef('primary-base'),
+        borderWidth: '0px',
+        shadow:
+          '0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12)',
+        hoverRing: joinCss('0 0 1px 10px ', fade(tokenRef('primary-base'), '92%')),
+      },
+      noFocusRing,
+    ),
   },
   filtersPanel: { button: { borderRadius: tokenRef('radius-sm') } },
+  tabs: {
+    segmented: {
+      borderRadius: tokenRef('radius-sm'),
+      tab: { borderRadius: '2px' },
+      sm: { borderRadius: tokenRef('radius-sm'), tabBorderRadius: '2px' },
+    },
+    pills: { borderRadius: tokenRef('radius-sm'), tab: { borderRadius: '2px' } },
+  },
+  selectButton: {
+    root: {
+      borderRadius: tokenRef('radius-sm'),
+      sm: { borderRadius: tokenRef('radius-sm') },
+      lg: { borderRadius: tokenRef('radius-sm') },
+    },
+    item: { borderRadius: '2px', sm: { borderRadius: '2px' }, lg: { borderRadius: '2px' } },
+  },
 };

@@ -14,6 +14,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { uniqueId } from '@tectra-ng/core/a11y';
 import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxPlacement } from '@tectra-ng/core/overlay';
@@ -51,7 +52,7 @@ const LINEAR: Record<string, [number, number]> = {
 
 @Component({
   selector: 'tx-speed-dial',
-  imports: [TxButton, TxTooltip],
+  imports: [RouterLink, TxButton, TxTooltip],
   templateUrl: './speed-dial.component.html',
   styleUrl: './speed-dial.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -223,6 +224,9 @@ export class TxSpeedDial {
       this.hide(true);
     } else if (event.key === 'Tab') {
       this.hide();
+    } else if (event.key === ' ' && event.target instanceof HTMLAnchorElement) {
+      event.preventDefault();
+      event.target.click();
     }
   }
 

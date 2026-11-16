@@ -14,11 +14,19 @@
   min-width: 0;
 }
 
-.tx-org-chart-card__title,
-.tx-org-chart-card__subtitle {
+.tx-org-chart-card__title {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.tx-org-chart-card__subtitle {
+  display: -webkit-box;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
 }
 
 .tx-org-chart-card__pills {

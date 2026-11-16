@@ -1,1 +1,1 @@
-`maxRank` sets the depth of the axis: ticks go by 5 up to 20 and by 10 deeper. Ranks below it sit on the bottom line; the tooltip still shows the real rank.
+`maxRank` sets the depth of the axis: rank 1 sits on the top line and `maxRank` on the bottom line. Up to 10 ranks every rank gets a tick, deeper scales tick by 5 up to 20 and by 10 beyond. Ranks below it sit on the bottom line; the tooltip still shows the real rank.

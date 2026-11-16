@@ -448,3 +448,34 @@
     transition: none;
   }
 }
+
+@media print {
+  :host,
+  :host([data-styled]) {
+    display: block;
+    min-height: 0;
+    background: none;
+    isolation: auto;
+  }
+
+  :host .tx-app-layout__backdrop,
+  :host .tx-app-layout__slot,
+  :host .tx-app-layout__mask,
+  :host .tx-app-layout__topbar {
+    display: none !important;
+  }
+
+  :host .tx-app-layout__column,
+  :host .tx-app-layout__wrapper {
+    display: block;
+  }
+
+  :host .tx-app-layout__wrapper {
+    padding: 0 !important;
+  }
+
+  :host .tx-app-layout__content {
+    max-width: none !important;
+    margin: 0 !important;
+  }
+}

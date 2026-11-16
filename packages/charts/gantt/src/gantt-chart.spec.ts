@@ -379,6 +379,61 @@ describe('TxGanttChart standalone', () => {
   });
 });
 
+describe('TxGanttChart fit and sub-rows', () => {
+  it('stretches a short range to the visible width and stops on destroy', async () => {
+    const callbacks: (() => void)[] = [];
+    const disconnect = vi.fn();
+    const view = window as unknown as Record<string, unknown>;
+    view['ResizeObserver'] = class {
+      constructor(callback: () => void) {
+        callbacks.push(callback);
+      }
+      observe = vi.fn();
+      disconnect = disconnect;
+    };
+    const width = vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(1000);
+    try {
+      const fixture = TestBed.createComponent(TxGanttChart);
+      fixture.componentRef.setInput('tasks', [{ id: 'a', label: 'Short', start: '2026-03-02', end: '2026-03-04' }]);
+      fixture.componentRef.setInput('zoom', 'day');
+      fixture.componentRef.setInput('padding', 0);
+      fixture.autoDetectChanges();
+      await fixture.whenStable();
+      const chart = fixture.componentInstance;
+      expect(chart.viewport()).toBe(1000);
+      expect(chart.width()).toBe(1000);
+      expect(chart.dataRange()).toEqual([new Date(2026, 2, 2).getTime(), new Date(2026, 2, 5).getTime()]);
+      expect(fixture.nativeElement.querySelector('.tx-gantt-chart__scroll').getAttribute('aria-label')).toContain('Mar 2, 2026 – Mar 4, 2026');
+      width.mockReturnValue(400);
+      callbacks.forEach((callback) => callback());
+      await fixture.whenStable();
+      expect(chart.width()).toBe(400);
+      fixture.destroy();
+      expect(disconnect).toHaveBeenCalled();
+    } finally {
+      width.mockRestore();
+      delete view['ResizeObserver'];
+    }
+  });
+
+  it('gives overlapping tasks of a timeline lane their own sub-rows', async () => {
+    const fixture = TestBed.createComponent(TxGanttChart);
+    fixture.componentRef.setInput('layout', 'timeline');
+    fixture.componentRef.setInput('tasks', [
+      { id: 'a', label: 'Deal A', start: '2026-03-02', end: '2026-03-10', group: 'Ann' },
+      { id: 'b', label: 'Deal B', start: '2026-03-05', end: '2026-03-12', group: 'Ann' },
+      { id: 'c', label: 'Deal C', start: '2026-03-04', end: '2026-03-06', group: 'Ben' },
+    ]);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    const rows = Array.from(fixture.nativeElement.querySelectorAll('.tx-gantt-chart__row')) as HTMLElement[];
+    expect(rows.map((row) => row.style.getPropertyValue('--tx-gantt-chart-lanes'))).toEqual(['2', '']);
+    const bar = (id: string) => fixture.nativeElement.querySelector(`[data-task="${id}"]`) as HTMLElement;
+    expect(bar('a').style.getPropertyValue('--tx-gantt-chart-lane')).toBe('');
+    expect(bar('b').style.getPropertyValue('--tx-gantt-chart-lane')).toBe('1');
+  });
+});
+
 describe('TxGanttChart recompiled by TestBed', () => {
   it('still renders its bars when a test overrides the component', async () => {
     TestBed.overrideComponent(TxGanttChart, { set: { styles: [] } });
@@ -386,5 +441,141 @@ describe('TxGanttChart recompiled by TestBed', () => {
     fixture.autoDetectChanges();
     await fixture.whenStable();
     expect(fixture.nativeElement.querySelectorAll('#main .tx-gantt-chart__bar').length).toBeGreaterThan(0);
+  });
+});
+
+@Component({
+  imports: [TxGanttChart],
+  template: `
+    <tx-gantt-chart
+      [tasks]="tasks"
+      zoom="day"
+      [today]="null"
+      [showDependencies]="show()"
+      [dependencyHighlight]="highlight()"
+      [pt]="{ dependency: { class: 'own-link' } }"
+    />
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class DependencyHost {
+  readonly tasks: TxGanttTask[] = [
+    { id: 'a', label: 'Brief', start: '2026-03-02', end: '2026-03-04', group: 'Design' },
+    { id: 'b', label: 'Mockups', start: '2026-03-05', end: '2026-03-11', group: 'Design', dependsOn: ['a'] },
+    { id: 'c', label: 'API', start: '2026-03-06', end: '2026-03-20', group: 'Build', dependsOn: [{ id: 'b', type: 'start-to-start' }, 'nope'] },
+    { id: 'd', label: 'Docs', start: '2026-03-09', end: '2026-03-20', group: 'Build', dependsOn: [{ id: 'c', type: 'finish-to-finish' }] },
+    { id: 'e', label: 'Launch', start: '2026-03-23', milestone: true, dependsOn: ['d', { id: 'a', type: 'start-to-finish' }] },
+    { id: 'f', label: 'Notes', start: '2026-03-02', end: '2026-03-03', group: 'Build' },
+  ];
+  readonly show = signal(true);
+  readonly highlight = signal(true);
+}
+
+describe('TxGanttChart dependencies', () => {
+  let fixture: ComponentFixture<DependencyHost>;
+  const el = (selector: string) => fixture.nativeElement.querySelector(selector) as HTMLElement;
+  const all = (selector: string) => Array.from(fixture.nativeElement.querySelectorAll(selector)) as HTMLElement[];
+  const dimmed = () => all('[data-task].tx-gantt-chart__task--dimmed').map((bar) => bar.dataset['task']);
+  const active = () => all('.tx-gantt-chart__dependency--active').length;
+
+  beforeEach(async () => {
+    fixture = TestBed.createComponent(DependencyHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+  });
+
+  it('draws an arrow per valid dependency in a layer sized in rows', () => {
+    const svg = el('.tx-gantt-chart__dependencies');
+    expect(svg.getAttribute('aria-hidden')).toBe('true');
+    expect(svg.getAttribute('viewBox')).toMatch(/^0 0 \d+ 8$/);
+    expect(svg.style.height).toBe('calc(var(--tx-gantt-chart-row-height) * 8)');
+    const links = all('.tx-gantt-chart__dependency');
+    expect(links).toHaveLength(5);
+    expect(links[0].classList).toContain('own-link');
+    expect(links[0].querySelector('.tx-gantt-chart__dependency-line')?.getAttribute('d')).toMatch(/^M/);
+    expect(links[0].querySelector('.tx-gantt-chart__dependency-head')?.getAttribute('d')).toMatch(/Z$/);
+  });
+
+  it('names what a task depends on and what depends on it', () => {
+    expect(el('[data-task="b"]').getAttribute('aria-label')).toContain('Depends on: Brief, Required by: API (start to start)');
+    expect(el('[data-task="d"]').getAttribute('aria-label')).toContain('Depends on: API (finish to finish), Required by: Launch');
+    expect(el('[data-task="e"]').getAttribute('aria-label')).toContain('Depends on: Docs, Brief (start to finish)');
+    expect(el('[data-task="f"]').getAttribute('aria-label')).not.toContain('Depends on');
+  });
+
+  it('lights up the chain of a hovered or focused task and dims the rest', async () => {
+    expect(dimmed()).toEqual([]);
+    el('[data-task="c"]').dispatchEvent(new MouseEvent('mouseenter'));
+    await fixture.whenStable();
+    expect(dimmed()).toEqual(['f']);
+    expect(active()).toBe(4);
+    expect(all('.tx-gantt-chart__dependency--dimmed')).toHaveLength(1);
+    el('[data-task="c"]').dispatchEvent(new MouseEvent('mouseleave'));
+    el('[data-task="b"]').dispatchEvent(new FocusEvent('focus'));
+    await fixture.whenStable();
+    expect(dimmed()).toEqual(['f']);
+    el('[data-task="b"]').dispatchEvent(new FocusEvent('blur'));
+    el('[data-task="f"]').dispatchEvent(new MouseEvent('mouseenter'));
+    await fixture.whenStable();
+    expect(dimmed()).toEqual([]);
+    el('[data-task="f"]').dispatchEvent(new MouseEvent('mouseleave'));
+    el('[data-task="d"]').dispatchEvent(new MouseEvent('mouseenter'));
+    await fixture.whenStable();
+    expect(dimmed()).toEqual(['f']);
+    expect(all('.tx-gantt-chart__dependency--dimmed')).toHaveLength(1);
+    expect(all('.tx-gantt-chart__dependency').pop()?.classList).toContain('tx-gantt-chart__dependency--active');
+    expect(all('.tx-gantt-chart__summary--dimmed')).toHaveLength(0);
+    expect(all('.tx-gantt-chart__bar-label--outside.tx-gantt-chart__task--dimmed')).toHaveLength(1);
+  });
+
+  it('dims the summary of a group outside the chain and moves arrows of a folded group to it', async () => {
+    const chart = fixture.debugElement.query(By.directive(TxGanttChart)).componentInstance as TxGanttChart;
+    chart.hovered.set('a');
+    await fixture.whenStable();
+    expect(chart.isGroupDimmed('Design')).toBe(false);
+    expect(chart.isGroupDimmed(null)).toBe(false);
+    chart.hovered.set(null);
+    const toggle = all('.tx-gantt-chart__toggle')[0];
+    toggle.click();
+    await fixture.whenStable();
+    expect(all('.tx-gantt-chart__dependency')).toHaveLength(4);
+    chart.hovered.set('f');
+    chart.active.set('d');
+    await fixture.whenStable();
+    expect(all('.tx-gantt-chart__summary--dimmed')).toHaveLength(0);
+  });
+
+  it('turns the highlight and the arrows off', async () => {
+    fixture.componentInstance.highlight.set(false);
+    await fixture.whenStable();
+    el('[data-task="c"]').dispatchEvent(new MouseEvent('mouseenter'));
+    await fixture.whenStable();
+    expect(dimmed()).toEqual([]);
+    expect(active()).toBe(0);
+    fixture.componentInstance.highlight.set(true);
+    fixture.componentInstance.show.set(false);
+    await fixture.whenStable();
+    expect(el('.tx-gantt-chart__dependencies')).toBeNull();
+    expect(dimmed()).toEqual([]);
+  });
+});
+
+describe('TxGanttChart dependency summaries', () => {
+  it('dims the summary bars of groups outside the chain', async () => {
+    const fixture = TestBed.createComponent(TxGanttChart);
+    fixture.componentRef.setInput('tasks', [
+      { id: 'a', label: 'A', start: '2026-03-02', group: 'One' },
+      { id: 'b', label: 'B', start: '2026-03-04', group: 'One', dependsOn: ['a'] },
+      { id: 'c', label: 'C', start: '2026-03-04', group: 'Two' },
+    ]);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    fixture.componentInstance.onBarHover(fixture.componentInstance.spans()[0]);
+    await fixture.whenStable();
+    const summaries = Array.from(fixture.nativeElement.querySelectorAll('.tx-gantt-chart__summary')) as HTMLElement[];
+    expect(summaries.map((summary) => summary.classList.contains('tx-gantt-chart__summary--dimmed'))).toEqual([false, true]);
+    fixture.componentInstance.onBarHover(null);
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelectorAll('.tx-gantt-chart__summary--dimmed')).toHaveLength(0);
   });
 });

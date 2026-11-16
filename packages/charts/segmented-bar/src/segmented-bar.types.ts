@@ -47,4 +47,5 @@ export type TxSegmentedBarPart =
   | 'label'
   | 'value'
   | 'percent'
-  | 'aside';
+  | 'aside'
+  | 'skeleton';

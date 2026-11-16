@@ -16,7 +16,7 @@ export interface TxStepContentContext {
   index: number;
   /** Whether the step is the active one. */
   active: boolean;
-  /** Whether the step comes before the active one. */
+  /** Whether the step is completed: its `completed` input, otherwise whether it comes before the active one. */
   completed: boolean;
   /** Whether the step cannot be picked. */
   disabled: boolean;

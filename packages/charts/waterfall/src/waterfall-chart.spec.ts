@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { TxChartTooltipTemplate } from '@tectra-ng/charts/core';
+import { TxChartTooltipTemplate, TxChartValueFormat } from '@tectra-ng/charts/core';
 import { TxAnnouncer } from '@tectra-ng/core/a11y';
 import { TectraChartTokens, TectraDeepPartial } from '@tectra-ng/themes';
 import { TxWaterfallChart } from './waterfall-chart.component';
 import { TxWaterfallBarEvent, TxWaterfallItem } from './waterfall-chart.types';
-import { waterfallExtent, waterfallSteps } from './waterfall-layout';
+import { visibleLabels, waterfallExtent, waterfallSteps } from './waterfall-layout';
 
 @Component({
   imports: [TxWaterfallChart],
@@ -35,6 +35,21 @@ describe('waterfall layout', () => {
       ['up', 6, 6],
     ]);
     expect(waterfallExtent(waterfallSteps([{ label: 'A', value: -5 }, { label: 'B', value: 12 }]))).toEqual([-5, 7]);
+  });
+
+  it('starts from a total with its own value', () => {
+    const steps = waterfallSteps([{ label: 'Opening', value: 50, total: true }, { label: 'A', value: 10 }, { label: 'Audit', value: 70, total: true }, { label: 'B', value: -5 }]);
+    expect(steps.map((step) => [step.kind, step.from, step.to])).toEqual([
+      ['total', 0, 50],
+      ['up', 50, 60],
+      ['total', 0, 70],
+      ['down', 70, 65],
+    ]);
+  });
+
+  it('keeps totals first and leaves out labels that overlap a kept one', () => {
+    const box = (x: number, top: number, total = false) => ({ x, width: 30, top, bottom: top + 11, total });
+    expect(visibleLabels([box(10, 0), box(30, 4), box(60, 0), box(40, 40), box(90, 2, true)])).toEqual([true, false, false, true, true]);
   });
 });
 
@@ -94,7 +109,7 @@ describe('TxWaterfallChart', () => {
 @Component({
   imports: [TxWaterfallChart, TxChartTooltipTemplate],
   template: `
-    <tx-waterfall-chart [items]="items()" [dataLabels]="labels()" [ariaLabel]="ariaLabel()" [dt]="dt()" (barClick)="clicks.push($event)">
+    <tx-waterfall-chart [items]="items()" [dataLabels]="labels()" [valueFormat]="format()" [ariaLabel]="ariaLabel()" [dt]="dt()" (barClick)="clicks.push($event)">
       @if (templates()) {
         <ng-template txChartTooltip let-data><span class="own-tooltip">{{ data.title }}</span></ng-template>
       }
@@ -109,6 +124,7 @@ class ConfigHost {
     { label: 'Sum', total: true },
   ]);
   readonly labels = signal(true);
+  readonly format = signal<TxChartValueFormat>('number');
   readonly ariaLabel = signal('');
   readonly dt = signal<TectraDeepPartial<TectraChartTokens> | undefined>(undefined);
   readonly templates = signal(false);
@@ -163,6 +179,27 @@ describe('TxWaterfallChart options', () => {
     await fixture.whenStable();
     expect(all('.tx-waterfall-chart__label')).toHaveLength(0);
     expect(all('.tx-chart-legend__item')).toHaveLength(0);
+  });
+
+  it('writes compact labels in a narrow chart and leaves out the ones that collide', async () => {
+    host.format.set({ currency: 'USD' });
+    host.items.set([
+      { label: 'Opening', value: 36400, total: true },
+      { label: 'Won', value: 12850 },
+      { label: 'Lost', value: -4120 },
+      { label: 'Churn', value: -2310 },
+      { label: 'Upsell', value: 3160 },
+      { label: 'Closing', total: true },
+    ]);
+    await fixture.whenStable();
+    expect(all('.tx-waterfall-chart__label')[0].textContent?.trim()).toBe('$36,400');
+    chart().size.set({ width: 200, height: 300 });
+    await fixture.whenStable();
+    const texts = chart().bars().map((bar) => bar.text);
+    expect(texts[0]).toBe('$36.4K');
+    expect(texts[5]).toBe('$46K');
+    expect(texts.some((text) => text === null)).toBe(true);
+    expect(all('.tx-waterfall-chart__label').length).toBe(texts.filter(Boolean).length);
   });
 
   it('prefixes the summary with the aria label', async () => {

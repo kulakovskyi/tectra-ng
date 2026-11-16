@@ -117,11 +117,12 @@ export class TxInputOtp extends TxFormControlBase<string> {
   onInput(event: Event, index: number): void {
     const element = event.target as HTMLInputElement;
     const typed = this.clean(element.value);
+    if (!element.value.trim()) {
+      this.setChars(index, ['']);
+      return;
+    }
     if (!typed) {
       element.value = this.chars()[index] ?? '';
-      if (!element.value) {
-        this.setChars(index, ['']);
-      }
       return;
     }
     const incoming = typed.length > 1 && this.chars()[index] && typed.startsWith(this.chars()[index]) ? typed.slice(1) : typed;
@@ -184,13 +185,14 @@ export class TxInputOtp extends TxFormControlBase<string> {
   }
 
   private setChars(index: number, values: string[]): void {
+    const wasComplete = this.isComplete();
     const next = this.indexes().map((position) => this.chars()[position] ?? '');
     values.forEach((value, offset) => (next[index + offset] = value));
     this.chars.set(next);
     this.syncCells();
     const value = next.join('');
     this.updateValue(value);
-    if (this.isComplete()) {
+    if (!wasComplete && this.isComplete()) {
       this.completed.emit(value);
     }
   }

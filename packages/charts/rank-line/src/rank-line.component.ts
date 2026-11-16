@@ -29,6 +29,7 @@ import {
   initialChartSize,
   injectChartEntrance,
   linePath,
+  timeTooltipFormatter,
   toTime,
   toggleKey,
 } from '@tectra-ng/charts/core';
@@ -36,8 +37,8 @@ import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassT
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
-import { rankLineColor, rankTickStep, rankTimeExtent, rankY } from './rank-line-layout';
-import { TxRankLineEvent, TxRankLinePart, TxRankMarker, TxRankSeries } from './rank-line.types';
+import { rankLineColor, rankTicks, rankTimeExtent, rankTimeStep, rankY } from './rank-line-layout';
+import { TxRankDateFormat, TxRankLineEvent, TxRankLinePart, TxRankMarker, TxRankSeries } from './rank-line.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { RANK_LINE_ICON_DEFAULTS } from './rank-line.icons';
 import { RANK_LINE_THEME } from './rank-line.theme';
@@ -69,6 +70,7 @@ export class TxRankChart {
   readonly series = input<readonly TxRankSeries[] | null | undefined>([]);
   readonly maxRank = input(20);
   readonly rankLabel = input('');
+  readonly dateFormat = input<TxRankDateFormat | null | undefined>(undefined);
   readonly height = input<TxChartHeight>(360);
   readonly showLegend = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly legendPosition = input<TxChartLegendPosition>('top');
@@ -106,27 +108,39 @@ export class TxRankChart {
   readonly colors = computed(() => this.list().map((item, index) => item.color || rankLineColor(index)));
   readonly extent = computed(() => rankTimeExtent(this.list()));
   readonly isEmpty = computed(() => !this.list().some((item) => item.points.some((point) => point.rank !== null && toTime(point.time) !== null)));
-  readonly dateTimeFormat = computed(() => dateFormat(this.intl(), { dateStyle: 'medium', timeStyle: 'short' }));
+  readonly formatTime = computed<(time: number) => string>(() => {
+    const own = this.dateFormat();
+    if (typeof own === 'function') return own;
+    if (own) {
+      const format = dateFormat(this.intl(), own);
+      return (time) => format.format(time);
+    }
+    const times = this.list().flatMap((item) => item.points.map((point) => toTime(point.time)).filter((time): time is number => time !== null));
+    return timeTooltipFormatter(this.intl(), rankTimeStep(times));
+  });
 
   readonly layout = computed(() => {
     const { width, height } = this.size();
-    const maxRank = Math.max(1, this.maxRank());
+    const maxRank = Math.max(1, Math.floor(this.maxRank()));
+    const ticks = rankTicks(maxRank);
     const base = cartesianLayout({
       width,
       height,
       intl: this.intl(),
       category: { kind: 'time', domain: this.extent() ?? [0, 1] },
-      value: { extent: [0, maxRank], min: 0, max: maxRank, tickCount: Math.ceil(maxRank / rankTickStep(maxRank)), format: (value: number) => String(Math.max(1, Math.round(value))) },
-      grid: 'value',
+      value: { extent: [1, maxRank], min: 0, max: maxRank, tickCount: 2, format: () => String(maxRank) },
+      grid: 'none',
     });
     const { plot } = base;
-    const mirror = (y: number) => plot.top * 2 + plot.height - y;
+    const y = (rank: number) => rankY(rank, maxRank, plot.top, plot.height);
     const axes = {
       ...base.axes,
-      grid: base.axes.grid.map((line) => ({ ...line, y1: mirror(line.y1), y2: mirror(line.y2) })),
-      axes: base.axes.axes.map((axis) =>
-        axis.position === 'left' || axis.position === 'right' ? { ...axis, labels: axis.labels.map((label) => ({ ...label, y: mirror(label.y) })) } : axis,
-      ),
+      zero: null,
+      grid: ticks.map((rank) => ({ x1: plot.left, y1: y(rank), x2: plot.left + plot.width, y2: y(rank) })),
+      axes: base.axes.axes.map((axis) => {
+        const template = axis.labels[0];
+        return axis.position === 'left' || axis.position === 'right' ? { ...axis, labels: ticks.map((rank) => ({ ...template, text: String(rank), y: y(rank) })) } : axis;
+      }),
     };
     return { plot, axes, x: (time: number) => base.categoryPosition(0, time), maxRank };
   });
@@ -161,7 +175,7 @@ export class TxRankChart {
     if (!marker || !this.showTooltip()) return null;
     const item = this.list()[marker.series];
     return {
-      title: this.dateTimeFormat().format(marker.time),
+      title: this.formatTime()(marker.time),
       rows: [{ label: item.name, value: this.rankLabel() ? `${this.rankLabel()}: ${marker.rank}` : String(marker.rank), color: this.colors()[marker.series], raw: marker.rank, seriesIndex: marker.series, active: true }],
       index: marker.point,
       x: marker.x,
@@ -174,18 +188,18 @@ export class TxRankChart {
   readonly summary = computed(() => {
     const t = this.translations();
     const extent = this.extent();
-    const format = this.dateTimeFormat();
-    const text = chartSummary(t, this.intl(), t.chartRank, this.list().length, this.markers().length, extent ? [format.format(extent[0]), format.format(extent[1])] : null);
+    const format = this.formatTime();
+    const text = chartSummary(t, this.intl(), t.chartRank, this.list().length, this.markers().length, extent ? [format(extent[0]), format(extent[1])] : null);
     return this.ariaLabel() ? `${this.ariaLabel()}. ${text}` : text;
   });
 
   readonly dataTable = computed(() => {
     const t = this.translations();
-    const format = this.dateTimeFormat();
+    const format = this.formatTime();
     return {
       columns: [{ key: 'rank', label: this.rankLabel() || t.chartRankValue }],
       rows: this.markers().map((marker) => ({
-        label: `${this.list()[marker.series].name}, ${format.format(marker.time)}`,
+        label: `${this.list()[marker.series].name}, ${format(marker.time)}`,
         cells: [marker.note ? `${marker.rank} (${marker.note})` : String(marker.rank)],
       })),
     };
@@ -237,7 +251,7 @@ export class TxRankChart {
     if (!next) return;
     this.active.set(next.key);
     const name = this.list()[next.series].name;
-    this.frame()?.announce(`${name}, ${this.dateTimeFormat().format(next.time)}: ${this.rankLabel() || this.translations().chartRankValue} ${next.rank}${next.note ? `, ${next.note}` : ''}`);
+    this.frame()?.announce(`${name}, ${this.formatTime()(next.time)}: ${this.rankLabel() || this.translations().chartRankValue} ${next.rank}${next.note ? `, ${next.note}` : ''}`);
   }
 
   onLegendToggle(key: string): void {

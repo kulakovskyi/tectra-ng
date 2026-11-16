@@ -98,8 +98,19 @@ export interface TxChartSeries {
 /** Turns a value into the text shown for it. */
 export type TxChartValueFormatter = (value: number) => string;
 
-/** How values are written: `number`, `integer`, `compact`, `percent` or an own formatter function. */
-export type TxChartValueFormat = 'number' | 'integer' | 'compact' | 'percent' | TxChartValueFormatter;
+/** Money format of chart values in the active locale: compact on the axes, in full in tooltips and labels. */
+export interface TxChartCurrencyFormat {
+  /** ISO 4217 code of the currency, like `USD` or `EUR`. */
+  currency: string;
+  /** How the currency is written: `symbol` (default, `$`), `narrowSymbol`, `code` (`USD`) or `name` (`US dollars`). */
+  currencyDisplay?: Intl.NumberFormatOptions['currencyDisplay'];
+}
+
+/**
+ * How values are written: `number`, `integer`, `compact`, `percent`, a currency (`{ currency: 'USD' }`)
+ * or an own formatter function.
+ */
+export type TxChartValueFormat = 'number' | 'integer' | 'compact' | 'percent' | TxChartCurrencyFormat | TxChartValueFormatter;
 
 /** Which point a tooltip value belongs to. */
 export interface TxChartTooltipContext {

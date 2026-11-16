@@ -7,9 +7,9 @@ Theme settings people change at run time: primary color, surface palette, style 
 ```
 
 ```ts
-import { edgeStyle, softStyle, tectraStyle } from '@tectra-ng/themes';
+import { edgeStyle, paperStyle, tectraStyle } from '@tectra-ng/themes';
 
-readonly styles = [tectraStyle, softStyle, edgeStyle];
+readonly styles = [tectraStyle, edgeStyle, paperStyle];
 ```
 
 Styles are objects, and only the ones you list end up in the bundle; with fewer than two the style row is hidden. Put it in a popover, a drawer or a settings page.
@@ -23,18 +23,18 @@ provideTectra({
   preset: Tectra,
   presetOverrides: { light: { primary: { contrast: '#ffffff' } } },
   storageKey: 'app-theme',
-  styles: [softStyle, edgeStyle],
+  styles: [edgeStyle, paperStyle],
 });
 ```
 
 - `presetOverrides` — your own changes to the preset (an object or `(preset) => overrides`), merged with `definePreset` at start and after every `updateTheme`. Keep them here instead of in `preset` so a new primary or style does not drop them.
 - `storageKey` — remembers the style, primary, surface, ripple and color scheme in local storage and restores them while the app starts, before the first render. On the server nothing is read.
-- `styles` — the styles a remembered choice may name; the style of `preset` is always known.
+- `styles` — the styles a remembered choice may name; the style of `preset` is always known. A remembered style that is not among them falls back to the style of `preset`.
 
 ## Inputs
 | Name | Description |
 |---|---|
-| styles | Style objects to pick from (`tectraStyle`, `softStyle`, `edgeStyle`, `paperStyle` or your own) |
+| styles | Style objects to pick from (`tectraStyle`, `edgeStyle`, `paperStyle` or your own) |
 | primaries | Primary color dots, `{ value, color, label }`; every primary color of `createTectraPreset` by default; an empty list hides the row |
 | surfaces | Surface palette dots; every surface palette by default; an empty list hides the row |
 | columns | Dots per row (default 9) |

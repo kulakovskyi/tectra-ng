@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { TxChartValueFormat, textWidth } from '@tectra-ng/charts/core';
 import { TectraChartTokens, TectraDeepPartial } from '@tectra-ng/themes';
 import { TxGauge } from './gauge.component';
 import { TxGaugeBand } from './gauge.types';
@@ -78,6 +79,9 @@ describe('TxGauge', () => {
   template: `
     <tx-gauge
       [value]="value()"
+      [max]="max()"
+      [valueFormat]="format()"
+      [height]="height()"
       [bands]="bands()"
       [needle]="needle()"
       [color]="color()"
@@ -93,6 +97,9 @@ describe('TxGauge', () => {
 })
 class OptionsHost {
   readonly value = signal<number | null | undefined>(0);
+  readonly max = signal(100);
+  readonly format = signal<TxChartValueFormat>('number');
+  readonly height = signal(220);
   readonly bands = signal<TxGaugeBand[] | null>(null);
   readonly needle = signal<boolean | undefined>(undefined);
   readonly color = signal<string | undefined>(undefined);
@@ -138,9 +145,54 @@ describe('TxGauge options', () => {
     const radius = gauge().fit().radius;
     host.showTicks.set(false);
     await fixture.whenStable();
-    expect(gauge().tickRoom()).toBe(0);
+    expect(gauge().tickMarks()).toEqual([]);
     expect(all('.tx-gauge__tick')).toHaveLength(0);
     expect(gauge().fit().radius).toBeGreaterThan(radius);
+  });
+
+  it('keeps a minimum arc: long tick labels turn compact, then only the tick lines stay', async () => {
+    host.showTicks.set(false);
+    await fixture.whenStable();
+    const bare = gauge().fit().radius;
+    host.showTicks.set(true);
+    host.ticks.set(4);
+    host.max.set(2_000_000);
+    host.format.set({ currency: 'USD', currencyDisplay: 'name' });
+    await fixture.whenStable();
+    expect(gauge().fit().radius).toBeGreaterThanOrEqual(bare * 0.6);
+    host.format.set((value) => `${value} units of something long`);
+    await fixture.whenStable();
+    expect(all('.tx-gauge__tick-line').length).toBeGreaterThan(0);
+    expect(all('.tx-gauge__tick-label')).toHaveLength(0);
+    expect(gauge().tickMarks().every((tick) => tick.label === null)).toBe(true);
+    host.format.set('number');
+    await fixture.whenStable();
+    expect(all('.tx-gauge__tick-label').map((label) => label.textContent?.trim())).toContain('2,000,000');
+    host.height.set(120);
+    await fixture.whenStable();
+    expect(all('.tx-gauge__tick-label').map((label) => label.textContent?.trim())).toContain('2M');
+    host.format.set('integer');
+    host.max.set(3);
+    host.ticks.set(6);
+    await fixture.whenStable();
+    expect(gauge().tickValues()).toEqual([0, 1, 2, 3]);
+  });
+
+  it('scales the value down to fit inside the arc', async () => {
+    host.height.set(140);
+    host.value.set(12);
+    await fixture.whenStable();
+    const full = gauge().valueFont().value;
+    host.max.set(1e12);
+    host.value.set(987654321012.5);
+    await fixture.whenStable();
+    const font = gauge().valueFont().value;
+    expect(font).toBeLessThan(full);
+    const inner = gauge().fit().radius - gauge().width();
+    expect(textWidth(gauge().formatted(), font)).toBeLessThanOrEqual(inner * 2);
+    host.needle.set(true);
+    await fixture.whenStable();
+    expect(gauge().valueFont().value).toBeLessThan(full);
   });
 
   it('shows "No data" for an undefined value', async () => {

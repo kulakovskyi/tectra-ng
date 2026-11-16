@@ -31,7 +31,7 @@ A one-time code in separate cells. Typing moves to the next cell, Backspace and 
 ## Outputs
 | Name | Description |
 |---|---|
-| completed | Every cell is filled — the full code |
+| completed | The last empty cell was filled — the full code; editing a filled code does not repeat it until a cell is emptied and filled again |
 
 ## Keyboard
 | Key | Action |

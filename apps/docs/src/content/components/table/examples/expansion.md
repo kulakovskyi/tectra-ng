@@ -1,1 +1,1 @@
-`<ng-template txTableExpansion>` adds a toggle column; an expanded row shows the template under it. `[(expandedRowKeys)]` holds the `dataKey` values of the open rows.
+`<ng-template txTableExpansion>` adds a toggle column; an expanded row shows the template under it. `[(expandedRowKeys)]` holds the `dataKey` values of the open rows. `[txTableExpansionOf]` takes the rows only for typing, so `let-invoice` has the row type. In the card view every card gets an expand button with the same content.

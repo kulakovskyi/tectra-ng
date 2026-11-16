@@ -30,13 +30,14 @@ import { TxRangeAreaChart } from '@tectra-ng/charts/range-area';
 | xAxisTitle | Title of the x axis |
 | yAxisTitle | Title of the value axis |
 | grid | Grid lines: `value`, `category`, `both` or `none` |
+| annotations | Marks on the plot: `{ type: 'x-line', x }`, `{ type: 'y-line', y }`, `{ type: 'x-band', from, to }`, `{ type: 'y-band', from, to }`, `{ type: 'point', x, y }`, each with an optional `label`, `tone` (`neutral`, `primary`, `success`, `info`, `warn`, `danger`) or `color`; `x` is a category label (or index) or a date with `xType="time"`; bands and lines sit behind the series, points and labels on top |
 | labelMode | Labels that do not fit: `auto`, `rotate` or `skip` |
 | maxLabels | Most x labels to show (10) |
 | toolbar | Shows the chart menu: download SVG, PNG or CSV (the file is named after `ariaLabel`) |
 | loading | Shows a skeleton of the same size |
 | ariaLabel | What the chart shows; starts the summary read by screen readers |
 | dt | Design tokens of this chart (`chart`) — band opacity, edge and line widths, palette |
-| pt | Classes and styles of the parts: `root`, `legend`, `legendItem`, `plot`, `svg`, `grid`, `axis`, `series`, `band`, `edge`, `line`, `marker`, `crosshair`, `tooltip`, `empty`, `skeleton` |
+| pt | Classes and styles of the parts: `root`, `legend`, `legendItem`, `plot`, `svg`, `grid`, `axis`, `series`, `band`, `edge`, `line`, `marker`, `crosshair`, `annotation`, `tooltip`, `empty`, `skeleton` |
 | ptOptions | How `pt` merges with the global pass-through |
 | unstyled | Removes the tectra styles and keeps the behaviour |
 

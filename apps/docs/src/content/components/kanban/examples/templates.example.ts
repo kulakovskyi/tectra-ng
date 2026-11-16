@@ -43,7 +43,7 @@ interface Note {
           (keydown.enter)="add(column.id, $event)"
         />
       </ng-template>
-      <ng-template txKanbanCard let-note>
+      <ng-template txKanbanCard [txKanbanCardOf]="columns()" let-note>
         <div class="card">{{ note.text }}</div>
       </ng-template>
       <ng-template txKanbanEmpty let-column>

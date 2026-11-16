@@ -9,6 +9,10 @@
   pointer-events: none;
 }
 
+:host(.tx-network-status--contained) .tx-network-status__region {
+  position: absolute;
+}
+
 .tx-network-status__pill {
   display: flex;
   align-items: center;

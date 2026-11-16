@@ -41,7 +41,7 @@
 - **Everything in one kit** — 80+ components (forms, data, overlays, navigation, feedback, date and time), 22 page blocks, 23 SVG charts, a rich text editor, a code editor with diff, 334 icons, brand logos and country flags.
 - **Modern Angular only** — standalone, signal inputs and models, OnPush, zoneless; works with reactive, template-driven and signal forms.
 - **Server rendering out of the box** — every component prerenders and hydrates without a layout jump.
-- **Your design, from tokens** — light and dark mode, 4 styles, 17 primary colours and 13 surfaces; change any component with `dt`, add classes with `pt`, or turn styles off with `unstyled`.
+- **Your design, from tokens** — light and dark mode, 3 styles, 17 primary colours and 13 surfaces; change any component with `dt`, add classes with `pt`, or turn styles off with `unstyled`.
 - **Accessible** — WAI-ARIA patterns, full keyboard support, axe checks of every docs page in light and dark.
 - **Few dependencies** — charts, QR codes, icons and utilities are written in the kit; only the editors bring an engine core.
 - **Tree-shakable** — one entry point per component, chart and utility, so an app ships only what it imports.

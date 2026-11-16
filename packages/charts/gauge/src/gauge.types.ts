@@ -48,8 +48,8 @@ export interface TxGaugeTick {
   labelX: number;
   /** Y of the tick label. */
   labelY: number;
-  /** Formatted value shown at the tick. */
-  label: string;
+  /** Formatted value shown at the tick; `null` when the label does not fit and only the tick line is drawn. */
+  label: string | null;
   /** Text anchor of the label. */
   anchor: 'start' | 'middle' | 'end';
 }

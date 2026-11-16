@@ -118,6 +118,40 @@ class StepsTemplateHost {
   readonly items: TxStepsItem[] = [{ label: 'One' }, { label: 'Two' }];
 }
 
+@Component({
+  imports: [TxStepper, TxStepItem, TxStep, TxStepPanel, TxStepList],
+  template: `
+    <tx-stepper [(value)]="value">
+      @for (step of steps(); track step.id) {
+        <tx-step-item [value]="step.id" [completed]="step.done">
+          <tx-step>{{ step.title }}</tx-step>
+          <tx-step-panel><p [class]="'panel-' + step.id">{{ step.title }}</p></tx-step-panel>
+        </tx-step-item>
+      }
+      @if (extra()) {
+        <tx-step-item value="extra"><tx-step>Extra</tx-step></tx-step-item>
+      }
+    </tx-stepper>
+    <tx-stepper class="row" value="b">
+      <tx-step-list>
+        @for (step of steps(); track step.id) {
+          <tx-step [value]="step.id" [completed]="step.done">{{ step.title }}</tx-step>
+        }
+      </tx-step-list>
+    </tx-stepper>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class DynamicHost {
+  readonly value = signal<TxStepValue | undefined>('b');
+  readonly extra = signal(false);
+  readonly steps = signal<{ id: string; title: string; done?: boolean }[]>([
+    { id: 'a', title: 'Account', done: false },
+    { id: 'b', title: 'Profile' },
+    { id: 'c', title: 'Review', done: true },
+  ]);
+}
+
 function setup<T>(component: new () => T): ComponentFixture<T> {
   const fixture = TestBed.createComponent(component);
   fixture.autoDetectChanges();
@@ -438,5 +472,46 @@ describe('stepper templates', () => {
     expect(TxStepContent.ngTemplateContextGuard({} as TxStepContent, {})).toBe(true);
     expect(TxStepPanelContent.ngTemplateContextGuard({} as TxStepPanelContent, null)).toBe(false);
     expect(TxStepsItemTemplate.ngTemplateContextGuard({} as TxStepsItemTemplate, { index: 0 })).toBe(true);
+  });
+});
+
+describe('TxStepper with dynamic steps', () => {
+  let fixture: ComponentFixture<DynamicHost>;
+  const all = (selector: string) => Array.from(fixture.nativeElement.querySelectorAll(selector)) as HTMLElement[];
+
+  it('renders steps from @for and @if without required input errors', async () => {
+    expect(() => {
+      fixture = setup(DynamicHost);
+    }).not.toThrow();
+    await fixture.whenStable();
+    expect(all('tx-stepper')[0].querySelectorAll('tx-step-item')).toHaveLength(3);
+    expect(all('.tx-step__number').slice(0, 3).map((node) => node.textContent)).toEqual(['1', '2', '3']);
+    fixture.componentInstance.extra.set(true);
+    fixture.componentInstance.steps.update((steps) => [...steps, { id: 'd', title: 'Done' }]);
+    await fixture.whenStable();
+    const items = all('tx-step-item');
+    expect(items).toHaveLength(5);
+    expect(items[4].classList).toContain('tx-step-item--last');
+    expect(items[4].querySelector('.tx-step__number')?.textContent).toBe('5');
+  });
+
+  it('lets an explicit completed win over the position of the step', async () => {
+    fixture = setup(DynamicHost);
+    await fixture.whenStable();
+    const [first, , third] = all('tx-step-item');
+    expect(first.classList).not.toContain('tx-step-item--completed');
+    expect(third.classList).toContain('tx-step-item--completed');
+    expect(third.querySelector('.tx-step')?.classList).toContain('tx-step--completed');
+    expect(third.querySelector('.tx-stepper__sr-only')?.textContent).toContain('completed');
+    expect(first.querySelector('.tx-stepper__sr-only')).toBeNull();
+    const row = all('.row tx-step');
+    expect(row[0].classList).not.toContain('tx-step--completed');
+    expect(row[1].classList).not.toContain('tx-step--completed');
+    expect(row[2].classList).toContain('tx-step--completed');
+    fixture.componentInstance.steps.update((steps) => steps.map((step) => ({ ...step, done: undefined })));
+    await fixture.whenStable();
+    expect(all('tx-step-item')[0].classList).toContain('tx-step-item--completed');
+    expect(all('.row tx-step')[0].classList).toContain('tx-step--completed');
+    expect(all('tx-step-item')[2].classList).not.toContain('tx-step-item--completed');
   });
 });

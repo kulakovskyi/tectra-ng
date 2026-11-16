@@ -6,6 +6,7 @@ import {
   TxTableActions,
   TxTableActionsTemplate,
   TxTableColumn,
+  TxTableExpansion,
 } from '@tectra-ng/ui/table';
 
 interface Invoice {
@@ -56,7 +57,14 @@ const INVOICES: Invoice[] = [
 
 @Component({
   selector: 'table-cards-example',
-  imports: [TxTable, TxTableActionsTemplate, TxTableActions, TxTableAction, TxButton],
+  imports: [
+    TxTable,
+    TxTableActionsTemplate,
+    TxTableActions,
+    TxTableAction,
+    TxTableExpansion,
+    TxButton,
+  ],
   template: `
     <tx-table
       ariaLabel="Invoices"
@@ -67,7 +75,7 @@ const INVOICES: Invoice[] = [
       [columns]="columns"
       [(selection)]="selected"
     >
-      <ng-template txTableActions let-invoice>
+      <ng-template txTableActions [txTableActionsOf]="invoices" let-invoice>
         <tx-table-actions>
           <button
             *txTableAction="{ label: 'Open' }"
@@ -86,7 +94,15 @@ const INVOICES: Invoice[] = [
           ></button>
         </tx-table-actions>
       </ng-template>
+      <ng-template txTableExpansion [txTableExpansionOf]="invoices" let-invoice>
+        <span class="details">Invoice {{ invoice.number }} for {{ invoice.client }}</span>
+      </ng-template>
     </tx-table>
+  `,
+  styles: `
+    .details {
+      color: var(--tx-text-muted);
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

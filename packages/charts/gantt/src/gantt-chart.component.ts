@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   ElementRef,
   Injector,
   afterNextRender,
@@ -13,7 +14,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { dateFormat, toggleKey } from '@tectra-ng/charts/core';
+import { dateFormat, textWidth, toggleKey } from '@tectra-ng/charts/core';
 import { uniqueId } from '@tectra-ng/core/a11y';
 import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService, formatMessage, injectTranslations } from '@tectra-ng/core/i18n';
@@ -24,8 +25,35 @@ import { TxButton } from '@tectra-ng/ui/button';
 import { TxButtonGroup } from '@tectra-ng/ui/button-group';
 import { TxSkeleton } from '@tectra-ng/ui/skeleton';
 import { TxTooltip } from '@tectra-ng/ui/tooltip';
-import { TX_GANTT_DAY, TX_GANTT_DAY_WIDTH, ganttDays, ganttFolds, ganttRange, ganttRows, ganttTicks, ganttTime, ganttX } from './gantt-layout';
-import { TxGanttDate, TxGanttGroupToggle, TxGanttLayout, TxGanttPart, TxGanttSpan, TxGanttTask, TxGanttTaskEvent, TxGanttZoom } from './gantt-chart.types';
+import {
+  TX_GANTT_DAY,
+  TX_GANTT_DAY_WIDTH,
+  TX_GANTT_LINK_STUB,
+  ganttChain,
+  ganttDays,
+  ganttFinishLinked,
+  ganttFitRange,
+  ganttFolds,
+  ganttLinkPaths,
+  ganttLinks,
+  ganttRange,
+  ganttRows,
+  ganttTicks,
+  ganttTime,
+  ganttX,
+} from './gantt-layout';
+import {
+  TxGanttDate,
+  TxGanttDependencyType,
+  TxGanttGroupToggle,
+  TxGanttLayout,
+  TxGanttLink,
+  TxGanttPart,
+  TxGanttSpan,
+  TxGanttTask,
+  TxGanttTaskEvent,
+  TxGanttZoom,
+} from './gantt-chart.types';
 import { GANTT_ICON_DEFAULTS } from './gantt.icons';
 import { GANTT_THEME } from './gantt.theme';
 
@@ -34,6 +62,7 @@ const MIN_BAR = 6;
 const SKELETON_ROWS = 5;
 const TODAY_AT = 0.3;
 const REVEAL_FROM = 0.8;
+const LABEL_FONT = 12.25;
 
 /**
  * Where task names go: beside the bar, inside it, or nowhere; `auto` picks beside for `tasks` and inside for `timeline`.
@@ -62,6 +91,7 @@ export class TxGanttChart {
 
   private locale = inject(TxLocaleService);
   private injector = inject(Injector);
+  private destroyRef = inject(DestroyRef);
   readonly translations = injectTranslations();
 
   readonly tasks = input<readonly TxGanttTask[] | null | undefined>([]);
@@ -76,6 +106,8 @@ export class TxGanttChart {
   readonly maxHeight = input('');
   readonly labelHeader = input('');
   readonly loading = input<boolean, unknown>(false, { transform: booleanAttribute });
+  readonly showDependencies = input<boolean, unknown>(true, { transform: booleanAttribute });
+  readonly dependencyHighlight = input<boolean, unknown>(true, { transform: booleanAttribute });
   readonly ariaLabel = input('');
   readonly dt = input<TectraDeepPartial<TectraChartTokens> | undefined>(undefined);
   readonly pt = input<TxPassThrough<TxGanttPart, TxGanttChart> | undefined>(undefined);
@@ -95,6 +127,8 @@ export class TxGanttChart {
   readonly zooms = ZOOMS;
   readonly collapsed = signal<ReadonlySet<string>>(new Set());
   readonly focused = signal<string | null>(null);
+  readonly hovered = signal<string | null>(null);
+  readonly active = signal<string | null>(null);
   private readonly now = Date.now();
   readonly skeletonRows = Array.from({ length: SKELETON_ROWS }, (_, index) => index);
 
@@ -102,7 +136,9 @@ export class TxGanttChart {
   readonly list = computed(() => this.tasks() ?? []);
   readonly isEmpty = computed(() => !this.list().some((task) => ganttTime(task.start) !== null));
   readonly dayWidth = computed(() => TX_GANTT_DAY_WIDTH[this.zoom()]);
-  readonly range = computed(() => ganttRange(this.list(), Math.max(0, this.padding()), this.start(), this.end()));
+  readonly viewport = signal(0);
+  readonly dataRange = computed(() => ganttRange(this.list(), Math.max(0, this.padding()), this.start(), this.end()));
+  readonly range = computed(() => ganttFitRange(this.dataRange(), this.zoom(), this.viewport()));
   readonly width = computed(() => Math.ceil(ganttX(this.range()[1], this.range()[0], this.dayWidth())));
   readonly ticks = computed(() => ganttTicks(this.range(), this.zoom(), this.intl()));
   readonly rows = computed(() => ganttRows(this.list(), this.layout(), this.collapsed(), this.range()[0], this.dayWidth(), MIN_BAR));
@@ -110,6 +146,30 @@ export class TxGanttChart {
   readonly spans = computed(() => this.rows().flatMap((row) => row.spans));
   private readonly openRows = computed(() => this.rows().filter((row) => row.spans.length && !row.collapsed));
   private readonly openSpans = computed(() => this.openRows().flatMap((row) => row.spans));
+  readonly links = computed(() => ganttLinks(this.list()));
+  readonly linkLayout = computed(() =>
+    this.showDependencies()
+      ? ganttLinkPaths(this.links(), this.folds(), this.labelsOutside() ? (task) => textWidth(task.label, LABEL_FONT) : undefined)
+      : { paths: [], height: 0 },
+  );
+  private readonly finishLinked = computed(() => (this.showDependencies() ? ganttFinishLinked(this.links()) : new Set<string>()));
+  readonly chain = computed(() => {
+    const id = this.hovered() ?? this.active();
+    if (!id || !this.showDependencies() || !this.dependencyHighlight()) return null;
+    const chain = ganttChain(this.links(), id);
+    return chain.links.size ? chain : null;
+  });
+  readonly linkPaths = computed(() => {
+    const chain = this.chain();
+    const paths = this.linkLayout().paths.map((path) => ({ ...path, state: !chain ? null : path.links.some((index) => chain.links.has(index)) ? 'active' : 'dimmed' }));
+    return [...paths.filter((path) => path.state !== 'active'), ...paths.filter((path) => path.state === 'active')];
+  });
+  private readonly dimmedGroups = computed(() => {
+    const chain = this.chain();
+    if (!chain) return new Set<string>();
+    const lit = new Set(this.list().flatMap((task) => (task.group && chain.tasks.has(task.id) ? [task.group] : [])));
+    return new Set(this.list().flatMap((task) => (task.group && !lit.has(task.group) ? [task.group] : [])));
+  });
   readonly labelsInside = computed(() => this.barLabels() === 'inside' || (this.barLabels() === 'auto' && this.layout() === 'timeline'));
   readonly labelsOutside = computed(() => this.barLabels() === 'outside' || (this.barLabels() === 'auto' && this.layout() === 'tasks'));
   readonly tabStop = computed(() => {
@@ -135,9 +195,40 @@ export class TxGanttChart {
 
   readonly dayFormat = computed(() => dateFormat(this.intl(), { day: 'numeric', month: 'short', year: 'numeric' }));
 
+  private readonly dependencyText = computed(() => {
+    const t = this.translations();
+    const types: Record<TxGanttDependencyType, string> = {
+      'finish-to-start': '',
+      'start-to-start': t.chartStartToStart,
+      'finish-to-finish': t.chartFinishToFinish,
+      'start-to-finish': t.chartStartToFinish,
+    };
+    const names = new Map(this.list().map((task) => [task.id, task.label]));
+    const name = (id: string, link: TxGanttLink) => (types[link.type] ? `${names.get(id)} (${types[link.type]})` : `${names.get(id)}`);
+    const lines = new Map<string, { before: string[]; after: string[] }>();
+    const entry = (id: string) => {
+      const known = lines.get(id);
+      if (known) return known;
+      const created = { before: [] as string[], after: [] as string[] };
+      lines.set(id, created);
+      return created;
+    };
+    for (const link of this.links()) {
+      entry(link.to).before.push(name(link.from, link));
+      entry(link.from).after.push(name(link.to, link));
+    }
+    return new Map(
+      [...lines].map(([id, { before, after }]) => [
+        id,
+        [...(before.length ? [`${t.chartDependsOn}: ${before.join(', ')}`] : []), ...(after.length ? [`${t.chartRequiredBy}: ${after.join(', ')}`] : [])],
+      ]),
+    );
+  });
+
   readonly text = computed(() => {
     const t = this.translations();
     const format = this.dayFormat();
+    const dependencies = this.dependencyText();
     return new Map(
       this.spans().map((span) => {
         const lines = span.task.milestone
@@ -147,21 +238,24 @@ export class TxGanttChart {
               `${format.format(span.start)} – ${format.format(span.end - 1)} · ${formatMessage(t.chartDays, { count: ganttDays(span.start, span.end) }, this.intl())}`,
               ...(span.task.progress !== null && span.task.progress !== undefined ? [`${t.chartProgress}: ${Math.round(span.task.progress)}%`] : []),
             ];
-        return [span.task.id, lines] as const;
+        return [span.task.id, [...lines, ...(dependencies.get(span.task.id) ?? [])]] as const;
       }),
     );
   });
 
   readonly summary = computed(() => {
     const t = this.translations();
-    const [from, to] = this.range();
+    const [from, to] = this.dataRange();
     const format = this.dayFormat();
     const text = `${t.chartGantt}, ${formatMessage(t.chartSummaryTasks, { count: this.spans().length }, this.intl())}, ${format.format(from)} – ${format.format(to - TX_GANTT_DAY)}`;
     return this.ariaLabel() ? `${this.ariaLabel()}. ${text}` : text;
   });
 
   constructor() {
-    afterNextRender(() => this.revealToday());
+    afterNextRender(() => {
+      this.observeViewport();
+      this.revealToday();
+    });
   }
 
   tooltipFor(span: TxGanttSpan): string {
@@ -170,6 +264,27 @@ export class TxGanttChart {
 
   ariaFor(span: TxGanttSpan): string {
     return (this.text().get(span.task.id) ?? [span.task.label]).join(', ');
+  }
+
+  labelShift(span: TxGanttSpan): number {
+    return this.finishLinked().has(span.task.id) ? TX_GANTT_LINK_STUB : 0;
+  }
+
+  isDimmed(id: string): boolean {
+    const chain = this.chain();
+    return !!chain && !chain.tasks.has(id);
+  }
+
+  isGroupDimmed(group: string | null): boolean {
+    return group !== null && this.dimmedGroups().has(group);
+  }
+
+  onBarHover(span: TxGanttSpan | null): void {
+    this.hovered.set(span ? span.task.id : null);
+  }
+
+  onBarBlur(): void {
+    this.active.set(null);
   }
 
   progressOf(span: TxGanttSpan): number | null {
@@ -226,6 +341,7 @@ export class TxGanttChart {
 
   onBarFocus(span: TxGanttSpan, element: HTMLElement): void {
     this.focused.set(span.task.id);
+    this.active.set(span.task.id);
     this.reveal(element);
   }
 
@@ -274,6 +390,17 @@ export class TxGanttChart {
     const behavior: ScrollBehavior = this.reducedMotion() ? 'auto' : 'smooth';
     if (rect.left < left) scroller.scrollBy({ left: rect.left - left - 16, behavior });
     else if (rect.right > box.right) scroller.scrollBy({ left: Math.min(rect.right - box.right + 16, rect.left - left - 16), behavior });
+  }
+
+  private observeViewport(): void {
+    const element = this.scroller()?.nativeElement;
+    const view = element?.ownerDocument.defaultView;
+    if (!element || !view || typeof view.ResizeObserver !== 'function') return;
+    const measure = () => this.viewport.set(Math.max(0, element.clientWidth - this.labelWidth(element)));
+    measure();
+    const observer = new view.ResizeObserver(measure);
+    observer.observe(element);
+    this.destroyRef.onDestroy(() => observer.disconnect());
   }
 
   private revealToday(): void {

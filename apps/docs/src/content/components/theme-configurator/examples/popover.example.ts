@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TxThemeConfigurator } from '@tectra-ng/blocks/theme-configurator';
-import { edgeStyle, softStyle, tectraStyle } from '@tectra-ng/themes';
+import { edgeStyle, paperStyle, tectraStyle } from '@tectra-ng/themes';
 import { TxButton } from '@tectra-ng/ui/button';
 import { TxPopover, TxPopoverTrigger } from '@tectra-ng/ui/popover';
 
@@ -18,5 +18,5 @@ import { TxPopover, TxPopoverTrigger } from '@tectra-ng/ui/popover';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class ThemeConfiguratorPopoverExample {
-  readonly styles = [tectraStyle, softStyle, edgeStyle];
+  readonly styles = [tectraStyle, edgeStyle, paperStyle];
 }

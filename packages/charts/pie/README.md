@@ -14,10 +14,11 @@ import { TxPieChart, TxPieLegendPipe } from '@tectra-ng/charts/pie';
 | Name | Description |
 |---|---|
 | pieData | Required. `{ series, labels, colors?, title? }` — values, one label per value, optional own colours and a name shown on top of the tooltip. No values or only zeros show "No data" |
-| chartWidth | Width: px (200) or a CSS size |
-| chartHeight | Height: px (400) or a CSS size; the donut takes the width and the legend goes under it |
+| chartWidth | Width: px or a CSS size (`'100%'` — the width of the parent; the chart measures itself) |
+| height | Height in px (400), or a CSS size; the donut fits the width and the height left under the legend |
+| chartHeight | Older name of `height`, used when `height` is not set |
 | showLegend | Shows the legend |
-| legendPosition | `bottom` (default), `top`, `left` or `right` |
+| legendPosition | `bottom` (default), `top`, `left` or `right`; a side legend moves under the donut when the chart is narrower than 420px |
 | legendAlign | `center` (default), `start` or `end` for a top or bottom legend |
 | legendVariant | Look of the legend: `dot` (default), `line`, `pill` or `stat` (each value in large type with its share; it replaces the tooltip) |
 | legendValues | Lists the value and the share of each segment in the legend |
@@ -26,7 +27,7 @@ import { TxPieChart, TxPieLegendPipe } from '@tectra-ng/charts/pie';
 | totalFormatter | `(value) => string` for the centre total and the hovered value |
 | tooltipFormatter | `(value, { seriesIndex }) => string` for the tooltip value |
 | showTooltip | Shows the tooltip on hover and keyboard focus |
-| valueFormat | Format of values: `number`, `integer`, `compact`, `percent` or a function |
+| valueFormat | Format of values: `number`, `integer`, `compact`, `percent`, a currency (`{ currency: 'USD' }`) or a function |
 | donutSize | Size of the hole as a share of the radius (`'65%'`); `'0%'` draws a pie |
 | segmentGap | Width in px of the card-coloured gap between segments (2) |
 | segmentRadius | Rounding of the segment corners in px; default — the `chart.pie.segmentRadius` token (4px). It shrinks on narrow segments and thin rings so the shape never breaks; `0` keeps sharp corners |

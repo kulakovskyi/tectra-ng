@@ -3,6 +3,7 @@
   vertical-align: middle;
 }
 
-:host([data-styled][data-filled]) .tx-split-button__menu-button {
-  box-shadow: inset var(--tx-split-button-divider-width) 0 0 var(--tx-split-button-divider-color);
+:host([data-styled]) .tx-split-button__group {
+  --tx-button-group-divider-width: var(--tx-split-button-divider-width);
+  --tx-button-group-divider-color: var(--tx-split-button-divider-color);
 }

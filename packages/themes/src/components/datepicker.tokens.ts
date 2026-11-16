@@ -39,6 +39,7 @@ export const datePickerTokens = {
     borderColor: tokenRef('form-field-border-color'),
     hoverBorderColor: tokenRef('form-field-border-color'),
     activeBorderColor: tokenRef('form-field-border-color'),
+    invalidBorderColor: tokenRef('form-field-invalid-border-color'),
     color: lightDark(tokenRef('surface-600'), tokenRef('surface-300')),
     hoverColor: lightDark(tokenRef('surface-700'), tokenRef('surface-200')),
     activeColor: lightDark(tokenRef('surface-800'), tokenRef('surface-100')),

@@ -15,7 +15,7 @@ import { TxBarList } from '@tectra-ng/charts/bar-list';
 |---|---|
 | items | `{ label, value, link?, queryParams? }[]` — rows in any order; no positive values show "No data" |
 | limit | How many rows to show (10); the percent stays the share of the whole total |
-| valueFormat | Format of values: `number`, `integer`, `compact`, `percent` or a function |
+| valueFormat | Format of values: `number`, `integer`, `compact`, `percent`, a currency (`{ currency: 'USD' }`) or a function |
 | loading | Shows skeleton rows |
 | ariaLabel | What the list shows, read by screen readers |
 | dt | Design tokens of this list (`chart`, group `barList`) |

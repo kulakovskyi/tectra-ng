@@ -72,7 +72,7 @@
     }
   </svg>
   @if (showValue()) {
-    <span class="tx-knob__text" [class]="passThrough().text?.class" [style]="passThrough().text?.style">
+    <span class="tx-knob__text" [class]="passThrough().text?.class" [style]="passThrough().text?.style" [style.--_text-fit]="textFit()">
       @if (template(); as custom) {
         <ng-container [ngTemplateOutlet]="custom.templateRef" [ngTemplateOutletContext]="{ $implicit: current() }" />
       } @else {

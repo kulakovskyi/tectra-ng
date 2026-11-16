@@ -29,13 +29,13 @@ interface Task {
       (itemDropped)="drops.push($event)"
       (columnDropped)="columnDrops.push($event)"
     >
-      <ng-template txKanbanCard let-task let-column="column">
+      <ng-template txKanbanCard [txKanbanCardOf]="columns()" let-task let-column="column">
         <span class="card">{{ task.title }} · {{ column.id }}</span>
       </ng-template>
-      <ng-template txKanbanColumnTop let-column
+      <ng-template txKanbanColumnTop [txKanbanColumnTopOf]="columns()" let-column
         ><span class="top">{{ column.title }} top</span></ng-template
       >
-      <ng-template txKanbanEmpty let-column
+      <ng-template txKanbanEmpty [txKanbanEmptyOf]="columns()" let-column
         ><span class="own-empty">Nothing in {{ column.title }}</span></ng-template
       >
       <button type="button" class="add">Add column</button>

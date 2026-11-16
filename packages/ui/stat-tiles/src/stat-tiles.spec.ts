@@ -64,6 +64,8 @@ describe('TxStatTiles', () => {
     expect(el('#visits .tx-stat-tile__label').textContent).toBe('Visits');
     expect(el('#visits .tx-stat-tile__value').textContent?.replace(/\s+/g, ' ').trim()).toBe('12.4 k');
     expect(el('#visits .tx-stat-tile__meta').textContent).toBe('Last 30 days');
+    expect(el('#visits .tx-stat-tile__label').getAttribute('title')).toBe('Visits');
+    expect(el('#visits .tx-stat-tile__meta').getAttribute('title')).toBe('Last 30 days');
     expect(el('#visits .tx-stat-tile__icon').getAttribute('aria-hidden')).toBe('true');
     expect(el('#visits .tx-stat-tile__aside .aside').textContent).toBe('+12%');
     expect(el('#visits .tx-stat-tile__body .spark')).not.toBeNull();
@@ -121,12 +123,14 @@ describe('TxStatTiles', () => {
     expect(el('#visits').classList).not.toContain('tx-stat-tile--compact');
     expect(el('#grid').style.getPropertyValue('--tx-stat-tiles-gap')).toBe('20px');
     expect(el('#grid').style.getPropertyValue('--tx-stat-tiles-min-width')).toBe('');
+    expect(el('#grid').style.getPropertyValue('--tx-stat-tiles-floor-width')).toBe('');
     fixture.componentInstance.compact.set(true);
     fixture.componentInstance.minWidth.set('9rem');
     await fixture.whenStable();
     expect(el('#grid').classList).toContain('tx-stat-tiles--compact');
     expect(el('#visits').classList).toContain('tx-stat-tile--compact');
     expect(el('#grid').style.getPropertyValue('--tx-stat-tiles-min-width')).toBe('9rem');
+    expect(el('#grid').style.getPropertyValue('--tx-stat-tiles-floor-width')).toBe('0px');
   });
 
   it('drops the styles when unstyled and works outside a grid', () => {

@@ -1,6 +1,6 @@
 # Column Chart
 
-`<tx-column-chart>` — columns or horizontal bars for comparing values across categories: stacked, 100% stacked or grouped. Drawn as SVG by the component, rendered on the server and themed by the design tokens.
+`<tx-column-chart>` — columns or horizontal bars for comparing values across categories: grouped side by side (default), stacked or 100% stacked. Drawn as SVG by the component, rendered on the server and themed by the design tokens.
 
 ```ts
 import { TxColumnChart } from '@tectra-ng/charts/column';
@@ -16,7 +16,7 @@ import { TxColumnChart } from '@tectra-ng/charts/column';
 | series | `{ name, data, color? }[]` — one number (or `null`) per category. An empty list shows "No data" |
 | categories | Labels of the category axis, one per value |
 | annotations | Marks on the plot: `{ type: 'x-line', x }`, `{ type: 'y-line', y }`, `{ type: 'x-band', from, to }`, `{ type: 'y-band', from, to }`, `{ type: 'point', x, y }`, each with an optional `label`, `tone` (`neutral`, `primary`, `success`, `info`, `warn`, `danger`) or `color`; `x` is a category label or index; an `x-band` covers whole categories. In a horizontal chart the lines turn with the axes |
-| stacked | Stacks the series (default); `false` groups them side by side |
+| stacked | Stacks the series; by default they are grouped side by side |
 | stackType | `normal` or `100%` (every category to 100%; also turns stacking on) |
 | height | Height in px (350), or a CSS size such as `'100%'` of a parent with a definite height |
 | horizontal | Draws horizontal bars with the categories on the left |
@@ -28,7 +28,7 @@ import { TxColumnChart } from '@tectra-ng/charts/column';
 | showTooltip | Shows the tooltip on hover and keyboard focus |
 | tooltipMode | `shared` (every series of the category) or `single` |
 | tooltipFormatter | `(value, { seriesIndex, dataPointIndex }) => string` for tooltip and data label values; default — the locale number format |
-| valueFormat | Value axis format: `number`, `integer`, `compact`, `percent` or a function |
+| valueFormat | Value axis format: `number`, `integer`, `compact`, `percent`, a currency (`{ currency: 'USD' }`) or a function |
 | yScale | `linear` or `log` |
 | yMin | Fixed start of the value axis |
 | yMax | Fixed end of the value axis |

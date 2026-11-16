@@ -8,12 +8,14 @@ import {
   Injector,
   booleanAttribute,
   computed,
+  effect,
   forwardRef,
   inject,
   input,
   model,
   output,
   signal,
+  untracked,
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -37,7 +39,7 @@ import { optionalBoolean } from '@tectra-ng/core/utils';
 import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraSelectTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxFieldVariant, TxSelectChipsFit, TxSelectSize, foldText } from '@tectra-ng/ui/select';
-import { TxTreeNode, TxTreeSelectionMode, descendantKeys, findNode, nodeMatches, normalizeChecked, parentMap } from '@tectra-ng/ui/tree';
+import { TxTreeNode, TxTreeSelectionMode, descendantKeys, findNode, nodeMatches, normalizeChecked, parentMap, walkTree } from '@tectra-ng/ui/tree';
 import { TxTreeBranch, TxTreeSelectRow, TxTreeSelectChangeEvent, TxTreeSelectDisplay, TxTreeSelectPart } from './tree-select.types';
 import { TREE_SELECT_ICON_DEFAULTS } from './tree-select.icons';
 import { TREE_SELECT_THEME } from './tree-select.theme';
@@ -117,6 +119,8 @@ export class TxTreeSelect extends TxFormControlBase<string | string[]> {
   readonly scrollStrategy = txScrollStrategy(this.injector);
   readonly viewportMargin = this.room.viewportMargin;
   readonly treeId = uniqueId('tx-tree');
+
+  private readonly seenKeys = new Set<string>();
 
   readonly isOpen = signal(false);
   readonly isPanelMounted = signal(false);
@@ -200,6 +204,21 @@ export class TxTreeSelect extends TxFormControlBase<string | string[]> {
   readonly tokenStyle = computed(() => toStyleObject(this.dt(), '--tx-select'));
   readonly hostStyle = computed(() => ({ ...this.tokenStyle(), ...this.passThrough().root?.style }));
   readonly panelStyle = computed(() => ({ ...this.tokenStyle(), ...this.passThrough().panel?.style }));
+
+  constructor() {
+    super();
+    effect(() => {
+      const fresh: string[] = [];
+      walkTree(this.options(), (node) => {
+        if (this.seenKeys.has(node.key)) return;
+        this.seenKeys.add(node.key);
+        if (node.expanded) fresh.push(node.key);
+      });
+      if (fresh.length) {
+        untracked(() => this.expandedKeys.update((keys) => [...keys, ...fresh.filter((key) => !keys.includes(key))]));
+      }
+    });
+  }
 
   open(): void {
     if (this.disabled() || this.readonly() || this.isOpen()) {

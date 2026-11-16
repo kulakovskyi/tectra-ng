@@ -36,6 +36,14 @@ describe('formatAmount', () => {
     ]);
     const unknown = formatAmount(10, { locale: 'en-US', currency: 'points' });
     expect(unknown[unknown.length - 1]).toEqual({ text: 'points', currency: true });
+    expect(formatAmount(10.125, { locale: 'en-US', currency: 'points' })[0].text).toBe('10.13');
+  });
+
+  it('keeps the minor digits of the currency without a format', () => {
+    expect(formatAmount(318.6, { locale: 'en-US', currency: 'USD' }).map((segment) => segment.text).join('')).toBe('$318.60');
+    expect(formatAmount(318.6, { locale: 'en-US', currency: 'JPY' }).map((segment) => segment.text).join('')).toBe('¥319');
+    expect(formatAmount(318.6, { locale: 'en-US', currency: 'USD', format: '1.0-2' }).map((segment) => segment.text).join('')).toBe('$318.6');
+    expect(formatAmount(318.625, { locale: 'en-US' }).map((segment) => segment.text).join('')).toBe('318.63');
   });
 });
 

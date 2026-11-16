@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TxAnalogClockHandsPipe } from './analog-clock-hands.pipe';
 import { TxAnalogClock } from './analog-clock.component';
-import { clockHands, forwardAngle, validTimeZone } from './analog-clock.utils';
+import { TxAnalogClockTime } from './analog-clock.types';
+import { clockHands, clockTime, forwardAngle, validTimeZone } from './analog-clock.utils';
 
 @Component({
   imports: [TxAnalogClock],
@@ -13,11 +14,24 @@ import { clockHands, forwardAngle, validTimeZone } from './analog-clock.utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class Host {
-  readonly time = signal<number>(Date.UTC(2026, 0, 1, 14, 30, 15));
+  readonly time = signal<TxAnalogClockTime>(Date.UTC(2026, 0, 1, 14, 30, 15));
   readonly seconds = signal(false);
 }
 
 describe('analog clock helpers', () => {
+  it('reads dates, milliseconds and ISO strings', () => {
+    const at = Date.UTC(2026, 0, 1, 14, 30, 15);
+    expect(clockTime(at)).toBe(at);
+    expect(clockTime(new Date(at))).toBe(at);
+    expect(clockTime('2026-01-01T14:30:15Z')).toBe(at);
+    expect(clockTime('not a time')).toBeNull();
+    expect(clockTime('')).toBeNull();
+    expect(clockTime(null)).toBeNull();
+    expect(clockTime(undefined)).toBeNull();
+    expect(clockHands('2026-01-01T14:30:15Z', 'UTC').time).toBe('14:30');
+    expect(clockHands('broken', 'UTC').time).toMatch(/^\d{2}:\d{2}$/);
+  });
+
   it('reads hands in a time zone', () => {
     const at = Date.UTC(2026, 0, 1, 14, 30, 15);
     expect(clockHands(at, 'UTC')).toEqual({ time: '14:30', hourAngle: 75, minuteAngle: 180, secondAngle: 90 });
@@ -69,6 +83,12 @@ describe('TxAnalogClock', () => {
     await fixture.whenStable();
     expect(el('#fixed .tx-analog-clock__hand--minute').style.getPropertyValue('--tx-analog-clock-angle')).toBe('360deg');
     expect(el('#fixed [role="img"]').getAttribute('aria-label')).toBe('London office, 15:00');
+  });
+
+  it('takes an ISO string as the fixed time', async () => {
+    fixture.componentInstance.time.set('2026-01-01T09:45:00Z');
+    await fixture.whenStable();
+    expect(el('#fixed [role="img"]').getAttribute('aria-label')).toBe('London office, 09:45');
   });
 });
 

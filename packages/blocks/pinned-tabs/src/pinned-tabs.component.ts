@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, afterNextRender, computed, inject, input, linkedSignal, model, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, afterNextRender, booleanAttribute, computed, inject, input, linkedSignal, model, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
@@ -27,6 +27,7 @@ const ALL = '__all__';
         [ariaLabel]="ariaLabel()"
         [tabs]="tabs()"
         [value]="activeTab()"
+        [raised]="raised()"
         [unstyled]="isUnstyled()"
         [class]="passThrough().tabs?.class"
         [style]="passThrough().tabs?.style"
@@ -81,6 +82,7 @@ export class TxPinnedTabs {
   readonly dialogTitle = input<string | undefined>(undefined);
   readonly dialogText = input<string | undefined>(undefined);
   readonly ariaLabel = input<string | undefined>(undefined);
+  readonly raised = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly dt = input<TectraDeepPartial<TectraPinnedTabsTokens> | undefined>(undefined);
   readonly pt = input<TxPassThrough<TxPinnedTabsPart, TxPinnedTabs> | undefined>(undefined);
   readonly ptOptions = input<TxPassThroughOptions | undefined>(undefined);

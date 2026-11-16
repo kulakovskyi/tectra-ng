@@ -65,14 +65,14 @@ test.describe('Open in StackBlitz', () => {
 
   test('carries the theme picked on the site', async ({ page, context }) => {
     await page.addInitScript(() =>
-      localStorage.setItem('tx-docs-theme', JSON.stringify({ style: 'soft', primary: 'violet', surface: 'slate', mode: 'dark', ripple: false })),
+      localStorage.setItem('tx-docs-theme', JSON.stringify({ style: 'paper', primary: 'violet', surface: 'slate', mode: 'dark', ripple: false })),
     );
     await page.goto('/components/button');
     const payload = await openInStackblitz(page, context, 'severity');
     expect(payload.files['src/app/app.config.ts']).toContain(
-      "provideTectra({ preset: createTectraPreset({ style: softStyle, primary: 'violet', surface: 'slate' }), mode: 'dark' })",
+      "provideTectra({ preset: createTectraPreset({ style: paperStyle, primary: 'violet', surface: 'slate' }), mode: 'dark' })",
     );
-    expect(payload.files['src/app/app.config.ts']).toContain("import { createTectraPreset, softStyle } from '@tectra-ng/themes';");
+    expect(payload.files['src/app/app.config.ts']).toContain("import { createTectraPreset, paperStyle } from '@tectra-ng/themes';");
   });
 
   test('includes the images an example shows', async ({ page, context }) => {

@@ -222,7 +222,8 @@ describe('TxSankeyChart interaction', () => {
     host().nodes.set([{ id: 'site', label: 'A site with a name far too long to fit next to its node in the box' }]);
     host().label.set('Funnel');
     await fixture.whenStable();
-    const site = all('.tx-sankey-chart__label').find((label) => label.textContent?.includes('far too long')) as HTMLElement;
+    const site = all('.tx-sankey-chart__label').find((label) => label.textContent?.includes('A site')) as HTMLElement;
+    expect(site.textContent).toContain('…');
     expect(site.querySelector('.tx-sankey-chart__value')).toBeNull();
     expect(plot().getAttribute('aria-label')).toBe('Funnel. Sankey diagram, 4 flows');
     host().showValues.set(false);

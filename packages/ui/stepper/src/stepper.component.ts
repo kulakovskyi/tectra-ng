@@ -62,7 +62,7 @@ export class TxStepper extends TxStepperRef {
   readonly passThrough = injectPassThrough('stepper', this, this.pt, this.ptOptions);
   readonly hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-stepper'), ...this.passThrough().root?.style }));
   readonly vertical = computed(() => this.items().length > 0);
-  private readonly values = computed(() => this.steps().map((step) => step.resolvedValue()));
+  private readonly values = computed(() => this.steps().flatMap((step) => step.resolvedValue() ?? []));
   private readonly panelValues = computed(() => new Set(this.panels().map((panel) => panel.resolvedValue())));
   readonly activeIndex = computed(() => this.indexOf(this.value()));
 

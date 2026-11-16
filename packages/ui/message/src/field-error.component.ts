@@ -105,7 +105,7 @@ export class TxFieldError {
       !this.shownError() &&
       control.valid &&
       hasValue(control.value) &&
-      (control.touched || control.dirty)
+      (this.showImmediately() || control.touched || control.dirty)
     );
   });
   readonly state = computed(() => (this.shownError() ? 'error' : this.successShown() ? 'success' : null));

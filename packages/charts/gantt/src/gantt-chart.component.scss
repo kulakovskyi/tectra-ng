@@ -93,7 +93,7 @@
 }
 
 .tx-gantt-chart__row {
-  height: var(--tx-gantt-chart-row-height);
+  height: calc(var(--tx-gantt-chart-row-height) * var(--tx-gantt-chart-lanes, 1));
 }
 
 .tx-gantt-chart__label-text {
@@ -161,18 +161,18 @@
 .tx-gantt-chart__summary,
 .tx-gantt-chart__bar-label--outside {
   position: absolute;
-  top: 50%;
+  top: calc(var(--tx-gantt-chart-row-height) * (var(--tx-gantt-chart-lane, 0) + 0.5));
   transform: translateY(-50%);
 }
 
 .tx-gantt-chart__bar {
   display: flex;
   align-items: center;
-  height: 60%;
+  height: calc(var(--tx-gantt-chart-row-height) * 0.6);
   min-width: 6px;
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  overflow: clip;
   border: 0;
   box-sizing: border-box;
   background: var(--tx-gantt-chart-color);
@@ -199,16 +199,33 @@
   padding-inline: 6px;
 }
 
+.tx-gantt-chart__bar-label--inside {
+  position: sticky;
+  left: var(--tx-gantt-chart-label-width);
+}
+
 .tx-gantt-chart__bar-label.tx-gantt-chart__bar-label--outside {
   position: absolute;
+  right: 0;
+  display: flex;
+  overflow: clip;
   padding-inline-start: 6px;
   pointer-events: none;
+}
+
+.tx-gantt-chart__bar-label-text {
+  position: sticky;
+  left: var(--tx-gantt-chart-label-width);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .tx-gantt-chart__milestone {
   display: flex;
   align-items: center;
-  height: 100%;
+  height: var(--tx-gantt-chart-row-height);
   margin: 0;
   padding: 0;
   border: 0;
@@ -221,6 +238,9 @@
 
 .tx-gantt-chart__milestone .tx-gantt-chart__bar-label.tx-gantt-chart__bar-label--outside {
   position: static;
+  right: auto;
+  display: block;
+  overflow: hidden;
   transform: none;
 }
 
@@ -237,6 +257,25 @@
   height: 6px;
   background: currentColor;
   opacity: 0.4;
+}
+
+.tx-gantt-chart__dependencies {
+  position: absolute;
+  top: 0;
+  left: var(--tx-gantt-chart-label-width);
+  width: var(--tx-gantt-chart-width);
+  overflow: visible;
+  pointer-events: none;
+}
+
+.tx-gantt-chart__dependency-line {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5px;
+}
+
+.tx-gantt-chart__dependency-head {
+  fill: currentColor;
 }
 
 .tx-gantt-chart__today {
@@ -296,7 +335,7 @@
   .tx-gantt-chart__label {
     box-shadow:
       inset -1px 0 0 var(--tx-chart-gantt-border-color),
-      inset 0 0 0 var(--tx-gantt-chart-row-height) var(--tx-gantt-chart-tint);
+      inset 0 0 0 calc(var(--tx-gantt-chart-row-height) * var(--tx-gantt-chart-lanes, 1)) var(--tx-gantt-chart-tint);
     transition: box-shadow var(--tx-chart-motion-hover-duration) ease;
   }
 
@@ -329,7 +368,7 @@
   .tx-gantt-chart__row {
     --tx-gantt-chart-tint: transparent;
 
-    box-shadow: inset 0 0 0 var(--tx-gantt-chart-row-height) var(--tx-gantt-chart-tint);
+    box-shadow: inset 0 0 0 calc(var(--tx-gantt-chart-row-height) * var(--tx-gantt-chart-lanes, 1)) var(--tx-gantt-chart-tint);
     transition: box-shadow var(--tx-chart-motion-hover-duration) ease;
   }
 
@@ -381,7 +420,8 @@
     transition:
       left var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing),
       width var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing),
-      filter var(--tx-chart-motion-hover-duration) ease;
+      filter var(--tx-chart-motion-hover-duration) ease,
+      opacity var(--tx-chart-motion-hover-duration) ease;
   }
 
   .tx-gantt-chart__bar:not(:has(.tx-gantt-chart__progress)) {
@@ -417,7 +457,9 @@
   .tx-gantt-chart__bar-label--outside {
     padding-inline-start: var(--tx-chart-gantt-bar-label-gap);
     color: var(--tx-chart-gantt-bar-label-color);
-    transition: left var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing);
+    transition:
+      left var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing),
+      opacity var(--tx-chart-motion-hover-duration) ease;
   }
 
   .tx-gantt-chart__bar:focus-visible,
@@ -428,7 +470,9 @@
 
   .tx-gantt-chart__milestone {
     translate: calc(var(--tx-chart-gantt-milestone-size) / -2) 0;
-    transition: left var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing);
+    transition:
+      left var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing),
+      opacity var(--tx-chart-motion-hover-duration) ease;
   }
 
   .tx-gantt-chart__diamond {
@@ -445,7 +489,33 @@
     opacity: 1;
     transition:
       left var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing),
-      width var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing);
+      width var(--tx-chart-motion-update-duration) var(--tx-chart-motion-easing),
+      opacity var(--tx-chart-motion-hover-duration) ease;
+  }
+
+  .tx-gantt-chart__dependency {
+    color: var(--tx-chart-gantt-dependency-color);
+    transition:
+      opacity var(--tx-chart-motion-hover-duration) ease,
+      color var(--tx-chart-motion-hover-duration) ease;
+  }
+
+  .tx-gantt-chart__dependency-line {
+    stroke-width: var(--tx-chart-gantt-dependency-width);
+  }
+
+  .tx-gantt-chart__dependency--active {
+    color: var(--tx-chart-gantt-dependency-active-color);
+  }
+
+  .tx-gantt-chart__dependency--active .tx-gantt-chart__dependency-line {
+    stroke-width: var(--tx-chart-gantt-dependency-active-width);
+  }
+
+  .tx-gantt-chart__dependency--dimmed,
+  .tx-gantt-chart__task--dimmed,
+  .tx-gantt-chart__summary--dimmed {
+    opacity: var(--tx-chart-gantt-dimmed-opacity);
   }
 
   .tx-gantt-chart__today {
@@ -463,6 +533,7 @@
   :host([data-styled]) .tx-gantt-chart__bar,
   :host([data-styled]) .tx-gantt-chart__milestone,
   :host([data-styled]) .tx-gantt-chart__summary,
+  :host([data-styled]) .tx-gantt-chart__dependency,
   :host([data-styled]) .tx-gantt-chart__bar-label--outside,
   :host([data-styled]) .tx-gantt-chart__chevron,
   :host([data-styled]) .tx-gantt-chart__row,

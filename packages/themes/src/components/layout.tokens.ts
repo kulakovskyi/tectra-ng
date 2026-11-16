@@ -1,4 +1,4 @@
-import { fade, joinCss, lightDark, tokenRef } from './token-helpers';
+import { fade, lightDark, tokenRef } from './token-helpers';
 
 /** Design tokens of `tx-divider`: its colors, sizes and spacing. */
 export const dividerTokens = {
@@ -18,8 +18,8 @@ export const cardTokens = {
   root: {
     background: tokenRef('surface-card'),
     borderColor: tokenRef('surface-border'),
-    borderRadius: '16px',
-    shadow: joinCss('0 1px 2px ', fade(tokenRef('surface-950'), '95%')),
+    borderRadius: tokenRef('content-radius'),
+    shadow: tokenRef('content-shadow'),
     padding: '20px',
     gap: '12px',
     color: tokenRef('text-primary'),
@@ -35,7 +35,8 @@ export const panelTokens = {
   root: {
     background: tokenRef('surface-card'),
     borderColor: tokenRef('surface-border'),
-    borderRadius: '16px',
+    borderRadius: tokenRef('content-radius'),
+    shadow: tokenRef('content-shadow'),
     padding: '24px',
     gap: '20px',
     color: tokenRef('text-primary'),

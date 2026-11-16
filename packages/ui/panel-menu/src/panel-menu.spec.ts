@@ -613,3 +613,50 @@ describe('TxPanelMenu pending navigation', () => {
   });
 
 });
+
+describe('TxPanelMenu leave guard', () => {
+  let answer: (leave: boolean) => void = () => undefined;
+  let fixture: ComponentFixture<PendingHost>;
+  const active = () => (Array.from(fixture.nativeElement.querySelectorAll('.tx-panel-menu__item--active')) as HTMLElement[]).map((element) => element.textContent?.trim());
+  const tasksLink = () =>
+    (Array.from(fixture.nativeElement.querySelectorAll('a.tx-panel-menu__item')) as HTMLAnchorElement[]).find((element) => element.textContent?.includes('Tasks')) as HTMLAnchorElement;
+  const flush = async () => {
+    await new Promise((resolve) => setTimeout(resolve));
+    fixture.detectChanges();
+  };
+
+  beforeEach(async () => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideRouter([
+          { path: 'home', component: Blank, canDeactivate: [() => new Promise<boolean>((resolve) => (answer = resolve))] },
+          { path: 'tasks', component: Blank },
+        ]),
+      ],
+    });
+    fixture = TestBed.createComponent(PendingHost);
+    fixture.autoDetectChanges();
+    await TestBed.inject(Router).navigateByUrl('/home');
+    await fixture.whenStable();
+  });
+
+  it('keeps the current item while the leave confirm is open and after it is cancelled', async () => {
+    tasksLink().click();
+    await flush();
+    expect(active()).toEqual(['Home']);
+    answer(false);
+    await flush();
+    expect(TestBed.inject(Router).url).toBe('/home');
+    expect(active()).toEqual(['Home']);
+  });
+
+  it('marks the clicked item once the page is left', async () => {
+    tasksLink().click();
+    await flush();
+    expect(active()).toEqual(['Home']);
+    answer(true);
+    await flush();
+    expect(TestBed.inject(Router).url).toBe('/tasks');
+    expect(active()).toEqual(['Tasks3']);
+  });
+});

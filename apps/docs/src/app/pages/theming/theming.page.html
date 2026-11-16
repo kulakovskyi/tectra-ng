@@ -153,12 +153,19 @@
       @for (row of group.rows; track row.name) {
         <button type="button" class="token" [attr.aria-label]="'Copy ' + row.name" [title]="row.light + ' · ' + row.dark" (click)="copyVariable(row.name)">
           <code class="token__name">{{ row.name }}</code>
-          @if (group.shadow) {
-            <span class="token__shadow" [style.box-shadow]="row.light"></span>
-            <span class="token__shadow token__shadow--dark" [style.box-shadow]="row.dark"></span>
-          } @else {
-            <span class="token__chip" [style.background]="row.light"></span>
-            <span class="token__chip" [style.background]="row.dark"></span>
+          @switch (row.preview) {
+            @case ('shadow') {
+              <span class="token__shadow" [style.box-shadow]="row.light"></span>
+              <span class="token__shadow token__shadow--dark" [style.box-shadow]="row.dark"></span>
+            }
+            @case ('radius') {
+              <span class="token__radius" [style.border-radius]="row.light"></span>
+              <span class="token__radius" [style.border-radius]="row.dark"></span>
+            }
+            @default {
+              <span class="token__chip" [style.background]="row.light"></span>
+              <span class="token__chip" [style.background]="row.dark"></span>
+            }
           }
         </button>
       }

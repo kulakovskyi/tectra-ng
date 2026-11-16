@@ -1,3 +1,5 @@
+import { textWidth, truncateText } from '@tectra-ng/charts/core';
+
 /** The rectangle of one funnel step, before it gets a color and a label. */
 export interface TxFunnelBox {
   /** Index of the step. */
@@ -67,4 +69,29 @@ export function funnelIndexAt(boxes: readonly TxFunnelBox[], y: number): number 
   if (y < first.y || y > last.y + last.height) return -1;
   const step = boxes.length > 1 ? boxes[1].y - first.y : first.height;
   return Math.max(0, Math.min(boxes.length - 1, Math.floor((y - first.y + (step - first.height) / 2) / step)));
+}
+
+/**
+ * Splits a step name into at most `maxLines` lines that fit `maxWidth` at a font size, breaking
+ * between words; the last line is shortened with an ellipsis when the rest still does not fit.
+ */
+export function funnelLabelLines(text: string, maxWidth: number, fontSize: number, maxLines = 2): string[] {
+  if (textWidth(text, fontSize) <= maxWidth || maxLines < 2) {
+    return [truncateText(text, maxWidth, fontSize)];
+  }
+  const words = text.split(/\s+/).filter(Boolean);
+  const lines: string[] = [];
+  let line = '';
+  while (words.length && lines.length < maxLines - 1) {
+    const next = line ? `${line} ${words[0]}` : words[0];
+    if (line && textWidth(next, fontSize) > maxWidth) {
+      lines.push(line);
+      line = '';
+      continue;
+    }
+    line = next;
+    words.shift();
+  }
+  const rest = [line, ...words].filter(Boolean).join(' ');
+  return [...lines, rest].map((part) => truncateText(part, maxWidth, fontSize));
 }

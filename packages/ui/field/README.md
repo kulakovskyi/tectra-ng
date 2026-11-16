@@ -23,9 +23,9 @@ A form row: label, control, hint and error in one element. It finds the control 
 | hint | Help text under the control |
 | control | Form control for the error, when it is not the projected one |
 | errorText | Error from outside the form (e.g. the server); shown before the control's errors and marks the control invalid |
-| successText | Text shown when the control has a valid value and was touched or changed |
+| successText | Text shown when the control has a valid value and was touched or changed (at once with `showImmediately`) |
 | messages | Own error texts per error key (see `tx-field-error`) |
-| showImmediately | Shows the error before the control is touched or changed |
+| showImmediately | Shows the error, and the success text, before the control is touched or changed |
 | layout | `vertical` (label above) or `horizontal` (label on the left, stacks below 40rem) |
 | dt | Design tokens of this instance (`field`) |
 | pt | Classes and styles of the parts: `root`, `label`, `control`, `hint`, `error` |

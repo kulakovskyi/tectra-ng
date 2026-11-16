@@ -4,9 +4,9 @@ import { TxChartPart } from '@tectra-ng/charts/core';
 export interface TxWaterfallItem {
   /** Name of the step. */
   label: string;
-  /** Change added to the running total; negative values go down. */
+  /** Change added to the running total; negative values go down. On a total: its own value, which the next steps start from. */
   value?: number | null;
-  /** Draws the running total so far instead of a change. */
+  /** Draws a total from zero: the running total so far, or `value` when set (an opening balance, a measured subtotal). */
   total?: boolean;
   /** Own colour of the bar. */
   color?: string;

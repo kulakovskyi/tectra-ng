@@ -51,6 +51,8 @@ describe('TxKnob', () => {
     expect(host.style.width).toBe('120px');
     expect(host.style.getPropertyValue('--tx-knob-value-color')).toBe('teal');
     expect(fixture.nativeElement.querySelector('#custom .own').textContent).toBe('7 pts');
+    const custom = fixture.debugElement.query((node) => node.nativeElement.id === 'custom').componentInstance as TxKnob;
+    expect(custom.textFit()).toBeNull();
   });
 
   it('steps with the keyboard within min and max', async () => {
@@ -145,6 +147,8 @@ describe('TxKnob', () => {
   template: `
     <tx-knob id="fine" ariaLabel="Fine" [step]="0.5" [max]="10" />
     <tx-knob id="flat" ariaLabel="Flat" [min]="5" [max]="5" />
+    <tx-knob id="storage" ariaLabel="Storage" [max]="256" valueTemplate="{value} GB" />
+    <tx-knob id="blank" ariaLabel="Blank" valueTemplate="" />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -162,6 +166,23 @@ describe('TxKnob without a form control', () => {
     expect(fine.getAttribute('aria-valuenow')).toBe('0.5');
     const flat = fixture.debugElement.query((node) => node.nativeElement.id === 'flat').componentInstance as TxKnob;
     expect(flat.fraction()).toBe(0);
+  });
+
+  it('shrinks a long value text to fit inside the ring', async () => {
+    const fixture = TestBed.createComponent(PlainHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    const knob = (id: string) => fixture.debugElement.query((node) => node.nativeElement.id === id).componentInstance as TxKnob;
+    const fit = (id: string) => (fixture.nativeElement.querySelector(`#${id} .tx-knob__text`) as HTMLElement).style.getPropertyValue('--_text-fit');
+    const short = knob('storage').textFit() ?? 0;
+    knob('storage').writeValue(128);
+    await fixture.whenStable();
+    const long = knob('storage').textFit() ?? 0;
+    expect(long).toBeLessThan(short);
+    expect(long).toBeCloseTo(64 / (6 * 0.62), 5);
+    expect(Number(fit('storage'))).toBeCloseTo(long, 5);
+    expect(knob('blank').textFit()).toBeNull();
+    expect(fit('blank')).toBe('');
   });
 });
 

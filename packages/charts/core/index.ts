@@ -8,6 +8,7 @@ export * from './src/decimate';
 export * from './src/palette';
 export * from './src/cartesian';
 export * from './src/chart-size';
+export * from './src/chart-legend-place';
 export * from './src/chart-motion';
 export * from './src/chart-templates.directive';
 export * from './src/chart-legend.component';

@@ -1,0 +1,1 @@
+`completed` on `tx-step` or `tx-step-item` wins over the position: "Documents" still waits although it comes before the active step, "Review" is done although it comes after — the line after a done step is coloured. Screen readers hear "completed" after the title of a done step.

@@ -47,4 +47,33 @@ describe('TxConfetti', () => {
     expect(second).not.toBe(first);
     expect(root.querySelectorAll('.tx-confetti__piece')).toHaveLength(TX_CONFETTI_PIECES.length);
   });
+
+  it('removes the pieces once every piece has faded out', async () => {
+    const fixture = TestBed.createComponent(Host);
+    await fixture.whenStable();
+    const root = fixture.nativeElement.querySelector('.few') as HTMLElement;
+    const end = (name: string) => {
+      const event = new Event('animationend', { bubbles: true });
+      Object.defineProperty(event, 'animationName', { value: name });
+      root.querySelector('.tx-confetti__piece')?.dispatchEvent(event);
+    };
+    end('tx-confetti-burst');
+    await fixture.whenStable();
+    expect(root.querySelectorAll('.tx-confetti__piece')).toHaveLength(1);
+    end('tx-confetti-fade');
+    await fixture.whenStable();
+    expect(root.querySelectorAll('.tx-confetti__piece')).toHaveLength(0);
+    const main = fixture.nativeElement.querySelector('tx-confetti') as HTMLElement;
+    const pieces = Array.from(main.querySelectorAll('.tx-confetti__piece'));
+    pieces.slice(1).forEach((piece) => {
+      const event = new Event('animationend', { bubbles: true });
+      Object.defineProperty(event, 'animationName', { value: 'tx-confetti-glimpse' });
+      piece.dispatchEvent(event);
+    });
+    await fixture.whenStable();
+    expect(main.querySelectorAll('.tx-confetti__piece')).toHaveLength(pieces.length);
+    fixture.componentInstance.confetti().play();
+    await fixture.whenStable();
+    expect(main.querySelectorAll('.tx-confetti__piece')).toHaveLength(TX_CONFETTI_PIECES.length);
+  });
 });

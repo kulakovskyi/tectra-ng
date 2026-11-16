@@ -28,9 +28,10 @@ Two step indicators for multi-step flows.
 ## Inputs
 | Name | Description |
 |---|---|
-| value | `tx-stepper`, two-way: the value of the active step. On `tx-step`, `tx-step-panel` and `tx-step-item`: the value of that step (a step and a panel inside a `tx-step-item` take the item's value) |
+| value | `tx-stepper`, two-way: the value of the active step. On `tx-step`, `tx-step-panel` and `tx-step-item`: the value of that step (a step and a panel inside a `tx-step-item` take the item's value). Steps may come from `@for` / `@if`; a step without a value is skipped until it gets one |
 | linear | `tx-stepper`: steps cannot be picked in the header; only the panels move on through `activate` |
 | disabled | `tx-step`: the step cannot be picked |
+| completed | `tx-step`, `tx-step-item`: marks the step done (or not done with `false`) whatever its position; unset, a step is done when it comes before the active one. A done step colours the line after it and adds "completed" to its accessible name |
 | items | `tx-steps`: the steps, `TxStepsItem[]` — `label`, `icon`, `description` (track), `disabled`, `command` (runs with `{ originalEvent, item, index }` when the step is clicked) |
 | activeIndex | `tx-steps`, two-way: index of the current step; the steps before it are done. Set it to `items.length` to mark every step done |
 | readonly | `tx-steps`: the steps cannot be clicked (default `true`). Off, an enabled step with a `command` can be clicked: it becomes current and runs its `command` |
@@ -53,7 +54,7 @@ Two step indicators for multi-step flows.
 |---|---|
 | default | `tx-step`: the step title. `tx-step-panel`: content that is always rendered |
 | txStepPanelContent | `<ng-template txStepPanelContent let-activate let-value="value" let-index="index" let-active="active">` — panel content, rendered when the step is first opened; `activate(value)` moves to a step |
-| txStepContent | `<ng-template txStepContent let-value let-active="active" let-completed="completed" let-index="index" let-activate="activate">` — own step header instead of the number and the title |
+| txStepContent | `<ng-template txStepContent let-value let-active="active" let-completed="completed" let-index="index" let-activate="activate">` — own step header instead of the number and the title; `completed` follows the `completed` input |
 | txStepsItem | `<ng-template txStepsItem let-item let-index="index" let-active="active" let-done="done">` — own content of a `tx-steps` step |
 
 ## Keyboard

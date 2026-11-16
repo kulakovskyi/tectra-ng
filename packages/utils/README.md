@@ -37,6 +37,7 @@ Part of `tectra-ng`. One entry point per utility, so you only bundle what you im
 | `@tectra-ng/utils/drag-scroll` | `txDragScroll` — drag a box to scroll it, or pan a canvas |
 | `@tectra-ng/utils/form-changes` | `trackFormChanges` (`changed` signal, commit, revert), `TxFormChangeTracker` |
 | `@tectra-ng/utils/scroll-end` | `txScrollEnd` — infinite scrolling for a box |
+| `@tectra-ng/utils/pagination` | `firstToPage`, `pageToFirst`, `pageCountOf`, `pageLinksOf`, `TxPaginationParams` — page math without the paginator component |
 | `@tectra-ng/utils/random` | `pickRandom`, `pickRandomN`, `shuffle` |
 | `@tectra-ng/utils/auto-focus` | `txAutoFocus` — focus a field or the first field inside after render |
 | `@tectra-ng/utils/style-class` | `txStyleClass` — show, hide or toggle an element by classes with enter / leave animations |

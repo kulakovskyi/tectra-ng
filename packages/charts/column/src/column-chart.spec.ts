@@ -153,7 +153,12 @@ describe('TxColumnChart', () => {
 
   afterEach(() => document.querySelectorAll('.cdk-overlay-container').forEach((container) => (container.innerHTML = '')));
 
-  it('stacks the series by default', () => {
+  it('groups the series by default', () => {
+    expect(el('#negative').classList).not.toContain('tx-column-chart--stacked');
+    expect(el('#main').classList).toContain('tx-column-chart--stacked');
+  });
+
+  it('stacks the series', () => {
     const bars = all('#main .tx-column-chart__bar');
     expect(bars).toHaveLength(5);
     expect(bars.filter((bar) => bar.getAttribute('data-end') === 'top').map((bar) => bar.getAttribute('data-index'))).toEqual(['1', '0', '2']);

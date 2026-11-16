@@ -1,0 +1,1 @@
+Steps can come from `@for` and `@if`. `completed` marks a step done on its own — here the steps can be done in any order; without `completed` a step counts as done when it comes before the active one.

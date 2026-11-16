@@ -442,6 +442,13 @@ describe('TxDatePicker interactions', () => {
     document.querySelectorAll('.cdk-overlay-container').forEach((node) => node.remove());
   });
 
+  it('marks the calendar button as part of an invalid field', async () => {
+    await setup({ showIcon: true, invalid: true });
+    expect(fixture.nativeElement.classList).toContain('tx-datepicker--invalid');
+    expect(fixture.nativeElement.classList).toContain('tx-datepicker--button');
+    expect(fixture.nativeElement.querySelector('.tx-datepicker__dropdown')).not.toBeNull();
+  });
+
   it('moves through months from the keyboard and picks one', async () => {
     await setup({ inline: true }, new Date(2026, 0, 15));
     const months: TxDatePickerMonthChangeEvent[] = [];

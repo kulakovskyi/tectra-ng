@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { TxChartTooltipTemplate } from '@tectra-ng/charts/core';
+import { TxChartTooltipTemplate, textWidth } from '@tectra-ng/charts/core';
 import { TectraChartTokens, TectraDeepPartial } from '@tectra-ng/themes';
 import { TxFunnelChart } from './funnel-chart.component';
 import { TxFunnelItem, TxFunnelStageEvent } from './funnel-chart.types';
-import { funnelBoxes, funnelConnectorPath, funnelIndexAt, funnelRate } from './funnel-layout';
+import { funnelBoxes, funnelConnectorPath, funnelIndexAt, funnelLabelLines, funnelRate } from './funnel-layout';
 
 @Component({
   imports: [TxFunnelChart],
@@ -26,6 +26,20 @@ class Host {
 }
 
 describe('funnel layout', () => {
+  it('wraps long step names between words and cuts what still does not fit', () => {
+    expect(funnelLabelLines('Visits', 100, 12)).toEqual(['Visits']);
+    const booked = funnelLabelLines('Booked a product demo call', 90, 12);
+    expect(booked).toHaveLength(2);
+    expect(booked[0].startsWith('Booked a')).toBe(true);
+    expect(booked.every((line) => textWidth(line, 12) <= 90)).toBe(true);
+    expect(funnelLabelLines('Booked a product demo call', 90, 12, 1)[0]).toMatch(/…$/);
+    expect(funnelLabelLines('Qualification', 40, 12)).toHaveLength(1);
+    expect(funnelLabelLines('Qualification', 40, 12)[0]).toMatch(/…$/);
+    const lines = funnelLabelLines('Requested a quote by phone or email today', 90, 12);
+    expect(lines).toHaveLength(2);
+    expect(lines[1]).toMatch(/…$/);
+  });
+
   it('centres bars sized by the biggest value with gaps between rows', () => {
     const boxes = funnelBoxes({ values: [100, 50], left: 0, width: 200, top: 0, height: 120, gapRatio: 0.4, minWidth: 4 });
     expect(boxes).toEqual([
@@ -170,6 +184,25 @@ describe('TxFunnelChart options', () => {
     expect(chart().summary()).toBe('Funnel chart, 1 series, 0 values');
     chart().onNavigate(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
     expect(chart().active()).toBeNull();
+  });
+
+  it('sizes the label column to the longest name and wraps it in a narrow chart', async () => {
+    host.items.set([
+      { label: 'Qualified', value: 200 },
+      { label: 'Requested a quote by phone', value: 80 },
+    ]);
+    await fixture.whenStable();
+    expect(all('.tx-funnel-chart__label').map((label) => label.textContent?.trim())).toEqual(['Qualified', 'Requested a quote by phone']);
+    chart().size.set({ width: 300, height: 300 });
+    await fixture.whenStable();
+    expect(chart().labelColumn()).toBe(120);
+    const spans = all('.tx-funnel-chart__label tspan').map((span) => span.textContent);
+    expect(spans.length).toBe(2);
+    expect(spans.join(' ')).toBe('Requested a quote by phone');
+    chart().size.set({ width: 300, height: 40 });
+    await fixture.whenStable();
+    expect(all('.tx-funnel-chart__label tspan')).toHaveLength(0);
+    expect(all('.tx-funnel-chart__label')[1].textContent).toContain('…');
   });
 
   it('drops the label column when labels are off', async () => {

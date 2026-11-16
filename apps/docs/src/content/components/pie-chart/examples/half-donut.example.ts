@@ -9,7 +9,7 @@ import { TxPieChart, TxPieData } from '@tectra-ng/charts/pie';
     [startAngle]="-90"
     [endAngle]="90"
     [chartWidth]="320"
-    [chartHeight]="240"
+    [height]="240"
     totalLabel="Votes"
     ariaLabel="Votes by answer"
   />`,

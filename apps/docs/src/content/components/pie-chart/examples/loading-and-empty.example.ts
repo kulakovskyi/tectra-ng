@@ -15,7 +15,7 @@ import { TxButton } from '@tectra-ng/ui/button';
         [pieData]="data()"
         [loading]="loading()"
         [chartWidth]="240"
-        [chartHeight]="280"
+        [height]="280"
         ariaLabel="Plans"
       />
     </div>

@@ -249,11 +249,11 @@ describe('TxPieChart options', () => {
     await fixture.whenStable();
     expect(el('#opts').style.width).toBe('320px');
     expect(el('#opts').style.height).toBe('100%');
-    expect(plot().style.height).toBe('200px');
+    expect(plot().style.height).toBe('320px');
     host.height.set('260px');
     host.toolbar.set(false);
     await fixture.whenStable();
-    expect(Number.parseFloat(plot().style.height)).toBeLessThanOrEqual(200);
+    expect(Number.parseFloat(plot().style.height)).toBeLessThan(260);
   });
 
   it('narrows the pie next to a side legend', async () => {
@@ -401,5 +401,47 @@ describe('TxPieChart recompiled by TestBed', () => {
     await fixture.whenStable();
     expect(fixture.nativeElement.querySelector('#center .own-center').textContent).toBe('100');
     expect(fixture.nativeElement.querySelectorAll('#main .tx-pie-chart__segment')).toHaveLength(3);
+  });
+});
+
+@Component({
+  imports: [TxPieChart],
+  template: `<tx-pie-chart id="sized" [pieData]="{ series: [3, 2], labels: ['Won', 'Lost'] }" [height]="height()" [chartHeight]="240" [legendPosition]="position()" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class SizeHost {
+  readonly height = signal<number | undefined>(300);
+  readonly position = signal<TxChartLegendPosition>('right');
+}
+
+describe('TxPieChart size', () => {
+  afterEach(() => vi.restoreAllMocks());
+
+  const create = async () => {
+    const fixture = TestBed.createComponent(SizeHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    return fixture;
+  };
+
+  it('fills the width of its parent and prefers height over chartHeight', async () => {
+    const fixture = await create();
+    const host = fixture.nativeElement.querySelector('#sized') as HTMLElement;
+    expect(host.style.width).toBe('100%');
+    expect(host.style.height).toBe('300px');
+    fixture.componentInstance.height.set(undefined);
+    await fixture.whenStable();
+    expect(host.style.height).toBe('240px');
+    expect(host.querySelector('tx-chart-frame')?.getAttribute('data-legend')).toBe('right');
+  });
+
+  it('moves a side legend under the donut on a narrow chart', async () => {
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(() => ({ width: 320 }) as DOMRect);
+    const fixture = await create();
+    const frame = fixture.nativeElement.querySelector('#sized tx-chart-frame') as HTMLElement;
+    expect(frame.getAttribute('data-legend')).toBe('bottom');
+    fixture.componentInstance.position.set('top');
+    await fixture.whenStable();
+    expect(frame.getAttribute('data-legend')).toBe('top');
   });
 });

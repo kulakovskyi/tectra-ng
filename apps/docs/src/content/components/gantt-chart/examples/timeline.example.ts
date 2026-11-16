@@ -40,5 +40,6 @@ export default class GanttChartTimelineExample {
       end: '2026-11-20',
       color: 'var(--tx-purple-500)',
     },
+    { id: 'r7', label: 'Design sprint', group: 'Room C', start: '2026-11-16', end: '2026-11-18' },
   ];
 }

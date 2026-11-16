@@ -19,6 +19,7 @@ The server and the first render in the browser show `defaultPinned`; the saved c
 | dialogTitle | Title of the settings dialog; the translated "Pinned tabs" by default |
 | dialogText | Explanation in the settings dialog; a translated hint by default |
 | ariaLabel | Name of the tab list |
+| raised | Card background, ring and shadow on the tabs, as `raised` of `tx-tabs` — for tabs on the page background next to cards |
 | dt | Design tokens of this instance (`pinnedTabs`) |
 | pt | Classes and styles of the parts: `root`, `tabs`, `button` |
 | ptOptions | How `pt` merges with the global pass-through |

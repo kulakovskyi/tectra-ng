@@ -1,6 +1,7 @@
 import { TxAmountFormatOptions, TxAmountSegment } from './amount.types';
 
 const DIGITS_INFO = /^(\d+)?(?:\.(\d+))?(?:-(\d+))?$/;
+const DEFAULT_FORMAT = '1.0-2';
 
 /**
  * Reads a digits-info string like `1.2-2` (integer digits, minimum and maximum fraction digits) into number format options; an invalid string gives no options.
@@ -38,20 +39,21 @@ function toSegments(parts: Intl.NumberFormatPart[]): TxAmountSegment[] {
  * Formats a number as money in the given locale and currency and splits the result into currency and number segments.
  */
 export function formatAmount(amount: number, options: TxAmountFormatOptions): TxAmountSegment[] {
-  const base: Intl.NumberFormatOptions = {
-    ...parseDigitsInfo(options.format),
+  const currency = options.currency?.trim();
+  const base = (format: string | undefined): Intl.NumberFormatOptions => ({
+    ...parseDigitsInfo(format),
     notation: options.notation ?? 'standard',
     signDisplay: options.showSign ? 'exceptZero' : 'auto',
-  };
-  const currency = options.currency?.trim();
+  });
+  const plain = base(options.format ?? DEFAULT_FORMAT);
   if (currency) {
     try {
       return toSegments(
-        new Intl.NumberFormat(options.locale, { ...base, style: 'currency', currency, currencyDisplay: options.currencyDisplay ?? 'narrowSymbol' }).formatToParts(amount),
+        new Intl.NumberFormat(options.locale, { ...base(options.format), style: 'currency', currency, currencyDisplay: options.currencyDisplay ?? 'narrowSymbol' }).formatToParts(amount),
       );
     } catch {
-      return [...toSegments(new Intl.NumberFormat(options.locale, base).formatToParts(amount)), { text: ' ', currency: false }, { text: currency, currency: true }];
+      return [...toSegments(new Intl.NumberFormat(options.locale, plain).formatToParts(amount)), { text: ' ', currency: false }, { text: currency, currency: true }];
     }
   }
-  return toSegments(new Intl.NumberFormat(options.locale, base).formatToParts(amount));
+  return toSegments(new Intl.NumberFormat(options.locale, plain).formatToParts(amount));
 }

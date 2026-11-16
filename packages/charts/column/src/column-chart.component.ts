@@ -107,7 +107,7 @@ export class TxColumnChart {
   readonly series = input<readonly TxChartSeries[] | null | undefined>([]);
   readonly categories = input<readonly (string | number | Date)[] | null | undefined>([]);
   readonly annotations = input<readonly TxChartAnnotation[] | null | undefined>([]);
-  readonly stacked = input<boolean, unknown>(true, { transform: booleanAttribute });
+  readonly stacked = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly stackType = input<TxColumnChartStackType>('normal');
   readonly height = input<TxChartHeight>(350);
   readonly horizontal = input<boolean, unknown>(false, { transform: booleanAttribute });

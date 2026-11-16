@@ -54,4 +54,10 @@ export interface TectraSemanticTokens {
   focusRing: { color: string };
   /** Box shadows of fields, overlays and modals. */
   shadow: { field: string; overlay: string; modal: string };
+  /**
+   * Frame of a content surface — cards, panels, stat tiles, data views, filters panels: one corner radius and one
+   * shadow (`--tx-content-radius`, `--tx-content-shadow`), so a style changes them together and an app can draw a
+   * matching frame on any page. For no shadow use `0 0 transparent`, not `none` (the shadow joins a border ring).
+   */
+  content: { radius: string; shadow: string };
 }

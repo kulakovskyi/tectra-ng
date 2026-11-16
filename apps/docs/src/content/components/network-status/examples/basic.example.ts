@@ -16,7 +16,7 @@ import { TxButton } from '@tectra-ng/ui/button';
           Back online
         </button>
       </div>
-      <tx-network-status #status bodyClass="" />
+      <tx-network-status #status contained />
     </div>
   `,
   styles: `
@@ -28,7 +28,7 @@ import { TxButton } from '@tectra-ng/ui/button';
       border: 1px solid var(--tx-surface-border);
       border-radius: 12px;
       background: var(--tx-surface-ground);
-      contain: layout;
+      position: relative;
       overflow: hidden;
     }
 

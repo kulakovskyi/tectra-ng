@@ -1,6 +1,6 @@
 # Panel menu
 
-A vertical menu of collapsible sections for app navigation. Two looks: `panel` (each root item is a bordered panel with a toggle header) and `sidebar` (root items are section titles above their links — the app sidebar). Nested items open in place with an animation; the item of the current route is highlighted and its parents open.
+A vertical menu of collapsible sections for app navigation. Two looks: `panel` (each root item is a bordered panel with a toggle header) and `sidebar` (root items are section titles above their links — the app sidebar). Nested items open in place with an animation; the item of the current route is highlighted and its parents open. A clicked link is highlighted as soon as its navigation starts and goes back when the navigation is cancelled or fails; when the current page has a `canDeactivate` guard (a leave confirm) the highlight waits until the guards let the page go.
 
 ```html
 <tx-panel-menu [model]="items" />
