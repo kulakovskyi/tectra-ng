@@ -1,6 +1,7 @@
 @use '../../styles/copy-swap';
 
 :host {
+  position: relative;
   display: inline-flex;
   align-items: center;
   max-width: 100%;
@@ -21,6 +22,8 @@
 
 .tx-truncate-text__full {
   position: absolute;
+  top: 0;
+  left: 0;
   width: 1px;
   height: 1px;
   overflow: hidden;
