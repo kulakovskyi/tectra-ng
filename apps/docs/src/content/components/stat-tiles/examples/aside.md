@@ -1,1 +1,1 @@
-An element with `txStatTileAside` sits at the top right — a change pill. Other content goes under the value, e.g. a breakdown or a sparkline.
+An element with `txStatTileAside` sits at the top right — a change pill. A long label stays on one line next to it, cut with an ellipsis and shown in full on hover, so the values of a row stay on one line. Other content goes under the value, e.g. a breakdown or a sparkline.

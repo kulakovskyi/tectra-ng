@@ -7,21 +7,21 @@ import { TxWaterfallChart } from '@tectra-ng/charts/waterfall';
 ```
 
 ```html
-<tx-waterfall-chart [items]="[{ label: 'Start', value: 120 }, { label: 'Costs', value: -45 }, { label: 'Result', total: true }]" />
+<tx-waterfall-chart [items]="[{ label: 'Start', value: 120, total: true }, { label: 'Costs', value: -45 }, { label: 'Result', total: true }]" />
 ```
 
 ## Inputs
 | Name | Description |
 |---|---|
-| items | `{ label, value?, total?, color? }[]` — a step adds `value` to the running total; `total: true` draws the running total from zero instead. An empty list shows "No data" |
+| items | `{ label, value?, total?, color? }[]` — a step adds `value` to the running total; `total: true` draws the running total from zero instead, or its own `value` (an opening balance, a measured subtotal) that the next steps start from. An empty list shows "No data" |
 | height | Height in px (350), or a CSS size such as `'100%'` of a parent with a definite height |
-| dataLabels | Writes the signed change (or the total) above or below each bar (on by default) |
+| dataLabels | Writes the signed change (or the total) above or below each bar (on by default); a label wider than its column turns compact (`+$36.4K`), one that still overlaps another is left out, totals first |
 | connectors | Draws a dashed line from each bar's end to the next bar (on by default) |
 | showLegend | Shows the legend of increase, decrease and total when there is more than one kind |
 | legendPosition | `top`, `bottom`, `left` or `right` |
 | legendAlign | `start`, `center` or `end` for a top or bottom legend |
 | showTooltip | Shows the change and the running total on hover and keyboard focus |
-| valueFormat | Value axis, labels and tooltip format: `number`, `integer`, `compact`, `percent` or a function |
+| valueFormat | Value axis, labels and tooltip format: `number`, `integer`, `compact`, `percent`, a currency (`{ currency: 'USD' }`) or a function |
 | yMin | Fixed start of the value axis |
 | yMax | Fixed end of the value axis |
 | xAxisTitle | Title of the category axis |
@@ -57,4 +57,4 @@ import { TxWaterfallChart } from '@tectra-ng/charts/waterfall';
 
 ## Notes
 
-The legend only names the colours, so it does not hide anything. Hovering anywhere in a step's column lays a soft band under it and fades the others. Bars grow one after another from their start once and slide to new values; both are off with reduced motion.
+The legend only names the colours, so it does not hide anything. Totals are neutral by default (`chart.waterfall.totalColor`), apart from the increase green and the primary colour. Hovering anywhere in a step's column lays a soft band under it and fades the others. Bars grow one after another from their start once and slide to new values; both are off with reduced motion.

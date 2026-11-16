@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TxThemeConfigurator } from '@tectra-ng/blocks/theme-configurator';
-import { softStyle, tectraStyle } from '@tectra-ng/themes';
+import { paperStyle, tectraStyle } from '@tectra-ng/themes';
 
 @Component({
   selector: 'theme-configurator-design-tokens-example',
@@ -9,7 +9,7 @@ import { softStyle, tectraStyle } from '@tectra-ng/themes';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class ThemeConfiguratorDesignTokensExample {
-  readonly styles = [tectraStyle, softStyle];
+  readonly styles = [tectraStyle, paperStyle];
   readonly tokens = {
     root: { width: '22rem', gap: '24px', labelColor: 'var(--tx-primary-soft-text)' },
   };

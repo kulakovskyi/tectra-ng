@@ -23,7 +23,7 @@ this.http.get<Page<Order>>('/api/orders', { params: buildHttpParams(filters) }).
 ## Pipes
 | Name | Description |
 |---|---|
-| txHttpStatusTone: warnCodes? | Severity for `tx-tag`, `tx-status-icon`, `tx-badge` |
+| txHttpStatusTone: warnCodes? | Severity for `tx-tag`, `tx-pill` (`tone`), `tx-status-icon`, `tx-badge` |
 | txHttpStatusLabel: warnCodes? | Translated group name: OK, Redirect, Client error, Server error, Warning, No response, Unknown |
 | txHttpStatusGroup: warnCodes? | The group as a key, for your own texts |
 

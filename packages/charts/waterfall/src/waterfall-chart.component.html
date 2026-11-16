@@ -61,18 +61,20 @@
   @if (dataLabels()) {
     <svg:g class="tx-waterfall-chart__labels">
       @for (bar of bars(); track bar.key) {
-        <svg:text
-          class="tx-waterfall-chart__label"
-          [class]="passThrough().dataLabel?.class"
-          [style]="passThrough().dataLabel?.style"
-          [attr.data-kind]="bar.kind"
-          text-anchor="middle"
-          [attr.dominant-baseline]="bar.above ? 'auto' : 'hanging'"
-          [attr.x]="bar.x + bar.width / 2"
-          [attr.y]="bar.textY"
-        >
-          {{ bar.text }}
-        </svg:text>
+        @if (bar.text) {
+          <svg:text
+            class="tx-waterfall-chart__label"
+            [class]="passThrough().dataLabel?.class"
+            [style]="passThrough().dataLabel?.style"
+            [attr.data-kind]="bar.kind"
+            text-anchor="middle"
+            [attr.dominant-baseline]="bar.above ? 'auto' : 'hanging'"
+            [attr.x]="bar.x + bar.width / 2"
+            [attr.y]="bar.textY"
+          >
+            {{ bar.text }}
+          </svg:text>
+        }
       }
     </svg:g>
   }

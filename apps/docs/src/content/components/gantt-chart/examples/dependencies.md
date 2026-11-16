@@ -1,0 +1,1 @@
+`dependsOn` lists the tasks a task waits for: an id is finish-to-start, `{ id, type }` sets `start-to-start`, `finish-to-finish` or `start-to-finish`. Arrows run between the bars around other tasks; hover or focus a task to light up everything it waits for and everything that waits for it. A folded group takes the arrows of its tasks on its summary bar.

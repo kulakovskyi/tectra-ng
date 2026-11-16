@@ -12,7 +12,7 @@ A small rounded label for a status, a category or a count — in tables, lists a
 | Name | Description |
 |---|---|
 | value | Text of the pill; content inside the tag is added after it |
-| tone | `neutral`, `primary`, `success`, `info`, `warn`, `danger`, `help`, `contrast` |
+| tone | `neutral`, `primary`, `success`, `info`, `warn`, `danger`, `help`, `contrast`; `secondary` is the same as `neutral`, so tag and badge severities (and `txHttpStatusTone`) fit |
 | variant | `soft` (tinted, default), `solid` or `outline` |
 | size | `small`, `medium` (`normal` is the same), `large` |
 | icon | Icon before the text: tectra name, `pi-` name or icon class |

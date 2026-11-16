@@ -11,7 +11,7 @@ import { TxStatTile, TxStatTiles } from '@tectra-ng/ui/stat-tiles';
         <tx-pill txStatTileAside size="small" tone="success" icon="arrow-up">12%</tx-pill>
       </tx-stat-tile>
       <tx-stat-tile
-        label="Bounce rate"
+        label="Bounce rate on landing pages"
         icon="sign-out"
         tone="warn"
         value="41"

@@ -2,7 +2,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { createTectraPreset, softStyle } from '@tectra-ng/themes';
+import { createTectraPreset, paperStyle } from '@tectra-ng/themes';
 import { answers, appDir } from './workdir.mjs';
 
 const read = (path: string) => readFileSync(join(appDir, path), 'utf8');
@@ -45,7 +45,7 @@ test.describe('ng add tectra-ng in a new Angular app', () => {
 
     const button = page.getByRole('button', { name: 'Save' });
     await expect(button).toHaveClass(/tx-button/);
-    const preset = createTectraPreset({ style: softStyle, primary: 'violet', surface: 'slate' });
+    const preset = createTectraPreset({ style: paperStyle, primary: 'violet', surface: 'slate' });
     await expect(button).toHaveCSS('background-color', rgb(preset.light.primary.base));
     expect(await page.evaluate(() => [...document.fonts].some((font) => font.family.includes('Onest')))).toBe(true);
 

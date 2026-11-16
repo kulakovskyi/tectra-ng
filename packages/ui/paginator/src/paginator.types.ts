@@ -54,16 +54,4 @@ export interface TxPaginatorTemplateContext {
   $implicit: TxPageState;
 }
 
-/** Page parameters of a paginated request or response: one-based page, page size and totals. */
-export interface TxPaginationParams {
-  /** One-based page number. */
-  page: number;
-  /** Page size. */
-  limit?: number;
-  /** Extra field some backends send next to `limit`; the kit does not read it. */
-  qtt?: number;
-  /** Total number of records. */
-  total?: number;
-  /** Extra field some backends send next to `total`; the kit does not read it. */
-  count?: number;
-}
+export type { TxPaginationParams } from '@tectra-ng/core/utils';

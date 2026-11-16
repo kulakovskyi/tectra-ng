@@ -14,7 +14,7 @@
     "style": {
       "type": "string",
       "description": "The style of the preset.",
-      "enum": ["tectra", "soft", "edge", "paper"],
+      "enum": ["tectra", "edge", "paper"],
       "default": "tectra",
       "x-prompt": "Which style?"
     },

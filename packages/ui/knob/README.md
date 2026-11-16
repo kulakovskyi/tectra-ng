@@ -19,7 +19,7 @@ A value on a dial: drag along the ring or use the keyboard. `arc="dial"` leaves 
 | arc | `dial` (270°, gap at the bottom) or `ring` (full circle from the top) |
 | showValue | Shows the value in the middle |
 | showHandle | Shows a handle at the end of the value; on by default for `ring` |
-| valueTemplate | Text of the value, `{value}` is replaced (formatted for the locale), e.g. `{value}%` |
+| valueTemplate | Text of the value, `{value}` is replaced (formatted for the locale), e.g. `{value}%`. The text scales with `size` and gets smaller when it is too long for the ring |
 | invalid | Red ring; without it the knob follows its form control |
 | disabled | Disables the knob (also from the form control) |
 | readonly | Shows the value, ignores dragging and keys |

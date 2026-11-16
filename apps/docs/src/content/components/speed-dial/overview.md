@@ -1,7 +1,7 @@
 ---
 category: Actions
 tokens: speedDial, button
-examples: basic, directions, circles, mask, design-tokens
+examples: basic, links, directions, circles, mask, design-tokens
 ---
 # SpeedDial
 

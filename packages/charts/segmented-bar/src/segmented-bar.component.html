@@ -1,48 +1,63 @@
 @let parts = passThrough();
-<div
-  class="tx-segmented-bar__track"
-  [class]="parts.track?.class"
-  [style]="parts.track?.style"
-  [attr.role]="showLegend() ? null : 'img'"
-  [attr.aria-label]="showLegend() ? null : summary()"
-  [attr.aria-hidden]="showLegend() || null"
->
-  @for (segment of barSegments(); track segment.key) {
-    <span
-      class="tx-segmented-bar__segment"
-      [class]="parts.segment?.class"
-      [style]="parts.segment?.style"
-      [attr.data-tone]="segment.tone"
-      [style.width.%]="segment.share"
-      [title]="segment.label + ': ' + segment.value"
-    >
-      @if (size() === 'large') {
-        {{ segment.percent }}
+@if (loading()) {
+  <div class="tx-segmented-bar__track" [class]="parts.track?.class" [style]="parts.track?.style" role="img" [attr.aria-label]="translations().chartLoading">
+    <tx-skeleton class="tx-segmented-bar__skeleton" [class]="parts.skeleton?.class" [style]="parts.skeleton?.style" width="100%" height="100%" borderRadius="inherit" />
+  </div>
+  @if (showLegend()) {
+    <div class="tx-segmented-bar__legend" [class]="parts.legend?.class" [style]="parts.legend?.style" aria-hidden="true">
+      @for (index of skeletonItems(); track index) {
+        <span class="tx-segmented-bar__legend-item" [class]="parts.legendItem?.class" [style]="parts.legendItem?.style">
+          <tx-skeleton class="tx-segmented-bar__legend-skeleton" [class]="parts.skeleton?.class" [style]="parts.skeleton?.style" width="5em" height="1lh" />
+        </span>
       }
-    </span>
+    </div>
   }
-</div>
-
-@if (showLegend()) {
-  <div class="tx-segmented-bar__legend" [class]="parts.legend?.class" [style]="parts.legend?.style" role="list" [attr.aria-label]="ariaLabel() || null">
-    @for (segment of legendSegments(); track segment.key) {
+} @else {
+  <div
+    class="tx-segmented-bar__track"
+    [class]="parts.track?.class"
+    [style]="parts.track?.style"
+    [attr.role]="showLegend() ? null : 'img'"
+    [attr.aria-label]="showLegend() ? null : summary()"
+    [attr.aria-hidden]="showLegend() || null"
+  >
+    @for (segment of barSegments(); track segment.key) {
       <span
-        class="tx-segmented-bar__legend-item"
-        [class]="parts.legendItem?.class"
-        [style]="parts.legendItem?.style"
+        class="tx-segmented-bar__segment"
+        [class]="parts.segment?.class"
+        [style]="parts.segment?.style"
         [attr.data-tone]="segment.tone"
-        role="listitem"
+        [style.width.%]="segment.share"
+        [title]="segment.label + ': ' + segment.value"
       >
-        <span class="tx-segmented-bar__dot" [class]="parts.dot?.class" [style]="parts.dot?.style" aria-hidden="true"></span>
-        <span class="tx-segmented-bar__label" [class]="parts.label?.class" [style]="parts.label?.style">{{ segment.label }}</span>
-        @if (showValue()) {
-          <span class="tx-segmented-bar__value" [class]="parts.value?.class" [style]="parts.value?.style">{{ segment.value }}</span>
-        }
-        @if (showPercent()) {
-          <span class="tx-segmented-bar__percent" [class]="parts.percent?.class" [style]="parts.percent?.style">{{ segment.percent }}</span>
+        @if (size() === 'large') {
+          {{ segment.percent }}
         }
       </span>
     }
-    <span class="tx-segmented-bar__aside" [class]="parts.aside?.class" [style]="parts.aside?.style"><ng-content /></span>
   </div>
+
+  @if (showLegend()) {
+    <div class="tx-segmented-bar__legend" [class]="parts.legend?.class" [style]="parts.legend?.style" role="list" [attr.aria-label]="ariaLabel() || null">
+      @for (segment of legendSegments(); track segment.key) {
+        <span
+          class="tx-segmented-bar__legend-item"
+          [class]="parts.legendItem?.class"
+          [style]="parts.legendItem?.style"
+          [attr.data-tone]="segment.tone"
+          role="listitem"
+        >
+          <span class="tx-segmented-bar__dot" [class]="parts.dot?.class" [style]="parts.dot?.style" aria-hidden="true"></span>
+          <span class="tx-segmented-bar__label" [class]="parts.label?.class" [style]="parts.label?.style">{{ segment.label }}</span>
+          @if (showValue()) {
+            <span class="tx-segmented-bar__value" [class]="parts.value?.class" [style]="parts.value?.style">{{ segment.value }}</span>
+          }
+          @if (showPercent()) {
+            <span class="tx-segmented-bar__percent" [class]="parts.percent?.class" [style]="parts.percent?.style">{{ segment.percent }}</span>
+          }
+        </span>
+      }
+      <span class="tx-segmented-bar__aside" [class]="parts.aside?.class" [style]="parts.aside?.style"><ng-content /></span>
+    </div>
+  }
 }

@@ -168,11 +168,17 @@ export async function writePdf(
   const headerRow = options.header === false || !table.columns.length ? null : wrapRow(table.columns.map((column) => column.title), bold, true, false);
   const bodyRows = texts.map((values, index) => wrapRow(values, regular, false, !!options.striped && index % 2 === 1));
 
-  const heading: { text: string; font: PdfFont; size: number; color: string }[] = [];
-  if (options.title) heading.push({ text: options.title, font: bold, size: size * 1.6, color: text });
-  if (options.subtitle) heading.push({ text: options.subtitle, font: regular, size: size * 1.1, color: muted });
+  const heading: { text: string; font: PdfFont; size: number; color: string; strong: boolean }[] = [];
+  const addHeading = (value: string, strong: boolean, headingSize: number, color: string) => {
+    const headingFont = strong ? bold : regular;
+    for (const line of wrapText(value, available, (part) => headingFont.width(part, headingSize))) {
+      heading.push({ text: line, font: headingFont, size: headingSize, color, strong });
+    }
+  };
+  if (options.title) addHeading(options.title, true, size * 1.6, text);
+  if (options.subtitle) addHeading(options.subtitle, false, size * 1.1, muted);
   const stamp = dateLine(options, context, date);
-  if (stamp) heading.push({ text: stamp, font: regular, size: size * 0.9, color: muted });
+  if (stamp) addHeading(stamp, false, size * 0.9, muted);
 
   const pages: string[][] = [];
   let ops: string[] = [];
@@ -217,7 +223,7 @@ export async function writePdf(
     if (first) {
       heading.forEach((line) => {
         y -= line.size * 1.25;
-        drawText(line.text, left, y, line.font, line.size, line.color, line.font === bold);
+        drawText(line.text, left, y, line.font, line.size, line.color, line.strong);
       });
       if (heading.length) y -= size * 1.2;
     }

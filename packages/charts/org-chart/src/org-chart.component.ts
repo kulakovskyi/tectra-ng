@@ -26,7 +26,7 @@ import { TxOrgChartNodeView } from './org-chart-node.component';
 import { TxOrgChartNodeTemplate } from './org-chart-templates.directive';
 import { TxOrgChartToolbar } from './org-chart-toolbar.component';
 import { TX_ORG_CHART_CONNECTOR_GAP, orgChartExpandState, orgChartPathLine } from './org-chart-tree';
-import { TX_ORG_CHART_FOCUS_ZOOM, TX_ORG_CHART_PADDING, TX_ORG_CHART_ZOOM, boundView, centerOn, clampZoom, fitView, wheelIsMouse, wheelZoom, zoomAt } from './org-chart-view';
+import { TX_ORG_CHART_FIT_MIN_ZOOM, TX_ORG_CHART_FOCUS_ZOOM, TX_ORG_CHART_PADDING, TX_ORG_CHART_ZOOM, boundView, centerOn, clampZoom, fitView, wheelIsMouse, wheelZoom, zoomAt } from './org-chart-view';
 import {
   TxOrgChartLabels,
   TxOrgChartMinimapItem,
@@ -90,6 +90,7 @@ export class TxOrgChart implements OnDestroy {
   readonly height = input<string>(DEFAULT_HEIGHT);
   readonly busy = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly pathKinds = input<readonly string[] | null>(null);
+  readonly minFitZoom = input(TX_ORG_CHART_FIT_MIN_ZOOM);
   readonly dt = input<TectraDeepPartial<TectraChartTokens> | undefined>(undefined);
   readonly pt = input<TxPassThrough<TxOrgChartPart, TxOrgChart> | undefined>(undefined);
   readonly ptOptions = input<TxPassThroughOptions | undefined>(undefined);
@@ -221,7 +222,10 @@ export class TxOrgChart implements OnDestroy {
   fitToScreen(): void {
     const stage = this.stage()?.nativeElement;
     if (!stage) return;
-    const next = fitView(this.viewport(), { width: stage.offsetWidth, height: stage.offsetHeight }, this.fullscreen() ? TX_ORG_CHART_PADDING * 2 : 0);
+    const card = stage.querySelector<HTMLElement>('.tx-org-chart-node__card');
+    const rect = card ? this.stageRect(card) : null;
+    const root = rect ? { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 } : null;
+    const next = fitView(this.viewport(), { width: stage.offsetWidth, height: stage.offsetHeight }, this.fullscreen() ? TX_ORG_CHART_PADDING * 2 : 0, this.minFitZoom(), root);
     if (next) this.view.set(next);
   }
 

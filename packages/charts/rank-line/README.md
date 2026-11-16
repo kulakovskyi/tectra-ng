@@ -1,6 +1,6 @@
 # Rank Chart
 
-`<tx-rank-chart>` — positions over time (search ranks, leaderboards): rank 1 on top, one straight line per series in its own colour, a gap where a check has no rank, a tooltip with the date and time, the series, the rank and an optional note. Points sit at their real times on a time axis.
+`<tx-rank-chart>` — positions over time (search ranks, leaderboards): rank 1 on top, one straight line per series in its own colour, a gap where a check has no rank, a tooltip with the date, the series, the rank and an optional note. Points sit at their real times on a time axis.
 
 ```ts
 import { TxRankChart } from '@tectra-ng/charts/rank-line';
@@ -14,7 +14,8 @@ import { TxRankChart } from '@tectra-ng/charts/rank-line';
 | Name | Description |
 |---|---|
 | series | `{ name, color?, points: { time, rank \| null, note? }[] }[]` — a `null` rank leaves a gap; without `color` the series takes one of 12 line colours by its index (`rankLineColor(index)`) |
-| maxRank | The deepest rank on the axis (20); ticks by 5 up to 20, by 10 deeper; deeper ranks sit on the bottom line |
+| maxRank | The deepest rank on the axis (20); rank 1 sits on the top line and `maxRank` on the bottom line; every rank gets a tick up to 10 ranks, then ticks go by 5 up to 20 and by 10 deeper; deeper ranks sit on the bottom line |
+| dateFormat | How the tooltip, the summary and the data table write a date: `Intl.DateTimeFormat` options or `(time) => string`; by default a date, with the time of day only when checks are less than a day apart |
 | rankLabel | Caption of the rank in the tooltip and the data table (`Position: 3`) |
 | height | Height: px (360) or `'100%'` of a parent with a definite height |
 | showLegend | Shows a legend that hides and shows series |

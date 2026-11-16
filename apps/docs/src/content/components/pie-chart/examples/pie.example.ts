@@ -8,7 +8,7 @@ import { TxPieChart, TxPieData } from '@tectra-ng/charts/pie';
     [pieData]="budget"
     donutSize="0%"
     [chartWidth]="260"
-    [chartHeight]="320"
+    [height]="320"
     ariaLabel="Budget split"
   />`,
   changeDetection: ChangeDetectionStrategy.OnPush,

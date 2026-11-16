@@ -4,7 +4,7 @@ tokens: pinnedTabs
 source: packages/blocks/pinned-tabs
 package: @tectra-ng/blocks/pinned-tabs
 import: TxPinnedTabs
-examples: basic, default-pins, design-tokens
+examples: basic, default-pins, raised, design-tokens
 ---
 # Pinned Tabs
 

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TxCountrySelect } from './country-select.component';
 import { TxCountryOption, TxCountrySort } from './country-select.types';
 
@@ -101,5 +101,33 @@ describe('TxCountrySelect', () => {
     await fixture.whenStable();
     render();
     expect(trigger().disabled).toBe(true);
+  });
+});
+
+@Component({
+  imports: [TxCountrySelect, ReactiveFormsModule],
+  template: `<form [formGroup]="form"><tx-country-select formControlName="country" ariaLabel="Country" [multiple]="multiple()" /></form>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class FormHost {
+  readonly form = new FormGroup({ country: new FormControl<string | string[] | null>('FR') });
+  readonly multiple = signal(false);
+}
+
+describe('TxCountrySelect in a form group', () => {
+  afterEach(() => vi.restoreAllMocks());
+
+  it('keeps its own select out of the parent form', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    const fixture = TestBed.createComponent(FormHost);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.componentInstance.multiple.set(true);
+    fixture.componentInstance.form.setValue({ country: ['FR'] });
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(warn).not.toHaveBeenCalled();
+    expect(Object.keys(fixture.componentInstance.form.controls)).toEqual(['country']);
+    fixture.destroy();
   });
 });

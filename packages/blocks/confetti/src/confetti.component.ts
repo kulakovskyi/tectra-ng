@@ -19,6 +19,7 @@ import { CONFETTI_THEME } from './confetti.theme';
           [style.--tx-confetti-i]="index"
           [class]="passThrough().piece?.class"
           [style]="passThrough().piece?.style"
+          (animationend)="pieceEnded($event)"
         ></span>
       }
     }
@@ -49,9 +50,22 @@ export class TxConfetti {
   readonly hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-confetti'), ...this.passThrough().root?.style }));
 
   private readonly run = signal(0);
-  protected readonly runs = computed(() => [this.run()]);
+  private readonly endedRun = signal(-1);
+  private endedPieces = 0;
+  protected readonly runs = computed(() => (this.endedRun() === this.run() ? [] : [this.run()]));
 
   play(): void {
+    this.endedPieces = 0;
     this.run.update((run) => run + 1);
+  }
+
+  protected pieceEnded(event: AnimationEvent): void {
+    if (!/(fade|glimpse)$/.test(event.animationName)) {
+      return;
+    }
+    this.endedPieces += 1;
+    if (this.endedPieces >= this.pieces().length) {
+      this.endedRun.set(this.run());
+    }
   }
 }

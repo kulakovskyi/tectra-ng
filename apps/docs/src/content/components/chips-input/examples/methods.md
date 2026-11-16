@@ -1,0 +1,1 @@
+`add(value)` adds chips from code with the same checks as typing — here from suggestion buttons — and keeps the typed text (`addOnBlur` is off, so leaving the field for a button does not turn the text into a chip). `[(text)]` is the typed text that is not a chip yet: setting it updates the field, and `clearText()` empties it without touching the chips.

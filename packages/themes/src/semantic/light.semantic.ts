@@ -47,5 +47,6 @@ export function createLightSemantic({ accent, surface }: TectraPalettes): Tectra
     mask: { background: 'rgba(12, 16, 21, 0.45)' },
     focusRing: { color: accent[600] },
     shadow: { ...shadows },
+    content: { radius: 'var(--tx-radius-lg)', shadow: `0 1px 2px color-mix(in srgb, ${surface[950]}, transparent 95%)` },
   };
 }

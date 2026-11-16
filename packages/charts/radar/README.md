@@ -29,7 +29,7 @@ import { TxRadarChart } from '@tectra-ng/charts/radar';
 | legendVariant | Look of the legend: `dot` (default), `line`, `pill` or `stat` (the average of each series, or the value on the focused axis, in large type; it replaces the tooltip) |
 | showTooltip | Shows the tooltip on hover and keyboard focus |
 | tooltipFormatter | `(value, { seriesIndex, dataPointIndex }) => string` for tooltip values |
-| valueFormat | Format of the ring values and the tooltip: `number`, `integer`, `compact`, `percent` or a function |
+| valueFormat | Format of the ring values and the tooltip: `number`, `integer`, `compact`, `percent`, a currency (`{ currency: 'USD' }`) or a function |
 | toolbar | Shows the chart menu in the top right corner: download SVG, PNG or CSV (the file is named after `ariaLabel`) |
 | loading | Shows a skeleton of the same size |
 | ariaLabel | What the chart shows; starts the summary read by screen readers |

@@ -1,6 +1,6 @@
 import { ACCENT_PALETTES, SURFACE_PALETTES } from '@tectra-ng/tokens';
 import { deepMerge, definePreset } from './define-preset';
-import { Soft, Tectra, createTectraPreset } from './presets/tectra.preset';
+import { Paper, Tectra, createTectraPreset } from './presets/tectra.preset';
 import { edgeStyle } from './styles/edge/edge.style';
 import { TectraStyle } from './types/style.interface';
 
@@ -17,10 +17,10 @@ describe('deepMerge', () => {
 
 describe('definePreset', () => {
   it('overrides one component token and keeps the rest', () => {
-    const preset = definePreset(Soft, { components: { button: { root: { borderRadius: '0' } } } });
+    const preset = definePreset(Paper, { components: { button: { root: { borderRadius: '0' } } } });
     expect(preset.components.button?.root?.borderRadius).toBe('0');
-    expect(preset.components.button?.root?.paddingX).toBe(Soft.components.button?.root?.paddingX);
-    expect(preset.light).toBe(Soft.light);
+    expect(preset.components.button?.root?.paddingX).toBe(Paper.components.button?.root?.paddingX);
+    expect(preset.light).toBe(Paper.light);
     expect(Tectra.components).toEqual({});
   });
 });
@@ -53,6 +53,6 @@ describe('createTectraPreset', () => {
   });
 
   it('explains how to pass a style given by its name', () => {
-    expect(() => createTectraPreset({ style: 'soft' as unknown as TectraStyle })).toThrow('import { softStyle } from');
+    expect(() => createTectraPreset({ style: 'edge' as unknown as TectraStyle })).toThrow('import { edgeStyle } from');
   });
 });

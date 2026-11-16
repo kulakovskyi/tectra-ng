@@ -1,4 +1,4 @@
-export type TectraNgAddStyle = 'tectra' | 'soft' | 'edge' | 'paper';
+export type TectraNgAddStyle = 'tectra' | 'edge' | 'paper';
 
 export type TectraNgAddPrimary =
   | 'noir'

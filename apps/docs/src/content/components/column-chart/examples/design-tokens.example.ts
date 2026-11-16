@@ -8,7 +8,6 @@ import { TxChartSeries } from '@tectra-ng/charts/core';
   template: `<tx-column-chart
     [series]="series"
     [categories]="months"
-    [stacked]="false"
     [dt]="{
       bar: { radius: '2px', width: '72%', groupGap: '6px' },
       series: { color1: 'var(--tx-green-500)', color2: 'var(--tx-amber-400)' },

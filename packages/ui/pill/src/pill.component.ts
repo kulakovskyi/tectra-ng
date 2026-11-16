@@ -48,7 +48,7 @@ import { PILL_THEME } from './pill.theme';
     '[class]': 'passThrough().root?.class',
     '[style]': 'hostStyle()',
     '[attr.data-styled]': '!isUnstyled() || null',
-    '[attr.data-tone]': 'tone()',
+    '[attr.data-tone]': 'resolvedTone()',
     '[attr.data-variant]': 'variant()',
     '[attr.data-size]': 'resolvedSize()',
   },
@@ -77,6 +77,7 @@ export class TxPill {
   readonly translations = injectTranslations();
   readonly isUnstyled = injectUnstyled(this.unstyled);
   readonly passThrough = injectPassThrough('pill', this, this.pt, this.ptOptions);
+  readonly resolvedTone = computed(() => (this.tone() === 'secondary' ? 'neutral' : this.tone()));
   readonly resolvedSize = computed(() => (this.size() === 'normal' ? 'medium' : this.size()));
   readonly iconName = computed(() => {
     const icon = this.icon();

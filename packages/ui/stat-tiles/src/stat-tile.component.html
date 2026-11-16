@@ -35,7 +35,7 @@
       </span>
     }
     <span class="tx-stat-tile__main" [class]="passThrough().main?.class" [style]="passThrough().main?.style">
-      <span class="tx-stat-tile__label" [class]="passThrough().label?.class" [style]="passThrough().label?.style">{{ label() }}</span>
+      <span class="tx-stat-tile__label" [class]="passThrough().label?.class" [style]="passThrough().label?.style" [attr.title]="label()">{{ label() }}</span>
       <span
         class="tx-stat-tile__value"
         [class.tx-stat-tile__value--text]="textValue()"
@@ -49,7 +49,7 @@
         }
       </span>
       @if (meta()) {
-        <span class="tx-stat-tile__meta" [class]="passThrough().meta?.class" [style]="passThrough().meta?.style">{{ meta() }}</span>
+        <span class="tx-stat-tile__meta" [class]="passThrough().meta?.class" [style]="passThrough().meta?.style" [attr.title]="meta()">{{ meta() }}</span>
       }
     </span>
     <span class="tx-stat-tile__aside" [class]="passThrough().aside?.class" [style]="passThrough().aside?.style">

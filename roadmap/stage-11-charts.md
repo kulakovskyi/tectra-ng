@@ -135,8 +135,9 @@ Arc helpers (`polar`, `arcPath`, `strokeArc`, `fitArc`) moved from `charts/pie` 
 
 - [x] `<tx-gantt-chart>` (`charts/gantt`): rows of time ranges under groups that fold (summary bar per group), progress, milestones, today line, sticky names and scale while scrolling both ways, zoom `day` / `week` / `month` / `quarter` from the toolbar, + / − and Ctrl + wheel at the pointer; a `timeline` layout with a lane per group; bars are one tab stop with arrow keys, tooltips and accessible names with dates, length and progress
 - [x] Docs + tests; e2e
+- [x] Task dependencies: `dependsOn` with ids (finish-to-start) or `{ id, type }` (`start-to-start`, `finish-to-finish`, `start-to-finish`); orthogonal arrows under the bars that pick the route crossing the fewest bars and names and go around through the row gap when the successor starts before the predecessor ends; milestones link from the diamond tips; a folded group takes the arrows of its tasks on its summary bar; hover or focus lights up the whole chain and dims the rest; accessible names list "Depends on" / "Required by"; unknown ids, self links and cycles are dropped; `showDependencies`, `dependencyHighlight`, tokens `dependencyColor` / `dependencyWidth` / `dependencyActiveColor` / `dependencyActiveWidth` / `dimmedOpacity`
 
-Built in HTML rather than SVG: sticky headers and text that cuts off cleanly come from CSS, and the scroll area is the kit's own.
+Built in HTML rather than SVG: sticky headers and text that cuts off cleanly come from CSS, and the scroll area is the kit's own. The dependency arrows are one SVG layer whose x axis is in px and y axis in rows (stretched with `preserveAspectRatio="none"`, strokes kept with `vector-effect`), so they follow the row-height token on the server and in the browser without measuring.
 
 ## 11.16 Sankey and sunburst ✅
 

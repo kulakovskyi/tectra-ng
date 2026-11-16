@@ -1,7 +1,7 @@
 ---
 category: Display
 tokens: truncateText
-examples: basic, table, link, copy, highlight, design-tokens, pass-through
+examples: basic, container-width, table, link, copy, highlight, design-tokens, pass-through
 ---
 # TruncateText
 

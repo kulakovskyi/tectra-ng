@@ -54,11 +54,8 @@ export const edgeDisplayTokens: TectraDeepPartial<TectraComponentTokens> = {
   divider: {
     root: { contentColor: tokenRef('text-primary') },
   },
-  card: {
-    root: { borderRadius: tokenRef('radius-sm'), shadow: '0 1px 4px 0 rgba(0, 0, 0, 0.1)' },
-  },
   panel: {
-    root: { borderRadius: tokenRef('radius-xs'), titleFontWeight: tokenRef('font-weight-bold') },
+    root: { titleFontWeight: tokenRef('font-weight-bold') },
   },
   fieldset: {
     root: {

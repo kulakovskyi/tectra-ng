@@ -1,1 +1,1 @@
-`layout="timeline"` puts every task of a group on one lane — bookings, shifts, releases. Names go inside the bars; `color` paints one task.
+`layout="timeline"` puts every task of a group on one lane — bookings, shifts, releases. Names go inside the bars; `color` paints one task. Tasks of a lane that overlap get their own sub-rows, so no bar hides another — here a design sprint booked into a room during an offsite.

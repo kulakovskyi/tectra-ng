@@ -1,0 +1,1 @@
+Put `txButton` buttons inside `tx-button-group`: inner corners go square, borders merge and solid buttons get a thin divider. Name the group with `aria-label` so a screen reader says what the buttons act on.

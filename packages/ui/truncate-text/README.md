@@ -11,7 +11,7 @@ One line of text cut to a number of characters, with the full value in a tooltip
 | Name | Description |
 |---|---|
 | text | The text; a number is shown as text |
-| limit | How many characters are shown before the text is cut |
+| limit | How many characters are shown before the text is cut. Whatever the limit, the text never gets wider than its container: a longer line is clipped with an ellipsis |
 | ellipsis | What follows the cut text (`...` by default) |
 | href | Makes the text a link to this address |
 | openLink | Makes the text a link to itself — for a `text` that is a URL; `href` wins when both are set |

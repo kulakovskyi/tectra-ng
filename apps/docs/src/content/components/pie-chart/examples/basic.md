@@ -1,1 +1,1 @@
-Pass `pieData` with `series` (values) and `labels`. Hover a segment: it moves out, its value and name appear in the centre, and the tooltip points at it from the outside.
+Pass `pieData` with `series` (values) and `labels`. The chart takes the width of its parent and `height` (400 by default); the donut fits what is left under the legend. Hover a segment: it moves out, its value and name appear in the centre, and the tooltip points at it from the outside.

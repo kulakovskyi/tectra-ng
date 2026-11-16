@@ -16,7 +16,7 @@ import {
   orgChartSearch,
   orgChartToggle,
 } from './org-chart-tree';
-import { TX_ORG_CHART_ZOOM, boundView, centerOn, clampZoom, fitView, wheelIsMouse, wheelZoom, zoomAt } from './org-chart-view';
+import { TX_ORG_CHART_FIT_MIN_ZOOM, TX_ORG_CHART_ZOOM, boundView, centerOn, clampZoom, fitView, wheelIsMouse, wheelZoom, zoomAt } from './org-chart-view';
 import { TxOrgChartLabels, TxOrgChartNode } from './org-chart.types';
 
 const leaf = (id: string, extra: Partial<TxOrgChartNode> = {}): TxOrgChartNode => ({ id, title: id, ...extra });
@@ -127,9 +127,18 @@ describe('org chart view', () => {
   it('centres a point and fits the stage', () => {
     expect(centerOn({ x: 0, y: 0, zoom: 1 }, { width: 400, height: 200 }, { x: 50, y: 50 })).toEqual({ zoom: 1, x: 150, y: 50 });
     expect(fitView({ width: 0, height: 0 }, { width: 10, height: 10 })).toBeNull();
-    const fit = fitView({ width: 880, height: 480 }, { width: 1600, height: 400 });
+    const fit = fitView({ width: 880, height: 480 }, { width: 1600, height: 400 }, 0, 0.2);
     expect(fit?.zoom).toBe(0.5);
     expect(fit?.x).toBe(40);
+    expect(fitView({ width: 880, height: 480 }, { width: 400, height: 200 })).toEqual({ zoom: 1, x: 240, y: 140 });
+  });
+
+  it('keeps a fit readable on a narrow canvas and centres it on the root', () => {
+    const phone = fitView({ width: 360, height: 640 }, { width: 1600, height: 900 }, 0, TX_ORG_CHART_FIT_MIN_ZOOM, { x: 800, y: 30 });
+    expect(phone).toEqual({ zoom: 0.6, x: 180 - 800 * 0.6, y: 50 });
+    expect(fitView({ width: 360, height: 640 }, { width: 1600, height: 1200 }, 0, TX_ORG_CHART_FIT_MIN_ZOOM, { x: 800, y: 30 })?.y).toBe(40);
+    expect(fitView({ width: 360, height: 640 }, { width: 1600, height: 300 })).toEqual({ zoom: 0.6, x: (360 - 960) / 2, y: (640 - 180) / 2 });
+    expect(fitView({ width: 360, height: 640 }, { width: 1600, height: 300 }, 0, 2)?.zoom).toBe(1);
   });
 
   it('keeps part of the tree inside the canvas', () => {

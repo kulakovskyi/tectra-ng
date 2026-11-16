@@ -62,7 +62,9 @@
   padding: var(--tx-panel-padding);
   border-radius: var(--tx-panel-border-radius);
   background: var(--tx-panel-background);
-  box-shadow: inset 0 0 0 1px var(--tx-panel-border-color);
+  box-shadow:
+    inset 0 0 0 1px var(--tx-panel-border-color),
+    var(--tx-panel-shadow);
   color: var(--tx-panel-color);
   font-family: var(--tx-font-family);
   transition: gap var(--tx-panel-transition-duration);

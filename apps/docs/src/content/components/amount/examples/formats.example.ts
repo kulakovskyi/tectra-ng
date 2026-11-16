@@ -6,9 +6,9 @@ import { TxAmount } from '@tectra-ng/ui/amount';
   imports: [TxAmount],
   template: `
     <dl class="grid">
-      @for (item of formats; track item.format) {
+      @for (item of formats; track item.label) {
         <dt>
-          <code>{{ item.format }}</code>
+          <code>{{ item.label }}</code>
         </dt>
         <dd><tx-amount [amount]="item.value" [format]="item.format" currency="USD" /></dd>
       }
@@ -28,10 +28,11 @@ import { TxAmount } from '@tectra-ng/ui/amount';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class AmountFormatsExample {
-  readonly formats = [
-    { format: '1.0-2', value: 1234.5 },
-    { format: '1.2-2', value: 1234.5 },
-    { format: '1.0-0', value: 1234.5 },
-    { format: '1.2-4', value: 0.0025 },
+  readonly formats: { label: string; format?: string; value: number }[] = [
+    { label: 'no format', value: 1234.5 },
+    { label: '1.0-2', format: '1.0-2', value: 1234.5 },
+    { label: '1.2-2', format: '1.2-2', value: 1234.5 },
+    { label: '1.0-0', format: '1.0-0', value: 1234.5 },
+    { label: '1.2-4', format: '1.2-4', value: 0.0025 },
   ];
 }

@@ -1,0 +1,1 @@
+`unstyled` drops the joined borders, the square inner corners and the divider. The buttons keep their own look and the group stays a `role="group"` for screen readers. Here the gap between buttons is your own style.

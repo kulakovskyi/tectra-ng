@@ -18,7 +18,7 @@ import { TxButton } from '@tectra-ng/ui/button';
       </div>
       <tx-network-status
         #status
-        bodyClass=""
+        contained
         offlineText="You are offline — changes stay on this device"
         restoredText="Back online — syncing your changes"
         [restoredDuration]="5000"
@@ -34,7 +34,7 @@ import { TxButton } from '@tectra-ng/ui/button';
       border: 1px solid var(--tx-surface-border);
       border-radius: 12px;
       background: var(--tx-surface-ground);
-      contain: layout;
+      position: relative;
       overflow: hidden;
     }
 

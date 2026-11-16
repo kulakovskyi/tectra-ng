@@ -1,6 +1,16 @@
 @if (primaries().length) {
-  <div class="tx-theme-configurator__section" [class]="passThrough().section?.class" [style]="passThrough().section?.style">
-    <span class="tx-theme-configurator__label" [id]="id + '-primary'" [class]="passThrough().label?.class" [style]="passThrough().label?.style">{{ translations().themePrimary }}</span>
+  <div
+    class="tx-theme-configurator__section"
+    [class]="passThrough().section?.class"
+    [style]="passThrough().section?.style"
+  >
+    <span
+      class="tx-theme-configurator__label"
+      [id]="id + '-primary'"
+      [class]="passThrough().label?.class"
+      [style]="passThrough().label?.style"
+      >{{ translations().themePrimary }}</span
+    >
     <tx-color-swatches
       class="tx-theme-configurator__swatches"
       [class]="passThrough().swatches?.class"
@@ -9,13 +19,24 @@
       [columns]="columns()"
       [ariaLabelledBy]="id + '-primary'"
       [ngModel]="theme.primary()"
+      [ngModelOptions]="{ standalone: true }"
       (ngModelChange)="update({ primary: $event })"
     />
   </div>
 }
 @if (surfaces().length) {
-  <div class="tx-theme-configurator__section" [class]="passThrough().section?.class" [style]="passThrough().section?.style">
-    <span class="tx-theme-configurator__label" [id]="id + '-surface'" [class]="passThrough().label?.class" [style]="passThrough().label?.style">{{ translations().themeSurface }}</span>
+  <div
+    class="tx-theme-configurator__section"
+    [class]="passThrough().section?.class"
+    [style]="passThrough().section?.style"
+  >
+    <span
+      class="tx-theme-configurator__label"
+      [id]="id + '-surface'"
+      [class]="passThrough().label?.class"
+      [style]="passThrough().label?.style"
+      >{{ translations().themeSurface }}</span
+    >
     <tx-color-swatches
       class="tx-theme-configurator__swatches"
       [class]="passThrough().swatches?.class"
@@ -24,14 +45,31 @@
       [columns]="columns()"
       [ariaLabelledBy]="id + '-surface'"
       [ngModel]="theme.surface()"
+      [ngModelOptions]="{ standalone: true }"
       (ngModelChange)="update({ surface: $event })"
     />
   </div>
 }
 @if (styles().length > 1) {
-  <div class="tx-theme-configurator__section" [class]="passThrough().section?.class" [style]="passThrough().section?.style">
-    <span class="tx-theme-configurator__label" [id]="id + '-style'" [class]="passThrough().label?.class" [style]="passThrough().label?.style">{{ translations().themeStyle }}</span>
-    <div class="tx-theme-configurator__segments" role="radiogroup" [attr.aria-labelledby]="id + '-style'" [class]="passThrough().segments?.class" [style]="passThrough().segments?.style">
+  <div
+    class="tx-theme-configurator__section"
+    [class]="passThrough().section?.class"
+    [style]="passThrough().section?.style"
+  >
+    <span
+      class="tx-theme-configurator__label"
+      [id]="id + '-style'"
+      [class]="passThrough().label?.class"
+      [style]="passThrough().label?.style"
+      >{{ translations().themeStyle }}</span
+    >
+    <div
+      class="tx-theme-configurator__segments"
+      role="radiogroup"
+      [attr.aria-labelledby]="id + '-style'"
+      [class]="passThrough().segments?.class"
+      [style]="passThrough().segments?.style"
+    >
       <tx-button-group>
         @for (style of styles(); track style.name; let index = $index) {
           <button
@@ -58,8 +96,23 @@
   </div>
 }
 @if (showRipple()) {
-  <div class="tx-theme-configurator__section tx-theme-configurator__section--row" [class]="passThrough().section?.class" [style]="passThrough().section?.style">
-    <span class="tx-theme-configurator__label" [id]="id + '-ripple'" [class]="passThrough().label?.class" [style]="passThrough().label?.style">{{ translations().themeRipple }}</span>
-    <tx-toggle-switch [ariaLabelledBy]="id + '-ripple'" [ngModel]="theme.ripple()" (ngModelChange)="setRipple($event)" />
+  <div
+    class="tx-theme-configurator__section tx-theme-configurator__section--row"
+    [class]="passThrough().section?.class"
+    [style]="passThrough().section?.style"
+  >
+    <span
+      class="tx-theme-configurator__label"
+      [id]="id + '-ripple'"
+      [class]="passThrough().label?.class"
+      [style]="passThrough().label?.style"
+      >{{ translations().themeRipple }}</span
+    >
+    <tx-toggle-switch
+      [ariaLabelledBy]="id + '-ripple'"
+      [ngModel]="theme.ripple()"
+      [ngModelOptions]="{ standalone: true }"
+      (ngModelChange)="setRipple($event)"
+    />
   </div>
 }

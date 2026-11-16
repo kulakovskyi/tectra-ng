@@ -25,13 +25,12 @@ import {
   initialChartSize,
   injectChartEntrance,
   readTokenNumber,
-  textWidth,
 } from '@tectra-ng/charts/core';
 import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService, formatMessage, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
-import { sankeyLayout, sankeyLinkY } from './sankey-layout';
+import { sankeyLabels, sankeyLayout, sankeyLinkY } from './sankey-layout';
 import { TxSankeyAlign, TxSankeyChartPart, TxSankeyLayoutLink, TxSankeyLayoutNode, TxSankeyLink, TxSankeyLinkEvent, TxSankeyNode, TxSankeyNodeEvent } from './sankey-chart.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { SANKEY_ICON_DEFAULTS } from './sankey.icons';
@@ -115,15 +114,9 @@ export class TxSankeyChart {
 
   readonly labels = computed(() => {
     const { labelGap, fontSize } = this.geometry();
-    const last = this.layout().columns - 1;
-    const width = this.size().width;
-    return this.layout().nodes.map((node) => {
-      const before = node.depth === last && last > 0;
-      const value = this.showValues() ? this.valueFormatter()(node.value) : '';
-      const room = before ? node.x - labelGap : width - node.x - node.width - labelGap;
-      const fits = textWidth(`${node.label} ${value}`, fontSize) <= room;
-      return { key: node.id, x: before ? node.x - labelGap : node.x + node.width + labelGap, y: node.y + node.height / 2, anchor: before ? 'end' : 'start', label: node.label, value: fits ? value : '' };
-    });
+    const nodes = this.layout().nodes;
+    const values = nodes.map((node) => (this.showValues() ? this.valueFormatter()(node.value) : ''));
+    return sankeyLabels(nodes, { width: this.size().width, labelGap, fontSize, values }).filter((label) => label.label);
   });
 
   readonly related = computed(() => {

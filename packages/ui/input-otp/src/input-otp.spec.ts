@@ -131,16 +131,37 @@ describe('TxInputOtp', () => {
   it('replaces a character typed over an existing one and clears an emptied cell', async () => {
     fixture.componentInstance.code.setValue('12');
     await fixture.whenStable();
+    await type(4, 'x');
+    expect(cells()[4].value).toBe('');
     await type(3, ' ');
     expect(cells()[3].value).toBe('');
     await type(0, '15');
     expect(cells()[0].value).toBe('5');
     expect(cells()[1].value).toBe('2');
-    await type(1, '');
+    await type(1, 'x');
     expect(cells()[1].value).toBe('2');
+    expect(fixture.componentInstance.code.value).toBe('52');
+    await type(1, '');
+    expect(cells()[1].value).toBe('');
+    expect(fixture.componentInstance.code.value).toBe('5');
     await type(3, ' ');
     expect(cells()[3].value).toBe('');
-    expect(fixture.componentInstance.code.value).toBe('52');
+  });
+
+  it('reports the complete code only when the last empty cell gets filled', async () => {
+    const completed = fixture.componentInstance.completed;
+    fixture.componentInstance.code.setValue('12345');
+    await fixture.whenStable();
+    await type(5, '6');
+    expect(completed).toEqual(['123456']);
+    await type(5, '7');
+    await type(0, '9');
+    expect(fixture.componentInstance.code.value).toBe('923457');
+    expect(completed).toEqual(['123456']);
+    await type(2, '');
+    expect(fixture.componentInstance.code.value).toBe('92457');
+    await type(2, '3');
+    expect(completed).toEqual(['123456', '923457']);
   });
 
   it('ignores an empty paste and accepts letters without integerOnly', async () => {

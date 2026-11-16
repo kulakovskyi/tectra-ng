@@ -33,16 +33,18 @@ import {
   chartBandRect,
   chartNumberFormatter,
   chartSummary,
+  compactValueFormatter,
   initialChartSize,
   injectChartEntrance,
   readTokenNumber,
   stepIndex,
+  textWidth,
 } from '@tectra-ng/charts/core';
 import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
-import { waterfallExtent, waterfallSteps } from './waterfall-layout';
+import { visibleLabels, waterfallExtent, waterfallSteps } from './waterfall-layout';
 import { TxWaterfallBarEvent, TxWaterfallChartBar, TxWaterfallChartPart, TxWaterfallConnector, TxWaterfallItem, TxWaterfallKind } from './waterfall-chart.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { WATERFALL_ICON_DEFAULTS } from './waterfall.icons';
@@ -50,6 +52,11 @@ import { WATERFALL_THEME } from './waterfall.theme';
 
 const DEFAULT_WIDTH = 0.56;
 const LABEL_GAP = 4;
+const LABEL_FONT_SIZE = 11;
+
+function signedFormat(format: (value: number) => string): (value: number) => string {
+  return (value) => (value > 0 ? `+${format(value)}` : value < 0 ? `−${format(-value)}` : format(value));
+}
 
 @Component({
   selector: 'tx-waterfall-chart',
@@ -123,10 +130,9 @@ export class TxWaterfallChart {
   readonly size = linkedSignal(() => initialChartSize(this.height(), this.legendShown() ? this.legendPosition() : null, undefined, this.toolbar()));
 
   readonly valueFormatter = computed(() => chartNumberFormatter(this.intl(), this.valueFormat()));
-  readonly signed = computed(() => {
-    const format = this.valueFormatter();
-    return (value: number) => (value > 0 ? `+${format(value)}` : value < 0 ? `−${format(-value)}` : format(value));
-  });
+  readonly signed = computed(() => signedFormat(this.valueFormatter()));
+  private readonly shortFormatter = computed(() => compactValueFormatter(this.intl(), this.valueFormat()));
+  private readonly shortSigned = computed(() => signedFormat(this.shortFormatter()));
 
   readonly layout = computed(() => {
     const { width, height } = this.size();
@@ -160,7 +166,7 @@ export class TxWaterfallChart {
     const band = layout.category as TxBandScale;
     const width = band.bandwidth * Math.min(1, Math.max(0.05, this.barWidth()));
     const scale = layout.value;
-    return this.steps().map((step) => {
+    const bars = this.steps().map((step) => {
       const a = scale.map(step.from);
       const b = scale.map(step.to);
       const y = Math.min(a, b);
@@ -173,11 +179,21 @@ export class TxWaterfallChart {
         y,
         width,
         height,
-        text: this.dataLabels() ? (step.kind === 'total' ? this.valueFormatter()(step.to) : this.signed()(step.change)) : null,
+        text: this.dataLabels() ? this.labelText(step.kind === 'total', step.kind === 'total' ? step.to : step.change, band.step) : null,
         textY: above ? y - LABEL_GAP : y + height + LABEL_GAP,
         above,
       };
     });
+    const visible = visibleLabels(
+      bars.map((bar) => ({
+        x: bar.x + bar.width / 2,
+        width: textWidth(bar.text ?? '', LABEL_FONT_SIZE),
+        top: bar.above ? bar.textY - LABEL_FONT_SIZE : bar.textY,
+        bottom: bar.above ? bar.textY : bar.textY + LABEL_FONT_SIZE,
+        total: bar.kind === 'total',
+      })),
+    );
+    return bars.map((bar, index) => (visible[index] ? bar : { ...bar, text: null }));
   });
 
   readonly hoverBand = computed(() => {
@@ -283,5 +299,10 @@ export class TxWaterfallChart {
         ? `${step.label}: ${t.chartTotal} ${this.valueFormatter()(step.to)}`
         : `${step.label}: ${this.signed()(step.change)}, ${t.chartTotal.toLocaleLowerCase(this.intl())} ${this.valueFormatter()(step.to)}`,
     );
+  }
+
+  private labelText(total: boolean, value: number, room: number): string {
+    const full = total ? this.valueFormatter()(value) : this.signed()(value);
+    return textWidth(full, LABEL_FONT_SIZE) <= room - LABEL_GAP ? full : total ? this.shortFormatter()(value) : this.shortSigned()(value);
   }
 }

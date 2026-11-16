@@ -33,6 +33,7 @@
     [attr.aria-labelledby]="ariaLabelledBy() ?? null"
     [attr.aria-invalid]="isInvalid() || null"
     [attr.maxlength]="maxLength() ?? null"
+    [value]="text()"
     [placeholder]="values().length ? '' : placeholder()"
     [readOnly]="readonly() || isFull()"
     [disabled]="disabled()"

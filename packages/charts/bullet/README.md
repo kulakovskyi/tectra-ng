@@ -19,7 +19,7 @@ import { TxBulletChart } from '@tectra-ng/charts/bullet';
 | max | End of the scale; the biggest value, target or threshold by default |
 | height | Height in px; by default one `chart.bullet.rowHeight` per row plus the axis |
 | showTooltip | Shows the value and the target on hover and keyboard focus |
-| valueFormat | Format of the axis and the tooltip: `number`, `integer`, `compact`, `percent` or a function |
+| valueFormat | Format of the axis and the tooltip: `number`, `integer`, `compact`, `percent`, a currency (`{ currency: 'USD' }`) or a function |
 | grid | Grid lines: `value` (default), `category`, `both` or `none` |
 | maxLabelWidth | Longer row labels are cut with an ellipsis (180px) |
 | toolbar | Shows the chart menu: download SVG, PNG or CSV |

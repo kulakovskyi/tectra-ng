@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { TxChartAnnotation } from '@tectra-ng/charts/core';
 import { TxRangeAreaChart, TxRangeSeries } from '@tectra-ng/charts/range-area';
 
 @Component({
@@ -9,6 +10,7 @@ import { TxRangeAreaChart, TxRangeSeries } from '@tectra-ng/charts/range-area';
     [categories]="weeks"
     xType="time"
     valueFormat="compact"
+    [annotations]="annotations"
     ariaLabel="Orders and the forecast with its range"
   />`,
   styles: `
@@ -20,6 +22,9 @@ import { TxRangeAreaChart, TxRangeSeries } from '@tectra-ng/charts/range-area';
 })
 export default class RangeAreaChartForecastExample {
   readonly weeks = Array.from({ length: 16 }, (_, index) => new Date(2026, 8, 7 + index * 7));
+  readonly annotations: TxChartAnnotation[] = [
+    { type: 'x-line', x: this.weeks[7], label: 'Today', tone: 'primary' },
+  ];
   readonly series: TxRangeSeries[] = [
     {
       name: 'Forecast',

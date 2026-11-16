@@ -50,6 +50,10 @@
     background: var(--tx-toggle-button-disabled-background);
     color: var(--tx-toggle-button-disabled-color);
     cursor: not-allowed;
+
+    .tx-toggle-button__icon {
+      color: var(--tx-toggle-button-icon-disabled-color);
+    }
   }
 }
 

@@ -373,10 +373,18 @@
 }
 
 .token__chip,
-.token__shadow {
+.token__shadow,
+.token__radius {
   width: 28px;
   height: 20px;
   border-radius: 6px;
+}
+
+.token__radius {
+  box-sizing: border-box;
+  border: 1.5px solid var(--tx-text-muted);
+  border-bottom: 0;
+  border-left: 0;
 }
 
 .token__chip {

@@ -34,6 +34,7 @@ import {
   chartSummary,
   initialChartSize,
   injectChartEntrance,
+  injectLegendPlace,
   parseRatio,
   polar,
   readTokenNumber,
@@ -116,6 +117,7 @@ export class TxRadialBar {
   readonly tokenStyle = computed(() => toStyleObject(this.dt(), '--tx-chart'));
   readonly hostStyle = computed(() => ({ ...this.tokenStyle(), ...this.passThrough().root?.style }));
   readonly entrance = injectChartEntrance();
+  readonly legendPlace = injectLegendPlace(() => this.legendPosition());
   readonly morph = signal(false);
 
   readonly hidden = signal<ReadonlySet<string>>(new Set());
@@ -129,7 +131,7 @@ export class TxRadialBar {
   readonly visibleIndexes = computed(() => this.keys().flatMap((key, index) => (this.hidden().has(key) ? [] : [index])));
   readonly isEmpty = computed(() => !this.list().some((item) => item.value !== null && Number.isFinite(item.value)));
   readonly legendShown = computed(() => this.showLegend() && this.list().length > 1);
-  readonly size = linkedSignal(() => initialChartSize(this.height(), this.legendShown() ? this.legendPosition() : null, undefined, this.toolbar()));
+  readonly size = linkedSignal(() => initialChartSize(this.height(), this.legendShown() ? this.legendPlace() : null, undefined, this.toolbar()));
 
   readonly span = computed(() => arcSpan(this.startAngle(), this.endAngle()));
   readonly fit = computed(() => fitArc(this.size().width, this.size().height, this.startAngle(), this.endAngle(), PADDING));

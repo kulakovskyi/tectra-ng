@@ -12,7 +12,7 @@ function palettes(accent = ACCENT_PALETTES.blue): TectraPalettes {
 
 describe('TECTRA_STYLES', () => {
   it('lists every style under its own name', () => {
-    expect(Object.keys(TECTRA_STYLES)).toEqual(['tectra', 'soft', 'edge', 'paper']);
+    expect(Object.keys(TECTRA_STYLES)).toEqual(['tectra', 'edge', 'paper']);
     for (const [name, style] of Object.entries(TECTRA_STYLES)) {
       expect(style.name).toBe(name);
       expect(style.label).toBeTruthy();

@@ -11,7 +11,7 @@ import { TxTag } from '@tectra-ng/ui/tag';
       <tx-pie-chart
         [pieData]="tags"
         [chartWidth]="180"
-        [chartHeight]="180"
+        [height]="180"
         [showLegend]="false"
         [showDataLabels]="false"
         totalLabel="Tags"

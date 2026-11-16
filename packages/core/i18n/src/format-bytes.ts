@@ -10,7 +10,10 @@ export interface TxFormatBytesOptions {
 
 const BYTE_UNITS = ['byte', 'kilobyte', 'megabyte', 'gigabyte', 'terabyte', 'petabyte'] as const;
 
-/** Formats a byte count in the largest unit that fits, with `Intl.NumberFormat` unit names of the locale: `512 byte`, `1.5 kB`, `5 MB`. */
+/**
+ * Formats a byte count in the largest unit that fits, with `Intl.NumberFormat` unit names of the locale: `512 bytes`,
+ * `1.5 kB`, `5 MB`. Bytes use the full unit name, so the plural form follows the locale (`1 byte`, `124 bytes`).
+ */
 export function formatBytes(bytes: number, options: TxFormatBytesOptions = {}): string {
   const { locale = 'en-US', decimals = 1, base = 1024 } = options;
   const size = Math.max(0, bytes);
@@ -18,7 +21,7 @@ export function formatBytes(bytes: number, options: TxFormatBytesOptions = {}): 
   return new Intl.NumberFormat(locale, {
     style: 'unit',
     unit: BYTE_UNITS[exponent],
-    unitDisplay: 'short',
+    unitDisplay: exponent === 0 ? 'long' : 'short',
     maximumFractionDigits: exponent === 0 ? 0 : decimals,
   }).format(size / base ** exponent);
 }

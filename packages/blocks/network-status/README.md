@@ -27,6 +27,7 @@ While the pill is shown the body gets the `bodyClass` class (`tx-offline`), e.g.
 | restoredText | Text after the connection is back (translated "Connection restored" by default) |
 | restoredDuration | How long "Connection restored" stays, in ms (default 3000) |
 | bodyClass | Class on `<body>` while the pill is shown (default `tx-offline`; empty — none) |
+| contained | Shows the pill at the bottom of the nearest positioned parent instead of the window — for previews and demos. A contained pill leaves `<body>` alone: no `bodyClass`, no `--tx-bottom-overlay-offset` |
 | dt | Design tokens of this instance (`networkStatus`) |
 | pt | Classes and styles of the parts: `root`, `pill`, `icon`, `text` |
 | ptOptions | How `pt` merges with the global pass-through |

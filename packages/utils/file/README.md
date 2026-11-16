@@ -1,6 +1,6 @@
 # File
 
-File sizes people can read — `512 byte`, `1.5 kB`, `5 MB`, with the number format and unit names of the locale — and downloads of a URL or a `Blob` from code (CSV built in the browser, a signed link from an API). Downloads do nothing on the server.
+File sizes people can read — `512 bytes`, `1.5 kB`, `5 MB`, with the number format and unit names of the locale — and downloads of a URL or a `Blob` from code (CSV built in the browser, a signed link from an API). Downloads do nothing on the server.
 
 ```html
 {{ file.size | txFileSize }}

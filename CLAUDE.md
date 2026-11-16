@@ -18,7 +18,7 @@ Nx 23 + Angular 22 (zoneless, standalone, signals, OnPush), TypeScript 6, ng-pac
 ```
 packages/
   tokens/       @tectra-ng/tokens        primitives + palettes (ink, accents, severities), radius, type, shadows, motion, layers
-  themes/       @tectra-ng/themes        semantic light/dark tokens, component tokens, presets (createTectraPreset: style object + primary + surface; styles in src/styles/<name>, exported as softStyle / edgeStyle / paperStyle), definePreset, presetToCss, toStyleObject
+  themes/       @tectra-ng/themes        semantic light/dark tokens, component tokens, presets (createTectraPreset: style object + primary + surface; styles in src/styles/<name>, exported as edgeStyle / paperStyle), definePreset, presetToCss, toStyleObject
   core/<entry>  @tectra-ng/core/<entry>  config (provideTectra, dt/pt/unstyled), overlay, a11y, forms, i18n, styles, ripple, fluid, utils
   icons/        @tectra-ng/icons         own SVG icon set + TxIcon, provideTxIcons
   brand-icons/  @tectra-ng/brand-icons   brand logos (Simple Icons, CC0)
@@ -65,7 +65,7 @@ Prefix Nx commands with `NX_DAEMON=false NX_NO_CLOUD=true`.
 | e2e (builds docs, serves on 4310, `TX_E2E_PORT` to change) | `npm run e2e` |
 | e2e of `ng add tectra-ng` and of the StackBlitz projects (after `build:packages` and `docs:build`; `ng new` + `ng add` from the packed packages in the OS temp folder, `TX_NG_ADD_DIR` to change) | `npm run e2e:ng-add` |
 | Bundle size budgets (after `npm run e2e:ng-add`; `size:update` to raise them on purpose) | `npm run size` |
-| e2e of the soft / edge / paper styles on every page (CI checks a subset) | `cd e2e/visual && TX_E2E_ALL_STYLES=1 npx playwright test themes.spec.ts` |
+| e2e of the edge / paper styles on every page (CI checks a subset) | `cd e2e/visual && TX_E2E_ALL_STYLES=1 npx playwright test themes.spec.ts` |
 | Build all packages | `npm run build:packages` |
 | Docs dev server (4300) | `npm run docs` |
 | Regenerate docs registry | `npm run registry` |

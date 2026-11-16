@@ -62,15 +62,13 @@ export const paperDisplayTokens: TectraDeepPartial<TectraComponentTokens> = {
   },
   card: {
     root: {
-      borderRadius: tokenRef('radius-sm'),
-      shadow: '0 2px 1px -1px rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 1px 3px 0 rgba(0, 0, 0, 0.12)',
       padding: '17.5px',
       gap: '8.75px',
       subtitleFontSize: '12.25px',
     },
   },
   panel: {
-    root: { borderRadius: tokenRef('radius-sm'), padding: '15.75px' },
+    root: { padding: '15.75px' },
   },
   fieldset: {
     root: {

@@ -1,0 +1,1 @@
+The face stays round at any size: `size` (a `dt` token, `210px` by default) is the width, the height follows it, and the clock never grows past its container — `size: '100%'` fills the box. Ticks and hands scale with the face. `time` also takes an ISO string.

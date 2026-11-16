@@ -872,6 +872,16 @@ export interface TxTranslations {
   chartZoomHint: string;
   /** Keyboard and pointer hint of the Gantt chart. */
   chartGanttHint: string;
+  /** Label of the tasks a Gantt task waits for, in its tooltip and accessible name. */
+  chartDependsOn: string;
+  /** Label of the tasks that wait for a Gantt task, in its tooltip and accessible name. */
+  chartRequiredBy: string;
+  /** Name of a start-to-start Gantt dependency. */
+  chartStartToStart: string;
+  /** Name of a finish-to-finish Gantt dependency. */
+  chartFinishToFinish: string;
+  /** Name of a start-to-finish Gantt dependency. */
+  chartStartToFinish: string;
   /** Screen reader text of the gauge value; takes `{value}`, `{min}` and `{max}`. */
   chartGaugeValue: string;
   /** Chart type name of the pie chart. */

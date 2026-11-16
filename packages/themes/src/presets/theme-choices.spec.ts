@@ -1,5 +1,5 @@
 import { ACCENT_PALETTES, SURFACE_PALETTES } from '@tectra-ng/tokens';
-import { softStyle } from '../styles/soft/soft.style';
+import { edgeStyle } from '../styles/edge/edge.style';
 import { createTectraPreset } from './tectra.preset';
 import { isTectraPrimary, isTectraSurface, tectraPrimaryChoices, tectraSurfaceChoices } from './theme-choices';
 
@@ -27,6 +27,6 @@ describe('theme choices', () => {
   });
 
   it('records what a preset was built from', () => {
-    expect(createTectraPreset({ style: softStyle, primary: 'teal', surface: 'zinc' }).source).toEqual({ style: softStyle, primary: 'teal', surface: 'zinc' });
+    expect(createTectraPreset({ style: edgeStyle, primary: 'teal', surface: 'zinc' }).source).toEqual({ style: edgeStyle, primary: 'teal', surface: 'zinc' });
   });
 });

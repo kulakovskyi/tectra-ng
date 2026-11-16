@@ -1,7 +1,7 @@
 ---
 category: Form
 tokens: chipsInput, chip, formField
-examples: basic, paste, limits, validation, template, field, states, design-tokens, pass-through
+examples: basic, paste, limits, validation, template, methods, field, states, design-tokens, pass-through
 ---
 # ChipsInput
 

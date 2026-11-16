@@ -4,7 +4,7 @@ A board of columns with cards. Cards move inside a column and between columns, w
 
 ```html
 <tx-kanban [columns]="columns()" [itemId]="taskId" itemsDraggable (itemDropped)="moveTask($event)">
-  <ng-template txKanbanCard let-task>
+  <ng-template txKanbanCard [txKanbanCardOf]="columns()" let-task>
     <task-card [task]="task" />
   </ng-template>
 </tx-kanban>
@@ -40,12 +40,23 @@ A board of columns with cards. Cards move inside a column and between columns, w
 ## Slots
 | Name | Description |
 |---|---|
-| txKanbanCard | Required. `<ng-template txKanbanCard let-item let-column="column">` — the card |
+| txKanbanCard | Required. `<ng-template txKanbanCard [txKanbanCardOf]="columns" let-item let-column="column">` — the card |
 | txKanbanColumnHeader | `<ng-template txKanbanColumnHeader let-column>` — own header instead of the title and the count |
 | txKanbanColumnTop | `<ng-template txKanbanColumnTop let-column>` — under the header, e.g. a quick-add field |
 | txKanbanColumnFooter | `<ng-template txKanbanColumnFooter let-column>` — at the bottom of a column |
 | txKanbanEmpty | `<ng-template txKanbanEmpty let-column>` — content of an empty column |
 | default | After the last column, e.g. an "Add column" button |
+
+The templates take the columns only for typing — `[txKanbanCardOf]="columns()"` gives `let-task` the card type in strict templates; without it the card stays untyped. Angular does not pass the type of the board `columns` to the templates inside it.
+
+## Inputs — templates
+| Name | Description |
+|---|---|
+| txKanbanCardOf | `txKanbanCard`: the columns of the board, only for the type of `let-item` and `column` |
+| txKanbanColumnHeaderOf | `txKanbanColumnHeader`: the columns of the board, only for the type of `let-column` |
+| txKanbanColumnTopOf | `txKanbanColumnTop`: the columns of the board, only for the type of `let-column` |
+| txKanbanColumnFooterOf | `txKanbanColumnFooter`: the columns of the board, only for the type of `let-column` |
+| txKanbanEmptyOf | `txKanbanEmpty`: the columns of the board, only for the type of `let-column` |
 
 ## Keyboard
 | Key | Action |

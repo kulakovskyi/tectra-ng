@@ -1,6 +1,6 @@
 import { avatarTokens } from './avatar.tokens';
 import { badgeTokens } from './badge.tokens';
-import { buttonTokens } from './button.tokens';
+import { buttonGroupTokens, buttonTokens } from './button.tokens';
 import { checkboxTokens } from './checkbox.tokens';
 import { formFieldTokens } from './form-field.tokens';
 import { inputGroupTokens } from './input-group.tokens';
@@ -31,6 +31,7 @@ import { listInputTokens } from './list-input.tokens';
 import { iconTokens } from './icon.tokens';
 import { rippleTokens } from './ripple.tokens';
 import { toggleButtonTokens } from './toggle-button.tokens';
+import { selectButtonTokens } from './select-button.tokens';
 import { toggleSwitchTokens } from './toggle-switch.tokens';
 import { tooltipTokens } from './tooltip.tokens';
 import { popoverTokens } from './popover.tokens';
@@ -94,6 +95,7 @@ export const COMPONENT_TOKENS = {
   floatLabel: floatLabelTokens,
   iftaLabel: iftaLabelTokens,
   button: buttonTokens,
+  buttonGroup: buttonGroupTokens,
   select: selectTokens,
   listbox: listboxTokens,
   chipsInput: chipsInputTokens,
@@ -106,6 +108,7 @@ export const COMPONENT_TOKENS = {
   emailSuggestion: emailSuggestionTokens,
   badge: badgeTokens,
   toggleButton: toggleButtonTokens,
+  selectButton: selectButtonTokens,
   message: messageTokens,
   fieldMessage: fieldMessageTokens,
   field: fieldTokens,

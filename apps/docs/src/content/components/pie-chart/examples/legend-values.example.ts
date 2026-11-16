@@ -8,8 +8,7 @@ import { TxPieChart, TxPieData } from '@tectra-ng/charts/pie';
     [pieData]="budget"
     legendValues
     legendPosition="right"
-    [chartWidth]="440"
-    [chartHeight]="220"
+    [height]="220"
     totalLabel="Total, %"
     ariaLabel="Budget split"
   />`,

@@ -8,6 +8,8 @@ import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { STEPPER_ICON_DEFAULTS } from './stepper.icons';
 import { injectTokens } from '@tectra-ng/core/config';
 import { STEPPER_THEME } from './stepper.theme';
+import { injectTranslations } from '@tectra-ng/core/i18n';
+import { optionalBoolean } from '@tectra-ng/core/utils';
 
 /** One numbered step in the header of `tx-stepper`. */
 @Component({
@@ -21,7 +23,7 @@ import { STEPPER_THEME } from './stepper.theme';
     '[class]': 'stepper.passThrough().step?.class',
     '[style]': 'stepper.passThrough().step?.style',
     '[class.tx-step--active]': 'active()',
-    '[class.tx-step--completed]': 'completed()',
+    '[class.tx-step--completed]': 'isCompleted()',
     '[class.tx-step--disabled]': 'disabled()',
   },
   viewProviders: [provideTxIconDefaults(STEPPER_ICON_DEFAULTS)],
@@ -34,7 +36,9 @@ export class TxStep {
 
   readonly value = input<TxStepValue | undefined>(undefined);
   readonly disabled = input<boolean, unknown>(false, { transform: booleanAttribute });
+  readonly completed = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
 
+  protected readonly t = injectTranslations();
   protected readonly contentTemplate = contentChild(TxStepContent);
   private readonly header = viewChild<ElementRef<HTMLButtonElement>>('header');
 
@@ -42,7 +46,7 @@ export class TxStep {
   readonly resolvedValue = computed(() => this.value() ?? this.item?.value());
   readonly index = computed(() => this.stepper.indexOf(this.resolvedValue()));
   readonly active = computed(() => this.stepper.isActive(this.resolvedValue()));
-  readonly completed = computed(() => this.stepper.isCompleted(this.resolvedValue()));
+  readonly isCompleted = computed(() => this.completed() ?? (this.item ? this.item.isCompleted() : this.stepper.isCompleted(this.resolvedValue())));
   readonly isDisabled = computed(() => this.disabled() || (this.stepper.linear() && !this.active()));
   readonly showSeparator = computed(() => !this.inItem && !this.stepper.isLast(this.resolvedValue()));
   readonly stepId = computed(() => this.stepper.stepId(this.resolvedValue()));
@@ -61,7 +65,7 @@ export class TxStep {
       value,
       index: this.index(),
       active: this.active(),
-      completed: this.completed(),
+      completed: this.isCompleted(),
       disabled: this.isDisabled(),
       activate: (target: TxStepValue) => this.stepper.activate(target),
     };

@@ -73,6 +73,8 @@ describe('TxChartFrame', () => {
     expect(el('svg').getAttribute('viewBox')).toBe('0 0 640 269');
     expect(el('svg .own-shape')).not.toBeNull();
     expect(el('table caption').textContent?.trim()).toBe('Line chart, 2 series');
+    expect(el('table').classList).not.toContain('cdk-visually-hidden');
+    expect(el('table').parentElement?.classList).toContain('cdk-visually-hidden');
     expect(all('tbody td').map((cell) => cell.textContent)).toEqual(['12']);
     expect(el('tx-chart-frame').style.height).toBe('300px');
   });

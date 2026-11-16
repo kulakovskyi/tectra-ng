@@ -44,6 +44,7 @@ function toDate(value: unknown): Date | null {
               [ariaLabel]="valueLabel()"
               [placeholder]="column().filterPlaceholder"
               [ngModel]="rule.value"
+              [ngModelOptions]="{ standalone: true }"
               (ngModelChange)="setValue(index, $event, live)"
             />
           } @placeholder {
@@ -59,6 +60,7 @@ function toDate(value: unknown): Date | null {
               [placeholder]="column().filterPlaceholder"
               [showClear]="true"
               [ngModel]="dateValue(rule.value)"
+              [ngModelOptions]="{ standalone: true }"
               (ngModelChange)="setValue(index, $event, live)"
             />
           } @placeholder {
@@ -74,6 +76,7 @@ function toDate(value: unknown): Date | null {
             [options]="booleanOptions()"
             [ariaLabel]="valueLabel()"
             [ngModel]="rule.value"
+            [ngModelOptions]="{ standalone: true }"
             (ngModelChange)="setValue(index, $event, true)"
           />
         }
@@ -89,6 +92,7 @@ function toDate(value: unknown): Date | null {
               [ariaLabel]="valueLabel()"
               [placeholder]="column().filterPlaceholder ?? translations().filterAny"
               [ngModel]="rule.value ?? []"
+              [ngModelOptions]="{ standalone: true }"
               (ngModelChange)="setValue(index, $event, live)"
             />
           } @placeholder {
@@ -159,6 +163,7 @@ function toDate(value: unknown): Date | null {
                 [options]="operatorOptions()"
                 [ariaLabel]="translations().filterMatchAll + ' / ' + translations().filterMatchAny"
                 [ngModel]="draft().operator"
+                [ngModelOptions]="{ standalone: true }"
                 (ngModelChange)="setOperator($event)"
               />
             }
@@ -172,6 +177,7 @@ function toDate(value: unknown): Date | null {
                     [options]="modeOptions()"
                     [ariaLabel]="translations().filterMatchMode"
                     [ngModel]="rule.matchMode"
+                    [ngModelOptions]="{ standalone: true }"
                     (ngModelChange)="setMode(index, $event)"
                   />
                 }

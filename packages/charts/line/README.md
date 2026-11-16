@@ -35,7 +35,7 @@ import { TxLineChart } from '@tectra-ng/charts/line';
 | showTooltip | Shows the tooltip on hover and keyboard focus |
 | tooltipMode | `shared` (every series at the point) or `single` (the nearest series) |
 | tooltipFormatter | `(value, { seriesIndex, dataPointIndex }) => string` for tooltip values; default — whole numbers in the locale |
-| valueFormat | Value axis format: `number`, `integer`, `compact`, `percent` or a function |
+| valueFormat | Value axis format: `number`, `integer`, `compact`, `percent`, a currency (`{ currency: 'USD' }`) or a function |
 | yScale | `linear` or `log` |
 | yMin | Fixed bottom of the value axis |
 | yMax | Fixed top of the value axis |

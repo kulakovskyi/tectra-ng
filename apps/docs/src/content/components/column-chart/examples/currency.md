@@ -1,0 +1,1 @@
+`valueFormat` takes a currency — `{ currency: 'USD' }` — written in the active tectra locale: compact on the axis, in full in the tooltip. Switch the language: the chart follows (this example has its own `TxLocaleService`, the rest of the site stays as it is).

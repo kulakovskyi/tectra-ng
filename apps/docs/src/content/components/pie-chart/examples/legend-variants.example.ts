@@ -18,7 +18,7 @@ import { TxSelect } from '@tectra-ng/ui/select';
       <tx-pie-chart
         [pieData]="budget"
         [chartWidth]="440"
-        [chartHeight]="360"
+        [height]="360"
         totalLabel="Budget"
         [legendVariant]="variant()"
         ariaLabel="Legend variants"

@@ -40,6 +40,14 @@ describe('chart scales', () => {
     expect(linearTicks(-20, 60, 4)).toEqual([-20, 0, 20, 40, 60]);
   });
 
+  it('keeps whole-number steps of at least 1 for integer ticks', () => {
+    expect(tickStep(0, 3, 6, true)).toBe(1);
+    expect(tickStep(0, 100, 5, true)).toBe(20);
+    expect(linearTicks(0, 3, 6, true)).toEqual([0, 1, 2, 3]);
+    expect(niceDomain(0, 2.4, 6, true)).toEqual([0, 3]);
+    expect(niceDomain(0.2, 0.2, 6, true)).toEqual([0, 1]);
+  });
+
   it('maps and inverts a linear scale', () => {
     const scale = linearScale([0, 100], [300, 0]);
     expect(scale.map(0)).toBe(300);

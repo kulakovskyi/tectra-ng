@@ -1,1 +1,1 @@
-`groupRowsBy` groups the rows: `subheader` mode adds a header row per group (here collapsible with `expandableRowGroups`) and `txTableGroupFooter` a row after it; `rowGroupMode="rowspan"` spans the group cell over its rows instead.
+`groupRowsBy` groups the rows: `subheader` mode adds a header row per group (here collapsible with `expandableRowGroups`) and `txTableGroupFooter` a row after it; `rowGroupMode="rowspan"` spans the group cell over its rows instead. In the card view the group headers and footers stay between the cards. `[txTableGroupFooterOf]` types `rows`.

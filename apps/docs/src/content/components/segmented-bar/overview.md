@@ -4,7 +4,7 @@ tokens: chart
 source: packages/charts/segmented-bar
 package: @tectra-ng/charts/segmented-bar
 import: TxSegmentedBar
-examples: basic, tones, large, legend, aside, value-format, design-tokens, pass-through
+examples: basic, tones, large, legend, aside, value-format, loading, design-tokens, pass-through
 ---
 # Segmented Bar
 

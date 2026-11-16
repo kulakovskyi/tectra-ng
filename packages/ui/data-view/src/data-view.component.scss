@@ -19,8 +19,10 @@
 
 :host([data-styled]) {
   border: var(--tx-data-view-border-width) solid var(--tx-data-view-border-color);
+  overflow: clip;
   border-radius: var(--tx-data-view-border-radius);
   background: var(--tx-data-view-background);
+  box-shadow: var(--tx-data-view-shadow);
   color: var(--tx-data-view-color);
   font-family: var(--tx-font-family);
 
@@ -60,8 +62,13 @@
   }
 
   .tx-data-view__content {
+    padding: var(--tx-data-view-content-padding);
     animation: tx-data-view-in calc(var(--tx-data-view-transition-duration) * 1.6) cubic-bezier(0.2, 0, 0, 1);
   }
+}
+
+:host([data-styled][data-layout='grid']) .tx-data-view__content {
+  padding: var(--tx-data-view-content-grid-padding);
 }
 
 @keyframes tx-data-view-in {

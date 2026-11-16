@@ -30,7 +30,12 @@ const TASKS: Task[] = [
       [value]="tasks"
       [columns]="columns"
     >
-      <ng-template txTableGroupFooter let-rows="rows" let-value="value">
+      <ng-template
+        txTableGroupFooter
+        [txTableGroupFooterOf]="tasks"
+        let-rows="rows"
+        let-value="value"
+      >
         <span class="total">{{ value }}: {{ hours(rows) }} h</span>
       </ng-template>
     </tx-table>

@@ -8,7 +8,6 @@ import { TxChartSeries } from '@tectra-ng/charts/core';
   template: `<tx-column-chart
     [series]="series"
     [categories]="months"
-    [stacked]="false"
     dataLabels
     valueFormat="compact"
     ariaLabel="Newsletter reach"

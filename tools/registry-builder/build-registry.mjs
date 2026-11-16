@@ -141,7 +141,7 @@ function readSource(packageDir) {
   const resolveType = (type) => aliases[type] ?? type;
 
   const members = {};
-  for (const m of source.matchAll(/^\s*(?:(?:readonly|protected|public|private)\s+)*(\w+)\s*=\s*(input|model)(\.required)?(?:<(.+?)>)?\(([^)]*)\);/gm)) {
+  for (const m of source.matchAll(/^\s*(?:(?:readonly|protected|public|private|override)\s+)*(\w+)\s*=\s*(input|model)(\.required)?(?:<(.+?)>)?\(([^)]*)\);/gm)) {
     const [, field, kind, required, generic, args] = m;
     const name = args.match(/alias:\s*'(\w+)'/)?.[1] ?? field;
     const type = (generic ?? 'unknown').replace(/,\s*unknown$/, '');
@@ -151,7 +151,7 @@ function readSource(packageDir) {
       members[`${name}Change`] ??= { type: `EventEmitter<${resolveType(type)}>`, default: '—' };
     }
   }
-  for (const m of source.matchAll(/^\s*(?:(?:readonly|protected|public|private)\s+)*(\w+)\s*=\s*output(?:<(.+?)>)?\(\)/gm)) {
+  for (const m of source.matchAll(/^\s*(?:(?:readonly|protected|public|private|override)\s+)*(\w+)\s*=\s*output(?:<(.+?)>)?\(\)/gm)) {
     members[m[1]] ??= { type: `EventEmitter<${m[2] ?? 'void'}>`, default: '—' };
   }
 

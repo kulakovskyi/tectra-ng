@@ -40,6 +40,7 @@ import { downloadCsv, toCsv } from './table.export';
 import { TxTableStyles } from './table.styles';
 import { TX_TABLE_IMPORTS } from './table.imports';
 import { TxStyleLoader } from '@tectra-ng/core/styles';
+import { uniqueId } from '@tectra-ng/core/a11y';
 import { TX_TABLE, TxTableContext, TxTableRowActionsSource } from './table.context';
 import {
   TxTableAction,
@@ -356,6 +357,7 @@ export class TxTable<T = unknown> implements TxTableContext {
   readonly menuRowKey = signal<unknown>(undefined);
   readonly menuItems = signal<TxMenuItem[]>([]);
   readonly closingKeys = signal<unknown[]>([]);
+  private readonly cardIdBase = uniqueId('tx-table-card');
   readonly cellEdit = signal<{ key: unknown; field: string; value: unknown } | null>(null);
   readonly rowDrafts = signal<ReadonlyMap<unknown, Record<string, unknown>>>(new Map());
   readonly editVersion = signal(0);
@@ -1267,6 +1269,10 @@ export class TxTable<T = unknown> implements TxTableContext {
 
   protected exportRows(): T[] {
     return this.sortedRows().filter((row) => row !== null && row !== undefined);
+  }
+
+  cardExpansionId(item: TxTableRenderRow<T>): string {
+    return `${this.cardIdBase}-${item.index}-expansion`;
   }
 
   canExpand(item: TxTableRenderRow<T>): boolean {

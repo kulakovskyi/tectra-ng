@@ -33,7 +33,7 @@ import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassT
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
-import { sunburstArcAt, sunburstArcs, sunburstFocus, sunburstValue } from './sunburst-layout';
+import { sunburstArcAt, sunburstArcs, sunburstFocus, sunburstLabelFits, sunburstValue } from './sunburst-layout';
 import { TxSunburstArc, TxSunburstChartPart, TxSunburstEvent, TxSunburstItem } from './sunburst-chart.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { SUNBURST_ICON_DEFAULTS } from './sunburst.icons';
@@ -134,8 +134,7 @@ export class TxSunburstChart {
       const middle = (arc.start + arc.end) / 2;
       const radius = (arc.inner + arc.outer) / 2;
       const at = polar(cx, cy, radius, middle);
-      const room = (arc.end - arc.start) * radius;
-      const fits = this.showLabels() && room >= textWidth(arc.label, fontSize) + 8 && arc.outer - arc.inner >= fontSize + 6;
+      const fits = this.showLabels() && sunburstLabelFits(arc, { x: at.x, y: at.y, width: textWidth(arc.label, fontSize), height: fontSize }, cx, cy);
       return {
         ...arc,
         d: arcPath(cx, cy, arc.inner, arc.outer, arc.start, arc.end, corner),

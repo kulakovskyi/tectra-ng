@@ -43,6 +43,12 @@ describe('TxPill', () => {
     expect(pill.style.getPropertyValue('--tx-pill-font-size')).toBe('14px');
   });
 
+  it('reads the secondary tone as neutral', async () => {
+    fixture.componentInstance.tone.set('secondary');
+    await fixture.whenStable();
+    expect(el('#status').getAttribute('data-tone')).toBe('neutral');
+  });
+
   it('removes with a click or the keyboard and has a translated label', async () => {
     const button = el('#tag .tx-pill__remove') as HTMLButtonElement;
     expect(button.getAttribute('aria-label')).toBe('Remove');

@@ -7,7 +7,7 @@ import { TxPieChart, TxPieData } from '@tectra-ng/charts/pie';
   template: `<tx-pie-chart
     [pieData]="budget"
     [chartWidth]="260"
-    [chartHeight]="320"
+    [height]="320"
     [pt]="pt"
     ariaLabel="Budget split"
   />`,

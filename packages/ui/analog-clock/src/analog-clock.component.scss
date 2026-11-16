@@ -6,7 +6,7 @@
   position: relative;
   box-sizing: border-box;
   width: 100%;
-  height: 100%;
+  aspect-ratio: 1;
   border-radius: 50%;
 }
 
@@ -20,7 +20,8 @@
 
 :host([data-styled]) {
   width: var(--tx-analog-clock-size);
-  height: var(--tx-analog-clock-size);
+  max-width: 100%;
+  aspect-ratio: 1;
 
   .tx-analog-clock__face {
     background: var(--tx-analog-clock-background);

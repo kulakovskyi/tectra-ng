@@ -14,6 +14,8 @@ import {
 } from '@angular/core';
 import {
   TxChartActive,
+  TxChartAnnotation,
+  TxChartAnnotations,
   TxChartAxes,
   TxChartCurve,
   TxChartFrame,
@@ -29,7 +31,10 @@ import {
   TxChartTooltipData,
   TxChartTooltipTemplate,
   TxChartValueFormat,
+  TxChartX,
   areaPath,
+  chartAnnotationShapes,
+  chartCategoryIndex,
   cartesianLayout,
   chartNumberFormatter,
   chartSummary,
@@ -58,7 +63,7 @@ const EDGE_SLACK = 8;
 
 @Component({
   selector: 'tx-range-area-chart',
-  imports: [TxChartFrame, TxChartAxes],
+  imports: [TxChartFrame, TxChartAxes, TxChartAnnotations],
   templateUrl: './range-area-chart.component.html',
   styleUrl: './range-area-chart.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -97,6 +102,7 @@ export class TxRangeAreaChart {
   readonly xAxisTitle = input('');
   readonly yAxisTitle = input('');
   readonly grid = input<TxChartGridMode>('value');
+  readonly annotations = input<readonly TxChartAnnotation[] | null | undefined>([]);
   readonly labelMode = input<TxChartLabelMode>('auto');
   readonly maxLabels = input(10);
   readonly toolbar = input<boolean, unknown>(true, { transform: booleanAttribute });
@@ -200,6 +206,11 @@ export class TxRangeAreaChart {
         line: item.line ? linePath(at(item.line), curve) : '',
       };
     });
+  });
+
+  readonly annotationShapes = computed(() => {
+    const layout = this.layout();
+    return chartAnnotationShapes(this.annotations(), { plot: layout.plot, x: (value) => this.xPosition(value), y: (value) => layout.value.map(value) });
   });
 
   readonly crosshair = computed(() => {
@@ -348,6 +359,21 @@ export class TxRangeAreaChart {
   private event(series: number, index: number): TxRangeAreaPointEvent {
     const item = this.list()[series];
     return { seriesIndex: series, dataPointIndex: index, category: this.labels()[index] ?? '', low: item.low[index] ?? null, high: item.high[index] ?? null, line: item.line?.[index] ?? null };
+  }
+
+  private xPosition(value: TxChartX): number | null {
+    const layout = this.layout();
+    if (this.xType() === 'time') {
+      const x = toTime(value);
+      return x === null ? null : layout.categoryPosition(0, x);
+    }
+    const categories = this.categories() ?? [];
+    const labels = this.xs().map((_, index) => {
+      const category = categories[index];
+      return category instanceof Date ? category.toISOString() : String(category ?? index + 1);
+    });
+    const index = chartCategoryIndex(value, labels);
+    return index < 0 ? null : this.positions()[index];
   }
 
   private nearestSeries(index: number, y: number): number {

@@ -9,7 +9,7 @@ import { TxPieChart, TxPieData } from '@tectra-ng/charts/pie';
       <tx-pie-chart
         [pieData]="status"
         [chartWidth]="200"
-        [chartHeight]="200"
+        [height]="200"
         [showLegend]="false"
         [showDataLabels]="false"
         donutSize="82%"
@@ -21,7 +21,7 @@ import { TxPieChart, TxPieData } from '@tectra-ng/charts/pie';
       <tx-pie-chart
         [pieData]="status"
         [chartWidth]="200"
-        [chartHeight]="200"
+        [height]="200"
         [showLegend]="false"
         [showDataLabels]="false"
         donutSize="45%"

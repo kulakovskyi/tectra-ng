@@ -8,7 +8,7 @@ import { TxTag } from '@tectra-ng/ui/tag';
 import { DocsThemeSettings } from '../../layout/theme-settings';
 
 const PRIMARIES: TectraPrimary[] = ['blue', 'violet', 'emerald', 'orange', 'rose', 'cyan', 'amber', 'noir'];
-const STYLES: TectraStyleName[] = ['tectra', 'soft', 'edge', 'paper'];
+const STYLES: TectraStyleName[] = ['tectra', 'edge', 'paper'];
 
 @Component({
   selector: 'docs-landing-theme-demo',

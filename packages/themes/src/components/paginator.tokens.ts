@@ -1,4 +1,4 @@
-import { tokenRef } from './token-helpers';
+import { joinCss, tokenRef } from './token-helpers';
 
 /**
  * Design tokens of `tx-paginator`: colors, sizes and spacing of its root, nav button, current page report,
@@ -35,7 +35,7 @@ export const paginatorTokens = {
     fontSize: tokenRef('font-size-md'),
   },
   jumpToPageInput: {
-    maxWidth: '31.5px',
+    maxWidth: joinCss('calc(2 * ', tokenRef('form-field-padding-x'), ' + 2px + 4ch)'),
   },
   total: {
     color: tokenRef('text-primary'),

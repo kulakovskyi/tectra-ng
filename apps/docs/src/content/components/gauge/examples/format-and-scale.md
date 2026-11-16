@@ -1,1 +1,1 @@
-A scale from `min` to `max`, the number of `ticks` and `valueFormat` for the value and the ticks — compact numbers here.
+A scale from `min` to `max`, the number of `ticks` and `valueFormat` for the value and the ticks — compact numbers, and a currency that is compact on the ticks and in full in the middle. Tick labels too long for the arc turn compact or are left out, and a long value gets a smaller font.

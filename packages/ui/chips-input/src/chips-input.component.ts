@@ -8,8 +8,8 @@ import {
   contentChild,
   forwardRef,
   input,
+  model,
   output,
-  signal,
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -74,6 +74,7 @@ export class TxChipsInput extends TxFormControlBase<string[]> {
   readonly pt = input<TxPassThrough<TxChipsInputPart, TxChipsInput> | undefined>(undefined);
   readonly ptOptions = input<TxPassThroughOptions | undefined>(undefined);
   readonly unstyled = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
+  readonly text = model('');
 
   readonly added = output<TxChipsInputEvent>();
   readonly removed = output<TxChipsInputEvent>();
@@ -86,7 +87,6 @@ export class TxChipsInput extends TxFormControlBase<string[]> {
   readonly isInvalid = injectFieldInvalid(this.invalid);
   readonly isUnstyled = injectUnstyled(this.unstyled);
   readonly passThrough = injectPassThrough('chipsInput', this, this.pt, this.ptOptions);
-  readonly text = signal('');
 
   readonly values = computed(() => this.value() ?? []);
   readonly isFull = computed(() => {
@@ -122,6 +122,7 @@ export class TxChipsInput extends TxFormControlBase<string[]> {
     if (parts.length > 1) {
       event.preventDefault();
       this.addAll(parts);
+      this.setText('');
     }
   }
 
@@ -133,6 +134,7 @@ export class TxChipsInput extends TxFormControlBase<string[]> {
       if (this.text().trim()) {
         event.preventDefault();
         this.addAll([this.text()]);
+        this.setText('');
       }
       return;
     }
@@ -145,6 +147,7 @@ export class TxChipsInput extends TxFormControlBase<string[]> {
   onBlur(): void {
     if (this.addOnBlur() && this.text().trim()) {
       this.addAll([this.text()]);
+      this.setText('');
     }
     this.markTouched();
   }
@@ -172,6 +175,17 @@ export class TxChipsInput extends TxFormControlBase<string[]> {
     this.field().nativeElement.focus();
   }
 
+  add(value: string | readonly string[]): void {
+    if (this.disabled() || this.readonly()) {
+      return;
+    }
+    this.addAll(typeof value === 'string' ? [value] : [...value]);
+  }
+
+  clearText(): void {
+    this.setText('');
+  }
+
   private addAll(parts: string[]): void {
     let values = this.values();
     for (const part of parts.map((item) => item.trim()).filter(Boolean)) {
@@ -188,7 +202,6 @@ export class TxChipsInput extends TxFormControlBase<string[]> {
       this.updateValue(values);
       this.added.emit({ value, values });
     }
-    this.setText('');
   }
 
   private setText(text: string): void {

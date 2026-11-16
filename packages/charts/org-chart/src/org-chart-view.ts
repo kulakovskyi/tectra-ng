@@ -37,19 +37,26 @@ export function centerOn(view: TxOrgChartView, viewport: TxOrgChartSize, point: 
   return { zoom: next, x: viewport.width / 2 - point.x * next, y: viewport.height / 2 - point.y * next };
 }
 
+/** Smallest zoom a fit goes down to, so the cards stay readable on a narrow canvas. */
+export const TX_ORG_CHART_FIT_MIN_ZOOM = 0.6;
+
 /**
- * View that fits the whole stage into the viewport, at most at 100% and centered; `top` leaves room for the toolbar. `null` when sizes are not known yet.
+ * View that fits the whole stage into the viewport, at most at 100% and not below `minZoom`; `top` leaves room for the
+ * toolbar. A stage that fits is centred; one that is still too wide is centred on `root` (the root card centre in stage
+ * px) and one that is too tall starts at the top. `null` when sizes are not known yet.
  */
-export function fitView(viewport: TxOrgChartSize, stage: TxOrgChartSize, top = 0): TxOrgChartView | null {
+export function fitView(viewport: TxOrgChartSize, stage: TxOrgChartSize, top = 0, minZoom = TX_ORG_CHART_FIT_MIN_ZOOM, root: TxOrgChartPoint | null = null): TxOrgChartView | null {
   if (!viewport.width || !stage.width || !stage.height) return null;
-  const zoom = Math.max(
-    TX_ORG_CHART_ZOOM.min,
-    Math.min(TX_ORG_CHART_ZOOM.initial, (viewport.width - TX_ORG_CHART_PADDING * 2) / stage.width, (viewport.height - top - TX_ORG_CHART_PADDING * 2) / stage.height),
-  );
+  const fitted = Math.min(TX_ORG_CHART_ZOOM.initial, (viewport.width - TX_ORG_CHART_PADDING * 2) / stage.width, (viewport.height - top - TX_ORG_CHART_PADDING * 2) / stage.height);
+  const zoom = clampZoom(Math.max(Math.min(minZoom, TX_ORG_CHART_ZOOM.initial), fitted));
+  const width = stage.width * zoom;
+  const height = stage.height * zoom;
+  const wide = width > viewport.width - TX_ORG_CHART_PADDING * 2 + 0.5;
+  const tall = height > viewport.height - top - TX_ORG_CHART_PADDING * 2 + 0.5;
   return {
     zoom,
-    x: (viewport.width - stage.width * zoom) / 2,
-    y: top + Math.max(0, (viewport.height - top - stage.height * zoom) / 2),
+    x: wide && root ? viewport.width / 2 - root.x * zoom : (viewport.width - width) / 2,
+    y: tall ? top + TX_ORG_CHART_PADDING : top + Math.max(0, (viewport.height - top - height) / 2),
   };
 }
 

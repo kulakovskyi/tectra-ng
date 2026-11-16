@@ -6,6 +6,7 @@ import {
   arcBounds,
   arcSpan,
   chartNumberFormatter,
+  compactValueFormatter,
   initialChartSize,
   injectChartEntrance,
   linearTicks,
@@ -31,6 +32,14 @@ const TICK_GAP = 4;
 const MIN_RADIUS = 8;
 const VALUE_GAP = 8;
 const LABEL_GAP = 6;
+const MIN_ARC_SHARE = 0.6;
+const MIN_VALUE_FONT = 10;
+const VALUE_INSET = 4;
+
+interface TickPlan {
+  labels: boolean;
+  format: (value: number) => string;
+}
 
 @Component({
   selector: 'tx-gauge',
@@ -99,39 +108,31 @@ export class TxGauge {
 
   readonly span = computed(() => arcSpan(this.startAngle(), this.endAngle()));
 
-  readonly tickValues = computed(() => (this.showTicks() ? linearTicks(this.min(), this.max(), Math.max(1, this.ticks())) : []));
+  readonly tickValues = computed(() =>
+    this.showTicks() ? linearTicks(this.min(), this.max(), Math.max(1, this.ticks()), this.valueFormat() === 'integer') : [],
+  );
   readonly tickFormat = computed(() => tickFormatter(this.intl(), this.tickValues(), this.valueFormat()));
-  readonly tickRoom = computed(() => {
-    const values = this.tickValues();
-    if (!values.length) return 0;
-    const { tickLength, tickFontSize } = this.geometry();
-    const widest = Math.max(...values.map((value) => textWidth(this.tickFormat()(value), tickFontSize)));
-    return TICK_GAP + tickLength + TICK_GAP + Math.max(widest, tickFontSize);
+  readonly shortTickFormat = computed(() => {
+    const format = this.valueFormat();
+    return compactValueFormatter(this.intl(), format === 'integer' ? 'number' : format);
   });
 
-  readonly fit = computed(() => {
-    const { width, height } = this.size();
-    const [start, end] = this.span();
-    const bounds = arcBounds(start, end);
-    const room = this.tickRoom();
-    const below = (radius: number) => Math.max(bounds.maxY * (radius + room), this.textBelow(radius));
-    const fits = (radius: number) =>
-      (bounds.maxX - bounds.minX) * (radius + room) <= width - PADDING * 2 && -bounds.minY * (radius + room) + below(radius) <= height - PADDING * 2;
-    let low = MIN_RADIUS;
-    let high = Math.max(MIN_RADIUS, Math.min(width, height));
-    for (let step = 0; step < 24; step++) {
-      const middle = (low + high) / 2;
-      if (fits(middle)) low = middle;
-      else high = middle;
+  readonly layout = computed(() => {
+    const plans: TickPlan[] = [
+      { labels: true, format: this.tickFormat() },
+      { labels: true, format: this.shortTickFormat() },
+    ];
+    const bare = this.fitFor(this.tickRoom({ labels: false, format: this.shortTickFormat() }));
+    for (const plan of plans) {
+      const fit = this.fitFor(this.tickRoom(plan));
+      if (fit.radius >= bare.radius * MIN_ARC_SHARE) {
+        return { fit, plan };
+      }
     }
-    const top = -bounds.minY * (low + room);
-    const used = top + below(low);
-    return {
-      cx: width / 2 - ((bounds.minX + bounds.maxX) / 2) * (low + room),
-      cy: PADDING + (height - PADDING * 2 - used) / 2 + top,
-      radius: low,
-    };
+    return { fit: bare, plan: { labels: false, format: this.shortTickFormat() } };
   });
+
+  readonly fit = computed(() => this.layout().fit);
   readonly width = computed(() => Math.max(2, this.fit().radius * this.geometry().thickness));
   readonly arcRadius = computed(() => this.fit().radius - this.width() / 2);
 
@@ -169,19 +170,29 @@ export class TxGauge {
   });
 
   readonly tickMarks = computed<TxGaugeTick[]>(() => {
-    const fit = this.fit();
+    const { fit, plan } = this.layout();
     const [start, end] = this.span();
     const { tickLength, tickFontSize } = this.geometry();
     const outer = fit.radius + TICK_GAP;
-    const format = this.tickFormat();
-    return this.tickValues().map((value) => {
+    const values = this.tickValues();
+    return values.map((value) => {
       const angle = gaugeAngle(value, this.min(), this.max(), start, end);
       const from = polar(fit.cx, fit.cy, outer, angle);
       const to = polar(fit.cx, fit.cy, outer + tickLength, angle);
       const sin = Math.sin(angle);
       const cos = Math.cos(angle);
       const text = polar(fit.cx, fit.cy, outer + tickLength + TICK_GAP + (Math.abs(cos) > 0.3 ? tickFontSize * 0.5 * Math.abs(cos) : 0), angle);
-      return { value, x1: from.x, y1: from.y, x2: to.x, y2: to.y, labelX: text.x, labelY: text.y, label: format(value), anchor: sin > 0.3 ? 'start' : sin < -0.3 ? 'end' : 'middle' };
+      return {
+        value,
+        x1: from.x,
+        y1: from.y,
+        x2: to.x,
+        y2: to.y,
+        labelX: text.x,
+        labelY: text.y,
+        label: plan.labels ? plan.format(value) : null,
+        anchor: sin > 0.3 ? 'start' : sin < -0.3 ? 'end' : 'middle',
+      };
     });
   });
 
@@ -199,7 +210,16 @@ export class TxGauge {
     return value === null || value === undefined || !Number.isFinite(value) ? '—' : chartNumberFormatter(this.intl(), this.valueFormat())(value);
   });
 
-  readonly valueFont = computed(() => this.fontsFor(this.fit().radius));
+  readonly valueFont = computed(() => {
+    const radius = this.fit().radius;
+    const fonts = this.fontsFor(radius);
+    const inner = Math.max(0, radius - this.width() - VALUE_INSET);
+    const reach = this.hasNeedle() ? this.valueOffset(radius) : fonts.value * 0.4;
+    const room = 2 * Math.sqrt(Math.max(0, inner * inner - reach * reach));
+    const text = textWidth(this.formatted(), fonts.value);
+    const value = text > room ? Math.max(MIN_VALUE_FONT, (fonts.value * room) / text) : fonts.value;
+    return { value, label: fonts.label };
+  });
   readonly valueY = computed(() => this.fit().cy + this.valueOffset(this.fit().radius));
 
   readonly summary = computed(() => {
@@ -220,6 +240,38 @@ export class TxGauge {
       this.dt();
       this.readGeometry();
     });
+  }
+
+  private tickRoom(plan: TickPlan): number {
+    const values = this.tickValues();
+    if (!values.length) return 0;
+    const { tickLength, tickFontSize } = this.geometry();
+    if (!plan.labels) return TICK_GAP + tickLength;
+    const widest = Math.max(...values.map((value) => textWidth(plan.format(value), tickFontSize)));
+    return TICK_GAP + tickLength + TICK_GAP + Math.max(widest, tickFontSize);
+  }
+
+  private fitFor(room: number): { cx: number; cy: number; radius: number } {
+    const { width, height } = this.size();
+    const [start, end] = this.span();
+    const bounds = arcBounds(start, end);
+    const below = (radius: number) => Math.max(bounds.maxY * (radius + room), this.textBelow(radius));
+    const fits = (radius: number) =>
+      (bounds.maxX - bounds.minX) * (radius + room) <= width - PADDING * 2 && -bounds.minY * (radius + room) + below(radius) <= height - PADDING * 2;
+    let low = MIN_RADIUS;
+    let high = Math.max(MIN_RADIUS, Math.min(width, height));
+    for (let step = 0; step < 24; step++) {
+      const middle = (low + high) / 2;
+      if (fits(middle)) low = middle;
+      else high = middle;
+    }
+    const top = -bounds.minY * (low + room);
+    const used = top + below(low);
+    return {
+      cx: width / 2 - ((bounds.minX + bounds.maxX) / 2) * (low + room),
+      cy: PADDING + (height - PADDING * 2 - used) / 2 + top,
+      radius: low,
+    };
   }
 
   private fontsFor(radius: number): { value: number; label: number } {

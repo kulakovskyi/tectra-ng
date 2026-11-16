@@ -1,1 +1,1 @@
-`txTableCell` gets the node data as `let-file` and the node itself as `node`. `[(expandedKeys)]` keeps the open rows; `expandAll()` / `collapseAll()` open or close all.
+`txTableCell` gets the node data as `let-file` and the node itself as `node`; `[txTableCellOf]="files"` takes the nodes only for typing, so `file` has the type of the node `data` and `node` the node type in strict templates. `[(expandedKeys)]` keeps the open rows; `expandAll()` / `collapseAll()` open or close all.

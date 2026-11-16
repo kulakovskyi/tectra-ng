@@ -2,19 +2,86 @@
   display: inline-flex;
 }
 
-:host ::ng-deep > .tx-button:not(:first-child) {
-  margin-left: -1px;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
+:host(.tx-button-group--fluid) {
+  display: flex;
+  width: 100%;
 }
 
-:host ::ng-deep > .tx-button:not(:last-child) {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
+:host(.tx-button-group--vertical) {
+  flex-direction: column;
 }
 
-:host ::ng-deep > .tx-button:hover,
-:host ::ng-deep > .tx-button:focus-visible {
-  position: relative;
-  z-index: 1;
+:host(.tx-button-group--fluid) ::ng-deep > .tx-button {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+:host([data-styled]:not(.tx-button-group--vertical)) {
+  ::ng-deep > .tx-button:not(:first-child) {
+    margin-left: -1px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  ::ng-deep > .tx-button:not(:last-child) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+}
+
+:host([data-styled].tx-button-group--vertical) {
+  ::ng-deep > .tx-button:not(:first-child) {
+    margin-top: -1px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+
+  ::ng-deep > .tx-button:not(:last-child) {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+}
+
+:host([data-styled]) {
+  ::ng-deep
+    > .tx-button[data-styled]:not([data-variant])
+    + .tx-button[data-styled]:not([data-variant]) {
+    position: relative;
+  }
+
+  ::ng-deep
+    > .tx-button[data-styled]:not([data-variant])
+    + .tx-button[data-styled]:not([data-variant])::before {
+    content: '';
+    position: absolute;
+    z-index: 2;
+    background: var(--tx-button-group-divider-color);
+    pointer-events: none;
+  }
+
+  ::ng-deep > .tx-button:hover,
+  ::ng-deep > .tx-button:focus-visible {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+:host([data-styled]:not(.tx-button-group--vertical))
+  ::ng-deep
+  > .tx-button[data-styled]:not([data-variant])
+  + .tx-button[data-styled]:not([data-variant])::before {
+  top: 0;
+  bottom: 0;
+  left: -1px;
+  width: var(--tx-button-group-divider-width);
+}
+
+:host([data-styled].tx-button-group--vertical)
+  ::ng-deep
+  > .tx-button[data-styled]:not([data-variant])
+  + .tx-button[data-styled]:not([data-variant])::before {
+  top: -1px;
+  right: 0;
+  left: 0;
+  height: var(--tx-button-group-divider-width);
 }

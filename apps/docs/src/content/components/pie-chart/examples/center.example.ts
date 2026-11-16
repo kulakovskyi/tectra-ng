@@ -8,7 +8,7 @@ import { TxPieCenter, TxPieChart, TxPieData } from '@tectra-ng/charts/pie';
     <tx-pie-chart
       [pieData]="storage"
       [chartWidth]="260"
-      [chartHeight]="320"
+      [height]="320"
       [showDataLabels]="false"
       donutSize="70%"
       ariaLabel="Storage used"

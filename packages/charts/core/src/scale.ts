@@ -6,9 +6,9 @@ const E2 = Math.sqrt(2);
 
 /**
  * Round step (1, 2, 5 times a power of ten) that gives about `count` ticks between two numbers; `0`
- * when it cannot.
+ * when it cannot. With `integer` the step is a whole number, at least 1.
  */
-export function tickStep(start: number, stop: number, count: number): number {
+export function tickStep(start: number, stop: number, count: number, integer = false): number {
   const span = Math.abs(stop - start);
   if (!span || count <= 0 || !Number.isFinite(span)) {
     return 0;
@@ -18,7 +18,7 @@ export function tickStep(start: number, stop: number, count: number): number {
   const base = 10 ** power;
   const error = raw / base;
   const factor = error >= E10 ? 10 : error >= E5 ? 5 : error >= E2 ? 2 : 1;
-  return factor * base;
+  return integer ? Math.max(1, factor * base) : factor * base;
 }
 
 /** Number of decimals a step needs to be written exactly. */
@@ -34,8 +34,11 @@ function clean(value: number, decimals: number): number {
   return Object.is(rounded, -0) ? 0 : rounded;
 }
 
-/** Widens a range to round numbers, for example `[3, 97]` to `[0, 100]`. */
-export function niceDomain(min: number, max: number, count = 5): TxRange {
+/**
+ * Widens a range to round numbers, for example `[3, 97]` to `[0, 100]`; with `integer` the tick step
+ * is a whole number.
+ */
+export function niceDomain(min: number, max: number, count = 5, integer = false): TxRange {
   if (!Number.isFinite(min) || !Number.isFinite(max)) {
     return [0, 1];
   }
@@ -44,12 +47,12 @@ export function niceDomain(min: number, max: number, count = 5): TxRange {
       return [0, 1];
     }
     const pad = Math.abs(min) * 0.1 || 1;
-    return niceDomain(min > 0 ? 0 : min - pad, max < 0 ? 0 : max + pad, count);
+    return niceDomain(min > 0 ? 0 : min - pad, max < 0 ? 0 : max + pad, count, integer);
   }
   let start = Math.min(min, max);
   let stop = Math.max(min, max);
   for (let round = 0; round < 3; round++) {
-    const step = tickStep(start, stop, count);
+    const step = tickStep(start, stop, count, integer);
     const nextStart = Math.floor(start / step) * step;
     const nextStop = Math.ceil(stop / step) * step;
     if (nextStart === start && nextStop === stop) {
@@ -61,9 +64,9 @@ export function niceDomain(min: number, max: number, count = 5): TxRange {
   return [start, stop];
 }
 
-/** Round tick values between `min` and `max`, about `count` of them. */
-export function linearTicks(min: number, max: number, count = 5): number[] {
-  const step = tickStep(min, max, count);
+/** Round tick values between `min` and `max`, about `count` of them; with `integer` only whole numbers. */
+export function linearTicks(min: number, max: number, count = 5, integer = false): number[] {
+  const step = tickStep(min, max, count, integer);
   if (!step) {
     return Number.isFinite(min) ? [min] : [];
   }

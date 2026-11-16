@@ -24,7 +24,7 @@ import { TxCandlestickChart } from '@tectra-ng/charts/candlestick';
 | yMax | Fixed end of the price axis |
 | yAxisTitle | Title of the price axis |
 | grid | Grid lines: `value` (default), `category`, `both` or `none` |
-| labelMode | Date labels that do not fit: `skip` (default), `auto` or `rotate` |
+| labelMode | Date labels that do not fit: `skip` (default), `auto` or `rotate`. Dates are written by the step of the data (days for daily and weekly candles, months for monthly ones), so no two labels repeat |
 | yAxisPosition | Side of the price axis: `right` (default) or `left` |
 | toolbar | Shows the chart menu: download SVG, PNG or CSV (the file is named after `ariaLabel`) |
 | loading | Shows a skeleton of the same size |

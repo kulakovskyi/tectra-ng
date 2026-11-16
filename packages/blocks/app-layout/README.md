@@ -12,6 +12,8 @@ The shell of a signed-in app: a sidebar menu, a top bar, the page and a footer. 
 
 `model` takes `TxPanelMenuItem` sections, as `tx-panel-menu` with `variant="sidebar"` draws them: a section with a `label` gets a title, items take `icon`, `routerLink`, `badge`, `disabled` (a lock), nested `items` and `active`. Without the sidebar (`[sidebar]="false"`) the top bar shows the logo and the title instead — for pages before the user has a workspace.
 
+When the page is printed the sidebar, the top bar and the backdrop are left out and the page content takes the full width of the paper.
+
 ## Inputs
 | Name | Description |
 |---|---|

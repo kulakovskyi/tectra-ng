@@ -67,8 +67,8 @@ test.describe('landing', () => {
     await page.getByRole('button', { name: 'emerald' }).click();
     await expect(page.getByRole('button', { name: 'emerald' })).toHaveAttribute('aria-pressed', 'true');
     await expect.poll(primary).not.toBe(before);
-    await page.getByRole('button', { name: 'Soft' }).click();
-    await expect(page.getByRole('button', { name: 'Soft' })).toHaveAttribute('aria-pressed', 'true');
+    await page.getByRole('button', { name: 'Edge' }).click();
+    await expect(page.getByRole('button', { name: 'Edge' })).toHaveAttribute('aria-pressed', 'true');
   });
 
   test('the libraries merge into one kit', async ({ page }) => {

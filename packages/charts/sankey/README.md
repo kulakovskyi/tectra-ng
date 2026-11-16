@@ -14,7 +14,7 @@ import { TxSankeyChart } from '@tectra-ng/charts/sankey';
 | Name | Description |
 |---|---|
 | links | `{ source, target, value, color? }[]` — flows between node ids; self links, zero values and links that close a cycle are left out. An empty list shows "No data" |
-| nodes | `{ id, label?, color? }[]` — optional names and colours; nodes found only in `links` use their id as the name |
+| nodes | `{ id, label?, color? }[]` — optional names and colours; nodes found only in `links` use their id as the name. Names sit right of their nodes (left in the last column); a name that would run into a node or another name moves to the other side, drops its value, is shortened or is hidden (the tooltip still names the node) |
 | height | Height in px (360), or a CSS size such as `'100%'` of a parent with a definite height |
 | align | `justify` (default) — nodes without outgoing flows stand in the last column; `left` — every node stands right after its sources |
 | showValues | Writes the value after each node name when it fits (on by default) |

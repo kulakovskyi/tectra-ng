@@ -19,7 +19,7 @@ import { TxTreemap } from '@tectra-ng/charts/treemap';
 | showValues | Writes the formatted value under the name when it fits |
 | showTooltip | Shows the tooltip on hover and keyboard focus |
 | tooltipFormatter | `(value, { seriesIndex, dataPointIndex }) => string` for the tooltip value |
-| valueFormat | Format of values: `number`, `integer`, `compact`, `percent` or a function |
+| valueFormat | Format of values: `number`, `integer`, `compact`, `percent`, a currency (`{ currency: 'USD' }`) or a function |
 | loading | Shows a skeleton of the same size |
 | ariaLabel | What the treemap shows; starts the summary read by screen readers |
 | dt | Design tokens of this treemap (`chart`, group `treemap`) |

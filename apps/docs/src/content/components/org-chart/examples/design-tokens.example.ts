@@ -12,7 +12,7 @@ import { TxOrgChart, TxOrgChartNode } from '@tectra-ng/charts/org-chart';
       height="320px"
       [dt]="{
         orgChart: {
-          cardWidth: '220px',
+          cardWidth: '260px',
           cardRadius: '16px',
           connectorColor: 'var(--tx-primary-300)',
           connectorRadius: '12px',

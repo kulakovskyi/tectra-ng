@@ -1,0 +1,1 @@
+Own previous / next controls: `pageToFirst` gives the first row of a page, `firstToPage` the page of a row, `pageCountOf` the number of pages, and `TxPaginationParams` is the request (`page` is 1-based).

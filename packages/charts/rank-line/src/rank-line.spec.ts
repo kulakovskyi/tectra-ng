@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { TxChartLegendTemplate, TxChartTooltipTemplate } from '@tectra-ng/charts/core';
-import { rankLineColor, rankTickStep, rankTimeExtent, rankY } from './rank-line-layout';
+import { rankLineColor, rankTickStep, rankTicks, rankTimeExtent, rankTimeStep, rankY } from './rank-line-layout';
 import { TxRankChart } from './rank-line.component';
 import { TxRankLineEvent, TxRankSeries } from './rank-line.types';
 
@@ -44,14 +44,36 @@ describe('rank line layout', () => {
   it('cycles twelve colours and picks the tick step', () => {
     expect(rankLineColor(0)).toBe('var(--tx-chart-rank-line-color1)');
     expect(rankLineColor(13)).toBe('var(--tx-chart-rank-line-color2)');
+    expect(rankTickStep(4)).toBe(1);
+    expect(rankTickStep(10)).toBe(1);
     expect(rankTickStep(20)).toBe(5);
     expect(rankTickStep(50)).toBe(10);
   });
 
-  it('maps rank 1 near the top and clamps deep ranks', () => {
-    expect(rankY(0, 20, 10, 200)).toBe(10);
-    expect(rankY(10, 20, 10, 200)).toBe(110);
-    expect(rankY(80, 20, 10, 200)).toBe(210);
+  it('ticks every rank of a short scale and multiples of the step of a long one', () => {
+    expect(rankTicks(4)).toEqual([1, 2, 3, 4]);
+    expect(rankTicks(20)).toEqual([1, 5, 10, 15, 20]);
+    expect(rankTicks(35)).toEqual([1, 10, 20, 30]);
+    expect(rankTicks(0)).toEqual([1]);
+  });
+
+  it('maps rank 1 to the top edge, the last rank to the bottom edge and clamps the rest', () => {
+    expect(rankY(1, 21, 10, 200)).toBe(10);
+    expect(rankY(11, 21, 10, 200)).toBe(110);
+    expect(rankY(21, 21, 10, 200)).toBe(210);
+    expect(rankY(80, 21, 10, 200)).toBe(210);
+    expect(rankY(0, 21, 10, 200)).toBe(10);
+  });
+
+  it('finds the calendar step of the data', () => {
+    const day = 86_400_000;
+    const jan = new Date(2026, 0, 1).getTime();
+    const feb = new Date(2026, 1, 1).getTime();
+    expect(rankTimeStep([jan, feb, jan]).unit).toBe('month');
+    expect(rankTimeStep([jan, jan + day, jan + 2 * day]).unit).toBe('day');
+    expect(rankTimeStep([jan, jan + 3_600_000]).unit).toBe('hour');
+    expect(rankTimeStep([jan]).unit).toBe('day');
+    expect(rankTimeStep([jan + 3_600_000]).unit).toBe('minute');
   });
 
   it('finds the time extent and widens a single time', () => {
@@ -61,8 +83,9 @@ describe('rank line layout', () => {
     expect(rankTimeExtent([{ name: 'a', points: [{ time: 'not a date', rank: 1 }, { time: 500, rank: 2 }] }])).toEqual([500 - 43_200_000, 500 + 43_200_000]);
   });
 
-  it('puts every rank on the top edge without a rank range', () => {
-    expect(rankY(5, 0, 10, 200)).toBe(10);
+  it('puts every rank in the middle of a scale of one rank', () => {
+    expect(rankY(5, 1, 10, 200)).toBe(110);
+    expect(rankY(5, 0, 10, 200)).toBe(110);
   });
 });
 
@@ -96,6 +119,18 @@ describe('TxRankChart', () => {
     expect(labels).toEqual(['1', '5', '10', '15', '20']);
     const ys = [...main().querySelectorAll<SVGTextElement>('.tx-chart-axes__axis[data-position="left"] .tx-chart-axes__label')].map((label) => Number(label.getAttribute('y')));
     expect(ys[0]).toBeLessThan(ys[4]);
+    expect(first?.y).toBe(ys[0]);
+    const grid = [...main().querySelectorAll('.tx-chart-axes__grid-line')].map((line) => Number(line.getAttribute('y1')));
+    expect(grid).toEqual(ys);
+  });
+
+  it('labels every rank of a short scale on its own row', async () => {
+    host.maxRank.set(4);
+    await fixture.whenStable();
+    const labels = [...main().querySelectorAll<SVGTextElement>('.tx-chart-axes__axis[data-position="left"] .tx-chart-axes__label')];
+    expect(labels.map((label) => label.textContent?.trim())).toEqual(['1', '2', '3', '4']);
+    const third = chart().markers().find((marker) => marker.rank === 3);
+    expect(third?.y).toBe(Number(labels[2].getAttribute('y')));
   });
 
   it('shows the tooltip with the date, rank and note and emits pointClick', () => {
@@ -105,6 +140,7 @@ describe('TxRankChart', () => {
     expect(tooltip?.rows[0]).toMatchObject({ label: 'site.com', value: 'Position: 1' });
     expect(tooltip?.note).toBe('Snippet');
     expect(tooltip?.title).toContain('2026');
+    expect(tooltip?.title).not.toMatch(/AM|PM/);
     expect(host.clicks[0]).toMatchObject({ seriesIndex: 0, pointIndex: 2, rank: 1, note: 'Snippet' });
     chart().onPointer({ x: -500, y: -500, type: 'move', target: null });
     expect(chart().tooltip()).toBeNull();
@@ -262,6 +298,40 @@ describe('TxRankChart options', () => {
     expect([...fixture.nativeElement.querySelectorAll('.own-legend')].map((item: Element) => item.textContent)).toEqual(['site.com', 'shop.com']);
     await key('Home');
     expect(panel()?.querySelector('.own-tooltip')?.textContent).toBe('2');
+  });
+});
+
+describe('TxRankChart date format', () => {
+  @Component({
+    imports: [TxRankChart],
+    template: `<tx-rank-chart [series]="series" [dateFormat]="format()" />`,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+  })
+  class FormatHost {
+    readonly series: TxRankSeries[] = [
+      {
+        name: 'a',
+        points: [
+          { time: new Date(2026, 0, 1, 1).getTime(), rank: 2 },
+          { time: new Date(2026, 1, 1, 1).getTime(), rank: 1 },
+        ],
+      },
+    ];
+    readonly format = signal<Intl.DateTimeFormatOptions | ((time: number) => string) | undefined>(undefined);
+  }
+
+  it('writes monthly checks as dates without a time and takes an own format', async () => {
+    const fixture = TestBed.createComponent(FormatHost);
+    await fixture.whenStable();
+    const chart = fixture.debugElement.query(By.directive(TxRankChart)).componentInstance as TxRankChart;
+    expect(chart.formatTime()(new Date(2026, 0, 1, 1).getTime())).toBe('Jan 1, 2026');
+    expect(chart.dataTable().rows[0].label).toBe('a, Jan 1, 2026');
+    fixture.componentInstance.format.set({ month: 'long', year: 'numeric' });
+    await fixture.whenStable();
+    expect(chart.formatTime()(new Date(2026, 0, 1, 1).getTime())).toBe('January 2026');
+    fixture.componentInstance.format.set((time) => `t${time}`);
+    await fixture.whenStable();
+    expect(chart.formatTime()(5)).toBe('t5');
   });
 });
 

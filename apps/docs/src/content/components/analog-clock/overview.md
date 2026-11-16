@@ -1,7 +1,7 @@
 ---
 category: Misc
 tokens: analogClock
-examples: basic, time-zones, seconds, fixed-time, hands-pipe, design-tokens, pass-through
+examples: basic, time-zones, seconds, fixed-time, sizes, hands-pipe, design-tokens, pass-through
 ---
 # AnalogClock
 

@@ -9,9 +9,14 @@
 }
 
 .tx-truncate-text__text {
-  display: inline-flex;
+  display: inline-block;
+  flex: 0 1 auto;
   min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
+  vertical-align: bottom;
 }
 
 .tx-truncate-text__full {

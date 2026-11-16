@@ -15,16 +15,17 @@ import { linearScale, niceDomain, chartNumberFormatter, TxChartSeries } from '@t
 | `timeScale(domain, range)` | Time in ms; `ticks(count)` and `interval(count)` pick calendar steps — seconds, minutes, hours, days, weeks, months, years |
 | `bandScale(count, range, paddingInner?, paddingOuter?)` | Equal bands for categories: `start`, `center`, `bandwidth`, `indexAt` |
 | `pointScale(count, range)` | Evenly spaced points from edge to edge: `at`, `indexAt` |
-| `niceDomain(min, max, count?)` | Widens a range to round numbers (`[3, 97]` → `[0, 100]`) |
-| `linearTicks(min, max, count?)`, `tickStep`, `logTicks`, `timeTicks` | Round tick values |
+| `niceDomain(min, max, count?, integer?)` | Widens a range to round numbers (`[3, 97]` → `[0, 100]`) |
+| `linearTicks(min, max, count?, integer?)`, `tickStep`, `logTicks`, `timeTicks` | Round tick values; with `integer` the step is a whole number, at least 1 — the value axes of the charts do this for the `integer` format, so small counts never repeat a label |
 | `toTime(value)` | ISO string (a date-only string is local midnight), `Date` or timestamp → ms |
 
 ## Formats
 
 | Function | What it does |
 |---|---|
-| `chartNumberFormatter(intl, format)` | `number` (up to 2 decimals), `integer`, `compact` (`1.2K`), `percent` or your function → `(value) => string` |
-| `tickFormatter(intl, ticks, format)` | Like the above with as many decimals as the tick step needs |
+| `chartNumberFormatter(intl, format)` | `number` (up to 2 decimals), `integer`, `compact` (`1.2K`), `percent`, a currency (`{ currency: 'USD', currencyDisplay? }` → `$36,400`, cents only when the value has them) or your function → `(value) => string` |
+| `tickFormatter(intl, ticks, format)` | Like the above with as many decimals as the tick step needs; a currency in compact form (`$36K`) |
+| `compactValueFormatter(intl, format)` | Short form for tight labels: a currency as `$36.4K`, `number` as `compact`, other formats as they are |
 | `compactNumber(value, intl?)` | `1234567` → `1.2M` |
 | `timeTickFormatter(intl, interval, span)`, `timeTooltipFormatter(intl, interval)` | Dates for ticks and tooltips through `Intl.DateTimeFormat` |
 | `chartMonthNames(intl, 'long' \| 'short')` | 12 capitalised month names |
@@ -39,7 +40,8 @@ import { linearScale, niceDomain, chartNumberFormatter, TxChartSeries } from '@t
 | `largestTriangleThreeBuckets(points, threshold)`, `decimateSeries(points, threshold)` | Thin long series and keep their shape |
 | `normalizeSeries(series, categories, xType)` | Turns `TxChartSeries[]` into labels, x values and a value table |
 | `cartesianLayout(options)` | Plot area, value and category scales, tick labels (skipped or rotated when they collide), grid and zero line |
-| `chartColor(index)`, `chartPalette(count?)`, `seriesColor(color, index)` | The series palette as `var(--tx-chart-series-colorN)` |
+| `chartColor(index)`, `chartPalette(count?)`, `seriesColor(color, index)` | The series palette as `var(--tx-chart-series-colorN)`; colour 1 is the primary colour and the others turn its hue in OKLCH, so every primary gets six clearly different neighbours |
+| `injectLegendPlace(position)`, `chartLegendPlace(position, width)`, `injectHostWidth()` | A `left` / `right` legend moves to the `bottom` when the chart is narrower than `TX_CHART_NARROW_WIDTH` (420px); the width is measured in the browser, the server keeps the asked position |
 
 ## Components
 
@@ -55,7 +57,7 @@ import { linearScale, niceDomain, chartNumberFormatter, TxChartSeries } from '@t
 
 ## Types
 
-`TxChartSeries` (`name`, `data` — numbers or `{ x, y }` points, `color?`), `TxChartValueFormat`, `TxChartTooltipFormatter` (`(value, { seriesIndex, dataPointIndex }) => string`), `TxChartLegendItem`, `TxChartTooltipData`, `TxChartLegendPosition`, `TxChartHeight`.
+`TxChartSeries` (`name`, `data` — numbers or `{ x, y }` points, `color?`), `TxChartValueFormat` (`number`, `integer`, `compact`, `percent`, `TxChartCurrencyFormat` or a function), `TxChartCurrencyFormat` (`currency`, `currencyDisplay?` — formatted in the active tectra locale, compact on the axes and in full in tooltips; it follows locale switches), `TxChartTooltipFormatter` (`(value, { seriesIndex, dataPointIndex }) => string`), `TxChartLegendItem`, `TxChartTooltipData`, `TxChartLegendPosition`, `TxChartHeight`.
 
 ## Notes
 

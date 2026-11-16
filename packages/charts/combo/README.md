@@ -34,7 +34,7 @@ import { TxComboChart } from '@tectra-ng/charts/combo';
 | showTooltip | Shows the tooltip on hover and keyboard focus |
 | tooltipMode | `shared` (every series of the category) or `single` |
 | tooltipFormatter | `(value, { seriesIndex, dataPointIndex }) => string` for tooltip values; default — the format of the series' axis |
-| valueFormat | Format of the main value axis: `number`, `integer`, `compact`, `percent` or a function |
+| valueFormat | Format of the main value axis: `number`, `integer`, `compact`, `percent`, a currency (`{ currency: 'USD' }`) or a function |
 | y2ValueFormat | Format of the second value axis; the main one by default |
 | yScale | `linear` or `log` for the main value axis |
 | yMin | Fixed start of the main value axis |

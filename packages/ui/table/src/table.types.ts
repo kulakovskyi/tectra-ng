@@ -1,4 +1,7 @@
+import type { TxFilterMatchMode, TxFilterRule } from '@tectra-ng/core/utils';
 import { TxPageState } from '@tectra-ng/ui/paginator';
+
+export type { TxFilterMatchMode, TxFilterRule };
 
 /** Size of `tx-table`: `small`, `medium` or `large`. */
 export type TxTableSize = 'small' | 'medium' | 'large';
@@ -32,33 +35,6 @@ export type TxTableEditType = 'text' | 'numeric' | 'date' | 'boolean';
 export type TxTableFilterType = 'text' | 'numeric' | 'date' | 'boolean';
 /** How the rules of one column filter combine: `and` or `or`. */
 export type TxFilterOperator = 'and' | 'or';
-/** How a filter value is compared with a cell: text, number, list, range and date comparisons. */
-export type TxFilterMatchMode =
-  | 'startsWith'
-  | 'contains'
-  | 'notContains'
-  | 'endsWith'
-  | 'equals'
-  | 'notEquals'
-  | 'in'
-  | 'lt'
-  | 'lte'
-  | 'gt'
-  | 'gte'
-  | 'between'
-  | 'dateIs'
-  | 'dateIsNot'
-  | 'dateBefore'
-  | 'dateAfter';
-
-/** One condition of a column filter: a value and how to compare it. */
-export interface TxFilterRule {
-  /** Value to compare with; an empty value is ignored. */
-  value: unknown;
-  /** How the cell value is compared with the filter value. */
-  matchMode: TxFilterMatchMode;
-}
-
 /** The filter of one column: its rules and how they combine. */
 export interface TxColumnFilter {
   /** Whether all rules (`and`) or any rule (`or`) must match. */
@@ -237,6 +213,15 @@ export interface TxTableRowReorderEvent<T = unknown> {
  */
 export type TxTableLoose<T> = 0 extends 1 & T ? T : unknown;
 
+/** Fields of a `tx-tree-table` node; a row type made only of them is read as a node. */
+export type TxTableTreeRowKey = 'key' | 'data' | 'children' | 'leaf' | 'expanded' | 'selectable' | 'loading';
+
+/**
+ * What the cell, editor and row templates get as the row for rows of type `R`: the `data` of a
+ * `tx-tree-table` node, the row itself in `tx-table`.
+ */
+export type TxTableRowData<R> = 0 extends 1 & R ? R : R extends { data: infer D } ? (Exclude<keyof R, TxTableTreeRowKey> extends never ? D : R) : R;
+
 /** Context of the group header and group footer templates. */
 export interface TxTableGroupContext<T = unknown> {
   /** First row of the group. */
@@ -348,14 +333,14 @@ export interface TxTableEditorContext<T = unknown> {
   cancel: () => void;
 }
 
-/** Context of the `txTableCell` template of a column. */
-export interface TxTableCellContext<T = unknown> {
+/** Context of the `txTableCell` template of a column; `N` is the type of `node`. */
+export interface TxTableCellContext<T = unknown, N = TxTableLoose<T>> {
   /** The row. */
   $implicit: T;
   /** The row. */
   row: T;
-  /** The tree node of the row, when the table shows a tree. */
-  node: TxTableLoose<T>;
+  /** The row as in `value`: the tree node in `tx-tree-table`. */
+  node: N;
   /** Position of the row. */
   index: number;
   /** The column of the cell. */
@@ -370,12 +355,12 @@ export interface TxTableHeaderContext {
   $implicit: TxTableColumn;
 }
 
-/** Context of the row templates: actions, expansion and card. */
-export interface TxTableRowContext<T = unknown> {
+/** Context of the row templates: actions, expansion and card; `N` is the type of `node`. */
+export interface TxTableRowContext<T = unknown, N = TxTableLoose<T>> {
   /** The row. */
   $implicit: T;
-  /** The tree node of the row, when the table shows a tree. */
-  node: TxTableLoose<T>;
+  /** The row as in `value`: the tree node in `tx-tree-table`. */
+  node: N;
   /** Position of the row. */
   index: number;
 }

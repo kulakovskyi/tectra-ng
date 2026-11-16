@@ -121,7 +121,7 @@ export const FEATURES: LandingFeature[] = [
     label: 'Theming',
     title: 'Make it yours in one line',
     text: 'Pick a style, a primary colour and a surface. Try it here: the whole page follows.',
-    points: ['Four styles, seventeen colours', 'Light and dark from the same tokens', 'Design tokens per component', 'Unstyled mode and pass-through'],
+    points: ['Three styles, seventeen colours', 'Light and dark from the same tokens', 'Design tokens per component', 'Unstyled mode and pass-through'],
     link: '/theming',
     linkLabel: 'Read about theming',
     tone: 'orange',

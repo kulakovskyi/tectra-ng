@@ -114,6 +114,14 @@
   }
 }
 
+:host([data-styled].tx-datepicker--invalid) .tx-datepicker__dropdown {
+  &,
+  &:not(:disabled):hover,
+  &:not(:disabled):active {
+    border-color: var(--tx-date-picker-dropdown-invalid-border-color);
+  }
+}
+
 :host([data-styled]:has(.tx-datepicker__input-icon)) {
   --_icon-room: calc(var(--tx-form-field-padding-x) + 1em);
 }

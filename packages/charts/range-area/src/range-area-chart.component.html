@@ -26,6 +26,7 @@
   (tooltipClosed)="active.set(null)"
 >
   <svg:g [tx-chart-axes]="layout().axes" [gridPart]="passThrough().grid" [axisPart]="passThrough().axis" />
+  <svg:g [tx-chart-annotations]="annotationShapes()" layer="back" [part]="passThrough().annotation" />
   @if (crosshair(); as line) {
     <svg:line
       class="tx-range-area-chart__crosshair"
@@ -66,4 +67,5 @@
       [style.fill]="point.color"
     />
   }
+  <svg:g [tx-chart-annotations]="annotationShapes()" layer="front" [part]="passThrough().annotation" />
 </tx-chart-frame>

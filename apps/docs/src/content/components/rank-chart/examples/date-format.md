@@ -1,0 +1,1 @@
+The tooltip picks the date format from the step of the data: monthly or daily checks show a date, checks less than a day apart add the time. `dateFormat` takes own `Intl.DateTimeFormat` options or a function, here a month and a year for a monthly leaderboard of four people.

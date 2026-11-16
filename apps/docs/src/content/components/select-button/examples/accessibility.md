@@ -1,0 +1,1 @@
+One value is a `radiogroup` of `radio` buttons: Tab goes to the picked option, ←/→ (or ↑/↓) move and pick, Home / End jump to the ends, disabled options are skipped. `multiple` is a `group` of buttons with `aria-pressed`: the arrows only move, Space or Enter toggles. Name the group with `ariaLabel`, `ariaLabelledBy` or a `tx-field` label; icon-only items are named by their text.

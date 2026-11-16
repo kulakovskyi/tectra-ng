@@ -17,6 +17,8 @@ export const confettiTokens = {
     duration: '1.1s',
     easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
     stagger: '40ms',
+    hold: '500ms',
+    fadeDuration: '600ms',
   },
 };
 

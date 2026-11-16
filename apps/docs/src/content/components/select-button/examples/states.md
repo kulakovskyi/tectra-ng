@@ -1,0 +1,1 @@
+An option with `disabled: true` (`optionDisabled` names another field) is skipped by clicks and keys. `disabled` turns off the whole control, `readonly` shows the value and ignores clicks, `invalid` paints the border red.

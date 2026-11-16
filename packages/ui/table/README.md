@@ -4,7 +4,7 @@ Data table for lists: sorting, pagination, server data, selection, row actions w
 
 ```html
 <tx-table [value]="people()" [columns]="columns" dataKey="id" paginator [rows]="10">
-  <ng-template txTableCell="name" let-person>
+  <ng-template txTableCell="name" [txTableCellOf]="people()" let-person>
     <strong>{{ person.name }}</strong>
   </ng-template>
 </tx-table>
@@ -13,6 +13,8 @@ Data table for lists: sorting, pagination, server data, selection, row actions w
 Columns are `TxTableColumn` objects: `field` (a dot reads a nested value, `team.name`), `header`, `sortable` (on unless `false`), `sortField`, `reorderable`, `resizable`, `hideable`, `hidden`, `width` (fixed, no resize), `initialWidth`, `minWidth`, `maxWidth` (CSS lengths; columns are 100px until resized), `frozen` (`start` / `end`), `align` (`start` / `center` / `end`), `headerClass`, `cellClass`, `footer`, `cardTitle` (this column is the title of the card), `hideInCard`; filters: `filter`, `filterField`, `filterType` (`text`, `numeric`, `date` — a date picker, `boolean`), `filterMatchModes`, `filterOptions` (`{ label, value }[]` — a multi select with the `in` match mode), `filterPlaceholder`; editing: `editable`, `editType` (`text`, `numeric`, `date` — a date picker, `boolean`), `editOptions` (a select).
 
 A cell shows the value of its field as text; `<ng-template txTableCell="field">` replaces it. Text that does not fit is cut with an ellipsis.
+
+Pass the rows to the row templates for typing: `[txTableCellOf]="people()"` (and `txTableActionsOf`, `txTableExpansionOf`, `txTableCardOf`, `txTableEditorOf`, `txTableGroupHeaderOf`, `txTableGroupFooterOf`) gives `let-row` the row type in strict templates. Angular does not pass the type of the table `value` to the templates inside it, so without the `…Of` input the row stays untyped.
 
 Filtering, sorting and pagination run on `value` unless `lazy` is on — then `lazyLoad` asks the server for `{ first, rows, sortField, sortOrder, multiSortMeta, filters, globalFilter }` and `totalRecords` is the size of the whole list. A set `totalRecords` without `lazy` also means `value` is already the current page.
 
@@ -96,7 +98,7 @@ Filtering, sorting and pagination run on `value` unless `lazy` is on — then `l
 | contextMenu | Own right-click menu (`TxMenuItem[]`); the row is in `contextMenuSelection` |
 | contextMenuSelection | Row the context menu was opened on. Two-way: `[(contextMenuSelection)]` |
 | rowContextMenu | Right-click opens the row actions as a menu (on by default) |
-| responsive | Rows become cards below `breakpoint` (on by default) |
+| responsive | Rows become cards below `breakpoint` (on by default); group headers and footers, the expand button and the expansion stay in the cards |
 | breakpoint | Width below which rows are cards, `64rem` by default |
 | dt | Design tokens (`table`) |
 | pt | Classes and styles of the parts: `root`, `toolbar`, `frame`, `scroller`, `table`, `thead`, `headerRow`, `headerCell`, `sortButton`, `sortIcon`, `tbody`, `row`, `cell`, `tfoot`, `footerCell`, `loading`, `empty`, `paginator`, `cards`, `card` |
@@ -132,19 +134,19 @@ Filtering, sorting and pagination run on `value` unless `lazy` is on — then `l
 ## Slots
 | Name | Description |
 |---|---|
-| txTableCell | `<ng-template txTableCell="field" let-row let-value="value" let-index="index">` — content of the cells of a column |
+| txTableCell | `<ng-template txTableCell="field" [txTableCellOf]="rows" let-row let-value="value" let-index="index">` — content of the cells of a column |
 | txTableHeaderCell | `<ng-template txTableHeaderCell="field" let-column>` — own header content |
 | txTableFooterCell | `<ng-template txTableFooterCell="field" let-column>` — footer content of a column |
-| txTableActions | `<ng-template txTableActions let-row>` — actions column; put `tx-table-actions` with buttons marked `*txTableAction="{ label }"` inside; the `…` popover closes once an action in it is clicked |
-| txTableExpansion | `<ng-template txTableExpansion let-row>` — content of an expanded row; adds the expand column |
-| txTableCard | `<ng-template txTableCard let-row let-index="index">` — own card for a row on narrow screens |
+| txTableActions | `<ng-template txTableActions [txTableActionsOf]="rows" let-row>` — actions column; put `tx-table-actions` with buttons marked `*txTableAction="{ label }"` inside; the `…` popover closes once an action in it is clicked |
+| txTableExpansion | `<ng-template txTableExpansion [txTableExpansionOf]="rows" let-row>` — content of an expanded row; adds the expand column, and an expand button to every card in the card view |
+| txTableCard | `<ng-template txTableCard [txTableCardOf]="rows" let-row let-index="index">` — own card for a row on narrow screens |
 | txTableEmpty | `<ng-template txTableEmpty>` — own content of an empty table |
 | txTableEditor | `<ng-template txTableEditor="field" let-value="value" let-set="set" let-commit="commit" let-cancel="cancel">` — own editor of a column |
 | txTableGroupHeader | `<ng-template txTableGroupHeader let-row let-value="value" let-count="count" let-toggle="toggle">` — content of a group header |
 | txTableGroupFooter | `<ng-template txTableGroupFooter let-value="value" let-count="count" let-rows="rows">` — row after a group, e.g. its total |
 | txTableToolbar | `<div txTableToolbar>` — content on the left of the toolbar row, next to the settings gear |
 
-The row templates take the table rows only for typing — `<ng-template txTableCell="name" [txTableCellOf]="deals()" let-deal>` gives `deal` the row type in strict templates; without it the row stays untyped.
+The row templates take the table rows only for typing — `<ng-template txTableCell="name" [txTableCellOf]="deals()" let-deal>` gives `deal` the row type and `node` the type of the rows in strict templates; without it the row stays untyped. In `tx-tree-table` pass the nodes: the row is typed as the node `data`.
 
 ## Inputs — row templates
 | Name | Description |
@@ -190,3 +192,4 @@ The row templates take the table rows only for typing — `<ng-template txTableC
 | Enter / F2 | On an editable cell (`editMode="cell"`): starts editing |
 | Enter / Tab / Shift + Tab | In a cell editor: saves (Tab moves to the next editable cell) |
 | Escape | In an editor: cancels |
+| Enter / Space | On the expand button of a row, a card or a group: opens or closes it |

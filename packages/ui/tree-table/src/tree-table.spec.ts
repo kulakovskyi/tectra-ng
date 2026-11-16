@@ -47,7 +47,7 @@ const COLUMNS: TxTableColumn[] = [
     [rows]="1"
     (nodeExpand)="expandedEvents.push($event.node.key ?? '')"
   >
-    <ng-template txTableCell="type" let-file let-node="node">{{ file.type }}/{{ node.key }}</ng-template>
+    <ng-template txTableCell="type" [txTableCellOf]="value()" let-file let-node="node">{{ file.type }}/{{ node.key }}</ng-template>
   </tx-tree-table>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

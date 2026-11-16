@@ -69,6 +69,9 @@ Give the list and grid templates the items for typing — `<ng-template txDataVi
 | txDataViewListOf | `txDataViewList`: the items, only for the type of `let-items` |
 | txDataViewGridOf | `txDataViewGrid`: the items, only for the type of `let-items` |
 
+## Frame
+The data view is a content surface like a card: its corner radius and shadow come from `--tx-content-radius` and `--tx-content-shadow`, and the corners clip the header, items and paginator. The items get an inset from the `content.padding` token (none by default, for full-width rows) and `content.gridPadding` in the grid layout (12.25px), so cards never touch the rounded edge.
+
 ## Layout switch
 `<tx-data-view-layout [(layout)]="layout" />` — two toggle buttons (list, grid) with `aria-pressed`.
 

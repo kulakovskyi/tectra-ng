@@ -6,8 +6,7 @@ import { TxPieChart, TxPieData } from '@tectra-ng/charts/pie';
   imports: [TxPieChart],
   template: `<tx-pie-chart
     [pieData]="traffic"
-    [chartWidth]="260"
-    [chartHeight]="320"
+    [height]="320"
     totalLabel="Visits"
     ariaLabel="Visits by source"
   />`,

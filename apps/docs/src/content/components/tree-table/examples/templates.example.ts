@@ -87,13 +87,15 @@ const FILES: TxTreeTableNode<File>[] = [
       [columns]="columns"
       [(expandedKeys)]="expanded"
     >
-      <ng-template txTableCell="name" let-file let-node="node">
+      <ng-template txTableCell="name" [txTableCellOf]="files" let-file let-node="node">
         <span class="name">
           <tx-icon [name]="node.children || node.leaf === false ? 'folder' : 'file'" />
           {{ file.name }}
         </span>
       </ng-template>
-      <ng-template txTableCell="size" let-file>{{ file.size }} MB</ng-template>
+      <ng-template txTableCell="size" [txTableCellOf]="files" let-file
+        >{{ file.size }} MB</ng-template
+      >
     </tx-tree-table>
   `,
   styles: `

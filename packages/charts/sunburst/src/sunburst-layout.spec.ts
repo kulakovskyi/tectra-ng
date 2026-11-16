@@ -1,4 +1,4 @@
-import { sunburstArcAt, sunburstArcs, sunburstFocus, sunburstValue } from './sunburst-layout';
+import { sunburstArcAt, sunburstArcs, sunburstFocus, sunburstLabelFits, sunburstValue } from './sunburst-layout';
 import { TxSunburstItem } from './sunburst-chart.types';
 
 const data: TxSunburstItem[] = [
@@ -50,6 +50,18 @@ describe('sunburst layout', () => {
     expect(sunburstArcAt(arcs, -50, 0, 0, 0)?.label).toBe('Asia');
     expect(sunburstArcAt(arcs, 50, 0, 0, 0)?.label).toBe('Europe');
     expect(sunburstArcAt(arcs, 500, 0, 0, 0)).toBeNull();
+  });
+
+  it('fits a label only inside both radii and both angles of its arc', () => {
+    const lower = { start: Math.PI / 2, end: Math.PI * 1.5, inner: 60, outer: 100 };
+    expect(sunburstLabelFits(lower, { x: 0, y: 80, width: 40, height: 14 }, 0, 0, 4)).toBe(true);
+    expect(sunburstLabelFits(lower, { x: 0, y: 80, width: 90, height: 14 }, 0, 0, 4)).toBe(false);
+    const right = { start: Math.PI / 4, end: Math.PI * 0.75, inner: 60, outer: 100 };
+    expect(sunburstLabelFits(right, { x: 80, y: 0, width: 40, height: 14 }, 0, 0, 4)).toBe(false);
+    expect(sunburstLabelFits(right, { x: 80, y: 0, width: 24, height: 14 }, 0, 0, 4)).toBe(true);
+    expect(sunburstLabelFits({ start: Math.PI / 2 - 0.15, end: Math.PI / 2 + 0.15, inner: 60, outer: 100 }, { x: 80, y: 0, width: 24, height: 14 }, 0, 0, 4)).toBe(false);
+    expect(sunburstLabelFits({ start: 0, end: Math.PI * 2, inner: 0, outer: 100 }, { x: 0, y: 50, width: 80, height: 14 }, 0, 0, 4)).toBe(true);
+    expect(sunburstLabelFits(right, { x: 80, y: 0, width: 36, height: 12 }, 0, 0)).toBe(true);
   });
 });
 

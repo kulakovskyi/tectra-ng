@@ -23,10 +23,10 @@ import { TxGauge } from '@tectra-ng/charts/gauge';
 | startAngle | Start of the scale in degrees clockwise from the top (-120) |
 | endAngle | End of the scale (120); `-90` / `90` draws a half circle |
 | label | Caption under the value |
-| valueFormat | Format of the value and the ticks: `number`, `integer`, `compact`, `percent` or a function |
+| valueFormat | Format of the value and the ticks: `number`, `integer`, `compact`, `percent`, a currency (`{ currency: 'USD' }`) or a function |
 | ticks | Number of ticks to aim for (5) |
-| showTicks | Draws the ticks with their values around the arc |
-| showValue | Writes the value and the caption in the middle |
+| showTicks | Draws the ticks with their values around the arc; labels that would shrink the arc too much turn compact (`2M`), and when even those do not fit only the tick lines stay |
+| showValue | Writes the value and the caption in the middle; a long value gets a smaller font so it stays inside the arc |
 | height | Height in px (220), or a CSS size such as `'100%'` of a parent with a definite height |
 | toolbar | Shows the chart menu: download SVG or PNG (the file is named after `ariaLabel` or `label`) |
 | loading | Shows a skeleton of the same size |

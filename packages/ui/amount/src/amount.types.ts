@@ -24,7 +24,10 @@ export interface TxAmountFormatOptions {
   locale: string;
   /** ISO currency code; without it the plain number is formatted. */
   currency?: string | null;
-  /** Digits info like `1.2-2`: minimum integer digits, then minimum and maximum fraction digits. */
+  /**
+   * Digits info like `1.2-2`: minimum integer digits, then minimum and maximum fraction digits. Without it a currency
+   * shows its own minor digits (`$318.60`, `¥318`) and a plain number up to two decimals.
+   */
   format?: string;
   /** Standard or compact notation (default `standard`). */
   notation?: TxAmountNotation;

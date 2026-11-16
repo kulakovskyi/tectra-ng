@@ -1,5 +1,11 @@
 @if (showTotal()) {
-  <div class="tx-paginator__total" [class]="passThrough().total?.class" [style]="passThrough().total?.style">{{ totalLabel() }}</div>
+  <div
+    class="tx-paginator__total"
+    [class]="passThrough().total?.class"
+    [style]="passThrough().total?.style"
+  >
+    {{ totalLabel() }}
+  </div>
 }
 <nav
   class="tx-paginator__bar"
@@ -8,8 +14,15 @@
   [attr.aria-label]="ariaLabel() ?? translations().pagination"
 >
   @if (startTemplate(); as start) {
-    <div class="tx-paginator__start" [class]="passThrough().start?.class" [style]="passThrough().start?.style">
-      <ng-container [ngTemplateOutlet]="start.templateRef" [ngTemplateOutletContext]="{ $implicit: state() }" />
+    <div
+      class="tx-paginator__start"
+      [class]="passThrough().start?.class"
+      [style]="passThrough().start?.style"
+    >
+      <ng-container
+        [ngTemplateOutlet]="start.templateRef"
+        [ngTemplateOutletContext]="{ $implicit: state() }"
+      />
     </div>
   }
   @if (showCurrentPageReport()) {
@@ -46,7 +59,11 @@
     <tx-icon class="tx-paginator__icon" aria-hidden="true" [name]="previousPageIcon()" />
   </button>
   @if (showPageLinks()) {
-    <span class="tx-paginator__pages" [class]="passThrough().pages?.class" [style]="passThrough().pages?.style">
+    <span
+      class="tx-paginator__pages"
+      [class]="passThrough().pages?.class"
+      [style]="passThrough().pages?.style"
+    >
       @for (link of pageLinks(); track link) {
         <button
           type="button"
@@ -77,6 +94,7 @@
       [unstyled]="isUnstyled()"
       [disabled]="disabled()"
       [ngModel]="page()"
+      [ngModelOptions]="{ standalone: true }"
       (ngModelChange)="changePage($event)"
     />
   }
@@ -134,12 +152,20 @@
       [unstyled]="isUnstyled()"
       [disabled]="disabled()"
       [ngModel]="rows()"
+      [ngModelOptions]="{ standalone: true }"
       (ngModelChange)="changeRows($event)"
     />
   }
   @if (endTemplate(); as end) {
-    <div class="tx-paginator__end" [class]="passThrough().end?.class" [style]="passThrough().end?.style">
-      <ng-container [ngTemplateOutlet]="end.templateRef" [ngTemplateOutletContext]="{ $implicit: state() }" />
+    <div
+      class="tx-paginator__end"
+      [class]="passThrough().end?.class"
+      [style]="passThrough().end?.style"
+    >
+      <ng-container
+        [ngTemplateOutlet]="end.templateRef"
+        [ngTemplateOutletContext]="{ $implicit: state() }"
+      />
     </div>
   }
 </nav>

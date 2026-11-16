@@ -6,7 +6,7 @@ A floating round button that fans out a few quick actions — in a line, a circl
 <tx-speed-dial ariaLabel="Create" direction="up" [model]="createActions" (itemSelected)="create($event.item)" />
 ```
 
-Items are `TxMenuItem`s (`label`, `icon`, `command`, `disabled`, `visible`, `severity: 'danger'`); each one is an icon button named by its label, with the label in a tooltip.
+Items are `TxMenuItem`s (`label`, `icon`, `command`, `disabled`, `visible`, `severity: 'danger'`); each one is an icon button named by its label, with the label in a tooltip. An item with `routerLink` (and `queryParams`, `fragment`) navigates with the router, one with `url` (and `target`) is a plain link; both still run their `command`.
 
 ## Inputs
 | Name | Description |
@@ -47,3 +47,4 @@ Items are `TxMenuItem`s (`label`, `icon`, `command`, `disabled`, `visible`, `sev
 | Home / End | First / last item |
 | Escape | Closes, focus goes back to the button |
 | Tab | Closes and moves on |
+| Enter / Space on an item | Runs the item or follows its link |

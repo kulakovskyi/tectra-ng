@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { TxChartCurrencyFormat } from '@tectra-ng/charts/core';
 import { TxWaterfallChart, TxWaterfallItem } from '@tectra-ng/charts/waterfall';
 
 @Component({
@@ -6,7 +7,7 @@ import { TxWaterfallChart, TxWaterfallItem } from '@tectra-ng/charts/waterfall';
   imports: [TxWaterfallChart],
   template: `<tx-waterfall-chart
     [items]="items"
-    valueFormat="compact"
+    [valueFormat]="usd"
     ariaLabel="Cash flow for the quarter"
   />`,
   styles: `
@@ -17,8 +18,9 @@ import { TxWaterfallChart, TxWaterfallItem } from '@tectra-ng/charts/waterfall';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class WaterfallChartBasicExample {
+  readonly usd: TxChartCurrencyFormat = { currency: 'USD' };
   readonly items: TxWaterfallItem[] = [
-    { label: 'Opening', value: 420000 },
+    { label: 'Opening', value: 420000, total: true },
     { label: 'Sales', value: 310000 },
     { label: 'Services', value: 95000 },
     { label: 'Salaries', value: -240000 },

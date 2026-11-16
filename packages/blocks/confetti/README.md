@@ -16,7 +16,7 @@ A one-time burst of confetti from the middle of its box — for a finished onboa
 }
 ```
 
-The burst plays once when it appears; `play()` plays it again. Ten pieces fly out in the primary, muted and success colours; give your own with `pieces`. It is decorative (`aria-hidden`); with reduced motion the pieces stand still at their places.
+The burst plays once when it appears; `play()` plays it again. Ten pieces fly out in the primary, muted and success colours; give your own with `pieces`. The pieces stay for a moment where they land, fade out and are removed. It is decorative (`aria-hidden`); with reduced motion the pieces do not fly — they appear at their places and fade out.
 
 ## Inputs
 | Name | Description |

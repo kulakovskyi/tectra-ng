@@ -24,6 +24,7 @@ The chart does not change `nodes` itself: handle `nodeToggle`, `expandAll`, `col
 | height | Height of the canvas (`calc(100vh - 15rem)`) |
 | busy | Dims the canvas and blocks it while data loads |
 | pathKinds | Node `kind`s that draw the path to the root on hover; `null` — every node |
+| minFitZoom | Smallest zoom of "fit to screen" (0.6), so cards stay readable on a phone; a tree still too wide is centred on its root, one too tall starts at the top |
 | dt | Design tokens of this chart (`chart`, group `orgChart`) |
 | pt | Classes and styles of the parts: `root`, `bar`, `toolbar`, `canvas`, `stage`, `minimap`, `hint` |
 | ptOptions | How `pt` merges with the global pass-through |

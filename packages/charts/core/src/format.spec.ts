@@ -1,6 +1,6 @@
 import { TX_LOCALE_US } from '@tectra-ng/core/i18n';
 import { alignedDomain, cartesianLayout } from './cartesian';
-import { chartMonthNames, chartNumberFormatter, compactNumber, textWidth, tickFormatter, timeTickOptions, truncateText } from './format';
+import { chartMonthNames, chartNumberFormatter, compactNumber, compactValueFormatter, textWidth, tickFormatter, timeTickOptions, truncateText } from './format';
 import { chartSummary, chartTable, hasChartData, normalizeSeries, tableRows } from './series-data';
 
 describe('chart formats', () => {
@@ -13,6 +13,21 @@ describe('chart formats', () => {
     expect(chartNumberFormatter('en-US', (value) => `#${value}`)(3)).toBe('#3');
     expect(chartNumberFormatter('en-US')(Number.NaN)).toBe('');
     expect(compactNumber(1500)).toBe('1.5K');
+  });
+
+  it('writes a currency in full, compact on ticks and in the locale', () => {
+    const usd = { currency: 'USD' };
+    expect(chartNumberFormatter('en-US', usd)(36400)).toBe('$36,400');
+    expect(chartNumberFormatter('en-US', usd)(12.5)).toBe('$12.50');
+    expect(chartNumberFormatter('en-US', usd)(Number.NaN)).toBe('');
+    expect(chartNumberFormatter('en-US', { currency: 'EUR', currencyDisplay: 'code' })(5)).toMatch(/^EUR\s5$/);
+    expect(tickFormatter('en-US', [0, 20000], usd)(20000)).toBe('$20K');
+    expect(tickFormatter('en-US', [0, 0.5], usd)(0.5)).toBe('$0.5');
+    expect(compactValueFormatter('en-US', usd)(36400)).toBe('$36.4K');
+    expect(compactValueFormatter('en-US', usd)(Number.NaN)).toBe('');
+    expect(compactValueFormatter('en-US')(36400)).toBe('36.4K');
+    expect(compactValueFormatter('en-US', 'percent')(25)).toBe('25%');
+    expect(tickFormatter('uk-UA', [0, 200000], usd)(200000)).toMatch(/200\s?тис\./);
   });
 
   it('gives ticks as many decimals as the step needs', () => {

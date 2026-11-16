@@ -428,6 +428,19 @@ describe('pdf writer options', () => {
     expect((pdf.match(/2 Tr/g) ?? []).length).toBe(3);
   });
 
+  it('wraps a long title and subtitle to the page width', async () => {
+    const title = 'Quarterly revenue by region, product line and sales channel with returns and discounts';
+    const subtitle = 'Every order placed between the first of January and the last day of March, grouped by the region of the buyer and the channel it came through, without test orders';
+    const pdf = await text(buildExportTable([{ a: 1 }], [{ field: 'a' }]), { title, subtitle, pageNumbers: false, header: false });
+    const titleLines = pdf.match(/\/F1 14\.4 Tf/g) ?? [];
+    const subtitleLines = pdf.match(/\/F1 9\.9 Tf/g) ?? [];
+    expect(titleLines.length).toBeGreaterThan(1);
+    expect(subtitleLines.length).toBeGreaterThan(1);
+    const xs = [...pdf.matchAll(/\/F1 (?:14\.4|9\.9) Tf [\d. ]+ rg ([\d.]+) [\d.]+ Td/g)].map((match) => Number(match[1]));
+    expect(new Set(xs)).toEqual(new Set([36]));
+    expect((pdf.match(/2 Tr [^\n]*\/F1 9\.9 Tf/g) ?? []).length).toBe(0);
+  });
+
   it('starts pages with a rule when the header is off', async () => {
     const rows = Array.from({ length: 90 }, (_, index) => ({ id: index }));
     const pdf = await text(buildExportTable(rows, [{ field: 'id' }]), { header: false, title: 'T', pageNumbers: false });

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { TxChartAnnotation } from '@tectra-ng/charts/core';
 import { TxAnnouncer } from '@tectra-ng/core/a11y';
 import { TxRangeAreaChart } from './range-area-chart.component';
 import { TxRangeAreaPointEvent, TxRangeAreaSeriesToggle, TxRangeAreaXType, TxRangeSeries } from './range-area-chart.types';
@@ -222,6 +223,48 @@ describe('TxRangeAreaChart interaction', () => {
     expect(chart().active()?.series).toBe(-1);
     expect(chart().tooltip()).toBeNull();
     expect(chart().activePoints()).toEqual([]);
+  });
+});
+
+describe('TxRangeAreaChart annotations', () => {
+  @Component({
+    imports: [TxRangeAreaChart],
+    template: `
+      <tx-range-area-chart id="category" [series]="series" [categories]="categories" [annotations]="categoryMarks" />
+      <tx-range-area-chart id="time" xType="time" [series]="series" [categories]="days" [annotations]="timeMarks" />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+  })
+  class AnnotationHost {
+    readonly series: TxRangeSeries[] = [{ name: 'Forecast', low: [1, 2, 3], high: [4, 5, 6] }];
+    readonly categories = ['Mon', new Date(2026, 0, 2), 'Wed'];
+    readonly days = [new Date(2026, 0, 1), new Date(2026, 0, 2), new Date(2026, 0, 3)];
+    readonly categoryMarks: TxChartAnnotation[] = [
+      { type: 'x-line', x: 'Wed', label: 'Today' },
+      { type: 'x-line', x: new Date(2026, 0, 2) },
+      { type: 'x-line', x: 'Sun' },
+      { type: 'y-band', from: 4, to: 5, label: 'Goal' },
+    ];
+    readonly timeMarks: TxChartAnnotation[] = [
+      { type: 'x-line', x: new Date(2026, 0, 2), label: 'Today', tone: 'primary' },
+      { type: 'x-line', x: 'not a date' },
+      { type: 'point', x: '2026-01-03', y: 6, label: 'Peak' },
+    ];
+  }
+
+  it('marks categories and dates behind and over the bands', async () => {
+    const fixture = TestBed.createComponent(AnnotationHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    const all = (selector: string) => Array.from(fixture.nativeElement.querySelectorAll(selector)) as HTMLElement[];
+    const charts = fixture.debugElement.queryAll(By.directive(TxRangeAreaChart)).map((item) => item.componentInstance as TxRangeAreaChart);
+    expect(charts[0].annotationShapes().map((shape) => shape.kind)).toEqual(['line', 'line', 'band']);
+    expect(charts[0].annotationShapes()[0].x1).toBe(charts[0].positions()[2]);
+    expect(charts[0].annotationShapes()[1].x1).toBe(charts[0].positions()[1]);
+    expect(charts[1].annotationShapes().map((shape) => shape.kind)).toEqual(['line', 'point']);
+    expect(charts[1].annotationShapes()[0].x1).toBeCloseTo(charts[1].positions()[1]);
+    expect(all('#category .tx-chart-annotation__label').map((label) => label.textContent?.trim())).toEqual(['Today', 'Goal']);
+    expect(all('#time .tx-chart-annotation__label').map((label) => label.textContent?.trim())).toEqual(['Today', 'Peak']);
   });
 });
 

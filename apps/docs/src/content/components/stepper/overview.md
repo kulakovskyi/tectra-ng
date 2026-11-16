@@ -2,7 +2,7 @@
 category: Navigation
 tokens: stepper, steps
 import: TxStepper, TxSteps
-examples: basic, linear, vertical, disabled-step, step-template, steps, clickable-steps, track, steps-template, design-tokens
+examples: basic, linear, vertical, dynamic-steps, completed, disabled-step, step-template, steps, clickable-steps, track, steps-template, design-tokens
 ---
 # Stepper
 

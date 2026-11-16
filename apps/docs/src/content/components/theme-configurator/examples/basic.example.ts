@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TxThemeConfigurator } from '@tectra-ng/blocks/theme-configurator';
-import { edgeStyle, paperStyle, softStyle, tectraStyle } from '@tectra-ng/themes';
+import { edgeStyle, paperStyle, tectraStyle } from '@tectra-ng/themes';
 
 @Component({
   selector: 'theme-configurator-basic-example',
@@ -9,5 +9,5 @@ import { edgeStyle, paperStyle, softStyle, tectraStyle } from '@tectra-ng/themes
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class ThemeConfiguratorBasicExample {
-  readonly styles = [tectraStyle, softStyle, edgeStyle, paperStyle];
+  readonly styles = [tectraStyle, edgeStyle, paperStyle];
 }

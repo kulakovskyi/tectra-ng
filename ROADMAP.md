@@ -28,7 +28,7 @@ Everything tectra covers, ordered by dependencies and by how much the first cons
 |---|---|---|
 | Tokens: ink surface, 5 accents, severity palettes, radius, typography, shadows | `@tectra-ng/tokens` | ✅ |
 | Themes: light / dark semantic, `createTectraPreset(options)`, component tokens, deep `definePreset` | `@tectra-ng/themes` | ✅ |
-| Theme picker: 17 primaries (`noir` follows the surface), 13 surfaces, 4 themes (`tectra` default, `soft`, `edge`, `paper`) via `createTectraPreset({ style, primary, surface })`, runtime ripple switch; docs header picker; e2e of every style in light and dark (`themes.spec.ts`) | `@tectra-ng/tokens`, `@tectra-ng/themes`, `@tectra-ng/core/config` | ✅ |
+| Theme picker: 17 primaries (`noir` follows the surface), 13 surfaces, 3 themes (`tectra` default, `edge`, `paper`; `soft` taken out until it reshapes the whole kit) via `createTectraPreset({ style, primary, surface })`, runtime ripple switch; docs header picker; e2e of every style in light and dark (`themes.spec.ts`) | `@tectra-ng/tokens`, `@tectra-ng/themes`, `@tectra-ng/core/config` | ✅ |
 | `provideTectra` (preset, mode, `darkSelector`, ripple, unstyled, pt, ptOptions), forms base, i18n, style loader, ripple, fluid | `@tectra-ng/core` | ✅ |
 | 334 icons with PrimeIcons names + registry, brand logos | `@tectra-ng/icons`, `@tectra-ng/brand-icons` | ✅ |
 | Docs site, registry builder, sandbox | `apps/docs` | ✅ |
@@ -133,6 +133,7 @@ Detailed checklist per component: [roadmap/stage-6-selection.md](roadmap/stage-6
 | `ui/mention-textarea` — suggestions at the caret, mentions output | — | 2 | ✅ |
 | `ui/email-suggestion` — own domain completion, typo fixes | — | 4 | ✅ |
 | `ui/tree-select`, `ui/cascade-select` | TreeSelect, CascadeSelect | — (parity) | ✅ |
+| `ui/select-button` — segmented single / multiple choice, icons, item template, sizes, `fluid`, form control | SelectButton | — (parity) | ✅ |
 
 ## Stage 7 — data ✅
 

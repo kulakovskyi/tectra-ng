@@ -29,21 +29,22 @@ import {
   seriesColor,
   stepIndex,
   textWidth,
-  truncateText,
 } from '@tectra-ng/charts/core';
 import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraChartTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
-import { funnelBoxes, funnelConnectorPath, funnelIndexAt, funnelRate } from './funnel-layout';
+import { funnelBoxes, funnelConnectorPath, funnelIndexAt, funnelLabelLines, funnelRate } from './funnel-layout';
 import { TxFunnelChartPart, TxFunnelConnector, TxFunnelItem, TxFunnelStage, TxFunnelStageEvent } from './funnel-chart.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { FUNNEL_ICON_DEFAULTS } from './funnel.icons';
 import { FUNNEL_THEME } from './funnel.theme';
 
-const DEFAULTS = { gap: 0.32, labelWidth: 0.3, labelFontSize: 12.25, valueFontSize: 12, conversionFontSize: 11 };
+const DEFAULTS = { gap: 0.32, labelWidth: 0.4, labelFontSize: 12.25, valueFontSize: 12, conversionFontSize: 11 };
 const PADDING = 4;
 const LABEL_PAD = 12;
+const LABEL_SLACK = 1.08;
+const LINE_HEIGHT = 1.2;
 const MIN_WIDTH = 4;
 
 @Component({
@@ -115,7 +116,7 @@ export class TxFunnelChart {
     if (!this.showLabels()) return 0;
     const { labelWidth, labelFontSize } = this.geometry();
     const widest = Math.max(0, ...this.list().map((item) => textWidth(item.label, labelFontSize)));
-    return Math.min(this.size().width * labelWidth, widest + LABEL_PAD);
+    return Math.min(this.size().width * labelWidth, widest * LABEL_SLACK + LABEL_PAD);
   });
 
   readonly stages = computed<TxFunnelStage[]>(() => {
@@ -161,10 +162,12 @@ export class TxFunnelChart {
     return this.stages().map((stage) => {
       const value = this.valueFormatter()(stage.value);
       const inside = stage.width >= textWidth(value, valueFontSize) + 12;
+      const lines = funnelLabelLines(stage.label, Math.max(0, column - LABEL_PAD) / LABEL_SLACK, labelFontSize, stage.height >= labelFontSize * LINE_HEIGHT * 2 ? 2 : 1);
       return {
         key: stage.key,
         index: stage.index,
-        label: truncateText(stage.label, Math.max(0, column - LABEL_PAD), labelFontSize),
+        label: lines.join(' '),
+        lines,
         full: stage.label,
         labelX: 0,
         y: stage.y + stage.height / 2,

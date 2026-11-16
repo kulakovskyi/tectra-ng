@@ -45,7 +45,7 @@ export class TxAmount {
 
   readonly amount = input<number | null | undefined>(null);
   readonly currency = input<string | null | undefined>(undefined);
-  readonly format = input<string>('1.0-2');
+  readonly format = input<string | undefined>(undefined);
   readonly notation = input<TxAmountNotation>('standard');
   readonly currencyDisplay = input<TxAmountCurrencyDisplay>('narrowSymbol');
   readonly showSign = input<boolean, unknown>(false, { transform: booleanAttribute });
