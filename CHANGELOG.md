@@ -1,3 +1,13 @@
+## 0.4.3 (2026-11-16)
+
+### 🚀 Features
+
+- select button, gantt dependencies, chart, surface and component fixes ([#38](https://github.com/kulakovskyi/tectra-ng/pull/38))
+
+### ❤️ Thank You
+
+- Andriy @kulakovskyi
+
 ## 0.4.2 (2026-11-14)
 
 ### 🚀 Features
