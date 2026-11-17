@@ -1,3 +1,13 @@
+## 0.4.5 (2026-11-17)
+
+### 🚀 Features
+
+- component options and fixes, dropdown panel widths ([#43](https://github.com/kulakovskyi/tectra-ng/pull/43))
+
+### ❤️ Thank You
+
+- Andriy @kulakovskyi
+
 ## 0.4.4 (2026-11-17)
 
 ### 🩹 Fixes
