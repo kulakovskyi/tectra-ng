@@ -1,4 +1,5 @@
 import { TxIconName } from '@tectra-ng/icons';
+import { TxPanelMenuItem } from '@tectra-ng/ui/panel-menu';
 
 /** One entry of `tx-command-palette`: a page to open or a command to run. */
 export interface TxCommandPaletteItem {
@@ -20,5 +21,30 @@ export interface TxCommandPaletteItem {
   command?: () => void;
 }
 
+/** Own texts of the keyboard hints in the palette footer; a missing one stays translated. */
+export interface TxCommandPaletteHints {
+  /** Text next to the arrow keys. */
+  navigate?: string;
+  /** Text next to the Enter key. */
+  open?: string;
+  /** Text next to the Escape key. */
+  close?: string;
+}
+
 /** Names of the parts of `tx-command-palette` that its `pt` input can style. */
 export type TxCommandPalettePart = 'root' | 'trigger' | 'overlay' | 'panel' | 'search' | 'results' | 'item' | 'footer';
+
+/** Maps the icon of a menu item to a palette icon: `{ 'old-name': 'new-name' }` or a function of the item. */
+export type TxMenuPaletteIcon = Readonly<Record<string, string>> | ((item: TxPanelMenuItem) => string | null | undefined);
+
+/** Options of `menuPaletteItems`. */
+export interface TxMenuPaletteOptions {
+  /** Group of the items, `pages` by default. */
+  group?: string;
+  /** Turns a menu label into the shown text, for menus whose labels are translation keys; section and parent titles too. */
+  translate?: (key: string) => string;
+  /** Maps the icon of a menu item to the icon shown in the palette; an icon it does not map stays as it is. */
+  icon?: TxMenuPaletteIcon;
+  /** Icon of an entry whose menu item has none, `file` by default. */
+  defaultIcon?: TxIconName | (string & {});
+}

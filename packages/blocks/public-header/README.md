@@ -30,6 +30,12 @@ The panel closes on a link or a button inside, on Escape (the focus goes back to
 | ptOptions | How `pt` merges with the global pass-through |
 | unstyled | Removes the tectra styles |
 
+## Outputs
+| Name | Description |
+|---|---|
+| languageChange | The code of the language chosen in the preferences; the tectra locale has already switched — mirror it into the app's own translations here, or app-wide with `provideTxLocaleSync` |
+| modeChange | The theme mode chosen in the preferences |
+
 ## Slots
 | Name | Description |
 |---|---|

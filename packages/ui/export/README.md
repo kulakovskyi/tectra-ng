@@ -1,6 +1,6 @@
 # Export
 
-Saves rows as a file in the browser — CSV, Excel (`.xlsx`), Word (`.docx`), PDF, JSON, HTML, Markdown — copies them as a table or prints them, without any third-party library. The Excel and Word files are written by the kit itself (zip + Office XML); the PDF embeds only the glyphs it uses from the Onest font (Latin and Cyrillic, loaded from `@tectra-ng/ui/export-font` on the first PDF export), so its text is real and searchable.
+Saves rows as a file in the browser — CSV, Excel (`.xlsx`), Word (`.docx`), PDF, JSON, HTML, Markdown — copies them as a table or prints them, and turns rich HTML into a paged PDF, without any third-party library. The Excel and Word files are written by the kit itself (zip + Office XML); the PDF embeds only the glyphs it uses from the Onest font (Latin and Cyrillic, loaded from `@tectra-ng/ui/export-font` on the first PDF export), so its text is real and searchable.
 
 Each format has its own icon button — `<tx-export-csv>`, `<tx-export-excel>`, `<tx-export-word>`, `<tx-export-pdf>`, or `<tx-export-button format="…">` for any of them — and `<tx-export>` is one "Export" split button with a menu of formats. They all take the same `fields`, `data` / `fetchData` and `options`.
 
@@ -48,6 +48,17 @@ exportFields: TxExportField<User>[] = [
 | failed | `fetchData`, the writer or the clipboard threw; the button is ready for the next click |
 | dataChange | The rows changed after `fetchData` |
 
+## Methods
+| Name | Description |
+|---|---|
+| TxExportService.exportHtmlPdf(source, options) | Turns rich HTML — a string, or an element whose content is read — into a paged PDF and saves it; resolves to the file name. `options`: `filename` plus the options of `writeHtmlPdf`, merged over the `title` and `pdf` options of `provideTxExport()` |
+| TxExportService.htmlPdfFile(source, options) | The same without saving: resolves to `{ blob, filename }` |
+
+## Functions
+| Name | Description |
+|---|---|
+| writeHtmlPdf(source, options) | Writes rich HTML (string or DOM node) as a PDF blob with real, selectable text. A string is read without a DOM, so it also runs on the server. See "Rich HTML to PDF" below |
+
 ## Keyboard
 | Key | Action |
 |---|---|
@@ -69,11 +80,25 @@ exportFields: TxExportField<User>[] = [
 
 `provideTxExport(options)` sets defaults for the app or for one component subtree.
 
+## Rich HTML to PDF
+
+```ts
+const exporter = inject(TxExportService);
+await exporter.exportHtmlPdf(this.article().nativeElement, { filename: 'release-notes', title: 'Release notes', pageSize: 'a4' });
+
+const blob = await writeHtmlPdf('<h1>Report</h1><p>Hello <b>world</b></p>', { margin: 56 });
+```
+
+- Draws headings `h1`–`h6`, paragraphs, `<br>`, bold / italic / underline / strike, `sub` / `sup`, `small`, links (clickable, `http`, `https`, `mailto`, `tel`), inline code and `<pre>` blocks (whitespace kept, long lines wrapped), ordered (`start`) and unordered lists nested to any depth, `blockquote`, `hr`, definition lists, figure captions and the alt text of images, and tables: `thead` rows (or a first row of `th` cells) repeat on every page, `colspan` spans columns, columns are sized by their content and rows taller than the rest of a page are split across pages.
+- Lines wrap by the real widths of the font; a heading never ends a page. `text-align` (or `align`) of blocks and cells, `font-weight`, `font-style` and `text-decoration` of inline styles are read; other CSS is not. `break-before: page` and `break-after: page` (or `page-break-*: always`) start a new page.
+- Options: `pageSize`, `orientation` (`portrait` by default), `margin` (48), `fontSize` (10; headings, code and tables follow it), `lineHeight` (1.45), `title` and `author` (file properties), `pageNumbers` (on), `textColor`, `mutedColor`, `linkColor`, `borderColor`, `headerBackground` (or `none`), `codeBackground`, `font`, `compress`.
+- Text is set in Onest (Latin and Cyrillic); the font loader may add `italic` and `mono` TrueType files, otherwise italic is slanted and code uses the regular font. Images, forms, scripts and styles are left out.
+
 ## Accessibility
 
 Icon-only buttons are named by their tooltip. While an export runs the button spins, has `aria-busy` and ignores more clicks. After copying, the button shows a check, its name becomes "Table copied" and the text is announced.
 
 ## Notes
 
-- `TxExportService.export({ format, rows, fields, options })` runs an export from code; `buildExportTable`, `writeCsv`, `writeXlsx`, `writeDocx`, `writePdf`, `writeJson`, `writeHtml`, `writeMarkdown` and `zip` are exported for own flows. `tx-table` `exportCSV()` uses the same CSV writer.
+- `TxExportService.export({ format, rows, fields, options })` runs an export from code; `buildExportTable`, `writeCsv`, `writeXlsx`, `writeDocx`, `writePdf`, `writeHtmlPdf`, `writeJson`, `writeHtml`, `writeMarkdown` and `zip` are exported for own flows. `tx-table` `exportCSV()` uses the same CSV writer.
 - PDF uses a TrueType font without shaping, so scripts that need it (Arabic, Indic) need their own font through `pdf.font`, and right-to-left text is not reordered.

@@ -1,6 +1,6 @@
 # Select
 
-Pick one value from a list. A `ControlValueAccessor`: works with `[formControl]`, `ngModel` and signal forms. The panel is a CDK overlay, so it is never cut by `overflow: hidden` and flips up at the bottom of the screen. Long lists scroll virtually and can load page by page from a server.
+Pick one value from a list. A `ControlValueAccessor`: works with `[formControl]`, `ngModel` and signal forms. The panel is a CDK overlay, so it is never cut by `overflow: hidden` and flips up at the bottom of the screen. Long lists scroll virtually and can load page by page from a server. The panel is at least as wide as the field and grows with its options up to `--tx-form-field-panel-max-width` (300px; one field changes it with `[dt]="{ overlay: { maxWidth: '520px' } }"`), never past the screen; it keeps the width it opened with while you search, scroll or load more, and lines up with the end of the field when there is no room on the right.
 
 The option engine (`buildOptionRows`, `readOptionField`, `foldText`) is exported for other list controls.
 

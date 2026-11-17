@@ -1049,7 +1049,7 @@ test('resting float labels sit in the middle of their field and hosts hug the fi
 
 test('labels name their fields', async ({ page }) => {
   await page.goto('/components/label');
-  await page.getByText('Full name', { exact: true }).click();
+  await page.locator('#basic').getByText('Full name', { exact: true }).click();
   await expect(page.locator('#label-basic-name')).toBeFocused();
   await expect(page.getByRole('combobox', { name: 'City' })).toBeVisible();
 });

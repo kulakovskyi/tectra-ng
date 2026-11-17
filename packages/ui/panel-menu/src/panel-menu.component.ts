@@ -9,6 +9,7 @@ import {
   effect,
   inject,
   input,
+  isSignal,
   model,
   numberAttribute,
   output,
@@ -46,6 +47,7 @@ import {
   TxPanelMenuItemContext,
   TxPanelMenuItemEvent,
   TxPanelMenuPart,
+  TxPanelMenuTranslate,
   TxPanelMenuVariant,
 } from './panel-menu.types';
 import { PANEL_MENU_ICON_DEFAULTS } from './panel-menu.icons';
@@ -154,6 +156,7 @@ export class TxPanelMenu {
   readonly expandedKeys = model<TxPanelMenuExpandedKeys>({});
   readonly badgeMax = input<number, unknown>(99, { transform: numberAttribute });
   readonly ariaLabel = input<string | undefined>(undefined);
+  readonly translate = input<TxPanelMenuTranslate | undefined>(undefined);
   readonly dt = input<TectraDeepPartial<TectraPanelMenuTokens> | undefined>(undefined);
   readonly pt = input<TxPassThrough<TxPanelMenuPart, TxPanelMenu> | undefined>(undefined);
   readonly ptOptions = input<TxPassThroughOptions | undefined>(undefined);
@@ -173,32 +176,37 @@ export class TxPanelMenu {
     this.nodes().map((node) =>
       this.variant() === 'sidebar' && !node.children.length && !node.separator
         ? { node, tree: [node], titled: false }
-        : { node, tree: node.children, titled: true },
+        : { node, tree: node.children, titled: this.variant() !== 'sidebar' || !!node.item.label?.trim() },
     ),
   );
 
   private readonly url = this.router ? routeUrl(this.router) : signal('');
 
-  readonly activeKeys = computed(() => {
+  private readonly routeState = computed(() => {
     const active = new Set<string>();
+    const open = new Set<string>();
     const current = this.currentTree();
     const visit = (nodes: TxPanelMenuNode[]) => {
       for (const node of nodes) {
-        if (node.item.active ?? (!!current && this.matches(node.item, current))) {
-          active.add(node.key);
+        const marked = node.item.active;
+        if (marked ?? (!!current && this.matches(node.item, current))) {
+          (marked || !node.children.length ? active : open).add(node.key);
         }
         visit(node.children);
       }
     };
     visit(this.nodes());
-    return active;
+    return { active, open };
   });
 
+  readonly activeKeys = computed(() => this.routeState().active);
+
   private readonly activeAncestors = computed(() => {
-    const keys = new Set<string>();
+    const { active, open } = this.routeState();
+    const keys = new Set<string>(open);
     const visit = (nodes: TxPanelMenuNode[]) => {
       for (const node of nodes) {
-        if (this.activeKeys().has(node.key)) {
+        if (active.has(node.key) || open.has(node.key)) {
           node.ancestors.forEach((key) => keys.add(key));
         }
         visit(node.children);
@@ -280,8 +288,15 @@ export class TxPanelMenu {
     return icon && this.txIconRegistry.has(icon) ? icon : null;
   }
 
+  protected text(key: string | undefined): string {
+    if (!key) {
+      return '';
+    }
+    return this.translate()?.(key) ?? key;
+  }
+
   protected badgeText(item: TxPanelMenuItem): string {
-    const badge = item.badge;
+    const badge = isSignal(item.badge) ? item.badge() : item.badge;
     if (badge === undefined || badge === null || badge === '') {
       return '';
     }
@@ -302,6 +317,7 @@ export class TxPanelMenu {
     return {
       $implicit: node.item,
       item: node.item,
+      label: this.text(node.item.label),
       level: node.level,
       active: this.isActive(node),
       expanded: node.children.length ? this.isExpanded(node) : false,
@@ -427,11 +443,17 @@ export class TxPanelMenu {
     if (!router || item.routerLink === undefined) {
       return false;
     }
-    const commands = typeof item.routerLink === 'string' ? [item.routerLink] : [...item.routerLink];
-    const target = router.createUrlTree(commands, { queryParams: item.queryParams, fragment: item.fragment });
+    const target = router.createUrlTree(this.commands(item.routerLink), { queryParams: item.queryParams, fragment: item.fragment });
     const options = item.routerLinkActiveOptions;
     const match = options && 'exact' in options ? (options.exact ? EXACT_MATCH : SUBSET_MATCH) : { ...SUBSET_MATCH, ...options };
-    return containsTree(current, target, match);
+    if (!containsTree(current, target, match)) {
+      return false;
+    }
+    return !item.routerLinkActiveExclude?.some((link) => containsTree(current, router.createUrlTree(this.commands(link)), SUBSET_MATCH));
+  }
+
+  private commands(link: string | readonly unknown[]): unknown[] {
+    return typeof link === 'string' ? [link] : [...link];
   }
 
   private build(items: TxPanelMenuItem[], parent: TxPanelMenuNode | null): TxPanelMenuNode[] {

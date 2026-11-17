@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { TxStatTile } from './stat-tile.component';
 import { TxStatTiles } from './stat-tiles.component';
+import { provideTxStatTilesRelay, TxStatTilesRelay } from './stat-tiles.context';
 import { TxStatTileTone } from './stat-tiles.types';
 
 @Component({ template: '', changeDetection: ChangeDetectionStrategy.OnPush })
@@ -157,5 +158,95 @@ describe('TxStatTile router link target', () => {
     expect(link.getAttribute('href')).toBe('/orders');
     expect(link.getAttribute('target')).toBe('_blank');
     expect(link.getAttribute('rel')).toBe('noopener noreferrer');
+  });
+});
+
+@Component({
+  selector: 'kpi-row',
+  imports: [TxStatTiles],
+  providers: [provideTxStatTilesRelay()],
+  template: `
+    <tx-stat-tiles id="wrapped" [compact]="compact()" [minWidth]="minWidth()" [floorWidth]="floorWidth()" [dt]="dt()">
+      <ng-content />
+    </tx-stat-tiles>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class KpiRow {
+  readonly compact = signal(true);
+  readonly minWidth = signal<string | undefined>('9rem');
+  readonly floorWidth = signal<string | null | undefined>(undefined);
+  readonly dt = signal<{ root?: { floorWidth?: string } } | undefined>(undefined);
+}
+
+@Component({
+  imports: [KpiRow, TxStatTile],
+  template: `
+    @if (shown()) {
+      <kpi-row>
+        <tx-stat-tile id="projected" label="Visits" />
+        <tx-stat-tile id="own" label="Bounce" [compact]="false" />
+      </kpi-row>
+    }
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class WrapperHost {
+  readonly shown = signal(true);
+}
+
+describe('TxStatTiles in a wrapper', () => {
+  it('reaches tiles projected through a wrapper with the relay, and a tile can set compact itself', async () => {
+    const fixture = TestBed.createComponent(WrapperHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    const el = (selector: string) => fixture.nativeElement.querySelector(selector) as HTMLElement;
+    expect(el('#projected').classList).toContain('tx-stat-tile--compact');
+    expect(el('#own').classList).not.toContain('tx-stat-tile--compact');
+
+    const row = fixture.debugElement.children[0].componentInstance as KpiRow;
+    row.compact.set(false);
+    await fixture.whenStable();
+    expect(el('#projected').classList).not.toContain('tx-stat-tile--compact');
+
+    fixture.componentInstance.shown.set(false);
+    await fixture.whenStable();
+    expect(el('#projected')).toBeNull();
+  });
+
+  it('keeps a floor under minWidth from the floorWidth input or the floorWidth token', async () => {
+    const fixture = TestBed.createComponent(WrapperHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    const grid = fixture.nativeElement.querySelector('#wrapped') as HTMLElement;
+    const row = fixture.debugElement.children[0].componentInstance as KpiRow;
+    expect(grid.style.getPropertyValue('--tx-stat-tiles-min-width')).toBe('9rem');
+    expect(grid.style.getPropertyValue('--tx-stat-tiles-floor-width')).toBe('0px');
+
+    row.dt.set({ root: { floorWidth: '12rem' } });
+    await fixture.whenStable();
+    expect(grid.style.getPropertyValue('--tx-stat-tiles-floor-width')).toBe('12rem');
+
+    row.floorWidth.set('15rem');
+    await fixture.whenStable();
+    expect(grid.style.getPropertyValue('--tx-stat-tiles-floor-width')).toBe('15rem');
+
+    row.minWidth.set(undefined);
+    row.dt.set(undefined);
+    await fixture.whenStable();
+    expect(grid.style.getPropertyValue('--tx-stat-tiles-min-width')).toBe('');
+    expect(grid.style.getPropertyValue('--tx-stat-tiles-floor-width')).toBe('15rem');
+  });
+
+  it('connects only the first grid to a relay', () => {
+    const relay = new TxStatTilesRelay();
+    const first = { compact: signal(true) };
+    const second = { compact: signal(false) };
+    expect(relay.compact()).toBe(false);
+    const disconnect = relay.connect(first);
+    expect(relay.connect(second)).toBeNull();
+    expect(relay.compact()).toBe(true);
+    disconnect?.();
+    expect(relay.compact()).toBe(false);
   });
 });

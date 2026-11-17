@@ -442,6 +442,25 @@ describe('TxDatePicker interactions', () => {
     document.querySelectorAll('.cdk-overlay-container').forEach((node) => node.remove());
   });
 
+  it('opens at least as wide as the field and stays inside the viewport', async () => {
+    const root = document.documentElement;
+    const viewport = vi.spyOn(Element.prototype, 'clientWidth', 'get').mockImplementation(function (this: Element) {
+      return this === root ? 375 : 0;
+    });
+    const width = vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockImplementation(function (this: HTMLElement) {
+      return this.matches('.tx-datepicker__panel') ? 220 : 140;
+    });
+    try {
+      await setup();
+      await open();
+      expect(panel().style.minWidth).toBe('140px');
+      expect(panel().style.maxWidth).toBe('359px');
+    } finally {
+      viewport.mockRestore();
+      width.mockRestore();
+    }
+  });
+
   it('marks the calendar button as part of an invalid field', async () => {
     await setup({ showIcon: true, invalid: true });
     expect(fixture.nativeElement.classList).toContain('tx-datepicker--invalid');
@@ -475,6 +494,24 @@ describe('TxDatePicker interactions', () => {
     await press(active(), 'Enter');
     expect(panel().getAttribute('data-view')).toBe('date');
     expect(changes).toEqual([]);
+  });
+
+  it('keeps the header buttons and their focus while it steps through months, years and decades', async () => {
+    await setup({ inline: true }, new Date(2026, 0, 15));
+    const next = $('.tx-datepicker__next');
+    const previous = $('.tx-datepicker__previous');
+    next.focus();
+    next.click();
+    await settle();
+    expect($('.tx-datepicker__next')).toBe(next);
+    expect($('.tx-datepicker__previous')).toBe(previous);
+    expect(document.activeElement).toBe(next);
+    $('.tx-datepicker__select-year').click();
+    await settle();
+    const decade = $('.tx-datepicker__next');
+    decade.click();
+    await settle();
+    expect($('.tx-datepicker__next')).toBe(decade);
   });
 
   it('moves through years and decades from the keyboard and the header', async () => {
@@ -853,7 +890,7 @@ describe('TxDatePicker interactions', () => {
     fixture = TestBed.createComponent(TxDatePicker);
     fixture.componentInstance.open();
     expect(fixture.componentInstance.isOpen()).toBe(true);
-    expect(fixture.componentInstance.panelMinWidth()).toBe(0);
+    expect(fixture.componentInstance.panelWidth.style()).toEqual({});
   });
 
   it('keeps the panel when it opens again before it is gone', async () => {

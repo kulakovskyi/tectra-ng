@@ -16,7 +16,7 @@ import { TX_ICONS, provideTxIcons } from '@tectra-ng/icons';
       <input txInput [formControl]="control" />
       <tx-input-icon position="end">.com</tx-input-icon>
       <tx-input-clear (cleared)="cleared = cleared + 1" />
-      <tx-input-copy (copied)="copied = $event" />
+      <tx-input-copy (copied)="copied = $event" (copyFailed)="failed = $event" />
     </tx-icon-field>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,9 +25,22 @@ class Host {
   readonly control = new FormControl('hello');
   cleared = 0;
   copied = '';
+  failed = '';
 }
 
-beforeEach(() => TestBed.configureTestingModule({ providers: [provideTxIcons(TX_ICONS)] }));
+const secureContext = Object.getOwnPropertyDescriptor(window, 'isSecureContext');
+const execCommand = document.execCommand;
+
+beforeEach(() => {
+  Object.defineProperty(window, 'isSecureContext', { value: true, configurable: true });
+  TestBed.configureTestingModule({ providers: [provideTxIcons(TX_ICONS)] });
+});
+
+afterEach(() => {
+  document.execCommand = execCommand;
+  if (secureContext) Object.defineProperty(window, 'isSecureContext', secureContext);
+  else Reflect.deleteProperty(window, 'isSecureContext');
+});
 
 describe('TxIconField', () => {
   let fixture: ComponentFixture<Host>;
@@ -68,6 +81,30 @@ describe('TxIconField', () => {
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith('hello');
     expect(fixture.componentInstance.copied).toBe('hello');
     expect(query('tx-input-copy button').getAttribute('aria-label')).toBe('Copied');
+    expect(fixture.componentInstance.failed).toBe('');
+  });
+
+  it('copies through a selection outside a secure context', async () => {
+    Object.defineProperty(window, 'isSecureContext', { value: false, configurable: true });
+    const exec = vi.fn().mockReturnValue(true);
+    document.execCommand = exec;
+    query('tx-input-copy button').click();
+    await fixture.whenStable();
+    expect(exec).toHaveBeenCalledWith('copy');
+    expect(navigator.clipboard.writeText).not.toHaveBeenCalled();
+    expect(fixture.componentInstance.copied).toBe('hello');
+  });
+
+  it('reports a refused copy without the check mark', async () => {
+    Object.assign(navigator, { clipboard: { writeText: vi.fn().mockRejectedValue(new Error('denied')) } });
+    document.execCommand = vi.fn().mockReturnValue(false);
+    const button = query('tx-input-copy button');
+    button.click();
+    await fixture.whenStable();
+    expect(fixture.componentInstance.copied).toBe('');
+    expect(fixture.componentInstance.failed).toBe('hello');
+    expect(button.classList).not.toContain('tx-input-action--done');
+    expect(button.getAttribute('aria-label')).toBe('Could not copy');
   });
 });
 
@@ -170,7 +207,7 @@ describe('TxIconField without a form control', () => {
   });
 
   it('copies an empty value without an input and resets the check after a while', async () => {
-    Object.assign(navigator, { clipboard: undefined });
+    Object.assign(navigator, { clipboard: { writeText: vi.fn().mockResolvedValue(undefined) } });
     const fixture = TestBed.createComponent(EmptyHost);
     fixture.autoDetectChanges();
     await fixture.whenStable();
@@ -181,10 +218,11 @@ describe('TxIconField without a form control', () => {
     const button = fixture.nativeElement.querySelector('tx-input-copy button') as HTMLButtonElement;
     button.click();
     button.click();
+    await vi.advanceTimersByTimeAsync(0);
     fixture.detectChanges();
     expect(fixture.componentInstance.copied).toEqual(['', '']);
     expect(button.getAttribute('aria-label')).toBe('Copied');
-    vi.advanceTimersByTime(1500);
+    await vi.advanceTimersByTimeAsync(1500);
     fixture.detectChanges();
     expect(button.getAttribute('aria-label')).toBe('Copy');
     button.click();

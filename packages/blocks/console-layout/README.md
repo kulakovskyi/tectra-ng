@@ -54,6 +54,30 @@ The panel goes inside the layout content; it moves the layout footer next to its
 | ptOptions | How `pt` merges with the global pass-through |
 | unstyled | Removes the tectra styles |
 
+## Inputs — tx-console-rail
+| Name | Description |
+|---|---|
+| items | Required. Sections of the rail (`TxConsoleRailItem[]`) |
+| label | Name of the rail navigation |
+| responsive | When the rail turns into a row under 768px: `viewport` — the window (default), `container` — the nearest container named `tx-console-layout`, `none` — it stays a column. Inside `tx-console-layout` it follows the layout |
+| unstyled | Removes the tectra styles |
+
+`tx-console-rail` also works on its own, e.g. next to your own header: it turns into a scrolling row on narrow screens like the rail of the layout. With `responsive="container"` give its frame `container: tx-console-layout / inline-size`.
+
+## Console in a wrapper component
+
+A panel reads the breakpoint mode and the footer from its console through the `TX_CONSOLE_LAYOUT` token. A panel projected into a component that wraps `tx-console-layout` cannot see the console, because Angular resolves it where it is written. Add `provideTxConsoleLayoutRelay()` to the wrapper's `providers`: the console inside it then reaches the projected panels and moves its footer into them.
+
+```ts
+@Component({
+  selector: 'admin-console',
+  imports: [TxConsoleLayout],
+  providers: [provideTxConsoleLayoutRelay()],
+  template: `<tx-console-layout title="Admin" footerName="Admin console" [railItems]="sections"><ng-content /></tx-console-layout>`,
+})
+export class AdminConsole {}
+```
+
 ## Slots
 | Name | Description |
 |---|---|

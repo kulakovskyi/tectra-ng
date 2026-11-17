@@ -6,7 +6,7 @@ import { optionalBoolean } from '@tectra-ng/core/utils';
 import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraActionsMenuTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TxButton } from '@tectra-ng/ui/button';
-import { TxPopover, TxPopoverTrigger } from '@tectra-ng/ui/popover';
+import { TxPopover, TxPopoverTarget, TxPopoverTrigger } from '@tectra-ng/ui/popover';
 import { TxTooltip } from '@tectra-ng/ui/tooltip';
 import { TxActionsMenuItem, TxActionsMenuPart, TxActionsMenuSize } from './actions-menu.types';
 import { ACTIONS_MENU_ICON_DEFAULTS } from './actions-menu.icons';
@@ -34,6 +34,7 @@ export class TxActionsMenu {
 
   private readonly popover = viewChild(TxPopover);
   private readonly list = viewChild<ElementRef<HTMLElement>>('list');
+  private readonly trigger = viewChild<ElementRef<HTMLButtonElement>>('trigger');
   private pending: TxActionsMenuItem | null = null;
 
   readonly items = input.required<readonly TxActionsMenuItem[]>();
@@ -54,6 +55,15 @@ export class TxActionsMenu {
   readonly hostStyle = computed(() => ({ ...this.tokenStyle(), ...this.passThrough().root?.style }));
   protected readonly popoverTokens = { content: { padding: '0' } };
   protected readonly name = computed(() => this.ariaLabel() ?? this.tooltip() ?? this.translations().moreActions);
+  readonly isOpen = computed(() => this.popover()?.isOpen() ?? false);
+
+  open(target?: TxPopoverTarget): void {
+    this.popover()?.show(target ?? this.trigger()?.nativeElement);
+  }
+
+  toggle(target?: TxPopoverTarget): void {
+    this.popover()?.toggle(target ?? this.trigger()?.nativeElement);
+  }
 
   close(): void {
     this.popover()?.hide();

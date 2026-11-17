@@ -1,7 +1,7 @@
 @let label = text();
 @let parts = passThrough();
-@let valueTemplate = rowValueTemplate();
-@let headerTemplate = rowHeaderTemplate();
+@let valueTemplate = resolvedRowValueTemplate();
+@let headerTemplate = resolvedRowHeaderTemplate();
 <div
   class="tx-heatmap__scroll"
   [class]="parts.scroll?.class"

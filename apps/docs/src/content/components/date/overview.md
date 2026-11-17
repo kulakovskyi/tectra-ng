@@ -3,7 +3,7 @@ category: Utilities
 source: packages/utils/date
 package: @tectra-ng/utils/date
 import: TxDatePipe
-examples: basic, locale, formats, defaults, time-zone, date-range, calendar-functions
+examples: basic, locale, formats, defaults, time-zone, format-function, date-range, calendar-functions
 ---
 # Date
 

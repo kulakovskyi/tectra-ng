@@ -25,6 +25,7 @@ import { TxButtonIconTemplate, TxButtonLoadingIconTemplate } from './button-temp
     ></button>
     <a txButton id="link" href="#" [disabled]="true" (click)="clicks.update((n) => n + 1)">Link</a>
     <button txButton id="projected" [icon]="'plus'">Create</button>
+    <button txButton id="tinted" severity="secondary" [outlined]="true" [dt]="{ outlined: { secondary: { background: 'white' } } }">Edit</button>
     <button txButton id="templated"><ng-template txButtonIcon><b class="custom-icon">!</b></ng-template>Custom</button>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -63,6 +64,13 @@ describe('TxButton', () => {
     expect(button.style.getPropertyValue('--tx-button-border-radius')).toBe('0');
     expect(button.querySelector('.tx-button__label')?.classList).toContain('my-label');
     expect(button.classList).toContain('global-root');
+  });
+
+  it('writes the resting background of an outlined button from its tokens', async () => {
+    await render();
+    const button = el('tinted');
+    expect(button.getAttribute('data-variant')).toBe('outlined');
+    expect(button.style.getPropertyValue('--tx-button-outlined-secondary-background')).toBe('white');
   });
 
   it('resolves the variant: explicit variant wins over shortcuts', async () => {

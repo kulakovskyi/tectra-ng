@@ -1,6 +1,6 @@
 # Knob
 
-A value on a dial: drag along the ring or use the keyboard. `arc="dial"` leaves a gap at the bottom (270°), `arc="ring"` is a full circle with a handle. `limit` caps the value below `max` and shows the unreachable part of the ring.
+A value on a dial: drag along the ring or use the keyboard. `arc="dial"` leaves a gap at the bottom (270°), `arc="ring"` is a full circle with a handle. `limit` caps the value below `max` and shows the unreachable part of the ring. A `ControlValueAccessor` — works with `[formControl]`, `ngModel`, signal forms and `[(value)]`.
 
 ```html
 <tx-knob formControlName="volume" [step]="5" valueTemplate="{value}%" ariaLabel="Volume" />
@@ -10,6 +10,7 @@ A value on a dial: drag along the ring or use the keyboard. `arc="dial"` leaves 
 ## Inputs
 | Name | Description |
 |---|---|
+| value | Two-way: the value (`null` shows `min`); use it or a form control |
 | min | Smallest value |
 | max | Largest value of the scale |
 | step | Step of dragging and the arrow keys |
@@ -35,6 +36,7 @@ A value on a dial: drag along the ring or use the keyboard. `arc="dial"` leaves 
 | Name | Description |
 |---|---|
 | changed | `{ value, originalEvent }` while dragging or after a key |
+| valueChange | The value changed (also from the form control) |
 
 ## Slots
 | Name | Description |

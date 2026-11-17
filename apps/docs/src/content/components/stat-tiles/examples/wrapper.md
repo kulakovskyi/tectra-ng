@@ -1,0 +1,1 @@
+Tiles projected into a component that wraps `tx-stat-tiles` cannot see the grid on their own. `provideTxStatTilesRelay()` in the wrapper's `providers` passes the grid settings on, so they turn compact with it; `compact` on a tile overrides the grid — "Failed" stays regular.

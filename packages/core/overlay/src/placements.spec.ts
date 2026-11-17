@@ -7,6 +7,7 @@ import {
   txArrowInset,
   txArrowOffset,
   txArrowPositions,
+  txFieldPositions,
   txPositions,
 } from './placements';
 
@@ -39,6 +40,22 @@ describe('placements', () => {
     const phone = { top: 8, right: 394, bottom: 706, left: 8 };
     const ordered = orderByRoom(positions, origin, { width: 260, height: 70 }, phone);
     expect(placementFromPosition(ordered[0])).toBe('bottom-start');
+  });
+});
+
+describe('txFieldPositions', () => {
+  it('lines a field panel up with the start or the end of the field, below first', () => {
+    const positions = txFieldPositions();
+    expect(positions.map(placementFromPosition)).toEqual(['bottom-start', 'bottom-end', 'top-start', 'top-end']);
+    expect(positions[1]).toMatchObject({ originX: 'end', overlayX: 'end', offsetY: 4 });
+    expect(txFieldPositions(6)[2]).toMatchObject({ originY: 'top', overlayY: 'bottom', offsetY: -6 });
+  });
+
+  it('aligns a panel wider than its field to the end of the field near the right edge', () => {
+    const origin = { top: 100, left: 800, width: 160, height: 36 };
+    const bounds = { top: 8, right: 1016, bottom: 760, left: 8 };
+    const ordered = orderByRoom(txFieldPositions(), origin, { width: 300, height: 200 }, bounds);
+    expect(placementFromPosition(ordered[0])).toBe('bottom-end');
   });
 });
 

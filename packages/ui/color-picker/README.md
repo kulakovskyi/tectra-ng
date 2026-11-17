@@ -16,6 +16,11 @@ Pick a colour in a popover, inline, or from a text field: a saturation / brightn
 | inputId | Id of the button (of the text field with `field`) for a `<label for>` |
 | ariaLabel | Accessible name of the button and the panel |
 | ariaLabelledBy | Id of the element that labels the button |
+| areaLabel | Accessible name of the saturation / brightness area (translated "Saturation and brightness" by default) |
+| hueLabel | Accessible name of the hue slider (translated "Hue" by default) |
+| hexLabel | Accessible name of the hex field in the panel (translated "Hex colour" by default) |
+| clearLabel | Accessible name of the clear button (translated "Clear" by default, none when `clearText` names it) |
+| clearText | Text shown next to the clear icon; without it the button shows only the icon |
 | size | `small`, `medium`, `large` |
 | invalid | Red border and `aria-invalid`; follows the form control by default |
 | readonly | Shows the colour, cannot change it |

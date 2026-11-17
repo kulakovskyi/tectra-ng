@@ -22,11 +22,12 @@ import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import {
   TxOverlayInsets,
+  TxPanelWidth,
   TxPlacement,
   placementFromPosition,
   txAnimateEnter,
   txAnimateLeave,
-  txPositions,
+  txFieldPositions,
   TxOverlayRoom,
   watchOrigin,
   TxOverlayAnchor,
@@ -109,11 +110,12 @@ export class TxCascadeSelect extends TxFormControlBase<unknown> {
   readonly isInvalid = injectFieldInvalid(this.invalid);
   readonly isUnstyled = injectUnstyled(this.unstyled);
   readonly passThrough = injectPassThrough('cascadeSelect', this, this.pt, this.ptOptions);
-  private readonly room = new TxOverlayRoom(txPositions('bottom-start', 4));
+  private readonly room = new TxOverlayRoom(txFieldPositions(4));
   private readonly connectedOverlay = viewChild(CdkConnectedOverlay);
   readonly positions = this.room.positions;
   readonly scrollStrategy = txScrollStrategy(this.injector);
   readonly viewportMargin = this.room.viewportMargin;
+  readonly panelWidth = new TxPanelWidth({ fitContent: false });
   readonly treeId = uniqueId('tx-cascade');
   readonly columnEnter = ['tx-cascade-select__column--enter'];
   readonly noClasses: string[] = [];
@@ -160,7 +162,7 @@ export class TxCascadeSelect extends TxFormControlBase<unknown> {
   readonly canClear = computed(() => this.showClear() && this.hasValue() && !this.disabled() && !this.readonly());
   readonly emptyText = computed(() => this.emptyMessage() ?? this.translations().emptyMessage);
   readonly hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-cascade-select'), ...this.passThrough().root?.style }));
-  readonly panelStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-cascade-select'), ...this.passThrough().panel?.style }));
+  readonly panelStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-cascade-select'), ...this.panelWidth.style(), ...this.passThrough().panel?.style }));
 
   open(): void {
     if (this.disabled() || this.readonly() || this.isOpen()) {
@@ -172,6 +174,7 @@ export class TxCascadeSelect extends TxFormControlBase<unknown> {
     this.activeLevel.set(Math.max(0, path.length - 1));
     this.isOpen.set(true);
     this.hasEntered = false;
+    this.panelWidth.open(this.box().nativeElement);
     this.isPanelMounted.set(true);
     this.room.open(this.overlayInsets.measure());
     this.stopWatching = watchOrigin(this.box().nativeElement, this.overlayInsets, {

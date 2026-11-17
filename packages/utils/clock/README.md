@@ -16,6 +16,6 @@ readonly offer = this.clock.countdown(() => this.deal().endsAt, 10 * 60_000);
 ## Methods
 | Name | Description |
 |---|---|
-| now | Signal of `Date.now()`, updated every second in the browser |
+| now | Signal of `Date.now()`, updated at the start of every second in the browser; the same signal as `TxTimeSource.every('second')` of `@tectra-ng/core/utils`, so it ticks together with every `tx-analog-clock` |
 | countdown(target, endingSoonMs?) | Signals `remainingMs`, `isExpired` (the target passed) and `isEndingSoon` (less than `endingSoonMs` left) for a date or a signal of one |
 | isInFuture(value) | The date is later than `now()` |

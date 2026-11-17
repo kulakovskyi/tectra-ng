@@ -35,6 +35,7 @@ class Host {
     <tx-avatar-editor
       [image]="image()"
       [size]="96"
+      shape="square"
       [disabled]="disabled()"
       [confirmRemove]="false"
       changeLabel="Replace"
@@ -125,6 +126,8 @@ describe('TxAvatarEditor', () => {
     const root = fixture.nativeElement.querySelector('tx-avatar-editor') as HTMLElement;
     const editor = fixture.debugElement.children[0].componentInstance as TxAvatarEditor;
     expect(root.style.getPropertyValue('--tx-avatar-editor-size')).toBe('96px');
+    expect(root.getAttribute('data-shape')).toBe('square');
+    expect(root.querySelector('tx-avatar')?.getAttribute('data-shape')).toBe('square');
     expect(root.style.color).toBe('red');
     expect(root.querySelector('button')?.getAttribute('aria-label')).toBe('Replace');
     await editor.remove();

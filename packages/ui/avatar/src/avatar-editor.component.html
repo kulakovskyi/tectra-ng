@@ -6,7 +6,7 @@
   (dragleave)="onDragLeave()"
   (drop)="onDrop($event)"
 >
-  <tx-avatar class="tx-avatar-editor__image" [image]="image()" [name]="name()" [tooltip]="false" [unstyled]="isUnstyled()" />
+  <tx-avatar class="tx-avatar-editor__image" [image]="image()" [name]="name()" [shape]="shape()" [tooltip]="false" [unstyled]="isUnstyled()" />
   <span class="tx-avatar-editor__badge" [class]="passThrough().badge?.class" [style]="passThrough().badge?.style">
     <button
       txButton

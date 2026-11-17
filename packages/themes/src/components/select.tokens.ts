@@ -16,6 +16,7 @@ export const selectTokens = {
     borderColor: tokenRef('surface-overlay-border'),
     borderRadius: tokenRef('radius-lg'),
     shadow: tokenRef('shadow-overlay'),
+    maxWidth: tokenRef('form-field-panel-max-width'),
   },
   list: {
     padding: '3.5px',
@@ -67,6 +68,7 @@ export const selectTokens = {
     removeSize: '12.25px',
     removeColor: lightDark(tokenRef('surface-800'), tokenRef('surface-0')),
     removeHoverColor: tokenRef('text-primary'),
+    inputMinWidth: '64px',
   },
   optionGroup: {
     padding: '3.5px 8.75px',

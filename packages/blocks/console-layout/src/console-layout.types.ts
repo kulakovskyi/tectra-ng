@@ -26,6 +26,9 @@ export interface TxConsoleRailItem {
 /** What the console breakpoints measure: the `viewport` (window) or the `container` (the console itself). */
 export type TxConsoleResponsive = 'viewport' | 'container';
 
+/** When a `tx-console-rail` turns into a row: by the `viewport`, by the `container` named `tx-console-layout`, or `none` — it stays a column. */
+export type TxConsoleRailResponsive = TxConsoleResponsive | 'none';
+
 /** A function that turns a key, such as a crumb or a rail label, into the shown text. */
 export type TxConsoleTranslate = (key: string) => string;
 

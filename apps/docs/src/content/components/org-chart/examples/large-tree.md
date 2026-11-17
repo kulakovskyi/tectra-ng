@@ -1,0 +1,1 @@
+A wide tree of 70 people. `[minFitZoom]="0"` lets "fit to screen" (`F`) go below the usual 20% so the whole tree shows, and zooming out then stops at that fit. `pageHotkeys` makes `+` `−` `0` `F` `/` and the arrows work from anywhere on the page — for a page where the chart is the main content; fields, dialogs and menus keep their keys.

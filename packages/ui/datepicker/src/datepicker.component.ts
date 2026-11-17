@@ -30,7 +30,7 @@ import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassT
 import { injectFluid } from '@tectra-ng/core/fluid';
 import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
-import { TxOverlayAnchor, TxOverlayInsets, TxPlacement, placementFromPosition, txAnimateEnter, txAnimateLeave, txPositions, txScrollStrategy, watchOrigin } from '@tectra-ng/core/overlay';
+import { TxOverlayAnchor, TxOverlayInsets, TxPanelWidth, TxPlacement, placementFromPosition, txAnimateEnter, txAnimateLeave, txFieldPositions, txScrollStrategy, watchOrigin } from '@tectra-ng/core/overlay';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraDatePickerTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
@@ -202,7 +202,7 @@ export class TxDatePicker extends TxFormControlBase<TxDatePickerValue> {
   readonly isFluid = injectFluid(this.fluid);
   readonly isInvalid = injectFieldInvalid(this.invalid);
   readonly passThrough = injectPassThrough('datePicker', this, this.pt, this.ptOptions);
-  readonly positions = txPositions('bottom-start', 4);
+  readonly positions = txFieldPositions(4);
   readonly scrollStrategy = txScrollStrategy(this.injector);
   readonly panelId = uniqueId('tx-datepicker');
   readonly generatedInputId = `${this.panelId}-input`;
@@ -219,7 +219,7 @@ export class TxDatePicker extends TxFormControlBase<TxDatePickerValue> {
   readonly focusedYear = signal(new Date().getFullYear());
   readonly pendingTime = signal<Date | null>(null);
   readonly previewDate = signal<Date | null>(null);
-  readonly panelMinWidth = signal(0);
+  readonly panelWidth = new TxPanelWidth({ fitContent: false });
   private readonly matchedMonths = signal<number | null>(null);
 
   readonly isDisabled = computed(() => this.disabled() || this.disabledInput());
@@ -267,7 +267,7 @@ export class TxDatePicker extends TxFormControlBase<TxDatePickerValue> {
   readonly seconds = computed(() => this.timeSource()?.getSeconds() ?? 0);
   readonly isPm = computed(() => (this.timeSource()?.getHours() ?? 0) >= 12);
   readonly hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-date-picker'), ...this.passThrough().root?.style }));
-  readonly panelStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-date-picker'), ...this.passThrough().panel?.style }));
+  readonly panelStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-date-picker'), ...this.panelWidth.style(), ...this.passThrough().panel?.style }));
   readonly showPanel = computed(() => this.inline() || this.isPanelMounted());
 
   private readonly syncView = effect(() => this.currentView.set(this.view()));
@@ -342,7 +342,8 @@ export class TxDatePicker extends TxFormControlBase<TxDatePickerValue> {
     this.resetFocus();
     this.isOpen.set(true);
     this.hasEntered = false;
-    this.panelMinWidth.set(this.fieldRef()?.nativeElement.offsetWidth ?? 0);
+    const field = this.fieldRef()?.nativeElement;
+    if (field && !this.touchUI()) this.panelWidth.open(field);
     if (this.touchUI()) this.openTouch();
     else this.isPanelMounted.set(true);
     this.opened.emit();

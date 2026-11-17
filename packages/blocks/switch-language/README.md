@@ -6,7 +6,7 @@ A segmented switch of the interface language: short codes in a capsule with a sl
 <tx-switch-language [(value)]="language" (valueChange)="translate.use($event)" />
 ```
 
-Give your own list with `languages` (`{ code, name, short }`). With `syncLocale` off the switch only reports the choice. Keep the choice yourself — save it on `valueChange`.
+Give your own list with `languages` (`{ code, name, short }`). With `syncLocale` off the switch only reports the choice. With `syncLocale` on, `provideTectra({ localeStorageKey: 'locale' })` remembers the choice between visits and restores it before the first render, and `provideTxLocaleSync((code) => …)` from `@tectra-ng/core/i18n` mirrors every change into the app's own translations.
 
 ## Inputs
 | Name | Description |

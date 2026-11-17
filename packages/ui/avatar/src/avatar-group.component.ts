@@ -76,6 +76,8 @@ export class TxAvatarGroup {
     };
   });
 
+  readonly listStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-avatar'), ...this.passThrough().list?.style }));
+
   readonly context: TxAvatarGroupContext = {
     size: this.size,
     shape: this.shape,

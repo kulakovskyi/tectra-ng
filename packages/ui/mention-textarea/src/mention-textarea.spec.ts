@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { TxSelectItem } from '@tectra-ng/ui/select';
 import { caretPoint } from './caret';
 import { TxMentionTextarea } from './mention-textarea.component';
 import { TxMentionItem } from './mention-textarea.types';
@@ -51,6 +52,34 @@ describe('TxMentionTextarea', () => {
   });
 
   afterEach(() => document.querySelector('.cdk-overlay-container')?.replaceChildren());
+
+  it('ignores a picked suggestion once the mention is closed', () => {
+    type('Hi @ole');
+    const mention = fixture.debugElement.children[0].componentInstance as TxMentionTextarea;
+    const item = mention.rows().find((row) => row.type === 'option') as TxSelectItem;
+    mention.close();
+    mention.onOptionClick(item);
+    expect(textarea().value).toBe('Hi @ole');
+  });
+
+  it('keeps the suggestions inside the viewport', () => {
+    const root = document.documentElement;
+    const viewport = vi.spyOn(Element.prototype, 'clientWidth', 'get').mockImplementation(function (this: Element) {
+      return this === root ? 375 : 0;
+    });
+    const width = vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockImplementation(function (this: HTMLElement) {
+      return this.matches('.tx-mention-textarea__panel') ? 220 : 140;
+    });
+    try {
+      type('Hi @ole');
+      const panel = document.querySelector('.tx-mention-textarea__panel') as HTMLElement;
+      expect(panel.style.minWidth).toBe('');
+      expect(panel.style.maxWidth).toBe('359px');
+    } finally {
+      viewport.mockRestore();
+      width.mockRestore();
+    }
+  });
 
   it('suggests people after the trigger and inserts the chosen one', () => {
     type('Hi @ole');

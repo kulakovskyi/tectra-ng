@@ -5,12 +5,13 @@ Pick one country or several. Built on `tx-select` and `tx-multiselect`: every IS
 ## Inputs
 | Name | Description |
 |---|---|
-| options | Countries to offer: codes, or `{ code, value?, label?, count?, hint?, disabled? }`; all countries by default |
+| options | Countries to offer: codes, or `{ code, value?, label?, count?, hint?, disabled?, flag? }`; all countries by default. A code that is not a country or a region (`none`, `ZZ`) is a text row without a flag, and its value stays as written; `flag: false` drops the flag of any row |
 | multiple | Several countries; the value is an array |
 | filter | Search by name or code (on by default) |
 | sort | `name` (localized, by default) or `none` (keep the order of `options`) |
 | shape | Flag shape: `rectangle` or `circle` |
 | maxFlags | With `multiple`: flags shown in the field before "+N" |
+| maxNamed | With `multiple`: up to this many picked countries show their names in the field, more show only flags (1 by default) |
 | virtualScrollThreshold | Above this many countries the list is virtual |
 | placeholder | Text shown while nothing is selected |
 | showClear | Shows a button that clears the value |

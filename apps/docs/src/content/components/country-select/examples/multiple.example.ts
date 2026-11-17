@@ -9,10 +9,17 @@ import { TxCountrySelect } from '@tectra-ng/ui/country-select';
     <div class="stack">
       <tx-country-select [formControl]="markets" [multiple]="true" [placeholder]="'Markets'" />
       <span class="hint">Value: {{ markets.value?.join(', ') || '—' }}</span>
+      <tx-country-select
+        [formControl]="offices"
+        [multiple]="true"
+        [maxNamed]="2"
+        [placeholder]="'Offices'"
+      />
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class CountrySelectMultipleExample {
   readonly markets = new FormControl<string[]>(['DE', 'FR', 'IT', 'ES', 'PL']);
+  readonly offices = new FormControl<string[]>(['PL', 'UA']);
 }

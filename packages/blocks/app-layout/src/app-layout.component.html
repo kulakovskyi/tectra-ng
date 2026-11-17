@@ -44,6 +44,7 @@
           variant="sidebar"
           [ariaLabel]="menuName()"
           [model]="model()"
+          [translate]="translate()"
           [collapsed]="!wide()"
           [unstyled]="isUnstyled()"
           [class]="passThrough().menu?.class"
@@ -95,7 +96,7 @@
 
 <ng-template #brand>
   @if (logo()) {
-    <img class="tx-app-layout__logo" alt="" [src]="logo()" />
+    <img class="tx-app-layout__logo" alt="" [src]="logo()" [class]="passThrough().logo?.class" [style]="passThrough().logo?.style" />
   }
   @if (title()) {
     <span class="tx-app-layout__name">{{ title() }}</span>

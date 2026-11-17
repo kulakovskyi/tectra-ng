@@ -181,8 +181,8 @@
         border-color var(--tx-motion-duration) var(--tx-motion-easing);
 
       &::after {
-        width: 4px;
-        height: 8px;
+        width: var(--tx-editor-content-task-check-width);
+        height: var(--tx-editor-content-task-check-height);
         margin-top: -2px;
         border: solid var(--tx-editor-content-task-checked-color);
         border-width: 0 2px 2px 0;
@@ -267,7 +267,7 @@
   iframe {
     display: block;
     width: 100%;
-    max-width: 640px;
+    max-width: var(--tx-editor-content-video-max-width);
     height: auto;
     border: 0;
     border-radius: var(--tx-editor-content-video-border-radius);

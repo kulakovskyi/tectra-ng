@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
 import { TxPanelMenu } from './panel-menu.component';
 import { TxPanelMenuItemTemplate } from './panel-menu.templates';
-import { TxPanelMenuExpandedKeys, TxPanelMenuItem, TxPanelMenuItemEvent, TxPanelMenuVariant } from './panel-menu.types';
+import { TxPanelMenuExpandedKeys, TxPanelMenuItem, TxPanelMenuItemEvent, TxPanelMenuTranslate, TxPanelMenuVariant } from './panel-menu.types';
 import { TX_ICONS, provideTxIcons } from '@tectra-ng/icons';
 
 @Component({ template: '', changeDetection: ChangeDetectionStrategy.OnPush })
@@ -334,11 +334,12 @@ describe('TxPanelMenu collapsed', () => {
 
 @Component({
   imports: [TxPanelMenu],
-  template: `<tx-panel-menu ariaLabel="Main" [variant]="variant()" [model]="model()" [multiple]="multiple()" [(expandedKeys)]="keys" />`,
+  template: `<tx-panel-menu ariaLabel="Main" [variant]="variant()" [model]="model()" [multiple]="multiple()" [translate]="translate()" [(expandedKeys)]="keys" />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class FlexHost {
   readonly variant = signal<TxPanelMenuVariant>('panel');
+  readonly translate = signal<TxPanelMenuTranslate | undefined>(undefined);
   readonly model = signal<TxPanelMenuItem[]>([]);
   readonly multiple = signal(false);
   keys: TxPanelMenuExpandedKeys = {};
@@ -658,5 +659,138 @@ describe('TxPanelMenu leave guard', () => {
     await flush();
     expect(TestBed.inject(Router).url).toBe('/tasks');
     expect(active()).toEqual(['Tasks3']);
+  });
+});
+
+const DICTIONARY: Record<string, Record<string, string>> = {
+  us: { 'nav.main': 'Main', 'nav.home': 'Home', 'nav.tip': 'Start page', 'nav.files': 'Files' },
+  ua: { 'nav.main': 'Головне', 'nav.home': 'Головна', 'nav.tip': 'Стартова сторінка', 'nav.files': 'Файли' },
+};
+
+@Component({
+  imports: [TxPanelMenu, TxPanelMenuItemTemplate],
+  template: `
+    <tx-panel-menu id="plain" variant="sidebar" [model]="model" [translate]="translate" />
+    <tx-panel-menu id="own" [model]="model" [translate]="translate">
+      <ng-template txPanelMenuItem let-label="label">
+        <span class="own">{{ label }}</span>
+      </ng-template>
+    </tx-panel-menu>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class TranslatedHost {
+  readonly language = signal('us');
+  readonly translate: TxPanelMenuTranslate = (key) => DICTIONARY[this.language()][key] ?? key;
+  readonly model: TxPanelMenuItem[] = [
+    { label: 'nav.files', routerLink: '/files' },
+    { label: 'nav.main', items: [{ label: 'nav.home', title: 'nav.tip', routerLink: '/home' }, { label: 'raw', routerLink: '/raw' }] },
+  ];
+}
+
+describe('TxPanelMenu labels, badges and parents', () => {
+  beforeEach(() => TestBed.configureTestingModule({ providers: [provideRouter([{ path: '**', component: Blank }])] }));
+
+  it('draws no title for a section with an empty label', async () => {
+    const { root, item } = await flex(
+      [
+        { label: '', items: [{ label: 'A', routerLink: '/a' }] },
+        { label: '  ', items: [{ label: 'B', routerLink: '/b' }] },
+        { items: [{ label: 'C', routerLink: '/c' }] },
+      ],
+      'sidebar',
+    );
+    expect(root.querySelector('.tx-panel-menu__section')).toBeNull();
+    const trees = Array.from(root.querySelectorAll('[role="tree"]'));
+    expect(trees).toHaveLength(3);
+    expect(trees.every((tree) => !tree.hasAttribute('aria-labelledby') && !tree.hasAttribute('aria-label'))).toBe(true);
+    expect(item('A').getAttribute('href')).toBe('/a');
+  });
+
+  it('passes labels, section titles and titles through translate and follows its signals', async () => {
+    const fixture = TestBed.createComponent(TranslatedHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    const root = fixture.nativeElement as HTMLElement;
+    const texts = (selector: string) => Array.from(root.querySelectorAll(selector)).map((element) => element.textContent?.trim());
+    expect(texts('#plain .tx-panel-menu__section')).toEqual(['Main']);
+    expect(texts('#plain .tx-panel-menu__label')).toEqual(['Files', 'Home', 'raw']);
+    expect(root.querySelector('#plain [role="tree"]')?.getAttribute('aria-label')).toBe('Files');
+    expect(root.querySelector('#plain [href="/home"]')?.getAttribute('title')).toBe('Start page');
+    expect(texts('#own .own')).toEqual(['Files', 'Main', 'Home', 'raw']);
+    fixture.componentInstance.language.set('ua');
+    await fixture.whenStable();
+    expect(texts('#plain .tx-panel-menu__section')).toEqual(['Головне']);
+    expect(texts('#plain .tx-panel-menu__label')).toEqual(['Файли', 'Головна', 'raw']);
+    expect(root.querySelector('#plain [href="/home"]')?.getAttribute('title')).toBe('Стартова сторінка');
+    expect(texts('#own .own')).toEqual(['Файли', 'Головне', 'Головна', 'raw']);
+  });
+
+  it('reads a signal badge and updates it in place', async () => {
+    const count = signal<number | null>(3);
+    const label = signal<string | undefined>('new');
+    const { fixture, item } = await flex([{ label: 'Main', items: [{ label: 'Inbox', badge: count }, { label: 'News', badge: label }] }], 'sidebar');
+    const badge = (name: string) => item(name).querySelector('.tx-panel-menu__badge')?.textContent ?? null;
+    expect(badge('Inbox')).toBe('3');
+    expect(badge('News')).toBe('new');
+    count.set(150);
+    label.set(undefined);
+    await fixture.whenStable();
+    expect(badge('Inbox')).toBe('99+');
+    expect(badge('News')).toBeNull();
+    count.set(null);
+    await fixture.whenStable();
+    expect(badge('Inbox')).toBeNull();
+  });
+
+  it('opens a parent on the pages of its link without filling it, unless it is marked active', async () => {
+    const links: TxPanelMenuItem[] = [
+      {
+        label: 'Main',
+        items: [
+          { label: 'Links', routerLink: '/links', items: [{ label: 'A', routerLink: '/links/a' }, { label: 'B', routerLink: '/links/b' }] },
+          { label: 'Pinned', active: true, items: [{ label: 'C', routerLink: '/c' }] },
+        ],
+      },
+    ];
+    const { fixture, item } = await flex(links, 'sidebar');
+    const router = TestBed.inject(Router);
+    await router.navigateByUrl('/links/a');
+    await fixture.whenStable();
+    const parent = item('Links');
+    expect(parent.tagName).toBe('DIV');
+    expect(parent.getAttribute('aria-expanded')).toBe('true');
+    expect(parent.classList).not.toContain('tx-panel-menu__item--active');
+    expect(parent.hasAttribute('aria-current')).toBe(false);
+    expect(item('A').classList).toContain('tx-panel-menu__item--active');
+    expect(item('Pinned').classList).toContain('tx-panel-menu__item--active');
+    await router.navigateByUrl('/links/other');
+    await fixture.whenStable();
+    expect(fixture.componentInstance.keys).toEqual({ '0': true, '0-0': true });
+    expect(fixture.nativeElement.querySelector('.tx-panel-menu__item--active')?.textContent?.trim()).toBe('Pinned');
+  });
+
+  it('leaves out the pages of routerLinkActiveExclude', async () => {
+    const projects: TxPanelMenuItem[] = [
+      {
+        label: 'Main',
+        items: [
+          { label: 'Projects', routerLink: '/projects', routerLinkActiveExclude: ['/projects/owners', ['/projects', 'archive']] },
+          { label: 'Owners', routerLink: '/projects/owners' },
+        ],
+      },
+    ];
+    const { fixture, item } = await flex(projects, 'sidebar');
+    const router = TestBed.inject(Router);
+    const active = (label: string) => item(label).classList.contains('tx-panel-menu__item--active');
+    await router.navigateByUrl('/projects/owners');
+    await fixture.whenStable();
+    expect([active('Projects'), active('Owners')]).toEqual([false, true]);
+    await router.navigateByUrl('/projects/42');
+    await fixture.whenStable();
+    expect([active('Projects'), active('Owners')]).toEqual([true, false]);
+    await router.navigateByUrl('/projects/archive/1');
+    await fixture.whenStable();
+    expect([active('Projects'), active('Owners')]).toEqual([false, false]);
   });
 });

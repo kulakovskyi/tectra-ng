@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TxAvatarGroup } from './avatar-group.component';
 import { TxAvatar } from './avatar.component';
+import { avatarInitials, provideTxAvatar } from './avatar.options';
 import { provideTxTooltip } from '@tectra-ng/ui/tooltip';
 
 @Component({
@@ -33,6 +34,10 @@ import { provideTxTooltip } from '@tectra-ng/ui/tooltip';
     <tx-avatar-group id="sized" [size]="28" [max]="0">
       <tx-avatar label="ZZ" />
       <tx-avatar icon="custom-glyph" />
+    </tx-avatar-group>
+    <tx-avatar-group id="tinted" [max]="1" [dt]="{ tones: { blue: { background: 'red' } }, list: { gap: '3px' } }" [pt]="{ list: { style: { color: 'green' } } }">
+      <tx-avatar name="Kim Bell" tone="blue" />
+      <tx-avatar name="Lu Chen" tone="blue" [dt]="{ root: { fontScale: '0.3' } }" />
     </tx-avatar-group>
     <tx-avatar-group id="all">
       <tx-avatar name="Olena" />
@@ -228,5 +233,86 @@ describe('TxAvatar', () => {
     await settle();
     expect(fixture.componentInstance.adds).toBe(1);
     expect(el('#team .tx-avatar-group__add')).toBeNull();
+  });
+});
+
+describe('TxAvatar list of a group', () => {
+  afterEach(() => document.querySelector('.cdk-overlay-container')?.remove());
+
+  it('carries the tokens of the group and of each avatar into the list of hidden people', async () => {
+    const fixture = TestBed.createComponent(Host);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    (fixture.nativeElement.querySelector('#tinted .tx-avatar-group__more') as HTMLButtonElement).click();
+    await fixture.whenStable();
+    const list = document.querySelector('.tx-popover .tx-avatar-group__list') as HTMLElement;
+    expect(list.style.getPropertyValue('--tx-avatar-tones-blue-background')).toBe('red');
+    expect(list.style.getPropertyValue('--tx-avatar-list-gap')).toBe('3px');
+    expect(list.style.color).toBe('green');
+    const listed = list.querySelector('tx-avatar') as HTMLElement;
+    expect(listed.getAttribute('data-tone')).toBe('blue');
+    expect(listed.style.getPropertyValue('--tx-avatar-font-scale')).toBe('0.3');
+    fixture.destroy();
+  });
+});
+
+@Component({
+  imports: [TxAvatar],
+  template: `
+    <tx-avatar id="admin" name="admin" />
+    <tx-avatar id="full" name="John Doe" />
+    <tx-avatar id="blank" image="./assets/blank.png" name="John Doe" />
+    <tx-avatar id="pattern" image="https://cdn.example.invalid/u/default-avatar.svg" name="Ann Lee" />
+    <tx-avatar id="real" image="https://cdn.example.invalid/u/ann.jpg" name="Ann Lee" />
+    <tx-avatar id="own" name="Bo Ray" tone="green" />
+    <tx-avatar id="fill" name="John Doe" size="fill" />
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class OptionsHost {}
+
+describe('TxAvatar with app-wide options', () => {
+  const render = async () => {
+    const fixture = TestBed.createComponent(OptionsHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    return (selector: string) => fixture.nativeElement.querySelector(selector) as HTMLElement;
+  };
+
+  it('has a default initials rule', () => {
+    expect(avatarInitials('Olena Kovalenko')).toBe('OK');
+    expect(avatarInitials('admin')).toBe('A');
+    expect(avatarInitials('jane.doe@mail.example')).toBe('JE');
+    expect(avatarInitials('  ')).toBe('');
+  });
+
+  it('uses the own initials rule, placeholder photos and one tone', async () => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideTxAvatar({
+          initials: (name) => (name.includes(' ') ? avatarInitials(name) : name.slice(0, 2).toUpperCase()),
+          placeholderImages: [' ./assets/blank.png ', /\/default-avatar\.\w+$/],
+          tone: 'solid',
+        }),
+      ],
+    });
+    const el = await render();
+    expect(el('#admin .tx-avatar__label').textContent).toBe('AD');
+    expect(el('#full .tx-avatar__label').textContent).toBe('JD');
+    expect(el('#admin').getAttribute('data-tone')).toBe('solid');
+    expect(el('#blank img')).toBeNull();
+    expect(el('#blank .tx-avatar__label').textContent).toBe('JD');
+    expect(el('#blank').getAttribute('data-tone')).toBe('solid');
+    expect(el('#pattern img')).toBeNull();
+    expect(el('#real img')).not.toBeNull();
+    expect(el('#own').getAttribute('data-tone')).toBe('green');
+  });
+
+  it('fills the box of its parent', async () => {
+    const el = await render();
+    expect(el('#fill').getAttribute('data-size')).toBe('fill');
+    expect(el('#fill').style.getPropertyValue('--tx-avatar-size')).toBe('');
+    expect(el('#admin .tx-avatar__label').textContent).toBe('A');
+    expect(el('#blank img')).not.toBeNull();
   });
 });

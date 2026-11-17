@@ -15,8 +15,8 @@
 }
 
 .tx-autocomplete__chips .tx-select__input {
-  flex: 1 1 64px;
-  min-width: 64px;
+  flex: 1 1 var(--tx-select-chip-input-min-width);
+  min-width: var(--tx-select-chip-input-min-width);
 }
 
 :host([data-styled]) .tx-autocomplete__dropdown {

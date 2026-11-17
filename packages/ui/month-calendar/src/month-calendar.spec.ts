@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, contentChild, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TxMonthCalendar } from './month-calendar.component';
 import { buildMonthLayout, dayIndex, indexToDate, monthWeekdays } from './month-calendar.layout';
@@ -223,5 +223,72 @@ describe('TxMonthCalendar defaults', () => {
   it('accepts any context in the event template guard', () => {
     expect(TxMonthCalendarEventTemplate.ngTemplateContextGuard({} as TxMonthCalendarEventTemplate, {})).toBe(true);
     expect(TxMonthCalendarEventTemplate.ngTemplateContextGuard({} as TxMonthCalendarEventTemplate, null)).toBe(false);
+  });
+});
+
+@Component({
+  selector: 'month-calendar-wrapper',
+  imports: [TxMonthCalendar, TxMonthCalendarEventTemplate],
+  template: `
+    <tx-month-calendar [month]="month" [events]="events" [eventTemplate]="ownEvent()?.templateRef" [labels]="labels()">
+      <ng-template txMonthCalendarEvent let-event><b class="inner">{{ event.title }}</b></ng-template>
+    </tx-month-calendar>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class Wrapper {
+  readonly ownEvent = contentChild(TxMonthCalendarEventTemplate);
+  readonly labels = signal<{ more?: string | null; today?: string | null; region?: string | null } | null>({ more: '', today: null, region: '' });
+  readonly month = new Date(2026, 9, 1);
+  readonly events = EVENTS;
+}
+
+@Component({
+  imports: [Wrapper, TxMonthCalendarEventTemplate],
+  template: `
+    <month-calendar-wrapper>
+      @if (own()) {
+        <ng-template txMonthCalendarEvent let-event let-segment="segment"><i class="outer">{{ event.title }}/{{ segment.lane }}</i></ng-template>
+      }
+    </month-calendar-wrapper>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class WrapperHost {
+  readonly own = signal(true);
+}
+
+describe('TxMonthCalendar in a wrapper', () => {
+  it('takes the event template as an input, which wins over the inner template', async () => {
+    const fixture = TestBed.createComponent(WrapperHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    const root = fixture.nativeElement as HTMLElement;
+    expect(root.querySelector('.outer')?.textContent).toBe('Sprint/0');
+    expect(root.querySelector('.inner')).toBeNull();
+
+    fixture.componentInstance.own.set(false);
+    await fixture.whenStable();
+    expect(root.querySelector('.outer')).toBeNull();
+    expect(root.querySelector('.inner')?.textContent).toBe('Sprint');
+  });
+
+  it('keeps the translated texts for empty or null labels', async () => {
+    const fixture = TestBed.createComponent(WrapperHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    const root = fixture.nativeElement as HTMLElement;
+    const calendar = root.querySelector('tx-month-calendar') as HTMLElement;
+    expect(calendar.querySelector('[role="grid"]')?.getAttribute('aria-label')).toBe('Calendar');
+    expect(calendar.querySelector('.tx-month-calendar__more')?.textContent?.trim()).toBe('+1');
+
+    const wrapper = fixture.debugElement.children[0].componentInstance as Wrapper;
+    wrapper.labels.set(null);
+    await fixture.whenStable();
+    expect(calendar.querySelector('[role="grid"]')?.getAttribute('aria-label')).toBe('Calendar');
+    wrapper.labels.set({ region: 'Shifts', more: '{count} hidden' });
+    await fixture.whenStable();
+    expect(calendar.querySelector('[role="grid"]')?.getAttribute('aria-label')).toBe('Shifts');
+    expect(calendar.querySelector('.tx-month-calendar__more')?.textContent?.trim()).toBe('1 hidden');
   });
 });

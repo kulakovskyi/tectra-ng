@@ -351,6 +351,10 @@
     box-shadow: inset 1px 0 0 var(--tx-chart-grid-color);
   }
 
+  .tx-gantt-chart__tick-text {
+    padding-inline: var(--tx-chart-gantt-tick-padding-x);
+  }
+
   .tx-gantt-chart__tier--top .tx-gantt-chart__tick {
     color: var(--tx-chart-gantt-header-top-color);
     font-weight: var(--tx-chart-gantt-header-top-font-weight);
@@ -395,6 +399,7 @@
   }
 
   .tx-gantt-chart__toggle {
+    gap: var(--tx-chart-gantt-toggle-gap);
     border-radius: var(--tx-radius-sm);
   }
 
@@ -414,6 +419,7 @@
 
   .tx-gantt-chart__bar {
     height: calc(var(--tx-gantt-chart-row-height) * var(--tx-chart-gantt-bar-height));
+    min-width: var(--tx-chart-gantt-bar-min-width);
     border-radius: var(--tx-chart-gantt-bar-radius);
     background: color-mix(in srgb, var(--tx-gantt-chart-color) var(--tx-chart-gantt-track-strength), var(--tx-chart-gantt-track-base));
     box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tx-gantt-chart-color) var(--tx-chart-gantt-bar-border-strength), transparent);
@@ -444,7 +450,7 @@
   }
 
   .tx-gantt-chart__bar--inside .tx-gantt-chart__bar-label {
-    padding-inline-start: calc(var(--tx-chart-gantt-inside-accent-width) + 6px);
+    padding-inline: calc(var(--tx-chart-gantt-inside-accent-width) + var(--tx-chart-gantt-inside-label-padding)) var(--tx-chart-gantt-inside-label-padding);
     color: var(--tx-chart-gantt-inside-label-color);
     font-weight: var(--tx-font-weight-medium);
   }
@@ -525,6 +531,8 @@
   }
 
   .tx-gantt-chart__empty {
+    gap: var(--tx-space-2);
+    min-height: var(--tx-chart-gantt-empty-min-height);
     color: var(--tx-chart-gantt-header-color);
   }
 }

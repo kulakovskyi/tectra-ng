@@ -27,7 +27,7 @@ import { WIZARD_THEME } from './wizard.theme';
         [style]="passThrough().back?.style"
         (click)="back.emit()"
       >
-        {{ backLabel() ?? translations().wizardBack }}
+        {{ backLabel() || translations().wizardBack }}
       </button>
     }
     <div class="tx-wizard-footer__end">
@@ -57,7 +57,7 @@ import { WIZARD_THEME } from './wizard.theme';
         [style]="passThrough().next?.style"
         (click)="next.emit()"
       >
-        {{ nextLabel() ?? translations().wizardNext }}
+        {{ nextLabel() || translations().wizardNext }}
       </button>
     </div>
   `,
@@ -75,11 +75,11 @@ import { WIZARD_THEME } from './wizard.theme';
 export class TxWizardFooter {
   private readonly wizardTheme = injectTokens(WIZARD_THEME);
 
-  readonly nextLabel = input<string | undefined>(undefined);
+  readonly nextLabel = input<string | null | undefined>(undefined);
   readonly nextIcon = input<TxIconName | (string & {})>('arrow-right');
-  readonly backLabel = input<string | undefined>(undefined);
+  readonly backLabel = input<string | null | undefined>(undefined);
   readonly showBack = input<boolean, unknown>(true, { transform: booleanAttribute });
-  readonly skipLabel = input<string | undefined>(undefined);
+  readonly skipLabel = input<string | null | undefined>(undefined);
   readonly loading = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly dt = input<TectraDeepPartial<TectraWizardTokens> | undefined>(undefined);
   readonly pt = input<TxPassThrough<TxWizardFooterPart, TxWizardFooter> | undefined>(undefined);

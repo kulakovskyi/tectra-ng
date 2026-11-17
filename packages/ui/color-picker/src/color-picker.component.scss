@@ -22,7 +22,7 @@
 }
 
 .tx-color-picker__field {
-  --tx-field-inset-start: calc(var(--tx-form-field-font-size) + 6px);
+  --tx-field-inset-start: calc(var(--tx-form-field-font-size) + var(--tx-form-field-icon-gap));
 
   position: relative;
   display: flex;
@@ -236,6 +236,14 @@
 
   .tx-color-picker__clear {
     @include action.button;
+  }
+
+  .tx-color-picker__clear--text {
+    display: inline-flex;
+    gap: var(--tx-color-picker-gap);
+    align-items: center;
+    width: auto;
+    padding-inline: var(--tx-form-field-sm-padding-x);
   }
 
   .tx-color-picker__presets {

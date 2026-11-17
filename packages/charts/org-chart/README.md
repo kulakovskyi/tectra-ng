@@ -24,11 +24,13 @@ The chart does not change `nodes` itself: handle `nodeToggle`, `expandAll`, `col
 | height | Height of the canvas (`calc(100vh - 15rem)`) |
 | busy | Dims the canvas and blocks it while data loads |
 | pathKinds | Node `kind`s that draw the path to the root on hover; `null` — every node |
-| minFitZoom | Smallest zoom of "fit to screen" (0.6), so cards stay readable on a phone; a tree still too wide is centred on its root, one too tall starts at the top |
+| minFitZoom | Smallest zoom of "fit to screen" (0.6), so cards stay readable on a phone; a tree still too wide is centred on its root, one too tall starts at the top. Below 0.2 (the smallest zoom of the buttons and the wheel) the fit goes further out and zooming out may follow it down; `0` always fits the whole tree, however big |
+| pageHotkeys | The hotkeys work from anywhere on the page, not only on the focused canvas — for a page where the chart is the main content. Typing in a field, a dialog, a menu or a listbox keeps its keys; the arrow keys move the canvas only while nothing else has the focus. Turn it on for one chart per page |
 | dt | Design tokens of this chart (`chart`, group `orgChart`) |
 | pt | Classes and styles of the parts: `root`, `bar`, `toolbar`, `canvas`, `stage`, `minimap`, `hint` |
 | ptOptions | How `pt` merges with the global pass-through |
 | unstyled | Removes the tectra styles and keeps the behaviour |
+| nodeTemplate | Own card as a `TemplateRef` (context as `txOrgChartNode`) — for a component that wraps the chart and gets the template from its own content; it wins over a `txOrgChartNode` template inside the chart |
 
 ## Outputs
 | Name | Description |
@@ -46,6 +48,9 @@ The chart does not change `nodes` itself: handle `nodeToggle`, `expandAll`, `col
 | txOrgChartNode | `<ng-template txOrgChartNode let-node let-highlighted="highlighted" let-inPath="inPath" let-toggle="toggle">` — own card; `<tx-org-chart-card [node]="node">` is the default card for reuse |
 
 ## Keyboard
+
+The zoom, fit and search keys work while the canvas has the focus; with `pageHotkeys` they work on the whole page.
+
 | Key | Action |
 |---|---|
 | Tab | Moves through the toolbar, the canvas, the cards and their chevrons |
@@ -53,6 +58,6 @@ The chart does not change `nodes` itself: handle `nodeToggle`, `expandAll`, `col
 | 0 | Reset the zoom to 100% |
 | F | Fit the tree to the canvas |
 | / | Focus the search |
-| Arrow keys | Move the canvas (when it has the focus) |
+| Arrow keys | Move the canvas (when it has the focus, or with `pageHotkeys` when nothing has the focus) |
 | Enter / Space | Click the focused card |
 | Escape | Leave the full screen |

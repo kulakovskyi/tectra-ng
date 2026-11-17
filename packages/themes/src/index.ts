@@ -1,6 +1,7 @@
 export * from './types/deep-partial.type';
 export * from './types/semantic-tokens.interface';
 export * from './types/preset.interface';
+export * from './types/css-options.interface';
 export * from './semantic/light.semantic';
 export * from './semantic/dark.semantic';
 export * from './components/token-helpers';

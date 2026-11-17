@@ -7,7 +7,7 @@ The language switch and the theme button together: in one capsule for a top bar,
 <tx-topbar-preferences layout="stacked" />
 ```
 
-It is built from `tx-switch-language` and `tx-switch-theme`; see their pages for the behaviour.
+It is built from `tx-switch-language` and `tx-switch-theme`; see their pages for the behaviour. The theme choice is remembered with `storageKey` of `provideTectra`, the language with `localeStorageKey`.
 
 ## Inputs
 | Name | Description |

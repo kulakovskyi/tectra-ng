@@ -5,6 +5,9 @@ import { Router, provideRouter } from '@angular/router';
 import { TxConsoleLayout } from './console-layout.component';
 import { TxConsoleRailItem } from './console-layout.types';
 import { TxConsolePanel } from './console-panel.component';
+import { TxConsoleLayoutRelay, provideTxConsoleLayoutRelay } from './console-layout.context';
+import { TxConsoleRail } from './console-rail.component';
+import { TxConsoleRailResponsive } from './console-layout.types';
 import { TX_CONSOLE_RAIL_SECTION_MATCH } from './console-rail-match';
 
 @Component({ template: '', changeDetection: ChangeDetectionStrategy.OnPush })
@@ -279,5 +282,114 @@ describe('TxConsoleLayout favicon, rail and lone panel', () => {
     await fixture.whenStable();
     const root = fixture.nativeElement.querySelector('tx-console-layout') as HTMLElement;
     expect(root.querySelectorAll('.tx-console-layout__crumb')).toHaveLength(0);
+  });
+});
+
+@Component({
+  selector: 'admin-console',
+  imports: [TxConsoleLayout],
+  providers: [provideTxConsoleLayoutRelay()],
+  template: `
+    <tx-console-layout title="Admin" responsive="container" [footerName]="footerName()" [footerLinks]="[{ label: 'terms', routerLink: '/terms' }]" [translate]="translate">
+      <ng-content />
+    </tx-console-layout>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class AdminConsole {
+  readonly footerName = signal<string | undefined>('Admin console');
+  readonly translate = (key: string) => key.toUpperCase();
+}
+
+@Component({
+  imports: [AdminConsole, TxConsolePanel],
+  template: `
+    <admin-console>
+      @if (panel()) {
+        <tx-console-panel label="Users"><p class="page">Page</p></tx-console-panel>
+      } @else {
+        <p class="page">Page</p>
+      }
+    </admin-console>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class WrapperHost {
+  readonly panel = signal(true);
+}
+
+@Component({
+  imports: [TxConsoleRail, TxConsoleLayout, TxConsolePanel],
+  template: `
+    <tx-console-rail label="Sections" [items]="items" [responsive]="responsive()" />
+    <tx-console-layout title="Plain" unstyled>
+      <tx-console-panel unstyled><p>Page</p></tx-console-panel>
+    </tx-console-layout>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class RailHost {
+  readonly responsive = signal<TxConsoleRailResponsive>('viewport');
+  readonly items: TxConsoleRailItem[] = [{ label: 'Help', icon: 'question-circle', url: 'https://example.com/help' }];
+}
+
+describe('TxConsoleLayout in a wrapper and a rail on its own', () => {
+  beforeEach(() => TestBed.configureTestingModule({ providers: [provideRouter([{ path: '**', component: Page }])] }));
+
+  it('reaches panels projected through a wrapper with the relay', async () => {
+    const fixture = TestBed.createComponent(WrapperHost);
+    await fixture.whenStable();
+    const root = fixture.nativeElement.querySelector('tx-console-layout') as HTMLElement;
+    const panel = () => root.querySelector('tx-console-panel') as HTMLElement;
+    expect(panel().getAttribute('data-responsive')).toBe('container');
+    expect(panel().querySelector('tx-app-footer')?.textContent).toContain('Admin console');
+    expect(panel().querySelector('tx-app-footer a')?.textContent?.trim()).toBe('TERMS');
+    expect(root.querySelector('.tx-console-layout__footer')).toBeNull();
+
+    const wrapper = fixture.debugElement.children[0].componentInstance as AdminConsole;
+    wrapper.footerName.set(undefined);
+    await fixture.whenStable();
+    expect(panel().querySelector('tx-app-footer')).toBeNull();
+
+    wrapper.footerName.set('Admin console');
+    fixture.componentInstance.panel.set(false);
+    await fixture.whenStable();
+    expect(root.querySelector('.tx-console-layout__footer')).not.toBeNull();
+  });
+
+  it('connects only the first console to a relay and has defaults without one', () => {
+    const relay = new TxConsoleLayoutRelay();
+    expect(relay.responsive()).toBe('viewport');
+    expect(relay.footerName()).toBeUndefined();
+    expect(relay.visibleFooterLinks()).toEqual([]);
+    const unregister = relay.registerPanel();
+    expect(relay.panelCount()).toBe(1);
+    unregister();
+    expect(relay.panelCount()).toBe(0);
+    const first = { responsive: signal<'container'>('container'), footerName: signal('One'), visibleFooterLinks: signal([]), registerPanel: () => () => undefined };
+    const disconnect = relay.connect(first);
+    expect(relay.connect({ ...first, footerName: signal('Two') })).toBeNull();
+    expect(relay.responsive()).toBe('container');
+    expect(relay.footerName()).toBe('One');
+    disconnect?.();
+    expect(relay.footerName()).toBeUndefined();
+  });
+
+  it('makes a rail on its own responsive by the viewport or a container, or keeps it a column', async () => {
+    const fixture = TestBed.createComponent(RailHost);
+    await fixture.whenStable();
+    const rail = fixture.nativeElement.querySelector('tx-console-rail') as HTMLElement;
+    expect(rail.getAttribute('data-responsive')).toBe('viewport');
+    fixture.componentInstance.responsive.set('container');
+    await fixture.whenStable();
+    expect(rail.getAttribute('data-responsive')).toBe('container');
+    fixture.componentInstance.responsive.set('none');
+    await fixture.whenStable();
+    expect(rail.hasAttribute('data-responsive')).toBe(false);
+    const plain = fixture.nativeElement.querySelector('tx-console-layout') as HTMLElement;
+    expect(plain.hasAttribute('data-styled')).toBe(false);
+    expect(plain.querySelector('tx-console-rail')?.hasAttribute('data-styled')).toBe(false);
+    expect(plain.querySelector('tx-console-rail')?.getAttribute('data-responsive')).toBe('viewport');
+    expect(plain.querySelector('tx-console-panel')?.hasAttribute('data-styled')).toBe(false);
   });
 });

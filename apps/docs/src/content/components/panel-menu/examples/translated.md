@@ -1,0 +1,1 @@
+`translate` passes item labels, section titles and item titles through your function — here it reads a language signal, so the menu follows the switch. `badge` takes a signal too: the counter updates in place.

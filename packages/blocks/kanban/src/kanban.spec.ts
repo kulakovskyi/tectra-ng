@@ -1,5 +1,5 @@
 import { CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, contentChild, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
@@ -439,5 +439,84 @@ describe('TxKanban slots, drops and scrolling', () => {
     board.dispatchEvent(pointer('pointercancel', { pointerId: 9 }));
     board.dispatchEvent(pointer('pointermove', { clientX: 40, pointerId: 9 }));
     expect(board.scrollLeft).toBe(130);
+  });
+});
+
+@Component({
+  selector: 'task-board',
+  imports: [TxKanban, TxKanbanColumnHeader],
+  template: `
+    <tx-kanban
+      [columns]="columns"
+      [itemId]="taskId"
+      [cardTemplate]="card()?.template"
+      [columnHeaderTemplate]="header()?.template"
+      [columnTopTemplate]="top()?.template"
+      [columnFooterTemplate]="footer()?.template"
+      [emptyTemplate]="empty()?.template"
+    >
+      <ng-template txKanbanColumnHeader let-column><em class="inner-head">{{ column.title }}</em></ng-template>
+    </tx-kanban>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class TaskBoard {
+  readonly card = contentChild(TxKanbanCard<Task>);
+  readonly header = contentChild(TxKanbanColumnHeader<Task>);
+  readonly top = contentChild(TxKanbanColumnTop<Task>);
+  readonly footer = contentChild(TxKanbanColumnFooter<Task>);
+  readonly empty = contentChild(TxKanbanEmpty<Task>);
+  readonly taskId = (task: Task) => task.id;
+  readonly columns: TxKanbanColumn<Task>[] = [
+    { id: 'todo', title: 'To do', items: [{ id: 'a', title: 'A' }] },
+    { id: 'done', title: 'Done', items: [] },
+  ];
+}
+
+@Component({
+  imports: [TaskBoard, TxKanbanCard, TxKanbanColumnHeader, TxKanbanColumnTop, TxKanbanColumnFooter, TxKanbanEmpty],
+  template: `
+    <task-board>
+      <ng-template txKanbanCard let-task let-column="column"><span class="outer-card">{{ task.title }} in {{ column.id }}</span></ng-template>
+      @if (ownHeader()) {
+        <ng-template txKanbanColumnHeader let-column><strong class="outer-head">{{ column.title }}</strong></ng-template>
+      }
+      <ng-template txKanbanColumnTop let-column><span class="outer-top">{{ column.id }}</span></ng-template>
+      <ng-template txKanbanColumnFooter let-column><span class="outer-foot">{{ column.id }}</span></ng-template>
+      <ng-template txKanbanEmpty let-column><span class="outer-empty">{{ column.id }} is empty</span></ng-template>
+    </task-board>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class WrapperHost {
+  readonly ownHeader = signal(true);
+}
+
+describe('TxKanban in a wrapper', () => {
+  it('takes every slot as a template input, which wins over the slot inside the board', async () => {
+    const fixture = TestBed.createComponent(WrapperHost);
+    await fixture.whenStable();
+    const root = fixture.nativeElement as HTMLElement;
+    const texts = (selector: string) => Array.from(root.querySelectorAll(selector)).map((element) => element.textContent?.trim());
+    expect(texts('.outer-card')).toEqual(['A in todo']);
+    expect(texts('.outer-head')).toEqual(['To do', 'Done']);
+    expect(texts('.inner-head')).toEqual([]);
+    expect(texts('.outer-top')).toEqual(['todo', 'done']);
+    expect(texts('.outer-foot')).toEqual(['todo', 'done']);
+    expect(texts('.outer-empty')).toEqual(['done is empty']);
+    expect(root.querySelector('.tx-kanban__empty')).toBeNull();
+
+    fixture.componentInstance.ownHeader.set(false);
+    await fixture.whenStable();
+    expect(texts('.outer-head')).toEqual([]);
+    expect(texts('.inner-head')).toEqual(['To do', 'Done']);
+  });
+
+  it('renders empty cards without any card template', async () => {
+    const fixture = TestBed.createComponent(TaskBoard);
+    await fixture.whenStable();
+    const cards = (fixture.nativeElement as HTMLElement).querySelectorAll('.tx-kanban__card');
+    expect(cards).toHaveLength(1);
+    expect(cards[0].textContent?.trim()).toBe('');
   });
 });

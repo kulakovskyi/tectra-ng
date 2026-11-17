@@ -9,7 +9,7 @@ import { TxMenu, TxMenuItem } from '@tectra-ng/ui/menu';
 import { TxProgressSpinner } from '@tectra-ng/ui/progress-spinner';
 import { TxTooltip } from '@tectra-ng/ui/tooltip';
 import { TxAvatar } from './avatar.component';
-import { TxAvatarEditorPart, TxAvatarEditorRejection } from './avatar.types';
+import { TxAvatarEditorPart, TxAvatarEditorRejection, TxAvatarShape } from './avatar.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { AVATAR_ICON_DEFAULTS } from './avatar.icons';
 import { AVATAR_THEME } from './avatar.theme';
@@ -49,6 +49,7 @@ export function acceptsFile(file: File, accept: string): boolean {
     '[class]': 'passThrough().root?.class',
     '[style]': 'hostStyle()',
     '[attr.data-styled]': '!isUnstyled() || null',
+    '[attr.data-shape]': 'shape()',
     '[class.tx-avatar-editor--loading]': 'loading()',
     '[class.tx-avatar-editor--dragover]': 'dragOver()',
     '[attr.aria-busy]': 'loading() || null',
@@ -61,6 +62,7 @@ export class TxAvatarEditor {
   readonly image = model<string | null | undefined>(undefined);
   readonly name = input<string | null | undefined>(undefined);
   readonly size = input<number | undefined, unknown>(undefined, { transform: optionalNumber });
+  readonly shape = input<TxAvatarShape>('circle');
   readonly loading = input(false, { transform: booleanAttribute });
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly hint = input<string | undefined>(undefined);

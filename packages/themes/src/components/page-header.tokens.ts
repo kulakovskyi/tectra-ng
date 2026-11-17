@@ -31,6 +31,7 @@ export const pageHeaderTokens = {
     hoverBackground: tokenRef('surface-hover'),
     activeBackground: tokenRef('surface-hover'),
     borderColor: tokenRef('surface-border'),
+    shadow: 'none',
   },
 };
 

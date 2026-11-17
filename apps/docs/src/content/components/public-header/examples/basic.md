@@ -1,1 +1,1 @@
-Links go in `txPublicHeaderNav`, buttons in `txPublicHeaderActions`; the language and theme preferences sit between them. Scroll the frame: the header stays on top and the page shows through its glass.
+Links go in `txPublicHeaderNav`, buttons in `txPublicHeaderActions`; the language and theme preferences sit between them. Scroll the frame: the header stays on top and the page shows through its glass. `languageChange` and `modeChange` report what the visitor picked there.

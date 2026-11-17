@@ -40,7 +40,13 @@
       </div>
       <div class="tx-public-header__end" [class]="passThrough().end?.class" [style]="passThrough().end?.style">
         @if (preferences()) {
-          <tx-topbar-preferences class="tx-public-header__preferences" [layout]="compact() ? 'stacked' : 'inline'" [unstyled]="isUnstyled()" />
+          <tx-topbar-preferences
+            class="tx-public-header__preferences"
+            [layout]="compact() ? 'stacked' : 'inline'"
+            [unstyled]="isUnstyled()"
+            (languageChange)="languageChange.emit($event)"
+            (modeChange)="modeChange.emit($event)"
+          />
         }
         <div class="tx-public-header__actions" [class]="passThrough().actions?.class" [style]="passThrough().actions?.style">
           <ng-content select="[txPublicHeaderActions]" />

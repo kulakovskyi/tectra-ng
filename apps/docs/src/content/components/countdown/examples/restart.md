@@ -1,0 +1,1 @@
+By default a new `value` or `unit` starts the countdown again. With `[restartOnChange]="false"` a running countdown keeps its deadline; the new duration is used at the next start — after zero or on `restart()`.

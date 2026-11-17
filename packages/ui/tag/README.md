@@ -7,6 +7,8 @@ A short label with a severity — a version, a category, an ID you can copy. Squ
 <tx-tag severity="secondary" [copyable]="true">ord_8F2KQ1</tx-tag>
 ```
 
+The same entry point exports `TxTagList`: `<tx-tag-list [tags]="tags" [limit]="3" />` keeps the tags on one line, shows the first `limit` of them and a `+N` tag that opens the rest in a popover. Its inputs and keyboard map are in [docs/tag-list.md](docs/tag-list.md).
+
 ## Inputs
 | Name | Description |
 |---|---|

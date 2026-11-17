@@ -57,4 +57,4 @@ import { TxWaterfallChart } from '@tectra-ng/charts/waterfall';
 
 ## Notes
 
-The legend only names the colours, so it does not hide anything. Totals are neutral by default (`chart.waterfall.totalColor`), apart from the increase green and the primary colour. Hovering anywhere in a step's column lays a soft band under it and fades the others. Bars grow one after another from their start once and slide to new values; both are off with reduced motion.
+The legend only names the colours, so it does not hide anything. Totals are neutral by default (`chart.waterfall.totalColor`), apart from the increase green and the primary colour. Hovering anywhere in a step's column lays a soft band under it and fades the others. Each bar is one SVG path with four rounded corners (`barPath` of `@tectra-ng/charts/core`, radius from the `chart.bar.radius` token, shrunk to fit a short bar); `unstyled` draws square bars. Bars grow one after another from their start once and slide to new values; both are off with reduced motion.

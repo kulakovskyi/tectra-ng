@@ -20,3 +20,6 @@ export interface TxKeyFilterRule {
   /** The whole text must match this pattern as well, when set. */
   value?: RegExp;
 }
+
+/** Value of `txKeyFilter`: a preset or a pattern; `null`, `undefined`, `false` or `''` switch the filter off. */
+export type TxKeyFilterValue = TxKeyFilterPreset | RegExp | null | undefined | false | '';

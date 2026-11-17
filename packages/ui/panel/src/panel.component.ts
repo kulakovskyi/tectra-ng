@@ -22,6 +22,7 @@ import { PANEL_THEME } from './panel.theme';
     '[attr.title]': 'null',
     '[attr.data-variant]': 'variant()',
     '[attr.data-align]': 'align()',
+    '[class.tx-panel--toggleable]': 'toggleable()',
     '[class.tx-panel--collapsed]': 'toggleable() && collapsed()',
     '[attr.role]': 'title() ? "region" : null',
     '[attr.aria-labelledby]': 'title() ? titleId : null',

@@ -15,7 +15,7 @@ import {
 import { TxAnnouncer } from '@tectra-ng/core/a11y';
 import { TectraChartTokens, TectraDeepPartial } from '@tectra-ng/themes';
 import { TxComboChart } from './combo-chart.component';
-import { TxComboChartPointEvent, TxComboChartSeries, TxComboChartSeriesToggle } from './combo-chart.types';
+import { TxComboChartBar, TxComboChartPointEvent, TxComboChartSeries, TxComboChartSeriesToggle } from './combo-chart.types';
 import { comboBars, comboSlots } from './combo-layout';
 
 @Component({
@@ -43,6 +43,13 @@ class Host {
   ]);
   readonly stacked = signal(false);
   readonly clicks: TxComboChartPointEvent[] = [];
+}
+
+function barData(fixture: ComponentFixture<unknown>, element: Element): TxComboChartBar {
+  const chart = fixture.debugElement.queryAll(By.directive(TxComboChart)).find((debug) => (debug.nativeElement as HTMLElement).contains(element))?.componentInstance as TxComboChart | undefined;
+  const found = chart?.bars().find((bar) => bar.key === `${element.getAttribute('data-series')}:${element.getAttribute('data-index')}`);
+  if (!found) throw new Error('no bar');
+  return found;
 }
 
 describe('comboBars', () => {
@@ -171,7 +178,7 @@ describe('TxComboChart', () => {
     expect(el('#main').classList).toContain('tx-combo-chart--stacked');
     expect(all('#main .tx-combo-chart__bar').filter((bar) => bar.getAttribute('data-end') === 'top')).toHaveLength(3);
     const first = all('#main .tx-combo-chart__bar').filter((bar) => bar.getAttribute('data-index') === '0');
-    expect(first[0].getAttribute('x')).toBe(first[1].getAttribute('x'));
+    expect(barData(fixture, first[0]).x).toBe(barData(fixture, first[1]).x);
   });
 
   it('reads the categories with the keyboard and formats every series by its axis', async () => {
@@ -192,7 +199,7 @@ describe('TxComboChart', () => {
 
   it('reports the clicked column', async () => {
     const bar = all('#main .tx-combo-chart__bar').find((item) => item.getAttribute('data-index') === '1' && item.getAttribute('data-series') === '0') as HTMLElement;
-    plot().dispatchEvent(new MouseEvent('click', { clientX: Number(bar.getAttribute('x')) + 1, clientY: Number(bar.getAttribute('y')) + Number(bar.getAttribute('height')) - 1, bubbles: true }));
+    plot().dispatchEvent(new MouseEvent('click', { clientX: barData(fixture, bar).x + 1, clientY: barData(fixture, bar).y + barData(fixture, bar).height - 1, bubbles: true }));
     expect(fixture.componentInstance.clicks[0]).toMatchObject({ seriesIndex: 0, dataPointIndex: 1, value: 52, category: 'Feb' });
   });
 
@@ -378,7 +385,7 @@ describe('TxComboChart options', () => {
     await pointer('pointermove', chart().band().center(0), trend);
     expect(chart().active()).toMatchObject({ index: 0, series: 1, pointerY: trend });
     const bar = el('.tx-combo-chart__bar[data-series="0"][data-index="1"]');
-    await pointer('click', Number(bar.getAttribute('x')) + 1, Number(bar.getAttribute('y')) + Number(bar.getAttribute('height')) - 1);
+    await pointer('click', barData(fixture, bar).x + 1, barData(fixture, bar).y + barData(fixture, bar).height - 1);
     expect(host.clicks.at(-1)).toMatchObject({ seriesIndex: 0, dataPointIndex: 1, value: 52, category: 'Feb' });
     legend(1).click();
     legend(2).click();
@@ -457,7 +464,55 @@ describe('TxComboChart options', () => {
   it('reads the bar geometry from the tokens', async () => {
     host.dt.set({ bar: { width: '0.3', groupGap: '6' } });
     await fixture.whenStable();
-    expect(chart().geometry()).toEqual({ width: 0.3, gap: 6 });
+    expect(chart().geometry()).toEqual({ width: 0.3, gap: 6, radius: 5 });
+  });
+});
+
+@Component({
+  imports: [TxComboChart],
+  template: `<tx-combo-chart [series]="series" [categories]="['Jan', 'Feb']" [stacked]="stacked()" [dt]="dt()" [unstyled]="unstyled()" [showLegend]="false" [toolbar]="false" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class ComboShapeHost {
+  readonly series: TxComboChartSeries[] = [
+    { name: 'Revenue', data: [40, 52] },
+    { name: 'Costs', data: [28, 30] },
+  ];
+  readonly stacked = signal(false);
+  readonly dt = signal<TectraDeepPartial<TectraChartTokens> | undefined>(undefined);
+  readonly unstyled = signal<boolean | undefined>(undefined);
+}
+
+describe('TxComboChart column shape', () => {
+  let fixture: ComponentFixture<ComboShapeHost>;
+  const bars = () => Array.from(fixture.nativeElement.querySelectorAll('.tx-combo-chart__bar')) as SVGPathElement[];
+  const arcs = (path: SVGPathElement) => (path.getAttribute('d')?.match(/A(\d+(?:\.\d+)?),/g) ?? []).map((arc) => Number(arc.slice(1, -1)));
+
+  beforeEach(async () => {
+    fixture = TestBed.createComponent(ComboShapeHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+  });
+
+  it('draws each column as one path with its rounded end, so the fill and the gap outline match', async () => {
+    expect(bars()).toHaveLength(4);
+    for (const bar of bars()) {
+      expect(bar.tagName.toLowerCase()).toBe('path');
+      expect(bar.getAttribute('d')).toBe(barData(fixture, bar).path);
+      expect(arcs(bar)).toEqual([5, 5]);
+    }
+    fixture.componentInstance.stacked.set(true);
+    await fixture.whenStable();
+    expect(bars().map((bar) => arcs(bar).length)).toEqual([0, 0, 2, 2]);
+  });
+
+  it('takes the radius from dt and draws square columns when unstyled', async () => {
+    fixture.componentInstance.dt.set({ bar: { radius: '3px' } });
+    await fixture.whenStable();
+    expect(arcs(bars()[0])).toEqual([3, 3]);
+    fixture.componentInstance.unstyled.set(true);
+    await fixture.whenStable();
+    expect(bars().every((bar) => !bar.getAttribute('d')?.includes('A'))).toBe(true);
   });
 });
 

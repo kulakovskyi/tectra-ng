@@ -10,7 +10,7 @@ import { TxPageHeaderLevel } from './page-header.types';
       [title]="title()"
       [subtitle]="subtitle()"
       [headingLevel]="level()"
-      [dt]="{ title: { fontSize: '20px' } }"
+      [dt]="{ title: { fontSize: '20px' }, secondaryButton: { shadow: '0 1px 2px black' } }"
       [pt]="{ actions: { class: 'own-actions' }, subtitle: { style: { color: 'red' } } }"
     >
       <button type="button" class="create">Create</button>
@@ -38,6 +38,11 @@ describe('TxPageHeader', () => {
     const root = fixture.nativeElement.querySelector('tx-page-header') as HTMLElement;
     expect(root.hasAttribute('data-styled')).toBe(true);
     expect(root.style.getPropertyValue('--tx-page-header-title-font-size')).toBe('20px');
+    expect(root.style.getPropertyValue('--tx-page-header-secondary-button-shadow')).toBe('0 1px 2px black');
+    const rules = Array.from(document.querySelectorAll('style'))
+      .map((style) => style.textContent ?? '')
+      .find((text) => text.includes('tx-page-header__actions'));
+    expect(rules).toContain('box-shadow: var(--tx-page-header-secondary-button-shadow)');
     expect(root.querySelector('h1.tx-page-header__title')?.textContent?.trim()).toBe('Payments');
     const subtitle = root.querySelector('.tx-page-header__subtitle') as HTMLElement;
     expect(subtitle.textContent?.trim()).toBe('24 payments');

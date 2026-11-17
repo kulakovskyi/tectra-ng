@@ -1,0 +1,1 @@
+A component that wraps the heatmap gets the templates from its own content and passes them on with `rowHeaderTemplate` and `rowValueTemplate` — a `txHeatmapRowHeader` inside the wrapper's content is not inside `<tx-heatmap>`, so the heatmap would not see it. An input wins over a template slot.

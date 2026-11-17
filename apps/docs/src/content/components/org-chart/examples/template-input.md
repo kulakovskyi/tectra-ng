@@ -1,0 +1,1 @@
+A component that wraps the chart gets the card template from its own content and passes it on with `nodeTemplate` — a `txOrgChartNode` inside the wrapper's content is not inside `<tx-org-chart>`, so the chart would not see it. The input wins over a template slot.

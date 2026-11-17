@@ -2,6 +2,8 @@
 
 `<tx-link>` shows a URL, an email or a phone number as a link: it builds the `href`, shortens long text, marks search matches and can add a copy button. Web links open in a new tab with `rel="noopener noreferrer"`, an arrow icon and a hidden "opens in a new tab" for screen readers. `<tx-icon-link>` is an icon with text for menus and footers — a router link with the active state, an external link, or a button.
 
+The styles of both weigh as much as one class, so your own rule for a part (`.menu .item`, a `pt` class under a parent) wins without `!important`.
+
 ```html
 <tx-link link="docs.example.com" [copyable]="true" />
 <tx-link link="ann@example.com" type="email" />
@@ -32,7 +34,8 @@
 ## Outputs
 | Name | Description |
 |---|---|
-| copied | `tx-link`: the link was copied; gives the copied text |
+| copied | `tx-link`: the link was copied; gives the copied text. Copying uses the Clipboard API and falls back to a selection outside a secure context |
+| copyFailed | `tx-link`: the browser refused to copy; gives the text. The button says "Could not copy" for a moment instead of the check mark — show your own message from here |
 
 ## Slots
 | Name | Description |

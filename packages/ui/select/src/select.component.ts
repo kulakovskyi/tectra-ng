@@ -78,7 +78,7 @@ export class TxSelect extends TxSelectBase<unknown> {
   });
   readonly tokenStyle = computed(() => toStyleObject(this.dt(), '--tx-select'));
   readonly hostStyle = computed(() => ({ ...this.tokenStyle(), ...this.passThrough().root?.style }));
-  readonly panelStyle = computed(() => ({ ...this.tokenStyle(), ...this.passThrough().panel?.style }));
+  readonly panelStyle = computed(() => ({ ...this.tokenStyle(), ...this.panelWidth.style(), ...this.passThrough().panel?.style }));
 
   protected override get typingTarget(): boolean {
     return this.editable();

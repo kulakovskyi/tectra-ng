@@ -1,6 +1,6 @@
 # Status icon
 
-A small coloured icon for a yes / no or a severity state in tables and lists — a check in green or a cross in red, with a label for screen readers and a native tooltip.
+A small coloured icon for a yes / no or a severity state in tables and lists — a check in green or a cross in red, with a label for screen readers and a native or a kit tooltip.
 
 ```html
 <tx-status-icon [status]="user.verified" label="Verified" />
@@ -15,6 +15,8 @@ A small coloured icon for a yes / no or a severity state in tables and lists —
 | icon | Own icon name or icon class |
 | label | Accessible name and tooltip; "Yes" / "No" for `status` by default; empty makes the icon decorative |
 | toolTip | Same as `label` |
+| tooltip | How the label shows on hover: `false` (default) — the native title; `true` (or the bare attribute) — a kit tooltip (`txTooltip`); `none` — no hint, the label stays for screen readers |
+| tooltipPlacement | Side of the kit tooltip (`top` by default) |
 | size | `small`, `medium`, `large` |
 | dt | Design tokens of this instance (`statusIcon`) |
 | pt | Classes and styles of the parts: `root`, `icon` |

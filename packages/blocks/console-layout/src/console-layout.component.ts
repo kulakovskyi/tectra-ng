@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, effect, forwardRef, inject, input, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NgTemplateOutlet } from '@angular/common';
 import { ActivatedRouteSnapshot, NavigationEnd, Router, RouterLink } from '@angular/router';
@@ -9,6 +9,7 @@ import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraConsoleLayoutTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { filter, of } from 'rxjs';
 import { TxConsoleDocument } from './console-document.service';
+import { TX_CONSOLE_LAYOUT, TxConsoleLayoutContext, TxConsoleLayoutRelay } from './console-layout.context';
 import { TxConsoleLayoutPart, TxConsoleRailItem, TxConsoleResponsive, TxConsoleTranslate } from './console-layout.types';
 import { TxConsoleRail } from './console-rail.component';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
@@ -22,7 +23,7 @@ import { CONSOLE_LAYOUT_THEME } from './console-layout.theme';
   templateUrl: './console-layout.component.html',
   styleUrl: './console-layout.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [TxConsoleDocument],
+  providers: [TxConsoleDocument, { provide: TX_CONSOLE_LAYOUT, useExisting: forwardRef(() => TxConsoleLayout) }],
   host: {
     class: 'tx-console-layout',
     '[class]': 'passThrough().root?.class',
@@ -33,7 +34,7 @@ import { CONSOLE_LAYOUT_THEME } from './console-layout.theme';
   },
   viewProviders: [provideTxIconDefaults(CONSOLE_LAYOUT_ICON_DEFAULTS)],
 })
-export class TxConsoleLayout {
+export class TxConsoleLayout implements TxConsoleLayoutContext {
   private readonly consoleLayoutTheme = injectTokens(CONSOLE_LAYOUT_THEME);
 
   private readonly router = inject(Router, { optional: true });
@@ -65,7 +66,8 @@ export class TxConsoleLayout {
   readonly hostStyle = computed(() => ({ ...this.tokenStyle(), ...this.passThrough().root?.style }));
 
   private readonly panels = signal(0);
-  readonly hasPanel = computed(() => this.panels() > 0);
+  private readonly relay = signal<TxConsoleLayoutRelay | null>(null);
+  readonly hasPanel = computed(() => this.panels() + (this.relay()?.panelCount() ?? 0) > 0);
 
   private readonly navigationEnd = toSignal(this.router ? this.router.events.pipe(filter((event) => event instanceof NavigationEnd)) : of(null), {
     initialValue: null,
@@ -86,6 +88,12 @@ export class TxConsoleLayout {
   readonly pageTitle = computed(() => [this.visibleCrumbs().at(-1), this.documentTitle()].filter(Boolean).join(' · '));
 
   constructor() {
+    const relay = inject(TxConsoleLayoutRelay, { optional: true });
+    const disconnect = relay?.connect(this);
+    if (relay && disconnect) {
+      this.relay.set(relay);
+      inject(DestroyRef).onDestroy(disconnect);
+    }
     effect(() => {
       if (this.documentTitle()) {
         this.consoleDocument.setTitle(this.pageTitle());

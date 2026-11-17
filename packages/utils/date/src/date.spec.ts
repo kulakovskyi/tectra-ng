@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { TxLocaleService } from '@tectra-ng/core/i18n';
 import { provideTxDateFormat } from './date.config';
 import { MS_IN_DAY, TX_DATE_FORMATS, TX_DATE_STYLES } from './date.constants';
+import { formatTxDate } from './date.format';
 import {
   addDays,
   addMonths,
@@ -176,5 +177,41 @@ describe('date functions', () => {
     expect(pipe.transform('2026-11-11', '')).toBe('-');
     expect(pipe.transform('2026-11-11', 'yyyy', undefined, 'xx-unknown')).toBe('-');
     expect(toIsoString('')).toBeUndefined();
+  });
+});
+
+describe('formatTxDate', () => {
+  const moment = new Date(2026, 10, 11, 9, 5);
+
+  it('formats without dependency injection, a medium en-US date by default', () => {
+    expect(formatTxDate(moment)).toBe('Nov 11, 2026');
+    expect(formatTxDate(moment, TX_DATE_FORMATS.dateTime)).toBe('11.11.26 09:05');
+    expect(formatTxDate(moment, { month: 'long', day: 'numeric' })).toBe('November 11');
+  });
+
+  it('formats in a locale and a time zone', () => {
+    expect(formatTxDate(moment, TX_DATE_STYLES.date, { locale: 'uk-UA' })).toBe(new Intl.DateTimeFormat('uk-UA', { dateStyle: 'medium' }).format(moment));
+    expect(formatTxDate('2026-11-11T22:30:00Z', 'HH:mm', { timezone: '+0200' })).toBe('00:30');
+    expect(formatTxDate('2026-11-11T22:30:00Z', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }, { timezone: 'Asia/Tokyo' })).toBe('07:30');
+  });
+
+  it('falls back to en-US for a pattern without Angular locale data, or to the empty text when the fallback is off', () => {
+    expect(formatTxDate(moment, 'd MMMM', { locale: 'uk-UA' })).toBe('11 November');
+    expect(formatTxDate(moment, 'd MMMM', { locale: 'uk-UA', fallbackLocale: 'en' })).toBe('11 November');
+    expect(formatTxDate(moment, 'd MMMM', { locale: 'uk-UA', fallbackLocale: null })).toBe('-');
+  });
+
+  it('returns the empty text for empty, invalid and unformattable values', () => {
+    expect(formatTxDate(null)).toBe('-');
+    expect(formatTxDate('not a date', undefined, { empty: '—' })).toBe('—');
+    expect(formatTxDate(moment, '')).toBe('-');
+    expect(formatTxDate(moment, { hour: 'numeric' }, { timezone: 'Not/AZone' })).toBe('-');
+  });
+
+  it('gives the same text as the txDate pipe', () => {
+    const pipe = TestBed.runInInjectionContext(() => new TxDatePipe());
+    for (const format of [undefined, TX_DATE_FORMATS.dateTime, TX_DATE_STYLES.dateTime, 'EEE, d MMM']) {
+      expect(pipe.transform(moment, format)).toBe(formatTxDate(moment, format));
+    }
   });
 });

@@ -19,6 +19,7 @@ function solid(group: string) {
 /* @__NO_SIDE_EFFECTS__ */
 function outlined(palette: string, color: string) {
   return {
+    background: 'transparent',
     hoverBackground: lightDark(tokenRef(`${palette}-50`), mix(tokenRef(`${palette}-400`), '8%', tokenRef('surface-900'))),
     activeBackground: lightDark(tokenRef(`${palette}-100`), mix(tokenRef(`${palette}-400`), '18%', tokenRef('surface-900'))),
     borderColor: lightDark(tokenRef(`${palette}-200`), tokenRef(`${palette}-700`)),
@@ -79,6 +80,7 @@ export const buttonTokens = {
   outlined: {
     primary: outlined('primary', tokenRef('primary-base')),
     secondary: {
+      background: 'transparent',
       hoverBackground: lightDark(tokenRef('surface-100'), tokenRef('surface-800')),
       activeBackground: lightDark(tokenRef('surface-200'), tokenRef('surface-700')),
       borderColor: lightDark(tokenRef('surface-300'), tokenRef('surface-600')),
@@ -90,12 +92,14 @@ export const buttonTokens = {
     help: outlined('purple', severityColor('purple')),
     danger: outlined('red', severityColor('red')),
     contrast: {
+      background: 'transparent',
       hoverBackground: lightDark(tokenRef('surface-50'), tokenRef('surface-800')),
       activeBackground: lightDark(tokenRef('surface-100'), tokenRef('surface-700')),
       borderColor: lightDark(tokenRef('surface-700'), tokenRef('surface-500')),
       color: lightDark(tokenRef('surface-950'), tokenRef('surface-0')),
     },
     plain: {
+      background: 'transparent',
       hoverBackground: lightDark(tokenRef('surface-50'), tokenRef('surface-800')),
       activeBackground: lightDark(tokenRef('surface-100'), tokenRef('surface-700')),
       borderColor: lightDark(tokenRef('surface-200'), tokenRef('surface-600')),

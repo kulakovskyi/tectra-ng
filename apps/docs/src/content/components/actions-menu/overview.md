@@ -4,7 +4,7 @@ tokens: actionsMenu
 source: packages/blocks/actions-menu
 package: @tectra-ng/blocks/actions-menu
 import: TxActionsMenu
-examples: basic, sizes, confirm, design-tokens
+examples: basic, sizes, confirm, open-from-code, design-tokens
 ---
 # Actions Menu
 

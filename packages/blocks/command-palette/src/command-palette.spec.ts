@@ -10,7 +10,7 @@ import {
   filterPaletteItems,
   menuPaletteItems,
 } from './command-palette.pipes';
-import { TxCommandPaletteItem } from './command-palette.types';
+import { TxCommandPaletteHints, TxCommandPaletteItem } from './command-palette.types';
 
 @Component({ template: '', changeDetection: ChangeDetectionStrategy.OnPush })
 class Page {}
@@ -23,6 +23,7 @@ class Page {}
       [items]="items"
       [groupLabels]="{ pages: 'Pages', actions: 'Actions' }"
       [loading]="loading()"
+      [hintTexts]="hints()"
       [debounceTime]="0"
       localFilter
       (searchChange)="terms.push($event)"
@@ -34,6 +35,7 @@ class Page {}
 })
 class Host {
   readonly loading = signal(false);
+  readonly hints = signal<TxCommandPaletteHints>({});
   readonly terms: string[] = [];
   readonly picked: string[] = [];
   closes = 0;
@@ -76,6 +78,15 @@ describe('TxCommandPalette', () => {
     expect(input.getAttribute('aria-activedescendant')).toBe(options[0].id);
     expect(document.querySelector('.tx-command-palette__sublabel')?.textContent?.trim()).toBe('Main');
     expect(document.body.style.overflow).toBe('hidden');
+  });
+
+  it('shows own footer hints and keeps the translated text for a missing or empty one', async () => {
+    const { fixture } = await open();
+    const hints = () => Array.from(document.querySelectorAll('.tx-command-palette__hint')).map((hint) => hint.textContent?.replace(/\s+/g, ' ').trim());
+    expect(hints()).toEqual(['↑↓ to navigate', '↵ to open', 'esc to close']);
+    fixture.componentInstance.hints.set({ navigate: 'blättern', open: '', close: 'schließen' });
+    await fixture.whenStable();
+    expect(hints()).toEqual(['↑↓ blättern', '↵ to open', 'esc schließen']);
   });
 
   it('filters locally, moves with the arrows and runs a command on Enter', async () => {
@@ -172,10 +183,14 @@ class RemoteHost {
     @for (item of menu | menuPaletteItems: 'nav'; track item.id) {
       <span class="group">{{ item.group }}</span>
     }
+    @for (item of menu | menuPaletteItems: { translate: upper, group: 'nav' }; track item.id) {
+      <span class="translated">{{ item.label }}</span>
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class PipesHost {
+  readonly upper = (key: string) => key.toUpperCase();
   readonly query = signal<string | null>(null);
   readonly menu: TxPanelMenuItem[] = [
     { label: 'Home', routerLink: '/' },
@@ -328,6 +343,7 @@ describe('palette pipes', () => {
     const pages = () => Array.from(fixture.nativeElement.querySelectorAll('.page')).map((node) => (node as HTMLElement).textContent);
     expect(pages()).toEqual(['Home', 'Profile']);
     expect(Array.from(fixture.nativeElement.querySelectorAll('.group')).map((node) => (node as HTMLElement).textContent)).toEqual(['nav', 'nav']);
+    expect(Array.from(fixture.nativeElement.querySelectorAll('.translated')).map((node) => (node as HTMLElement).textContent)).toEqual(['HOME', 'PROFILE']);
     fixture.componentInstance.query.set('settings');
     await fixture.whenStable();
     expect(pages()).toEqual(['Profile']);
@@ -348,5 +364,28 @@ describe('palette pipes', () => {
     ]);
     expect(filterPaletteItems(items, null)).toEqual(items);
     expect(filterPaletteItems(items, 'one').map((item) => item.label)).toEqual(['One']);
+  });
+
+  it('translate labels and titles and map icons through options', () => {
+    const menu: TxPanelMenuItem[] = [
+      { label: 'menu.main', items: [{ label: 'menu.home', icon: 'house', routerLink: '/' }, { label: 'menu.team', icon: 'users', routerLink: '/team' }] },
+      { label: 'menu.settings', items: [{ label: 'menu.profile', routerLink: '/profile' }] },
+    ];
+    const translate = (key: string) => `t(${key})`;
+    const mapped = menuPaletteItems(menu, { group: 'nav', translate, icon: { house: 'home' }, defaultIcon: 'link' });
+    expect(mapped.map((item) => [item.group, item.label, item.sublabel, item.icon])).toEqual([
+      ['nav', 't(menu.home)', 't(menu.main)', 'home'],
+      ['nav', 't(menu.team)', 't(menu.main)', 'users'],
+      ['nav', 't(menu.profile)', 't(menu.settings)', 'link'],
+    ]);
+    expect(filterPaletteItems(mapped, 'menu.team').map((item) => item.label)).toEqual(['t(menu.team)']);
+
+    const byFunction = menuPaletteItems(menu, { icon: (item) => (item.routerLink === '/team' ? 'user' : null) });
+    expect(byFunction.map((item) => [item.group, item.label, item.icon])).toEqual([
+      ['pages', 'menu.home', 'house'],
+      ['pages', 'menu.team', 'user'],
+      ['pages', 'menu.profile', 'file'],
+    ]);
+    expect(menuPaletteItems([{ routerLink: '/blank' }], { translate })[0].label).toBe('');
   });
 });

@@ -32,6 +32,7 @@ export const TX_LOCALE_UA: TxLocaleDefinition = {
     passwordStrong: 'Надійний',
     showPassword: 'Показати пароль',
     hidePassword: 'Сховати пароль',
+    generatePassword: 'Згенерувати пароль',
     otpCell: 'Символ {index} з {length}',
     increment: 'Збільшити',
     decrement: 'Зменшити',

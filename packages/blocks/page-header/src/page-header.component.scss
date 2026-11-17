@@ -60,3 +60,7 @@
 
   gap: var(--tx-page-header-actions-gap);
 }
+
+:host([data-styled]) .tx-page-header__actions ::ng-deep .tx-button[data-styled][data-severity='secondary']:not([data-variant], .tx-button--raised, :focus-visible) {
+  box-shadow: var(--tx-page-header-secondary-button-shadow);
+}

@@ -18,6 +18,10 @@ function notTaken(control: AbstractControl): ValidationErrors | null {
     : null;
 }
 
+function noSpaces(control: AbstractControl): ValidationErrors | null {
+  return /\s/.test(String(control.value ?? '')) ? { spaces: true } : null;
+}
+
 @Component({
   selector: 'message-custom-messages-example',
   imports: [ReactiveFormsModule, TxLabel, TxInput, TxFieldError],
@@ -28,7 +32,7 @@ function notTaken(control: AbstractControl): ValidationErrors | null {
         txInput
         id="custom-name"
         [formControl]="name"
-        placeholder="Try “admin” or one letter"
+        placeholder="Try “admin”, one letter or a space"
         [fluid]="true"
       />
       <tx-field-error for="custom-name" [control]="name" [messages]="messages" />
@@ -42,10 +46,16 @@ function notTaken(control: AbstractControl): ValidationErrors | null {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class MessageCustomMessagesExample {
-  readonly name = new FormControl('', [Validators.required, Validators.minLength(3), notTaken]);
+  readonly name = new FormControl('', [
+    Validators.required,
+    Validators.minLength(3),
+    notTaken,
+    noSpaces,
+  ]);
   readonly messages = {
     required: 'Give your team a name',
     minlength: (error: unknown) => `Add ${this.missing(error)} more`,
+    '*': 'Use letters, digits and dashes only',
   };
 
   private missing(error: unknown): number {

@@ -1,22 +1,27 @@
 import { CdkConnectedOverlay, ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
-import { DestroyRef, Directive, ElementRef, Injector, booleanAttribute, computed, inject, input, output, signal, viewChild } from '@angular/core';
+import { DestroyRef, Directive, ElementRef, Injector, afterNextRender, booleanAttribute, computed, inject, input, output, signal, viewChild } from '@angular/core';
 import { injectFieldInvalid } from '@tectra-ng/core/forms';
 import {
   TxOverlayInsets,
+  TxPanelWidth,
   TxPlacement,
   placementFromPosition,
   txAnimateEnter,
   txAnimateLeave,
-  txPositions,
+  txFieldPositions,
   TxOverlayRoom,
   watchOrigin,
   txScrollStrategy,
 } from '@tectra-ng/core/overlay';
 import { optionalBoolean } from '@tectra-ng/core/utils';
+import { TxOptionRange } from './option-list.component';
 import { TxOptionsBase } from './options-base';
 import { isSelectableRow } from './select-options';
 import { TxFieldVariant, TxSelectItem, TxSelectSize } from './select.types';
+
+const CUT_CONTENT = '.tx-select__option-label, .tx-select__list--virtual';
+const VIRTUAL_ROW = '.tx-select__list--virtual .tx-select__option';
 
 /**
  * Shared base of `tx-select` and `tx-multiselect`: the field, its panel, size, variant and keyboard
@@ -49,10 +54,11 @@ export abstract class TxSelectBase<T> extends TxOptionsBase<T> {
   private overlayInsets = inject(TxOverlayInsets);
   private stopWatchingTrigger: (() => void) | null = null;
   private hasEntered = false;
+  private widthPending = false;
   private readonly stopWatching = inject(DestroyRef).onDestroy(() => this.stopWatchingTrigger?.());
 
   readonly isInvalid = injectFieldInvalid(this.invalid);
-  private readonly room = new TxOverlayRoom(txPositions('bottom-start', 4));
+  private readonly room = new TxOverlayRoom(txFieldPositions(4));
   private readonly connectedOverlay = viewChild(CdkConnectedOverlay);
   readonly positions = this.room.positions;
   readonly scrollStrategy = txScrollStrategy(this.injector);
@@ -60,7 +66,7 @@ export abstract class TxSelectBase<T> extends TxOptionsBase<T> {
   readonly isOpen = signal(false);
   readonly isPanelMounted = signal(false);
   readonly panelPlacement = signal<TxPlacement>('bottom-start');
-  readonly panelWidth = signal(0);
+  readonly panelWidth = new TxPanelWidth({ maxWidth: 'var(--tx-select-overlay-max-width)' });
 
   abstract readonly hasValue: () => boolean;
   protected abstract clearValue(): void;
@@ -82,7 +88,8 @@ export abstract class TxSelectBase<T> extends TxOptionsBase<T> {
     if (this.disabled() || this.readonly() || this.isOpen()) {
       return;
     }
-    this.panelWidth.set(this.box().nativeElement.offsetWidth);
+    this.panelWidth.open(this.box().nativeElement);
+    this.widthPending = false;
     this.activeIndex.set(-1);
     this.isOpen.set(true);
     this.hasEntered = false;
@@ -169,6 +176,9 @@ export abstract class TxSelectBase<T> extends TxOptionsBase<T> {
   onPositionChange(change: ConnectedOverlayPositionChange): void {
     this.panelPlacement.set(placementFromPosition(change.connectionPair) ?? 'bottom-start');
     const panel = this.panel()?.nativeElement;
+    if (!this.hasEntered) {
+      this.lockPanelWidth(panel);
+    }
     if (!this.hasEntered && this.room.fit(this.box().nativeElement, panel, this.connectedOverlay(), this.injector)) {
       return;
     }
@@ -177,6 +187,28 @@ export abstract class TxSelectBase<T> extends TxOptionsBase<T> {
       txAnimateEnter(panel, this.panelPlacement());
       const selected = this.rows().findIndex((row) => isSelectableRow(row) && row.selected);
       this.optionList()?.scrollToIndex(this.activeIndex() >= 0 ? this.activeIndex() : selected);
+    }
+  }
+
+  private lockPanelWidth(panel: HTMLElement | undefined): void {
+    if (panel && this.virtualScroll() && this.rows().length && !panel.querySelector(VIRTUAL_ROW)) {
+      this.widthPending = true;
+      return;
+    }
+    this.panelWidth.lock(panel, CUT_CONTENT);
+  }
+
+  override onRangeChange(range: TxOptionRange): void {
+    super.onRangeChange(range);
+    if (this.widthPending) {
+      this.widthPending = false;
+      afterNextRender(
+        () => {
+          this.panelWidth.lock(this.panel()?.nativeElement, CUT_CONTENT);
+          this.connectedOverlay()?.overlayRef?.updatePosition();
+        },
+        { injector: this.injector },
+      );
     }
   }
 

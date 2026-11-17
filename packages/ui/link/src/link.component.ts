@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, DOCUMENT, DestroyRef, booleanAttrib
 import { RouterLink } from '@angular/router';
 import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
-import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
+import { optionalBoolean, optionalNumber, writeToClipboard } from '@tectra-ng/core/utils';
 import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraLinkTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxHighlightTerms, TxHighlightText } from '@tectra-ng/ui/highlight-text';
@@ -34,6 +34,7 @@ export class TxLink {
 
   private document = inject(DOCUMENT);
   private timer: ReturnType<typeof setTimeout> | null = null;
+  private destroyed = false;
 
   readonly link = input<string | null | undefined>('');
   readonly type = input<TxLinkType>('url');
@@ -50,11 +51,13 @@ export class TxLink {
   readonly unstyled = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
 
   readonly copied = output<string>();
+  readonly copyFailed = output<string>();
 
   readonly translations = injectTranslations();
   readonly isUnstyled = injectUnstyled(this.unstyled);
   readonly passThrough = injectPassThrough('link', this, this.pt, this.ptOptions);
   readonly isCopied = signal(false);
+  readonly isCopyFailed = signal(false);
 
   readonly value = computed(() => (this.link() ?? '').trim());
   readonly fullText = computed(() => this.linkText() || this.value());
@@ -82,20 +85,39 @@ export class TxLink {
     const translations = this.translations();
     return { url: translations.copyLink, email: translations.copyEmail, phone: translations.copyPhone }[this.type()];
   });
+  readonly copyStateLabel = computed(() => {
+    if (this.isCopied()) return this.translations().copied;
+    return this.isCopyFailed() ? this.translations().copyToClipboardFailed : this.copyLabel();
+  });
   readonly hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-link'), ...this.passThrough().root?.style }));
 
   constructor() {
-    inject(DestroyRef).onDestroy(() => this.timer && clearTimeout(this.timer));
+    inject(DestroyRef).onDestroy(() => {
+      this.destroyed = true;
+      if (this.timer) clearTimeout(this.timer);
+    });
   }
 
-  copy(): void {
+  async copy(): Promise<boolean> {
     const text = this.value();
-    this.document.defaultView?.navigator.clipboard?.writeText(text);
-    this.copied.emit(text);
-    this.isCopied.set(true);
+    const done = await writeToClipboard(text, this.document);
+    if (this.destroyed) {
+      return done;
+    }
+    this.isCopied.set(done);
+    this.isCopyFailed.set(!done);
+    if (done) {
+      this.copied.emit(text);
+    } else {
+      this.copyFailed.emit(text);
+    }
     if (this.timer) {
       clearTimeout(this.timer);
     }
-    this.timer = setTimeout(() => this.isCopied.set(false), COPIED_FOR);
+    this.timer = setTimeout(() => {
+      this.isCopied.set(false);
+      this.isCopyFailed.set(false);
+    }, COPIED_FOR);
+    return done;
   }
 }

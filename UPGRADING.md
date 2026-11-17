@@ -1,5 +1,19 @@
 # Upgrading
 
+## From 0.4.4
+
+Fixes and new options; the defaults keep today's look. A few behaviours and types changed:
+
+- **Copy buttons** of `tx-truncate-text`, `tx-input-copy` and `tx-link` fall back to a hidden selection when the Clipboard API is missing, emit `copied` only on success and the new `copyFailed` on failure. Their `copy()` now returns `Promise<boolean>`.
+- **`tx-chips-input`**: a form gets one value change per Enter, separator, blur or paste instead of one per chip; a paste goes in at the cursor and keeps the typed text; `rejected` carries a `reason`.
+- **`tx-pill`**: the `[txPillLeading]` content sits in a `.tx-pill__leading` wrapper, so a `tx-pill > [txPillLeading]` selector no longer matches.
+- **`tx-panel-menu`**: an item with sub-items is no longer highlighted by the route, it only opens; `active: true` still highlights it. A sidebar section with an empty label renders no title.
+- **`tx-country-select`**: an option code that is not a country or region shows only its label (no flag) and keeps its case as the value (`none` stays `none`); set `flag: true` on the option to draw one.
+- **`tx-heatmap`, `tx-org-chart`**: `rowHeaderTemplate`, `rowValueTemplate` and `nodeTemplate` are now inputs; the slot directives work as before, and an input wins over a slot.
+- **Bars** of `tx-column-chart`, `tx-combo-chart` and `tx-waterfall-chart` are single rounded paths instead of clipped rects; value changes animate the path (`d`), which Safari shows without the transition.
+- **`tx-panel`** clips its content only when `toggleable`.
+- **Dropdown panels** of select, multiselect, autocomplete, tree-select and country-select are at least as wide as the field and grow with their options up to `--tx-form-field-panel-max-width` (300px), never past the screen; before they had exactly the field's width. Set the token to `0px` to keep the field width.
+
 ## From 0.4.1
 
 Mostly fixes; a few defaults and types changed. The compiler points to every type change.

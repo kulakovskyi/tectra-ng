@@ -27,6 +27,6 @@ A clock face with hour and minute hands (and an optional second hand) that shows
 
 - The face is `role="img"` named by the time (`14:30`, after `ariaLabel` when set).
 - Hands turn with a soft spring and always forward — from :59 to :00 they go on, not back around the face; with reduced motion they jump.
-- The clock updates at the start of each minute (or second), so it stays exact without polling.
+- The clock updates at the start of each minute (or second), so it stays exact without polling. Every clock of the app reads the one `TxTimeSource` of `@tectra-ng/core/utils` (also behind `TxClock.now`): one timer per step for any number of clocks, and they all tick together. A clock with a fixed `time` starts no timer, and none runs on the server.
 - The face is always round: its width is the `size` token (`210px`), at most the width of its container, and the height follows; ticks and hands are sized in percent of the face.
 - `txAnalogClockHands` (pipe) and `clockHands(time, timezone)` (a `Date`, ms or an ISO string) return `{ time, hourAngle, minuteAngle, secondAngle }`.

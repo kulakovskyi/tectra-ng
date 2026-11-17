@@ -32,7 +32,7 @@ import { TectraDeepPartial, TectraFiltersPanelTokens, toStyleObject } from '@tec
 import { TxButton } from '@tectra-ng/ui/button';
 import { TxPopover, TxPopoverTrigger } from '@tectra-ng/ui/popover';
 import { TxTooltip } from '@tectra-ng/ui/tooltip';
-import { TX_FILTERS_PANEL, TxFilterField, TxFiltersPanelContext, TxFiltersReset } from './filter-field.directive';
+import { TX_FILTERS_PANEL, TxFilterField, TxFiltersPanelContext, TxFiltersPanelRelay, TxFiltersReset } from './filter-field.directive';
 import {
   TxFiltersPanelCollapse,
   TxFiltersPanelLayout,
@@ -103,8 +103,17 @@ export class TxFiltersPanel implements TxFiltersPanelContext, AfterViewInit {
   protected readonly translations = injectTranslations();
   protected readonly id = uniqueId('tx-filters-panel');
 
-  private readonly fields = contentChildren(TxFilterField, { descendants: true });
-  protected readonly resetAction = contentChild(TxFiltersReset, { descendants: true });
+  private readonly queriedFields = contentChildren(TxFilterField, { descendants: true });
+  private readonly readyFields = signal<readonly TxFilterField[]>([]);
+  private readonly resetSlot = contentChild(TxFiltersReset, { descendants: true });
+  private readonly registeredResets = signal<readonly TxFiltersReset[]>([]);
+  private readonly relay = signal<TxFiltersPanelRelay | null>(null);
+  private readonly fields = computed(() => {
+    const ready = [...this.readyFields(), ...(this.relay()?.fields() ?? [])];
+    const queried = this.queriedFields().filter((field) => ready.includes(field));
+    return [...queried, ...ready.filter((field) => !queried.includes(field))];
+  });
+  protected readonly resetAction = computed(() => this.resetSlot() ?? [...this.registeredResets(), ...(this.relay()?.resets() ?? [])][0] ?? null);
   private readonly fieldsContainer = viewChild.required<ElementRef<HTMLElement>>('fieldsContainer');
   private readonly toggleButton = viewChild<ElementRef<HTMLButtonElement>>('toggleButton');
   private readonly menuList = viewChild<ElementRef<HTMLElement>>('menuList');
@@ -175,7 +184,14 @@ export class TxFiltersPanel implements TxFiltersPanelContext, AfterViewInit {
   protected readonly menuPopoverPt = computed(() => ({ root: { style: this.tokenStyle() } }));
 
   constructor() {
-    inject(DestroyRef).onDestroy(() => clearTimeout(this.closingTimer));
+    const destroyRef = inject(DestroyRef);
+    destroyRef.onDestroy(() => clearTimeout(this.closingTimer));
+    const relay = inject(TxFiltersPanelRelay, { optional: true });
+    const disconnect = relay?.connect(this);
+    if (relay && disconnect) {
+      this.relay.set(relay);
+      destroyRef.onDestroy(disconnect);
+    }
     effect((onCleanup) => {
       const view = this.document.defaultView;
       if (!view?.matchMedia) {
@@ -196,6 +212,16 @@ export class TxFiltersPanel implements TxFiltersPanelContext, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.projectedCount.set(this.fieldsContainer().nativeElement.children.length);
+  }
+
+  registerField(field: TxFilterField): () => void {
+    this.readyFields.update((fields) => [...fields, field]);
+    return () => this.readyFields.update((fields) => fields.filter((item) => item !== field));
+  }
+
+  registerReset(reset: TxFiltersReset): () => void {
+    this.registeredResets.update((resets) => [...resets, reset]);
+    return () => this.registeredResets.update((resets) => resets.filter((item) => item !== reset));
   }
 
   isFieldHidden(key: string): boolean {

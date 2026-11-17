@@ -7,6 +7,13 @@
   <tx-select [options]="empty" [filter]="true" [placeholder]="'Open me: translated search and empty text'" />
 </div>
 
+<h2>Remember and mirror</h2>
+<p class="hint">
+  With <code>localeStorageKey</code> the locale set with <code>setLocale</code> — by <code>tx-switch-language</code> too — is kept in local storage and restored before the first render; nothing
+  is read on the server. <code>provideTxLocaleSync</code> calls your function with the start locale and after every change, in an injection context, so the app's own translations follow.
+</p>
+<docs-code-block [code]="rememberExample" [label]="'Remember and mirror the locale'" />
+
 <h2>Formats</h2>
 <div class="facts">
   @for (sample of samples(); track sample.label) {

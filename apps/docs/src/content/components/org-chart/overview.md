@@ -4,7 +4,7 @@ tokens: chart
 source: packages/charts/org-chart
 package: @tectra-ng/charts/org-chart
 import: TxOrgChart
-examples: basic, node-template, lazy-children, path-and-minimap, header-and-labels, design-tokens, pass-through
+examples: basic, node-template, template-input, lazy-children, large-tree, path-and-minimap, header-and-labels, design-tokens, pass-through
 ---
 # Org Chart
 

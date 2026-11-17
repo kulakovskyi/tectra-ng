@@ -55,6 +55,9 @@ export interface TxMonthCalendarLabels {
   region: string;
 }
 
+/** Own texts of `tx-month-calendar`; a missing, empty or `null` text keeps the translated one. */
+export type TxMonthCalendarLabelInput = { readonly [K in keyof TxMonthCalendarLabels]?: string | null };
+
 /** One day cell of the laid out month. */
 export interface TxMonthCalendarDay {
   /** Day as `YYYY-MM-DD`. */

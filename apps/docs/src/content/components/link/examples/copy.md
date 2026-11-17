@@ -1,1 +1,1 @@
-`copyable` adds a button that copies the link and confirms with a check.
+`copyable` adds a button that copies the link and confirms with a check. Outside a secure context it copies through a selection; when the browser refuses, `copyFailed` fires and the button says so instead.

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, TemplateRef, contentChild, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { TxOrgChartCard } from './org-chart-card.component';
@@ -16,8 +16,8 @@ import {
   orgChartSearch,
   orgChartToggle,
 } from './org-chart-tree';
-import { TX_ORG_CHART_FIT_MIN_ZOOM, TX_ORG_CHART_ZOOM, boundView, centerOn, clampZoom, fitView, wheelIsMouse, wheelZoom, zoomAt } from './org-chart-view';
-import { TxOrgChartLabels, TxOrgChartNode } from './org-chart.types';
+import { TX_ORG_CHART_FIT_FLOOR, TX_ORG_CHART_FIT_MIN_ZOOM, TX_ORG_CHART_ZOOM, boundView, centerOn, clampZoom, fitView, wheelIsMouse, wheelZoom, zoomAt } from './org-chart-view';
+import { TxOrgChartLabels, TxOrgChartNode, TxOrgChartNodeContext } from './org-chart.types';
 
 const leaf = (id: string, extra: Partial<TxOrgChartNode> = {}): TxOrgChartNode => ({ id, title: id, ...extra });
 
@@ -139,6 +139,22 @@ describe('org chart view', () => {
     expect(fitView({ width: 360, height: 640 }, { width: 1600, height: 1200 }, 0, TX_ORG_CHART_FIT_MIN_ZOOM, { x: 800, y: 30 })?.y).toBe(40);
     expect(fitView({ width: 360, height: 640 }, { width: 1600, height: 300 })).toEqual({ zoom: 0.6, x: (360 - 960) / 2, y: (640 - 180) / 2 });
     expect(fitView({ width: 360, height: 640 }, { width: 1600, height: 300 }, 0, 2)?.zoom).toBe(1);
+  });
+
+  it('fits a huge tree below the default smallest zoom when minFitZoom allows it', () => {
+    const viewport = { width: 1080, height: 600 };
+    const wide = { width: 20000, height: 900 };
+    expect(fitView(viewport, wide)?.zoom).toBe(TX_ORG_CHART_FIT_MIN_ZOOM);
+    expect(fitView(viewport, wide, 0, 0.2)?.zoom).toBe(0.2);
+    const whole = fitView(viewport, wide, 0, 0);
+    expect(whole?.zoom).toBeCloseTo(0.05);
+    expect(whole?.x).toBeCloseTo(40);
+    expect(fitView(viewport, wide, 0, 0.1)?.zoom).toBe(0.1);
+    expect(fitView(viewport, { width: 10_000_000, height: 900 }, 0, 0)?.zoom).toBe(TX_ORG_CHART_FIT_FLOOR);
+    expect(clampZoom(0.05, 0.05)).toBe(0.05);
+    expect(zoomAt({ x: 0, y: 0, zoom: 0.05 }, 0.01, { x: 0, y: 0 }, 0.05).zoom).toBe(0.05);
+    expect(centerOn({ x: 0, y: 0, zoom: 0.05 }, viewport, { x: 0, y: 0 }, 0.05, 0.05).zoom).toBe(0.05);
+    expect(centerOn({ x: 0, y: 0, zoom: 0.05 }, viewport, { x: 0, y: 0 }).zoom).toBe(TX_ORG_CHART_ZOOM.min);
   });
 
   it('keeps part of the tree inside the canvas', () => {
@@ -657,6 +673,9 @@ describe('TxOrgChart interactions', () => {
     host.highlight.set(['dev']);
     await settle();
     expect(chart().view()).toEqual({ x: 0, y: 0, zoom: 1 });
+    host.nodes.set([...PEOPLE]);
+    await settle();
+    expect(chart().view()).toEqual({ x: 0, y: 0, zoom: 1 });
     chart().onSearch('dana');
     await settle();
     expect(chart().view().zoom).toBe(1.25);
@@ -760,6 +779,26 @@ describe('TxOrgChart before and around rendering', () => {
     expect(chart.view().zoom).toBeGreaterThan(1);
   });
 
+  it('skips the canvas work when the template has no canvas', async () => {
+    TestBed.overrideComponent(TxOrgChart, { set: { template: '' } });
+    const fixture = TestBed.createComponent(TxOrgChart);
+    fixture.componentRef.setInput('nodes', PEOPLE);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const chart = fixture.componentInstance;
+    chart.fitToScreen();
+    chart.toggleFullscreen();
+    chart.highlightPath(['ceo', 'cto']);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    chart.onWheel(new WheelEvent('wheel', { deltaY: -100, ctrlKey: true, clientX: 10, clientY: 10 }));
+    expect(chart.fullscreen()).toBe(false);
+    expect(chart.pathLine()).toBe('');
+    expect(chart.minimapLayout().items).toEqual([]);
+    expect(chart.view().zoom).toBeGreaterThan(1);
+    fixture.destroy();
+  });
+
   it('follows the canvas size with a resize observer and stops on destroy', async () => {
     const callbacks: (() => void)[] = [];
     const disconnect = vi.fn();
@@ -850,5 +889,126 @@ describe('TxOrgChart parts', () => {
     send('pointerup', 1, 60);
     expect(points.map((point) => point.x)).toEqual([100, 200]);
     expect(points[0].y).toBe(0);
+  });
+});
+
+@Component({
+  selector: 'own-org-chart',
+  imports: [TxOrgChart, TxOrgChartNodeTemplate],
+  template: `
+    <tx-org-chart [nodes]="nodes" [toolbar]="false" [minimap]="false" [nodeTemplate]="card()">
+      <ng-template txOrgChartNode let-node><span class="inner-node">{{ node.title }}</span></ng-template>
+    </tx-org-chart>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class OwnOrgChart {
+  readonly nodes = PEOPLE;
+  readonly card = contentChild('card', { read: TemplateRef<TxOrgChartNodeContext> });
+}
+
+@Component({
+  imports: [OwnOrgChart, TxOrgChart],
+  template: `
+    <own-org-chart id="wrapped">
+      <ng-template #card let-node><b class="outer-node">{{ node.title }}</b></ng-template>
+    </own-org-chart>
+    <own-org-chart id="fallback" />
+    <tx-org-chart id="page" [nodes]="nodes" [pageHotkeys]="page()" [minFitZoom]="0" height="400px" />
+    <input class="outside-input" aria-label="Outside" />
+    <div role="dialog" aria-label="Dialog"><button type="button" class="in-dialog">Ok</button></div>
+    <button type="button" class="outside-button">Outside</button>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class PageHost {
+  readonly nodes = PEOPLE;
+  readonly page = signal(true);
+}
+
+describe('TxOrgChart on the page', () => {
+  let fixture: ComponentFixture<PageHost>;
+  const chart = () => fixture.debugElement.query(By.css('#page')).componentInstance as TxOrgChart;
+  const page = () => fixture.nativeElement.querySelector('#page') as HTMLElement;
+  const key = (target: EventTarget, init: KeyboardEventInit) => {
+    const event = new KeyboardEvent('keydown', { bubbles: true, cancelable: true, ...init });
+    target.dispatchEvent(event);
+    return event;
+  };
+
+  beforeEach(async () => {
+    vi.stubGlobal('CSS', { escape: (value: string) => value });
+    vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(1080);
+    vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockReturnValue(600);
+    vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockImplementation(function (this: HTMLElement) {
+      return this.classList.contains('tx-org-chart__stage') ? 20000 : 200;
+    });
+    vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockImplementation(function (this: HTMLElement) {
+      return this.classList.contains('tx-org-chart__stage') ? 900 : 80;
+    });
+    fixture = TestBed.createComponent(PageHost);
+    document.body.appendChild(fixture.nativeElement);
+    fixture.detectChanges();
+    await fixture.whenStable();
+  });
+
+  afterEach(() => {
+    fixture.destroy();
+    vi.restoreAllMocks();
+    vi.unstubAllGlobals();
+  });
+
+  it('takes the node template from a wrapper and falls back to its own slot', () => {
+    const wrapped = fixture.nativeElement.querySelector('#wrapped') as HTMLElement;
+    expect([...wrapped.querySelectorAll('.outer-node')].map((node) => node.textContent)).toContain('Dana Fox');
+    expect(wrapped.querySelector('.inner-node')).toBeNull();
+    const fallback = fixture.nativeElement.querySelector('#fallback') as HTMLElement;
+    expect([...fallback.querySelectorAll('.inner-node')].map((node) => node.textContent)).toContain('Ben Cole');
+  });
+
+  it('fits the whole wide tree with minFitZoom 0 and lets the zoom go back down to that fit', () => {
+    expect(chart().view().zoom).toBeCloseTo(0.05);
+    expect(chart().minZoom()).toBeCloseTo(0.05);
+    expect(chart().toolbarState().canZoomOut).toBe(false);
+    chart().zoomIn();
+    expect(chart().view().zoom).toBeCloseTo(0.06);
+    expect(chart().toolbarState().canZoomOut).toBe(true);
+    chart().zoomOut();
+    chart().zoomOut();
+    expect(chart().view().zoom).toBeCloseTo(0.05);
+    chart().centerOn({ x: 0, y: 0 });
+    expect(chart().view().zoom).toBeCloseTo(0.05);
+  });
+
+  it('runs the hotkeys from anywhere on the page with pageHotkeys', () => {
+    const zoom = chart().view().zoom;
+    expect(key(document.body, { key: '+' }).defaultPrevented).toBe(true);
+    expect(chart().view().zoom).toBeCloseTo(zoom * 1.2);
+    key(fixture.nativeElement.querySelector('.outside-button'), { key: '-' });
+    expect(chart().view().zoom).toBeCloseTo(zoom);
+    key(document, { key: '0' });
+    expect(chart().view().zoom).toBe(1);
+    const x = chart().view().x;
+    key(document.body, { key: 'ArrowLeft' });
+    expect(chart().view().x).toBe(x + 48);
+    expect(key(fixture.nativeElement.querySelector('.outside-button'), { key: 'ArrowLeft' }).defaultPrevented).toBe(false);
+    key(document.body, { key: 'f' });
+    expect(chart().view().zoom).toBeCloseTo(0.05);
+  });
+
+  it('leaves typing, dialogs, handled keys and the canvas alone, and is off by default', () => {
+    expect(key(fixture.nativeElement.querySelector('.outside-input'), { key: '+' }).defaultPrevented).toBe(false);
+    expect(key(fixture.nativeElement.querySelector('.in-dialog'), { key: '+' }).defaultPrevented).toBe(false);
+    const handled = new KeyboardEvent('keydown', { key: '+', bubbles: true, cancelable: true });
+    handled.preventDefault();
+    const zoom = chart().view().zoom;
+    document.body.dispatchEvent(handled);
+    expect(chart().view().zoom).toBe(zoom);
+    const canvas = page().querySelector('.tx-org-chart__canvas') as HTMLElement;
+    expect(key(canvas, { key: 'q' }).defaultPrevented).toBe(false);
+    fixture.componentInstance.page.set(false);
+    fixture.detectChanges();
+    expect(key(document.body, { key: '+' }).defaultPrevented).toBe(false);
+    expect(chart().view().zoom).toBe(zoom);
   });
 });

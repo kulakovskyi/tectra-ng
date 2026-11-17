@@ -54,8 +54,15 @@ describe('pie layout', () => {
   it('draws arcs, rings and full circles', () => {
     expect(arcPath(50, 50, 0, 50, 0, Math.PI / 2)).toBe('M50,0A50,50 0 0 1 100,50L50,50Z');
     expect(arcPath(50, 50, 25, 50, 0, Math.PI / 2)).toContain('A25,25 0 0 0');
-    expect(arcPath(50, 50, 0, 50, 0, Math.PI * 2).match(/A/g)).toHaveLength(2);
     expect(arcPath(50, 50, 0, 50, 1, 1)).toBe('');
+  });
+
+  it('draws a full turn as one closed disc or ring without radial edges', () => {
+    expect(arcPath(50, 50, 0, 50, 0, Math.PI * 2)).toBe('M50,0A50,50 0 1 1 50,100A50,50 0 1 1 50,0Z');
+    expect(arcPath(50, 50, 25, 50, 0, Math.PI * 2, 4)).toBe('M50,0A50,50 0 1 1 50,100A50,50 0 1 1 50,0ZM50,25A25,25 0 1 0 50,75A25,25 0 1 0 50,25Z');
+    const turned = arcPath(50, 50, 25, 50, Math.PI / 2, Math.PI / 2 + Math.PI * 2);
+    expect(turned).toBe('M100,50A50,50 0 1 1 0,50A50,50 0 1 1 100,50ZM75,50A25,25 0 1 0 25,50A25,25 0 1 0 75,50Z');
+    expect(turned).not.toContain('L');
   });
 
   it('rounds the corners and shrinks the rounding on narrow segments', () => {
@@ -443,5 +450,71 @@ describe('TxPieChart size', () => {
     fixture.componentInstance.position.set('top');
     await fixture.whenStable();
     expect(frame.getAttribute('data-legend')).toBe('top');
+  });
+});
+
+@Component({
+  imports: [TxPieChart],
+  template: `<tx-pie-chart id="ring" [pieData]="data()" [chartWidth]="200" [chartHeight]="200" [showLegend]="false" [toolbar]="false" [dt]="dt()" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class RingHost {
+  readonly data = signal<TxPieData>({ series: [1], labels: ['All'] });
+  readonly dt = signal<Record<string, unknown> | undefined>(undefined);
+}
+
+describe('TxPieChart full ring and hover offset', () => {
+  let fixture: ComponentFixture<RingHost>;
+  const segments = () => Array.from(fixture.nativeElement.querySelectorAll('#ring .tx-pie-chart__segment')) as SVGPathElement[];
+  const chart = () => fixture.debugElement.children[0].componentInstance as TxPieChart;
+  const offset = (path: SVGPathElement) => [path.style.getPropertyValue('--tx-pie-chart-ux'), path.style.getPropertyValue('--tx-pie-chart-uy')];
+
+  beforeEach(async () => {
+    fixture = TestBed.createComponent(RingHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+  });
+
+  it('draws a single segment as one seamless ring that stays in place on hover', async () => {
+    const [ring] = segments();
+    expect(segments()).toHaveLength(1);
+    const d = ring.getAttribute('d') ?? '';
+    expect(d.match(/M/g)).toHaveLength(2);
+    expect(d).not.toContain('L');
+    expect(offset(ring)).toEqual(['0', '0']);
+    chart().hovered.set(0);
+    await fixture.whenStable();
+    expect(ring.classList).toContain('tx-pie-chart__segment--hovered');
+    expect(offset(ring)).toEqual(['0', '0']);
+  });
+
+  it('keeps a segment of half the circle or more in place and moves the small ones out', async () => {
+    fixture.componentInstance.data.set({ series: [3, 1], labels: ['Big', 'Small'] });
+    await fixture.whenStable();
+    const [big, small] = segments();
+    expect(offset(big)).toEqual(['0', '0']);
+    expect(offset(small)).toEqual(['-0.707', '-0.707']);
+    fixture.componentInstance.data.set({ series: [1, 1], labels: ['A', 'B'] });
+    await fixture.whenStable();
+    expect(segments().map(offset)).toEqual([
+      ['0', '0'],
+      ['0', '0'],
+    ]);
+  });
+
+  it('keeps a moved segment inside the plot by fitting the hover offset into the padding', async () => {
+    fixture.componentInstance.data.set({ series: [1, 1, 1], labels: ['A', 'B', 'C'] });
+    await fixture.whenStable();
+    const radius = () => chart().geometry().fit.radius;
+    expect(radius()).toBe(100 - 8);
+    fixture.componentInstance.dt.set({ pie: { hoverOffset: '20px' } });
+    await fixture.whenStable();
+    expect(chart().hoverOffset()).toBe(20);
+    expect(radius()).toBe(100 - 21);
+    const { fit, arcs } = chart().geometry();
+    for (const arc of arcs) {
+      const reach = Math.hypot(Math.sin(arc.middle) * 20, Math.cos(arc.middle) * 20) + fit.radius + chart().segmentGap() / 2;
+      expect(reach).toBeLessThanOrEqual(100);
+    }
   });
 });

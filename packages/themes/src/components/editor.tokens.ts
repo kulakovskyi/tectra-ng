@@ -38,6 +38,8 @@ export const editorContentTokens = {
   task: {
     size: '16px',
     gap: '8.75px',
+    checkWidth: '4px',
+    checkHeight: '8px',
     borderRadius: tokenRef('radius-sm'),
     borderColor: tokenRef('form-field-border-color'),
     checkedBackground: tokenRef('primary-base'),
@@ -77,6 +79,7 @@ export const editorContentTokens = {
   video: {
     borderRadius: tokenRef('radius-lg'),
     aspectRatio: '16 / 9',
+    maxWidth: '640px',
   },
   mention: {
     padding: '0.05em 0.35em',
@@ -129,6 +132,7 @@ export const editorTokens = {
   },
   tool: {
     size: '29.75px',
+    gap: '2px',
     borderRadius: tokenRef('radius-md'),
     iconSize: '15px',
     color: tokenRef('text-muted'),
@@ -140,6 +144,9 @@ export const editorTokens = {
     labelFontSize: tokenRef('font-size-sm'),
     labelFontWeight: tokenRef('font-weight-medium'),
     labelPadding: '0 8.75px',
+    labelMinWidth: '112px',
+    menuPadding: '0 5px 0 7px',
+    colorBarHeight: '3px',
     focusRingWidth: '2px',
     focusRingColor: tokenRef('focus-ring-color'),
   },
@@ -148,11 +155,16 @@ export const editorTokens = {
     hoverBackground: mix(tokenRef('primary-base'), '17%', 'transparent'),
     color: tokenRef('primary-hover'),
     animationDuration: '3.2s',
+    gap: '6px',
+    padding: '0 10.5px',
   },
   content: {
     padding: '12.25px 15.75px',
     minHeight: '140px',
     placeholderColor: tokenRef('form-field-placeholder-color'),
+  },
+  table: {
+    cellMinWidth: '48px',
   },
   footer: {
     padding: '5.25px 12.25px',
@@ -177,6 +189,8 @@ export const editorTokens = {
     shadow: tokenRef('shadow-overlay'),
     offset: '8px',
     linkMaxWidth: '240px',
+    labelGap: '6px',
+    itemPadding: '0 7px',
   },
   popover: {
     padding: '10.5px',
@@ -199,6 +213,7 @@ export const editorTokens = {
     itemRadius: tokenRef('radius-sm'),
     itemFocusBackground: tokenRef('list-focus-background'),
     avatarSize: '22px',
+    commandIconInset: '3px',
     secondaryColor: tokenRef('text-muted'),
   },
 };

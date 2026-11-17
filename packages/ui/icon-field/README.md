@@ -21,7 +21,8 @@ Icons, text, a clear button or a copy button inside a field. Items before the in
 | Name | Description |
 |---|---|
 | cleared | `tx-input-clear`: the field was cleared |
-| copied | `tx-input-copy`: the value that was copied |
+| copied | `tx-input-copy`: the value that was copied. Copying uses the Clipboard API and falls back to a selection outside a secure context |
+| copyFailed | `tx-input-copy`: the browser refused to copy; gives the value. The button says "Could not copy" for a moment instead of the check mark — show your own message from here |
 
 ## Keyboard
 | Key | Action |

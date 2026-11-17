@@ -228,14 +228,14 @@
   .tx-toast__actions {
     display: flex;
     flex-shrink: 0;
-    gap: 6px;
+    gap: var(--tx-toast-action-gap);
   }
 
   .tx-toast__action {
     flex-shrink: 0;
     padding: var(--tx-toast-action-padding);
     border: 0;
-    border-radius: 9999px;
+    border-radius: var(--tx-radius-full);
     background: color-mix(in srgb, var(--_tone) var(--tx-toast-action-tint), transparent);
     color: var(--_tone);
     font: inherit;

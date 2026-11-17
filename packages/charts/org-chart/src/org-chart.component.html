@@ -89,7 +89,7 @@
         <tx-org-chart-node
           [node]="root"
           [state]="treeState()"
-          [template]="nodeTemplate()?.template ?? null"
+          [template]="resolvedNodeTemplate()"
           root
           (toggleNode)="nodeToggle.emit($event)"
           (hoverPath)="highlightPath($event)"

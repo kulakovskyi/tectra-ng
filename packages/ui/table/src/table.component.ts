@@ -181,6 +181,15 @@ export interface TxTableRenderGroup {
   collapsed: boolean;
 }
 
+function addClasses(target: Record<string, boolean>, value: string | string[] | Record<string, boolean> | null | undefined): void {
+  if (!value) return;
+  if (typeof value === 'string' || Array.isArray(value)) {
+    for (const name of [value].flat().join(' ').split(/\s+/)) if (name) target[name] = true;
+    return;
+  }
+  for (const [names, on] of Object.entries(value)) for (const name of names.split(/\s+/)) if (name) target[name] = target[name] || !!on;
+}
+
 const EDITOR_FOCUS_TARGET = 'input:not(.tx-table__editor-pending), textarea, button, [tabindex]:not([tabindex="-1"])';
 
 @Component({
@@ -1282,6 +1291,13 @@ export class TxTable<T = unknown> implements TxTableContext {
 
   rowClassOf(item: TxTableRenderRow<T>): string | string[] | Record<string, boolean> | null | undefined {
     return this.rowClass()?.(item.row, item.index);
+  }
+
+  rowClasses(item: TxTableRenderRow<T>): Record<string, boolean> {
+    const classes: Record<string, boolean> = {};
+    addClasses(classes, this.rowClassOf(item));
+    addClasses(classes, this.passThrough().row?.class);
+    return classes;
   }
 
   toggleColumn(field: string, visible: boolean): void {

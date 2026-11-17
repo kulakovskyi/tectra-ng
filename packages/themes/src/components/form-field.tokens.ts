@@ -33,6 +33,10 @@ export const formFieldTokens = {
     focusRing: { shadow: 'none', width: '0px', style: 'none', color: 'transparent', offset: '0px' },
     invalidFocusRing: { shadow: 'none' },
     transitionDuration: tokenRef('motion-duration'),
+    actionSize: '24px',
+    actionRoom: '28px',
+    iconGap: '6px',
+    panelMaxWidth: '300px',
   },
 };
 

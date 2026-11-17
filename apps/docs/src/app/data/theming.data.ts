@@ -109,6 +109,31 @@ theme.primary(); // 'violet'`,
 }`,
   },
   {
+    icon: 'palette',
+    title: 'More palettes',
+    file: 'app.config.ts',
+    text: 'Only the primary, surface and severity palettes are written by default. palettes adds accent palettes as --tx-<palette>-<step> for charts, tags or your own CSS.',
+    language: 'typescript',
+    code: `provideTectra({ preset: Tectra, palettes: ['teal', 'rose', 'indigo'] });
+
+// styles.css
+.badge-new { background: var(--tx-teal-100); color: var(--tx-teal-800); }`,
+  },
+  {
+    icon: 'expand',
+    title: 'Sizes in rem',
+    file: 'app.config.ts',
+    text: 'Tokens are in px. units: rem writes every size above 1px as rem, so components scale with the root font size; rootFontSize sets the base (16).',
+    language: 'typescript',
+    code: `provideTectra({ preset: Tectra, units: 'rem' });
+
+// styles.css
+html { font-size: 14px; } /* every component is 12.5% smaller */
+
+// without Angular
+presetToCss(Tectra, { units: 'rem', palettes: ['teal'] });`,
+  },
+  {
     icon: 'file',
     title: 'Plain CSS',
     file: 'build-theme.ts',

@@ -8,6 +8,8 @@ import { TxPillPart, TxPillSize, TxPillTone, TxPillVariant } from './pill.types'
 import { PILL_ICON_DEFAULTS } from './pill.icons';
 import { PILL_THEME } from './pill.theme';
 
+const SPIN_MODIFIERS = new Set(['spin', 'pi-spin']);
+
 @Component({
   selector: 'tx-pill',
   imports: [TxIcon],
@@ -15,15 +17,21 @@ import { PILL_THEME } from './pill.theme';
     @if (dot()) {
       <span class="tx-pill__dot" aria-hidden="true"></span>
     } @else if (icon(); as icon) {
-      <span class="tx-pill__icon" aria-hidden="true" [class]="passThrough().icon?.class" [style]="passThrough().icon?.style">
+      <span
+        class="tx-pill__icon"
+        aria-hidden="true"
+        [class.tx-pill__icon--spin]="iconSpin()"
+        [class]="passThrough().icon?.class"
+        [style]="passThrough().icon?.style"
+      >
         @if (iconName(); as name) {
-          <tx-icon [name]="name" />
+          <tx-icon [name]="name" [class]="iconModifiers()" />
         } @else {
           <span [class]="icon"></span>
         }
       </span>
     }
-    <ng-content select="[txPillLeading]" />
+    <span class="tx-pill__leading" [class]="passThrough().leading?.class" [style]="passThrough().leading?.style"><ng-content select="[txPillLeading]" /></span>
     <span class="tx-pill__label" [class]="passThrough().label?.class" [style]="passThrough().label?.style">{{ value() }}<ng-content /></span>
     @if (removable()) {
       <button
@@ -31,8 +39,8 @@ import { PILL_THEME } from './pill.theme';
         class="tx-pill__remove"
         [class]="passThrough().remove?.class"
         [style]="passThrough().remove?.style"
-        [attr.aria-label]="removeLabel() ?? translations().remove"
-        [title]="removeLabel() ?? translations().remove"
+        [attr.aria-label]="removeText()"
+        [title]="removeText()"
         (click)="remove($event)"
         (keydown.delete)="remove($event)"
         (keydown.backspace)="remove($event)"
@@ -79,10 +87,14 @@ export class TxPill {
   readonly passThrough = injectPassThrough('pill', this, this.pt, this.ptOptions);
   readonly resolvedTone = computed(() => (this.tone() === 'secondary' ? 'neutral' : this.tone()));
   readonly resolvedSize = computed(() => (this.size() === 'normal' ? 'medium' : this.size()));
-  readonly iconName = computed(() => {
-    const icon = this.icon();
-    return icon && this.txIconRegistry.has(icon) ? icon : null;
+  private readonly iconParts = computed(() => {
+    const [name, ...modifiers] = (this.icon() ?? '').trim().split(/\s+/);
+    return this.txIconRegistry.has(name) ? { name, modifiers } : null;
   });
+  readonly iconName = computed(() => this.iconParts()?.name ?? null);
+  readonly iconModifiers = computed(() => this.iconParts()?.modifiers.join(' ') ?? '');
+  readonly iconSpin = computed(() => this.iconParts()?.modifiers.some((modifier) => SPIN_MODIFIERS.has(modifier)) ?? false);
+  readonly removeText = computed(() => this.removeLabel() || this.translations().remove);
   readonly hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-pill'), ...this.passThrough().root?.style }));
 
   remove(event: Event): void {

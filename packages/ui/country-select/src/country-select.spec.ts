@@ -1,16 +1,25 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TxCountrySelect } from './country-select.component';
 import { TxCountryOption, TxCountrySort } from './country-select.types';
 
 @Component({
   imports: [TxCountrySelect, ReactiveFormsModule],
-  template: `<tx-country-select [formControl]="control" [options]="options()" [multiple]="multiple()" [sort]="sort()" [maxFlags]="2" [ariaLabel]="'Country'" />`,
+  template: `<tx-country-select
+    [formControl]="control"
+    [options]="options()"
+    [multiple]="multiple()"
+    [sort]="sort()"
+    [maxFlags]="2"
+    [maxNamed]="maxNamed()"
+    [ariaLabel]="'Country'"
+  />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class Host {
-  control = new FormControl<string | string[] | null>(null);
+  control = new FormControl<string | string[] | null>(null, Validators.required);
+  readonly maxNamed = signal(1);
   readonly options = signal<(string | TxCountryOption)[] | undefined>(undefined);
   readonly multiple = signal(false);
   readonly sort = signal<TxCountrySort>('name');
@@ -93,6 +102,61 @@ describe('TxCountrySelect', () => {
     render();
     expect(fixture.nativeElement.querySelectorAll('.tx-country-select__flags tx-country')).toHaveLength(2);
     expect(fixture.nativeElement.querySelector('.tx-country-select__more')?.textContent?.trim()).toBe('+1');
+  });
+
+  it('names the picked countries up to maxNamed, then shows only flags', async () => {
+    host.multiple.set(true);
+    host.options.set(['FR', 'IT', 'ES']);
+    host.control.setValue(['FR', 'IT']);
+    render();
+    await fixture.whenStable();
+    render();
+    const names = () => Array.from(fixture.nativeElement.querySelectorAll('.tx-country-select__flags .tx-country__name')).map((name) => (name as HTMLElement).textContent);
+    expect(names()).toEqual([]);
+    host.maxNamed.set(2);
+    render();
+    expect(names()).toEqual(['France', 'Italy']);
+  });
+
+  it('draws codes that are not countries as text and keeps their value', async () => {
+    host.options.set([{ code: 'none', label: 'Not set' }, { code: 'ZZ', label: 'Other' }, 'eu', { code: 'PL', flag: false }]);
+    host.sort.set('none');
+    render();
+    trigger().click();
+    render();
+    const flags = options().map((option) => option.querySelector('.tx-country__flag')?.textContent?.trim() ?? null);
+    expect(flags).toEqual([null, null, '🇪🇺', null]);
+    expect(options().map((option) => option.querySelector('.tx-country__name')?.textContent)).toEqual(['Not set', 'Other', 'European Union', 'Poland']);
+    options()[0].click();
+    render();
+    expect(host.control.value).toBe('none');
+    expect(trigger().textContent?.trim()).toBe('Not set');
+    expect(trigger().querySelector('.tx-country__flag')).toBeNull();
+  });
+
+  it('shows the name of a text option among several picked', async () => {
+    host.multiple.set(true);
+    host.options.set([{ code: 'other', label: 'Other' }, 'FR', 'IT']);
+    host.control.setValue(['other', 'FR']);
+    render();
+    await fixture.whenStable();
+    render();
+    expect(Array.from(fixture.nativeElement.querySelectorAll('.tx-country-select__flags .tx-country__name')).map((name) => (name as HTMLElement).textContent)).toEqual(['Other']);
+  });
+
+  it('turns invalid with the touched invalid form control', async () => {
+    await fixture.whenStable();
+    render();
+    expect(trigger().getAttribute('aria-invalid')).toBeNull();
+    host.control.markAsTouched();
+    await fixture.whenStable();
+    render();
+    expect(trigger().getAttribute('aria-invalid')).toBe('true');
+    expect(fixture.nativeElement.querySelector('tx-select')?.classList).toContain('tx-select--invalid');
+    host.control.setValue('UA');
+    await fixture.whenStable();
+    render();
+    expect(trigger().getAttribute('aria-invalid')).toBeNull();
   });
 
   it('follows the disabled form control', async () => {

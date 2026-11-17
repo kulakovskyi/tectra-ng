@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, booleanAttribute, computed, effect, inject, input, linkedSignal, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, booleanAttribute, computed, inject, input, linkedSignal } from '@angular/core';
 import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
-import { optionalBoolean } from '@tectra-ng/core/utils';
+import { optionalBoolean, TxTimeSource } from '@tectra-ng/core/utils';
 import { TectraAnalogClockTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TxAnalogClockPart, TxAnalogClockTime } from './analog-clock.types';
 import { clockHands, clockTime, forwardAngle } from './analog-clock.utils';
@@ -72,27 +72,12 @@ export class TxAnalogClock {
   readonly hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-analog-clock'), ...this.passThrough().root?.style }));
 
   protected readonly ticks = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-  private readonly now = signal(Date.now());
-  private timer: ReturnType<typeof setTimeout> | null = null;
+  private readonly timeSource = inject(TxTimeSource);
 
   private readonly fixedTime = computed(() => clockTime(this.time()));
-  readonly hands = computed(() => clockHands(this.fixedTime() ?? this.now(), this.timezone()));
+  readonly hands = computed(() => clockHands(this.fixedTime() ?? this.timeSource.every(this.showSeconds() ? 'second' : 'minute')(), this.timezone()));
   readonly label = computed(() => (this.ariaLabel() ? `${this.ariaLabel()}, ${this.hands().time}` : this.hands().time));
   readonly hourAngle = linkedSignal<number, number>({ source: () => this.hands().hourAngle, computation: (next, previous) => forwardAngle(previous?.value ?? null, next) });
   readonly minuteAngle = linkedSignal<number, number>({ source: () => this.hands().minuteAngle, computation: (next, previous) => forwardAngle(previous?.value ?? null, next) });
   readonly secondAngle = linkedSignal<number, number>({ source: () => this.hands().secondAngle, computation: (next, previous) => forwardAngle(previous?.value ?? null, next) });
-
-  private readonly schedule = effect((onCleanup) => {
-    this.now();
-    if (this.fixedTime() !== null) return;
-    const step = this.showSeconds() ? 1000 : 60000;
-    this.timer = setTimeout(() => this.now.set(Date.now()), step - (Date.now() % step) + 5);
-    onCleanup(() => {
-      if (this.timer) clearTimeout(this.timer);
-    });
-  });
-
-  private readonly cleanup = inject(DestroyRef).onDestroy(() => {
-    if (this.timer) clearTimeout(this.timer);
-  });
 }

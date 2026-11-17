@@ -28,7 +28,7 @@
 }
 
 :host {
-  --_shift: 1;
+  --tx-wizard-direction: 1;
 
   position: relative;
   isolation: isolate;
@@ -51,7 +51,7 @@
 }
 
 :host([data-direction='back']) {
-  --_shift: -1;
+  --tx-wizard-direction: -1;
 }
 
 .tx-wizard-stage__stage {
@@ -111,14 +111,6 @@
     font-size: var(--tx-wizard-stage-title-font-size);
     font-weight: var(--tx-wizard-stage-title-font-weight);
   }
-
-  ::ng-deep .tx-wizard-scene--enter {
-    animation: tx-wizard-scene-in var(--tx-wizard-stage-scene-enter-duration) var(--tx-wizard-stage-scene-easing) both;
-  }
-
-  ::ng-deep .tx-wizard-scene--leave {
-    animation: tx-wizard-scene-out var(--tx-wizard-stage-scene-leave-duration) ease-in both;
-  }
 }
 
 @media (width >= 1024px) {
@@ -129,20 +121,6 @@
   @include wide("[data-responsive='container']");
 }
 
-@keyframes tx-wizard-scene-in {
-  from {
-    opacity: 0;
-    transform: translateX(calc(var(--_shift) * var(--tx-wizard-stage-scene-enter-shift))) scale(0.96);
-  }
-}
-
-@keyframes tx-wizard-scene-out {
-  to {
-    opacity: 0;
-    transform: translateX(calc(var(--_shift) * -1 * var(--tx-wizard-stage-scene-leave-shift))) scale(0.98);
-  }
-}
-
 @keyframes tx-wizard-caption-in {
   from {
     opacity: 0;
@@ -151,11 +129,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  :host([data-styled]) {
-    ::ng-deep .tx-wizard-scene--enter,
-    ::ng-deep .tx-wizard-scene--leave,
-    .tx-wizard-stage__caption--enter {
-      animation: none;
-    }
+  :host([data-styled]) .tx-wizard-stage__caption--enter {
+    animation: none;
   }
 }

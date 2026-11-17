@@ -6,3 +6,6 @@ export type TxStatusIconSeverity = 'success' | 'info' | 'warn' | 'danger' | 'sec
 
 /** Size of `tx-status-icon`: `small`, `medium` or `large`. */
 export type TxStatusIconSize = 'small' | 'medium' | 'large';
+
+/** Hint of `tx-status-icon`: `true` shows the label in a kit tooltip, `false` in the native title, `'none'` shows none. */
+export type TxStatusIconTooltip = boolean | 'none';

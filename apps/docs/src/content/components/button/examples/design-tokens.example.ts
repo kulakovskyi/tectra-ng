@@ -8,6 +8,9 @@ import { TxButton } from '@tectra-ng/ui/button';
     <div class="flex">
       <button txButton [dt]="teal">Teal button</button>
       <button txButton [dt]="chunky" [icon]="'plus'">Chunky</button>
+      <button txButton severity="secondary" [outlined]="true" [dt]="filledOutline">
+        Filled outline
+      </button>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,6 +30,9 @@ export default class ButtonDesignTokensExample {
         activeColor: '#ffffff',
       },
     },
+  };
+  filledOutline = {
+    outlined: { secondary: { background: 'var(--tx-surface-ground)' } },
   };
   chunky = {
     root: { borderRadius: '2px', paddingX: '24px', paddingY: '14px', label: { fontWeight: '800' } },

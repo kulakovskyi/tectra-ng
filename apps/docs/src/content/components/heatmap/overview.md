@@ -4,7 +4,7 @@ tokens: chart
 source: packages/charts/heatmap
 package: @tectra-ng/charts/heatmap
 import: TxHeatmap
-examples: basic, templates, interactive, value-scale, calendar, scroll, design-tokens, pass-through
+examples: basic, templates, template-inputs, interactive, value-scale, calendar, scroll, design-tokens, pass-through
 ---
 # Heatmap
 

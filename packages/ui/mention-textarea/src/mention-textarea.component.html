@@ -47,7 +47,7 @@
     class="tx-select__panel tx-mention-textarea__panel"
     [attr.data-styled]="!isUnstyled() || null"
     [class]="passThrough().panel?.class"
-    [style]="passThrough().panel?.style"
+    [style]="panelStyle()"
     (mousedown)="onPanelMousedown($event)"
   >
     <tx-option-list

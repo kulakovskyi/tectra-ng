@@ -10,7 +10,7 @@ Inline feedback. `<tx-message>` is a box with a severity, an optional icon and a
 <tx-field-error for="email" [control]="email" />
 ```
 
-Error texts: `messages` on the field, then `provideTectra({ validationMessages })`, then `error.message` of a custom validator, then the built-in text of the locale (`required`, `email`, `minlength`, `maxlength`, `min`, `max`, `pattern`, and the keys of `TxValidators` from `@tectra-ng/utils/validators`; anything else is "Invalid value"). `{param}` is replaced with the fields of the error object, e.g. `{requiredLength}`, `{min}`.
+Error texts: `messages` on the field, then `provideTectra({ validationMessages })`, then `error.message` of a custom validator, then the built-in text of the locale (`required`, `email`, `minlength`, `maxlength`, `min`, `max`, `pattern`, and the keys of `TxValidators` from `@tectra-ng/utils/validators`). A key without any of these takes the `'*'` entry — of `messages`, then of `validationMessages` — and "Invalid value" when there is none. `{param}` is replaced with the fields of the error object, e.g. `{requiredLength}`, `{min}`.
 
 ## Inputs
 | Name | Description |
@@ -27,7 +27,7 @@ Error texts: `messages` on the field, then `provideTectra({ validationMessages }
 | errorText | `tx-field-error`: an error from outside the form (e.g. the server) — shown as is, before the control's errors |
 | showImmediately | `tx-field-error`: shows the error, and the success text, before the control is touched or changed |
 | successText | `tx-field-error`: text shown when the control has a valid value and was touched or changed (at once with `showImmediately`) |
-| messages | `tx-field-error`: own texts per error key — a string with `{param}` or a function of the error |
+| messages | `tx-field-error`: own texts per error key — a string with `{param}` or a function of the error; `'*'` is the text for keys that have no text of their own |
 | for | `tx-field-hint`, `tx-field-error`: id of the field; adds this text to its `aria-describedby` |
 | id | `tx-field-hint`, `tx-field-error`: own id instead of a generated one |
 | dt | Design tokens of this instance (`message` or `fieldMessage`) |

@@ -50,6 +50,8 @@ export interface TxTranslations {
   showPassword: string;
   /** Label of the button that hides the password. */
   hidePassword: string;
+  /** Accessible name of an icon-only button that generates a password. */
+  generatePassword: string;
   /** Accessible name of one cell of the one-time code input; takes `{index}` and `{length}`. */
   otpCell: string;
   /** Accessible name of the increase button of the number input. */

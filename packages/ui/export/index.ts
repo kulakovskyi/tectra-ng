@@ -8,6 +8,7 @@ export { writeCsv, writeTsv, writeJson, writeHtml, writeMarkdown, htmlTable } fr
 export { writeXlsx, xlsxParts, columnName, excelSerial, excelWidths, sheetName } from './src/writers/xlsx';
 export { writeDocx, docxDocument } from './src/writers/docx';
 export { writePdf, wrapText } from './src/writers/pdf';
+export { writeHtmlPdf } from './src/writers/html-pdf';
 export { parseTrueType } from './src/writers/truetype';
 export type { TxTrueTypeFont } from './src/writers/truetype';
 export { zip, crc32 } from './src/writers/zip';

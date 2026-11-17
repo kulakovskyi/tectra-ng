@@ -1,0 +1,1 @@
+A component that wraps the board gets the slot templates from its own content and passes them on with `cardTemplate`, `columnHeaderTemplate`, `columnTopTemplate`, `columnFooterTemplate` and `emptyTemplate` — a `txKanbanCard` inside the wrapper's content is not inside `<tx-kanban>`, so the board would not see it. An input wins over a template slot.

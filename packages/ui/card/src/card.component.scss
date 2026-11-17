@@ -52,9 +52,9 @@
 :host([data-styled]) .tx-card__footer {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--tx-space-2);
   margin-top: auto;
-  padding-top: 4px;
+  padding-top: var(--tx-space-1);
 }
 
 :host([data-styled]) .tx-card__footer:empty {

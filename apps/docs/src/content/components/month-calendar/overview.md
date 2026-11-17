@@ -1,7 +1,7 @@
 ---
 category: Data
 tokens: monthCalendar
-examples: basic, navigation, lanes, week-start, event-template, compact, design-tokens, pass-through
+examples: basic, navigation, lanes, week-start, event-template, template-input, compact, design-tokens, pass-through
 ---
 # MonthCalendar
 

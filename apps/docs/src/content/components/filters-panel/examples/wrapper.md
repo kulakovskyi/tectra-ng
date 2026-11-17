@@ -1,0 +1,1 @@
+Fields projected into a component that wraps `tx-filters-panel` reach the panel through `provideTxFiltersPanelRelay()` in the wrapper's `providers`: the panel lists, hides and orders them and folds the reset action into its panel on narrow screens. The fields here come from a `@for` over a filter list.

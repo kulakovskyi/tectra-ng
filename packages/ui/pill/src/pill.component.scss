@@ -12,8 +12,15 @@
   text-overflow: ellipsis;
 }
 
-.tx-pill__label:empty {
+.tx-pill__label:empty,
+.tx-pill__leading:empty {
   display: none;
+}
+
+.tx-pill__leading {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
 }
 
 :host([data-styled]) {
@@ -84,9 +91,18 @@
   background: currentColor;
 }
 
-:host([data-styled]) ::ng-deep > [txPillLeading] {
-  flex-shrink: 0;
+:host([data-styled]) .tx-pill__leading {
   margin-inline-start: calc(var(--tx-pill-padding-x) * -0.5);
+}
+
+:host([data-styled]) .tx-pill__icon--spin tx-icon {
+  animation: tx-pill-spin var(--tx-pill-spin-duration) linear infinite;
+}
+
+@keyframes tx-pill-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 :host([data-styled]) .tx-pill__remove {
@@ -96,7 +112,7 @@
   justify-content: center;
   width: var(--tx-pill-remove-size);
   height: var(--tx-pill-remove-size);
-  margin-inline-end: -4px;
+  margin-inline-end: var(--tx-pill-remove-offset);
   padding: 0;
   border: none;
   border-radius: 50%;
@@ -124,5 +140,9 @@
 @media (prefers-reduced-motion: reduce) {
   :host([data-styled]) .tx-pill__remove {
     transition: none;
+  }
+
+  :host([data-styled]) .tx-pill__icon--spin tx-icon {
+    animation-duration: calc(var(--tx-pill-spin-duration) * 3);
   }
 }

@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, input, signal, viewChild } from '@a
 import { By } from '@angular/platform-browser';
 import { TxFluid, injectFluid } from '@tectra-ng/core/fluid';
 import { TestBed } from '@angular/core/testing';
-import { TxFilterField, TxFiltersReset } from './filter-field.directive';
+import { TxFilterField, TxFiltersPanelRelay, TxFiltersReset, provideTxFiltersPanelRelay } from './filter-field.directive';
 import { TxFiltersPanel } from './filters-panel.component';
 import { TxFiltersPanelLayout } from './filters-panel.types';
 import { TxHasFilterValuePipe, hasFilterValue } from './has-filter-value.pipe';
@@ -305,8 +305,8 @@ describe('hasFilterValue', () => {
 });
 
 @Component({
-  imports: [TxFilterField],
-  template: `<div txFilterField="alone" filterLabel="Alone"><input aria-label="Alone" /></div>`,
+  imports: [TxFilterField, TxFiltersReset],
+  template: `<div txFilterField="alone" filterLabel="Alone"><input aria-label="Alone" /></div><button type="button" txFiltersReset>Reset</button>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class LooseFieldHost {}
@@ -552,6 +552,7 @@ describe('TxFiltersPanel folding, storage and menu edges', () => {
     expect(directive.order()).toBeNull();
     expect(element.hasAttribute('hidden')).toBe(false);
     expect(element.style.order).toBe('');
+    expect(fixture.nativeElement.querySelector('.tx-filters-panel__reset')).not.toBeNull();
   });
 
   it('keeps the layout in memory when the window has no storage', async () => {
@@ -561,5 +562,142 @@ describe('TxFiltersPanel folding, storage and menu edges', () => {
     panel.toggle('owner');
     expect(panel.options().every((option) => option.visible)).toBe(true);
     expect(host.layouts).toHaveLength(1);
+  });
+});
+
+@Component({
+  imports: [TxFiltersPanel, TxFilterField],
+  template: `
+    <tx-filters-panel stateKey="tx-spec-loop" [defaultVisible]="2">
+      @for (field of fields(); track field.key) {
+        <div class="loop-field" [txFilterField]="field.key" [filterLabel]="field.label" [filterActive]="field.active">
+          <input [attr.aria-label]="field.label" />
+        </div>
+      }
+    </tx-filters-panel>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class LoopHost {
+  readonly fields = signal([
+    { key: 'search', label: 'Search', active: false },
+    { key: 'status', label: 'Status', active: false },
+    { key: 'owner', label: 'Owner', active: true },
+  ]);
+}
+
+describe('TxFiltersPanel with fields from a loop', () => {
+  afterEach(() => localStorage.removeItem('tx-spec-loop'));
+
+  it('renders fields created by @for without reading inputs that are not set yet', async () => {
+    const fixture = TestBed.createComponent(LoopHost);
+    await fixture.whenStable();
+    const fields = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll<HTMLElement>('.loop-field'));
+    expect(fields.map((field) => field.hasAttribute('hidden'))).toEqual([false, false, false]);
+    expect(fields.map((field) => field.style.order)).toEqual(['0', '1', '2']);
+
+    fixture.componentInstance.fields.update((fields) => [...fields, { key: 'team', label: 'Team', active: false }]);
+    await fixture.whenStable();
+    const all = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll<HTMLElement>('.loop-field'));
+    expect(all).toHaveLength(4);
+    expect(all[3].hasAttribute('hidden')).toBe(true);
+    expect(all[3].style.order).toBe('3');
+  });
+});
+
+@Component({
+  selector: 'orders-filters',
+  imports: [TxFiltersPanel],
+  providers: [provideTxFiltersPanelRelay()],
+  template: `
+    <tx-filters-panel #panel stateKey="tx-spec-wrapped" [defaultVisible]="1" [collapse]="collapse()">
+      <ng-content />
+      <ng-content select="[txFiltersActions]" ngProjectAs="[txFiltersActions]" />
+    </tx-filters-panel>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class OrdersFilters {
+  readonly panel = viewChild.required<TxFiltersPanel>('panel');
+  readonly collapse = signal<'never' | 'always'>('never');
+}
+
+@Component({
+  imports: [OrdersFilters, TxFilterField, TxFiltersReset],
+  template: `
+    <orders-filters>
+      @for (field of fields; track field) {
+        <div class="wrapped-field" [txFilterField]="field" [filterLabel]="field" [filterActive]="field === active()"><input [attr.aria-label]="field" /></div>
+      }
+      @if (reset()) {
+        <button txFiltersActions txFiltersReset type="button" class="wrapped-reset" (click)="resets = resets + 1">Reset</button>
+      }
+    </orders-filters>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class WrappedHost {
+  readonly fields = ['search', 'status', 'owner'];
+  readonly active = signal<string | null>(null);
+  readonly reset = signal(true);
+  resets = 0;
+}
+
+describe('TxFiltersPanel in a wrapper', () => {
+  afterEach(() => localStorage.removeItem('tx-spec-wrapped'));
+
+  it('reaches fields and the reset action projected through a wrapper with the relay', async () => {
+    const fixture = TestBed.createComponent(WrappedHost);
+    await fixture.whenStable();
+    const root = fixture.nativeElement as HTMLElement;
+    const wrapper = fixture.debugElement.children[0].componentInstance as OrdersFilters;
+    const panel = wrapper.panel();
+    const fields = () => Array.from(root.querySelectorAll<HTMLElement>('.wrapped-field'));
+    expect(panel.options().map((option) => [option.key, option.visible])).toEqual([
+      ['search', true],
+      ['status', false],
+      ['owner', false],
+    ]);
+    expect(fields().map((field) => field.hasAttribute('hidden'))).toEqual([false, true, true]);
+    expect(fields().map((field) => field.style.order)).toEqual(['0', '1', '2']);
+
+    fixture.componentInstance.active.set('owner');
+    await fixture.whenStable();
+    expect(fields().map((field) => field.hasAttribute('hidden'))).toEqual([false, true, false]);
+    expect(panel.activeCount()).toBe(1);
+
+    wrapper.collapse.set('always');
+    await fixture.whenStable();
+    expect(root.querySelector('.tx-filters-panel__toggle .tx-filters-panel__count')?.textContent?.trim()).toBe('1');
+    (root.querySelector('.tx-filters-panel__panel-footer button') as HTMLButtonElement).click();
+    expect(fixture.componentInstance.resets).toBe(1);
+
+    fixture.componentInstance.reset.set(false);
+    await fixture.whenStable();
+    expect(root.querySelector('.tx-filters-panel__panel-footer')).toBeNull();
+  });
+
+  it('answers with defaults until a panel connects and connects only the first one', () => {
+    const relay = new TxFiltersPanelRelay();
+    expect(relay.isFieldHidden('a')).toBe(false);
+    expect(relay.fieldOrder('a')).toBeNull();
+    const field = {} as TxFilterField;
+    const reset = {} as TxFiltersReset;
+    const removeField = relay.registerField(field);
+    const removeReset = relay.registerReset(reset);
+    expect(relay.fields()).toEqual([field]);
+    expect(relay.resets()).toEqual([reset]);
+    removeField();
+    removeReset();
+    expect(relay.fields()).toEqual([]);
+    expect(relay.resets()).toEqual([]);
+
+    const first = { isFieldHidden: () => true, fieldOrder: () => 2 };
+    const disconnect = relay.connect(first);
+    expect(relay.connect({ isFieldHidden: () => false, fieldOrder: () => null })).toBeNull();
+    expect(relay.isFieldHidden('a')).toBe(true);
+    expect(relay.fieldOrder('a')).toBe(2);
+    disconnect?.();
+    expect(relay.isFieldHidden('a')).toBe(false);
   });
 });

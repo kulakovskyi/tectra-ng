@@ -9,7 +9,7 @@ import { optionalBoolean } from '@tectra-ng/core/utils';
 import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraConsoleLayoutTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { filter } from 'rxjs';
-import { TxConsoleLayout } from './console-layout.component';
+import { TX_CONSOLE_LAYOUT } from './console-layout.context';
 import { TxConsolePanelPart } from './console-layout.types';
 import { CONSOLE_LAYOUT_ICON_DEFAULTS } from './console-layout.icons';
 import { CONSOLE_LAYOUT_THEME } from './console-layout.theme';
@@ -77,7 +77,7 @@ import { CONSOLE_LAYOUT_THEME } from './console-layout.theme';
 export class TxConsolePanel {
   private readonly consoleLayoutTheme = injectTokens(CONSOLE_LAYOUT_THEME);
 
-  private readonly layout = inject(TxConsoleLayout, { optional: true });
+  private readonly layout = inject(TX_CONSOLE_LAYOUT, { optional: true });
   private readonly toggleButton = viewChild<ElementRef<HTMLButtonElement>>('toggleButton');
 
   readonly label = input<string | undefined>(undefined);

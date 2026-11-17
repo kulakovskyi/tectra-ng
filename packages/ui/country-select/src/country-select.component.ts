@@ -1,16 +1,18 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, forwardRef, inject, input, output } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { TxFormControlBase } from '@tectra-ng/core/forms';
+import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
 import { TxLocaleService } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraSelectTokens } from '@tectra-ng/themes';
-import { TX_COUNTRY_CODES, TxCountry, TxFlagShape, countryName } from '@tectra-ng/ui/country';
+import { TX_COUNTRY_CODES, TX_REGION_CODES, TxCountry, TxFlagShape, countryName, isCountryCode } from '@tectra-ng/ui/country';
 import { TxMultiselect } from '@tectra-ng/ui/multiselect';
 import { TxFieldVariant, TxSelect, TxSelectItem, TxSelectOptionTemplate, TxSelectSize, TxSelectValueTemplate } from '@tectra-ng/ui/select';
 import { TxCountryItem, TxCountryOption, TxCountrySort } from './country-select.types';
 import { injectTokens } from '@tectra-ng/core/config';
 import { COUNTRY_SELECT_THEME } from './country-select.theme';
+
+const FLAG_CODES = new Set([...TX_COUNTRY_CODES, ...TX_REGION_CODES]);
 
 @Component({
   selector: 'tx-country-select',
@@ -35,6 +37,7 @@ export class TxCountrySelect extends TxFormControlBase<string | string[]> {
   readonly sort = input<TxCountrySort>('name');
   readonly shape = input<TxFlagShape>('rectangle');
   readonly maxFlags = input<number>(3);
+  readonly maxNamed = input<number>(1);
   readonly virtualScrollThreshold = input<number>(50);
   readonly placeholder = input<string>('');
   readonly showClear = input<boolean, unknown>(false, { transform: booleanAttribute });
@@ -51,15 +54,19 @@ export class TxCountrySelect extends TxFormControlBase<string | string[]> {
 
   readonly changed = output<string | string[] | null>();
 
+  readonly isInvalid = injectFieldInvalid(this.invalid);
+
   readonly items = computed<TxCountryItem[]>(() => {
     const locale = this.locale.locale().intl;
     const items = (this.options() ?? TX_COUNTRY_CODES).map((option) => {
       const entry: TxCountryOption = typeof option === 'string' ? { code: option } : option;
-      const code = entry.code.trim().toUpperCase();
+      const trimmed = entry.code.trim();
+      const code = isCountryCode(trimmed) ? trimmed.toUpperCase() : trimmed;
       return {
         code,
         value: entry.value ?? code,
         label: entry.label ?? countryName(code, locale),
+        flag: entry.flag ?? FLAG_CODES.has(code),
         count: entry.count ?? null,
         hint: entry.hint ?? '',
         disabled: !!entry.disabled,
@@ -79,6 +86,10 @@ export class TxCountrySelect extends TxFormControlBase<string | string[]> {
 
   firstFlags(items: TxSelectItem[]): TxCountryItem[] {
     return items.slice(0, this.maxFlags()).map((item) => item.option as TxCountryItem);
+  }
+
+  showsNames(items: TxSelectItem[]): boolean {
+    return items.length <= this.maxNamed();
   }
 
   onModelChange(value: string | string[] | null): void {

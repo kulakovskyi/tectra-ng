@@ -11,6 +11,8 @@ Strong random passwords from `crypto.getRandomValues` (no bias, at least one cha
 const password = inject(TxPasswordGenerator).generate({ length: 24, symbols: false });
 ```
 
+`txPasswordGenerate` works on any `button`, also a `txButton`. An icon-only button without its own `aria-label`, `aria-labelledby` or `title` gets the translated "Generate password" (locale key `generatePassword`) as its accessible name; use the same key for a tooltip: `[txTooltip]="translations().generatePassword"` with `translations = injectTranslations()`.
+
 ## Inputs
 | Name | Description |
 |---|---|

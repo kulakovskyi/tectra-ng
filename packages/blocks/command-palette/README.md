@@ -15,6 +15,12 @@ A search button for the top bar and a ⌘K / Ctrl K window with grouped results:
 
 `menuPaletteItems` turns a sidebar menu (`TxPanelMenuItem[]`) into page items; `commandPaletteFilter` matches the label and the sublabel. Both are also exported as functions (`menuPaletteItems()`, `filterPaletteItems()`).
 
+The second argument of `menuPaletteItems` is the group (`pages`) or `TxMenuPaletteOptions`: `group`, `translate` — a function that turns the menu labels (translation keys) into text, section and parent titles too — `icon` — a map `{ 'menu-icon': 'palette-icon' }` or a function of the menu item, for menus whose icons are named differently — and `defaultIcon` for items without one (`file`). The pipe is pure: give it a new options object when the language changes.
+
+```html
+<tx-command-palette localFilter [items]="menu | menuPaletteItems: { translate: t, icon: { house: 'home' } }" />
+```
+
 The window is a dialog with a combobox: the field owns the focus, the active result is announced with `aria-activedescendant`, focus goes back to the button after closing, and the page does not scroll behind it.
 
 ## Inputs
@@ -28,6 +34,7 @@ The window is a dialog with a combobox: the field owns the focus, the active res
 | loading | A spinner in the field and a "Searching…" row |
 | emptyText | Text when a query finds nothing; translated by default |
 | loadingText | Text of the loading row; translated by default |
+| hintTexts | Own texts of the footer key hints (`TxCommandPaletteHints`: `navigate`, `open`, `close`); a missing or empty one stays translated |
 | minQueryLength | Shortest term `searchChange` sends; shorter terms send `''` (default 2) |
 | debounceTime | Delay in ms before `searchChange` (default 300) |
 | shortcutKey | Key that opens and closes the window with ⌘ / Ctrl (default `k`) |

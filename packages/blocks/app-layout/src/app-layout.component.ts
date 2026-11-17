@@ -23,7 +23,7 @@ import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraAppLayoutTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
-import { TxPanelMenu, TxPanelMenuItem } from '@tectra-ng/ui/panel-menu';
+import { TxPanelMenu, TxPanelMenuItem, TxPanelMenuTranslate } from '@tectra-ng/ui/panel-menu';
 import { TxTooltip } from '@tectra-ng/ui/tooltip';
 import { filter } from 'rxjs';
 import { TxAppLayoutBackdrop, TxAppLayoutPart, TxAppLayoutResponsive } from './app-layout.types';
@@ -72,6 +72,7 @@ export class TxAppLayout implements OnInit {
   readonly backdropVariant = input<TxAppLayoutBackdrop>('spectrum');
   readonly responsive = input<TxAppLayoutResponsive>('viewport');
   readonly menuLabel = input<string | undefined>(undefined);
+  readonly translate = input<TxPanelMenuTranslate | undefined>(undefined);
   readonly dt = input<TectraDeepPartial<TectraAppLayoutTokens> | undefined>(undefined);
   readonly pt = input<TxPassThrough<TxAppLayoutPart, TxAppLayout> | undefined>(undefined);
   readonly ptOptions = input<TxPassThroughOptions | undefined>(undefined);

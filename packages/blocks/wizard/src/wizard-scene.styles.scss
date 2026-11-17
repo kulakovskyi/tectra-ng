@@ -1,0 +1,28 @@
+.tx-wizard-scene--enter:is(.tx-wizard-stage[data-styled] *, .tx-wizard-scene[data-styled]) {
+  animation: tx-wizard-scene-enter var(--tx-wizard-stage-scene-enter-duration) var(--tx-wizard-stage-scene-easing) both;
+}
+
+.tx-wizard-scene--leave:is(.tx-wizard-stage[data-styled] *, .tx-wizard-scene[data-styled]) {
+  animation: tx-wizard-scene-leave var(--tx-wizard-stage-scene-leave-duration) ease-in both;
+}
+
+@keyframes tx-wizard-scene-enter {
+  from {
+    opacity: 0;
+    transform: translateX(calc(var(--tx-wizard-direction, 1) * var(--tx-wizard-stage-scene-enter-shift))) scale(0.96);
+  }
+}
+
+@keyframes tx-wizard-scene-leave {
+  to {
+    opacity: 0;
+    transform: translateX(calc(var(--tx-wizard-direction, 1) * -1 * var(--tx-wizard-stage-scene-leave-shift))) scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tx-wizard-scene--enter:is(.tx-wizard-stage[data-styled] *, .tx-wizard-scene[data-styled]),
+  .tx-wizard-scene--leave:is(.tx-wizard-stage[data-styled] *, .tx-wizard-scene[data-styled]) {
+    animation: none;
+  }
+}

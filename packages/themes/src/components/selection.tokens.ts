@@ -29,6 +29,7 @@ export const chipsInputTokens = {
     chipPaddingX: '8px',
     chipBorderRadius: tokenRef('radius-sm'),
     inputMinWidth: '80px',
+    chipRemoveSize: '16px',
   },
 };
 

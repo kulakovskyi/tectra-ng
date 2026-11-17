@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { TxToastService } from '@tectra-ng/ui/toast';
 import { TxClipboard, copyToClipboard } from './clipboard';
-import { CLIPBOARD_ICON_DEFAULTS } from './clipboard.icons';
 import { TxCopy } from './copy.directive';
 
 @Component({
@@ -140,6 +139,5 @@ describe('clipboard', () => {
     button.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
     await flush();
     expect(writeText).not.toHaveBeenCalled();
-    expect(Object.keys(CLIPBOARD_ICON_DEFAULTS).length).toBeGreaterThan(0);
   });
 });

@@ -27,7 +27,7 @@ import { optionalBoolean } from '@tectra-ng/core/utils';
 import { provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraCommandPaletteTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { filterPaletteItems } from './command-palette.pipes';
-import { TxCommandPaletteItem, TxCommandPalettePart } from './command-palette.types';
+import { TxCommandPaletteHints, TxCommandPaletteItem, TxCommandPalettePart } from './command-palette.types';
 import { COMMAND_PALETTE_ICON_DEFAULTS } from './command-palette.icons';
 import { COMMAND_PALETTE_THEME } from './command-palette.theme';
 
@@ -69,6 +69,7 @@ export class TxCommandPalette {
   readonly loading = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly emptyText = input<string | undefined>(undefined);
   readonly loadingText = input<string | undefined>(undefined);
+  readonly hintTexts = input<TxCommandPaletteHints>({});
   readonly minQueryLength = input<number, unknown>(2, { transform: numberAttribute });
   readonly debounceTime = input<number, unknown>(300, { transform: numberAttribute });
   readonly shortcutKey = input<string>('k');

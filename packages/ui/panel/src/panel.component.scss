@@ -35,6 +35,7 @@
 
 .tx-panel__collapse {
   display: grid;
+  flex-grow: 1;
   grid-template-rows: 1fr;
 }
 
@@ -43,7 +44,16 @@
 }
 
 .tx-panel__collapse-inner {
+  display: flex;
+  flex-direction: column;
   min-height: 0;
+}
+
+.tx-panel__body {
+  flex-grow: 1;
+}
+
+:host(.tx-panel--toggleable) .tx-panel__collapse-inner {
   overflow: hidden;
 }
 
@@ -94,7 +104,7 @@
 }
 
 :host([data-styled]) .tx-panel__header {
-  gap: 12px;
+  gap: var(--tx-panel-header-gap);
 }
 
 :host([data-styled][data-align='start']) .tx-panel__header {
@@ -107,16 +117,19 @@
 
 :host([data-styled][data-align='end']) .tx-panel__header {
   align-items: flex-end;
-  column-gap: 24px;
-  row-gap: 16px;
+  gap: var(--tx-panel-header-end-gap);
 
   .tx-panel__lead {
     align-self: flex-start;
   }
+
+  .tx-panel__actions {
+    align-items: flex-end;
+  }
 }
 
 :host([data-styled]) .tx-panel__lead {
-  gap: 12px;
+  gap: var(--tx-panel-lead-gap);
 }
 
 :host([data-styled]) .tx-panel__icon {
@@ -129,37 +142,37 @@
   border-radius: var(--tx-panel-icon-border-radius);
   background: var(--tx-panel-icon-background);
   color: var(--tx-panel-icon-color);
-  font-size: calc(var(--_icon) * 0.45);
+  font-size: calc(var(--_icon) * var(--tx-panel-icon-scale));
 }
 
 :host([data-styled]) .tx-panel__heading {
-  gap: 2px;
+  gap: var(--tx-panel-heading-gap);
 }
 
 :host([data-styled]) .tx-panel__title {
   font-size: var(--_title);
   font-weight: var(--tx-panel-title-font-weight);
-  line-height: 1.3;
+  line-height: var(--tx-panel-title-line-height);
 }
 
 :host([data-styled]) .tx-panel__subtitle {
   margin: 0;
   color: var(--tx-panel-subtitle-color);
   font-size: var(--tx-panel-subtitle-font-size);
-  line-height: 1.45;
+  line-height: var(--tx-panel-subtitle-line-height);
 }
 
 :host([data-styled]) .tx-panel__actions {
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--tx-panel-actions-gap);
 }
 
 :host([data-styled]) .tx-panel__toggle {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: var(--tx-panel-toggle-size);
+  height: var(--tx-panel-toggle-size);
   padding: 0;
   border: none;
   border-radius: var(--tx-radius-md);
@@ -197,7 +210,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 8px;
+  gap: var(--tx-panel-footer-gap);
   margin-top: var(--_gap);
 }
 

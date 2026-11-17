@@ -20,6 +20,7 @@ A large avatar the person can change themselves: the camera button picks a photo
 | image | Two-way: the photo address; without it the avatar shows initials and the button uploads at once |
 | name | Name for the initials and the colour when there is no photo |
 | size | Size of the photo in px (112 by default, `editor.size` token) |
+| shape | `circle` (default) or `square` |
 | loading | Spinner over the photo while the new one uploads; the button is off |
 | disabled | Turns the button and drop off |
 | hint | Small text under the photo, e.g. allowed types and size |

@@ -46,6 +46,7 @@ export class TxCountdown {
   readonly format = input<TxCountdownFormat | undefined>(undefined);
   readonly endingSoon = input<number, unknown>(0, { transform: numberAttribute });
   readonly paused = input<boolean, unknown>(false, { transform: booleanAttribute });
+  readonly restartOnChange = input<boolean, unknown>(true, { transform: booleanAttribute });
   readonly ariaLive = input<'off' | 'polite' | 'assertive'>('off');
   readonly dt = input<TectraDeepPartial<TectraCountdownTokens> | undefined>(undefined);
   readonly pt = input<TxPassThrough<TxCountdownPart, TxCountdown> | undefined>(undefined);
@@ -66,6 +67,7 @@ export class TxCountdown {
   private readonly frozen = signal<number | null>(null);
   private timer: ReturnType<typeof setTimeout> | null = null;
   private done = false;
+  private countsValue = false;
 
   readonly resolvedFormat = computed<TxCountdownFormat>(() => this.format() ?? (this.target() !== undefined && this.value() === undefined ? 'clock' : 'number'));
   readonly remainingMs = computed(() => {
@@ -88,18 +90,29 @@ export class TxCountdown {
     const unit = this.unit();
     const target = targetTime(this.target());
     untracked(() => {
-      this.done = false;
-      this.now.set(Date.now());
-      const deadline = value !== undefined ? Date.now() + value * TX_COUNTDOWN_UNIT_MS[unit] : target;
-      if (this.paused()) {
-        this.deadline.set(deadline);
-        this.frozen.set(deadline === null ? null : Math.max(0, deadline - Date.now()));
-      } else {
-        this.frozen.set(null);
-        this.deadline.set(deadline);
-      }
+      const running = this.deadline() !== null && !this.isExpired();
+      if (!this.restartOnChange() && running && this.countsValue && value !== undefined) return;
+      this.begin(value, unit, target);
     });
   });
+
+  restart(): void {
+    this.begin(this.value(), this.unit(), targetTime(this.target()));
+  }
+
+  private begin(value: number | undefined, unit: TxCountdownUnit, target: number | null): void {
+    this.done = false;
+    this.countsValue = value !== undefined;
+    this.now.set(Date.now());
+    const deadline = value !== undefined ? Date.now() + value * TX_COUNTDOWN_UNIT_MS[unit] : target;
+    if (this.paused()) {
+      this.deadline.set(deadline);
+      this.frozen.set(deadline === null ? null : Math.max(0, deadline - Date.now()));
+    } else {
+      this.frozen.set(null);
+      this.deadline.set(deadline);
+    }
+  }
 
   private readonly pause = effect(() => {
     const paused = this.paused();

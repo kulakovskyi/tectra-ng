@@ -1,9 +1,11 @@
 import { DecimalPipe } from '@angular/common';
 import { afterRenderEffect, ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, viewChild } from '@angular/core';
+import { TxStyleLoader } from '@tectra-ng/core/styles';
 import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraWizardTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxWizardLayout } from './wizard-layout.component';
+import { TxWizardSceneStyles } from './wizard-scene.styles';
 import { TxWizardDirection, TxWizardStagePart } from './wizard.types';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { WIZARD_ICON_DEFAULTS } from './wizard.icons';
@@ -62,6 +64,7 @@ export class TxWizardStage {
   private readonly captionElement = viewChild<ElementRef<HTMLElement>>('captionElement');
 
   constructor() {
+    inject(TxStyleLoader).load(TxWizardSceneStyles);
     let shown: string | undefined;
     afterRenderEffect(() => {
       const text = this.caption();

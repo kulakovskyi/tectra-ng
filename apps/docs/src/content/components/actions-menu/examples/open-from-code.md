@@ -1,0 +1,1 @@
+`open(target)`, `toggle(target)` and `close()` drive the menu from code: here a click or a right click on a file opens the same menu at that file. Without a target the menu opens at its own button; `isOpen` tells whether it is open.

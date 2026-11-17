@@ -31,13 +31,13 @@
 }
 
 :host([data-styled]:has(.tx-input-number__clear)) {
-  --_clear: 28px;
+  --_clear: var(--tx-form-field-action-room);
 }
 
 .tx-input-number__clear {
   position: absolute;
   top: 50%;
-  right: calc(var(--_inset, 0px) + 8px);
+  right: calc(var(--_inset, 0px) + var(--tx-space-2));
   transform: translateY(-50%);
 }
 

@@ -1,7 +1,7 @@
 ---
 category: Navigation
 tokens: panelMenu
-examples: basic, multiple, expanded, sidebar, router-links, commands, template, design-tokens
+examples: basic, multiple, expanded, sidebar, router-links, translated, commands, template, design-tokens
 ---
 
 # Panel Menu

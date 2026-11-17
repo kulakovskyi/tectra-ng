@@ -8,4 +8,4 @@ export type TxPillVariant = 'soft' | 'solid' | 'outline';
 /** Size of `tx-pill`; `normal` is the same as `medium`. */
 export type TxPillSize = 'small' | 'medium' | 'normal' | 'large';
 /** Parts of `tx-pill` that `pt` can style. */
-export type TxPillPart = 'root' | 'icon' | 'label' | 'remove';
+export type TxPillPart = 'root' | 'icon' | 'leading' | 'label' | 'remove';

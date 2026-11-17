@@ -6,7 +6,7 @@
   },
   "provider": {
     "what": "provideTectra with a preset, no component",
-    "kitBytes": 18000,
+    "kitBytes": 19000,
     "entryPoints": [
       "core-config",
       "themes",

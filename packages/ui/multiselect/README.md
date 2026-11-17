@@ -1,6 +1,6 @@
 # Multiselect
 
-Pick several values from a list. The value is an array; works with `[formControl]`, `ngModel` and signal forms. Shares the option engine, keyboard and panel with `tx-select`: groups, search, virtual scroll, lazy loading and templates work the same.
+Pick several values from a list. The value is an array; works with `[formControl]`, `ngModel` and signal forms. Shares the option engine, keyboard and panel with `tx-select`: groups, search, virtual scroll, lazy loading and templates work the same. The panel sizes itself like the one of `tx-select`.
 
 Texts come from the tectra locale — `selectAll`, `selectedOfTotal`, `selectedItems`, `searchPlaceholder`, `emptyMessage`, `clear`. Override them for the whole app with `provideTectra({ translations: { selectAll: '…' } })`, switch languages at runtime with `TxLocaleService.setLocale(…)`, or set them on one field with `selectAllLabel`, `countLabel`, `selectedItemsLabel`, `filterPlaceholder`, `emptyMessage`.
 

@@ -30,11 +30,11 @@
 }
 
 .tx-table__menu-action .tx-button {
-  width: 24px;
-  min-width: 24px;
-  height: 24px;
+  width: var(--tx-table-actions-menu-icon-size);
+  min-width: var(--tx-table-actions-menu-icon-size);
+  height: var(--tx-table-actions-menu-icon-size);
   padding: 0;
-  font-size: 10.5px;
+  font-size: var(--tx-table-actions-menu-icon-font-size);
 }
 
 .tx-table__menu-label {

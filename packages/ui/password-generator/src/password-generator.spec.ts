@@ -1,17 +1,24 @@
 import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { TxLocaleService } from '@tectra-ng/core/i18n';
+import { TxButton } from '@tectra-ng/ui/button';
 import { TxPassword } from '@tectra-ng/ui/password';
 import { TxPasswordGenerate } from './password-generate.directive';
 import { TxPasswordGenerator } from './password-generator.service';
 
 @Component({
-  imports: [TxPassword, TxPasswordGenerate, ReactiveFormsModule],
+  imports: [TxPassword, TxPasswordGenerate, TxButton, ReactiveFormsModule],
   template: `
     <tx-password #password ariaLabel="Password" [formControl]="password1" [toggleMask]="true" />
     <button id="fill-password" [txPasswordGenerate]="password" [length]="20" (generated)="last = $event">Generate</button>
     <button id="fill-control" [txPasswordGenerate]="token" [symbols]="false" [excludeSimilar]="true" [length]="32">Token</button>
     <button id="only-emit" [txPasswordGenerate]="null" (generated)="emitted = $event">Suggest</button>
+    <button id="icon-only" [txPasswordGenerate]="token"><svg aria-hidden="true"></svg></button>
+    <button id="tx-icon-only" txButton icon="refresh" [txPasswordGenerate]="token"></button>
+    <button id="tx-label" txButton icon="refresh" label="New password" [txPasswordGenerate]="token"></button>
+    <button id="own-name" aria-label="New key" [txPasswordGenerate]="token"></button>
+    <button id="own-title" title="Suggest a key" [txPasswordGenerate]="token"></button>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -90,5 +97,23 @@ describe('TxPasswordGenerate', () => {
     expect(fixture.componentInstance.password1.value).toBe('');
     expect(fixture.componentInstance.token.value).toBe('');
   });
-});
 
+  it('names an icon-only button and follows the locale', async () => {
+    const name = (id: string) => (fixture.nativeElement.querySelector(`#${id}`) as HTMLButtonElement).getAttribute('aria-label');
+    expect(name('icon-only')).toBe('Generate password');
+    expect(name('tx-icon-only')).toBe('Generate password');
+    expect(name('tx-label')).toBeNull();
+    expect(name('fill-password')).toBeNull();
+    expect(name('own-name')).toBe('New key');
+    expect(name('own-title')).toBeNull();
+    await TestBed.inject(TxLocaleService).setLocale('ua');
+    await fixture.whenStable();
+    expect(name('icon-only')).toBe('Згенерувати пароль');
+  });
+
+  it('works on a txButton', async () => {
+    (fixture.nativeElement.querySelector('#tx-icon-only') as HTMLButtonElement).click();
+    await fixture.whenStable();
+    expect(fixture.componentInstance.token.value).toHaveLength(16);
+  });
+});

@@ -1,4 +1,4 @@
-import { TxBandScale, TxContinuousScale, TxStackedValue, seriesColor } from '@tectra-ng/charts/core';
+import { TxBandScale, TxContinuousScale, TxStackedValue, barPath, seriesColor } from '@tectra-ng/charts/core';
 import { TxComboChartBar } from './combo-chart.types';
 
 /** Everything `comboBars` needs to lay the columns out: scales, series values and grouping settings. */
@@ -23,6 +23,8 @@ export interface TxComboBarsInput {
   columns: readonly number[];
   /** Own colors per series; the palette fills the gaps. */
   colors: readonly (string | undefined)[];
+  /** Corner radius in px of the outer end of a column (0 by default); it shrinks to fit a thin or short column. */
+  barRadius?: number;
 }
 
 function baseOf(scale: TxContinuousScale): number {
@@ -74,16 +76,16 @@ export function comboBars(input: TxComboBarsInput): TxComboChartBar[] {
       const b = scale.map(to);
       const positive = to >= from;
       const isEnd = stacked ? outermost.get(`${slot}:${index}:${positive ? 1 : -1}`) === series : true;
+      const rect = { x: band.center(index) - group / 2 + slot * (slotSize + input.groupGap), y: Math.min(a, b), width: slotSize, height: Math.abs(b - a) };
+      const end = isEnd ? (positive ? 'top' : 'bottom') : null;
       bars.push({
         key: `${series}:${index}`,
         series,
         index,
-        x: band.center(index) - group / 2 + slot * (slotSize + input.groupGap),
-        y: Math.min(a, b),
-        width: slotSize,
-        height: Math.abs(b - a),
+        ...rect,
+        path: barPath(rect, end, input.barRadius),
         color: seriesColor(input.colors[series], series),
-        end: isEnd ? (positive ? 'top' : 'bottom') : null,
+        end,
         dir: positive ? 'up' : 'down',
       });
     });

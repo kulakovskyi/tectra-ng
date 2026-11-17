@@ -27,7 +27,8 @@ One line of text cut to a number of characters, with the full value in a tooltip
 ## Outputs
 | Name | Description |
 |---|---|
-| copied | The text was copied; gives the copied text |
+| copied | The text was copied; gives the copied text. Copying uses the Clipboard API and falls back to a selection outside a secure context |
+| copyFailed | The browser refused to copy; gives the text. The button says "Could not copy" for a moment instead of the check mark — show your own message from here |
 
 ## Keyboard
 | Key | Action |

@@ -22,6 +22,7 @@ import { TxTooltip } from '@tectra-ng/ui/tooltip';
           sidebar: { width: '248px', railWidth: '64px', background: 'var(--tx-surface-ground)' },
           content: { padding: '16px 20px' },
         }"
+        [pt]="{ logo: { style: { borderRadius: 'var(--tx-radius-full)' } } }"
       >
         <div txAppTopbar class="topbar">
           <button

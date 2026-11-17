@@ -100,6 +100,11 @@ export const codeEditorTokens = {
     widgetWidth: '420px',
     countColor: tokenRef('text-muted'),
     countFontSize: '12px',
+    countMinWidth: '76px',
+    inputPaddingEnd: '72px',
+    optionSize: '22px',
+    optionInset: '3px',
+    optionFontSize: '11px',
   },
 };
 

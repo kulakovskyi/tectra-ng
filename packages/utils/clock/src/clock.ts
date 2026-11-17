@@ -1,6 +1,6 @@
-import { isPlatformBrowser } from '@angular/common';
-import { DestroyRef, Injectable, PLATFORM_ID, Signal, computed, inject, isSignal, signal } from '@angular/core';
-import { MS_IN_SECOND, TxDateInput, toDate } from '@tectra-ng/utils/date';
+import { Injectable, Signal, computed, inject, isSignal } from '@angular/core';
+import { TxTimeSource } from '@tectra-ng/core/utils';
+import { TxDateInput, toDate } from '@tectra-ng/utils/date';
 
 /** Signals of a countdown created by `TxClock.countdown`. */
 export interface TxCountdownState {
@@ -14,16 +14,7 @@ export interface TxCountdownState {
 
 @Injectable({ providedIn: 'root' })
 export class TxClock {
-  private readonly current = signal(Date.now());
-
-  readonly now = this.current.asReadonly();
-
-  constructor() {
-    if (isPlatformBrowser(inject(PLATFORM_ID))) {
-      const timer = setInterval(() => this.current.set(Date.now()), MS_IN_SECOND);
-      inject(DestroyRef).onDestroy(() => clearInterval(timer));
-    }
-  }
+  readonly now: Signal<number> = inject(TxTimeSource).every('second');
 
   countdown(target: Signal<TxDateInput> | TxDateInput, endingSoonMs = 0): TxCountdownState {
     const targetTime = computed(() => toDate(isSignal(target) ? target() : target)?.getTime() ?? null);

@@ -1,4 +1,4 @@
-import { TectraDeepPartial, TectraPreset, TectraStyle } from '@tectra-ng/themes';
+import { TectraCssOptions, TectraDeepPartial, TectraPreset, TectraStyle } from '@tectra-ng/themes';
 import { TxLocaleCode, TxLocaleDefinition, TxTranslations } from '@tectra-ng/core/i18n/types';
 import { TxGlobalPassThrough, TxPassThroughOptions } from './pass-through.interface';
 
@@ -9,7 +9,7 @@ export type TxThemeMode = 'light' | 'dark';
 
 /** Text of a validation error, or a function that builds it from the error value. */
 export type TxValidationMessage = string | ((error: unknown) => string);
-/** Validation error texts by error key. */
+/** Validation error texts by error key; `'*'` is the text for keys that have neither an own nor a built-in text. */
 export type TxValidationMessages = Record<string, TxValidationMessage>;
 
 /** Space in px that overlays leave free at the top and bottom of the viewport, for fixed bars. */
@@ -29,8 +29,11 @@ export interface TxOverlayConfig {
 /** Overrides merged into the preset with `definePreset`, or a function that builds them from the preset. */
 export type TxPresetOverrides = TectraDeepPartial<TectraPreset> | ((preset: TectraPreset) => TectraDeepPartial<TectraPreset>);
 
-/** Config passed to `provideTectra`: theme, locale, ripple, pass-through and validation texts. */
-export interface TectraConfig {
+/**
+ * Config passed to `provideTectra`: theme, locale, ripple, pass-through and validation texts; `palettes`, `units` and
+ * `rootFontSize` set how the CSS variables are written.
+ */
+export interface TectraConfig extends TectraCssOptions {
   /** Theme preset to apply. */
   preset: TectraPreset;
   /** The app's own changes to the preset; applied at start and again after every `TxThemeService.updateTheme`. */
@@ -57,6 +60,11 @@ export interface TectraConfig {
   locales?: TxLocaleDefinition[];
   /** Texts that override the ones of the current locale. */
   translations?: Partial<TxTranslations>;
+  /**
+   * Local storage key that remembers the locale chosen with `TxLocaleService.setLocale` and restores it before the
+   * first render; nothing is read on the server.
+   */
+  localeStorageKey?: string;
   /** App-wide settings of overlays. */
   overlay?: TxOverlayConfig;
   /** Validation error texts by error key, shown by form field components. */
