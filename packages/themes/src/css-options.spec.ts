@@ -23,6 +23,15 @@ describe('pxToRem', () => {
     expect(pxToRem('2em 50% 9999px')).toBe('2em 50% 624.9375rem');
     expect(pxToRem('var(--tx-gap-12px)')).toBe('var(--tx-gap-12px)');
   });
+
+  it('reads decimal sizes and stays fast on long runs of digits', () => {
+    expect(pxToRem('12.5px .5px 24.px')).toBe('0.7813rem .5px 24.px');
+    const digits = '0'.repeat(50000);
+    const start = performance.now();
+    expect(pxToRem(`${digits}.${digits}x`)).toBe(`${digits}.${digits}x`);
+    expect(pxToRem(`${digits}px`)).toBe(`${digits}px`);
+    expect(performance.now() - start).toBeLessThan(500);
+  });
 });
 
 describe('preset css options', () => {

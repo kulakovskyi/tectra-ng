@@ -29,7 +29,7 @@ export function toStyleObject(tokens: object | undefined, prefix: string): Recor
   return tokens ? Object.fromEntries(toCssVariables(tokens, prefix).map(({ name, value }) => [name, value])) : {};
 }
 
-const PX_SIZE = /(?<![\w.#-])(-?\d*\.?\d+)px\b/g;
+const PX_SIZE = /(?<![\w.#-])(-?(?:\d+(?:\.\d+)?|\.\d+))px\b/g;
 
 /**
  * Writes every px size in a CSS value as rem, counted from the root font size (default 16); sizes of 1px and less stay
