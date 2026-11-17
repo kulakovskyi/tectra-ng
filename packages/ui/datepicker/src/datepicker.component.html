@@ -94,7 +94,6 @@
     [cdkConnectedOverlayOpen]="isPanelMounted() && !touchUI()"
     [cdkConnectedOverlayPositions]="positions"
     [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
-    [cdkConnectedOverlayMinWidth]="panelMinWidth()"
     [cdkConnectedOverlayDisableClose]="true"
     (attach)="onAttach()"
     (positionChange)="onPositionChange($event)"
@@ -123,7 +122,6 @@
     [class.tx-datepicker__panel--disabled]="isDisabled()"
     [class]="passThrough().panel?.class"
     [style]="panelStyle()"
-    [style.min-width.px]="inline() ? null : panelMinWidth()"
     (keydown)="onPanelKeydown($event)"
     (focusout)="onPanelFocusOut($event)"
   >
@@ -132,7 +130,7 @@
     }
     @if (!timeOnly()) {
       <div class="tx-datepicker__calendars">
-        @for (month of currentView() === 'date' ? months() : [months()[0]]; track month.year * 12 + month.month; let first = $first; let last = $last) {
+        @for (month of currentView() === 'date' ? months() : [months()[0]]; track $index; let first = $first; let last = $last) {
           <div class="tx-datepicker__calendar" [class]="passThrough().calendar?.class" [style]="passThrough().calendar?.style">
             <div class="tx-datepicker__header" [class]="passThrough().header?.class" [style]="passThrough().header?.style">
               <button

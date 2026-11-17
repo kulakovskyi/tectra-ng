@@ -50,6 +50,14 @@ export function txPositions(placement: TxPlacement = 'bottom-start', offset = 4)
   return [...sidesAround(side, align), ...across].map(([s, a]) => position(s, a, offset));
 }
 
+/**
+ * Connected positions for the panel of a field, with an offset in px (default 4): below the field aligned to its
+ * start, then to its end, then the same above it, so a panel wider than its field lines up with one of its edges.
+ */
+export function txFieldPositions(offset = 4): ConnectedPosition[] {
+  return (['bottom', 'top'] as const).flatMap((side) => (['start', 'end'] as const).map((align) => position(side, align, offset)));
+}
+
 /** Placement a connected position stands for; `null` for a position not made by `txPositions`. */
 export function placementFromPosition(position: ConnectedPosition): TxPlacement | null {
   const panelClass = Array.isArray(position.panelClass) ? position.panelClass[0] : position.panelClass;

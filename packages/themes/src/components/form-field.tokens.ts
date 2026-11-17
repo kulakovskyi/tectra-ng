@@ -36,6 +36,7 @@ export const formFieldTokens = {
     actionSize: '24px',
     actionRoom: '28px',
     iconGap: '6px',
+    panelMaxWidth: '300px',
   },
 };
 

@@ -28,6 +28,7 @@ export const pillTokens = {
     iconSize: '0.9em',
     dotSize: '6px',
     removeSize: '16px',
+    removeOffset: '-4px',
     spinDuration: '0.8s',
     focusRingColor: tokenRef('focus-ring-color'),
   },

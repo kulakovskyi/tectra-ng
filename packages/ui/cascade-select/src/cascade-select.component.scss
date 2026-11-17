@@ -5,6 +5,7 @@
 .tx-cascade-select__tree {
   display: flex;
   align-items: stretch;
+  overflow-x: auto;
 }
 
 .tx-cascade-select__column {
@@ -32,8 +33,12 @@
   .tx-cascade-select__column {
     gap: var(--tx-select-list-gap);
     box-sizing: border-box;
-    width: var(--tx-cascade-select-column-width);
+    flex: 0 0 var(--tx-cascade-select-column-width);
     max-height: var(--tx-select-list-max-height);
+
+    &:last-child {
+      flex-grow: 1;
+    }
     padding: var(--tx-select-list-padding-block) var(--tx-select-list-padding-inline);
 
     & + & {

@@ -23,6 +23,7 @@ export const tagTokens = {
     tint: '14%',
     iconSize: '0.95em',
     actionSize: '16px',
+    actionOffset: '-3px',
     focusRingColor: tokenRef('focus-ring-color'),
   },
   sm: { fontSize: '11px', paddingX: '5px', paddingY: '1px' },

@@ -1,6 +1,6 @@
 # Autocomplete
 
-A text field that suggests values while you type. Free text, or only a suggestion with `forceSelection`; one value or several as chips. You load the suggestions in `completed` (from a server or a local list), or let the field search a fixed list with `localSearch`. Works with `[formControl]`, `ngModel` and signal forms.
+A text field that suggests values while you type. Free text, or only a suggestion with `forceSelection`; one value or several as chips. You load the suggestions in `completed` (from a server or a local list), or let the field search a fixed list with `localSearch`. Works with `[formControl]`, `ngModel` and signal forms. The panel is at least as wide as the field and grows with its suggestions up to `--tx-form-field-panel-max-width` (300px; one field changes it with `[dt]="{ overlay: { maxWidth: '520px' } }"`), never past the screen; it keeps the width it opened with while you type, and lines up with the end of the field when there is no room on the right.
 
 ## Inputs
 | Name | Description |

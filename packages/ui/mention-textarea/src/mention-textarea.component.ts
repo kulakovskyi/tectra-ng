@@ -18,7 +18,7 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectFieldInvalid } from '@tectra-ng/core/forms';
-import { TxOverlayInsets, txPositions, watchOrigin, TxOverlayAnchor, txScrollStrategy } from '@tectra-ng/core/overlay';
+import { TxOverlayInsets, TxPanelWidth, txFieldPositions, watchOrigin, TxOverlayAnchor, txScrollStrategy } from '@tectra-ng/core/overlay';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraDeepPartial, TectraMentionTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxAvatar } from '@tectra-ng/ui/avatar';
@@ -87,7 +87,8 @@ export class TxMentionTextarea extends TxOptionsBase<string> {
   readonly isUnstyled = injectUnstyled(this.unstyled);
   readonly isInvalid = injectFieldInvalid(this.invalid);
   readonly passThrough = injectPassThrough('mentionTextarea', this, this.pt, this.ptOptions);
-  readonly positions = txPositions('bottom-start', 4);
+  readonly positions = txFieldPositions(4);
+  readonly panelWidth = new TxPanelWidth({ matchOrigin: false, fitContent: false });
   readonly scrollStrategy = txScrollStrategy(this.injector);
   protected readonly source = this.suggestions;
   protected override readonly localQuery = computed(() => (this.localSearch() ? this.query().trim() : ''));
@@ -113,6 +114,7 @@ export class TxMentionTextarea extends TxOptionsBase<string> {
   });
   readonly showPanel = computed(() => this.isOpen() && (this.rows().length > 0 || this.loading()));
   readonly hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-mention'), ...this.passThrough().root?.style }));
+  readonly panelStyle = computed(() => ({ ...this.panelWidth.style(), ...this.passThrough().panel?.style }));
 
   constructor() {
     super();
@@ -231,6 +233,7 @@ export class TxMentionTextarea extends TxOptionsBase<string> {
     const point = caretPoint(element, start);
     this.caret.set({ top: element.offsetTop + point.top, left: element.offsetLeft + point.left, height: point.height });
     if (!this.isOpen()) {
+      this.panelWidth.open(element);
       this.isOpen.set(true);
     }
     if (changed) {

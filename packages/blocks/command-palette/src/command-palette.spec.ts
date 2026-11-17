@@ -10,7 +10,7 @@ import {
   filterPaletteItems,
   menuPaletteItems,
 } from './command-palette.pipes';
-import { TxCommandPaletteItem } from './command-palette.types';
+import { TxCommandPaletteHints, TxCommandPaletteItem } from './command-palette.types';
 
 @Component({ template: '', changeDetection: ChangeDetectionStrategy.OnPush })
 class Page {}
@@ -23,6 +23,7 @@ class Page {}
       [items]="items"
       [groupLabels]="{ pages: 'Pages', actions: 'Actions' }"
       [loading]="loading()"
+      [hintTexts]="hints()"
       [debounceTime]="0"
       localFilter
       (searchChange)="terms.push($event)"
@@ -34,6 +35,7 @@ class Page {}
 })
 class Host {
   readonly loading = signal(false);
+  readonly hints = signal<TxCommandPaletteHints>({});
   readonly terms: string[] = [];
   readonly picked: string[] = [];
   closes = 0;
@@ -76,6 +78,15 @@ describe('TxCommandPalette', () => {
     expect(input.getAttribute('aria-activedescendant')).toBe(options[0].id);
     expect(document.querySelector('.tx-command-palette__sublabel')?.textContent?.trim()).toBe('Main');
     expect(document.body.style.overflow).toBe('hidden');
+  });
+
+  it('shows own footer hints and keeps the translated text for a missing or empty one', async () => {
+    const { fixture } = await open();
+    const hints = () => Array.from(document.querySelectorAll('.tx-command-palette__hint')).map((hint) => hint.textContent?.replace(/\s+/g, ' ').trim());
+    expect(hints()).toEqual(['↑↓ to navigate', '↵ to open', 'esc to close']);
+    fixture.componentInstance.hints.set({ navigate: 'blättern', open: '', close: 'schließen' });
+    await fixture.whenStable();
+    expect(hints()).toEqual(['↑↓ blättern', '↵ to open', 'esc schließen']);
   });
 
   it('filters locally, moves with the arrows and runs a command on Enter', async () => {

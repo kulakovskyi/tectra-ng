@@ -1,5 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
-import { TxConsoleRail, TxConsoleRailItem } from '@tectra-ng/blocks/console-layout';
+import {
+  TxConsoleRail,
+  TxConsoleRailItem,
+  TxConsoleRailResponsive,
+} from '@tectra-ng/blocks/console-layout';
 import { TxEmptyState } from '@tectra-ng/blocks/empty-state';
 import { TxTabItem, TxTabValue, TxTabs } from '@tectra-ng/ui/tabs';
 
@@ -14,19 +18,19 @@ const SECTIONS = [
   imports: [TxConsoleRail, TxEmptyState, TxTabs],
   template: `
     <div class="column">
-      <tx-tabs variant="pills" ariaLabel="Frame width" [tabs]="widths" [(value)]="width" />
-      <div class="stage">
-        <div class="frame" [style.width]="width() === 'narrow' ? '375px' : '820px'">
-          <div class="body">
-            <tx-console-rail responsive="container" label="Sections" [items]="items()" />
-            <tx-empty-state
-              class="page"
-              [icon]="current().icon"
-              [title]="current().label"
-              text="The rail turns into a row when its frame is narrower than 768px."
-            />
-          </div>
-        </div>
+      <tx-tabs variant="pills" ariaLabel="Responsive" [tabs]="modes" [(value)]="mode" />
+      <div class="frame" [class.frame--row]="mode() === 'container'">
+        <tx-console-rail [responsive]="responsive()" label="Sections" [items]="items()" />
+        <tx-empty-state
+          class="page"
+          [icon]="current().icon"
+          [title]="current().label"
+          [text]="
+            mode() === 'container'
+              ? 'This frame is narrower than 768px, so the rail is a row.'
+              : 'The rail stays a column at any width.'
+          "
+        />
       </div>
     </div>
   `,
@@ -39,54 +43,40 @@ const SECTIONS = [
       width: 100%;
     }
 
-    .stage {
-      width: 100%;
-      overflow-x: auto;
-    }
-
     .frame {
       container: tx-console-layout / inline-size;
+      display: flex;
+      width: 100%;
       height: 320px;
       overflow: hidden;
       border: 1px solid var(--tx-surface-border);
       border-radius: 12px;
-      transition: width 0.3s ease;
     }
 
-    .body {
-      display: flex;
-      height: 100%;
+    .frame--row {
+      flex-direction: column;
+    }
+
+    .frame--row tx-console-rail {
+      height: auto;
     }
 
     .page {
       flex: 1;
       align-self: center;
     }
-
-    @container tx-console-layout (width < 768px) {
-      .body {
-        flex-direction: column;
-      }
-
-      tx-console-rail {
-        height: auto;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .frame {
-        transition: none;
-      }
-    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class ConsoleLayoutRailExample {
-  readonly widths: TxTabItem[] = [
-    { value: 'narrow', label: 'Narrow', icon: 'mobile' },
-    { value: 'wide', label: 'Wide', icon: 'desktop' },
+  readonly modes: TxTabItem[] = [
+    { value: 'container', label: 'container', icon: 'mobile' },
+    { value: 'none', label: 'none', icon: 'desktop' },
   ];
-  readonly width = signal<TxTabValue | undefined>('narrow');
+  readonly mode = signal<TxTabValue | undefined>('container');
+  readonly responsive = computed<TxConsoleRailResponsive>(() =>
+    this.mode() === 'none' ? 'none' : 'container',
+  );
   readonly section = signal(SECTIONS[0].label);
   readonly current = computed(
     () => SECTIONS.find((item) => item.label === this.section()) ?? SECTIONS[0],

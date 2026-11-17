@@ -235,7 +235,7 @@
     flex-shrink: 0;
     padding: var(--tx-toast-action-padding);
     border: 0;
-    border-radius: 9999px;
+    border-radius: var(--tx-radius-full);
     background: color-mix(in srgb, var(--_tone) var(--tx-toast-action-tint), transparent);
     color: var(--_tone);
     font: inherit;

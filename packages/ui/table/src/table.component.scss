@@ -477,7 +477,7 @@
 
     &::-webkit-scrollbar-thumb {
       border: 2px solid transparent;
-      border-radius: 999px;
+      border-radius: var(--tx-radius-full);
       background-color: var(--tx-table-scroller-scrollbar-thumb);
       background-clip: padding-box;
     }
@@ -543,7 +543,7 @@
   .tx-table__sort-badge {
     min-width: var(--tx-table-sort-icon-badge-size);
     height: var(--tx-table-sort-icon-badge-size);
-    border-radius: 999px;
+    border-radius: var(--tx-radius-full);
     background: var(--tx-table-sort-icon-badge-background);
     color: var(--tx-table-sort-icon-badge-color);
     font-size: var(--tx-table-sort-icon-badge-font-size);

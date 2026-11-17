@@ -107,7 +107,7 @@ export class TxAutocomplete extends TxSelectBase<unknown> {
   readonly showPanel = computed(() => this.isPanelMounted() && (this.rows().length > 0 || this.loading() || this.showEmptyMessage()));
   readonly tokenStyle = computed(() => toStyleObject(this.dt(), '--tx-select'));
   readonly hostStyle = computed(() => ({ ...this.tokenStyle(), ...this.passThrough().root?.style }));
-  readonly panelStyle = computed(() => ({ ...this.tokenStyle(), ...this.passThrough().panel?.style }));
+  readonly panelStyle = computed(() => ({ ...this.tokenStyle(), ...this.panelWidth.style(), ...this.passThrough().panel?.style }));
 
   protected override get typingTarget(): boolean {
     return true;

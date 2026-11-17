@@ -21,6 +21,16 @@ export interface TxCommandPaletteItem {
   command?: () => void;
 }
 
+/** Own texts of the keyboard hints in the palette footer; a missing one stays translated. */
+export interface TxCommandPaletteHints {
+  /** Text next to the arrow keys. */
+  navigate?: string;
+  /** Text next to the Enter key. */
+  open?: string;
+  /** Text next to the Escape key. */
+  close?: string;
+}
+
 /** Names of the parts of `tx-command-palette` that its `pt` input can style. */
 export type TxCommandPalettePart = 'root' | 'trigger' | 'overlay' | 'panel' | 'search' | 'results' | 'item' | 'footer';
 

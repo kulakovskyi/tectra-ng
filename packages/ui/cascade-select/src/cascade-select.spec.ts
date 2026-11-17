@@ -174,6 +174,26 @@ describe('TxCascadeSelect with plain options', () => {
 
   afterEach(() => document.querySelector('.cdk-overlay-container')?.replaceChildren());
 
+  it('opens at least as wide as the field and grows with its columns up to the viewport', () => {
+    const root = document.documentElement;
+    const viewport = vi.spyOn(Element.prototype, 'clientWidth', 'get').mockImplementation(function (this: Element) {
+      return this === root ? 375 : 0;
+    });
+    const width = vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockImplementation(function (this: HTMLElement) {
+      return this.matches('.tx-cascade-select__panel') ? 220 : 140;
+    });
+    try {
+      component().open();
+      render();
+      expect(panel()?.style.minWidth).toBe('140px');
+      expect(panel()?.style.maxWidth).toBe('359px');
+      expect(panel()?.style.width).toBe('');
+    } finally {
+      viewport.mockRestore();
+      width.mockRestore();
+    }
+  });
+
   it('opens with keys and the box, emits opened and closed, and closes on Escape, Tab, the box and outside clicks', async () => {
     key('a');
     expect(trigger().getAttribute('aria-expanded')).toBe('false');

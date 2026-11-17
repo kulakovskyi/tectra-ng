@@ -53,6 +53,7 @@ const ICONS = { speedometer: 'gauge', receipt: 'file', people: 'users' };
         [label]="language() === 'de' ? 'Suchen' : 'Search'"
         [items]="items()"
         [groupLabels]="{ pages: language() === 'de' ? 'Seiten' : 'Pages' }"
+        [hintTexts]="language() === 'de' ? germanHints : {}"
         (itemSelect)="last.set($event.label)"
       />
       <span class="note">Opened: {{ last() }}</span>
@@ -69,6 +70,7 @@ const ICONS = { speedometer: 'gauge', receipt: 'file', people: 'users' };
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class CommandPaletteMenuOptionsExample {
+  readonly germanHints = { navigate: 'blättern', open: 'öffnen', close: 'schließen' };
   readonly languages: TxTabItem[] = [
     { value: 'en', label: 'English' },
     { value: 'de', label: 'Deutsch' },

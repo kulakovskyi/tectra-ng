@@ -257,7 +257,7 @@
 .tx-editor__frame ::ng-deep .tx-editor__prose td,
 .tx-editor__frame ::ng-deep .tx-editor__prose th {
   position: relative;
-  min-width: 48px;
+  min-width: var(--tx-editor-table-cell-min-width);
 }
 
 .tx-editor__frame ::ng-deep .tx-editor__drop-cursor {
@@ -268,7 +268,7 @@
 
 .tx-editor__frame ::ng-deep .tx-editor__video {
   position: relative;
-  max-width: 640px;
+  max-width: var(--tx-editor-content-video-max-width);
 }
 
 .tx-editor__frame ::ng-deep .tx-editor__video-shield {
@@ -335,7 +335,7 @@
 
 .tx-editor__frame[data-styled] .tx-editor__tool,
 .tx-editor__bubble[data-styled] .tx-editor__tool {
-  gap: 2px;
+  gap: var(--tx-editor-tool-gap);
   min-width: var(--tx-editor-tool-size);
   height: var(--tx-editor-tool-size);
   border-radius: var(--tx-editor-tool-border-radius);
@@ -380,7 +380,7 @@
 
 .tx-editor__frame[data-styled] .tx-editor__tool--label {
   justify-content: space-between;
-  min-width: 112px;
+  min-width: var(--tx-editor-tool-label-min-width);
   padding: var(--tx-editor-tool-label-padding);
   font-size: var(--tx-editor-tool-label-font-size);
   font-weight: var(--tx-editor-tool-label-font-weight);
@@ -398,12 +398,12 @@
 }
 
 .tx-editor__frame[data-styled] .tx-editor__tool:not(.tx-editor__tool--label):has(.tx-editor__chevron) {
-  padding: 0 5px 0 7px;
+  padding: var(--tx-editor-tool-menu-padding);
 }
 
 .tx-editor__frame[data-styled] .tx-editor__color-bar {
   width: 1em;
-  height: 3px;
+  height: var(--tx-editor-tool-color-bar-height);
   margin-top: 1px;
   border-radius: var(--tx-radius-full);
   background: currentColor;
@@ -411,9 +411,9 @@
 }
 
 .tx-editor__frame[data-styled] .tx-editor__ai {
-  gap: 6px;
+  gap: var(--tx-editor-ai-gap);
   height: var(--tx-editor-tool-size);
-  padding: 0 10.5px;
+  padding: var(--tx-editor-ai-padding);
   border-radius: var(--tx-editor-tool-border-radius);
   outline: var(--tx-editor-tool-focus-ring-width) solid transparent;
   outline-offset: 1px;
@@ -548,8 +548,8 @@
 .tx-editor__bubble[data-styled] .tx-editor__bubble-label {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 0 7px;
+  gap: var(--tx-editor-bubble-label-gap);
+  padding: var(--tx-editor-bubble-item-padding);
   color: var(--tx-editor-ai-color);
   font-size: var(--tx-font-size-sm);
   font-weight: var(--tx-font-weight-semibold);
@@ -565,7 +565,7 @@
 
 .tx-editor__bubble[data-styled] .tx-editor__bubble-link {
   max-width: var(--tx-editor-bubble-link-max-width);
-  padding: 0 7px;
+  padding: var(--tx-editor-bubble-item-padding);
   color: var(--tx-editor-content-link-color);
   font-size: var(--tx-font-size-sm);
   text-decoration: none;
@@ -582,7 +582,7 @@
 }
 
 .tx-editor__form-actions {
-  gap: 4px;
+  gap: var(--tx-space-1);
 }
 
 .tx-editor__field {
@@ -692,8 +692,8 @@
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  width: calc(var(--tx-editor-suggestion-avatar-size) + 6px);
-  height: calc(var(--tx-editor-suggestion-avatar-size) + 6px);
+  width: calc(var(--tx-editor-suggestion-avatar-size) + var(--tx-editor-suggestion-command-icon-inset) * 2);
+  height: calc(var(--tx-editor-suggestion-avatar-size) + var(--tx-editor-suggestion-command-icon-inset) * 2);
   border: 1px solid var(--tx-editor-bubble-border-color);
   border-radius: var(--tx-radius-md);
   background: var(--tx-editor-toolbar-background);

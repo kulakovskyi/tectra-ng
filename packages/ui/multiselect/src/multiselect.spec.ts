@@ -67,6 +67,26 @@ describe('TxMultiselect', () => {
 
   afterEach(() => document.querySelector('.cdk-overlay-container')?.replaceChildren());
 
+  it('opens at least as wide as the field and grows with its content inside the viewport', () => {
+    const root = document.documentElement;
+    const viewport = vi.spyOn(Element.prototype, 'clientWidth', 'get').mockImplementation(function (this: Element) {
+      return this === root ? 375 : 0;
+    });
+    const width = vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockImplementation(function (this: HTMLElement) {
+      return this.matches('.tx-select__panel') ? 220 : 140;
+    });
+    try {
+      open();
+      const panel = document.querySelector('.tx-select__panel') as HTMLElement;
+      expect(panel.style.minWidth).toBe('140px');
+      expect(panel.style.maxWidth).toBe('min(max(var(--tx-select-overlay-max-width), 140px), 359px)');
+      expect(panel.style.width).toBe('220px');
+    } finally {
+      viewport.mockRestore();
+      width.mockRestore();
+    }
+  });
+
   it('toggles options with clicks and keeps the panel open', () => {
     open();
     expect(document.querySelector('[role="listbox"]')?.getAttribute('aria-multiselectable')).toBe('true');

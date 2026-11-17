@@ -34,6 +34,7 @@ The window is a dialog with a combobox: the field owns the focus, the active res
 | loading | A spinner in the field and a "Searching…" row |
 | emptyText | Text when a query finds nothing; translated by default |
 | loadingText | Text of the loading row; translated by default |
+| hintTexts | Own texts of the footer key hints (`TxCommandPaletteHints`: `navigate`, `open`, `close`); a missing or empty one stays translated |
 | minQueryLength | Shortest term `searchChange` sends; shorter terms send `''` (default 2) |
 | debounceTime | Delay in ms before `searchChange` (default 300) |
 | shortcutKey | Key that opens and closes the window with ⌘ / Ctrl (default `k`) |

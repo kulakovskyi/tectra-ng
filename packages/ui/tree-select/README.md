@@ -1,6 +1,6 @@
 # Tree select
 
-Pick from a hierarchy — folders, categories, org units. A select whose panel is a tree (`role="tree"`): expand with the arrows, search keeps the parents of what matches, one node, several nodes, or checkboxes that check a whole branch. The value is the node `key` (an array of keys for several). Also exports the tree helpers `walkTree`, `findNode`, `descendantKeys`, `normalizeChecked`.
+Pick from a hierarchy — folders, categories, org units. A select whose panel is a tree (`role="tree"`): expand with the arrows, search keeps the parents of what matches, one node, several nodes, or checkboxes that check a whole branch. The value is the node `key` (an array of keys for several). Also exports the tree helpers `walkTree`, `findNode`, `descendantKeys`, `normalizeChecked`. The panel is at least as wide as the field and grows with its tree up to `--tx-form-field-panel-max-width` (300px; one field changes it with `[dt]="{ overlay: { maxWidth: '520px' } }"`), never past the screen; it keeps the width it opened with while you search or expand branches, and lines up with the end of the field when there is no room on the right.
 
 ## Inputs
 | Name | Description |

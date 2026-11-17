@@ -307,6 +307,25 @@ describe('TxColorPicker interactions', () => {
 
   afterEach(() => document.querySelector('.cdk-overlay-container')?.replaceChildren());
 
+  it('keeps its own width and stays inside the viewport', () => {
+    const root = document.documentElement;
+    const viewport = vi.spyOn(Element.prototype, 'clientWidth', 'get').mockImplementation(function (this: Element) {
+      return this === root ? 375 : 0;
+    });
+    const width = vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockImplementation(function (this: HTMLElement) {
+      return this.matches('.tx-color-picker__panel') ? 220 : 140;
+    });
+    try {
+      picker().open();
+      render();
+      expect(panel()?.style.minWidth).toBe('');
+      expect(panel()?.style.maxWidth).toBe('359px');
+    } finally {
+      viewport.mockRestore();
+      width.mockRestore();
+    }
+  });
+
   it('names the trigger from the placeholder, the label and the labelled-by id', () => {
     host.placeholder.set('None yet');
     render();
@@ -468,7 +487,7 @@ describe('TxColorPicker interactions', () => {
     expect(panel()).not.toBeNull();
     component.onPositionChange({ connectionPair: { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom' } } as ConnectedOverlayPositionChange);
     expect(component.placement()).toBe('bottom-start');
-    component.onPositionChange({ connectionPair: component.positions[1] } as ConnectedOverlayPositionChange);
+    component.onPositionChange({ connectionPair: component.positions[2] } as ConnectedOverlayPositionChange);
     expect(component.placement()).toBe('top-start');
   });
 

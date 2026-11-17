@@ -25,11 +25,12 @@ import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import {
   TxOverlayInsets,
+  TxPanelWidth,
   TxPlacement,
   placementFromPosition,
   txAnimateEnter,
   txAnimateLeave,
-  txPositions,
+  txFieldPositions,
   TxOverlayRoom,
   watchOrigin,
   TxOverlayAnchor,
@@ -113,7 +114,7 @@ export class TxTreeSelect extends TxFormControlBase<string | string[]> {
   readonly isInvalid = injectFieldInvalid(this.invalid);
   readonly isUnstyled = injectUnstyled(this.unstyled);
   readonly passThrough = injectPassThrough('treeSelect', this, this.pt, this.ptOptions);
-  private readonly room = new TxOverlayRoom(txPositions('bottom-start', 4));
+  private readonly room = new TxOverlayRoom(txFieldPositions(4));
   private readonly connectedOverlay = viewChild(CdkConnectedOverlay);
   readonly positions = this.room.positions;
   readonly scrollStrategy = txScrollStrategy(this.injector);
@@ -125,7 +126,7 @@ export class TxTreeSelect extends TxFormControlBase<string | string[]> {
   readonly isOpen = signal(false);
   readonly isPanelMounted = signal(false);
   readonly placement = signal<TxPlacement>('bottom-start');
-  readonly panelWidth = signal(0);
+  readonly panelWidth = new TxPanelWidth({ maxWidth: 'var(--tx-select-overlay-max-width)' });
   readonly query = signal('');
   readonly activeKey = signal<string | null>(null);
 
@@ -203,7 +204,7 @@ export class TxTreeSelect extends TxFormControlBase<string | string[]> {
   readonly emptyText = computed(() => this.emptyMessage() ?? this.translations().emptyMessage);
   readonly tokenStyle = computed(() => toStyleObject(this.dt(), '--tx-select'));
   readonly hostStyle = computed(() => ({ ...this.tokenStyle(), ...this.passThrough().root?.style }));
-  readonly panelStyle = computed(() => ({ ...this.tokenStyle(), ...this.passThrough().panel?.style }));
+  readonly panelStyle = computed(() => ({ ...this.tokenStyle(), ...this.panelWidth.style(), ...this.passThrough().panel?.style }));
 
   constructor() {
     super();
@@ -224,7 +225,7 @@ export class TxTreeSelect extends TxFormControlBase<string | string[]> {
     if (this.disabled() || this.readonly() || this.isOpen()) {
       return;
     }
-    this.panelWidth.set(this.box().nativeElement.offsetWidth);
+    this.panelWidth.open(this.box().nativeElement);
     this.revealSelected();
     this.mounted.set(new Set(this.expandedKeys()));
     this.activeKey.set(this.selectedKeys().find((key) => this.rows().some((row) => row.node.key === key)) ?? this.rows()[0]?.node.key ?? null);
@@ -278,6 +279,9 @@ export class TxTreeSelect extends TxFormControlBase<string | string[]> {
   onPositionChange(change: ConnectedOverlayPositionChange): void {
     this.placement.set(placementFromPosition(change.connectionPair) ?? 'bottom-start');
     const panel = this.panel()?.nativeElement;
+    if (!this.hasEntered) {
+      this.panelWidth.lock(panel);
+    }
     if (!this.hasEntered && this.room.fit(this.box().nativeElement, panel, this.connectedOverlay(), this.injector)) {
       return;
     }

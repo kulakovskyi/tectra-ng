@@ -15,7 +15,7 @@
 .tx-analog-clock__pin {
   position: absolute;
   left: 50%;
-  border-radius: 9999px;
+  border-radius: var(--tx-radius-full);
 }
 
 :host([data-styled]) {

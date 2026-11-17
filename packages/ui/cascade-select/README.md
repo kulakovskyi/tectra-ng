@@ -1,6 +1,6 @@
 # Cascade select
 
-Pick a value through nested groups shown as columns — country → region → city, category → subcategory → item. The next column opens on hover or with ArrowRight; only leaves are values. Works with `[formControl]`, `ngModel` and signal forms.
+Pick a value through nested groups shown as columns — country → region → city, category → subcategory → item. The next column opens on hover or with ArrowRight; only leaves are values. Works with `[formControl]`, `ngModel` and signal forms. The panel is at least as wide as the field and grows with its columns up to the width of the screen; past it the columns narrow and scroll sideways.
 
 ## Inputs
 | Name | Description |

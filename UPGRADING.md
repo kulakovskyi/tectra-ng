@@ -12,6 +12,7 @@ Fixes and new options; the defaults keep today's look. A few behaviours and type
 - **`tx-heatmap`, `tx-org-chart`**: `rowHeaderTemplate`, `rowValueTemplate` and `nodeTemplate` are now inputs; the slot directives work as before, and an input wins over a slot.
 - **Bars** of `tx-column-chart`, `tx-combo-chart` and `tx-waterfall-chart` are single rounded paths instead of clipped rects; value changes animate the path (`d`), which Safari shows without the transition.
 - **`tx-panel`** clips its content only when `toggleable`.
+- **Dropdown panels** of select, multiselect, autocomplete, tree-select and country-select are at least as wide as the field and grow with their options up to `--tx-form-field-panel-max-width` (300px), never past the screen; before they had exactly the field's width. Set the token to `0px` to keep the field width.
 
 ## From 0.4.1
 

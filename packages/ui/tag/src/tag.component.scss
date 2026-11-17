@@ -70,7 +70,7 @@
   justify-content: center;
   width: var(--tx-tag-action-size);
   height: var(--tx-tag-action-size);
-  margin-inline-end: -3px;
+  margin-inline-end: var(--tx-tag-action-offset);
   padding: 0;
   border: none;
   border-radius: var(--tx-radius-xs);

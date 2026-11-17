@@ -20,7 +20,7 @@ import { uniqueId } from '@tectra-ng/core/a11y';
 import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TX_FIELD_STATE, TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
 import { injectTranslations } from '@tectra-ng/core/i18n';
-import { TxOverlayInsets, TxPlacement, placementFromPosition, txAnimateEnter, txAnimateLeave, txPositions, watchOrigin, TxOverlayAnchor, txScrollStrategy } from '@tectra-ng/core/overlay';
+import { TxOverlayInsets, TxPanelWidth, TxPlacement, placementFromPosition, txAnimateEnter, txAnimateLeave, txFieldPositions, watchOrigin, TxOverlayAnchor, txScrollStrategy } from '@tectra-ng/core/overlay';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraColorPickerTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
@@ -115,7 +115,8 @@ export class TxColorPicker extends TxFormControlBase<TxColorValue> implements Va
   readonly isInvalid = injectFieldInvalid(this.invalid);
   readonly isUnstyled = injectUnstyled(this.unstyled);
   readonly passThrough = injectPassThrough('colorPicker', this, this.pt, this.ptOptions);
-  readonly positions = txPositions('bottom-start', 4);
+  readonly positions = txFieldPositions(4);
+  readonly panelWidth = new TxPanelWidth({ matchOrigin: false, fitContent: false });
   readonly scrollStrategy = txScrollStrategy(this.injector);
   readonly panelId = uniqueId('tx-color-picker');
   readonly valueId = `${this.panelId}-value`;
@@ -149,7 +150,7 @@ export class TxColorPicker extends TxFormControlBase<TxColorValue> implements Va
   readonly clearName = computed(() => this.clearLabel() ?? (this.clearText() ? null : this.translations().clear));
   readonly editable = computed(() => !this.disabled() && !this.readonly());
   readonly hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-color-picker'), ...this.passThrough().root?.style }));
-  readonly panelStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-color-picker'), ...this.passThrough().panel?.style }));
+  readonly panelStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-color-picker'), ...this.panelWidth.style(), ...this.passThrough().panel?.style }));
 
   override writeValue(value: TxColorValue | null): void {
     super.writeValue(value);
@@ -203,6 +204,7 @@ export class TxColorPicker extends TxFormControlBase<TxColorValue> implements Va
     }
     this.isOpen.set(true);
     this.hasEntered = false;
+    this.panelWidth.open(this.hostElement);
     this.isPanelMounted.set(true);
     this.opened.emit();
   }

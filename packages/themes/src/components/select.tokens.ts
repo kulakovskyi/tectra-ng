@@ -16,6 +16,7 @@ export const selectTokens = {
     borderColor: tokenRef('surface-overlay-border'),
     borderRadius: tokenRef('radius-lg'),
     shadow: tokenRef('shadow-overlay'),
+    maxWidth: tokenRef('form-field-panel-max-width'),
   },
   list: {
     padding: '3.5px',

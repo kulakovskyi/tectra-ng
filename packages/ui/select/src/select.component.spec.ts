@@ -419,6 +419,30 @@ describe('TxSelect features', () => {
     expect(options().length).toBeLessThan(500);
   });
 
+  it('locks the width of a virtual list once its first rows are drawn', async () => {
+    host.virtual.set(true);
+    host.options.set(Array.from({ length: 50 }, (_, index) => ({ label: `Item ${index}`, value: index })));
+    render();
+    open();
+    const component = fixture.debugElement.query(By.directive(TxSelect)).componentInstance as TxSelect;
+    const overlay = (component as unknown as { connectedOverlay: () => CdkConnectedOverlay }).connectedOverlay();
+    const panel = document.querySelector('.tx-select__panel') as HTMLElement;
+    panel.querySelectorAll('.tx-select__option').forEach((row) => row.remove());
+    panel.style.width = 'max-content';
+    Object.defineProperty(panel, 'offsetWidth', { value: 240, configurable: true });
+    (component as unknown as { hasEntered: boolean }).hasEntered = false;
+    (component.panelWidth as unknown as { box: { update: (fn: (box: object) => object) => void } }).box.update((box) => ({ ...box, locked: null }));
+    component.onPositionChange({ connectionPair: component.positions()[0] } as ConnectedOverlayPositionChange);
+    expect(panel.style.width).toBe('max-content');
+    const update = vi.spyOn(overlay.overlayRef, 'updatePosition');
+    component.onRangeChange({ start: 0, end: 10 });
+    component.onRangeChange({ start: 0, end: 12 });
+    await fixture.whenStable();
+    TestBed.tick();
+    expect(panel.style.width).toBe('240px');
+    expect(update).toHaveBeenCalledTimes(1);
+  });
+
   it('applies dt, pt and the footer slot; unstyled drops data-styled', () => {
     open();
     const panel = document.querySelector('.tx-select__panel') as HTMLElement;
@@ -848,6 +872,55 @@ describe('TxSelect behaviour', () => {
     type(input, '');
     expect(host.control.value).toBeNull();
     expect(host.opens).toBe(1);
+  });
+
+  it('opens at least as wide as the field, grows with the options and keeps its width while filtering', () => {
+    const width = vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockImplementation(function (this: HTMLElement) {
+      return this.classList.contains('tx-select__panel') ? 230 : this.classList.contains('tx-select__box') ? 160 : 0;
+    });
+    try {
+      host.filter.set(true);
+      render();
+      open();
+      const component = select();
+      component.onPositionChange({ connectionPair: component.positions()[0] } as ConnectedOverlayPositionChange);
+      render();
+      const element = panel() as HTMLElement;
+      expect(element.style.minWidth).toBe('160px');
+      expect(element.style.maxWidth).toBe('max(var(--tx-select-overlay-max-width), 160px)');
+      expect(element.style.width).toBe('230px');
+      type(search(), 'zu');
+      expect(element.style.width).toBe('230px');
+    } finally {
+      width.mockRestore();
+    }
+  });
+
+  it('lines a wide panel up with the end of a field near the right edge', () => {
+    const root = document.documentElement;
+    const clientHeight = vi.spyOn(Element.prototype, 'clientHeight', 'get').mockImplementation(function (this: Element) {
+      return this === root ? 800 : 0;
+    });
+    const clientWidth = vi.spyOn(Element.prototype, 'clientWidth', 'get').mockImplementation(function (this: Element) {
+      return this === root ? 375 : 0;
+    });
+    const width = vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockImplementation(function (this: HTMLElement) {
+      return this.classList.contains('tx-select__panel') ? 225 : 140;
+    });
+    const height = vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockReturnValue(200);
+    vi.spyOn(box(), 'getBoundingClientRect').mockReturnValue({ top: 100, bottom: 136, left: 227, right: 367, width: 140, height: 36 } as DOMRect);
+    try {
+      open();
+      const component = select();
+      component.onPositionChange({ connectionPair: component.positions()[0] } as ConnectedOverlayPositionChange);
+      expect(component.positions()[0]).toMatchObject({ originX: 'end', overlayX: 'end', originY: 'bottom' });
+      expect((panel() as HTMLElement).style.maxWidth).toBe('min(max(var(--tx-select-overlay-max-width), 140px), 359px)');
+    } finally {
+      clientHeight.mockRestore();
+      clientWidth.mockRestore();
+      width.mockRestore();
+      height.mockRestore();
+    }
   });
 
   it('waits for room before the enter animation and falls back to bottom-start', () => {

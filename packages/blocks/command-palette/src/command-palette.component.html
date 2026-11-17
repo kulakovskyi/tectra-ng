@@ -95,9 +95,9 @@
           }
         </div>
         <div class="tx-command-palette__footer" aria-hidden="true" [class]="passThrough().footer?.class" [style]="passThrough().footer?.style">
-          <span class="tx-command-palette__hint"><kbd>↑</kbd><kbd>↓</kbd> {{ translations().paletteNavigate }}</span>
-          <span class="tx-command-palette__hint"><kbd>↵</kbd> {{ translations().paletteOpen }}</span>
-          <span class="tx-command-palette__hint"><kbd>esc</kbd> {{ translations().paletteClose }}</span>
+          <span class="tx-command-palette__hint"><kbd>↑</kbd><kbd>↓</kbd> {{ hintTexts().navigate || translations().paletteNavigate }}</span>
+          <span class="tx-command-palette__hint"><kbd>↵</kbd> {{ hintTexts().open || translations().paletteOpen }}</span>
+          <span class="tx-command-palette__hint"><kbd>esc</kbd> {{ hintTexts().close || translations().paletteClose }}</span>
         </div>
       </div>
     </div>
