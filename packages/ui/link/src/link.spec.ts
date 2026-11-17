@@ -12,7 +12,7 @@ class Page {}
 @Component({
   imports: [TxLink, TxIconLink],
   template: `
-    <tx-link id="url" [link]="link()" [type]="type()" [maxLength]="12" highlight="docs" [copyable]="true" (copied)="copiedText = $event" />
+    <tx-link id="url" [link]="link()" [type]="type()" [maxLength]="12" highlight="docs" [copyable]="true" (copied)="copiedText = $event" (copyFailed)="failedText = $event" />
     <tx-link id="router" link="Settings" [routerLink]="['/settings']" />
     <tx-icon-link id="nav" icon="pi-user" text="Profile" routerLink="/profile" />
     <tx-icon-link id="external" icon="book" text="Docs" href="https://docs.example.com" />
@@ -25,6 +25,7 @@ class Host {
   readonly link = signal<string | null>('docs.example.com/guide');
   readonly type = signal<TxLinkType>('url');
   copiedText = '';
+  failedText = '';
 }
 
 beforeEach(() => TestBed.configureTestingModule({ providers: [provideTxIcons(TX_ICONS)] }));
@@ -33,8 +34,19 @@ describe('TxLink and TxIconLink', () => {
   let fixture: ComponentFixture<Host>;
   const el = (selector: string) => fixture.nativeElement.querySelector(selector) as HTMLElement;
   const writeText = vi.fn(() => Promise.resolve());
+  const secure = Object.getOwnPropertyDescriptor(window, 'isSecureContext');
+  const execCommand = document.execCommand;
+
+  afterEach(() => {
+    document.execCommand = execCommand;
+    if (secure) Object.defineProperty(window, 'isSecureContext', secure);
+    else Reflect.deleteProperty(window, 'isSecureContext');
+  });
 
   beforeEach(async () => {
+    writeText.mockReset();
+    writeText.mockResolvedValue(undefined);
+    Object.defineProperty(window, 'isSecureContext', { value: true, configurable: true });
     Object.assign(navigator, { clipboard: { writeText } });
     TestBed.configureTestingModule({ providers: [provideRouter([{ path: 'profile', component: Page }, { path: 'settings', component: Page }])] });
     fixture = TestBed.createComponent(Host);
@@ -75,6 +87,30 @@ describe('TxLink and TxIconLink', () => {
     expect(writeText).toHaveBeenCalledWith('docs.example.com/guide');
     expect(fixture.componentInstance.copiedText).toBe('docs.example.com/guide');
     expect(button.getAttribute('aria-label')).toBe('Copied');
+    expect(fixture.componentInstance.failedText).toBe('');
+  });
+
+  it('falls back to a selection outside a secure context', async () => {
+    Object.defineProperty(window, 'isSecureContext', { value: false, configurable: true });
+    const exec = vi.fn().mockReturnValue(true);
+    document.execCommand = exec;
+    (el('#url .tx-link__copy') as HTMLButtonElement).click();
+    await fixture.whenStable();
+    expect(exec).toHaveBeenCalledWith('copy');
+    expect(writeText).not.toHaveBeenCalled();
+    expect(fixture.componentInstance.copiedText).toBe('docs.example.com/guide');
+  });
+
+  it('reports a refused copy without the check mark', async () => {
+    writeText.mockRejectedValue(new Error('denied'));
+    document.execCommand = vi.fn().mockReturnValue(false);
+    const button = el('#url .tx-link__copy') as HTMLButtonElement;
+    button.click();
+    await fixture.whenStable();
+    expect(fixture.componentInstance.copiedText).toBe('');
+    expect(fixture.componentInstance.failedText).toBe('docs.example.com/guide');
+    expect(button.classList).not.toContain('tx-link__copy--done');
+    expect(button.getAttribute('aria-label')).toBe('Could not copy');
   });
 
   it('uses the router for routerLink', () => {
@@ -111,15 +147,36 @@ describe('TxLink and TxIconLink', () => {
     vi.useFakeTimers();
     const button = el('#url .tx-link__copy') as HTMLButtonElement;
     button.click();
-    vi.advanceTimersByTime(1000);
+    await vi.advanceTimersByTimeAsync(1000);
     button.click();
-    vi.advanceTimersByTime(1000);
+    await vi.advanceTimersByTimeAsync(1000);
     fixture.detectChanges();
     expect(button.getAttribute('aria-label')).toBe('Copied');
-    vi.advanceTimersByTime(1000);
+    await vi.advanceTimersByTimeAsync(1000);
     fixture.detectChanges();
     expect(button.getAttribute('aria-label')).toBe('Copy link');
     vi.useRealTimers();
   });
-});
 
+  it('keeps the styled rules of the parts at the weight of one class', () => {
+    const rules = [...document.querySelectorAll('style')]
+      .map((style) => style.textContent ?? '')
+      .filter((css) => css.includes('tx-icon-link__anchor') || css.includes('tx-link__anchor'))
+      .join('\n');
+    expect(rules).toContain(':where(.tx-icon-link__anchor');
+    const selectors = rules.match(/[^{}]*\{/g) ?? [];
+    const styledParts = selectors.filter((selector) => selector.includes('[data-styled]') && /tx-(icon-)?link__(anchor|copy|external|icon)/.test(selector));
+    expect(styledParts.length).toBeGreaterThan(0);
+    for (const selector of styledParts) {
+      expect(selector).toMatch(/:where\(\[data-styled\]\)\s+:where\(/);
+    }
+  });
+
+  it('reports nothing when the copy ends after the component is gone', async () => {
+    const host = fixture.componentInstance;
+    (el('#url .tx-link__copy') as HTMLButtonElement).click();
+    fixture.destroy();
+    await new Promise((resolve) => setTimeout(resolve));
+    expect(host.copiedText).toBe('');
+  });
+});

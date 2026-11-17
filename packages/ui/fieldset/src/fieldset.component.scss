@@ -56,7 +56,7 @@
 :host([data-styled]) .tx-fieldset__toggle {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--tx-fieldset-toggle-gap);
   padding: var(--tx-fieldset-toggle-padding);
   border: none;
   border-radius: var(--tx-fieldset-legend-border-radius);

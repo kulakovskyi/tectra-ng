@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TxLocaleService } from '@tectra-ng/core/i18n';
-import { countryEmoji, countryName, isCountryCode } from './countries';
+import { TX_COUNTRY_CODES, TX_REGION_CODES, countryEmoji, countryName, isCountryCode } from './countries';
 import { TxCountry } from './country.component';
 import { TxFlagShape } from './country.types';
 import { provideTxFlags, txFlagIcons, txFlagImages } from './flags';
@@ -96,6 +96,21 @@ describe('TxCountry', () => {
     expect(countryEmoji('PL')).toBe('🇵🇱');
     expect(countryName('Europe', 'en-US')).toBe('Europe');
     expect(countryEmoji('EUR')).toBe('');
+  });
+
+  it('lists regions apart from countries and survives a locale Intl rejects', () => {
+    expect(TX_REGION_CODES).toEqual(['EU', 'UN']);
+    expect(TX_REGION_CODES.some((code) => TX_COUNTRY_CODES.includes(code))).toBe(false);
+    expect(countryName('EU', 'en-US')).toBe('European Union');
+    expect(countryEmoji('eu')).toBe('🇪🇺');
+    expect(countryName('UA', '!!')).toBe('Ukraine');
+    expect(countryName('pl', '!!')).toBe('Poland');
+  });
+
+  it('falls back to the code when Intl has no name', () => {
+    const of = vi.spyOn(Intl.DisplayNames.prototype, 'of').mockReturnValue(undefined);
+    expect(countryName('fr', 'en-US')).toBe('FR');
+    of.mockRestore();
   });
 
   it('shows nothing for an empty value', () => {

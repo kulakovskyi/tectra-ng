@@ -14,5 +14,5 @@ import { TxCountry } from '@tectra-ng/ui/country';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class CountryBasicExample {
-  readonly codes = ['ua', 'PL', 'DE', 'JP', 'BR'];
+  readonly codes = ['ua', 'PL', 'DE', 'JP', 'BR', 'EU'];
 }

@@ -1,0 +1,1 @@
+`tx-console-rail` works on its own, next to your own header or page. By default it turns into a row on a narrow window; `responsive="container"` follows the nearest container named `tx-console-layout` — here the frame — and `responsive="none"` keeps it a column.

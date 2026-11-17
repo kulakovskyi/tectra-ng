@@ -3,7 +3,8 @@ import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassT
 import { TxLocaleService } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { TectraAmountTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
-import { TxAmountCurrencyDisplay, TxAmountNotation, TxAmountPart, TxAmountSign } from './amount.types';
+import { TX_AMOUNT_OPTIONS } from './amount.options';
+import { TxAmountCurrencyDisplay, TxAmountNotation, TxAmountPart, TxAmountSign, TxAmountSymbolPosition, TxAmountSymbols } from './amount.types';
 import { formatAmount } from './format-amount';
 import { provideTxIconDefaults } from '@tectra-ng/icons';
 import { AMOUNT_ICON_DEFAULTS } from './amount.icons';
@@ -42,6 +43,7 @@ export class TxAmount {
   private readonly amountTheme = injectTokens(AMOUNT_THEME);
 
   private localeService = inject(TxLocaleService);
+  private options = inject(TX_AMOUNT_OPTIONS, { optional: true });
 
   readonly amount = input<number | null | undefined>(null);
   readonly currency = input<string | null | undefined>(undefined);
@@ -52,6 +54,8 @@ export class TxAmount {
   readonly signColor = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly strong = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly locale = input<string | undefined>(undefined);
+  readonly symbolPosition = input<TxAmountSymbolPosition | undefined>(undefined);
+  readonly symbols = input<TxAmountSymbols | undefined>(undefined);
   readonly emptyText = input<string>('—');
   readonly dt = input<TectraDeepPartial<TectraAmountTokens> | undefined>(undefined);
   readonly pt = input<TxPassThrough<TxAmountPart, TxAmount> | undefined>(undefined);
@@ -77,12 +81,14 @@ export class TxAmount {
       return [];
     }
     return formatAmount(amount, {
-      locale: this.locale() ?? this.localeService.locale().intl,
+      locale: this.locale() ?? this.options?.locale ?? this.localeService.locale().intl,
       currency: this.currency(),
       format: this.format(),
       notation: this.notation(),
       currencyDisplay: this.currencyDisplay(),
       showSign: this.showSign(),
+      symbolPosition: this.symbolPosition() ?? this.options?.symbolPosition,
+      symbols: { ...this.options?.symbols, ...this.symbols() },
     });
   });
   readonly hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-amount'), ...this.passThrough().root?.style }));

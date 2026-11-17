@@ -1,5 +1,6 @@
 import { EnvironmentProviders, inject, makeEnvironmentProviders, provideAppInitializer, provideEnvironmentInitializer } from '@angular/core';
 import { TxLocaleRegistry } from './locale-registry';
+import { TxLocaleStorage } from './locale-storage';
 import { TectraConfig } from './tectra-config.interface';
 import { TECTRA_CONFIG } from './tectra-config.token';
 import { TxThemeService } from './theme.service';
@@ -14,9 +15,8 @@ export function provideTectra(config: TectraConfig): EnvironmentProviders {
     provideAppInitializer(async () => {
       const registry = inject(TxLocaleRegistry);
       registry.add(...(config.locales ?? []));
-      if (typeof config.locale === 'string') {
-        await registry.load(config.locale);
-      }
+      const codes = [inject(TxLocaleStorage).read(), config.locale].filter((code): code is string => typeof code === 'string');
+      await Promise.all(codes.map((code) => registry.load(code)));
     }),
   ]);
 }

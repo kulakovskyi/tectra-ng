@@ -33,14 +33,14 @@ export class TxCookieNotice {
   private readonly document = inject(DOCUMENT);
   protected readonly router = inject(ActivatedRoute, { optional: true }) ? inject(Router) : null;
 
-  readonly title = input<string | undefined>(undefined);
-  readonly text = input<string | undefined>(undefined);
+  readonly title = input<string | null | undefined>(undefined);
+  readonly text = input<string | null | undefined>(undefined);
   readonly icon = input<TxIconName | (string & {})>('shield');
   readonly link = input<string | readonly unknown[] | undefined>(undefined);
   readonly href = input<string | undefined>(undefined);
-  readonly linkLabel = input<string | undefined>(undefined);
-  readonly acceptLabel = input<string | undefined>(undefined);
-  readonly label = input<string | undefined>(undefined);
+  readonly linkLabel = input<string | null | undefined>(undefined);
+  readonly acceptLabel = input<string | null | undefined>(undefined);
+  readonly label = input<string | null | undefined>(undefined);
   readonly cookieName = input<string>('cookieNoticeDismissed');
   readonly maxAgeDays = input<number, unknown>(365, { transform: numberAttribute });
   readonly sharedDomain = input<string | undefined>(undefined);

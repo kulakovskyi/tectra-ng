@@ -8,7 +8,7 @@ The header of a page: a title, an optional subtitle and the page actions on the 
 </tx-page-header>
 ```
 
-The space below the header is set from the outside (a class or a style on `tx-page-header`). A solid `secondary` button among the actions gets the card background and border, so it stays visible on the page background.
+The space below the header is set from the outside (a class or a style on `tx-page-header`). A solid `secondary` button among the actions gets the card background, border and shadow (`secondaryButton` tokens: `background`, `hoverBackground`, `activeBackground`, `borderColor`, `shadow` — none by default), so it stays visible on the page background.
 
 ## Inputs
 | Name | Description |

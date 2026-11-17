@@ -43,6 +43,7 @@ describe('presetToCss', () => {
     expect(css).toContain('--tx-primary-600:');
     expect(css).toContain('--tx-red-500:');
     expect(css).toContain('--tx-button-primary-background:');
+    expect(css).toContain('--tx-button-outlined-secondary-background: transparent;');
     expect(css).toContain('--tx-toggle-button-checked-color:');
   });
 

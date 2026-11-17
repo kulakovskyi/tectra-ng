@@ -8,4 +8,4 @@ export type TxAppLayoutBackdrop = 'spectrum' | 'accent';
 export type TxAppLayoutResponsive = 'viewport' | 'container';
 
 /** Names of the parts of `tx-app-layout` that its `pt` input can style. */
-export type TxAppLayoutPart = 'root' | 'sidebar' | 'brand' | 'menu' | 'topbar' | 'menuButton' | 'content' | 'mask';
+export type TxAppLayoutPart = 'root' | 'sidebar' | 'brand' | 'logo' | 'menu' | 'topbar' | 'menuButton' | 'content' | 'mask';

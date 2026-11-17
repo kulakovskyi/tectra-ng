@@ -5,7 +5,7 @@ import { TxChartTooltipTemplate, TxChartValueFormat } from '@tectra-ng/charts/co
 import { TxAnnouncer } from '@tectra-ng/core/a11y';
 import { TectraChartTokens, TectraDeepPartial } from '@tectra-ng/themes';
 import { TxWaterfallChart } from './waterfall-chart.component';
-import { TxWaterfallBarEvent, TxWaterfallItem } from './waterfall-chart.types';
+import { TxWaterfallBarEvent, TxWaterfallChartBar, TxWaterfallItem } from './waterfall-chart.types';
 import { visibleLabels, waterfallExtent, waterfallSteps } from './waterfall-layout';
 
 @Component({
@@ -23,6 +23,13 @@ class Host {
   ]);
   readonly connectors = signal(true);
   readonly clicks: TxWaterfallBarEvent[] = [];
+}
+
+function barData(fixture: ComponentFixture<unknown>, element: Element): TxWaterfallChartBar {
+  const chart = fixture.debugElement.queryAll(By.directive(TxWaterfallChart)).find((debug) => (debug.nativeElement as HTMLElement).contains(element))?.componentInstance as TxWaterfallChart | undefined;
+  const found = chart?.bars().find((bar) => String(bar.index) === element.getAttribute('data-index'));
+  if (!found) throw new Error('no bar');
+  return found;
 }
 
 describe('waterfall layout', () => {
@@ -73,7 +80,7 @@ describe('TxWaterfallChart', () => {
     expect(bars[0].classList).toContain('own-bar');
     expect(all('#main .tx-waterfall-chart__label').map((label) => label.textContent?.trim())).toEqual(['+100', '+40', '−25', '−10', '105']);
     expect(all('#main .tx-waterfall-chart__connector')).toHaveLength(4);
-    expect(Number(bars[2].getAttribute('y'))).toBeCloseTo(Number(bars[1].getAttribute('y')), 0);
+    expect(barData(fixture, bars[2]).y).toBeCloseTo(barData(fixture, bars[1]).y, 0);
     expect(all('#main .tx-chart-legend__item').map((item) => item.textContent?.trim())).toEqual(['Increase', 'Decrease', 'Total']);
     expect(el('#main .tx-chart-legend__item').tagName).toBe('SPAN');
     expect(plot().getAttribute('aria-label')).toBe('Waterfall chart, 1 series, 5 values, total 105');
@@ -101,7 +108,7 @@ describe('TxWaterfallChart', () => {
 
   it('reports the clicked step', () => {
     const bar = all('#main .tx-waterfall-chart__bar')[4];
-    plot().dispatchEvent(new MouseEvent('click', { clientX: Number(bar.getAttribute('x')) + 2, clientY: Number(bar.getAttribute('y')) + 2, bubbles: true }));
+    plot().dispatchEvent(new MouseEvent('click', { clientX: barData(fixture, bar).x + 2, clientY: barData(fixture, bar).y + 2, bubbles: true }));
     expect(fixture.componentInstance.clicks[0]).toEqual({ index: 4, label: 'End', change: 105, total: 105, kind: 'total' });
   });
 });
@@ -255,6 +262,47 @@ describe('TxWaterfallChart options', () => {
     host.dt.set({ bar: { width: '0.3' } });
     await fixture.whenStable();
     expect(chart().barWidth()).toBe(0.3);
+  });
+});
+
+@Component({
+  imports: [TxWaterfallChart],
+  template: `<tx-waterfall-chart [items]="items" [dt]="dt()" [unstyled]="unstyled()" [showLegend]="false" [toolbar]="false" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class WaterfallShapeHost {
+  readonly items: TxWaterfallItem[] = [{ label: 'Start', value: 100 }, { label: 'Fees', value: -20 }, { label: 'End', total: true }];
+  readonly dt = signal<TectraDeepPartial<TectraChartTokens> | undefined>(undefined);
+  readonly unstyled = signal<boolean | undefined>(undefined);
+}
+
+describe('TxWaterfallChart bar shape', () => {
+  let fixture: ComponentFixture<WaterfallShapeHost>;
+  const bars = () => Array.from(fixture.nativeElement.querySelectorAll('.tx-waterfall-chart__bar')) as SVGPathElement[];
+  const arcs = (path: SVGPathElement) => (path.getAttribute('d')?.match(/A(\d+(?:\.\d+)?),/g) ?? []).map((arc) => Number(arc.slice(1, -1)));
+
+  beforeEach(async () => {
+    fixture = TestBed.createComponent(WaterfallShapeHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+  });
+
+  it('draws each bar as one path with four rounded corners', () => {
+    expect(bars()).toHaveLength(3);
+    for (const bar of bars()) {
+      expect(bar.tagName.toLowerCase()).toBe('path');
+      expect(bar.getAttribute('d')).toBe(barData(fixture, bar).path);
+      expect(arcs(bar)).toEqual([5, 5, 5, 5]);
+    }
+  });
+
+  it('takes the radius from dt and draws square bars when unstyled', async () => {
+    fixture.componentInstance.dt.set({ bar: { radius: '2px' } });
+    await fixture.whenStable();
+    expect(arcs(bars()[0])).toEqual([2, 2, 2, 2]);
+    fixture.componentInstance.unstyled.set(true);
+    await fixture.whenStable();
+    expect(bars().every((bar) => !bar.getAttribute('d')?.includes('A'))).toBe(true);
   });
 });
 

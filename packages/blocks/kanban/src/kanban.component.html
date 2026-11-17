@@ -45,16 +45,16 @@
               <tx-icon name="bars" aria-hidden="true" />
             </button>
           }
-          @if (headerTemplate(); as header) {
-            <ng-container *ngTemplateOutlet="header.template; context: { $implicit: column }" />
+          @if (header(); as headerTemplate) {
+            <ng-container *ngTemplateOutlet="headerTemplate; context: { $implicit: column }" />
           } @else {
             <h3 class="tx-kanban__title">{{ column.title }}</h3>
             <tx-pill size="small" [value]="column.items.length" [unstyled]="isUnstyled()" />
           }
         </header>
-        @if (topTemplate(); as top) {
+        @if (top(); as topTemplate) {
           <div class="tx-kanban__slot" data-drag-ignore>
-            <ng-container *ngTemplateOutlet="top.template; context: { $implicit: column }" />
+            <ng-container *ngTemplateOutlet="topTemplate; context: { $implicit: column }" />
           </div>
         }
         <div
@@ -86,11 +86,11 @@
               (keydown)="onCardKeydown($event, columnIndex, itemIndex)"
             >
               <div class="tx-kanban__card-placeholder" *cdkDragPlaceholder></div>
-              <ng-container *ngTemplateOutlet="cardTemplate().template; context: { $implicit: item, column: column }" />
+              <ng-container *ngTemplateOutlet="card(); context: { $implicit: item, column: column }" />
             </div>
           } @empty {
-            @if (emptyTemplate(); as empty) {
-              <ng-container *ngTemplateOutlet="empty.template; context: { $implicit: column }" />
+            @if (empty(); as emptyContent) {
+              <ng-container *ngTemplateOutlet="emptyContent; context: { $implicit: column }" />
             } @else {
               <div class="tx-kanban__empty" [class]="passThrough().empty?.class" [style]="passThrough().empty?.style">
                 {{ emptyText() ?? translations().noCards }}
@@ -113,9 +113,9 @@
             {{ showMoreLabel(view.hidden) }}
           </button>
         }
-        @if (footerTemplate(); as footer) {
+        @if (footer(); as footerTemplate) {
           <div class="tx-kanban__slot" data-drag-ignore>
-            <ng-container *ngTemplateOutlet="footer.template; context: { $implicit: column }" />
+            <ng-container *ngTemplateOutlet="footerTemplate; context: { $implicit: column }" />
           </div>
         }
       </section>

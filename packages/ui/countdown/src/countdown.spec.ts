@@ -175,6 +175,76 @@ describe('TxCountdown without a deadline', () => {
   });
 });
 
+@Component({
+  imports: [TxCountdown],
+  template: `<tx-countdown id="kept" [value]="value()" [unit]="unit()" [target]="target()" [restartOnChange]="false" (completed)="completions = completions + 1" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class KeepHost {
+  readonly value = signal<number | undefined>(5);
+  readonly unit = signal<TxCountdownUnit>('seconds');
+  readonly target = signal<number | undefined>(undefined);
+  completions = 0;
+}
+
+describe('TxCountdown with restartOnChange off', () => {
+  let fixture: ComponentFixture<KeepHost>;
+  const text = () => (fixture.nativeElement.querySelector('#kept') as HTMLElement).textContent?.trim();
+  const countdown = () => fixture.debugElement.children[0].componentInstance as TxCountdown;
+  const advance = async (ms: number) => {
+    for (let step = 0; step < ms; step += 100) {
+      vi.advanceTimersByTime(Math.min(100, ms - step));
+      await fixture.whenStable();
+    }
+  };
+
+  beforeEach(async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] });
+    vi.setSystemTime(new Date(2026, 0, 1, 12, 0, 0));
+    fixture = TestBed.createComponent(KeepHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+  });
+
+  afterEach(() => {
+    fixture.destroy();
+    vi.useRealTimers();
+  });
+
+  it('keeps counting when the value or unit changes, and takes the new value at the next start', async () => {
+    await advance(1050);
+    expect(text()).toBe('4');
+    fixture.componentInstance.value.set(10);
+    fixture.componentInstance.unit.set('minutes');
+    await fixture.whenStable();
+    expect(text()).toBe('1');
+    await advance(4000);
+    expect(text()).toBe('0');
+    expect(fixture.componentInstance.completions).toBe(1);
+    fixture.componentInstance.value.set(2);
+    await fixture.whenStable();
+    expect(text()).toBe('2');
+  });
+
+  it('starts again on restart() and follows a new target', async () => {
+    await advance(2050);
+    fixture.componentInstance.unit.set('seconds');
+    fixture.componentInstance.value.set(7);
+    await fixture.whenStable();
+    expect(text()).toBe('3');
+    countdown().restart();
+    await fixture.whenStable();
+    expect(text()).toBe('7');
+    fixture.componentInstance.value.set(undefined);
+    fixture.componentInstance.target.set(Date.now() + 30000);
+    await fixture.whenStable();
+    expect(text()).toBe('00:30');
+    fixture.componentInstance.target.set(Date.now() + 90000);
+    await fixture.whenStable();
+    expect(text()).toBe('01:30');
+  });
+});
+
 describe('TxRemainingTimePipe in a template', () => {
   it('formats milliseconds as a clock', () => {
     const fixture = TestBed.createComponent(PipeHost);

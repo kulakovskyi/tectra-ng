@@ -17,23 +17,26 @@ export const TX_ORG_CHART_MINIMAP_COMPACT = { width: 140, height: 100, minHeight
 /** Canvas width in px under which the compact minimap is used. */
 export const TX_ORG_CHART_COMPACT_WIDTH = 480;
 
-/** Keeps a zoom factor between the smallest and the biggest allowed. */
-export function clampZoom(zoom: number): number {
-  return Math.min(TX_ORG_CHART_ZOOM.max, Math.max(TX_ORG_CHART_ZOOM.min, zoom));
+/** Smallest zoom a fit may reach when `minFitZoom` allows any zoom, so a huge tree never collapses to nothing. */
+export const TX_ORG_CHART_FIT_FLOOR = 0.02;
+
+/** Keeps a zoom factor between the smallest (`min`, `TX_ORG_CHART_ZOOM.min` by default; lower after a fit of a big tree) and the biggest allowed. */
+export function clampZoom(zoom: number, min: number = TX_ORG_CHART_ZOOM.min): number {
+  return Math.min(TX_ORG_CHART_ZOOM.max, Math.max(min, zoom));
 }
 
-/** Zooms the view around a point so that the point stays under the cursor. */
-export function zoomAt(view: TxOrgChartView, zoom: number, at: TxOrgChartPoint): TxOrgChartView {
-  const next = clampZoom(zoom);
+/** Zooms the view around a point so that the point stays under the cursor; `min` is the smallest zoom allowed. */
+export function zoomAt(view: TxOrgChartView, zoom: number, at: TxOrgChartPoint, min: number = TX_ORG_CHART_ZOOM.min): TxOrgChartView {
+  const next = clampZoom(zoom, min);
   const ratio = next / view.zoom;
   return { zoom: next, x: at.x - (at.x - view.x) * ratio, y: at.y - (at.y - view.y) * ratio };
 }
 
 /**
- * Moves the view so that a point of the canvas is in the middle of the viewport, optionally at a new zoom.
+ * Moves the view so that a point of the canvas is in the middle of the viewport, optionally at a new zoom; `min` is the smallest zoom allowed.
  */
-export function centerOn(view: TxOrgChartView, viewport: TxOrgChartSize, point: TxOrgChartPoint, zoom = view.zoom): TxOrgChartView {
-  const next = clampZoom(zoom);
+export function centerOn(view: TxOrgChartView, viewport: TxOrgChartSize, point: TxOrgChartPoint, zoom = view.zoom, min: number = TX_ORG_CHART_ZOOM.min): TxOrgChartView {
+  const next = clampZoom(zoom, min);
   return { zoom: next, x: viewport.width / 2 - point.x * next, y: viewport.height / 2 - point.y * next };
 }
 
@@ -41,14 +44,16 @@ export function centerOn(view: TxOrgChartView, viewport: TxOrgChartSize, point: 
 export const TX_ORG_CHART_FIT_MIN_ZOOM = 0.6;
 
 /**
- * View that fits the whole stage into the viewport, at most at 100% and not below `minZoom`; `top` leaves room for the
+ * View that fits the whole stage into the viewport, at most at 100% and not below `minZoom`; a `minZoom` under
+ * `TX_ORG_CHART_ZOOM.min` (`0` for any) lets the fit go further out, down to `TX_ORG_CHART_FIT_FLOOR`. `top` leaves room for the
  * toolbar. A stage that fits is centred; one that is still too wide is centred on `root` (the root card centre in stage
  * px) and one that is too tall starts at the top. `null` when sizes are not known yet.
  */
 export function fitView(viewport: TxOrgChartSize, stage: TxOrgChartSize, top = 0, minZoom = TX_ORG_CHART_FIT_MIN_ZOOM, root: TxOrgChartPoint | null = null): TxOrgChartView | null {
   if (!viewport.width || !stage.width || !stage.height) return null;
   const fitted = Math.min(TX_ORG_CHART_ZOOM.initial, (viewport.width - TX_ORG_CHART_PADDING * 2) / stage.width, (viewport.height - top - TX_ORG_CHART_PADDING * 2) / stage.height);
-  const zoom = clampZoom(Math.max(Math.min(minZoom, TX_ORG_CHART_ZOOM.initial), fitted));
+  const floor = Math.max(TX_ORG_CHART_FIT_FLOOR, Math.min(minZoom, TX_ORG_CHART_ZOOM.initial));
+  const zoom = clampZoom(Math.max(floor, fitted), Math.min(TX_ORG_CHART_ZOOM.min, floor));
   const width = stage.width * zoom;
   const height = stage.height * zoom;
   const wide = width > viewport.width - TX_ORG_CHART_PADDING * 2 + 0.5;

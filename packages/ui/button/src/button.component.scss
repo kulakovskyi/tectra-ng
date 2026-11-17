@@ -13,7 +13,7 @@
 }
 
 @mixin outlined($severity) {
-  --_background: transparent;
+  --_background: var(--tx-button-outlined-#{$severity}-background);
   --_hover-background: var(--tx-button-outlined-#{$severity}-hover-background);
   --_active-background: var(--tx-button-outlined-#{$severity}-active-background);
   --_border-color: var(--tx-button-outlined-#{$severity}-border-color);

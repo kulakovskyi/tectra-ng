@@ -16,7 +16,26 @@ A card that holds the filter fields above a table or a list. Users choose which 
 </tx-filters-panel>
 ```
 
-Every field wrapper carries `txFilterField`; fields may sit at any depth, but only direct children of the panel follow the saved order. A field whose `filterActive` is `true` is always shown and cannot be hidden.
+Every field wrapper carries `txFilterField`; fields may sit at any depth and may come from `@for` or `@if`, but only direct children of the panel follow the saved order. A field whose `filterActive` is `true` is always shown and cannot be hidden.
+
+## Panel in a wrapper component
+
+Fields and the reset action find their panel through the `TX_FILTERS_PANEL` token. When they are projected into a component that wraps `tx-filters-panel`, Angular resolves them where they are written and they cannot see the panel. Add `provideTxFiltersPanelRelay()` to the wrapper's `providers`: the panel inside it then lists, hides and orders the projected fields and clicks the projected reset action.
+
+```ts
+@Component({
+  selector: 'orders-filters',
+  imports: [TxFiltersPanel],
+  providers: [provideTxFiltersPanelRelay()],
+  template: `
+    <tx-filters-panel stateKey="orders-filters">
+      <ng-content />
+      <ng-content select="[txFiltersActions]" ngProjectAs="[txFiltersActions]" />
+    </tx-filters-panel>
+  `,
+})
+export class OrdersFilters {}
+```
 
 ## Inputs
 | Name | Description |

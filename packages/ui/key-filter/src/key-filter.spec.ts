@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TxKeyFilter } from './key-filter.directive';
 import { TX_KEY_FILTER_PRESETS, txKeyFilterAccepts, txKeyFilterRule } from './key-filter.presets';
-import { TxKeyFilterPreset } from './key-filter.types';
+import { TxKeyFilterValue } from './key-filter.types';
 
 describe('key filter presets', () => {
   it('accepts and rejects by preset', () => {
@@ -33,7 +33,7 @@ describe('key filter presets', () => {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class Host {
-  readonly filter = signal<TxKeyFilterPreset | RegExp>('pint');
+  readonly filter = signal<TxKeyFilterValue>('pint');
   readonly validateOnly = signal(false);
   readonly control = new FormControl('');
 }
@@ -153,5 +153,116 @@ describe('TxKeyFilter', () => {
       },
     });
     expect(type(input, '1')).toBe(false);
+  });
+
+  it('switches off with null, false, undefined or an empty string', () => {
+    const { fixture, input } = setup();
+    for (const off of [null, false, undefined, ''] as const) {
+      fixture.componentInstance.filter.set(off);
+      fixture.componentInstance.validateOnly.set(false);
+      fixture.detectChanges();
+      expect(type(input, 'a')).toBe(true);
+      const paste = new Event('paste', { cancelable: true }) as ClipboardEvent;
+      Object.defineProperty(paste, 'clipboardData', { value: { getData: () => 'a1' } });
+      input.dispatchEvent(paste);
+      expect(paste.defaultPrevented).toBe(false);
+      const drop = new Event('drop', { cancelable: true }) as DragEvent;
+      Object.defineProperty(drop, 'dataTransfer', { value: { getData: () => 'a1' } });
+      input.dispatchEvent(drop);
+      expect(drop.defaultPrevented).toBe(false);
+      input.value = 'x1';
+      input.dispatchEvent(new Event('input'));
+      expect(input.value).toBe('x1');
+      fixture.componentInstance.validateOnly.set(true);
+      fixture.detectChanges();
+      fixture.componentInstance.control.setValue('12a');
+      expect(fixture.componentInstance.control.errors).toBeNull();
+    }
+  });
+
+  it('checks the value again when the filter changes', () => {
+    const { fixture } = setup();
+    fixture.componentInstance.validateOnly.set(true);
+    fixture.detectChanges();
+    fixture.componentInstance.control.setValue('12a');
+    expect(fixture.componentInstance.control.errors).toEqual({ keyFilter: { value: '12a' } });
+    fixture.componentInstance.filter.set(null);
+    fixture.detectChanges();
+    expect(fixture.componentInstance.control.errors).toBeNull();
+    fixture.componentInstance.filter.set('alphanum');
+    fixture.detectChanges();
+    expect(fixture.componentInstance.control.errors).toBeNull();
+    fixture.componentInstance.filter.set('pint');
+    fixture.detectChanges();
+    expect(fixture.componentInstance.control.errors).toEqual({ keyFilter: { value: '12a' } });
+  });
+
+  it('cleans text that arrives without a cancelable beforeinput', () => {
+    const { fixture, input } = setup();
+    input.dispatchEvent(new InputEvent('beforeinput', { data: null, inputType: 'insertReplacementText', cancelable: true }));
+    input.value = '1a2b3';
+    input.setSelectionRange(4, 4);
+    input.dispatchEvent(new InputEvent('input', { inputType: 'insertReplacementText' }));
+    expect(input.value).toBe('123');
+    expect(input.selectionStart).toBe(2);
+    expect(fixture.componentInstance.control.value).toBe('123');
+    input.value = '45';
+    input.dispatchEvent(new Event('input'));
+    expect(input.value).toBe('45');
+  });
+
+  it('waits for the end of a composition before cleaning', () => {
+    const { fixture, input } = setup();
+    input.value = '1';
+    input.dispatchEvent(new CompositionEvent('compositionstart'));
+    input.dispatchEvent(new InputEvent('beforeinput', { data: 'к', inputType: 'insertCompositionText' }));
+    input.value = '1к';
+    input.dispatchEvent(new InputEvent('input', { inputType: 'insertCompositionText', isComposing: true }));
+    expect(input.value).toBe('1к');
+    input.dispatchEvent(new InputEvent('input', { inputType: 'insertCompositionText' }));
+    expect(input.value).toBe('1к');
+    input.dispatchEvent(new CompositionEvent('compositionend'));
+    expect(input.value).toBe('1');
+    expect(fixture.componentInstance.control.value).toBe('1');
+  });
+
+  it('restores the text before an input that breaks the whole value', () => {
+    const { fixture, input } = setup();
+    fixture.componentInstance.filter.set('positive');
+    fixture.detectChanges();
+    input.value = '1.5';
+    input.dispatchEvent(new InputEvent('beforeinput', { data: null, inputType: 'insertReplacementText' }));
+    input.value = '1.5.2x';
+    input.dispatchEvent(new Event('input'));
+    expect(input.value).toBe('1.5');
+    expect(input.selectionStart).toBe(3);
+    expect(fixture.componentInstance.control.value).toBe('1.5');
+    input.value = '7,7,7';
+    input.dispatchEvent(new Event('input'));
+    expect(input.value).toBe('7,7,7');
+  });
+
+  it('cleans an autofilled field whose caret cannot be set', () => {
+    const { fixture, input } = setup();
+    Object.defineProperty(input, 'setSelectionRange', {
+      value: () => {
+        throw new DOMException('No selection', 'InvalidStateError');
+      },
+    });
+    input.value = 'n0 7';
+    input.dispatchEvent(new Event('input'));
+    expect(input.value).toBe('07');
+    expect(fixture.componentInstance.control.value).toBe('07');
+  });
+
+  it('leaves the field alone with validateOnly', () => {
+    const { fixture, input } = setup();
+    fixture.componentInstance.validateOnly.set(true);
+    fixture.detectChanges();
+    input.dispatchEvent(new InputEvent('beforeinput', { data: 'a', inputType: 'insertText' }));
+    input.value = 'a1';
+    input.dispatchEvent(new Event('input'));
+    input.dispatchEvent(new CompositionEvent('compositionend'));
+    expect(input.value).toBe('a1');
   });
 });

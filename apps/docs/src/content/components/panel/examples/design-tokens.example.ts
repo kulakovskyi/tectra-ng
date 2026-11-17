@@ -12,8 +12,10 @@ import { TxPanel } from '@tectra-ng/ui/panel';
       [dt]="{
         root: {
           borderRadius: '8px',
-          iconColor: 'var(--tx-green-700)',
-          iconBackground: 'var(--tx-green-100)',
+          iconColor: 'var(--tx-success-base)',
+          iconBackground: 'var(--tx-success-soft)',
+          iconScale: '0.55',
+          leadGap: '16px',
         },
       }"
     >

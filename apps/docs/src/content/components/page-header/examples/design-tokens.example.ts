@@ -15,6 +15,7 @@ import { TxButton } from '@tectra-ng/ui/button';
           heading: { gap: '4px' },
           title: { fontSize: '24px', letterSpacing: '-0.03em' },
           subtitle: { fontSize: '14px' },
+          secondaryButton: { shadow: 'var(--tx-shadow-field)' },
         }"
       >
         <button txButton severity="secondary" icon="filter">Filter</button>

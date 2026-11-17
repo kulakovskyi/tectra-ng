@@ -4,7 +4,7 @@ tokens: kanban
 source: packages/blocks/kanban
 package: @tectra-ng/blocks/kanban
 import: TxKanban, TxKanbanCard
-examples: basic, fixed-height, templates, design-tokens
+examples: basic, fixed-height, templates, template-inputs, design-tokens
 ---
 # Kanban
 

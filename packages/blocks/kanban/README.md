@@ -26,6 +26,11 @@ A board of columns with cards. Cards move inside a column and between columns, w
 | columnDragLabel | Name of the column handle; translated by default |
 | pageSize | Cards per column before "Show N more"; `0` shows all (default 30) |
 | height | Height of the board, e.g. `70vh`; the columns then scroll inside |
+| cardTemplate | The card as a `TemplateRef` (context `$implicit` item, `column`) — for a component that wraps the board and gets the template from its own content; wins over `txKanbanCard` |
+| columnHeaderTemplate | Own column header as a `TemplateRef` (context `$implicit` column); wins over `txKanbanColumnHeader` |
+| columnTopTemplate | Content under the header as a `TemplateRef`; wins over `txKanbanColumnTop` |
+| columnFooterTemplate | Content at the bottom of a column as a `TemplateRef`; wins over `txKanbanColumnFooter` |
+| emptyTemplate | Content of an empty column as a `TemplateRef`; wins over `txKanbanEmpty` |
 | dt | Design tokens of this instance (`kanban`) |
 | pt | Classes and styles of the parts: `root`, `column`, `header`, `list`, `card`, `empty` |
 | ptOptions | How `pt` merges with the global pass-through |
@@ -40,12 +45,25 @@ A board of columns with cards. Cards move inside a column and between columns, w
 ## Slots
 | Name | Description |
 |---|---|
-| txKanbanCard | Required. `<ng-template txKanbanCard [txKanbanCardOf]="columns" let-item let-column="column">` — the card |
+| txKanbanCard | `<ng-template txKanbanCard [txKanbanCardOf]="columns" let-item let-column="column">` — the card; needed unless `cardTemplate` is set |
 | txKanbanColumnHeader | `<ng-template txKanbanColumnHeader let-column>` — own header instead of the title and the count |
 | txKanbanColumnTop | `<ng-template txKanbanColumnTop let-column>` — under the header, e.g. a quick-add field |
 | txKanbanColumnFooter | `<ng-template txKanbanColumnFooter let-column>` — at the bottom of a column |
 | txKanbanEmpty | `<ng-template txKanbanEmpty let-column>` — content of an empty column |
 | default | After the last column, e.g. an "Add column" button |
+
+Every slot also has a template input (`cardTemplate`, `columnHeaderTemplate`, `columnTopTemplate`, `columnFooterTemplate`, `emptyTemplate`). Angular finds `<ng-template txKanbanCard>` only between the `tx-kanban` tags, so a component that wraps the board takes the template from its own content and passes it on; when both are there, the input wins.
+
+```ts
+@Component({
+  selector: 'task-board',
+  imports: [TxKanban],
+  template: `<tx-kanban [columns]="columns()" [itemId]="taskId" [cardTemplate]="card()?.template" />`,
+})
+export class TaskBoard<T> {
+  readonly card = contentChild(TxKanbanCard<T>);
+}
+```
 
 The templates take the columns only for typing — `[txKanbanCardOf]="columns()"` gives `let-task` the card type in strict templates; without it the card stays untyped. Angular does not pass the type of the board `columns` to the templates inside it.
 

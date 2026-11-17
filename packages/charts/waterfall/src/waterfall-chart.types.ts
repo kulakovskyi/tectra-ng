@@ -48,6 +48,8 @@ export interface TxWaterfallChartBar extends TxWaterfallStep {
   width: number;
   /** Height, in px. */
   height: number;
+  /** SVG path of the bar with its rounded corners. */
+  path: string;
   /** Text of the data label, `null` when labels are off. */
   text: string | null;
   /** Vertical position of the data label, in px. */

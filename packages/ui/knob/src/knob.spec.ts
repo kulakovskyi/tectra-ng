@@ -202,3 +202,31 @@ describe('knob template directive', () => {
     expect(TxKnobValueTemplate.ngTemplateContextGuard({} as TxKnobValueTemplate, undefined)).toBe(false);
   });
 });
+
+@Component({
+  imports: [TxKnob],
+  template: `<tx-knob ariaLabel="Level" [step]="10" [(value)]="level" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class ModelHost {
+  readonly level = signal<number | null>(30);
+}
+
+describe('TxKnob value model', () => {
+  it('binds both ways without a form', async () => {
+    const fixture = TestBed.createComponent(ModelHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    const slider = fixture.nativeElement.querySelector('[role="slider"]') as HTMLElement;
+    expect(slider.getAttribute('aria-valuenow')).toBe('30');
+    slider.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', cancelable: true }));
+    await fixture.whenStable();
+    expect(fixture.componentInstance.level()).toBe(40);
+    fixture.componentInstance.level.set(70);
+    await fixture.whenStable();
+    expect(slider.getAttribute('aria-valuenow')).toBe('70');
+    fixture.componentInstance.level.set(null);
+    await fixture.whenStable();
+    expect(slider.getAttribute('aria-valuenow')).toBe('0');
+  });
+});

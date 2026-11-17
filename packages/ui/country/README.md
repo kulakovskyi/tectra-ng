@@ -1,6 +1,6 @@
 # Country
 
-A country as a flag and its name. The name comes from `Intl.DisplayNames` in the current tectra locale, so it follows `setLocale`. Unknown values are shown as plain text. Also exports the ISO 3166-1 code list (`TX_COUNTRY_CODES`), `countryName`, `countryEmoji` and `isCountryCode`.
+A country as a flag and its name. The name comes from `Intl.DisplayNames` in the current tectra locale, so it follows `setLocale`. Unknown values are shown as plain text. Also exports the ISO 3166-1 code list (`TX_COUNTRY_CODES`), the region codes (`TX_REGION_CODES`), `countryName`, `countryEmoji` and `isCountryCode`.
 
 Flags are emoji by default — no assets to load. To draw them as images, provide a resolver once. The tectra flag set, loaded flag by flag on demand:
 
@@ -31,3 +31,16 @@ While an async flag loads, its box is already there (the `loading-background` to
 | pt | Classes and styles of the parts: `root`, `flag`, `name` |
 | ptOptions | How `pt` merges with the global pass-through |
 | unstyled | Removes the tectra styles |
+
+## Constants
+| Name | Description |
+|---|---|
+| TX_COUNTRY_CODES | ISO 3166-1 alpha-2 codes of every country, plus `XK` (Kosovo) |
+| TX_REGION_CODES | Codes with a name and a flag that are not countries: `EU` (European Union), `UN` (United Nations); add them with `[...TX_COUNTRY_CODES, ...TX_REGION_CODES]` |
+
+## Functions
+| Name | Description |
+|---|---|
+| countryName(code, locale) | Localized name (`PL` → `Poland`); other text comes back as it is; a locale `Intl` does not accept falls back to `en-US` |
+| countryEmoji(code) | Emoji flag of a two-letter code, an empty string otherwise |
+| isCountryCode(code) | Whether the text is two letters, as a country code looks |

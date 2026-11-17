@@ -9,6 +9,7 @@ import { TxAvatar } from '@tectra-ng/ui/avatar';
       @for (name of names; track name) {
         <tx-avatar [name]="name" />
       }
+      <tx-avatar name="Support Desk" tone="solid" />
     </div>
   `,
   styles: `

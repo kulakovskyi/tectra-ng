@@ -5,6 +5,7 @@ import {
   ElementRef,
   Injector,
   OnDestroy,
+  TemplateRef,
   ViewEncapsulation,
   afterNextRender,
   booleanAttribute,
@@ -33,6 +34,7 @@ import {
   TxOrgChartMinimapLayout,
   TxOrgChartMinimapTone,
   TxOrgChartNode,
+  TxOrgChartNodeContext,
   TxOrgChartPart,
   TxOrgChartPoint,
   TxOrgChartSize,
@@ -48,6 +50,7 @@ type TxFullscreenElement = HTMLElement & { webkitRequestFullscreen?: () => Promi
 type TxFullscreenDocument = Document & { webkitFullscreenElement?: Element | null; webkitExitFullscreen?: () => Promise<void> | void };
 
 const TYPING = ['INPUT', 'TEXTAREA', 'SELECT'];
+const PAGE_KEYS_IGNORE = '[role="dialog"], [role="alertdialog"], [role="menu"], [role="listbox"], [aria-modal="true"]';
 const DRAG_IGNORE = '[data-drag-ignore], button, a, input, textarea, select, [contenteditable="true"]';
 const DRAG_THRESHOLD = 4;
 const KEY_PAN = 48;
@@ -68,6 +71,7 @@ const DEFAULT_HEIGHT = 'calc(100vh - 15rem)';
     '(document:fullscreenchange)': 'onFullscreenChange()',
     '(document:webkitfullscreenchange)': 'onFullscreenChange()',
     '(document:keydown.escape)': 'exitOverlayFullscreen()',
+    '(document:keydown)': 'onPageKeydown($event)',
   },
   viewProviders: [provideTxIconDefaults(ORG_CHART_ICON_DEFAULTS)],
 })
@@ -91,6 +95,8 @@ export class TxOrgChart implements OnDestroy {
   readonly busy = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly pathKinds = input<readonly string[] | null>(null);
   readonly minFitZoom = input(TX_ORG_CHART_FIT_MIN_ZOOM);
+  readonly pageHotkeys = input<boolean, unknown>(false, { transform: booleanAttribute });
+  readonly nodeTemplate = input<TemplateRef<TxOrgChartNodeContext> | null | undefined>(undefined);
   readonly dt = input<TectraDeepPartial<TectraChartTokens> | undefined>(undefined);
   readonly pt = input<TxPassThrough<TxOrgChartPart, TxOrgChart> | undefined>(undefined);
   readonly ptOptions = input<TxPassThroughOptions | undefined>(undefined);
@@ -102,7 +108,8 @@ export class TxOrgChart implements OnDestroy {
   readonly expandAll = output<void>();
   readonly collapseAll = output<void>();
 
-  readonly nodeTemplate = contentChild(TxOrgChartNodeTemplate);
+  protected readonly nodeSlot = contentChild(TxOrgChartNodeTemplate);
+  readonly resolvedNodeTemplate = computed(() => this.nodeTemplate() ?? this.nodeSlot()?.template ?? null);
 
   readonly isUnstyled = injectUnstyled(this.unstyled);
   readonly passThrough = injectPassThrough('orgChart', this, this.pt, this.ptOptions);
@@ -110,6 +117,8 @@ export class TxOrgChart implements OnDestroy {
   readonly hostStyle = computed(() => ({ ...this.tokenStyle(), ...this.passThrough().root?.style }));
 
   readonly view = signal<TxOrgChartView>({ x: 0, y: 0, zoom: TX_ORG_CHART_ZOOM.initial });
+  private readonly fitZoom = signal<number>(TX_ORG_CHART_ZOOM.min);
+  readonly minZoom = computed(() => Math.min(TX_ORG_CHART_ZOOM.min, this.fitZoom()));
   readonly viewport = signal<TxOrgChartSize>({ width: 0, height: 0 });
   readonly fullscreen = signal(false);
   readonly native = signal(false);
@@ -167,7 +176,7 @@ export class TxOrgChart implements OnDestroy {
     return {
       zoomPercent: Math.round(zoom * 100),
       canZoomIn: zoom < TX_ORG_CHART_ZOOM.max,
-      canZoomOut: zoom > TX_ORG_CHART_ZOOM.min,
+      canZoomOut: zoom > this.minZoom(),
       hasQuery: !!this.query().trim(),
       matchCount: this.highlightSet().size,
       isFullscreen: this.fullscreen(),
@@ -226,7 +235,9 @@ export class TxOrgChart implements OnDestroy {
     const rect = card ? this.stageRect(card) : null;
     const root = rect ? { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 } : null;
     const next = fitView(this.viewport(), { width: stage.offsetWidth, height: stage.offsetHeight }, this.fullscreen() ? TX_ORG_CHART_PADDING * 2 : 0, this.minFitZoom(), root);
-    if (next) this.view.set(next);
+    if (!next) return;
+    this.fitZoom.set(next.zoom);
+    this.view.set(next);
   }
 
   zoomIn(): void {
@@ -242,7 +253,7 @@ export class TxOrgChart implements OnDestroy {
   }
 
   centerOn(point: TxOrgChartPoint): void {
-    this.view.update((view) => centerOn(view, this.viewport(), point));
+    this.view.update((view) => centerOn(view, this.viewport(), point, view.zoom, this.minZoom()));
   }
 
   onSearch(query: string): void {
@@ -264,7 +275,7 @@ export class TxOrgChart implements OnDestroy {
     event.preventDefault();
     if (event.ctrlKey || event.metaKey || wheelIsMouse(event)) {
       const rect = this.canvasRect();
-      this.view.update((view) => zoomAt(view, wheelZoom(view.zoom, event.deltaY, event.ctrlKey), { x: event.clientX - rect.left, y: event.clientY - rect.top }));
+      this.view.update((view) => zoomAt(view, wheelZoom(view.zoom, event.deltaY, event.ctrlKey), { x: event.clientX - rect.left, y: event.clientY - rect.top }, this.minZoom()));
       return;
     }
     this.panBy(-event.deltaX, -event.deltaY);
@@ -290,7 +301,7 @@ export class TxOrgChart implements OnDestroy {
       const rect = this.canvasRect();
       if (this.pinchDistance > 0) {
         const ratio = distance / this.pinchDistance;
-        this.view.update((view) => zoomAt(view, view.zoom * ratio, { x: (a.x + b.x) / 2 - rect.left, y: (a.y + b.y) / 2 - rect.top }));
+        this.view.update((view) => zoomAt(view, view.zoom * ratio, { x: (a.x + b.x) / 2 - rect.left, y: (a.y + b.y) / 2 - rect.top }, this.minZoom()));
       }
       this.pinchDistance = distance;
       this.suppressClick = true;
@@ -318,9 +329,19 @@ export class TxOrgChart implements OnDestroy {
   }
 
   onKeydown(event: KeyboardEvent): void {
+    this.runHotkey(event, event.target === this.canvas()?.nativeElement);
+  }
+
+  onPageKeydown(event: KeyboardEvent): void {
+    if (!this.pageHotkeys() || event.defaultPrevented) return;
+    const target = event.target as HTMLElement;
+    if (this.canvas()?.nativeElement.contains(target) || target.closest?.(PAGE_KEYS_IGNORE)) return;
+    this.runHotkey(event, target === this.document.body || target === this.document.documentElement);
+  }
+
+  private runHotkey(event: KeyboardEvent, onCanvas: boolean): void {
     const target = event.target as HTMLElement | null;
     if (!target || target.isContentEditable || TYPING.includes(target.tagName) || event.ctrlKey || event.metaKey || event.altKey || !this.hasContent()) return;
-    const onCanvas = target === this.canvas()?.nativeElement;
     switch (event.key) {
       case '+':
       case '=':
@@ -496,7 +517,7 @@ export class TxOrgChart implements OnDestroy {
 
   private zoomAtCenter(zoom: number): void {
     const viewport = this.viewport();
-    this.view.update((view) => zoomAt(view, clampZoom(zoom), { x: viewport.width / 2, y: viewport.height / 2 }));
+    this.view.update((view) => zoomAt(view, clampZoom(zoom, this.minZoom()), { x: viewport.width / 2, y: viewport.height / 2 }, this.minZoom()));
   }
 
   private distance(): number {
@@ -518,7 +539,7 @@ export class TxOrgChart implements OnDestroy {
     if (!stage || !target || !this.viewport().width) return;
     this.lastFocusKey = key;
     const rect = this.stageRect(target);
-    this.view.update((view) => centerOn(view, this.viewport(), { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 }, Math.max(view.zoom, TX_ORG_CHART_FOCUS_ZOOM)));
+    this.view.update((view) => centerOn(view, this.viewport(), { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 }, Math.max(view.zoom, TX_ORG_CHART_FOCUS_ZOOM), this.minZoom()));
   }
 
   private drawPath(ids: readonly string[]): void {

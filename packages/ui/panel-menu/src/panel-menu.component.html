@@ -4,9 +4,9 @@
     <div role="separator" class="tx-panel-menu__separator" [class]="passThrough().separator?.class" [style]="passThrough().separator?.style"></div>
   } @else if (variant() === 'sidebar') {
     @if (block.titled) {
-      <div class="tx-panel-menu__section" [id]="node.id" [class]="passThrough().section?.class" [style]="passThrough().section?.style">{{ node.item.label }}</div>
+      <div class="tx-panel-menu__section" [id]="node.id" [class]="passThrough().section?.class" [style]="passThrough().section?.style">{{ text(node.item.label) }}</div>
     }
-    <ng-container *ngTemplateOutlet="tree; context: { $implicit: block.tree, labelledBy: block.titled ? node.id : null, label: block.titled ? null : node.item.label }" />
+    <ng-container *ngTemplateOutlet="tree; context: { $implicit: block.tree, labelledBy: block.titled ? node.id : null, label: block.titled ? null : text(node.item.label).trim() || null }" />
   } @else {
     <div
       class="tx-panel-menu__panel"
@@ -21,7 +21,7 @@
             [id]="node.id"
             [class.tx-panel-menu__header--active]="isActive(node)"
             [attr.aria-current]="isActive(node) ? 'page' : null"
-            [attr.title]="node.item.title ?? null"
+            [attr.title]="text(node.item.title) || null"
             [target]="node.item.target"
             [routerLink]="routerCommands(node.item)"
             [queryParams]="node.item.queryParams"
@@ -39,7 +39,7 @@
             class="tx-panel-menu__header"
             [id]="node.id"
             [attr.href]="href(node.item)"
-            [attr.title]="node.item.title ?? null"
+            [attr.title]="text(node.item.title) || null"
             [attr.target]="node.item.target ?? null"
             [attr.rel]="node.item.target === '_blank' ? 'noopener noreferrer' : null"
             [class]="passThrough().header?.class"
@@ -56,7 +56,7 @@
             class="tx-panel-menu__header"
             [id]="node.id"
             [disabled]="node.item.disabled ?? false"
-            [attr.title]="node.item.title ?? null"
+            [attr.title]="text(node.item.title) || null"
             [attr.aria-expanded]="node.children.length ? isExpanded(node) : null"
             [attr.aria-controls]="node.children.length ? node.id + '-content' : null"
             [class]="passThrough().header?.class"
@@ -120,7 +120,7 @@
               [attr.aria-level]="ariaLevel(node)"
               [attr.aria-selected]="isActive(node)"
               [attr.aria-current]="isActive(node) ? 'page' : null"
-              [attr.title]="node.item.title ?? null"
+              [attr.title]="text(node.item.title) || null"
               [target]="node.item.target"
               [routerLink]="routerCommands(node.item)"
               [queryParams]="node.item.queryParams"
@@ -146,7 +146,7 @@
               [attr.aria-selected]="isActive(node)"
               [attr.aria-current]="isActive(node) ? 'page' : null"
               [attr.href]="href(node.item)"
-              [attr.title]="node.item.title ?? null"
+              [attr.title]="text(node.item.title) || null"
               [attr.target]="node.item.target ?? null"
               [attr.rel]="node.item.target === '_blank' ? 'noopener noreferrer' : null"
               [class]="passThrough().item?.class"
@@ -174,7 +174,7 @@
               [attr.aria-current]="isActive(node) ? 'page' : null"
               [attr.aria-expanded]="node.children.length ? isExpanded(node) : null"
               [attr.aria-owns]="node.children.length ? node.id + '-group' : null"
-              [attr.title]="node.item.title ?? null"
+              [attr.title]="text(node.item.title) || null"
               [class]="passThrough().item?.class"
               [style]="passThrough().item?.style"
               (click)="onItemClick(node, $event)"
@@ -222,7 +222,7 @@
         }
       </span>
     }
-    <span class="tx-panel-menu__label" [class]="passThrough().label?.class" [style]="passThrough().label?.style">{{ node.item.label }}</span>
+    <span class="tx-panel-menu__label" [class]="passThrough().label?.class" [style]="passThrough().label?.style">{{ text(node.item.label) }}</span>
     @if (badgeText(node.item); as badge) {
       @if (variant() === 'sidebar') {
         <span class="tx-panel-menu__badge" [txAnimationReplay]="badge" [class]="passThrough().badge?.class" [style]="passThrough().badge?.style">{{ badge }}</span>

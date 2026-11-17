@@ -8,13 +8,19 @@ export const labelTokens = {
     fontWeight: tokenRef('font-weight-semibold'),
     gap: '4px',
     marginBottom: '6px',
+    lineHeight: '1.3',
+    textDisplay: 'inline-flex',
     requiredColor: tokenRef('danger-base'),
     hintColor: tokenRef('text-muted'),
+    hintFontSize: '0.9em',
+    filledColor: tokenRef('success-base'),
+    filledFontSize: '0.9em',
   },
   subtle: {
     color: tokenRef('text-muted'),
     fontSize: tokenRef('font-size-sm'),
     fontWeight: tokenRef('font-weight-semibold'),
+    lineHeight: '1.3',
   },
 };
 

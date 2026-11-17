@@ -32,6 +32,10 @@ export const avatarTokens = {
     orange: tone('orange'),
     purple: tone('purple'),
     red: tone('red'),
+    solid: {
+      background: tokenRef('primary-base'),
+      color: tokenRef('primary-contrast'),
+    },
   },
   group: {
     overlap: '0.18',

@@ -52,6 +52,7 @@ import {
   injectChartEntrance,
   linePath,
   normalizeSeries,
+  parseRatio,
   readTokenNumber,
   seriesColor,
   stackExtent,
@@ -84,6 +85,7 @@ import { COMBO_THEME } from './combo.theme';
 
 const DEFAULT_WIDTH = 0.56;
 const DEFAULT_GROUP_GAP = 3;
+const DEFAULT_RADIUS = 5;
 const EDGE_SLACK = 8;
 
 @Component({
@@ -168,7 +170,8 @@ export class TxComboChart {
   readonly hidden = signal<ReadonlySet<string>>(new Set());
   readonly focusedSeries = signal<number | null>(null);
   readonly active = signal<TxChartActive | null>(null);
-  readonly geometry = signal({ width: DEFAULT_WIDTH, gap: DEFAULT_GROUP_GAP });
+  readonly geometry = signal({ width: DEFAULT_WIDTH, gap: DEFAULT_GROUP_GAP, radius: DEFAULT_RADIUS });
+  readonly barRadius = computed(() => (this.isUnstyled() ? 0 : parseRatio(this.dt()?.bar?.radius, this.geometry().radius)));
 
   private readonly intl = computed(() => this.locale.locale().intl);
   private readonly list = computed(() => this.series() ?? []);
@@ -284,6 +287,7 @@ export class TxComboChart {
       stackedValues: this.stackedValues(),
       columns: this.columnIndexes(),
       colors: this.list().map((item) => item.color),
+      barRadius: this.barRadius(),
     });
   });
 
@@ -506,9 +510,10 @@ export class TxComboChart {
     const next = {
       width: readTokenNumber(element, '--tx-chart-bar-width', DEFAULT_WIDTH),
       gap: readTokenNumber(element, '--tx-chart-bar-group-gap', DEFAULT_GROUP_GAP),
+      radius: readTokenNumber(element, '--tx-chart-bar-radius', DEFAULT_RADIUS),
     };
     const current = this.geometry();
-    if (current.width !== next.width || current.gap !== next.gap) {
+    if (current.width !== next.width || current.gap !== next.gap || current.radius !== next.radius) {
       this.geometry.set(next);
     }
   }

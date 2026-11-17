@@ -1,7 +1,7 @@
 ---
 category: Display
 tokens: statusIcon
-examples: basic, labels, severities, sizes, in-a-table, design-tokens
+examples: basic, labels, tooltips, severities, sizes, in-a-table, design-tokens
 ---
 # Status Icon
 

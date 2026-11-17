@@ -18,6 +18,8 @@ import { TxAppLayout } from './app-layout.component';
       [model]="model"
       [(anchored)]="anchored"
       [dt]="{ sidebar: { width: '240px' } }"
+      [pt]="{ logo: { class: 'own-logo' } }"
+      [translate]="translate"
     >
       <button txAppTopbar type="button" class="bell">Bell</button>
       <p class="page">Page</p>
@@ -31,6 +33,7 @@ class Host {
   readonly backdrop = signal(true);
   readonly anchored = signal(true);
   readonly model: TxPanelMenuItem[] = [{ label: 'Main', items: [{ label: 'Dashboard', icon: 'home' }] }];
+  readonly translate = (key: string) => (key === 'Main' ? 'Workspace' : key);
 }
 
 describe('TxAppLayout', () => {
@@ -54,6 +57,8 @@ describe('TxAppLayout', () => {
     expect(aside.querySelector('.tx-app-layout__brand')?.getAttribute('aria-label')).toBe('Reports');
     expect(aside.querySelector('.tx-app-layout__name')?.textContent?.trim()).toBe('Reports');
     expect(aside.querySelector('tx-panel-menu .tx-panel-menu__label')?.textContent?.trim()).toBe('Dashboard');
+    expect(aside.querySelector('tx-panel-menu .tx-panel-menu__section')?.textContent?.trim()).toBe('Workspace');
+    expect(aside.querySelector('.tx-app-layout__logo')?.classList).toContain('own-logo');
     expect(root.querySelector('.tx-app-layout__topbar-end .bell')).not.toBeNull();
     expect(root.querySelector('main .page')).not.toBeNull();
     expect(root.querySelector('.tx-app-layout__wrapper > .foot')).not.toBeNull();

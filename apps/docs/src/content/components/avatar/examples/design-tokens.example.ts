@@ -8,7 +8,8 @@ import { TxAvatar, TxAvatarGroup } from '@tectra-ng/ui/avatar';
     <tx-avatar-group
       size="large"
       ariaLabel="Reviewers"
-      [dt]="{ group: { overlap: '0.4', ringWidth: '3px' } }"
+      [max]="2"
+      [dt]="{ group: { overlap: '0.4', ringWidth: '3px' }, list: { itemGap: '12px' } }"
     >
       <tx-avatar name="Olena Kovalenko" />
       <tx-avatar name="Taras Shevchuk" />

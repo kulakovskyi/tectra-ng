@@ -5,7 +5,7 @@ import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassT
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraStatTileTokens, toStyleObject } from '@tectra-ng/themes';
-import { TxStatTiles } from './stat-tiles.component';
+import { TX_STAT_TILES } from './stat-tiles.context';
 import { TxStatTileCommands, TxStatTilePart, TxStatTileTone } from './stat-tiles.types';
 import { STAT_TILES_ICON_DEFAULTS } from './stat-tiles.icons';
 import { STAT_TILES_THEME } from './stat-tiles.theme';
@@ -37,7 +37,7 @@ import { STAT_TILES_THEME } from './stat-tiles.theme';
 export class TxStatTile {
   private readonly statTilesTheme = injectTokens(STAT_TILES_THEME);
 
-  private tiles = inject(TxStatTiles, { optional: true });
+  private readonly tiles = inject(TX_STAT_TILES, { optional: true });
 
   readonly label = input.required<string>();
   readonly value = input<string | number | null | undefined>(null);
@@ -50,6 +50,7 @@ export class TxStatTile {
   readonly fitValue = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly accentValue = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly highlighted = input<boolean, unknown>(false, { transform: booleanAttribute });
+  readonly compact = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
   readonly link = input<TxStatTileCommands>(undefined);
   readonly queryParams = input<Params | null | undefined>(undefined);
   readonly href = input<string | null | undefined>(undefined);
@@ -62,7 +63,7 @@ export class TxStatTile {
   readonly isUnstyled = injectUnstyled(this.unstyled);
   readonly passThrough = injectPassThrough('statTile', this, this.pt, this.ptOptions);
   readonly hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-stat-tile'), ...this.passThrough().root?.style }));
-  readonly isCompact = computed(() => this.tiles?.compact() ?? false);
+  readonly isCompact = computed(() => this.compact() ?? this.tiles?.compact() ?? false);
   readonly isLink = computed(() => !!this.link() || !!this.href());
   readonly displayValue = computed(() => this.value() ?? '-');
   readonly valueTitle = computed(() => (this.textValue() ? String(this.displayValue()) : null));

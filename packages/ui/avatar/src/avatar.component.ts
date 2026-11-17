@@ -5,6 +5,7 @@ import { injectTxIcons, provideTxIconDefaults, TxIcon, TxIconName } from '@tectr
 import { TxTooltip } from '@tectra-ng/ui/tooltip';
 import { TectraAvatarTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TX_AVATAR_GROUP } from './avatar-group.token';
+import { TX_AVATAR_OPTIONS, avatarInitials } from './avatar.options';
 import { TxAvatarPart, TxAvatarShape, TxAvatarSize, TxAvatarTone, TxAvatarTooltip } from './avatar.types';
 import { AVATAR_ICON_DEFAULTS } from './avatar.icons';
 import { AVATAR_THEME } from './avatar.theme';
@@ -54,12 +55,13 @@ export class TxAvatar {
 
   private txIconRegistry = injectTxIcons();
   private group = inject(TX_AVATAR_GROUP, { optional: true });
+  private options = inject(TX_AVATAR_OPTIONS, { optional: true });
 
   readonly image = input<string | null | undefined>(undefined);
   readonly name = input<string | null | undefined>(undefined);
   readonly label = input<string | undefined>(undefined);
   readonly icon = input<TxIconName | (string & {})>('user');
-  readonly size = input<TxAvatarSize | number | undefined>(undefined);
+  readonly size = input<TxAvatarSize | 'fill' | number | undefined>(undefined);
   readonly shape = input<TxAvatarShape | undefined>(undefined);
   readonly tone = input<TxAvatarTone | undefined>(undefined);
   readonly ariaLabel = input<string | undefined>(undefined);
@@ -74,12 +76,21 @@ export class TxAvatar {
   readonly isUnstyled = injectUnstyled(this.unstyled);
   readonly passThrough = injectPassThrough('avatar', this, this.pt, this.ptOptions);
   readonly failed = signal(false);
-  readonly showImage = computed(() => !!this.image() && !this.failed());
-  readonly initials = computed(() => this.label() ?? initialsOf(this.name()));
+  readonly showImage = computed(() => {
+    const image = this.image()?.trim();
+    return !!image && !this.failed() && !this.isPlaceholder(image);
+  });
+  readonly initials = computed(() => {
+    const name = this.name()?.trim();
+    return this.label() ?? (name ? (this.options?.initials ?? avatarInitials)(name) : '');
+  });
   readonly resolvedSize = computed(() => this.size() ?? this.group?.size() ?? 'medium');
   readonly presetSize = computed(() => (typeof this.resolvedSize() === 'number' ? null : this.resolvedSize()));
   readonly resolvedShape = computed(() => this.shape() ?? this.group?.shape() ?? 'circle');
-  readonly resolvedTone = computed(() => this.tone() ?? (this.name() || this.label() ? TONES[hash(this.name() ?? this.label() ?? '') % TONES.length] : null));
+  readonly resolvedTone = computed(() => {
+    const named = this.name() || this.label();
+    return this.tone() ?? (named ? (this.options?.tone ?? TONES[hash(this.name() ?? named) % TONES.length]) : null);
+  });
   readonly accessibleName = computed(() => this.ariaLabel() ?? this.name() ?? null);
   readonly showsTooltip = computed(() => {
     const tooltip = this.tooltip();
@@ -109,20 +120,14 @@ export class TxAvatar {
     this.failed.set(true);
     this.imageError.emit(event);
   }
+
+  private isPlaceholder(image: string): boolean {
+    return !!this.options?.placeholderImages?.some((placeholder) => (typeof placeholder === 'string' ? placeholder.trim() === image : placeholder.test(image)));
+  }
 }
 
 function avatarTooltip(value: unknown): TxAvatarTooltip | undefined {
   return value === 'none' ? 'none' : optionalBoolean(value);
-}
-
-function initialsOf(name: string | null | undefined): string {
-  const words = (name ?? '').trim().split(/[\s._@-]+/).filter(Boolean);
-  if (!words.length) {
-    return '';
-  }
-  const first = Array.from(words[0])[0] ?? '';
-  const last = words.length > 1 ? (Array.from(words[words.length - 1])[0] ?? '') : '';
-  return (first + last).toUpperCase();
 }
 
 function hash(text: string): number {

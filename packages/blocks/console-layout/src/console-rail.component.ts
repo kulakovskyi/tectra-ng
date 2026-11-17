@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, input } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
-import { TxConsoleRailItem } from './console-layout.types';
+import { TxConsoleRailItem, TxConsoleRailResponsive } from './console-layout.types';
 import { TX_CONSOLE_RAIL_EXACT_MATCH } from './console-rail-match';
 import { CONSOLE_LAYOUT_ICON_DEFAULTS } from './console-layout.icons';
 import { injectTokens } from '@tectra-ng/core/config';
@@ -56,7 +56,11 @@ import { CONSOLE_LAYOUT_THEME } from './console-layout.theme';
   `,
   styleUrl: './console-rail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'tx-console-rail', '[attr.data-styled]': '!unstyled() || null' },
+  host: {
+    class: 'tx-console-rail',
+    '[attr.data-styled]': '!unstyled() || null',
+    '[attr.data-responsive]': 'responsive() === "none" ? null : responsive()',
+  },
   viewProviders: [provideTxIconDefaults(CONSOLE_LAYOUT_ICON_DEFAULTS)],
 })
 export class TxConsoleRail {
@@ -64,6 +68,7 @@ export class TxConsoleRail {
 
   readonly items = input.required<readonly TxConsoleRailItem[]>();
   readonly label = input<string | undefined>(undefined);
+  readonly responsive = input<TxConsoleRailResponsive>('viewport');
   readonly unstyled = input<boolean, unknown>(false, { transform: booleanAttribute });
   protected readonly exactMatch = TX_CONSOLE_RAIL_EXACT_MATCH;
 }

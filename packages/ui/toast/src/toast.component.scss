@@ -228,7 +228,7 @@
   .tx-toast__actions {
     display: flex;
     flex-shrink: 0;
-    gap: 6px;
+    gap: var(--tx-toast-action-gap);
   }
 
   .tx-toast__action {

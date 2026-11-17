@@ -37,6 +37,8 @@ const BUILT_IN_MESSAGES: Record<string, keyof TxTranslations> = {
   pricePositive: 'validationPricePositive',
 };
 
+const FALLBACK_KEY = '*';
+
 @Component({
   selector: 'tx-field-error',
   imports: [TxIcon],
@@ -126,7 +128,12 @@ export class TxFieldError {
     if (isObject(error) && typeof error['message'] === 'string') {
       return error['message'];
     }
-    return interpolate(this.translations()[BUILT_IN_MESSAGES[key] ?? 'validationInvalid'], error);
+    const builtIn = BUILT_IN_MESSAGES[key];
+    const fallback = builtIn ? undefined : (this.messages()?.[FALLBACK_KEY] ?? this.globalMessages?.[FALLBACK_KEY]);
+    if (fallback) {
+      return interpolate(typeof fallback === 'function' ? fallback(error) : fallback, error);
+    }
+    return interpolate(this.translations()[builtIn ?? 'validationInvalid'], error);
   }
 }
 

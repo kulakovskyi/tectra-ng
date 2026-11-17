@@ -4,7 +4,7 @@ tokens: filtersPanel
 source: packages/blocks/filters-panel
 package: @tectra-ng/blocks/filters-panel
 import: TxFiltersPanel, TxFilterField, TxFiltersReset, TxHasFilterValuePipe
-examples: basic, customizable, actions, mobile, plain, busy, design-tokens
+examples: basic, customizable, actions, mobile, plain, busy, wrapper, design-tokens
 ---
 # Filters Panel
 

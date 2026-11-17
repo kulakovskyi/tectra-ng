@@ -1,5 +1,16 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { TxChipsInput } from '@tectra-ng/ui/chips-input';
+import {
+  TxChipsInput,
+  TxChipsInputCommitEvent,
+  TxChipsInputRejectReason,
+} from '@tectra-ng/ui/chips-input';
+
+const MESSAGES: Record<TxChipsInputRejectReason, string> = {
+  duplicate: 'is already invited',
+  max: 'does not fit, five people at most',
+  pattern: 'is not an email address',
+  length: 'is longer than 40 characters',
+};
 
 @Component({
   selector: 'chips-input-validation-example',
@@ -7,16 +18,22 @@ import { TxChipsInput } from '@tectra-ng/ui/chips-input';
   template: `
     <div class="stack">
       <tx-chips-input
+        ariaLabel="Invite by email"
+        placeholder="Invite by email"
+        maxLengthMode="reject"
+        [maxLength]="40"
+        [max]="5"
         [itemPattern]="email"
         [separator]="separator"
-        [invalid]="!!rejected()"
-        [placeholder]="'Invite by email'"
-        (rejected)="rejected.set($event.value)"
-        (added)="rejected.set('')"
+        [normalize]="lowercase"
+        [invalid]="problems().length > 0"
+        [(value)]="emails"
+        (committed)="report($event)"
       />
-      @if (rejected()) {
-        <span class="hint">“{{ rejected() }}” is not an email address.</span>
+      @for (problem of problems(); track $index) {
+        <span class="hint">{{ problem }}</span>
       }
+      <span class="hint">{{ emails()?.length ?? 0 }} of 5 invited</span>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,5 +41,12 @@ import { TxChipsInput } from '@tectra-ng/ui/chips-input';
 export default class ChipsInputValidationExample {
   readonly email = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
   readonly separator = /[\s,;]+/;
-  readonly rejected = signal('');
+  readonly emails = signal<string[] | null>(['ana@example.com']);
+  readonly problems = signal<string[]>([]);
+
+  readonly lowercase = (value: string) => value.toLowerCase();
+
+  report(event: TxChipsInputCommitEvent): void {
+    this.problems.set(event.rejected.map(({ value, reason }) => `“${value}” ${MESSAGES[reason]}.`));
+  }
 }

@@ -10,13 +10,14 @@ import {
   contentChild,
   inject,
   input,
+  output,
   signal,
   viewChild,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { uniqueId } from '@tectra-ng/core/a11y';
-import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
+import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions, TxThemeMode } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
@@ -66,6 +67,9 @@ export class TxPublicHeader {
   readonly pt = input<TxPassThrough<TxPublicHeaderPart, TxPublicHeader> | undefined>(undefined);
   readonly ptOptions = input<TxPassThroughOptions | undefined>(undefined);
   readonly unstyled = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
+
+  readonly languageChange = output<string>();
+  readonly modeChange = output<TxThemeMode>();
 
   readonly isUnstyled = injectUnstyled(this.unstyled);
   readonly passThrough = injectPassThrough('publicHeader', this, this.pt, this.ptOptions);

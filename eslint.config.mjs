@@ -86,7 +86,7 @@ export default [
     rules: {
       '@angular-eslint/template/prefer-control-flow': 'error',
       '@angular-eslint/template/prefer-self-closing-tags': 'error',
-      '@angular-eslint/template/elements-content': ['error', { allowList: ['aria-label', 'aria-labelledby', 'label', 'title', 'innerHTML', 'innerText', 'txTooltip'] }],
+      '@angular-eslint/template/elements-content': ['error', { allowList: ['aria-label', 'aria-labelledby', 'label', 'title', 'innerHTML', 'innerText', 'txTooltip', 'txPasswordGenerate'] }],
     },
   },
 ];

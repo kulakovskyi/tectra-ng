@@ -10,6 +10,7 @@ import { TxPill } from '@tectra-ng/ui/pill';
       <tx-pill tone="warn" icon="pi-clock">Overdue in 3 days</tx-pill>
       <tx-pill tone="danger" icon="exclamation-triangle">Failed</tx-pill>
       <tx-pill tone="info" icon="globe">Public</tx-pill>
+      <tx-pill tone="primary" icon="spinner spin">Syncing</tx-pill>
     </div>
   `,
   styles: `

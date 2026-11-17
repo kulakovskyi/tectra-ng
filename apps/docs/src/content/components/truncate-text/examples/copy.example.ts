@@ -9,9 +9,10 @@ import { TxTruncateText } from '@tectra-ng/ui/truncate-text';
       text="sk_test_51Hc8f2LkA9xQm3Vt7Rz0pWnYbEuJd"
       [limit]="14"
       copyable
-      (copied)="last.set($event)"
+      (copied)="last.set('Copied: ' + $event)"
+      (copyFailed)="last.set('Could not copy: ' + $event)"
     />
-    <p class="result">{{ last() ? 'Copied: ' + last() : 'Nothing copied yet' }}</p>
+    <p class="result">{{ last() || 'Nothing copied yet' }}</p>
   `,
   styles: `
     .result {

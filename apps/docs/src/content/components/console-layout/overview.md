@@ -4,7 +4,7 @@ tokens: consoleLayout, appFooter
 source: packages/blocks/console-layout
 package: @tectra-ng/blocks/console-layout
 import: TxConsoleLayout, TxConsolePanel
-examples: basic, router, panel, responsive, design-tokens
+examples: basic, router, panel, responsive, rail, design-tokens
 ---
 # Console Layout
 

@@ -49,6 +49,7 @@ import {
   initialChartSize,
   injectChartEntrance,
   normalizeSeries,
+  parseRatio,
   readTokenNumber,
   seriesColor,
   stackExtent,
@@ -73,6 +74,7 @@ import { COLUMN_THEME } from './column.theme';
 const DEFAULT_WIDTH = 0.56;
 const DEFAULT_HORIZONTAL_WIDTH = 0.64;
 const DEFAULT_GROUP_GAP = 3;
+const DEFAULT_RADIUS = 5;
 const LABEL_FONT_SIZE = 11;
 const EDGE_SLACK = 8;
 
@@ -155,7 +157,8 @@ export class TxColumnChart {
   readonly hidden = signal<ReadonlySet<string>>(new Set());
   readonly focusedSeries = signal<number | null>(null);
   readonly active = signal<TxChartActive | null>(null);
-  readonly geometry = signal({ width: DEFAULT_WIDTH, horizontalWidth: DEFAULT_HORIZONTAL_WIDTH, gap: DEFAULT_GROUP_GAP });
+  readonly geometry = signal({ width: DEFAULT_WIDTH, horizontalWidth: DEFAULT_HORIZONTAL_WIDTH, gap: DEFAULT_GROUP_GAP, radius: DEFAULT_RADIUS });
+  readonly barRadius = computed(() => (this.isUnstyled() ? 0 : parseRatio(this.dt()?.bar?.radius, this.geometry().radius)));
 
   private readonly intl = computed(() => this.locale.locale().intl);
   private readonly list = computed(() => this.series() ?? []);
@@ -254,6 +257,7 @@ export class TxColumnChart {
           }
         : null,
       labelFontSize: LABEL_FONT_SIZE,
+      barRadius: this.barRadius(),
     });
   });
 
@@ -467,9 +471,10 @@ export class TxColumnChart {
       width: readTokenNumber(element, '--tx-chart-bar-width', DEFAULT_WIDTH),
       horizontalWidth: readTokenNumber(element, '--tx-chart-bar-horizontal-width', DEFAULT_HORIZONTAL_WIDTH),
       gap: readTokenNumber(element, '--tx-chart-bar-group-gap', DEFAULT_GROUP_GAP),
+      radius: readTokenNumber(element, '--tx-chart-bar-radius', DEFAULT_RADIUS),
     };
     const current = this.geometry();
-    if (current.width !== next.width || current.horizontalWidth !== next.horizontalWidth || current.gap !== next.gap) {
+    if (current.width !== next.width || current.horizontalWidth !== next.horizontalWidth || current.gap !== next.gap || current.radius !== next.radius) {
       this.geometry.set(next);
     }
   }

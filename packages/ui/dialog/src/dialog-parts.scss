@@ -51,7 +51,7 @@
   }
 
   .tx-dialog-header__subtitle {
-    margin: 2px 0 0;
+    margin: var(--tx-dialog-subtitle-margin-top) 0 0;
     color: var(--tx-dialog-subtitle-color);
     font-size: var(--tx-dialog-subtitle-font-size);
   }

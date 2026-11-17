@@ -58,6 +58,8 @@ import { PIE_THEME } from './pie.theme';
 const MIN_LABEL_ANGLE = (10 * Math.PI) / 180;
 const LEGEND_ITEM_WIDTH = 34;
 const DEFAULT_SEGMENT_RADIUS = 4;
+const DEFAULT_HOVER_OFFSET = 6;
+const MIN_PADDING = 8;
 const STAT_ITEM_WIDTH = 116;
 const STAT_ROW = 66;
 const LEGEND_LINE = 25;
@@ -148,6 +150,7 @@ export class TxPieChart {
   readonly hidden = signal<ReadonlySet<string>>(new Set());
   readonly hovered = signal<number | null>(null);
   readonly tokenRadius = signal(DEFAULT_SEGMENT_RADIUS);
+  readonly hoverOffset = signal(DEFAULT_HOVER_OFFSET);
   readonly keyboard = signal(false);
   readonly fromLegend = signal(false);
 
@@ -209,7 +212,7 @@ export class TxPieChart {
   readonly geometry = computed(() =>
     pieArcs(
       this.values().map((value, index) => (this.hidden().has(this.keys()[index]) ? 0 : value)),
-      { width: this.size().width, height: this.plotHeight(), startAngle: this.startAngle(), endAngle: this.endAngle(), donutSize: this.inner(), padding: Math.max(8, this.segmentGap() + 2), cornerRadius: this.segmentRadius() ?? this.tokenRadius() },
+      { width: this.size().width, height: this.plotHeight(), startAngle: this.startAngle(), endAngle: this.endAngle(), donutSize: this.inner(), padding: Math.max(MIN_PADDING, this.segmentGap() + 2, Math.ceil(this.hoverOffset() + this.segmentGap() / 2)), cornerRadius: this.segmentRadius() ?? this.tokenRadius() },
     ),
   );
 
@@ -227,16 +230,18 @@ export class TxPieChart {
   readonly segments = computed(() => {
     const { arcs } = this.geometry();
     const labelFormat = this.dataLabelFormatter();
-    return arcs
-      .filter((arc) => arc.end > arc.start)
-      .map((arc) => ({
+    const visible = arcs.filter((arc) => arc.end > arc.start);
+    return visible.map((arc) => {
+      const still = visible.length === 1 || arc.end - arc.start >= Math.PI;
+      return {
         ...arc,
         key: this.keys()[arc.index],
         color: this.colors()[arc.index],
-        ux: Math.round(Math.sin(arc.middle) * 1000) / 1000,
-        uy: Math.round(-Math.cos(arc.middle) * 1000) / 1000,
+        ux: still ? 0 : Math.round(Math.sin(arc.middle) * 1000) / 1000,
+        uy: still ? 0 : Math.round(-Math.cos(arc.middle) * 1000) / 1000,
         label: this.showDataLabels() && arc.end - arc.start >= MIN_LABEL_ANGLE ? labelFormat(arc.percent) : null,
-      }));
+      };
+    });
   });
 
   readonly center = computed<TxPieCenterData | null>(() => {
@@ -339,6 +344,7 @@ export class TxPieChart {
       if (next !== this.tokenRadius()) {
         this.tokenRadius.set(next);
       }
+      this.hoverOffset.set(this.isUnstyled() ? 0 : readTokenNumber(this.host.nativeElement, '--tx-chart-pie-hover-offset', DEFAULT_HOVER_OFFSET));
     });
   }
 

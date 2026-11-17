@@ -11,12 +11,14 @@ import { TxToastService } from '@tectra-ng/ui/toast';
         link="docs.example.com/getting-started"
         [copyable]="true"
         (copied)="toast.success('Copied ' + $event)"
+        (copyFailed)="toast.error('Could not copy ' + $event)"
       />
       <tx-link
         link="billing@example.com"
         type="email"
         [copyable]="true"
         (copied)="toast.success('Copied ' + $event)"
+        (copyFailed)="toast.error('Could not copy ' + $event)"
       />
     </div>
   `,

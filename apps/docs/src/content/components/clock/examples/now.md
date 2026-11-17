@@ -1,1 +1,1 @@
-`now` is a signal of the current time; format it with any date pipe.
+`now` is a signal of the current time; format it with any date pipe. It comes from `TxTimeSource` (`@tectra-ng/core/utils`), the one timer of the app at the start of each second, so the analog clock next to it moves together with the digits.

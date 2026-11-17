@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, computed, contentChild, inject, input, linkedSignal, numberAttribute, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, TemplateRef, computed, contentChild, inject, input, linkedSignal, numberAttribute, output } from '@angular/core';
 import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxLocaleService, injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
@@ -12,6 +12,8 @@ import {
   TxMonthCalendarDateInput,
   TxMonthCalendarDay,
   TxMonthCalendarEvent,
+  TxMonthCalendarEventContext,
+  TxMonthCalendarLabelInput,
   TxMonthCalendarLabels,
   TxMonthCalendarMarker,
   TxMonthCalendarPart,
@@ -50,9 +52,10 @@ export class TxMonthCalendar {
   readonly selectedDate = input<TxMonthCalendarDateInput | null>(null);
   readonly weekStartsOn = input<number | undefined>(undefined);
   readonly maxLanes = input<number, unknown>(3, { transform: numberAttribute });
-  readonly labels = input<Partial<TxMonthCalendarLabels>>({});
+  readonly labels = input<TxMonthCalendarLabelInput | null | undefined>({});
   readonly locale = input<string | undefined>(undefined);
   readonly today = input<Date | undefined>(undefined);
+  readonly eventTemplate = input<TemplateRef<TxMonthCalendarEventContext> | null | undefined>(undefined);
   readonly dt = input<TectraDeepPartial<TectraMonthCalendarTokens> | undefined>(undefined);
   readonly pt = input<TxPassThrough<TxMonthCalendarPart, TxMonthCalendar> | undefined>(undefined);
   readonly ptOptions = input<TxPassThroughOptions | undefined>(undefined);
@@ -61,7 +64,8 @@ export class TxMonthCalendar {
   readonly dayClick = output<Date>();
   readonly eventClick = output<TxMonthCalendarEvent>();
 
-  protected readonly eventTemplate = contentChild(TxMonthCalendarEventTemplate);
+  protected readonly eventSlot = contentChild(TxMonthCalendarEventTemplate);
+  protected readonly resolvedEventTemplate = computed(() => this.eventTemplate() ?? this.eventSlot()?.templateRef ?? null);
 
   readonly translations = injectTranslations();
   readonly isUnstyled = injectUnstyled(this.unstyled);
@@ -72,7 +76,8 @@ export class TxMonthCalendar {
   readonly resolvedWeekStart = computed(() => this.weekStartsOn() ?? this.localeService.locale().firstDayOfWeek);
   readonly text = computed<TxMonthCalendarLabels>(() => {
     const translations = this.translations();
-    return { more: translations.moreEvents, today: translations.today, region: translations.calendar, ...this.labels() };
+    const labels = this.labels();
+    return { more: labels?.more || translations.moreEvents, today: labels?.today || translations.today, region: labels?.region || translations.calendar };
   });
   readonly weekdays = computed(() => monthWeekdays(this.resolvedWeekStart(), this.resolvedLocale()));
   readonly weeks = computed<TxMonthCalendarWeek[]>(() =>

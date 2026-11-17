@@ -25,6 +25,8 @@ import { TxHeatmap, TxHeatmapRowHeader, TxHeatmapRowValue, heatmapCalendar } fro
 | pt | Classes and styles of the parts: `root`, `scroll`, `grid`, `head`, `row`, `lead`, `groups`, `group`, `groupLabel`, `columns`, `column`, `value`, `cell`, `legend` |
 | ptOptions | How `pt` merges with the global pass-through |
 | unstyled | Removes the tectra styles and keeps the behaviour |
+| rowHeaderTemplate | The row header as a `TemplateRef` (context `{ $implicit: row, row }`) — for a component that wraps the heatmap and gets the template from its own content; it wins over a `txHeatmapRowHeader` template inside the heatmap |
+| rowValueTemplate | The value column as a `TemplateRef`, like `rowHeaderTemplate`; it wins over a `txHeatmapRowValue` template |
 
 Tones: `success`, `danger`, `warn`, `info` (striped), `pending` (outlined), `neutral`. A cell with a `value` and no `tone` takes the scale colour.
 

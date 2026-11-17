@@ -3,7 +3,13 @@
 Dates in templates and code: the `txDate` pipe formats in the tectra locale — with `Intl` date styles by default, or with Angular date patterns — follows a locale switch, and shows `-` instead of an error for an empty or broken value; small calendar functions work on copies and count calendar days, not 24-hour blocks, so daylight saving time does not shift them.
 
 ```ts
-import { TxDatePipe, TX_DATE_FORMATS, TX_DATE_STYLES, addDays, toIsoRange } from '@tectra-ng/utils/date';
+import { TxDatePipe, TX_DATE_FORMATS, TX_DATE_STYLES, addDays, formatTxDate, toIsoRange } from '@tectra-ng/utils/date';
+```
+
+Outside templates — in a service, a worker, an export or a test — `formatTxDate` gives the same text without dependency injection:
+
+```ts
+formatTxDate(order.paidAt, TX_DATE_STYLES.dateTime, { locale: 'uk-UA', timezone: 'Europe/Kyiv' });
 ```
 
 ```html
@@ -26,6 +32,7 @@ import { TxDatePipe, TX_DATE_FORMATS, TX_DATE_STYLES, addDays, toIsoRange } from
 ## Functions
 | Name | Description |
 |---|---|
+| formatTxDate(value, format?, options?) | The function behind `txDate`, without dependency injection. `format` as in the pipe (a medium date by default); `options`: `locale` (`'en-US'`), `timezone`, `empty` (`'-'`), `fallbackLocale` — locale of an Angular pattern when Angular has no data for `locale` (`'en-US'`, `null` returns the empty text). Never throws |
 | toDate(value) | A new `Date` from a `Date`, string or number; `null` when empty or invalid |
 | isValidDate(value) | `true` when the value is a real date |
 | startOfDay(date) / middleOfDay(date) / endOfDay(date) | 00:00:00.000, 12:00 or 23:59:59.999 of the same day |

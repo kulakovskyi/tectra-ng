@@ -71,6 +71,7 @@ export const tableTokens = {
   },
   columnResizer: {
     width: '8px',
+    hitWidth: '14px',
     lineWidth: '2px',
     color: tokenRef('primary-base'),
   },
@@ -141,6 +142,8 @@ export const tableTokens = {
   actions: {
     gap: '7px',
     overflowPadding: '10.5px',
+    menuIconSize: '24px',
+    menuIconFontSize: '10.5px',
   },
   card: {
     minWidth: '280px',

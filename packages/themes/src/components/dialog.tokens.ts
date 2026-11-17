@@ -33,6 +33,7 @@ export const dialogTokens = {
   subtitle: {
     color: tokenRef('text-muted'),
     fontSize: '12.25px',
+    marginTop: '2px',
   },
   content: {
     padding: '0 21px',

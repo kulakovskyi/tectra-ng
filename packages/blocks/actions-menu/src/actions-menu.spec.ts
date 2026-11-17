@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { TxActionsMenu } from './actions-menu.component';
 import { TxActionsMenuItem, TxActionsMenuSize } from './actions-menu.types';
@@ -121,6 +121,83 @@ describe('TxActionsMenu labels and other keys', () => {
     items[1].dispatchEvent(letter);
     expect(letter.defaultPrevented).toBe(false);
     expect(document.activeElement).toBe(items[1]);
+    fixture.destroy();
+  });
+});
+
+@Component({
+  imports: [TxActionsMenu],
+  template: `
+    <button type="button" class="row" (click)="menu.toggle($event)">Row</button>
+    <tx-actions-menu #menu [items]="items()" [unstyled]="unstyled()" />
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class CodeHost {
+  readonly menu = viewChild.required(TxActionsMenu);
+  readonly items = signal<TxActionsMenuItem[]>([{ id: 'copy', label: 'Copy' }]);
+  readonly unstyled = signal(false);
+}
+
+describe('TxActionsMenu from code', () => {
+  const panel = () => document.querySelector('.tx-actions-menu__list');
+
+  it('opens, toggles and closes the menu at its own button or at another element', async () => {
+    const fixture = TestBed.createComponent(CodeHost);
+    await fixture.whenStable();
+    const menu = fixture.componentInstance.menu();
+    const root = fixture.nativeElement as HTMLElement;
+    const trigger = root.querySelector('.tx-actions-menu__trigger') as HTMLButtonElement;
+    const row = root.querySelector('.row') as HTMLButtonElement;
+    expect(menu.isOpen()).toBe(false);
+
+    menu.open();
+    await fixture.whenStable();
+    expect(menu.isOpen()).toBe(true);
+    expect(trigger.getAttribute('aria-expanded')).toBe('true');
+    expect(panel()).not.toBeNull();
+
+    menu.toggle();
+    await fixture.whenStable();
+    expect(menu.isOpen()).toBe(false);
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
+
+    row.click();
+    await fixture.whenStable();
+    expect(menu.isOpen()).toBe(true);
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
+
+    menu.toggle(row);
+    await fixture.whenStable();
+    expect(menu.isOpen()).toBe(false);
+
+    menu.open(row);
+    await fixture.whenStable();
+    menu.close();
+    await fixture.whenStable();
+    expect(menu.isOpen()).toBe(false);
+
+    fixture.componentInstance.items.set([]);
+    await fixture.whenStable();
+    const emptyKey = new KeyboardEvent('keydown', { key: 'Home', cancelable: true });
+    (menu as unknown as { onKeydown(event: KeyboardEvent): void }).onKeydown(emptyKey);
+    expect(emptyKey.defaultPrevented).toBe(false);
+    menu.open();
+    menu.toggle();
+    menu.close();
+    expect(menu.isOpen()).toBe(false);
+    fixture.destroy();
+  });
+
+  it('drops the styles when unstyled', async () => {
+    const fixture = TestBed.createComponent(CodeHost);
+    fixture.componentInstance.unstyled.set(true);
+    await fixture.whenStable();
+    const root = fixture.nativeElement.querySelector('tx-actions-menu') as HTMLElement;
+    expect(root.hasAttribute('data-styled')).toBe(false);
+    fixture.componentInstance.menu().open();
+    await fixture.whenStable();
+    expect(document.querySelector('.tx-actions-menu__list')?.hasAttribute('data-styled')).toBe(false);
     fixture.destroy();
   });
 });

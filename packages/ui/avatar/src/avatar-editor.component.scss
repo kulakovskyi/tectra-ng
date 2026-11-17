@@ -58,6 +58,11 @@
     background: var(--tx-avatar-editor-loader-background);
   }
 
+  &[data-shape='square'] .tx-avatar-editor__image,
+  &[data-shape='square'] .tx-avatar-editor__loader {
+    border-radius: var(--tx-avatar-square-border-radius);
+  }
+
   .tx-avatar-editor__hint {
     max-width: var(--tx-avatar-editor-hint-max-width);
     color: var(--tx-avatar-editor-hint-color);

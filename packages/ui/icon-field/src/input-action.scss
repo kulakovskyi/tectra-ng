@@ -7,8 +7,8 @@
 button {
   display: grid;
   place-items: center;
-  width: 24px;
-  height: 24px;
+  width: var(--tx-form-field-action-size);
+  height: var(--tx-form-field-action-size);
   padding: 0;
   border: none;
   border-radius: var(--tx-radius-sm);

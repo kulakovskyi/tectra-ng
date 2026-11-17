@@ -7,7 +7,7 @@ import { TxTruncateText } from './truncate-text.component';
   imports: [TxTruncateText],
   template: `
     <tx-truncate-text id="short" text="Short name" />
-    <tx-truncate-text id="long" [text]="long()" [limit]="10" [highlight]="search()" copyable (copied)="copied = $event" [dt]="{ root: { gap: '4px' } }" [pt]="{ text: { class: 'own-text' } }" />
+    <tx-truncate-text id="long" [text]="long()" [limit]="10" [highlight]="search()" copyable (copied)="copied = $event" (copyFailed)="failed = $event" [dt]="{ root: { gap: '4px' } }" [pt]="{ text: { class: 'own-text' } }" />
     <tx-truncate-text id="href" text="https://example.com/a/very/long/path" [limit]="12" href="https://example.com/a/very/long/path" ellipsis="…" />
     <tx-truncate-text id="open" text="https://example.org/docs" openLink />
     <tx-truncate-text id="same-tab" text="Inbox" href="/inbox" target="_self" />
@@ -20,6 +20,7 @@ class Host {
   readonly long = signal('Quarterly marketing report 2026');
   readonly search = signal('');
   copied = '';
+  failed = '';
 }
 
 describe('TxTruncateText', () => {
@@ -33,7 +34,17 @@ describe('TxTruncateText', () => {
   const tooltip = () => document.querySelector('.tx-tooltip') as HTMLElement | null;
   const visible = (selector: string) => el(`${selector} .tx-truncate-text__text [aria-hidden="true"]`)?.textContent?.trim() ?? el(`${selector} .tx-truncate-text__text`).textContent?.trim();
 
+  const secure = Object.getOwnPropertyDescriptor(window, 'isSecureContext');
+  const execCommand = document.execCommand;
+
+  afterEach(() => {
+    document.execCommand = execCommand;
+    if (secure) Object.defineProperty(window, 'isSecureContext', secure);
+    else Reflect.deleteProperty(window, 'isSecureContext');
+  });
+
   beforeEach(async () => {
+    Object.defineProperty(window, 'isSecureContext', { value: true, configurable: true });
     TestBed.configureTestingModule({ providers: [provideTxTooltip({ showDelay: 0, hideDelay: 0 })] });
     fixture = TestBed.createComponent(Host);
     fixture.autoDetectChanges();
@@ -88,6 +99,29 @@ describe('TxTruncateText', () => {
     expect(button.getAttribute('aria-label')).toBe('Copied');
     expect(button.classList).toContain('tx-truncate-text__copy--done');
     expect(el('#empty .tx-truncate-text__copy')).toBeNull();
+    expect(fixture.componentInstance.failed).toBe('');
+  });
+
+  it('copies through a selection outside a secure context', async () => {
+    Object.defineProperty(window, 'isSecureContext', { value: false, configurable: true });
+    const exec = vi.fn().mockReturnValue(true);
+    document.execCommand = exec;
+    (el('#long .tx-truncate-text__copy') as HTMLButtonElement).click();
+    await settle();
+    expect(exec).toHaveBeenCalledWith('copy');
+    expect(fixture.componentInstance.copied).toBe('Quarterly marketing report 2026');
+  });
+
+  it('reports a refused copy and says so instead of the check mark', async () => {
+    Object.assign(navigator, { clipboard: { writeText: vi.fn().mockRejectedValue(new Error('denied')) } });
+    document.execCommand = vi.fn().mockReturnValue(false);
+    const button = el('#long .tx-truncate-text__copy') as HTMLButtonElement;
+    button.click();
+    await settle();
+    expect(fixture.componentInstance.copied).toBe('');
+    expect(fixture.componentInstance.failed).toBe('Quarterly marketing report 2026');
+    expect(button.classList).not.toContain('tx-truncate-text__copy--done');
+    expect(button.getAttribute('aria-label')).toBe('Could not copy');
   });
 
   it('becomes a link that opens a new tab, named by the full text', () => {
@@ -116,20 +150,27 @@ describe('TxTruncateText', () => {
     expect(el('#same-tab a').hasAttribute('rel')).toBe(false);
   });
 
-  it('restarts the check when copied again and resets it after a while', () => {
+  it('restarts the check when copied again and resets it after a while', async () => {
     vi.useFakeTimers();
-    Object.assign(navigator, { clipboard: undefined });
+    Object.assign(navigator, { clipboard: { writeText: vi.fn().mockResolvedValue(undefined) } });
     const button = el('#long .tx-truncate-text__copy') as HTMLButtonElement;
     button.click();
-    vi.advanceTimersByTime(1000);
+    await vi.advanceTimersByTimeAsync(1000);
     button.click();
-    vi.advanceTimersByTime(1000);
+    await vi.advanceTimersByTimeAsync(1000);
     fixture.detectChanges();
     expect(button.getAttribute('aria-label')).toBe('Copied');
-    vi.advanceTimersByTime(1000);
+    await vi.advanceTimersByTimeAsync(1000);
     fixture.detectChanges();
     expect(button.getAttribute('aria-label')).toBe('Copy');
     vi.useRealTimers();
   });
-});
 
+  it('reports nothing when the copy ends after the component is gone', async () => {
+    const host = fixture.componentInstance;
+    (el('#long .tx-truncate-text__copy') as HTMLButtonElement).click();
+    fixture.destroy();
+    await new Promise((resolve) => setTimeout(resolve));
+    expect(host.copied).toBe('');
+  });
+});

@@ -25,9 +25,11 @@ test('country select finds by code, shows the flag and the localized name', asyn
 
 test('several countries show flags and a counter', async ({ page }) => {
   await page.goto('/components/country-select');
-  const frame = example(page, 'Multiple');
-  await expect(frame.locator('.tx-country-select__flags tx-country')).toHaveCount(3);
-  await expect(frame.locator('.tx-country-select__more')).toHaveText('+2');
+  const [markets, offices] = await example(page, 'Multiple').locator('tx-country-select').all();
+  await expect(markets.locator('.tx-country-select__flags tx-country')).toHaveCount(3);
+  await expect(markets.locator('.tx-country-select__more')).toHaveText('+2');
+  await expect(offices).toContainText('Poland');
+  await expect(offices).toContainText('Ukraine');
 });
 
 test('flag-only countries are named images', async ({ page }) => {

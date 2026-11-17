@@ -54,11 +54,15 @@ export class TxHeatmap {
   readonly pt = input<TxPassThrough<TxHeatmapPart, TxHeatmap> | undefined>(undefined);
   readonly ptOptions = input<TxPassThroughOptions | undefined>(undefined);
   readonly unstyled = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
+  readonly rowHeaderTemplate = input<TemplateRef<TxHeatmapRowContext> | null | undefined>(undefined);
+  readonly rowValueTemplate = input<TemplateRef<TxHeatmapRowContext> | null | undefined>(undefined);
 
   readonly cellClick = output<TxHeatmapCellClick>();
 
-  readonly rowHeaderTemplate = contentChild(TxHeatmapRowHeader, { read: TemplateRef<TxHeatmapRowContext> });
-  readonly rowValueTemplate = contentChild(TxHeatmapRowValue, { read: TemplateRef<TxHeatmapRowContext> });
+  protected readonly rowHeaderSlot = contentChild(TxHeatmapRowHeader, { read: TemplateRef<TxHeatmapRowContext> });
+  protected readonly rowValueSlot = contentChild(TxHeatmapRowValue, { read: TemplateRef<TxHeatmapRowContext> });
+  readonly resolvedRowHeaderTemplate = computed(() => this.rowHeaderTemplate() ?? this.rowHeaderSlot() ?? null);
+  readonly resolvedRowValueTemplate = computed(() => this.rowValueTemplate() ?? this.rowValueSlot() ?? null);
 
   readonly isUnstyled = injectUnstyled(this.unstyled);
   readonly passThrough = injectPassThrough('heatmap', this, this.pt, this.ptOptions);

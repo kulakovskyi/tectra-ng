@@ -1,0 +1,1 @@
+A component that wraps the calendar gets the bar template from its own content and passes it on with `eventTemplate` — a `txMonthCalendarEvent` inside the wrapper's content is not inside `<tx-month-calendar>`, so the calendar would not see it. The input wins over a template slot.

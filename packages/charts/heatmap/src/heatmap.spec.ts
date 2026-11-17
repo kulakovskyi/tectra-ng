@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, TemplateRef, contentChild, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { heatmapCalendar } from './heatmap-calendar';
@@ -6,7 +6,7 @@ import { TxHeatmapCellView } from './heatmap-cell.component';
 import { heatmapLevel, heatmapRowGroups, heatmapScale } from './heatmap-layout';
 import { TxHeatmapRowHeader, TxHeatmapRowValue } from './heatmap-templates.directive';
 import { TxHeatmap } from './heatmap.component';
-import { TxHeatmapCell, TxHeatmapCellClick, TxHeatmapColumnGroup, TxHeatmapLegendItem, TxHeatmapRow } from './heatmap.types';
+import { TxHeatmapCell, TxHeatmapCellClick, TxHeatmapColumnGroup, TxHeatmapLegendItem, TxHeatmapRow, TxHeatmapRowContext } from './heatmap.types';
 
 const GROUPS: TxHeatmapColumnGroup[] = [
   { key: 'w1', label: 'Week 1', columns: [{ key: 'mon', label: 'M' }, { key: 'tue', label: 'T' }] },
@@ -265,5 +265,49 @@ describe('TxHeatmap labels', () => {
     await fixture.whenStable();
     expect(fixture.nativeElement.querySelector('.own-head')?.textContent).toBe('Ann');
     expect(fixture.nativeElement.querySelector('.own-value')?.textContent).toBe('90%');
+  });
+});
+
+@Component({
+  selector: 'own-heatmap',
+  imports: [TxHeatmap, TxHeatmapRowHeader],
+  template: `
+    <tx-heatmap [groups]="groups" [rows]="rows" [rowHeaderTemplate]="header()" [rowValueTemplate]="value()">
+      <ng-template txHeatmapRowHeader let-row><s class="inner-head">{{ row.key }}</s></ng-template>
+    </tx-heatmap>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class OwnHeatmap {
+  readonly groups = GROUPS;
+  readonly rows: TxHeatmapRow[] = [{ key: 'Ann', data: '90%', cells: [{ tone: 'success' }] }];
+  readonly header = contentChild('head', { read: TemplateRef<TxHeatmapRowContext> });
+  readonly value = contentChild('value', { read: TemplateRef<TxHeatmapRowContext> });
+}
+
+@Component({
+  imports: [OwnHeatmap],
+  template: `
+    <own-heatmap id="wrapped">
+      <ng-template #head let-row><b class="outer-head">{{ row.key }}</b></ng-template>
+      <ng-template #value let-row><i class="outer-value">{{ row.data }}</i></ng-template>
+    </own-heatmap>
+    <own-heatmap id="fallback" />
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class WrapperHost {}
+
+describe('TxHeatmap template inputs', () => {
+  it('takes row templates projected through a wrapper and falls back to its own slots', async () => {
+    const fixture = TestBed.createComponent(WrapperHost);
+    await fixture.whenStable();
+    const wrapped = fixture.nativeElement.querySelector('#wrapped') as HTMLElement;
+    expect(wrapped.querySelector('.outer-head')?.textContent).toBe('Ann');
+    expect(wrapped.querySelector('.outer-value')?.textContent).toBe('90%');
+    expect(wrapped.querySelector('.inner-head')).toBeNull();
+    const fallback = fixture.nativeElement.querySelector('#fallback') as HTMLElement;
+    expect(fallback.querySelector('.inner-head')?.textContent).toBe('Ann');
+    expect(fallback.querySelector('.tx-heatmap__value')).toBeNull();
   });
 });

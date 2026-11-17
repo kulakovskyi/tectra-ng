@@ -21,12 +21,23 @@ import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraChipsInputTokens, TectraDeepPartial, toStyleObject } from '@tectra-ng/themes';
 import { TxChip } from '@tectra-ng/ui/chip';
 import { TxChipsInputItemTemplate } from './chips-input-item.directive';
-import { TxChipsInputEvent, TxChipsInputPart, TxChipsInputSize, TxChipsInputVariant } from './chips-input.types';
+import {
+  TxChipsInputCommitEvent,
+  TxChipsInputEvent,
+  TxChipsInputLengthMode,
+  TxChipsInputNormalizer,
+  TxChipsInputPart,
+  TxChipsInputRejectReason,
+  TxChipsInputRejectedEvent,
+  TxChipsInputSize,
+  TxChipsInputVariant,
+} from './chips-input.types';
 import { CHIPS_INPUT_ICON_DEFAULTS } from './chips-input.icons';
 import { CHIPS_INPUT_THEME } from './chips-input.theme';
 
 /**
- * A text field that turns typed text into removable chips; works with forms and a list of strings as the value.
+ * A text field that turns typed text into removable chips; the value is a list of strings. A `ControlValueAccessor` —
+ * works with `[formControl]`, `ngModel`, signal forms and `[(value)]`.
  */
 @Component({
   selector: 'tx-chips-input',
@@ -54,6 +65,7 @@ import { CHIPS_INPUT_THEME } from './chips-input.theme';
 export class TxChipsInput extends TxFormControlBase<string[]> {
   private readonly chipsInputTheme = injectTokens(CHIPS_INPUT_THEME);
 
+  override readonly value = model<string[] | null>(null);
   readonly placeholder = input<string>('');
   readonly separator = input<string | RegExp>(',');
   readonly addOnBlur = input<boolean, unknown>(true, { transform: booleanAttribute });
@@ -61,6 +73,8 @@ export class TxChipsInput extends TxFormControlBase<string[]> {
   readonly caseSensitive = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly max = input<number | undefined>(undefined);
   readonly maxLength = input<number | undefined>(undefined);
+  readonly maxLengthMode = input<TxChipsInputLengthMode>('truncate');
+  readonly normalize = input<TxChipsInputNormalizer | undefined>(undefined);
   readonly itemPattern = input<RegExp | undefined>(undefined);
   readonly showClear = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly inputId = input<string | undefined>(undefined);
@@ -78,7 +92,8 @@ export class TxChipsInput extends TxFormControlBase<string[]> {
 
   readonly added = output<TxChipsInputEvent>();
   readonly removed = output<TxChipsInputEvent>();
-  readonly rejected = output<TxChipsInputEvent>();
+  readonly rejected = output<TxChipsInputRejectedEvent>();
+  readonly committed = output<TxChipsInputCommitEvent>();
 
   readonly itemTemplate = contentChild(TxChipsInputItemTemplate);
   readonly field = viewChild.required<ElementRef<HTMLInputElement>>('field');
@@ -118,11 +133,22 @@ export class TxChipsInput extends TxFormControlBase<string[]> {
 
   onPaste(event: ClipboardEvent): void {
     const pasted = event.clipboardData?.getData('text') ?? '';
-    const parts = pasted.split(/\r?\n/).flatMap((line) => line.split(this.separator()));
+    const field = this.field().nativeElement;
+    const current = field.value;
+    const start = field.selectionStart ?? current.length;
+    const end = field.selectionEnd ?? current.length;
+    const combined = current.slice(0, start) + pasted + current.slice(end);
+    const parts = combined.split(/\r?\n/).flatMap((line) => line.split(this.separator()));
     if (parts.length > 1) {
       event.preventDefault();
       this.addAll(parts);
       this.setText('');
+      return;
+    }
+    const value = this.prepare(combined);
+    if (value !== null && this.rejectReason(value, this.values()) === 'length') {
+      event.preventDefault();
+      this.addAll([combined]);
     }
   }
 
@@ -186,22 +212,60 @@ export class TxChipsInput extends TxFormControlBase<string[]> {
     this.setText('');
   }
 
-  private addAll(parts: string[]): void {
+  private addAll(parts: readonly string[]): void {
     let values = this.values();
-    for (const part of parts.map((item) => item.trim()).filter(Boolean)) {
-      const value = this.maxLength() ? part.slice(0, this.maxLength()) : part;
-      const duplicate = values.some((item) => (this.caseSensitive() ? item === value : item.toLowerCase() === value.toLowerCase()));
-      const max = this.max();
-      const full = max !== undefined && values.length >= max;
-      const invalidPattern = !!this.itemPattern() && !this.itemPattern()?.test(value);
-      if ((duplicate && !this.allowDuplicate()) || full || invalidPattern) {
-        this.rejected.emit({ value, values });
+    const added: TxChipsInputEvent[] = [];
+    const refused: { value: string; reason: TxChipsInputRejectReason }[] = [];
+    for (const part of parts) {
+      const value = this.prepare(part);
+      if (value === null) {
+        continue;
+      }
+      const reason = this.rejectReason(value, values);
+      if (reason) {
+        refused.push({ value, reason });
         continue;
       }
       values = [...values, value];
-      this.updateValue(values);
-      this.added.emit({ value, values });
+      added.push({ value, values });
     }
+    if (added.length) {
+      this.updateValue(values);
+    }
+    const rejected = refused.map((item): TxChipsInputRejectedEvent => ({ ...item, values }));
+    added.forEach((event) => this.added.emit(event));
+    rejected.forEach((event) => this.rejected.emit(event));
+    if (added.length || rejected.length) {
+      this.committed.emit({ added: added.map((event) => event.value), rejected, values });
+    }
+  }
+
+  private prepare(part: string): string | null {
+    const trimmed = part.trim();
+    const normalize = this.normalize();
+    const value = trimmed && normalize ? normalize(trimmed)?.trim() : trimmed;
+    if (!value) {
+      return null;
+    }
+    const maxLength = this.maxLength();
+    return maxLength && this.maxLengthMode() === 'truncate' ? value.slice(0, maxLength).trimEnd() : value;
+  }
+
+  private rejectReason(value: string, values: readonly string[]): TxChipsInputRejectReason | null {
+    const maxLength = this.maxLength();
+    if (maxLength && value.length > maxLength) {
+      return 'length';
+    }
+    const pattern = this.itemPattern();
+    if (pattern && !pattern.test(value)) {
+      return 'pattern';
+    }
+    const caseSensitive = this.caseSensitive();
+    if (!this.allowDuplicate() && values.some((item) => (caseSensitive ? item === value : item.toLowerCase() === value.toLowerCase()))) {
+      return 'duplicate';
+    }
+    const max = this.max();
+    return max !== undefined && values.length >= max ? 'max' : null;
   }
 
   private setText(text: string): void {

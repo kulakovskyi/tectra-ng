@@ -4,7 +4,7 @@ tokens: wizard
 source: packages/blocks/wizard
 package: @tectra-ng/blocks/wizard
 import: TxWizardLayout, TxWizardProgress, TxWizardStepHead, TxWizardStage, TxWizardFooter
-examples: basic, responsive, parts, design-tokens
+examples: basic, responsive, parts, own-scenes, design-tokens
 ---
 # Wizard
 

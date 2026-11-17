@@ -1,6 +1,6 @@
 :host {
-  --_icon-room: calc(var(--tx-form-field-font-size) + 6px);
-  --_action-room: calc(24px + 6px);
+  --_icon-room: calc(var(--tx-form-field-font-size) + var(--tx-form-field-icon-gap));
+  --_action-room: calc(var(--tx-form-field-action-size) + var(--tx-form-field-icon-gap));
 
   position: relative;
   display: inline-flex;
@@ -31,7 +31,7 @@
   z-index: 1;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--tx-space-1);
   transform: translateY(-50%);
   pointer-events: none;
 
@@ -45,5 +45,5 @@
 }
 
 .tx-icon-field__slot--end {
-  right: calc(var(--tx-form-field-padding-x) - 4px);
+  right: calc(var(--tx-form-field-padding-x) - var(--tx-space-1));
 }

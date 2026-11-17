@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, booleanAttribute, computed, contentChild, forwardRef, inject, input, numberAttribute, output, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, booleanAttribute, computed, contentChild, forwardRef, inject, input, model, numberAttribute, output, signal, viewChild } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { TxFormControlBase, injectFieldInvalid } from '@tectra-ng/core/forms';
@@ -16,6 +16,10 @@ const CENTER = 50;
 const TEXT_INSET = 12;
 const CHAR_WIDTH = 0.62;
 
+/**
+ * A value on a dial: drag along the ring or use the keyboard. A `ControlValueAccessor` — works with `[formControl]`,
+ * `ngModel`, signal forms and `[(value)]`.
+ */
 @Component({
   selector: 'tx-knob',
   imports: [NgTemplateOutlet],
@@ -42,6 +46,7 @@ export class TxKnob extends TxFormControlBase<number> {
   private localeService = inject(TxLocaleService);
   private lastFraction = 0;
 
+  override readonly value = model<number | null>(null);
   readonly min = input<number, unknown>(0, { transform: numberAttribute });
   readonly max = input<number, unknown>(100, { transform: numberAttribute });
   readonly step = input<number, unknown>(1, { transform: numberAttribute });

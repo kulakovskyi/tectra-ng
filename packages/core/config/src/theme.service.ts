@@ -1,5 +1,6 @@
 import { DOCUMENT, Injectable, computed, inject, signal } from '@angular/core';
 import {
+  TectraCssOptions,
   TectraPreset,
   TectraPresetSource,
   TectraStyle,
@@ -66,7 +67,7 @@ export class TxThemeService {
 
   /** Writes the CSS variables of a preset and rewrites the registered component tokens with its overrides. */
   applyPreset(preset: TectraPreset): void {
-    const css = presetBaseCss(preset);
+    const css = presetBaseCss(preset, this.cssOptions());
     const darkSelector = this.config?.darkSelector;
     this.styleElement('tectra-theme').textContent = darkSelector ? css.replace(':root[data-tx-theme="dark"]', `:root[data-tx-theme="dark"], ${darkSelector}`) : css;
     this.preset.set(preset);
@@ -171,7 +172,11 @@ export class TxThemeService {
 
   private writeGroup(name: string): void {
     const overrides = (this.preset()?.components as Record<string, object | undefined> | undefined)?.[name];
-    this.styleElement(`tectra-tokens-${name}`).textContent = componentTokensCss(name, deepMerge(this.groups.get(name) as object, overrides));
+    this.styleElement(`tectra-tokens-${name}`).textContent = componentTokensCss(name, deepMerge(this.groups.get(name) as object, overrides), this.cssOptions());
+  }
+
+  private cssOptions(): TectraCssOptions {
+    return { palettes: this.config?.palettes, units: this.config?.units, rootFontSize: this.config?.rootFontSize };
   }
 
   private styleElement(id: string): HTMLStyleElement {

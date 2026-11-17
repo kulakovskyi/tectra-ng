@@ -10,6 +10,7 @@ import {
   TxChartTooltipMode,
   TxChartTooltipTemplate,
   bandScale,
+  barPath,
   linearScale,
   stackValues,
 } from '@tectra-ng/charts/core';
@@ -18,6 +19,14 @@ import { TectraChartTokens, TectraDeepPartial } from '@tectra-ng/themes';
 import { TxColumnChart } from './column-chart.component';
 import { TxColumnChartPointEvent, TxColumnChartSeriesToggle } from './column-chart.types';
 import { columnBars } from './column-layout';
+import { TxColumnChartBar } from './column-chart.types';
+
+function barData(fixture: ComponentFixture<unknown>, element: Element): TxColumnChartBar {
+  const chart = fixture.debugElement.queryAll(By.directive(TxColumnChart)).find((debug) => (debug.nativeElement as HTMLElement).contains(element))?.componentInstance as TxColumnChart | undefined;
+  const found = chart?.bars().find((bar) => bar.key === `${element.getAttribute('data-series')}:${element.getAttribute('data-index')}`);
+  if (!found) throw new Error('no bar');
+  return found;
+}
 
 @Component({
   imports: [TxColumnChart],
@@ -72,6 +81,7 @@ describe('columnBars', () => {
     });
     expect(bars).toHaveLength(4);
     expect(bars.map((bar) => bar.end)).toEqual([null, null, 'top', 'bottom']);
+    expect(bars.every((bar) => bar.path === barPath(bar, bar.end, 0))).toBe(true);
     expect(bars[0].width).toBe(50);
     expect(bars[0].x).toBe(25);
     expect(bars[0].label).toBe('4');
@@ -218,14 +228,14 @@ describe('TxColumnChart', () => {
     expect(el('#main').classList).not.toContain('tx-column-chart--active');
     expect(el('#main .tx-chart-hover-band')).toBeNull();
     const bar = all('#main .tx-column-chart__bar').find((item) => item.getAttribute('data-index') === '1') as HTMLElement;
-    const center = Number(bar.getAttribute('x')) + Number(bar.getAttribute('width')) / 2;
-    plot().dispatchEvent(new MouseEvent('pointermove', { clientX: center, clientY: Number(bar.getAttribute('y')) - 30, bubbles: true }));
+    const center = barData(fixture, bar).x + barData(fixture, bar).width / 2;
+    plot().dispatchEvent(new MouseEvent('pointermove', { clientX: center, clientY: barData(fixture, bar).y - 30, bubbles: true }));
     await fixture.whenStable();
     expect(el('#main').classList).toContain('tx-column-chart--active');
     const band = el('#main .tx-chart-hover-band');
     expect(band.classList).toContain('tx-chart-hover-band--on');
-    expect(Number(band.getAttribute('x'))).toBeLessThan(Number(bar.getAttribute('x')));
-    expect(Number(band.getAttribute('x')) + Number(band.getAttribute('width'))).toBeGreaterThan(Number(bar.getAttribute('x')) + Number(bar.getAttribute('width')));
+    expect(Number(band.getAttribute('x'))).toBeLessThan(barData(fixture, bar).x);
+    expect(Number(band.getAttribute('x')) + Number(band.getAttribute('width'))).toBeGreaterThan(barData(fixture, bar).x + barData(fixture, bar).width);
     plot().dispatchEvent(new MouseEvent('pointerleave'));
     await fixture.whenStable();
     expect(el('#main .tx-chart-hover-band').classList).not.toContain('tx-chart-hover-band--on');
@@ -233,8 +243,8 @@ describe('TxColumnChart', () => {
 
   it('reports the clicked bar', async () => {
     const bar = all('#main .tx-column-chart__bar').find((item) => item.getAttribute('data-index') === '1') as SVGRectElement & HTMLElement;
-    const x = Number(bar.getAttribute('x')) + 2;
-    const y = Number(bar.getAttribute('y')) + 2;
+    const x = barData(fixture, bar).x + 2;
+    const y = barData(fixture, bar).y + 2;
     plot().dispatchEvent(new MouseEvent('click', { clientX: x, clientY: y, bubbles: true }));
     expect(fixture.componentInstance.clicks[0]).toMatchObject({ seriesIndex: 0, dataPointIndex: 1, value: 5, category: 'Tue' });
   });
@@ -445,7 +455,7 @@ describe('TxColumnChart options', () => {
     expect(tooltip?.rows.map((row) => row.label)).toEqual(['Closed']);
     expect(tooltip?.total).toBeUndefined();
     const active = bar(1, 0);
-    expect(tooltip?.y).toBe(Number(active.getAttribute('y')));
+    expect(tooltip?.y).toBe(barData(fixture, active).y);
   });
 
   it('picks the nearest grouped bar off the bars and the last stacked one above a stack', async () => {
@@ -454,14 +464,14 @@ describe('TxColumnChart options', () => {
     const left = bar(0, 0);
     const right = bar(1, 0);
     const top = chart().layout().plot.top + 1;
-    await pointer('pointermove', Number(right.getAttribute('x')) + Number(right.getAttribute('width')) - 1, top);
+    await pointer('pointermove', barData(fixture, right).x + barData(fixture, right).width - 1, top);
     expect(chart().active()).toMatchObject({ index: 0, series: 1 });
-    await pointer('pointermove', Number(left.getAttribute('x')) + 1, top);
+    await pointer('pointermove', barData(fixture, left).x + 1, top);
     expect(chart().active()).toMatchObject({ index: 0, series: 0 });
     host.horizontal.set(true);
     await fixture.whenStable();
     const lower = bar(1, 1);
-    await pointer('click', Number(lower.getAttribute('x')) + Number(lower.getAttribute('width')) + 20, Number(lower.getAttribute('y')) + 1);
+    await pointer('click', barData(fixture, lower).x + barData(fixture, lower).width + 20, barData(fixture, lower).y + 1);
     expect(host.clicks.at(-1)).toMatchObject({ seriesIndex: 1, dataPointIndex: 1, value: 3, category: 'Tue' });
     host.horizontal.set(false);
     host.stacked.set(true);
@@ -522,11 +532,56 @@ describe('TxColumnChart options', () => {
   });
 
   it('reads the bar geometry from the tokens', async () => {
-    const before = Number(bar(0, 0).getAttribute('width'));
+    const before = barData(fixture, bar(0, 0)).width;
     host.dt.set({ bar: { width: '0.28', horizontalWidth: '0.3', groupGap: '6' } });
     await fixture.whenStable();
-    expect(chart().geometry()).toEqual({ width: 0.28, horizontalWidth: 0.3, gap: 6 });
-    expect(Number(bar(0, 0).getAttribute('width'))).toBeCloseTo(before / 2, 5);
+    expect(chart().geometry()).toEqual({ width: 0.28, horizontalWidth: 0.3, gap: 6, radius: 5 });
+    expect(barData(fixture, bar(0, 0)).width).toBeCloseTo(before / 2, 5);
+  });
+});
+
+@Component({
+  imports: [TxColumnChart],
+  template: `<tx-column-chart [series]="series" [categories]="['A', 'B']" [stacked]="stacked()" [dt]="dt()" [unstyled]="unstyled()" [showLegend]="false" [toolbar]="false" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class ShapeHost {
+  readonly series: TxChartSeries[] = [{ name: 'Visits', data: [4, 6] }];
+  readonly stacked = signal(false);
+  readonly dt = signal<TectraDeepPartial<TectraChartTokens> | undefined>(undefined);
+  readonly unstyled = signal<boolean | undefined>(undefined);
+}
+
+describe('TxColumnChart bar shape', () => {
+  let fixture: ComponentFixture<ShapeHost>;
+  const bars = () => Array.from(fixture.nativeElement.querySelectorAll('.tx-column-chart__bar')) as SVGPathElement[];
+  const arcs = (path: SVGPathElement) => (path.getAttribute('d')?.match(/A(\d+(?:\.\d+)?),/g) ?? []).map((arc) => Number(arc.slice(1, -1)));
+
+  beforeEach(async () => {
+    fixture = TestBed.createComponent(ShapeHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+  });
+
+  it('draws each bar as one path with the rounded end, so the fill and the outline match', async () => {
+    expect(bars().map((bar) => bar.tagName.toLowerCase())).toEqual(['path', 'path']);
+    for (const bar of bars()) {
+      expect(bar.getAttribute('d')).toBe(barData(fixture, bar).path);
+      expect(arcs(bar)).toEqual([5, 5]);
+      expect(bar.getAttribute('x')).toBeNull();
+    }
+    fixture.componentInstance.stacked.set(true);
+    await fixture.whenStable();
+    expect(bars().every((bar) => arcs(bar).length === 2)).toBe(true);
+  });
+
+  it('takes the radius from dt and draws square bars when unstyled', async () => {
+    fixture.componentInstance.dt.set({ bar: { radius: '3px' } });
+    await fixture.whenStable();
+    expect(arcs(bars()[0])).toEqual([3, 3]);
+    fixture.componentInstance.unstyled.set(true);
+    await fixture.whenStable();
+    expect(bars().every((bar) => !bar.getAttribute('d')?.includes('A'))).toBe(true);
   });
 });
 

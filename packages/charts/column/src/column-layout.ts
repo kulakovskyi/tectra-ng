@@ -1,4 +1,4 @@
-import { TxBandScale, TxContinuousScale, TxStackedValue, seriesColor, textWidth } from '@tectra-ng/charts/core';
+import { TxBandScale, TxContinuousScale, TxStackedValue, barPath, seriesColor, textWidth } from '@tectra-ng/charts/core';
 import { TxColumnChartBar } from './column-chart.types';
 
 /** Everything `columnBars` needs to lay the bars out: scales, series values and label settings. */
@@ -27,6 +27,8 @@ export interface TxColumnLayoutInput {
   labels: ((value: number, series: number, index: number) => string) | null;
   /** Font size of data labels in px, used to check whether they fit. */
   labelFontSize: number;
+  /** Corner radius in px of the outer end of a bar (0 by default); it shrinks to fit a thin or short bar. */
+  barRadius?: number;
 }
 
 /** Lays out the bars of a grouped or stacked column chart, with their data labels. */
@@ -74,6 +76,7 @@ export function columnBars(input: TxColumnLayoutInput): TxColumnChartBar[] {
         series: seriesIndex,
         index,
         ...rect,
+        path: barPath(rect, end, input.barRadius),
         color: seriesColor(input.colors[seriesIndex], seriesIndex),
         end,
         dir: horizontal ? (positive ? 'right' : 'left') : positive ? 'up' : 'down',

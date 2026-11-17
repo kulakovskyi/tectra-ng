@@ -5,3 +5,4 @@ export * from './src/tectra-config.interface';
 export * from './src/tectra-config.token';
 export * from './src/theme.service';
 export * from './src/locale-registry';
+export * from './src/locale-storage';

@@ -2,7 +2,7 @@
 category: Data
 tokens: button, splitButton
 import: TxExport, TxExportCsv, TxExportExcel, TxExportWord, TxExportPdf, TxExportButton
-examples: basic, formats, menu, columns, excel, documents, server, events, defaults, pass-through
+examples: basic, formats, menu, columns, excel, documents, rich-text, server, events, defaults, pass-through
 ---
 # Export
 

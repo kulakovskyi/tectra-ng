@@ -7,7 +7,7 @@ A vertical menu of collapsible sections for app navigation. Two looks: `panel` (
 <tx-panel-menu variant="sidebar" ariaLabel="Main" [model]="navigation" [(expandedKeys)]="open" />
 ```
 
-Items are `TxPanelMenuItem` — the kit menu item (`label`, `icon`, `routerLink`, `queryParams`, `fragment`, `url`, `target`, `command`, `disabled`, `visible`, `separator`, `badge`, `title`, `items`, `id`) plus `expanded` (open at the start), `active` (marks the current item yourself — for items that run a `command`; without it the current item comes from the route) and `routerLinkActiveOptions` (`{ exact: true }` or router match options; a subset match by default).
+Items are `TxPanelMenuItem` — the kit menu item (`label`, `icon`, `routerLink`, `queryParams`, `fragment`, `url`, `target`, `command`, `disabled`, `visible`, `separator`, `badge`, `title`, `items`, `id`) plus `expanded` (open at the start), `active` (marks the current item yourself — for items that run a `command`; without it the current item comes from the route), `routerLinkActiveOptions` (`{ exact: true }` or router match options; a subset match by default) and `routerLinkActiveExclude` (router links whose pages do not make the item active — `['/projects/owners']` on a `/projects` item next to an own "Owners" item). `badge` also takes a signal, so a counter updates in place. Only links are highlighted: an item with nested items does not navigate, so on the page of its own `routerLink` it just opens; in `sidebar` a section with an empty `label` gets no title.
 
 ## Inputs
 | Name | Description |
@@ -19,6 +19,7 @@ Items are `TxPanelMenuItem` — the kit menu item (`label`, `icon`, `routerLink`
 | expandedKeys | Two-way: the open items, `{ [key]: boolean }`; a key is the item `id` or its index path (`0-1-2`) |
 | badgeMax | `sidebar`: numbers above it show as `99+` (zero and less are hidden) |
 | ariaLabel | Makes the menu a `navigation` landmark with this name |
+| translate | Translate function: item labels, section titles and item titles are keys passed through it; a function that reads signals updates the menu when they change |
 | dt | Design tokens of this instance (`panelMenu`) |
 | pt | Classes and styles of the parts: `root`, `panel`, `header`, `section`, `tree`, `item`, `icon`, `label`, `badge`, `lock`, `submenuIcon`, `separator` |
 | ptOptions | How `pt` merges with the global pass-through |
@@ -33,7 +34,7 @@ Items are `TxPanelMenuItem` — the kit menu item (`label`, `icon`, `routerLink`
 ## Slots
 | Name | Description |
 |---|---|
-| txPanelMenuItem | `<ng-template txPanelMenuItem let-item let-level="level" let-active="active" let-expanded="expanded" let-hasSubmenu="hasSubmenu">` — content of every header and item |
+| txPanelMenuItem | `<ng-template txPanelMenuItem let-item let-level="level" let-active="active" let-expanded="expanded" let-hasSubmenu="hasSubmenu" let-label="label">` — content of every header and item; `label` is the translated label |
 
 ## Keyboard
 | Key | Action |

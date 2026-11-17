@@ -1,6 +1,6 @@
 ---
 category: Form
-examples: password, control, options, service
+examples: password, control, icon-button, options, service
 ---
 # PasswordGenerator
 

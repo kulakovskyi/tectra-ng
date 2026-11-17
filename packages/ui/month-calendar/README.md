@@ -15,9 +15,10 @@ A month grid that draws events as continuous bars across days, with day markers,
 | selectedDate | Highlighted day: a `Date` or `'yyyy-MM-dd'`; it gets the keyboard focus |
 | weekStartsOn | First day of the week: 0 Sunday … 6 Saturday; locale default |
 | maxLanes | Bar rows per week; the rest goes to the `+N` link of the day |
-| labels | Own texts `{ more, today, region }`: `more` with a `{count}` placeholder, `today` added to the name of today, `region` the name of the grid; translated by default |
+| labels | Own texts `{ more, today, region }`: `more` with a `{count}` placeholder, `today` added to the name of today, `region` the name of the grid; a missing, empty or `null` text stays translated |
 | locale | BCP 47 locale for weekday names and day names; the kit locale by default |
 | today | The day treated as today (the day of creation by default); pass it from a clock if the page stays open over midnight |
+| eventTemplate | Content of a bar as a `TemplateRef` — for a component that wraps the calendar and gets the template from its own content; it wins over a `txMonthCalendarEvent` template inside the calendar |
 | dt | Design tokens of this instance (`monthCalendar`) |
 | pt | Classes and styles of the parts: `root`, `grid`, `head`, `weekday`, `week`, `cell`, `day`, `number`, `marker`, `event`, `more` |
 | ptOptions | How `pt` merges with the global pass-through |

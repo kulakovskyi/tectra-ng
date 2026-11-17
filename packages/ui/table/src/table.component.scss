@@ -159,7 +159,7 @@
   position: absolute;
   inset-block: 0;
   inset-inline-start: -2px;
-  width: 14px;
+  width: var(--tx-table-column-resizer-hit-width);
 }
 
 .tx-table__resizer-line {

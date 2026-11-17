@@ -1,1 +1,1 @@
-Own texts per error key through `messages` — a string with `{param}` from the error object, or a function. A validator can also return `{ key: { message } }`. App-wide texts go to `provideTectra({ validationMessages })`.
+Own texts per error key through `messages` — a string with `{param}` from the error object, or a function. A validator can also return `{ key: { message } }`. The `'*'` entry is the text for any other key (here `spaces`). App-wide texts go to `provideTectra({ validationMessages })`.

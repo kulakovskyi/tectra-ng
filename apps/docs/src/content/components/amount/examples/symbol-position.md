@@ -1,0 +1,1 @@
+`symbolPosition` puts the currency `before` or `after` the number in any locale; `symbols` writes own texts for codes, known or not. Set both app-wide with `provideTxAmount({ locale, symbolPosition, symbols })` — its `locale` formats numbers apart from the language of the interface.

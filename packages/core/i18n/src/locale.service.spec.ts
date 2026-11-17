@@ -82,4 +82,41 @@ describe('TxLocaleService', () => {
     await service.setLocale(TX_LOCALE_UA);
     expect(service.locale()).toBe(TX_LOCALE_UA);
   });
+
+  describe('with localeStorageKey', () => {
+    const key = 'tx-locale-service-spec';
+
+    afterEach(() => localStorage.removeItem(key));
+
+    it('restores the remembered locale before the first render', async () => {
+      localStorage.setItem(key, 'ua');
+      TestBed.configureTestingModule({ providers: [provideTectra({ preset: Tectra, localeStorageKey: key })] });
+      await TestBed.inject(ApplicationInitStatus).donePromise;
+      expect(TestBed.inject(TxLocaleService).locale().code).toBe('ua');
+    });
+
+    it('restores English over the configured locale', () => {
+      localStorage.setItem(key, 'us');
+      TestBed.configureTestingModule({ providers: [provideTectra({ preset: Tectra, locale: TX_LOCALE_UA, localeStorageKey: key })] });
+      expect(TestBed.inject(TxLocaleService).locale()).toBe(TX_LOCALE_US);
+    });
+
+    it('keeps the configured locale when the remembered code is unknown', () => {
+      localStorage.setItem(key, 'xx');
+      TestBed.configureTestingModule({ providers: [provideTectra({ preset: Tectra, locale: TX_LOCALE_UA, localeStorageKey: key })] });
+      expect(TestBed.inject(TxLocaleService).locale()).toBe(TX_LOCALE_UA);
+    });
+
+    it('remembers the locale applied by setLocale, the last one when two overlap', async () => {
+      TestBed.configureTestingModule({ providers: [provideTectra({ preset: Tectra, localeStorageKey: key })] });
+      const service = TestBed.inject(TxLocaleService);
+      expect(localStorage.getItem(key)).toBeNull();
+      await service.setLocale('ua');
+      expect(localStorage.getItem(key)).toBe('ua');
+      const loading = service.setLocale('xx');
+      await service.setLocale('us');
+      await loading;
+      expect(localStorage.getItem(key)).toBe('us');
+    });
+  });
 });

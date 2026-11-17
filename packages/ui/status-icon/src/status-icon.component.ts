@@ -1,11 +1,12 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
 import { injectTxIcons, provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraStatusIconTokens, toStyleObject } from '@tectra-ng/themes';
-import { TxStatusIconPart, TxStatusIconSeverity, TxStatusIconSize } from './status-icon.types';
+import { TxTooltip } from '@tectra-ng/ui/tooltip';
+import { TxStatusIconPart, TxStatusIconSeverity, TxStatusIconSize, TxStatusIconTooltip } from './status-icon.types';
 import { STATUS_ICON_ICON_DEFAULTS } from './status-icon.icons';
 import { STATUS_ICON_THEME } from './status-icon.theme';
 
@@ -28,6 +29,7 @@ const SEVERITY_ICONS: Record<TxStatusIconSeverity, TxIconName> = {
     }
   `,
   styleUrl: './status-icon.component.scss',
+  hostDirectives: [{ directive: TxTooltip, inputs: ['tooltipPlacement'] }],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'tx-status-icon',
@@ -39,7 +41,7 @@ const SEVERITY_ICONS: Record<TxStatusIconSeverity, TxIconName> = {
     '[attr.role]': 'resolvedLabel() ? "img" : null',
     '[attr.aria-label]': 'resolvedLabel() || null',
     '[attr.aria-hidden]': 'resolvedLabel() ? null : "true"',
-    '[attr.title]': 'resolvedLabel() || null',
+    '[attr.title]': 'showsTooltip() || tooltip() === "none" ? null : resolvedLabel() || null',
   },
   viewProviders: [provideTxIconDefaults(STATUS_ICON_ICON_DEFAULTS)],
 })
@@ -53,6 +55,7 @@ export class TxStatusIcon {
   readonly icon = input<TxIconName | (string & {}) | undefined>(undefined);
   readonly label = input<string | undefined>(undefined);
   readonly toolTip = input<string | undefined>(undefined);
+  readonly tooltip = input<TxStatusIconTooltip | undefined, unknown>(undefined, { transform: statusIconTooltip });
   readonly size = input<TxStatusIconSize>('medium');
   readonly dt = input<TectraDeepPartial<TectraStatusIconTokens> | undefined>(undefined);
   readonly pt = input<TxPassThrough<TxStatusIconPart, TxStatusIcon> | undefined>(undefined);
@@ -78,5 +81,14 @@ export class TxStatusIcon {
     }
     return this.status() ? this.translations().yes : this.translations().no;
   });
+  readonly showsTooltip = computed(() => this.tooltip() === true && !!this.resolvedLabel());
   readonly hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-status-icon'), ...this.passThrough().root?.style }));
+
+  constructor() {
+    inject(TxTooltip, { self: true }).useContent(computed(() => (this.showsTooltip() ? this.resolvedLabel() : undefined)));
+  }
+}
+
+function statusIconTooltip(value: unknown): TxStatusIconTooltip | undefined {
+  return value === 'none' ? 'none' : optionalBoolean(value);
 }

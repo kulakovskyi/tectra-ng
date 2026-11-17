@@ -7,6 +7,12 @@ export type TxAmountNotation = 'standard' | 'compact';
 /** How the currency is written: narrow symbol, symbol, ISO code or full name. */
 export type TxAmountCurrencyDisplay = 'narrowSymbol' | 'symbol' | 'code' | 'name';
 
+/** Where the currency goes: `auto` as the locale writes it, `before` or `after` the number. */
+export type TxAmountSymbolPosition = 'auto' | 'before' | 'after';
+
+/** Own currency texts by ISO or custom code, such as `{ USDT: '₮', UAH: 'грн' }`. */
+export type TxAmountSymbols = Readonly<Record<string, string>>;
+
 /** Sign of an amount: `positive`, `negative` or `zero`. */
 export type TxAmountSign = 'positive' | 'negative' | 'zero';
 
@@ -35,4 +41,18 @@ export interface TxAmountFormatOptions {
   currencyDisplay?: TxAmountCurrencyDisplay;
   /** Writes `+` before positive amounts (default off). */
   showSign?: boolean;
+  /** Where the currency goes (default `auto`: as the locale writes it). */
+  symbolPosition?: TxAmountSymbolPosition;
+  /** Own currency texts by code; a code found here is written with its own text instead of the `Intl` one. */
+  symbols?: TxAmountSymbols;
+}
+
+/** App-wide defaults of every `tx-amount`; set them with `provideTxAmount`. */
+export interface TxAmountOptions {
+  /** `Intl` locale of the numbers, such as `en-US`, apart from the language of the interface; the tectra locale when not set. */
+  locale?: string;
+  /** Where the currency goes (default `auto`). */
+  symbolPosition?: TxAmountSymbolPosition;
+  /** Own currency texts by code, such as `{ USDT: 'USDT', BTC: '₿' }`. */
+  symbols?: TxAmountSymbols;
 }

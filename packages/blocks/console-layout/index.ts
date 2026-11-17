@@ -1,4 +1,5 @@
 export * from './src/console-layout.types';
+export * from './src/console-layout.context';
 export * from './src/console-rail-match';
 export * from './src/console-document.service';
 export * from './src/console-rail.component';

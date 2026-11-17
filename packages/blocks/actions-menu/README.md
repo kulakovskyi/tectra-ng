@@ -13,7 +13,7 @@ readonly actions: TxActionsMenuItem[] = [
 ];
 ```
 
-Without items nothing is rendered. The button is named by `ariaLabel`, then `tooltip`, then the translated "More actions".
+Without items nothing is rendered. The button is named by `ariaLabel`, then `tooltip`, then the translated "More actions". `open()`, `toggle()` and `close()` drive the menu from code, e.g. from a shortcut or from another button.
 
 ## Inputs
 | Name | Description |
@@ -31,6 +31,14 @@ Without items nothing is rendered. The button is named by `ariaLabel`, then `too
 | Name | Description |
 |---|---|
 | itemSelect | The id of the chosen action, emitted once the menu has closed |
+
+## Methods
+| Name | Description |
+|---|---|
+| open(target?) | Opens the menu at an element or at `event.currentTarget` — a row, a custom button, a context-menu click — or at its own button |
+| toggle(target?) | Closes the menu when it is open at that target, otherwise opens it there |
+| close() | Closes the menu |
+| isOpen | Signal: whether the menu is open |
 
 ## Keyboard
 | Key | Action |

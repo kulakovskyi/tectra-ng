@@ -3,3 +3,4 @@ export * from './src/format-message';
 export * from './src/format-bytes';
 export * from './src/locale.service';
 export * from './src/translations';
+export * from './src/locale-sync';

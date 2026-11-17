@@ -59,7 +59,7 @@
   .tx-datepicker__clear {
     @include action.button;
 
-    right: calc(var(--_icon-room) + var(--_button-room, 0px) + 8px);
+    right: calc(var(--_icon-room) + var(--_button-room, 0px) + var(--tx-space-2));
   }
 
   .tx-datepicker__input-icon {
@@ -127,7 +127,7 @@
 }
 
 :host([data-styled]:has(.tx-datepicker__clear)) {
-  --_clear-room: 28px;
+  --_clear-room: var(--tx-form-field-action-room);
 }
 
 :host([data-styled].tx-datepicker--button) {

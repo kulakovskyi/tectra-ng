@@ -9,6 +9,8 @@ A titled section of a page: an icon, a title and a subtitle, actions in the head
 </tx-panel>
 ```
 
+Give the panel a height (`height: 100%` in a grid cell, a flex item that grows) and the body grows with it, so content with `height: 100%` fills the panel. A panel that is not `toggleable` does not clip its content: shadows and negative margins stay visible. A `toggleable` panel clips it so the collapse animation stays inside the box.
+
 ## Inputs
 | Name | Description |
 |---|---|
@@ -16,7 +18,7 @@ A titled section of a page: an icon, a title and a subtitle, actions in the head
 | subtitle | Muted line under the title |
 | icon | Icon in a tinted square before the title |
 | variant | `card`, `inset` or `plain` |
-| align | Vertical alignment of the title and the actions: `start`, `center`, `end` |
+| align | Vertical alignment of the title and the actions: `start`, `center`, `end`; with `end` the actions also line up at their bottom edge, e.g. a button next to a labelled field |
 | headingLevel | Heading level of the title, 2 by default |
 | toggleable | Adds a button that collapses the content |
 | collapsed | Two-way: the content is collapsed |

@@ -1,12 +1,16 @@
 import { DOCUMENT, Injectable, InjectionToken, Provider, inject } from '@angular/core';
 import { TxLocaleService } from '@tectra-ng/core/i18n';
-import { TxExportFont, TxExportFormat, TxExportOptions, TxExportRequest, TxExportResult, TxExportTable } from './export.types';
+import { TxExportFormat, TxExportHtmlPdfOptions, TxExportOptions, TxExportRequest, TxExportResult, TxExportTable } from './export.types';
 import { TxExportTextContext, buildExportTable, downloadBlob, withExtension } from './export.utils';
+import { loadDefaultExportFont } from './writers/default-font';
 import { writeDocx } from './writers/docx';
+import { writeHtmlPdf } from './writers/html-pdf';
 import { writePdf } from './writers/pdf';
 import { printHtml } from './writers/print';
 import { htmlTable, printPageCss, writeCsv, writeHtml, writeJson, writeMarkdown, writeTsv } from './writers/text';
 import { writeXlsx } from './writers/xlsx';
+
+export { loadDefaultExportFont } from './writers/default-font';
 
 /** Default export options for the app or a subtree; set it with `provideTxExport`. */
 export const TX_EXPORT_OPTIONS = new InjectionToken<TxExportOptions>('TX_EXPORT_OPTIONS', { providedIn: 'root', factory: () => ({}) });
@@ -46,13 +50,6 @@ export function mergeExportOptions(...layers: (TxExportOptions | undefined)[]): 
     }
   }
   return merged as TxExportOptions;
-}
-
-/**
- * Loads the Onest font from `@tectra-ng/ui/export-font` for PDF files; it is fetched on the first PDF export.
- */
-export function loadDefaultExportFont(): Promise<TxExportFont> {
-  return import('@tectra-ng/ui/export-font').then((module) => module.TX_EXPORT_FONT);
 }
 
 /** Exports rows from code to a file, the clipboard or the printer; the export buttons use it. */
@@ -105,6 +102,24 @@ export class TxExportService {
       case 'markdown':
         return { filename, blob: new Blob([writeMarkdown(table, { title: options.title, ...options.markdown }, context)], { type: 'text/markdown;charset=utf-8' }) };
     }
+  }
+
+  /**
+   * Turns rich HTML — a string, or an element whose content is read — into a paged PDF and saves it; resolves to the
+   * file name. Page and text options start from the `pdf` options and the title of `provideTxExport`.
+   */
+  async exportHtmlPdf(source: string | Node, options: TxExportHtmlPdfOptions & { filename?: string } = {}): Promise<string> {
+    const { blob, filename } = await this.htmlPdfFile(source, options);
+    downloadBlob(this.document, blob, filename);
+    return filename;
+  }
+
+  /** Builds the PDF of rich HTML like `exportHtmlPdf` without saving it. */
+  async htmlPdfFile(source: string | Node, options: TxExportHtmlPdfOptions & { filename?: string } = {}): Promise<{ blob: Blob; filename: string }> {
+    const { filename, ...pdf } = options;
+    const defaults: TxExportHtmlPdfOptions = { title: this.defaults.title, ...this.defaults.pdf };
+    const name = withExtension(filename || this.defaults.filename || 'ExportedData', 'pdf');
+    return { filename: name, blob: await writeHtmlPdf(source, { ...defaults, ...pdf }) };
   }
 
   /** Gives the locale and the yes and no texts used to write cell values. */

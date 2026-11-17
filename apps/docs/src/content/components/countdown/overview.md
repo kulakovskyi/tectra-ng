@@ -1,7 +1,7 @@
 ---
 category: Misc
 tokens: countdown
-examples: basic, units, target, ending-soon, pause, template, remaining-time, design-tokens, pass-through
+examples: basic, units, target, ending-soon, pause, restart, template, remaining-time, design-tokens, pass-through
 ---
 # Countdown
 

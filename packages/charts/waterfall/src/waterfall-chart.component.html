@@ -41,7 +41,7 @@
   }
   <svg:g class="tx-waterfall-chart__bars">
     @for (bar of bars(); track bar.key) {
-      <svg:rect
+      <svg:path
         class="tx-waterfall-chart__bar"
         [class.tx-waterfall-chart__bar--active]="active() === bar.index"
         [class]="passThrough().bar?.class"
@@ -49,10 +49,7 @@
         [attr.data-kind]="bar.kind"
         [attr.data-index]="bar.index"
         [attr.data-dir]="bar.above ? 'up' : 'down'"
-        [attr.x]="bar.x"
-        [attr.y]="bar.y"
-        [attr.width]="bar.width"
-        [attr.height]="bar.height"
+        [attr.d]="bar.path"
         [style.--tx-waterfall-chart-own]="bar.color"
         [style.--tx-waterfall-chart-order]="bar.index"
       />

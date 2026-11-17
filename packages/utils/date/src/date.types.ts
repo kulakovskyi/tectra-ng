@@ -16,6 +16,18 @@ export interface TxDateFormatConfig {
   timezone: string | undefined;
 }
 
+/** Options of `formatTxDate`; every field is optional. */
+export interface TxDateFormatOptions {
+  /** Locale of the formatted date (default `en-US`). */
+  locale?: string;
+  /** Time zone: an offset (`'+0200'`), `'UTC'` or an IANA name; the local one when not set. */
+  timezone?: string;
+  /** Text returned for an empty or invalid date (default `-`). */
+  empty?: string;
+  /** Locale of an Angular pattern when Angular has no locale data for `locale` (default `en-US`); `null` returns the empty text instead. */
+  fallbackLocale?: string | null;
+}
+
 /** A date range as two ISO strings. */
 export interface TxIsoRange {
   /** First day or moment of the range. */

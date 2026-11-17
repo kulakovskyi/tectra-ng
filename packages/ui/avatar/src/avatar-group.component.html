@@ -34,7 +34,7 @@
         role="list"
         [attr.data-styled]="!isUnstyled() || null"
         [class]="passThrough().list?.class"
-        [style]="passThrough().list?.style"
+        [style]="listStyle()"
       >
         @for (avatar of hiddenAvatars(); track avatar) {
           <div
@@ -51,6 +51,7 @@
                 [icon]="avatar.icon()"
                 [tone]="avatar.tone()"
                 [shape]="avatar.shape()"
+                [dt]="avatar.dt()"
                 [tooltip]="false"
                 [unstyled]="isUnstyled()"
               />

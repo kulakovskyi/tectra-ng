@@ -31,6 +31,16 @@ class Host {
 })
 class BrandHost {}
 
+@Component({
+  imports: [TxPublicHeader],
+  template: `<tx-public-header brand="Northwind" (languageChange)="languages.push($event)" (modeChange)="modes.push($event)" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class PreferencesHost {
+  readonly languages: string[] = [];
+  readonly modes: string[] = [];
+}
+
 describe('TxPublicHeader', () => {
   beforeEach(() => TestBed.configureTestingModule({ providers: [provideRouter([])] }));
 
@@ -48,6 +58,18 @@ describe('TxPublicHeader', () => {
     fixture.componentInstance.preferences.set(false);
     await fixture.whenStable();
     expect(root.querySelector('tx-topbar-preferences')).toBeNull();
+  });
+
+  it('reports the language and the theme mode chosen in the preferences', async () => {
+    const fixture = TestBed.createComponent(PreferencesHost);
+    await fixture.whenStable();
+    const root = fixture.nativeElement as HTMLElement;
+    root.querySelectorAll<HTMLButtonElement>('tx-switch-language [role="radio"]')[1].click();
+    root.querySelector<HTMLButtonElement>('tx-switch-theme button')?.click();
+    await fixture.whenStable();
+    expect(fixture.componentInstance.languages).toEqual(['ua']);
+    expect(fixture.componentInstance.modes).toEqual(['dark']);
+    document.documentElement.removeAttribute('data-tx-theme');
   });
 
   it('opens the menu with the burger and closes it on a link or Escape', async () => {

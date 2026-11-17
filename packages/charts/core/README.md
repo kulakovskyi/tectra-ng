@@ -36,6 +36,7 @@ import { linearScale, niceDomain, chartNumberFormatter, TxChartSeries } from '@t
 | Function | What it does |
 |---|---|
 | `linePath(points, curve)`, `areaPath(top, bottom, curve)` | SVG paths; `null` points split the path; curves `smooth` (monotone), `straight`, `step` |
+| `barPath(rect, end, radius?)` | SVG path of a bar with the two corners of one `end` (`top`, `bottom`, `left`, `right`) or `all` four rounded, the radius shrunk to fit; `null` keeps it square. The column, combo and waterfall charts draw their bars with it, so a stroke follows the rounded fill |
 | `stackValues(series, 'normal' \| '100%')` | `[from, to]` per value; positive and negative values stack apart |
 | `largestTriangleThreeBuckets(points, threshold)`, `decimateSeries(points, threshold)` | Thin long series and keep their shape |
 | `normalizeSeries(series, categories, xType)` | Turns `TxChartSeries[]` into labels, x values and a value table |

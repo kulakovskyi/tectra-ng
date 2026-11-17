@@ -2,7 +2,7 @@
 category: Data
 tokens: statTiles, statTile
 import: TxStatTiles, TxStatTile
-examples: basic, tones, share, value-modes, highlighted, aside, links, compact, min-width, design-tokens, pass-through
+examples: basic, tones, share, value-modes, highlighted, aside, links, compact, min-width, wrapper, design-tokens, pass-through
 ---
 # Stat tiles
 

@@ -34,7 +34,7 @@ Filtering, sorting and pagination run on `value` unless `lazy` is on — then `l
 | ariaLabel | Name of the table |
 | ariaLabelledBy | Id of the element that names the table |
 | caption | Text of a `<caption>` hidden on screen: names the table for screen readers when there is no `ariaLabel`, or describes it in more words |
-| rowClass | Function `(row, index)` that returns classes for a row |
+| rowClass | Function `(row, index)` that returns classes for a row: a string, an array of names or an object `{ name: boolean }` (as `[class]` takes); added next to the `row` pass-through class |
 | sortMode | `single` (default) or `multiple` — with `multiple`, Ctrl / ⌘ + click adds a column to the sort |
 | sortField | Field the table is sorted by. Two-way: `[(sortField)]` |
 | sortOrder | `asc`, `desc` or `null`. Two-way: `[(sortOrder)]`; a click goes asc → desc → none |

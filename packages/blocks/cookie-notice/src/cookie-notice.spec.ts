@@ -79,6 +79,26 @@ describe('TxCookieNotice on another host', () => {
   });
 });
 
+describe('TxCookieNotice on a subdomain over https', () => {
+  beforeEach(() => TestBed.configureTestingModule({ providers: [provideRouter([])] }));
+
+  it('keeps the choice for the shared domain and marks the cookie secure', async () => {
+    const fixture = TestBed.createComponent(SharedHost);
+    await fixture.whenStable();
+    const writes: string[] = [];
+    const page = {
+      location: { hostname: 'app.example.com', protocol: 'https:' },
+      set cookie(value: string) {
+        writes.push(value);
+      },
+    };
+    const notice = fixture.componentInstance.notice();
+    Object.defineProperty(notice, 'document', { value: page });
+    notice.dismiss();
+    expect(writes).toEqual([expect.stringMatching(/^test-shared=1; max-age=\d+; path=\/; domain=\.example\.com; secure; samesite=lax$/)]);
+  });
+});
+
 describe('TxCookieNotice with no router provided', () => {
   afterEach(() => {
     document.cookie = 'test-notice=; max-age=0; path=/';
@@ -141,5 +161,56 @@ describe('TxCookieNotice autoShow and preview', () => {
     fixture.componentInstance.preview.set(false);
     await fixture.whenStable();
     expect(notice.visible()).toBe(true);
+  });
+});
+
+@Component({
+  imports: [TxCookieNotice],
+  template: `<tx-cookie-notice cookieName="test-empty" href="/privacy" [title]="title()" [text]="''" [linkLabel]="null" acceptLabel="" label="" preview />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class EmptyTextsHost {
+  readonly title = signal<string | null | undefined>('');
+}
+
+describe('TxCookieNotice with empty texts', () => {
+  beforeEach(() => TestBed.configureTestingModule({ providers: [provideRouter([])] }));
+
+  it('shows the translated defaults for an empty string or null', async () => {
+    const fixture = TestBed.createComponent(EmptyTextsHost);
+    await fixture.whenStable();
+    const panel = fixture.nativeElement.querySelector('[role="region"]') as HTMLElement;
+    expect(panel.getAttribute('aria-label')).toBe('Cookie notice');
+    expect(panel.querySelector('.tx-cookie-notice__title')?.textContent?.trim()).toBe('Only essential cookies');
+    expect(panel.querySelector('.tx-cookie-notice__text')?.textContent?.trim()).not.toBe('');
+    expect(panel.querySelector('.tx-cookie-notice__link')?.textContent?.trim()).toBe('Learn more');
+    expect(panel.querySelector('.tx-cookie-notice__accept')?.textContent?.trim()).toBe('Got it');
+
+    fixture.componentInstance.title.set('Cookies');
+    await fixture.whenStable();
+    expect(panel.querySelector('.tx-cookie-notice__title')?.textContent?.trim()).toBe('Cookies');
+  });
+});
+
+@Component({
+  imports: [TxCookieNotice],
+  template: `<tx-cookie-notice cookieName="test-own" href="/privacy" title="Cookies" text="Only what we need." linkLabel="Policy" acceptLabel="Fine" label="Cookie banner" preview unstyled />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class OwnTextsHost {}
+
+describe('TxCookieNotice with own texts', () => {
+  beforeEach(() => TestBed.configureTestingModule({ providers: [provideRouter([])] }));
+
+  it('shows the own texts and drops the styles when unstyled', async () => {
+    const fixture = TestBed.createComponent(OwnTextsHost);
+    await fixture.whenStable();
+    const panel = fixture.nativeElement.querySelector('[role="region"]') as HTMLElement;
+    expect(panel.getAttribute('aria-label')).toBe('Cookie banner');
+    expect(panel.querySelector('.tx-cookie-notice__title')?.textContent?.trim()).toBe('Cookies');
+    expect(panel.querySelector('.tx-cookie-notice__text')?.textContent?.trim()).toBe('Only what we need.');
+    expect(panel.querySelector('.tx-cookie-notice__link')?.textContent?.trim()).toBe('Policy');
+    expect(panel.querySelector('.tx-cookie-notice__accept')?.textContent?.trim()).toBe('Fine');
+    expect(fixture.nativeElement.querySelector('tx-cookie-notice').hasAttribute('data-styled')).toBe(false);
   });
 });

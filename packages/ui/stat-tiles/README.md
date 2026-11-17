@@ -13,7 +13,8 @@ A responsive grid of key numbers — totals, rates, counts — each tile with a 
 | Name | Description |
 |---|---|
 | minWidth | `tx-stat-tiles` — narrowest column before the grid wraps; without it columns stay at least the `floorWidth` token (210px) unless `compact`, an explicit value wins over that floor |
-| compact | `tx-stat-tiles` — tighter gap, padding, icon and value; columns down to `minWidth` |
+| floorWidth | `tx-stat-tiles` — lowest column width that `minWidth` cannot go below, e.g. `15rem` to keep long labels readable while `minWidth` sets the wrap point; not used when `compact` |
+| compact | `tx-stat-tiles`: tighter gap, padding, icon and value; columns down to `minWidth` |
 | ariaLabel | `tx-stat-tiles` — accessible name of the list |
 | ariaLabelledBy | `tx-stat-tiles` — id of the element that names the list |
 | label | `tx-stat-tile` — what the number is; one line, cut with an ellipsis and shown in full as a title, so values of a row stay on one line next to an aside |
@@ -27,6 +28,7 @@ A responsive grid of key numbers — totals, rates, counts — each tile with a 
 | fitValue | `tx-stat-tile` — the value shrinks with the tile width instead of wrapping |
 | accentValue | `tx-stat-tile` — the value in the tone colour |
 | highlighted | `tx-stat-tile` — tinted background and ring in the tone |
+| compact | `tx-stat-tile`: the compact look of this tile; without it the tile follows its grid |
 | link | `tx-stat-tile` — router link of the whole tile |
 | queryParams | `tx-stat-tile` — query params of the router link |
 | href | `tx-stat-tile` — plain URL of the whole tile |
@@ -35,6 +37,20 @@ A responsive grid of key numbers — totals, rates, counts — each tile with a 
 | pt | Classes and styles of the parts: `root` on the grid; `root`, `body`, `head`, `icon`, `main`, `label`, `value`, `unit`, `meta`, `aside`, `bar`, `barFill` on a tile |
 | ptOptions | How `pt` merges with the global pass-through |
 | unstyled | Removes the tectra styles |
+
+## Grid in a wrapper component
+
+A tile reads `compact` from its grid through the `TX_STAT_TILES` token. Tiles projected into a component that wraps `tx-stat-tiles` cannot see the grid, because Angular resolves them where they are written. Add `provideTxStatTilesRelay()` to the wrapper's `providers` — the grid inside it then reaches the projected tiles — or set `compact` on each tile.
+
+```ts
+@Component({
+  selector: 'kpi-row',
+  imports: [TxStatTiles],
+  providers: [provideTxStatTilesRelay()],
+  template: `<tx-stat-tiles compact ariaLabel="Key numbers"><ng-content /></tx-stat-tiles>`,
+})
+export class KpiRow {}
+```
 
 ## Slots
 | Name | Description |

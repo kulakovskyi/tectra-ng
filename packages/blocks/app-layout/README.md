@@ -10,7 +10,7 @@ The shell of a signed-in app: a sidebar menu, a top bar, the page and a footer. 
 </tx-app-layout>
 ```
 
-`model` takes `TxPanelMenuItem` sections, as `tx-panel-menu` with `variant="sidebar"` draws them: a section with a `label` gets a title, items take `icon`, `routerLink`, `badge`, `disabled` (a lock), nested `items` and `active`. Without the sidebar (`[sidebar]="false"`) the top bar shows the logo and the title instead — for pages before the user has a workspace.
+`model` takes `TxPanelMenuItem` sections, as `tx-panel-menu` with `variant="sidebar"` draws them: a section with a `label` gets a title (an empty label draws none), items take `icon`, `routerLink`, `badge` (a value or a signal), `disabled` (a lock), nested `items` and `active`. Without the sidebar (`[sidebar]="false"`) the top bar shows the logo and the title instead — for pages before the user has a workspace.
 
 When the page is printed the sidebar, the top bar and the backdrop are left out and the page content takes the full width of the paper.
 
@@ -28,8 +28,9 @@ When the page is printed the sidebar, the top bar and the backdrop are left out 
 | backdropVariant | `spectrum` — primary, purple and cyan tints (default); `accent` — tints of the primary colour only |
 | responsive | What the 1024px breakpoint measures: `viewport` — the window (default), `container` — the layout itself; it also keeps the mobile menu, the mask and the backdrop inside it (a preview, a frame) |
 | menuLabel | Name of the menu, its button and the sidebar; the translated "Menu" by default |
+| translate | Translate function of the menu: item labels, section titles and item titles are keys passed through it (as `translate` of `tx-panel-menu`) |
 | dt | Design tokens of this instance (`appLayout`) |
-| pt | Classes and styles of the parts: `root`, `sidebar`, `brand`, `menu`, `topbar`, `menuButton`, `content`, `mask` |
+| pt | Classes and styles of the parts: `root`, `sidebar`, `brand`, `logo`, `menu`, `topbar`, `menuButton`, `content`, `mask` |
 | ptOptions | How `pt` merges with the global pass-through |
 | unstyled | Removes the tectra styles |
 

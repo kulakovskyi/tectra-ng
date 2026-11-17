@@ -1,7 +1,7 @@
 ---
 category: Form
 tokens: label, floatLabel, iftaLabel
-examples: basic, required, subtle, float, ifta, select
+examples: basic, required, filled, subtle, float, ifta, select
 ---
 # Label
 

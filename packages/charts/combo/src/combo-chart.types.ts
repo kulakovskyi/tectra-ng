@@ -36,6 +36,8 @@ export interface TxComboChartBar {
   width: number;
   /** Height of the bar. */
   height: number;
+  /** SVG path of the bar with its rounded end; the fill and the segment gap outline share this one shape. */
+  path: string;
   /** Color of the bar. */
   color: string;
   /** Side with the rounded end of the bar; `null` for a bar that is not the outermost of a stack. */

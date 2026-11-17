@@ -8,6 +8,13 @@ export const TX_COUNTRY_CODES: readonly string[] = (
   'TV TW TZ UA UG UM US UY UZ VA VC VE VG VI VN VU WF WS XK YE YT ZA ZM ZW'
 ).split(' ');
 
+/**
+ * Two-letter codes that are not countries but have a localized name and a flag: `EU` (European Union) and `UN`
+ * (United Nations). Add them to the country list where they fit: `[...TX_COUNTRY_CODES, ...TX_REGION_CODES]`.
+ */
+export const TX_REGION_CODES: readonly string[] = ['EU', 'UN'];
+
+const FALLBACK_LOCALE = 'en-US';
 const COUNTRY_CODE = /^[A-Z]{2}$/;
 const nameCache = new Map<string, Intl.DisplayNames>();
 
@@ -20,18 +27,27 @@ export function isCountryCode(code: string | null | undefined): boolean {
 
 /**
  * Name of the country in the given locale, such as `Poland` for `PL`; text that is not a country code comes back unchanged.
+ * A locale that `Intl` does not accept falls back to `en-US`.
  */
 export function countryName(code: string, locale: string): string {
   const upper = code.trim().toUpperCase();
   if (!isCountryCode(upper)) {
     return code;
   }
+  return regionNames(locale).of(upper) ?? upper;
+}
+
+function regionNames(locale: string): Intl.DisplayNames {
   let names = nameCache.get(locale);
   if (!names) {
-    names = new Intl.DisplayNames([locale], { type: 'region', fallback: 'code' });
+    try {
+      names = new Intl.DisplayNames([locale], { type: 'region', fallback: 'code' });
+    } catch {
+      names = regionNames(FALLBACK_LOCALE);
+    }
     nameCache.set(locale, names);
   }
-  return names.of(upper) ?? upper;
+  return names;
 }
 
 /** Emoji flag of the country code; an empty string when the code is not valid. */

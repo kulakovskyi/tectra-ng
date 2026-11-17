@@ -1,1 +1,1 @@
-`itemPattern` accepts only matching values — here email addresses.
+`itemPattern` accepts only email addresses, `normalize` lowercases them before the duplicate check, and `maxLengthMode="reject"` refuses long values instead of cutting them. `committed` reports a whole paste at once, each refusal with its `reason`; the list is bound with `[(value)]`.

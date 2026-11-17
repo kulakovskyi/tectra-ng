@@ -122,3 +122,57 @@ describe('TxAnalogClock following the time', () => {
     fixture.destroy();
   });
 });
+
+@Component({
+  imports: [TxAnalogClock],
+  template: `
+    <tx-analog-clock id="kyiv" timezone="Europe/Kyiv" showSeconds />
+    <tx-analog-clock id="utc" timezone="UTC" showSeconds />
+    <tx-analog-clock id="minutes" timezone="UTC" />
+    <tx-analog-clock id="frozen" timezone="UTC" [time]="0" />
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class ManyClocksHost {}
+
+@Component({
+  imports: [TxAnalogClock],
+  template: `<tx-analog-clock timezone="UTC" showSeconds [time]="time" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class FixedHost {
+  readonly time = Date.UTC(2026, 0, 1, 8, 0, 0);
+}
+
+describe('TxAnalogClock on one time source', () => {
+  afterEach(() => vi.useRealTimers());
+
+  it('runs one timer per step for every clock and ticks them together', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] });
+    vi.setSystemTime(new Date(Date.UTC(2026, 0, 1, 10, 0, 58, 300)));
+    const fixture = TestBed.createComponent(ManyClocksHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    const angle = (id: string, hand: string) => (fixture.nativeElement.querySelector(`#${id} .tx-analog-clock__hand--${hand}`) as HTMLElement).style.getPropertyValue('--tx-analog-clock-angle');
+    expect(vi.getTimerCount()).toBe(2);
+    expect([angle('kyiv', 'second'), angle('utc', 'second'), angle('minutes', 'minute')]).toEqual(['348deg', '348deg', '0deg']);
+    vi.advanceTimersByTime(700);
+    await fixture.whenStable();
+    expect([angle('kyiv', 'second'), angle('utc', 'second'), angle('minutes', 'minute')]).toEqual(['354deg', '354deg', '0deg']);
+    vi.advanceTimersByTime(1000);
+    await fixture.whenStable();
+    expect([angle('kyiv', 'second'), angle('utc', 'second'), angle('minutes', 'minute')]).toEqual(['360deg', '360deg', '6deg']);
+    expect(angle('frozen', 'minute')).toBe('0deg');
+    expect(vi.getTimerCount()).toBe(2);
+    fixture.destroy();
+  });
+
+  it('starts no timer for a fixed time', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] });
+    const fixture = TestBed.createComponent(FixedHost);
+    fixture.autoDetectChanges();
+    await fixture.whenStable();
+    expect(vi.getTimerCount()).toBe(0);
+    fixture.destroy();
+  });
+});

@@ -32,6 +32,7 @@ export const TX_LOCALE_US: TxLocaleDefinition = {
     passwordStrong: 'Strong',
     showPassword: 'Show password',
     hidePassword: 'Hide password',
+    generatePassword: 'Generate password',
     otpCell: 'Character {index} of {length}',
     increment: 'Increase',
     decrement: 'Decrease',

@@ -1,0 +1,1 @@
+`txWizardScene` gives your own markup the scene motion of the stage — here a tip card in a product tour: each card slides in from the side it comes from, set by `direction`, with the same `tx-wizard-scene--enter` / `--leave` classes. An empty `nextLabel` keeps the translated "Next".

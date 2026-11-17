@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TxPublicHeader } from '@tectra-ng/blocks/public-header';
 import { TxButton } from '@tectra-ng/ui/button';
@@ -9,7 +9,12 @@ import { TxCard } from '@tectra-ng/ui/card';
   imports: [RouterLink, TxPublicHeader, TxButton, TxCard],
   template: `
     <div class="screen">
-      <tx-public-header brand="Northwind" logo="/favicon.svg">
+      <tx-public-header
+        brand="Northwind"
+        logo="/favicon.svg"
+        (languageChange)="lastChange.set('language ' + $event)"
+        (modeChange)="lastChange.set('theme ' + $event)"
+      >
         <nav txPublicHeaderNav aria-label="Main">
           <a routerLink="." [queryParams]="{ section: 'features' }">Features</a>
           <a routerLink="." [queryParams]="{ section: 'pricing' }">Pricing</a>
@@ -23,6 +28,7 @@ import { TxCard } from '@tectra-ng/ui/card';
       <main class="page">
         <h2>Ship reports your team reads</h2>
         <p>Scroll this frame: the header stays on top and the content shows through its glass.</p>
+        <p>Last preference change: {{ lastChange() }}</p>
         <div class="cards">
           @for (card of cards; track card) {
             <tx-card [title]="card" subtitle="Ready in a minute" />
@@ -62,6 +68,7 @@ import { TxCard } from '@tectra-ng/ui/card';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class PublicHeaderBasicExample {
+  readonly lastChange = signal('none yet');
   readonly cards = [
     'Dashboards',
     'Alerts',

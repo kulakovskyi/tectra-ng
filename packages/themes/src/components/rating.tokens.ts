@@ -15,6 +15,7 @@ export const ratingTokens = {
     focusRingOffset: '3px',
     borderRadius: tokenRef('radius-sm'),
     clearGap: '10px',
+    clearPadding: '2px 6px',
     clearColor: tokenRef('text-muted'),
     clearHoverColor: tokenRef('text-primary'),
     clearFontSize: tokenRef('font-size-sm'),

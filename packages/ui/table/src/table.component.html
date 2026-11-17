@@ -272,7 +272,7 @@
                   cdkDragLockAxis="y"
                   cdkDragPreviewContainer="parent"
                   class="tx-table__row"
-                [class]="[rowClassOf(item) ?? '', passThrough().row?.class ?? '']"
+                [class]="rowClasses(item)"
                 [style]="passThrough().row?.style"
                 [class.tx-table__row--odd]="odd"
                 [class.tx-table__row--selected]="item.selected"

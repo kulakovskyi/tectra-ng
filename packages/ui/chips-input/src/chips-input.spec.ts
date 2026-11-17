@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TxChipsInputItemTemplate } from './chips-input-item.directive';
 import { TxChipsInput } from './chips-input.component';
-import { TxChipsInputEvent } from './chips-input.types';
+import { TxChipsInputCommitEvent, TxChipsInputLengthMode, TxChipsInputNormalizer, TxChipsInputRejectedEvent } from './chips-input.types';
 
 @Component({
   imports: [TxChipsInput, TxChipsInputItemTemplate, ReactiveFormsModule],
@@ -36,7 +36,7 @@ class Host {
   readonly custom = signal(false);
   added: string[] = [];
   removed: string[] = [];
-  rejected: TxChipsInputEvent[] = [];
+  rejected: TxChipsInputRejectedEvent[] = [];
 }
 
 describe('TxChipsInput', () => {
@@ -117,6 +117,7 @@ describe('TxChipsInput', () => {
     expect(host.control.value).toEqual(['averyveryv', 'ok']);
     expect(input().readOnly).toBe(true);
     expect(host.rejected.map((event) => event.value)).toEqual(['B2', 'more']);
+    expect(host.rejected.map((event) => event.reason)).toEqual(['pattern', 'max']);
   });
 
   it('adds on blur, clears and renders own chip content', () => {
@@ -281,5 +282,129 @@ describe('chips input item directive', () => {
   it('narrows its template context', () => {
     expect(TxChipsInputItemTemplate.ngTemplateContextGuard({} as TxChipsInputItemTemplate, { $implicit: 'a', index: 0 })).toBe(true);
     expect(TxChipsInputItemTemplate.ngTemplateContextGuard({} as TxChipsInputItemTemplate, undefined)).toBe(false);
+  });
+});
+
+@Component({
+  imports: [TxChipsInput, ReactiveFormsModule],
+  template: `
+    <tx-chips-input
+      ariaLabel="Keywords"
+      [formControl]="control"
+      [maxLength]="5"
+      [maxLengthMode]="mode()"
+      [normalize]="normalize()"
+      [max]="max()"
+      [itemPattern]="pattern()"
+      (rejected)="rejected.push($event)"
+      (committed)="commits.push($event)"
+    />
+    <tx-chips-input id="model" ariaLabel="Tags" [(value)]="tags" />
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class BatchHost {
+  readonly control = new FormControl<string[] | null>([]);
+  readonly mode = signal<TxChipsInputLengthMode>('truncate');
+  readonly normalize = signal<TxChipsInputNormalizer | undefined>(undefined);
+  readonly max = signal<number | undefined>(undefined);
+  readonly pattern = signal<RegExp | undefined>(undefined);
+  readonly tags = signal<string[] | null>(['a']);
+  rejected: TxChipsInputRejectedEvent[] = [];
+  commits: TxChipsInputCommitEvent[] = [];
+}
+
+describe('TxChipsInput batches, reasons and the value model', () => {
+  let fixture: ComponentFixture<BatchHost>;
+  let host: BatchHost;
+  let changes: (string[] | null)[];
+  const field = (id?: string) => fixture.nativeElement.querySelector(`${id ? `#${id}` : 'tx-chips-input'} .tx-chips-input__input`) as HTMLInputElement;
+  const paste = (text: string) => {
+    const event = new Event('paste', { bubbles: true, cancelable: true });
+    Object.defineProperty(event, 'clipboardData', { value: { getData: () => text } });
+    field().dispatchEvent(event);
+    fixture.detectChanges();
+    return event.defaultPrevented;
+  };
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(BatchHost);
+    host = fixture.componentInstance;
+    fixture.detectChanges();
+    changes = [];
+    host.control.valueChanges.subscribe((value) => changes.push(value));
+  });
+
+  it('cuts long values by default and rejects them with reject', () => {
+    expect(paste('toolongword\none')).toBe(true);
+    expect(host.control.value).toEqual(['toolo', 'one']);
+    host.mode.set('reject');
+    host.control.setValue([]);
+    fixture.detectChanges();
+    expect(paste('toolongword\ntwo')).toBe(true);
+    expect(host.control.value).toEqual(['two']);
+    expect(host.rejected.map(({ value, reason, values }) => ({ value, reason, values }))).toEqual([{ value: 'toolongword', reason: 'length', values: ['two'] }]);
+  });
+
+  it('rejects a single long pasted line with reject and keeps the typed text', () => {
+    host.mode.set('reject');
+    fixture.detectChanges();
+    field().value = 'ab';
+    field().dispatchEvent(new Event('input'));
+    expect(paste('cdef')).toBe(true);
+    expect(field().value).toBe('ab');
+    expect(host.rejected.at(-1)?.reason).toBe('length');
+    expect(host.control.value).toEqual([]);
+    expect(paste('c')).toBe(false);
+    expect(paste('   ')).toBe(false);
+  });
+
+  it('puts a multi-line paste in at the cursor and keeps the typed text', () => {
+    field().value = 'a  z';
+    field().dispatchEvent(new Event('input'));
+    field().setSelectionRange(2, 2);
+    expect(paste('b\nc')).toBe(true);
+    expect(host.control.value).toEqual(['a b', 'c z']);
+    expect(field().value).toBe('');
+    expect(paste('long text\nx')).toBe(true);
+    expect(host.control.value).toEqual(['a b', 'c z', 'long', 'x']);
+  });
+
+  it('reports every reason and one change per paste', () => {
+    host.max.set(3);
+    host.pattern.set(/^[a-z]+$/);
+    fixture.detectChanges();
+    host.control.setValue(['one']);
+    changes = [];
+    paste('one\nTwo2\nthree\nfour\nfive\nsix');
+    expect(host.control.value).toEqual(['one', 'three', 'four']);
+    expect(changes).toEqual([['one', 'three', 'four']]);
+    expect(host.rejected.map((event) => event.reason)).toEqual(['duplicate', 'pattern', 'max', 'max']);
+    expect(host.commits).toHaveLength(1);
+    expect(host.commits[0].added).toEqual(['three', 'four']);
+    expect(host.commits[0].rejected.map((event) => event.value)).toEqual(['one', 'Two2', 'five', 'six']);
+    expect(host.commits[0].values).toEqual(['one', 'three', 'four']);
+  });
+
+  it('normalises before the checks and drops what the normaliser empties', () => {
+    host.normalize.set((value) => (value.startsWith('#') ? value.slice(1).toLowerCase() : value === 'skip' ? null : value.toLowerCase()));
+    fixture.detectChanges();
+    paste('#Tag\ntag\nskip\nNEW');
+    expect(host.control.value).toEqual(['tag', 'new']);
+    expect(host.rejected.map((event) => [event.value, event.reason])).toEqual([['tag', 'duplicate']]);
+    paste('skip\n#');
+    expect(host.commits).toHaveLength(1);
+  });
+
+  it('binds the list both ways with [(value)]', () => {
+    const model = field('model');
+    expect(fixture.nativeElement.querySelectorAll('#model tx-chip')).toHaveLength(1);
+    model.value = 'b,';
+    model.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    expect(host.tags()).toEqual(['a', 'b']);
+    host.tags.set(null);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll('#model tx-chip')).toHaveLength(0);
   });
 });

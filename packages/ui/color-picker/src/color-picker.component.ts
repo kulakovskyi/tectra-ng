@@ -73,6 +73,11 @@ export class TxColorPicker extends TxFormControlBase<TxColorValue> implements Va
   readonly inputId = input<string | undefined>(undefined);
   readonly ariaLabel = input<string | undefined>(undefined);
   readonly ariaLabelledBy = input<string | undefined>(undefined);
+  readonly areaLabel = input<string | undefined>(undefined);
+  readonly hueLabel = input<string | undefined>(undefined);
+  readonly hexLabel = input<string | undefined>(undefined);
+  readonly clearLabel = input<string | undefined>(undefined);
+  readonly clearText = input<string | undefined>(undefined);
   readonly size = input<TxColorPickerSize>('medium');
   readonly invalid = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
   readonly readonly = input<boolean, unknown>(false, { transform: booleanAttribute });
@@ -141,6 +146,7 @@ export class TxColorPicker extends TxFormControlBase<TxColorValue> implements Va
     return this.showValue() ? `${name}, ${this.triggerText()}` : name;
   });
   readonly fieldLabel = computed(() => this.ariaLabel() ?? (this.inputId() || this.ariaLabelledBy() || this.inField ? null : this.translations().colorHex));
+  readonly clearName = computed(() => this.clearLabel() ?? (this.clearText() ? null : this.translations().clear));
   readonly editable = computed(() => !this.disabled() && !this.readonly());
   readonly hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-color-picker'), ...this.passThrough().root?.style }));
   readonly panelStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-color-picker'), ...this.passThrough().panel?.style }));

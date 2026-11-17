@@ -29,6 +29,7 @@ import {
   TxChartTooltipData,
   TxChartTooltipTemplate,
   TxChartValueFormat,
+  barPath,
   cartesianLayout,
   chartBandRect,
   chartNumberFormatter,
@@ -36,6 +37,7 @@ import {
   compactValueFormatter,
   initialChartSize,
   injectChartEntrance,
+  parseRatio,
   readTokenNumber,
   stepIndex,
   textWidth,
@@ -51,6 +53,7 @@ import { WATERFALL_ICON_DEFAULTS } from './waterfall.icons';
 import { WATERFALL_THEME } from './waterfall.theme';
 
 const DEFAULT_WIDTH = 0.56;
+const DEFAULT_RADIUS = 5;
 const LABEL_GAP = 4;
 const LABEL_FONT_SIZE = 11;
 
@@ -120,6 +123,8 @@ export class TxWaterfallChart {
   readonly morph = signal(false);
   readonly active = signal<number | null>(null);
   readonly barWidth = signal(DEFAULT_WIDTH);
+  readonly tokenRadius = signal(DEFAULT_RADIUS);
+  readonly barRadius = computed(() => (this.isUnstyled() ? 0 : parseRatio(this.dt()?.bar?.radius, this.tokenRadius())));
 
   private readonly intl = computed(() => this.locale.locale().intl);
   readonly list = computed(() => this.items() ?? []);
@@ -166,19 +171,19 @@ export class TxWaterfallChart {
     const band = layout.category as TxBandScale;
     const width = band.bandwidth * Math.min(1, Math.max(0.05, this.barWidth()));
     const scale = layout.value;
+    const radius = this.barRadius();
     const bars = this.steps().map((step) => {
       const a = scale.map(step.from);
       const b = scale.map(step.to);
       const y = Math.min(a, b);
       const height = Math.max(1, Math.abs(b - a));
       const above = step.kind === 'total' ? step.to >= 0 : step.change >= 0;
+      const rect = { x: band.center(step.index) - width / 2, y, width, height };
       return {
         ...step,
         key: `${step.index}:${step.label}`,
-        x: band.center(step.index) - width / 2,
-        y,
-        width,
-        height,
+        ...rect,
+        path: barPath(rect, 'all', radius),
         text: this.dataLabels() ? this.labelText(step.kind === 'total', step.kind === 'total' ? step.to : step.change, band.step) : null,
         textY: above ? y - LABEL_GAP : y + height + LABEL_GAP,
         above,
@@ -265,6 +270,7 @@ export class TxWaterfallChart {
       this.dt();
       const next = readTokenNumber(this.host.nativeElement, '--tx-chart-bar-width', DEFAULT_WIDTH);
       if (next !== this.barWidth()) this.barWidth.set(next);
+      this.tokenRadius.set(readTokenNumber(this.host.nativeElement, '--tx-chart-bar-radius', DEFAULT_RADIUS));
     });
   }
 

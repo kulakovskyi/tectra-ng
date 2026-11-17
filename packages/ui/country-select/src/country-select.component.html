@@ -15,7 +15,7 @@
     [ariaLabelledBy]="ariaLabelledBy()"
     [size]="size()"
     [variant]="variant()"
-    [invalid]="invalid()"
+    [invalid]="isInvalid()"
     [readonly]="readonly()"
     [dt]="dt()"
     [unstyled]="unstyled()"
@@ -31,7 +31,7 @@
     <ng-template txSelectValue let-selected>
       <span class="tx-country-select__flags" [class.tx-country-select__flags--styled]="!unstyled()">
         @for (item of firstFlags(selected); track item.value) {
-          <tx-country [country]="item.code" [name]="item.label" [showName]="selected.length === 1" [shape]="shape()" />
+          <tx-country [country]="item.flag ? item.code : null" [name]="item.label" [showName]="!item.flag || showsNames(selected)" [shape]="shape()" />
         }
         @if (extraCount(selected); as extra) {
           <span class="tx-country-select__more">+{{ extra }}</span>
@@ -56,7 +56,7 @@
     [ariaLabelledBy]="ariaLabelledBy()"
     [size]="size()"
     [variant]="variant()"
-    [invalid]="invalid()"
+    [invalid]="isInvalid()"
     [readonly]="readonly()"
     [dt]="dt()"
     [unstyled]="unstyled()"
@@ -70,14 +70,14 @@
       <ng-container [ngTemplateOutlet]="option" [ngTemplateOutletContext]="{ $implicit: item }" />
     </ng-template>
     <ng-template txSelectValue let-item>
-      <tx-country [country]="item.code" [name]="item.label" [shape]="shape()" />
+      <tx-country [country]="item.flag ? item.code : null" [name]="item.label" [shape]="shape()" />
     </ng-template>
   </tx-select>
 }
 
 <ng-template #option let-item>
   <span class="tx-country-select__option" [class.tx-country-select__option--styled]="!unstyled()">
-    <tx-country class="tx-country-select__country" [country]="item.code" [name]="item.label" [shape]="shape()" />
+    <tx-country class="tx-country-select__country" [country]="item.flag ? item.code : null" [name]="item.label" [shape]="shape()" />
     @if (item.hint) {
       <span class="tx-country-select__hint">{{ item.hint }}</span>
     }

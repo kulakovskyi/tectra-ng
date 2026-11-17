@@ -1,5 +1,6 @@
 import { PLATFORM_ID, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { TxTimeSource } from '@tectra-ng/core/utils';
 import { TxDateInput } from '@tectra-ng/utils/date';
 import { TxClock } from './clock';
 
@@ -15,6 +16,11 @@ describe('TxClock', () => {
     const start = clock.now();
     vi.advanceTimersByTime(3000);
     expect(clock.now() - start).toBe(3000);
+  });
+
+  it('shares the one time source of the app', () => {
+    expect(TestBed.inject(TxClock).now).toBe(TestBed.inject(TxTimeSource).every('second'));
+    expect(vi.getTimerCount()).toBe(1);
   });
 
   it('does not tick on the server', () => {

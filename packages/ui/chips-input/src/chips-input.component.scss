@@ -18,8 +18,8 @@
 }
 
 .tx-chips-input__input {
-  flex: 1 1 var(--tx-chips-input-input-min-width, 80px);
-  min-width: var(--tx-chips-input-input-min-width, 80px);
+  flex: 1 1 var(--tx-chips-input-input-min-width);
+  min-width: var(--tx-chips-input-input-min-width);
 }
 
 :host(.tx-chips-input--disabled) .tx-chips-input__box {
@@ -77,7 +77,7 @@
     --tx-chip-font-size: var(--tx-chips-input-chip-font-size);
     --tx-chip-padding-x: var(--tx-chips-input-chip-padding-x);
     --tx-chip-border-radius: var(--tx-chips-input-chip-border-radius);
-    --tx-chip-remove-size: 16px;
+    --tx-chip-remove-size: var(--tx-chips-input-chip-remove-size);
 
     margin-block: calc((1lh - var(--tx-chips-input-chip-height)) / 2);
   }
@@ -98,7 +98,7 @@
   .tx-chips-input__clear {
     @include action.button;
 
-    margin-block: calc((1lh - 24px) / 2);
+    margin-block: calc((1lh - var(--tx-form-field-action-size)) / 2);
     margin-inline-start: auto;
   }
 }

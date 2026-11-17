@@ -4,7 +4,7 @@ tokens: commandPalette
 source: packages/blocks/command-palette
 package: @tectra-ng/blocks/command-palette
 import: TxCommandPalette
-examples: basic, server-search, compact, design-tokens
+examples: basic, server-search, compact, menu-options, design-tokens
 ---
 # Command Palette
 

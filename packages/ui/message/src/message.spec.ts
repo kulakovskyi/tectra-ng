@@ -52,7 +52,7 @@ class MessageHost {
     <input txInput id="email" [formControl]="email" />
     <tx-field-hint for="email" [icon]="'info-circle'">We never share it</tx-field-hint>
     <tx-field-error for="email" [control]="email" [successText]="'Looks good'" [messages]="messages()" />
-    <tx-field-error id="code-error" [control]="code" [showImmediately]="true" />
+    <tx-field-error id="code-error" [control]="code" [showImmediately]="true" [messages]="codeMessages()" />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -60,6 +60,7 @@ class FieldHost {
   readonly email = new FormControl('', [Validators.required, Validators.email, Validators.minLength(6)]);
   readonly code = new FormControl('', (control) => (control.value === 'taken' ? { duplicate: { message: 'Already taken' } } : { format: true }));
   readonly messages = signal<Record<string, string | ((error: unknown) => string)> | undefined>(undefined);
+  readonly codeMessages = signal<Record<string, string | ((error: unknown) => string)> | undefined>(undefined);
 }
 
 beforeEach(() => TestBed.configureTestingModule({ providers: [provideTxIcons(TX_ICONS)] }));
@@ -210,6 +211,32 @@ describe('TxFieldHint and TxFieldError', () => {
     fixture.componentInstance.code.setValue('taken');
     await fixture.whenStable();
     expect(errorText('#code-error')).toBe('Already taken');
+  });
+
+  it('takes the own fallback entry for keys without a text, after error.message and built-in texts', async () => {
+    await setup();
+    const host = fixture.componentInstance;
+    host.codeMessages.set({ '*': 'Check the code' });
+    host.messages.set({ '*': 'Something is wrong' });
+    host.email.markAsTouched();
+    await fixture.whenStable();
+    expect(errorText('#code-error')).toBe('Check the code');
+    expect(errorText()).toBe('This field is required');
+    host.codeMessages.set({ '*': (error) => `Rule failed: ${JSON.stringify(error)}` });
+    await fixture.whenStable();
+    expect(errorText('#code-error')).toBe('Rule failed: true');
+    host.code.setValue('taken');
+    await fixture.whenStable();
+    expect(errorText('#code-error')).toBe('Already taken');
+  });
+
+  it('takes the global fallback entry when the field has none', async () => {
+    TestBed.configureTestingModule({ providers: [{ provide: TECTRA_CONFIG, useValue: { preset: Tectra, validationMessages: { '*': 'Not accepted' } } }] });
+    await setup();
+    expect(errorText('#code-error')).toBe('Not accepted');
+    fixture.componentInstance.codeMessages.set({ '*': 'Own fallback' });
+    await fixture.whenStable();
+    expect(errorText('#code-error')).toBe('Own fallback');
   });
 
   it('takes global messages and the current locale', async () => {

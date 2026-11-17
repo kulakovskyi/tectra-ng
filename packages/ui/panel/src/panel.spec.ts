@@ -68,6 +68,24 @@ describe('TxPanel', () => {
     expect(el('#members').getAttribute('data-variant')).toBe('inset');
   });
 
+  it('marks only a toggleable panel, so a fixed one does not clip its content', () => {
+    expect(el('#members').classList).toContain('tx-panel--toggleable');
+    expect(el('#own-icon').classList).not.toContain('tx-panel--toggleable');
+    expect(el('#own-icon').classList).not.toContain('tx-panel--collapsed');
+  });
+
+  it('writes the spacing, line height and icon scale tokens of an instance', async () => {
+    const panel = TestBed.createComponent(TxPanel);
+    panel.componentRef.setInput('dt', { root: { headerGap: '8px', headerEndGap: '4px 8px', iconScale: '0.5', titleLineHeight: '1.2', toggleSize: '28px' } });
+    await panel.whenStable();
+    const style = (panel.nativeElement as HTMLElement).style;
+    expect(style.getPropertyValue('--tx-panel-header-gap')).toBe('8px');
+    expect(style.getPropertyValue('--tx-panel-header-end-gap')).toBe('4px 8px');
+    expect(style.getPropertyValue('--tx-panel-icon-scale')).toBe('0.5');
+    expect(style.getPropertyValue('--tx-panel-title-line-height')).toBe('1.2');
+    expect(style.getPropertyValue('--tx-panel-toggle-size')).toBe('28px');
+  });
+
   it('draws an unregistered icon name as a class', () => {
     expect(fixture.nativeElement.querySelector('#own-icon .tx-panel__icon span.own-panel-icon')).not.toBeNull();
   });

@@ -1,7 +1,7 @@
 ---
 category: Display
 tokens: amount
-examples: basic, formats, currency-display, compact, signs, empty-and-zero, locales, in-a-table, design-tokens
+examples: basic, formats, currency-display, symbol-position, compact, signs, empty-and-zero, locales, in-a-table, design-tokens
 ---
 # Amount
 

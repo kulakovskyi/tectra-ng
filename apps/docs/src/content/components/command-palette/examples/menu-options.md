@@ -1,0 +1,1 @@
+`menuPaletteItems` takes options: `translate` turns the menu labels — translation keys here — into text, section titles included, and `icon` maps the menu icons to the icons of the palette (an object or a function of the item); `defaultIcon` is used for items without one. Switch the language and search again. This palette opens with ⌘E / Ctrl E.

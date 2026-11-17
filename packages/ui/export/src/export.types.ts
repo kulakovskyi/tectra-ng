@@ -113,6 +113,10 @@ export interface TxExportFont {
   regular: ArrayBuffer | Uint8Array | string;
   /** TrueType file of the bold weight; the regular one is emulated when not set. */
   bold?: ArrayBuffer | Uint8Array | string;
+  /** TrueType file of the italic style, used by `writeHtmlPdf`; the regular one is slanted when not set. */
+  italic?: ArrayBuffer | Uint8Array | string;
+  /** TrueType file of a monospaced font for code, used by `writeHtmlPdf`; the regular one when not set. */
+  mono?: ArrayBuffer | Uint8Array | string;
 }
 
 /** Options of the CSV file. */
@@ -185,6 +189,42 @@ export interface TxExportPdfOptions extends TxExportPageOptions {
   cellPadding?: number;
   /** Author stored in the file properties. */
   author?: string;
+  /** Compresses the file (default on). */
+  compress?: boolean;
+}
+
+/** Options of `writeHtmlPdf`: page, text sizes and colours of a PDF made from HTML. */
+export interface TxExportHtmlPdfOptions {
+  /** Page size (default `a4`). */
+  pageSize?: TxExportPageSize;
+  /** Page orientation; `auto` is portrait (default `portrait`). */
+  orientation?: TxExportOrientation;
+  /** Page margin in points: one number, or `[top, right, bottom, left]` (default 48). */
+  margin?: number | readonly [number, number, number, number];
+  /** Size of body text in points; headings, code and tables scale with it (default 10). */
+  fontSize?: number;
+  /** Line height as a multiple of the font size (default 1.45). */
+  lineHeight?: number;
+  /** Title stored in the file properties and shown by PDF viewers. */
+  title?: string;
+  /** Author stored in the file properties. */
+  author?: string;
+  /** Shows page numbers at the bottom (default on). */
+  pageNumbers?: boolean;
+  /** Colour of the text, as hex. */
+  textColor?: string;
+  /** Colour of quotes, captions and page numbers, as hex. */
+  mutedColor?: string;
+  /** Colour of links, as hex. */
+  linkColor?: string;
+  /** Colour of table lines, rules and the quote bar, as hex. */
+  borderColor?: string;
+  /** Background of table header cells, as hex, or `none`. */
+  headerBackground?: string;
+  /** Background of code, as hex. */
+  codeBackground?: string;
+  /** Loads the TrueType fonts; the Onest font of `@tectra-ng/ui/export-font` when not set. */
+  font?: () => Promise<TxExportFont>;
   /** Compresses the file (default on). */
   compress?: boolean;
 }

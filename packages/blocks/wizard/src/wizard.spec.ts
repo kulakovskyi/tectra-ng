@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { TxWizardFooter } from './wizard-footer.component';
 import { TxWizardLayout } from './wizard-layout.component';
 import { TxWizardProgress } from './wizard-progress.component';
+import { TxWizardScene } from './wizard-scene.directive';
 import { TxWizardStage } from './wizard-stage.component';
 import { TxWizardStepHead } from './wizard-step-head.component';
 
@@ -156,5 +157,74 @@ describe('TxWizard parts on their own', () => {
     fixture.componentInstance.caption.set('Third');
     await fixture.whenStable();
     expect(stage.querySelector('.tx-wizard-stage__title')?.textContent?.trim()).toBe('Third');
+  });
+});
+
+@Component({
+  imports: [TxWizardFooter],
+  template: `<tx-wizard-footer [backLabel]="backLabel()" [nextLabel]="nextLabel()" [skipLabel]="skipLabel()" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class EmptyLabelsHost {
+  readonly backLabel = signal<string | null | undefined>('');
+  readonly nextLabel = signal<string | null | undefined>(null);
+  readonly skipLabel = signal<string | null | undefined>('');
+}
+
+describe('TxWizardFooter with empty labels', () => {
+  it('shows the translated texts for an empty string or null and no skip button without a skip text', async () => {
+    const fixture = TestBed.createComponent(EmptyLabelsHost);
+    await fixture.whenStable();
+    const root = fixture.nativeElement as HTMLElement;
+    const texts = () => Array.from(root.querySelectorAll('tx-wizard-footer button')).map((button) => button.textContent?.trim());
+    expect(texts()).toEqual(['Back', 'Next']);
+
+    fixture.componentInstance.backLabel.set('Previous');
+    fixture.componentInstance.nextLabel.set('Continue');
+    fixture.componentInstance.skipLabel.set('Later');
+    await fixture.whenStable();
+    expect(texts()).toEqual(['Previous', 'Later', 'Continue']);
+  });
+});
+
+@Component({
+  imports: [TxWizardStage, TxWizardScene],
+  template: `
+    <div class="own-stage">
+      <figure txWizardScene class="own" [direction]="direction()" [unstyled]="unstyled()">Own</figure>
+    </div>
+    <tx-wizard-stage direction="back"><div txWizardScene class="inner">Inner</div></tx-wizard-stage>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class SceneHost {
+  readonly direction = signal<'forward' | 'back' | undefined>('back');
+  readonly unstyled = signal<boolean | undefined>(undefined);
+}
+
+describe('TxWizardScene', () => {
+  it('marks own markup as a scene, writes its direction and loads the scene motion once', async () => {
+    const fixture = TestBed.createComponent(SceneHost);
+    await fixture.whenStable();
+    const root = fixture.nativeElement as HTMLElement;
+    const own = root.querySelector('.own') as HTMLElement;
+    const inner = root.querySelector('.inner') as HTMLElement;
+    expect(own.classList).toContain('tx-wizard-scene');
+    expect(own.hasAttribute('data-styled')).toBe(true);
+    expect(own.style.getPropertyValue('--tx-wizard-direction')).toBe('-1');
+    expect(inner.style.getPropertyValue('--tx-wizard-direction')).toBe('');
+    expect(root.querySelector('tx-wizard-stage')?.getAttribute('data-direction')).toBe('back');
+    const styles = Array.from(document.querySelectorAll('style')).filter((style) => style.textContent?.includes('tx-wizard-scene-enter'));
+    expect(styles).toHaveLength(1);
+
+    fixture.componentInstance.direction.set('forward');
+    fixture.componentInstance.unstyled.set(true);
+    await fixture.whenStable();
+    expect(own.style.getPropertyValue('--tx-wizard-direction')).toBe('1');
+    expect(own.hasAttribute('data-styled')).toBe(false);
+
+    fixture.componentInstance.direction.set(undefined);
+    await fixture.whenStable();
+    expect(own.style.getPropertyValue('--tx-wizard-direction')).toBe('');
   });
 });

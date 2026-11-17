@@ -6,7 +6,7 @@ A small card in the bottom-left corner that tells the visitor the site keeps onl
 <tx-cookie-notice [link]="['/privacy']" sharedDomain="example.com" />
 ```
 
-The texts are translated and can be replaced. It renders nothing on the server and appears in the browser after a short delay, so it never moves the page. With `sharedDomain` the choice is kept for every subdomain of that domain. While `tx-network-status` shows its pill, the card moves up by the `--tx-bottom-overlay-offset` the pill writes on `<body>`, so the two never cover each other; any other bottom overlay can set that variable too.
+The texts are translated and can be replaced; an empty string or `null` keeps the translated text. It renders nothing on the server and appears in the browser after a short delay, so it never moves the page. With `sharedDomain` the choice is kept for every subdomain of that domain. While `tx-network-status` shows its pill, the card moves up by the `--tx-bottom-overlay-offset` the pill writes on `<body>`, so the two never cover each other; any other bottom overlay can set that variable too.
 
 ## Inputs
 | Name | Description |

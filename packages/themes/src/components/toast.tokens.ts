@@ -55,6 +55,7 @@ export const toastTokens = {
     shadow: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',
   },
   action: {
+    gap: '6px',
     padding: '5.25px 12.25px',
     fontSize: '12.25px',
     fontWeight: tokenRef('font-weight-semibold'),

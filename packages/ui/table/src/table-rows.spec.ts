@@ -31,6 +31,8 @@ const TASKS: Task[] = [
       [rowGroupMode]="groupMode()"
       [expandableRowGroups]="true"
       [(expandedRowGroups)]="openGroups"
+      [rowClass]="rowClass()"
+      [pt]="pt()"
       (rowReorder)="onReorder($event)"
     >
       <ng-template txTableGroupFooter let-count="count" let-value="value">
@@ -53,6 +55,8 @@ class Host {
   readonly openGroups = signal<unknown[] | null>(null);
   readonly moves: TxTableRowReorderEvent[] = [];
   readonly sync = signal(true);
+  readonly rowClass = signal<((row: Task, index: number) => string | string[] | Record<string, boolean> | null) | undefined>(undefined);
+  readonly pt = signal<{ row?: { class: string } } | undefined>(undefined);
 
   onReorder(event: TxTableRowReorderEvent<Task>): void {
     this.moves.push(event);
@@ -175,6 +179,33 @@ describe('TxTable rows', () => {
       ['Web', '2'],
     ]);
     expect(root().querySelector('.tx-table__group-header')).toBeNull();
+  });
+
+  it('applies row classes returned as a string, an array or an object, next to the row pass-through class', async () => {
+    const rowClasses = () => [...root().querySelectorAll('.tx-table__tbody > .tx-table__row')].map((row) => row.className);
+    host.pt.set({ row: { class: 'own-row  extra' } });
+    host.rowClass.set((row) => ({ 'row--core': row.team === 'Core', 'row--web row--team': row.team === 'Web', 'row--team': false }));
+    await stable();
+    let classes = rowClasses();
+    expect(classes[0]).toContain('row--core');
+    expect(classes[0]).not.toContain('row--web');
+    expect(classes[1]).toContain('row--web');
+    expect(classes[1]).toContain('row--team');
+    expect(classes.every((name) => name.includes('own-row') && name.includes('extra') && name.includes('tx-table__row'))).toBe(true);
+
+    host.rowClass.set((row, index) => (index === 0 ? ['first', 'row--' + row.team.toLowerCase()] : index === 1 ? 'second  row--odd-one' : null));
+    await stable();
+    classes = rowClasses();
+    expect(classes[0]).toContain('first');
+    expect(classes[0]).toContain('row--core');
+    expect(classes[1]).toContain('second');
+    expect(classes[1]).toContain('row--odd-one');
+    expect(classes[2]).not.toContain('first');
+
+    host.pt.set(undefined);
+    host.rowClass.set(undefined);
+    await stable();
+    expect(rowClasses().some((name) => name.includes('own-row') || name.includes('first'))).toBe(false);
   });
 });
 

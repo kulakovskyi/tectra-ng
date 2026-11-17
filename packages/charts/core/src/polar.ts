@@ -29,9 +29,19 @@ export function maxCornerRadius(inner: number, outer: number, sweep: number): nu
   return Math.max(0, Math.min(byThickness, byOuter, byInner));
 }
 
+function circlePath(cx: number, cy: number, radius: number, start: number, clockwise: boolean): string {
+  const a = polar(cx, cy, radius, start);
+  const b = polar(cx, cy, radius, start + Math.PI);
+  const r = round(radius);
+  const sweep = clockwise ? 1 : 0;
+  return `M${round(a.x)},${round(a.y)}A${r},${r} 0 1 ${sweep} ${round(b.x)},${round(b.y)}A${r},${r} 0 1 ${sweep} ${round(a.x)},${round(a.y)}Z`;
+}
+
 /**
  * SVG path of a pie or donut segment from `start` to `end` radians, with optional rounded corners;
- * `inner` of `0` makes a pie slice.
+ * `inner` of `0` makes a pie slice. A full turn is one closed disc or ring (the outer circle and the
+ * inner one drawn the other way round, so the hole stays empty with any fill rule) without radial
+ * edges, so a stroke draws no seams across it.
  */
 export function arcPath(cx: number, cy: number, inner: number, outer: number, start: number, end: number, corner = 0): string {
   const sweep = end - start;
@@ -39,8 +49,8 @@ export function arcPath(cx: number, cy: number, inner: number, outer: number, st
     return '';
   }
   if (sweep >= TX_FULL_CIRCLE - 1e-6) {
-    const middle = start + Math.PI;
-    return arcPath(cx, cy, inner, outer, start, middle) + arcPath(cx, cy, inner, outer, middle, start + TX_FULL_CIRCLE);
+    const disc = circlePath(cx, cy, outer, start, true);
+    return inner > 0 ? disc + circlePath(cx, cy, inner, start, false) : disc;
   }
   const radius = Math.min(Math.max(0, corner), maxCornerRadius(inner, outer, sweep));
   if (radius < 0.5) {

@@ -12,6 +12,7 @@ import {
   DOCUMENT,
   ElementRef,
   Injector,
+  TemplateRef,
   afterNextRender,
   booleanAttribute,
   computed,
@@ -38,7 +39,9 @@ import {
   TxKanbanEmpty,
 } from './kanban-templates.directive';
 import {
+  TxKanbanCardContext,
   TxKanbanColumn,
+  TxKanbanColumnContext,
   TxKanbanColumnDrop,
   TxKanbanColumnView,
   TxKanbanItemDrop,
@@ -99,6 +102,11 @@ export class TxKanban<T> {
   readonly columnDragLabel = input<string | undefined>(undefined);
   readonly pageSize = input<number, unknown>(30, { transform: numberAttribute });
   readonly height = input<string | undefined>(undefined);
+  readonly cardTemplate = input<TemplateRef<TxKanbanCardContext<T>> | null | undefined>(undefined);
+  readonly columnHeaderTemplate = input<TemplateRef<TxKanbanColumnContext<T>> | null | undefined>(undefined);
+  readonly columnTopTemplate = input<TemplateRef<TxKanbanColumnContext<T>> | null | undefined>(undefined);
+  readonly columnFooterTemplate = input<TemplateRef<TxKanbanColumnContext<T>> | null | undefined>(undefined);
+  readonly emptyTemplate = input<TemplateRef<TxKanbanColumnContext<T>> | null | undefined>(undefined);
   readonly dt = input<TectraDeepPartial<TectraKanbanTokens> | undefined>(undefined);
   readonly pt = input<TxPassThrough<TxKanbanPart, TxKanban<T>> | undefined>(undefined);
   readonly ptOptions = input<TxPassThroughOptions | undefined>(undefined);
@@ -118,11 +126,16 @@ export class TxKanban<T> {
     ...this.passThrough().root?.style,
   }));
 
-  protected readonly cardTemplate = contentChild.required(TxKanbanCard<T>);
-  protected readonly headerTemplate = contentChild(TxKanbanColumnHeader<T>);
-  protected readonly topTemplate = contentChild(TxKanbanColumnTop<T>);
-  protected readonly footerTemplate = contentChild(TxKanbanColumnFooter<T>);
-  protected readonly emptyTemplate = contentChild(TxKanbanEmpty<T>);
+  private readonly cardSlot = contentChild(TxKanbanCard<T>);
+  private readonly headerSlot = contentChild(TxKanbanColumnHeader<T>);
+  private readonly topSlot = contentChild(TxKanbanColumnTop<T>);
+  private readonly footerSlot = contentChild(TxKanbanColumnFooter<T>);
+  private readonly emptySlot = contentChild(TxKanbanEmpty<T>);
+  protected readonly card = computed(() => this.cardTemplate() ?? this.cardSlot()?.template ?? null);
+  protected readonly header = computed(() => this.columnHeaderTemplate() ?? this.headerSlot()?.template ?? null);
+  protected readonly top = computed(() => this.columnTopTemplate() ?? this.topSlot()?.template ?? null);
+  protected readonly footer = computed(() => this.columnFooterTemplate() ?? this.footerSlot()?.template ?? null);
+  protected readonly empty = computed(() => this.emptyTemplate() ?? this.emptySlot()?.template ?? null);
 
   private readonly shown = signal<Record<string, number>>({});
   protected readonly views = computed<TxKanbanColumnView<T>[]>(() => {

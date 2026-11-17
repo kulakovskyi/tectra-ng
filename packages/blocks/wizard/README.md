@@ -28,6 +28,18 @@ A full-screen step-by-step flow for onboarding and setup: the step on the left �
 
 Give each step `animate.enter="tx-wizard-step--enter"` to rise in, and each scene the `tx-wizard-scene` class with `animate.enter="tx-wizard-scene--enter"` / `animate.leave="tx-wizard-scene--leave"`: the scenes stack on the stage and slide forward or back by `direction`. Motion is off with reduced motion.
 
+Own scene markup outside `tx-wizard-stage` — a stage of your own, a dialog, a card — slides the same way with the `txWizardScene` directive and the same two classes; its `direction` input sets the way, or it follows the nearest element that sets the public `--tx-wizard-direction` variable (`1` forward, `-1` back; `tx-wizard-stage` sets it from its `direction`).
+
+```html
+<div class="my-stage">
+  @switch (step()) {
+    @case (1) {
+      <figure txWizardScene [direction]="direction()" animate.enter="tx-wizard-scene--enter" animate.leave="tx-wizard-scene--leave">…</figure>
+    }
+  }
+</div>
+```
+
 ## Inputs
 | Name | Description |
 |---|---|
@@ -43,16 +55,22 @@ Give each step `animate.enter="tx-wizard-step--enter"` to rise in, and each scen
 | direction | `tx-wizard-stage`: `forward` or `back` — the way the scenes slide |
 | number | `tx-wizard-stage`: step number before the caption, two digits |
 | caption | `tx-wizard-stage`: caption under the stage; it rises in when it changes |
-| nextLabel | `tx-wizard-footer`: text of the primary button; the translated "Next" by default |
+| nextLabel | `tx-wizard-footer`: text of the primary button; the translated "Next" when empty |
 | nextIcon | `tx-wizard-footer`: icon of the primary button (`arrow-right`) |
-| backLabel | `tx-wizard-footer`: text of the back button; the translated "Back" by default |
+| backLabel | `tx-wizard-footer`: text of the back button; the translated "Back" when empty — hide the button with `showBack` |
 | showBack | `tx-wizard-footer`: `false` hides the back button (the first step) |
-| skipLabel | `tx-wizard-footer`: text of a quiet skip button; without it there is none |
+| skipLabel | `tx-wizard-footer`: text of a quiet skip button; without it (or with an empty one) there is none |
 | loading | `tx-wizard-footer`: a spinner on the primary button, all buttons disabled |
 | dt | Design tokens of this instance (`wizard`) |
 | pt | Classes and styles of the parts: layout `root`, `panel`, `header`, `body`, `footer`, `visual`; progress `root`, `label`, `segments`, `segment`; step head `root`, `icon`, `title`, `lead`; stage `root`, `stage`, `caption`; footer `root`, `back`, `skip`, `next` |
 | ptOptions | How `pt` merges with the global pass-through |
 | unstyled | Removes the tectra styles |
+
+## Inputs — txWizardScene
+| Name | Description |
+|---|---|
+| direction | `forward` or `back` — the way this scene slides; without it the nearest `--tx-wizard-direction` (forward when none) |
+| unstyled | Leaves the scene without the slide animation |
 
 ## Outputs
 | Name | Description |

@@ -10,13 +10,14 @@ Counts down to zero — a number of seconds, minutes, hours or days, or the time
 ## Inputs
 | Name | Description |
 |---|---|
-| value | Number of `unit`s to count down from; a new value starts again |
+| value | Number of `unit`s to count down from; a new value (or `unit`) starts again unless `restartOnChange` is off |
 | unit | `seconds`, `minutes`, `hours` or `days` |
 | target | A date (`Date`, ISO string or ms) to count down to, instead of `value` |
 | suffix | Text after the value, e.g. `s` or a translated unit |
 | format | `number` — whole units left (default with `value`), `clock` — `mm:ss` or `h:mm:ss` (default with `target`) |
 | endingSoon | Milliseconds before zero when the countdown turns to the "ending" colour (`tx-countdown--ending`); `0` never |
 | paused | Stops the countdown and keeps the time left; it goes on from there |
+| restartOnChange | `true` (default) — a new `value` or `unit` starts the countdown again; `false` — a running countdown keeps its deadline and the new value is taken at the next start (after zero or `restart()`). A new `target` always moves the deadline |
 | ariaLive | `off` (default — a ticking timer would talk every second), `polite` or `assertive` |
 | dt | Design tokens of this instance (`countdown`) |
 | pt | Classes and styles of the root |
@@ -28,6 +29,11 @@ Counts down to zero — a number of seconds, minutes, hours or days, or the time
 |---|---|
 | completed | Zero was reached; fires once per start |
 | tick | The time left in milliseconds, whenever the shown value changes |
+
+## Methods
+| Name | Description |
+|---|---|
+| restart() | Starts again from the current `value` and `unit` (or `target`) |
 
 ## Slots
 | Name | Description |

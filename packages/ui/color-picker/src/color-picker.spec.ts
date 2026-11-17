@@ -499,3 +499,44 @@ describe('TxColorPicker recompiled by TestBed', () => {
     document.querySelector('.cdk-overlay-container')?.remove();
   });
 });
+
+@Component({
+  imports: [TxColorPicker],
+  template: `
+    <tx-color-picker id="own" inline showClear areaLabel="Shade" hueLabel="Tone" hexLabel="Code" clearLabel="Reset colour" [clearText]="clearText()" />
+    <tx-color-picker id="text" inline showClear clearText="Clear" />
+    <tx-color-picker id="plain" inline showClear />
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class LabelHost {
+  readonly clearText = signal<string | undefined>(undefined);
+}
+
+describe('TxColorPicker labels', () => {
+  it('names the area, hue slider, hex field and clear button', () => {
+    const fixture = TestBed.createComponent(LabelHost);
+    fixture.detectChanges();
+    const part = (id: string, selector: string) => fixture.nativeElement.querySelector(`#${id} ${selector}`) as HTMLElement;
+    for (const picker of fixture.debugElement.queryAll(By.directive(TxColorPicker))) {
+      picker.componentInstance.writeValue('#3366cc');
+    }
+    fixture.detectChanges();
+    expect(part('own', '.tx-color-picker__area').getAttribute('aria-label')).toBe('Shade');
+    expect(part('own', '.tx-color-picker__hue').getAttribute('aria-label')).toBe('Tone');
+    expect(part('own', '.tx-color-picker__input').getAttribute('aria-label')).toBe('Code');
+    expect(part('own', '.tx-color-picker__clear').getAttribute('aria-label')).toBe('Reset colour');
+    expect(part('own', '.tx-color-picker__clear').classList).not.toContain('tx-color-picker__clear--text');
+    fixture.componentInstance.clearText.set('Reset');
+    fixture.detectChanges();
+    expect(part('own', '.tx-color-picker__clear').textContent?.trim()).toBe('Reset');
+    expect(part('own', '.tx-color-picker__clear').getAttribute('aria-label')).toBe('Reset colour');
+    expect(part('text', '.tx-color-picker__clear').classList).toContain('tx-color-picker__clear--text');
+    expect(part('text', '.tx-color-picker__clear').textContent?.trim()).toBe('Clear');
+    expect(part('text', '.tx-color-picker__clear').hasAttribute('aria-label')).toBe(false);
+    expect(part('plain', '.tx-color-picker__area').getAttribute('aria-label')).toBe('Saturation and brightness');
+    expect(part('plain', '.tx-color-picker__hue').getAttribute('aria-label')).toBe('Hue');
+    expect(part('plain', '.tx-color-picker__input').getAttribute('aria-label')).toBe('Hex colour');
+    expect(part('plain', '.tx-color-picker__clear').getAttribute('aria-label')).toBe('Clear');
+  });
+});

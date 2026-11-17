@@ -1,7 +1,7 @@
 ---
 category: Form
 tokens: colorPicker
-examples: basic, inline, field, presets, formats, states, design-tokens
+examples: basic, inline, field, presets, formats, states, labels, design-tokens
 ---
 # ColorPicker
 
