@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TxChipsInputItemTemplate } from './chips-input-item.directive';
 import { TxChipsInput } from './chips-input.component';
@@ -299,7 +300,7 @@ describe('chips input item directive', () => {
       (rejected)="rejected.push($event)"
       (committed)="commits.push($event)"
     />
-    <tx-chips-input id="model" ariaLabel="Tags" [(value)]="tags" />
+    <tx-chips-input id="model" ariaLabel="Tags" [disabled]="locked()" [(value)]="tags" />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -310,6 +311,7 @@ class BatchHost {
   readonly max = signal<number | undefined>(undefined);
   readonly pattern = signal<RegExp | undefined>(undefined);
   readonly tags = signal<string[] | null>(['a']);
+  readonly locked = signal(false);
   rejected: TxChipsInputRejectedEvent[] = [];
   commits: TxChipsInputCommitEvent[] = [];
 }
@@ -406,5 +408,24 @@ describe('TxChipsInput batches, reasons and the value model', () => {
     host.tags.set(null);
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelectorAll('#model tx-chip')).toHaveLength(0);
+  });
+
+  it('is disabled by its own input without a form', () => {
+    const root = fixture.nativeElement.querySelector('#model') as HTMLElement;
+    host.locked.set(true);
+    fixture.detectChanges();
+    const model = field('model');
+    expect(model.disabled).toBe(true);
+    expect(root.classList).toContain('tx-chips-input--disabled');
+    expect(root.querySelector('tx-chip .tx-chip__remove')).toBeNull();
+    const chips = fixture.debugElement.query(By.css('#model')).componentInstance as TxChipsInput;
+    chips.add('c');
+    chips.removeAt(0);
+    fixture.detectChanges();
+    expect(host.tags()).toEqual(['a']);
+    host.locked.set(false);
+    fixture.detectChanges();
+    expect(field('model').disabled).toBe(false);
+    expect(root.classList).not.toContain('tx-chips-input--disabled');
   });
 });

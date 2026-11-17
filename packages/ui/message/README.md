@@ -17,7 +17,7 @@ Error texts: `messages` on the field, then `provideTectra({ validationMessages }
 |---|---|
 | severity | `tx-message`: `primary`, `secondary`, `success`, `info`, `warn`, `danger`, `help`, `contrast`. `tx-field-hint`: `secondary` or `success` |
 | text | `tx-message`: the text; the projected content follows it |
-| icon | Icon name (`exclamation-triangle`, also `pi-exclamation-triangle`) or an icon class; no icon by default |
+| icon | Icon name (`exclamation-triangle`, also `pi-exclamation-triangle`) or an icon class; no icon by default. Words after a tectra icon name are classes on the icon: `spinner spin` (or `pi-spin`) rotates it (`icon.spinDuration` token, slower with reduced motion) |
 | size | `tx-message`: `small`, `medium`, `large` |
 | variant | `tx-message`: tinted box by default, `outlined` without the fill, `text` without the box, `simple` without the box and padding |
 | closable | `tx-message`: shows a close button |

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TxChipsInput } from '@tectra-ng/ui/chips-input';
 
@@ -11,6 +11,7 @@ import { TxChipsInput } from '@tectra-ng/ui/chips-input';
       <tx-chips-input [variant]="'filled'" [placeholder]="'Filled'" />
       <tx-chips-input [size]="'large'" [placeholder]="'Large'" />
       <tx-chips-input [formControl]="locked" [ariaLabel]="'Disabled'" />
+      <tx-chips-input [disabled]="true" [(value)]="tags" [ariaLabel]="'Disabled without a form'" />
       <tx-chips-input [formControl]="shown" [readonly]="true" [ariaLabel]="'Read only'" />
     </div>
   `,
@@ -19,4 +20,5 @@ import { TxChipsInput } from '@tectra-ng/ui/chips-input';
 export default class ChipsInputStatesExample {
   readonly locked = new FormControl({ value: ['locked'], disabled: true });
   readonly shown = new FormControl(['shown', 'only']);
+  readonly tags = signal<string[] | null>(['no', 'form']);
 }

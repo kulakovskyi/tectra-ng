@@ -24,6 +24,7 @@ A text field that turns what you type into chips — keywords, tags, emails, dom
 | size | `small`, `medium`, `large` |
 | variant | `outlined` or `filled` |
 | invalid | Red border and `aria-invalid`; follows the form control by default |
+| disabled | Disables the field (also from the form control), so `[(value)]` works without forms |
 | readonly | Shows the chips, cannot change them |
 | dt | Design tokens of this instance (`chipsInput`) |
 | pt | Classes and styles of the parts: `root`, `list`, `chip`, `input`, `clear` |

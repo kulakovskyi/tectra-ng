@@ -72,6 +72,16 @@
   font-size: var(--_icon-font-size);
 }
 
+:host([data-styled]) .tx-message__icon--spin tx-icon {
+  animation: tx-message-spin var(--tx-message-icon-spin-duration) linear infinite;
+}
+
+@keyframes tx-message-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 :host([data-styled]) .tx-message__content {
   flex: 1;
   min-width: 0;
@@ -169,5 +179,9 @@
   :host([data-styled]),
   :host([data-styled].tx-message--closing) {
     animation-duration: 1ms;
+  }
+
+  :host([data-styled]) .tx-message__icon--spin tx-icon {
+    animation-duration: calc(var(--tx-message-icon-spin-duration) * 3);
   }
 }

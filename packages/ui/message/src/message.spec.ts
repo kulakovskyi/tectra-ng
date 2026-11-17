@@ -97,6 +97,20 @@ describe('TxMessage', () => {
     expect(message().getAttribute('role')).toBe('status');
   });
 
+  it('takes the words after an icon name as icon classes and turns the icon for spin', async () => {
+    fixture.componentInstance.icon.set('spinner spin extra');
+    await fixture.whenStable();
+    const box = message().querySelector('.tx-message__icon') as HTMLElement;
+    const icon = box.querySelector('tx-icon') as HTMLElement;
+    expect(icon.getAttribute('data-icon')).toBe('spinner');
+    expect(icon.classList).toContain('spin');
+    expect(icon.classList).toContain('extra');
+    expect(box.classList).toContain('tx-message__icon--spin');
+    fixture.componentInstance.icon.set('check');
+    await fixture.whenStable();
+    expect(message().querySelector('.tx-message__icon')?.classList).not.toContain('tx-message__icon--spin');
+  });
+
   it('has no icon by default', async () => {
     fixture.componentInstance.icon.set(undefined);
     await fixture.whenStable();
