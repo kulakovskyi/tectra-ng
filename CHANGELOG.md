@@ -1,3 +1,13 @@
+## 0.4.4 (2026-11-17)
+
+### 🩹 Fixes
+
+- legend, funnel, stepper and datepicker fixes, landing questions layout ([#41](https://github.com/kulakovskyi/tectra-ng/pull/41))
+
+### ❤️ Thank You
+
+- Andriy @kulakovskyi
+
 ## 0.4.3 (2026-11-16)
 
 ### 🚀 Features
