@@ -1,6 +1,6 @@
 # Input
 
-Styles a native `input` or `textarea` with the shared `formField` tokens (also used by select, password, number…). Native `readonly` and `disabled` are styled too. Works with `[formControl]`, `ngModel` and signal forms as is — it is the native element.
+Styles a native `input` or `textarea` with the shared `formField` tokens (also used by select, password, number…). Native `readonly` and `disabled` are styled too; a `readonly` input with a `data-picker` attribute (no typing, a picker opens on click, like `tx-datepicker readonlyInput`) keeps the normal field look. Works with `[formControl]`, `ngModel` and signal forms as is — it is the native element.
 
 ## Inputs
 | Name | Description |

@@ -21,7 +21,7 @@
     @include field.filled;
   }
 
-  &:enabled:not([readonly]):hover {
+  &:enabled:is(:not([readonly]), [data-picker]):hover {
     @include field.hover;
 
     &[data-variant='filled'] {
@@ -29,7 +29,7 @@
     }
   }
 
-  &:enabled:not([readonly]):focus {
+  &:enabled:is(:not([readonly]), [data-picker]):focus {
     @include field.focus;
 
     &[data-variant='filled'] {
@@ -37,7 +37,7 @@
     }
   }
 
-  &[readonly] {
+  &[readonly]:not([data-picker]) {
     @include field.readonly;
   }
 
@@ -51,6 +51,10 @@
     &:focus {
       @include field.invalid-focus;
     }
+  }
+
+  &[data-picker]:enabled {
+    cursor: pointer;
   }
 
   &:disabled {

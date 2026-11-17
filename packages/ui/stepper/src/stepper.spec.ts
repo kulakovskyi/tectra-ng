@@ -199,6 +199,9 @@ describe('TxStepper', () => {
     expect(all('tx-step-panel')[0].hasAttribute('hidden')).toBe(true);
     expect(el('.content-1')).toBeTruthy();
     expect(all('tx-step')[0].classList).toContain('tx-step--completed');
+    expect(all('tx-step')[0].querySelector('.tx-step__number tx-icon')).toBeTruthy();
+    expect(all('tx-step')[1].querySelector('.tx-step__number tx-icon')).toBeNull();
+    expect(all('tx-step')[1].querySelector('.tx-step__number')?.textContent?.trim()).toBe('2');
   });
 
   it('activates a step on click unless it is disabled', async () => {
@@ -485,14 +488,14 @@ describe('TxStepper with dynamic steps', () => {
     }).not.toThrow();
     await fixture.whenStable();
     expect(all('tx-stepper')[0].querySelectorAll('tx-step-item')).toHaveLength(3);
-    expect(all('.tx-step__number').slice(0, 3).map((node) => node.textContent)).toEqual(['1', '2', '3']);
+    expect(all('.tx-step__number').slice(0, 3).map((node) => node.textContent?.trim())).toEqual(['1', '2', '']);
     fixture.componentInstance.extra.set(true);
     fixture.componentInstance.steps.update((steps) => [...steps, { id: 'd', title: 'Done' }]);
     await fixture.whenStable();
     const items = all('tx-step-item');
     expect(items).toHaveLength(5);
     expect(items[4].classList).toContain('tx-step-item--last');
-    expect(items[4].querySelector('.tx-step__number')?.textContent).toBe('5');
+    expect(items[4].querySelector('.tx-step__number')?.textContent?.trim()).toBe('5');
   });
 
   it('lets an explicit completed win over the position of the step', async () => {
@@ -503,6 +506,8 @@ describe('TxStepper with dynamic steps', () => {
     expect(third.classList).toContain('tx-step-item--completed');
     expect(third.querySelector('.tx-step')?.classList).toContain('tx-step--completed');
     expect(third.querySelector('.tx-stepper__sr-only')?.textContent).toContain('completed');
+    expect(third.querySelector('.tx-step__number tx-icon')).toBeTruthy();
+    expect(first.querySelector('.tx-step__number tx-icon')).toBeNull();
     expect(first.querySelector('.tx-stepper__sr-only')).toBeNull();
     const row = all('.row tx-step');
     expect(row[0].classList).not.toContain('tx-step--completed');

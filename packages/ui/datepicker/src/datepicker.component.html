@@ -21,6 +21,7 @@
       [unstyled]="isUnstyled()"
       [disabled]="isDisabled()"
       [readOnly]="readonly() || readonlyInput()"
+      [attr.data-picker]="readonlyInput() && !readonly() ? '' : null"
       [required]="required()"
       [value]="inputText()"
       [attr.inputmode]="readonlyInput() || touchUI() ? 'none' : null"

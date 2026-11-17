@@ -677,6 +677,38 @@ describe('TxDatePicker interactions', () => {
     expect(input().value).toBe('08.10.2026');
   });
 
+  it('opens a range on the month of its end and focuses the end day', async () => {
+    await setup({ selectionMode: 'range' }, [new Date(2025, 11, 1), new Date(2026, 10, 30)]);
+    expect([picker.viewMonth(), picker.viewYear()]).toEqual([10, 2026]);
+    await open();
+    expect([picker.viewMonth(), picker.viewYear()]).toEqual([10, 2026]);
+    expect(active().getAttribute('data-date')).toBe('2026-11-30');
+    picker.writeValue([new Date(2026, 2, 4), null]);
+    await settle();
+    expect([picker.viewMonth(), picker.viewYear()]).toEqual([2, 2026]);
+  });
+
+  it('ends a range on its last month and keeps a short range from its start with several months', async () => {
+    await setup({ selectionMode: 'range', numberOfMonths: 2 }, [new Date(2025, 11, 1), new Date(2026, 10, 30)]);
+    expect([picker.viewMonth(), picker.viewYear()]).toEqual([9, 2026]);
+    picker.writeValue([new Date(2026, 4, 3), new Date(2026, 4, 9)]);
+    await settle();
+    expect([picker.viewMonth(), picker.viewYear()]).toEqual([4, 2026]);
+    fixture.componentRef.setInput('selectionMode', 'multiple');
+    picker.writeValue([new Date(2026, 1, 3), new Date(2026, 4, 9)]);
+    await settle();
+    expect([picker.viewMonth(), picker.viewYear()]).toEqual([1, 2026]);
+  });
+
+  it('keeps the normal field look for readonlyInput and the read-only look for readonly', async () => {
+    await setup({ readonlyInput: true });
+    expect(input().readOnly).toBe(true);
+    expect(input().hasAttribute('data-picker')).toBe(true);
+    fixture.componentRef.setInput('readonly', true);
+    await settle();
+    expect(input().hasAttribute('data-picker')).toBe(false);
+  });
+
   it('reads range values with gaps and clears them', async () => {
     await setup({ selectionMode: 'range', showClear: true }, [null, new Date(2026, 9, 5)]);
     expect(input().value).toBe('');

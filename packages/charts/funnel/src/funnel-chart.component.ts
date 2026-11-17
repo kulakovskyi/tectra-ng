@@ -112,11 +112,15 @@ export class TxFunnelChart {
   readonly valueFormatter = computed(() => chartNumberFormatter(this.intl(), this.valueFormat()));
   readonly percentFormatter = computed(() => chartNumberFormatter(this.intl(), 'percent'));
 
-  readonly labelColumn = computed(() => {
-    if (!this.showLabels()) return 0;
+  readonly labelSpace = computed(() => {
     const { labelWidth, labelFontSize } = this.geometry();
     const widest = Math.max(0, ...this.list().map((item) => textWidth(item.label, labelFontSize)));
-    return Math.min(this.size().width * labelWidth, widest * LABEL_SLACK + LABEL_PAD);
+    return Math.min(widest, Math.max(0, this.size().width * labelWidth - LABEL_PAD) / LABEL_SLACK);
+  });
+
+  readonly labelColumn = computed(() => {
+    if (!this.showLabels()) return 0;
+    return Math.min(this.size().width * this.geometry().labelWidth, this.labelSpace() * LABEL_SLACK + LABEL_PAD);
   });
 
   readonly stages = computed<TxFunnelStage[]>(() => {
@@ -157,12 +161,11 @@ export class TxFunnelChart {
   });
 
   readonly labels = computed(() => {
-    const column = this.labelColumn();
     const { labelFontSize, valueFontSize } = this.geometry();
     return this.stages().map((stage) => {
       const value = this.valueFormatter()(stage.value);
       const inside = stage.width >= textWidth(value, valueFontSize) + 12;
-      const lines = funnelLabelLines(stage.label, Math.max(0, column - LABEL_PAD) / LABEL_SLACK, labelFontSize, stage.height >= labelFontSize * LINE_HEIGHT * 2 ? 2 : 1);
+      const lines = funnelLabelLines(stage.label, this.labelSpace(), labelFontSize, stage.height >= labelFontSize * LINE_HEIGHT * 2 ? 2 : 1);
       return {
         key: stage.key,
         index: stage.index,

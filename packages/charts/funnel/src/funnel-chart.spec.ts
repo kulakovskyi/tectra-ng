@@ -205,6 +205,19 @@ describe('TxFunnelChart options', () => {
     expect(all('.tx-funnel-chart__label')[1].textContent).toContain('…');
   });
 
+  it('keeps the widest label whole when the column fits it', async () => {
+    host.items.set([
+      { label: 'Lead', value: 400 },
+      { label: 'Qualified', value: 200 },
+      { label: 'Proposal', value: 120 },
+      { label: 'Negotiation', value: 80 },
+      { label: 'Won', value: 40 },
+    ]);
+    chart().size.set({ width: 640, height: 320 });
+    await fixture.whenStable();
+    expect(all('.tx-funnel-chart__label').map((label) => label.textContent?.trim())).toEqual(['Lead', 'Qualified', 'Proposal', 'Negotiation', 'Won']);
+  });
+
   it('drops the label column when labels are off', async () => {
     const left = Number(el('.tx-funnel-chart__stage').getAttribute('x'));
     host.showLabels.set(false);

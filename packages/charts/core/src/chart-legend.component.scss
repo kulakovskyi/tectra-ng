@@ -56,6 +56,15 @@ button.tx-chart-legend__item {
   grid-template-columns: auto minmax(0, 1fr) auto auto;
 }
 
+:host(.tx-chart-legend--values) .tx-chart-legend__label {
+  display: -webkit-box;
+  overflow-wrap: break-word;
+  white-space: normal;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
 .tx-chart-legend__value,
 .tx-chart-legend__percent,
 .tx-chart-legend__stat {

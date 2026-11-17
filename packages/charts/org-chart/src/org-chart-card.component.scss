@@ -35,6 +35,11 @@
   align-items: center;
 }
 
+.tx-org-chart-card__pills tx-pill {
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
 .tx-org-chart-card__icon {
   display: flex;
   flex-shrink: 0;

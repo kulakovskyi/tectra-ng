@@ -189,6 +189,12 @@
     }
   }
 
+  .tx-step--completed:not(.tx-step--active) .tx-step__number {
+    border-color: var(--tx-stepper-step-number-completed-border-color);
+    background: var(--tx-stepper-step-number-completed-background);
+    color: var(--tx-stepper-step-number-completed-color);
+  }
+
   .tx-step--active {
     .tx-step__number {
       border-color: var(--tx-stepper-step-number-active-border-color);
