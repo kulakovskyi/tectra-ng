@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, booleanAttribute, computed, content
 import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean, optionalNumber } from '@tectra-ng/core/utils';
-import { injectTxIcons, provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
+import { injectTxIcons, provideTxIconDefaults, splitIconValue, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraMessageTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxMessageActions, TxMessageCloseIconTemplate, TxMessageIconTemplate } from './message-templates.directive';
 import { TxMessagePart, TxMessageSeverity, TxMessageSize, TxMessageVariant } from './message.types';
@@ -63,7 +63,13 @@ export class TxMessage {
 
   readonly role = computed(() => (this.severity() === 'danger' || this.severity() === 'warn' ? 'alert' : 'status'));
   readonly hasIcon = computed(() => !!this.icon() || !!this.iconTemplate());
-  readonly iconName = computed(() => this.registered(this.icon()));
+  private readonly iconParts = computed(() => {
+    const parts = splitIconValue(this.icon());
+    return parts && this.txIconRegistry.has(parts.name) ? parts : null;
+  });
+  readonly iconName = computed(() => this.iconParts()?.name ?? null);
+  readonly iconModifiers = computed(() => this.iconParts()?.modifiers.join(' ') ?? '');
+  readonly iconSpin = computed(() => this.iconParts()?.spin ?? false);
   readonly closeIconName = computed(() => this.registered(this.closeIcon()));
   readonly hostStyle = computed(() => ({
     ...toStyleObject(this.dt(), '--tx-message'),

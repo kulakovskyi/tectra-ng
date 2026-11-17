@@ -1,9 +1,15 @@
 @if (hasIcon()) {
-  <span class="tx-message__icon" aria-hidden="true" [class]="passThrough().icon?.class" [style]="passThrough().icon?.style">
+  <span
+    class="tx-message__icon"
+    aria-hidden="true"
+    [class.tx-message__icon--spin]="iconSpin()"
+    [class]="passThrough().icon?.class"
+    [style]="passThrough().icon?.style"
+  >
     @if (iconTemplate(); as template) {
       <ng-container [ngTemplateOutlet]="template.templateRef" />
     } @else if (iconName(); as name) {
-      <tx-icon [name]="name" />
+      <tx-icon [name]="name" [class]="iconModifiers()" />
     } @else {
       <span [class]="icon()"></span>
     }

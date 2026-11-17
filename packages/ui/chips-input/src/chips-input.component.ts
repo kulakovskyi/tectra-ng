@@ -53,7 +53,7 @@ import { CHIPS_INPUT_THEME } from './chips-input.theme';
     '[attr.data-styled]': '!isUnstyled() || null',
     '[attr.data-size]': 'size()',
     '[attr.data-variant]': 'variant()',
-    '[class.tx-chips-input--disabled]': 'disabled()',
+    '[class.tx-chips-input--disabled]': 'isDisabled()',
     '[class.tx-chips-input--invalid]': 'isInvalid()',
     '[class.tx-chips-input--readonly]': 'readonly()',
     '[class.tx-chips-input--filled]': 'values().length > 0 || !!text()',
@@ -83,6 +83,8 @@ export class TxChipsInput extends TxFormControlBase<string[]> {
   readonly size = input<TxChipsInputSize>('medium');
   readonly variant = input<TxChipsInputVariant>('outlined');
   readonly invalid = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
+  // eslint-disable-next-line @angular-eslint/no-input-rename
+  readonly disabledInput = input<boolean, unknown>(false, { alias: 'disabled', transform: booleanAttribute });
   readonly readonly = input<boolean, unknown>(false, { transform: booleanAttribute });
   readonly dt = input<TectraDeepPartial<TectraChipsInputTokens> | undefined>(undefined);
   readonly pt = input<TxPassThrough<TxChipsInputPart, TxChipsInput> | undefined>(undefined);
@@ -108,7 +110,8 @@ export class TxChipsInput extends TxFormControlBase<string[]> {
     const max = this.max();
     return max !== undefined && this.values().length >= max;
   });
-  readonly canClear = computed(() => this.showClear() && this.values().length > 0 && !this.disabled() && !this.readonly());
+  readonly isDisabled = computed(() => this.disabled() || this.disabledInput());
+  readonly canClear = computed(() => this.showClear() && this.values().length > 0 && !this.isDisabled() && !this.readonly());
   readonly hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-chips-input'), ...this.passThrough().root?.style }));
 
   override writeValue(value: string[] | null): void {
@@ -185,7 +188,7 @@ export class TxChipsInput extends TxFormControlBase<string[]> {
   }
 
   removeAt(index: number): void {
-    if (this.disabled() || this.readonly()) {
+    if (this.isDisabled() || this.readonly()) {
       return;
     }
     const value = this.values()[index];
@@ -202,7 +205,7 @@ export class TxChipsInput extends TxFormControlBase<string[]> {
   }
 
   add(value: string | readonly string[]): void {
-    if (this.disabled() || this.readonly()) {
+    if (this.isDisabled() || this.readonly()) {
       return;
     }
     this.addAll(typeof value === 'string' ? [value] : [...value]);

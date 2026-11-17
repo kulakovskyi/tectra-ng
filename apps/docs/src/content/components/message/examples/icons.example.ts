@@ -9,6 +9,11 @@ import { TxMessage, TxMessageIconTemplate } from '@tectra-ng/ui/message';
       <tx-message text="No icon" />
       <tx-message icon="shield" text="Tectra icon name" />
       <tx-message icon="pi-cloud-upload" text="A name with the pi- prefix works too" />
+      <tx-message
+        severity="info"
+        icon="spinner spin"
+        text="Words after the name are icon classes: spin turns it"
+      />
       <tx-message severity="success">
         <ng-template txMessageIcon><span class="count">3</span></ng-template>
         Own icon template — three files uploaded.

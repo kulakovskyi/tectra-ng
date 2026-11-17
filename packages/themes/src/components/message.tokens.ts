@@ -32,7 +32,7 @@ export const messageTokens = {
     accentWidth: '4px',
     transitionDuration: '0.2s',
   },
-  icon: { size: '28px', fontSize: '14px', tint: '15%' },
+  icon: { size: '28px', fontSize: '14px', tint: '15%', spinDuration: '0.8s' },
   actions: { gap: '8px' },
   closeButton: {
     size: '26px',

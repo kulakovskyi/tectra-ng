@@ -4,6 +4,7 @@ import { TxIcon } from './icon.component';
 import { TX_ICON_DEFAULTS, injectTxIcons, provideTxIconDefaults } from './icon-defaults';
 import { TxIconRegistry } from './icon-registry.service';
 import { TX_ICONS, txIconCheck, txIconTrash } from './icons';
+import { splitIconValue } from './icon-value';
 import { isTxIconName } from './is-icon-name';
 import { provideTxIcons } from './provide-icons';
 
@@ -102,5 +103,19 @@ describe('icons', () => {
     expect(registry.has('custom')).toBe(false);
     registry.register({ custom: ['M0 0'] });
     expect(registry.get('custom')).toEqual(['M0 0']);
+  });
+});
+
+describe('splitIconValue', () => {
+  it('splits the name from its modifier classes and spots a spin', () => {
+    expect(splitIconValue('spinner spin')).toEqual({ name: 'spinner', modifiers: ['spin'], spin: true });
+    expect(splitIconValue('  spinner  pi-spin  big ')).toEqual({ name: 'spinner', modifiers: ['pi-spin', 'big'], spin: true });
+    expect(splitIconValue('check')).toEqual({ name: 'check', modifiers: [], spin: false });
+  });
+
+  it('gives null for an empty value', () => {
+    expect(splitIconValue(undefined)).toBeNull();
+    expect(splitIconValue(null)).toBeNull();
+    expect(splitIconValue('   ')).toBeNull();
   });
 });

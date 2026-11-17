@@ -2,13 +2,11 @@ import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input, 
 import { injectPassThrough, injectTokens, injectUnstyled, TxPassThrough, TxPassThroughOptions } from '@tectra-ng/core/config';
 import { injectTranslations } from '@tectra-ng/core/i18n';
 import { optionalBoolean } from '@tectra-ng/core/utils';
-import { injectTxIcons, provideTxIconDefaults, TxIcon, TxIconName } from '@tectra-ng/icons';
+import { injectTxIcons, provideTxIconDefaults, splitIconValue, TxIcon, TxIconName } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraPillTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxPillPart, TxPillSize, TxPillTone, TxPillVariant } from './pill.types';
 import { PILL_ICON_DEFAULTS } from './pill.icons';
 import { PILL_THEME } from './pill.theme';
-
-const SPIN_MODIFIERS = new Set(['spin', 'pi-spin']);
 
 @Component({
   selector: 'tx-pill',
@@ -88,12 +86,12 @@ export class TxPill {
   readonly resolvedTone = computed(() => (this.tone() === 'secondary' ? 'neutral' : this.tone()));
   readonly resolvedSize = computed(() => (this.size() === 'normal' ? 'medium' : this.size()));
   private readonly iconParts = computed(() => {
-    const [name, ...modifiers] = (this.icon() ?? '').trim().split(/\s+/);
-    return this.txIconRegistry.has(name) ? { name, modifiers } : null;
+    const parts = splitIconValue(this.icon());
+    return parts && this.txIconRegistry.has(parts.name) ? parts : null;
   });
   readonly iconName = computed(() => this.iconParts()?.name ?? null);
   readonly iconModifiers = computed(() => this.iconParts()?.modifiers.join(' ') ?? '');
-  readonly iconSpin = computed(() => this.iconParts()?.modifiers.some((modifier) => SPIN_MODIFIERS.has(modifier)) ?? false);
+  readonly iconSpin = computed(() => this.iconParts()?.spin ?? false);
   readonly removeText = computed(() => this.removeLabel() || this.translations().remove);
   readonly hostStyle = computed(() => ({ ...toStyleObject(this.dt(), '--tx-pill'), ...this.passThrough().root?.style }));
 
