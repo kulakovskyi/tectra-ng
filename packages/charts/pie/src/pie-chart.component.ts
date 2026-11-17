@@ -63,6 +63,12 @@ const STAT_ROW = 66;
 const LEGEND_LINE = 25;
 const LEGEND_ROW_GAP = 3;
 const LEGEND_GAP = 10.5;
+const LEGEND_FONT = 12.25;
+const VALUES_ROW = 24.5;
+const VALUES_ROW_GAP = 2;
+const VALUES_LABEL_LINE = 16.5;
+const VALUES_FIXED = 63;
+const VALUES_PERCENT_MIN = 31;
 
 @Component({
   selector: 'tx-pie-chart',
@@ -179,12 +185,16 @@ export class TxPieChart {
       return Math.ceil(items.length / perRow) * STAT_ROW + 7;
     }
     if (this.legendValues()) {
-      return items.length * 22 + 8;
+      const wrapped = items.filter((item) => {
+        const room = width - VALUES_FIXED - textWidth(item.value ?? '', LEGEND_FONT) - Math.max(VALUES_PERCENT_MIN, textWidth(item.percent ?? '', LEGEND_FONT));
+        return textWidth(item.label, LEGEND_FONT) > room;
+      }).length;
+      return items.length * VALUES_ROW + Math.max(0, items.length - 1) * VALUES_ROW_GAP + wrapped * VALUES_LABEL_LINE + LEGEND_GAP;
     }
     let rows = 1;
     let line = 0;
     for (const item of items) {
-      const next = textWidth(item.label, 12.25) + LEGEND_ITEM_WIDTH + (this.legendVariant() === 'pill' ? 12 : 0);
+      const next = textWidth(item.label, LEGEND_FONT) + LEGEND_ITEM_WIDTH + (this.legendVariant() === 'pill' ? 12 : 0);
       if (line && line + next > width) {
         rows += 1;
         line = 0;

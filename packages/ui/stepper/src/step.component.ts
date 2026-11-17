@@ -4,7 +4,7 @@ import { TxStepItem } from './step-item.component';
 import { TxStepperRef } from './stepper.context';
 import { TxStepContent } from './stepper.templates';
 import { TxStepContentContext, TxStepValue } from './stepper.types';
-import { provideTxIconDefaults } from '@tectra-ng/icons';
+import { TxIcon, provideTxIconDefaults } from '@tectra-ng/icons';
 import { STEPPER_ICON_DEFAULTS } from './stepper.icons';
 import { injectTokens } from '@tectra-ng/core/config';
 import { STEPPER_THEME } from './stepper.theme';
@@ -14,7 +14,7 @@ import { optionalBoolean } from '@tectra-ng/core/utils';
 /** One numbered step in the header of `tx-stepper`. */
 @Component({
   selector: 'tx-step',
-  imports: [NgTemplateOutlet],
+  imports: [NgTemplateOutlet, TxIcon],
   templateUrl: './step.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -47,6 +47,7 @@ export class TxStep {
   readonly index = computed(() => this.stepper.indexOf(this.resolvedValue()));
   readonly active = computed(() => this.stepper.isActive(this.resolvedValue()));
   readonly isCompleted = computed(() => this.completed() ?? (this.item ? this.item.isCompleted() : this.stepper.isCompleted(this.resolvedValue())));
+  readonly showCheck = computed(() => this.isCompleted() && !this.active());
   readonly isDisabled = computed(() => this.disabled() || (this.stepper.linear() && !this.active()));
   readonly showSeparator = computed(() => !this.inItem && !this.stepper.isLast(this.resolvedValue()));
   readonly stepId = computed(() => this.stepper.stepId(this.resolvedValue()));

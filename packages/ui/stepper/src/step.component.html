@@ -18,7 +18,13 @@
     (click)="select()"
     (keydown)="onKeydown($event)"
   >
-    <span class="tx-step__number" [class]="stepper.passThrough().number?.class" [style]="stepper.passThrough().number?.style">{{ index() + 1 }}</span>
+    <span class="tx-step__number" [class]="stepper.passThrough().number?.class" [style]="stepper.passThrough().number?.style">
+      @if (showCheck()) {
+        <tx-icon name="check" />
+      } @else {
+        {{ index() + 1 }}
+      }
+    </span>
     <span class="tx-step__title" [class]="stepper.passThrough().title?.class" [style]="stepper.passThrough().title?.style"><ng-content /></span>
     @if (isCompleted()) {
       <span class="tx-stepper__sr-only">, {{ t().stepCompleted }}</span>

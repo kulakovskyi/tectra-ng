@@ -96,6 +96,19 @@ theme.setMode('dark');
 theme.primary(); // 'violet'`,
   },
   {
+    icon: 'clone',
+    title: 'A frame like a card',
+    file: 'styles.css',
+    text: 'Component variables like --tx-card-* exist only where that component renders. For your own frame next to cards, panels and data views, use the semantic tokens: they are on every page and follow the style.',
+    language: 'css',
+    code: `.frame {
+  border: 1px solid var(--tx-surface-border);
+  border-radius: var(--tx-content-radius);
+  background: var(--tx-surface-card);
+  box-shadow: var(--tx-content-shadow);
+}`,
+  },
+  {
     icon: 'file',
     title: 'Plain CSS',
     file: 'build-theme.ts',

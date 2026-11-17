@@ -311,14 +311,29 @@ export class TxDatePicker extends TxFormControlBase<TxDatePickerValue> {
     super.writeValue(value);
     this.draft.set(null);
     this.pendingTime.set(null);
-    const first = this.dates().find((date): date is Date => !!date) ?? this.defaultDate();
-    if (first) this.showMonthOf(first);
+    const target = this.focusTarget() ?? this.defaultDate();
+    if (target) this.showMonthOf(target);
   }
 
   private showMonthOf(date: Date): void {
-    this.viewMonth.set(date.getMonth());
-    this.viewYear.set(date.getFullYear());
+    const first = this.firstShownMonth(date);
+    this.viewMonth.set(first.getMonth());
+    this.viewYear.set(first.getFullYear());
     this.focusedDate.set(startOfDay(date));
+  }
+
+  private focusTarget(): Date | undefined {
+    const set = this.dates().filter((date): date is Date => !!date);
+    return this.selectionMode() === 'range' ? set.at(-1) : set[0];
+  }
+
+  private firstShownMonth(date: Date): Date {
+    const start = this.dates().find((value): value is Date => !!value);
+    const month = new Date(date.getFullYear(), date.getMonth(), 1);
+    if (this.selectionMode() !== 'range' || !start) return month;
+    const back = new Date(date.getFullYear(), date.getMonth() - this.monthCount() + 1, 1);
+    const startMonth = new Date(start.getFullYear(), start.getMonth(), 1);
+    return startMonth > back ? startMonth : back;
   }
 
   open(focusPanel = false): void {
@@ -806,12 +821,9 @@ export class TxDatePicker extends TxFormControlBase<TxDatePickerValue> {
   }
 
   private resetFocus(): void {
-    const selected = this.dates().find((date): date is Date => !!date);
-    const base = selected ?? this.defaultDate() ?? new Date();
+    const base = this.focusTarget() ?? this.defaultDate() ?? new Date();
     this.currentView.set(this.view());
-    this.viewMonth.set(base.getMonth());
-    this.viewYear.set(base.getFullYear());
-    this.focusedDate.set(startOfDay(base));
+    this.showMonthOf(base);
     this.focusedMonth.set(base.getMonth());
     this.focusedYear.set(base.getFullYear());
   }

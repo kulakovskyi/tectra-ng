@@ -18,26 +18,27 @@ import { TxField } from '@tectra-ng/ui/field';
           [formControl]="end"
         />
       </tx-field>
-      <button txButton type="submit" label="Save" [disabled]="end.disabled"></button>
-      <button
-        txButton
-        type="button"
-        variant="text"
-        [label]="end.disabled ? 'Enable' : 'Disable'"
-        (click)="end.disabled ? end.enable() : end.disable()"
-      ></button>
+      <div class="actions">
+        <button txButton type="submit" label="Save" [disabled]="end.disabled"></button>
+        <button
+          txButton
+          type="button"
+          variant="text"
+          [label]="end.disabled ? 'Enable' : 'Disable'"
+          (click)="end.disabled ? end.enable() : end.disable()"
+        ></button>
+      </div>
     </form>
   `,
   styles: `
     .form {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: flex-start;
-      gap: 12px;
-      max-width: 520px;
+      display: grid;
+      gap: 16px;
+      max-width: 360px;
     }
-    tx-field {
-      flex: 1 1 260px;
+    .actions {
+      display: flex;
+      gap: 8px;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
