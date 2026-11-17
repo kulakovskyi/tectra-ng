@@ -1,3 +1,13 @@
+## 0.4.6 (2026-11-17)
+
+### 🩹 Fixes
+
+- message icon modifiers and a disabled input on chips-input ([#45](https://github.com/kulakovskyi/tectra-ng/pull/45))
+
+### ❤️ Thank You
+
+- Andriy @kulakovskyi
+
 ## 0.4.5 (2026-11-17)
 
 ### 🚀 Features
