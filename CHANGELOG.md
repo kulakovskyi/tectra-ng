@@ -1,3 +1,13 @@
+## 0.4.7 (2026-11-18)
+
+### 🩹 Fixes
+
+- **ui:** collapse reveal, panel width, link copy position, table action keepOpen ([#47](https://github.com/kulakovskyi/tectra-ng/pull/47))
+
+### ❤️ Thank You
+
+- Andriy @kulakovskyi
+
 ## 0.4.6 (2026-11-17)
 
 ### 🩹 Fixes
