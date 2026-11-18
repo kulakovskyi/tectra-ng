@@ -39,8 +39,9 @@ interface ServerItem extends TxAccordionItem {
   `,
   styles: `
     .head {
-      display: inline-flex;
+      display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 8px;
     }
     .facts {

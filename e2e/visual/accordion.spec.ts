@@ -71,4 +71,43 @@ test.describe('accordion', () => {
     });
     expect(style).toEqual({ width: '1px', start: '10px', end: '10px' });
   });
+
+  test('reveals an opening panel as fast as it makes room for it', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    const accordion = example(page, 'Basic').locator('tx-accordion');
+    await accordion.evaluate((element: HTMLElement) => element.style.setProperty('--tx-accordion-expand-duration', '20s'));
+    const content = accordion.locator('.tx-accordion-content').nth(1);
+    await accordion.locator('.tx-accordion-header__button').nth(1).click();
+    const frame = await content.evaluate((element) => {
+      for (const animation of element.getAnimations()) {
+        animation.pause();
+        animation.currentTime = 3000;
+      }
+      const box = element.getBoundingClientRect();
+      const inner = element.querySelector('.tx-accordion-content__inner');
+      let bottom = inner?.getBoundingClientRect().bottom ?? box.top;
+      for (let node = inner?.parentElement; node && node !== element.parentElement; node = node.parentElement) {
+        if (getComputedStyle(node).overflowY !== 'visible') bottom = Math.min(bottom, node.getBoundingClientRect().bottom);
+      }
+      return { room: box.height, shown: bottom - box.top };
+    });
+    expect(frame.room).toBeGreaterThan(10);
+    expect(Math.abs(frame.shown - frame.room)).toBeLessThan(1);
+  });
+
+  test('gives a header template the whole header up to the toggle icon', async ({ page }) => {
+    const header = example(page, 'Templates').locator('.tx-accordion-header__button').first();
+    const gap = await header.evaluate((element) => {
+      const content = element.querySelector('.tx-accordion-header__content')?.getBoundingClientRect();
+      const toggle = element.querySelector('.tx-accordion-header__toggle')?.getBoundingClientRect();
+      return (toggle?.left ?? 0) - (content?.right ?? 0);
+    });
+    expect(gap).toBe(7);
+    const space = await header.evaluate((element) => {
+      const pill = element.querySelector('tx-pill')?.getBoundingClientRect();
+      const toggle = element.querySelector('.tx-accordion-header__toggle')?.getBoundingClientRect();
+      return (toggle?.left ?? 0) - (pill?.right ?? 0);
+    });
+    expect(space).toBeLessThan(8);
+  });
 });

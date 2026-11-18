@@ -116,4 +116,5 @@ export class TxTableAction {
     return config ? actionIdOf(config) : '';
   });
   readonly label = computed(() => this.txTableAction()?.label ?? '');
+  readonly keepOpen = computed(() => !!this.txTableAction()?.keepOpen);
 }

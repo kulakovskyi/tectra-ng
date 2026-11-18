@@ -14,6 +14,7 @@ class Page {}
   template: `
     <tx-link id="url" [link]="link()" [type]="type()" [maxLength]="12" highlight="docs" [copyable]="true" (copied)="copiedText = $event" (copyFailed)="failedText = $event" />
     <tx-link id="router" link="Settings" [routerLink]="['/settings']" />
+    <tx-link id="start" link="team@example.com" type="email" copyPosition="start" [copyable]="true" />
     <tx-icon-link id="nav" icon="pi-user" text="Profile" routerLink="/profile" />
     <tx-icon-link id="external" icon="book" text="Docs" href="https://docs.example.com" />
     <tx-icon-link id="action" icon="sign-out" text="Log out" />
@@ -156,6 +157,13 @@ describe('TxLink and TxIconLink', () => {
     fixture.detectChanges();
     expect(button.getAttribute('aria-label')).toBe('Copy link');
     vi.useRealTimers();
+  });
+
+  it('puts the copy button before or after the link', () => {
+    const order = (id: string) => [...el(id).children].map((child) => child.className.split(' ')[0]);
+    expect(order('#url')).toEqual(['tx-link__anchor', 'tx-link__copy']);
+    expect(order('#start')).toEqual(['tx-link__copy', 'tx-link__anchor']);
+    expect(order('#router')).toEqual(['tx-link__anchor']);
   });
 
   it('keeps the styled rules of the parts at the weight of one class', () => {

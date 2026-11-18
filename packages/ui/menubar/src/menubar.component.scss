@@ -70,6 +70,7 @@
 .tx-menubar__collapse {
   display: grid;
   grid-template-rows: 0fr;
+  overflow: hidden;
 }
 
 .tx-menubar__entry--expanded > .tx-menubar__collapse {
@@ -78,7 +79,6 @@
 
 .tx-menubar__collapse-inner {
   min-height: 0;
-  overflow: hidden;
 }
 
 .tx-menubar__entry:not(.tx-menubar__entry--expanded) > .tx-menubar__collapse > .tx-menubar__collapse-inner {

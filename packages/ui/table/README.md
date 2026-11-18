@@ -137,7 +137,7 @@ Filtering, sorting and pagination run on `value` unless `lazy` is on — then `l
 | txTableCell | `<ng-template txTableCell="field" [txTableCellOf]="rows" let-row let-value="value" let-index="index">` — content of the cells of a column |
 | txTableHeaderCell | `<ng-template txTableHeaderCell="field" let-column>` — own header content |
 | txTableFooterCell | `<ng-template txTableFooterCell="field" let-column>` — footer content of a column |
-| txTableActions | `<ng-template txTableActions [txTableActionsOf]="rows" let-row>` — actions column; put `tx-table-actions` with buttons marked `*txTableAction="{ label }"` inside; the `…` popover closes once an action in it is clicked |
+| txTableActions | `<ng-template txTableActions [txTableActionsOf]="rows" let-row>` — actions column; put `tx-table-actions` with buttons marked `*txTableAction="{ label }"` inside; the `…` popover closes once an action in it is clicked, unless the action has `keepOpen` |
 | txTableExpansion | `<ng-template txTableExpansion [txTableExpansionOf]="rows" let-row>` — content of an expanded row; adds the expand column, and an expand button to every card in the card view |
 | txTableCard | `<ng-template txTableCard [txTableCardOf]="rows" let-row let-index="index">` — own card for a row on narrow screens |
 | txTableEmpty | `<ng-template txTableEmpty>` — own content of an empty table |
@@ -174,7 +174,7 @@ The row templates take the table rows only for typing — `<ng-template txTableC
 ## Inputs — *txTableAction
 | Name | Description |
 |---|---|
-| txTableAction | `{ label, id? }` — the label is used in the settings and the right-click menu; `id` defaults to a slug of the label. Works inside `@if` and other blocks; an action without a config is left out |
+| txTableAction | `{ label, id?, keepOpen? }` — the label is used in the settings and the right-click menu; `id` defaults to a slug of the label; `keepOpen: true` leaves the `…` popover open after a click on the action (e.g. to show its `loading` state; the right-click menu still closes). Works inside `@if` and other blocks; an action without a config is left out |
 
 ## Keyboard
 | Key | Action |

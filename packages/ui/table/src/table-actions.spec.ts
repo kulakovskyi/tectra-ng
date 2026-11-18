@@ -125,6 +125,7 @@ describe('TxTableActions outside a table', () => {
       }
       <button *txTableAction="{ label: 'Delete' }" class="delete" type="button" (click)="clicks.push('delete')"><span class="inner">Delete</span></button>
       <span *txTableAction="{ label: 'Note' }" class="note">Note</span>
+      <button *txTableAction="{ label: 'Check', keepOpen: true }" class="check" type="button" (click)="clicks.push('check')"><span class="inner">Check</span></button>
       <button *txTableAction="undefined" class="bare" type="button">Bare</button>
     </tx-table-actions>
   `,
@@ -157,12 +158,13 @@ describe('TxTableActions with wrapped actions', () => {
 
   it('registers an action inside @if once its config is set and drops it when hidden', async () => {
     const actions = fixture.debugElement.query(By.directive(TxTableActions)).componentInstance as TxTableActions;
-    expect(actions.menuActions().map((action) => action.label())).toEqual(['Edit', 'Delete', 'Note']);
+    expect(actions.menuActions().map((action) => action.label())).toEqual(['Edit', 'Delete', 'Note', 'Check']);
+    expect(actions.menuActions().map((action) => action.keepOpen())).toEqual([false, false, false, true]);
     const bare = actions.actions().at(-1);
     expect([bare?.id(), bare?.label()]).toEqual(['', '']);
     fixture.componentInstance.canEdit.set(false);
     await stable();
-    expect(actions.menuActions().map((action) => action.label())).toEqual(['Delete', 'Note']);
+    expect(actions.menuActions().map((action) => action.label())).toEqual(['Delete', 'Note', 'Check']);
   });
 
   it('closes the overflow popover when an action in it is activated', async () => {
@@ -174,9 +176,11 @@ describe('TxTableActions with wrapped actions', () => {
     expect(popover.open()).toBe(true);
     (overlay()?.querySelector('.note') as HTMLElement).click();
     expect(popover.open()).toBe(true);
+    (overlay()?.querySelector('.check .inner') as HTMLElement).click();
+    expect(popover.open()).toBe(true);
     (overlay()?.querySelector('.delete .inner') as HTMLElement).click();
     expect(popover.open()).toBe(false);
-    expect(fixture.componentInstance.clicks).toEqual(['delete']);
+    expect(fixture.componentInstance.clicks).toEqual(['check', 'delete']);
     expect(document.activeElement).toBe(more);
   });
 });

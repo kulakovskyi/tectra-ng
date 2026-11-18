@@ -89,4 +89,16 @@ test.describe('panel menu', () => {
     await expect(badge).toHaveText('99+');
     await expect(badge).toHaveCSS('color', 'rgb(255, 255, 255)');
   });
+
+  test('sidebar switches the text of the active item without a colour transition', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await page.goto('/components/panel-menu?folder=work');
+    const work = example(page, 'Router links').locator('tx-panel-menu[data-variant="sidebar"]').getByRole('treeitem', { name: 'Work' });
+    await expect(work).toHaveAttribute('aria-current', 'page');
+    const transitions = await work.evaluate((element) => [
+      getComputedStyle(element).transitionProperty,
+      getComputedStyle(element.querySelector('.tx-panel-menu__icon') ?? element).transitionProperty,
+    ]);
+    for (const properties of transitions) expect(properties.split(', ')).not.toContain('color');
+  });
 });

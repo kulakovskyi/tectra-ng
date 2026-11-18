@@ -22,6 +22,7 @@ The styles of both weigh as much as one class, so your own rule for a part (`.me
 | target | Own target; web links use `_blank` by default |
 | external | `tx-link`: shows or hides the arrow icon; shown when the link opens a new tab by default |
 | copyable | `tx-link`: adds a button that copies the link |
+| copyPosition | `tx-link`: `end` (default) puts the copy button after the link, `start` before it — it stays in one column while long values are cut |
 | icon | `tx-icon-link`: icon name or icon class |
 | text | `tx-icon-link`: the text |
 | href | `tx-icon-link`: external address, opens in a new tab |

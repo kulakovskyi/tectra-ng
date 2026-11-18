@@ -10,6 +10,24 @@
   }
 </ng-template>
 
+<ng-template #copyButton>
+  <button
+    type="button"
+    class="tx-link__copy"
+    [class.tx-link__copy--done]="isCopied()"
+    [class]="passThrough().copy?.class"
+    [style]="passThrough().copy?.style"
+    [attr.aria-label]="copyStateLabel()"
+    [title]="copyStateLabel()"
+    (click)="copy()"
+  >
+    <span class="tx-copy-swap" [class.tx-copy-swap--done]="isCopied()"><tx-icon class="tx-copy-swap__icon tx-copy-swap__icon--idle" name="copy" /><tx-icon class="tx-copy-swap__icon tx-copy-swap__icon--done" name="check" /></span>
+  </button>
+</ng-template>
+
+@if (showCopy() && copyPosition() === 'start') {
+  <ng-container [ngTemplateOutlet]="copyButton" />
+}
 @if (routerLink(); as commands) {
   <a class="tx-link__anchor" [routerLink]="$any(commands)" [attr.title]="fullTitle()" [class]="passThrough().anchor?.class" [style]="passThrough().anchor?.style">
     <ng-container [ngTemplateOutlet]="content" />
@@ -27,17 +45,6 @@
     <ng-container [ngTemplateOutlet]="content" />
   </a>
 }
-@if (copyable() && link()) {
-  <button
-    type="button"
-    class="tx-link__copy"
-    [class.tx-link__copy--done]="isCopied()"
-    [class]="passThrough().copy?.class"
-    [style]="passThrough().copy?.style"
-    [attr.aria-label]="copyStateLabel()"
-    [title]="copyStateLabel()"
-    (click)="copy()"
-  >
-    <span class="tx-copy-swap" [class.tx-copy-swap--done]="isCopied()"><tx-icon class="tx-copy-swap__icon tx-copy-swap__icon--idle" name="copy" /><tx-icon class="tx-copy-swap__icon tx-copy-swap__icon--done" name="check" /></span>
-  </button>
+@if (showCopy() && copyPosition() === 'end') {
+  <ng-container [ngTemplateOutlet]="copyButton" />
 }

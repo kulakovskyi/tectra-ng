@@ -202,6 +202,7 @@
 .tx-table__expansion-body {
   display: grid;
   grid-template-rows: 0fr;
+  overflow: hidden;
 }
 
 .tx-table__expansion-body--open {
@@ -210,7 +211,6 @@
 
 .tx-table__expansion-inner {
   min-height: 0;
-  overflow: hidden;
 }
 
 .tx-table__expansion-body:not(.tx-table__expansion-body--open) > .tx-table__expansion-inner {

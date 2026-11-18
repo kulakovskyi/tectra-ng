@@ -47,7 +47,9 @@ import { TABLE_THEME } from './table.theme';
       <tx-popover #overflow placement="bottom-end">
         <div #overflowPanel class="tx-table-actions__overflow">
           @for (action of overflowActions(); track action.id()) {
-            <ng-container [ngTemplateOutlet]="action.templateRef" />
+            <div class="tx-table-actions__item" [attr.data-keep-open]="action.keepOpen() ? '' : null">
+              <ng-container [ngTemplateOutlet]="action.templateRef" />
+            </div>
           }
         </div>
       </tx-popover>
@@ -65,6 +67,10 @@ import { TABLE_THEME } from './table.theme';
       display: flex;
       flex-wrap: wrap;
       gap: var(--tx-table-actions-gap, 7px);
+    }
+
+    .tx-table-actions__item {
+      display: contents;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -134,6 +140,6 @@ export class TxTableActions implements TxTableRowActionsSource {
 
   private closeAfterAction(panel: HTMLElement, event: MouseEvent): void {
     const control = (event.target as Element | null)?.closest('button, a[href], [role="button"], [role="menuitem"]');
-    if (control && panel.contains(control)) this.overflow()?.hide();
+    if (control && panel.contains(control) && !control.closest('[data-keep-open]')) this.overflow()?.hide();
   }
 }
