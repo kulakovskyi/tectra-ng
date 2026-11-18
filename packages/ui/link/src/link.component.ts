@@ -7,7 +7,7 @@ import { optionalBoolean, optionalNumber, writeToClipboard } from '@tectra-ng/co
 import { provideTxIconDefaults, TxIcon } from '@tectra-ng/icons';
 import { TectraDeepPartial, TectraLinkTokens, toStyleObject } from '@tectra-ng/themes';
 import { TxHighlightTerms, TxHighlightText } from '@tectra-ng/ui/highlight-text';
-import { TxLinkCommands, TxLinkPart, TxLinkType } from './link.types';
+import { TxLinkCommands, TxLinkCopyPosition, TxLinkPart, TxLinkType } from './link.types';
 import { LINK_ICON_DEFAULTS } from './link.icons';
 import { LINK_THEME } from './link.theme';
 
@@ -45,6 +45,7 @@ export class TxLink {
   readonly target = input<string | undefined>(undefined);
   readonly external = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
   readonly copyable = input<boolean, unknown>(false, { transform: booleanAttribute });
+  readonly copyPosition = input<TxLinkCopyPosition>('end');
   readonly dt = input<TectraDeepPartial<TectraLinkTokens> | undefined>(undefined);
   readonly pt = input<TxPassThrough<TxLinkPart, TxLink> | undefined>(undefined);
   readonly ptOptions = input<TxPassThroughOptions | undefined>(undefined);
@@ -78,6 +79,7 @@ export class TxLink {
         return PROTOCOL.test(value) || value.startsWith('/') ? value : `https://${value}`;
     }
   });
+  readonly showCopy = computed(() => this.copyable() && !!this.link());
   readonly resolvedTarget = computed(() => this.target() ?? (this.type() === 'url' ? '_blank' : null));
   readonly opensNewTab = computed(() => !this.routerLink() && this.resolvedTarget() === '_blank');
   readonly showExternal = computed(() => this.external() ?? this.opensNewTab());

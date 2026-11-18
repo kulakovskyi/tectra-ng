@@ -623,6 +623,35 @@ test('panel collapses by click and keyboard and hides its content', async ({ pag
   await expect(toggle).toHaveAttribute('aria-expanded', 'true');
 });
 
+test('a panel keeps wide content inside its own width', async ({ page }) => {
+  await page.goto('/components/panel');
+  const panel = page.locator('tx-panel:not(.tx-panel--toggleable)').first();
+  const widths = await panel.evaluate((element) => {
+    const wide = document.createElement('div');
+    wide.style.width = '3000px';
+    element.querySelector('.tx-panel__body')?.appendChild(wide);
+    const inner = element.querySelector('.tx-panel__collapse-inner')?.getBoundingClientRect().width ?? Infinity;
+    const host = element.getBoundingClientRect().width;
+    wide.remove();
+    return { inner, host };
+  });
+  expect(widths.inner).toBeLessThanOrEqual(widths.host);
+});
+
+test('a link puts its copy button before the link on request', async ({ page }) => {
+  await page.goto('/components/link');
+  const links = page.locator('link-copy-position-example tx-link');
+  await expect(links).toHaveCount(3);
+  const boxes = await links.evaluateAll((elements) =>
+    elements.map((element) => ({
+      copy: element.querySelector('.tx-link__copy')?.getBoundingClientRect().left ?? Infinity,
+      anchor: element.querySelector('.tx-link__anchor')?.getBoundingClientRect().left ?? -Infinity,
+    })),
+  );
+  for (const box of boxes) expect(box.copy).toBeLessThan(box.anchor);
+  expect(new Set(boxes.map((box) => box.copy)).size).toBe(1);
+});
+
 test('fieldset collapses from its legend and keeps the legend naming the group', async ({ page }) => {
   await page.goto('/components/fieldset');
   const example = page.locator('fieldset-toggleable-example');

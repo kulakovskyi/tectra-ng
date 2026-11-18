@@ -32,6 +32,7 @@
 .tx-tree-select__children {
   display: grid;
   grid-template-rows: 0fr;
+  overflow: hidden;
 }
 
 .tx-tree-select__children--open {
@@ -40,7 +41,6 @@
 
 .tx-tree-select__children-inner {
   min-height: 0;
-  overflow: hidden;
 }
 
 .tx-tree-select__children:not(.tx-tree-select__children--open) > .tx-tree-select__children-inner {

@@ -6,7 +6,6 @@
   :host(#{$mode}) .tx-console-panel__nav {
     position: static;
     min-height: 0;
-    overflow: hidden;
     visibility: hidden;
     transition: visibility 0s linear var(--tx-console-layout-panel-collapse-duration);
   }
@@ -18,6 +17,7 @@
   :host(#{$mode}) .tx-console-panel__collapse {
     display: grid;
     grid-template-rows: 0fr;
+    overflow: hidden;
     transition: grid-template-rows var(--tx-console-layout-panel-collapse-duration) var(--tx-motion-easing);
   }
 

@@ -102,6 +102,7 @@
 .tx-step-item .tx-step-panel {
   display: grid;
   grid-template-rows: 0fr;
+  overflow: hidden;
 }
 
 .tx-step-item--active .tx-step-panel {
@@ -110,7 +111,6 @@
 
 .tx-step-panel__collapse {
   min-height: 0;
-  overflow: hidden;
 }
 
 .tx-step-item:not(.tx-step-item--active) .tx-step-panel__collapse {

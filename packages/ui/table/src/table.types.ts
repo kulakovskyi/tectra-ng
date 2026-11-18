@@ -371,12 +371,14 @@ export interface TxTableEmptyContext {
   $implicit: number;
 }
 
-/** Config of a `*txTableAction`: its label and id. */
+/** Config of a `*txTableAction`: its label, id and whether a click keeps the `…` popover open. */
 export interface TxTableActionConfig {
   /** Text of the action in the settings and the right-click menu. */
   label: string;
   /** Id of the action; a slug of the label by default. */
   id?: string;
+  /** Keeps the `…` popover open after a click on this action, e.g. to show its loading state. */
+  keepOpen?: boolean;
 }
 
 /** A registered row action as the settings list shows it. */

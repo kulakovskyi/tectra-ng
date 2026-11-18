@@ -91,14 +91,15 @@ const INVOICES: Invoice[] = [
           ></button>
           @if (invoice.status !== 'Paid') {
             <button
-              *txTableAction="{ label: 'Send reminder' }"
+              *txTableAction="{ label: 'Send reminder', keepOpen: true }"
               txButton
               size="small"
               severity="info"
               icon="send"
               txTooltip="Send reminder"
               aria-label="Send reminder"
-              (click)="toast.success('Reminder sent for ' + invoice.number)"
+              [loading]="sending().has(invoice.id)"
+              (click)="sendReminder(invoice)"
             ></button>
           }
           <button
@@ -120,6 +121,7 @@ const INVOICES: Invoice[] = [
 export default class TableRowActionsExample {
   readonly toast = inject(TxToastService);
   readonly invoices = signal(INVOICES);
+  readonly sending = signal<ReadonlySet<number>>(new Set());
   readonly columns: TxTableColumn[] = [
     { field: 'number', header: 'Invoice' },
     { field: 'client', header: 'Client', initialWidth: '180px' },
@@ -127,6 +129,15 @@ export default class TableRowActionsExample {
     { field: 'amount', header: 'Amount', align: 'end' },
     { field: 'status', header: 'Status' },
   ];
+
+  sendReminder(invoice: Invoice): void {
+    if (this.sending().has(invoice.id)) return;
+    this.sending.update((ids) => new Set(ids).add(invoice.id));
+    setTimeout(() => {
+      this.sending.update((ids) => new Set([...ids].filter((id) => id !== invoice.id)));
+      this.toast.success('Reminder sent for ' + invoice.number);
+    }, 1500);
+  }
 
   remove(invoice: Invoice): void {
     const index = this.invoices().indexOf(invoice);

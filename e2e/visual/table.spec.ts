@@ -96,6 +96,21 @@ test('right-click opens the row actions as a menu that runs them', async ({ page
   await expect(menu).toBeHidden();
 });
 
+test('an action with keepOpen leaves the overflow popover open while it loads', async ({ page }) => {
+  const frame = example(page, 'Row actions');
+  await frame.locator('tbody tr').nth(1).getByRole('button', { name: 'More actions' }).click();
+  const panel = page.locator('.tx-table-actions__overflow');
+  await expect(panel).toBeVisible();
+  const reminder = panel.getByRole('button', { name: 'Send reminder' });
+  await reminder.click();
+  await expect(reminder).toHaveAttribute('aria-busy', 'true');
+  await expect(panel).toBeVisible();
+  await expect(page.locator('body > tx-toast')).toContainText('Reminder sent for INV-1043');
+  await expect(panel).toBeVisible();
+  await panel.getByRole('button', { name: 'Delete' }).click();
+  await expect(panel).toBeHidden();
+});
+
 test('rows become cards below 64rem', async ({ page }) => {
   await page.setViewportSize({ width: 800, height: 900 });
   const frame = example(page, 'Basic');

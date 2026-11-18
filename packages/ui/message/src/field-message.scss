@@ -32,6 +32,7 @@
 :host([data-styled]) .tx-field-message__row {
   display: grid;
   grid-template-rows: 1fr;
+  overflow: hidden;
 }
 
 :host([data-styled]) .tx-field-message__inner {
@@ -40,7 +41,6 @@
   gap: var(--tx-field-message-gap);
   min-height: 0;
   padding-top: var(--tx-field-message-margin-top);
-  overflow: hidden;
 }
 
 :host([data-styled]) .tx-field-message__icon {

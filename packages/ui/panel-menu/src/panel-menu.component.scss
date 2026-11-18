@@ -63,6 +63,7 @@
 .tx-panel-menu__collapse {
   display: grid;
   grid-template-rows: 0fr;
+  overflow: hidden;
 }
 
 .tx-panel-menu__collapse--open {
@@ -71,7 +72,6 @@
 
 .tx-panel-menu__collapse-inner {
   min-height: 0;
-  overflow: hidden;
 }
 
 .tx-panel-menu__collapse:not(.tx-panel-menu__collapse--open) > .tx-panel-menu__collapse-inner {
@@ -282,7 +282,6 @@
     font-weight: var(--tx-panel-menu-sidebar-active-font-weight);
     transition:
       background-color var(--_duration),
-      color var(--_duration),
       box-shadow var(--_duration),
       padding-inline-start var(--tx-panel-menu-sidebar-reveal-duration) var(--tx-panel-menu-sidebar-reveal-easing);
 
@@ -295,7 +294,7 @@
 
     .tx-panel-menu__icon {
       color: var(--tx-panel-menu-sidebar-active-color);
-      transition: color var(--_duration);
+      transition: none;
     }
   }
 

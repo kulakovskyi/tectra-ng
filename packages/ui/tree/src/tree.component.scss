@@ -41,6 +41,7 @@
 .tx-tree__collapse {
   display: grid;
   grid-template-rows: 0fr;
+  overflow: hidden;
 }
 
 .tx-tree__collapse--open {
@@ -49,7 +50,6 @@
 
 .tx-tree__collapse-inner {
   min-height: 0;
-  overflow: hidden;
 }
 
 .tx-tree__toggler--hidden {
