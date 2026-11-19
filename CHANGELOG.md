@@ -1,3 +1,17 @@
+## 0.4.8 (2026-11-19)
+
+### 🚀 Features
+
+- **docs:** category pages, search keywords and steady scrolling ([#50](https://github.com/kulakovskyi/tectra-ng/pull/50))
+
+### 🩹 Fixes
+
+- **ui:** panel menu group width, table card overflow, centred sidebar badge ([#49](https://github.com/kulakovskyi/tectra-ng/pull/49))
+
+### ❤️ Thank You
+
+- Andriy @kulakovskyi
+
 ## 0.4.7 (2026-11-18)
 
 ### 🩹 Fixes
