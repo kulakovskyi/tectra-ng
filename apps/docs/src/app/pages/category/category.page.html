@@ -1,0 +1,53 @@
+@if (view(); as view) {
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a routerLink="/docs">Docs</a>
+    <tx-icon name="angle-right" aria-hidden="true" />
+    @if (view.current) {
+      <a routerLink="/components">Components</a>
+      <tx-icon name="angle-right" aria-hidden="true" />
+      <span aria-current="page">{{ view.current.name }}</span>
+    } @else {
+      <span aria-current="page">Components</span>
+    }
+  </nav>
+  <h1>{{ view.heading }}</h1>
+  <p class="lead">{{ view.intro }}</p>
+
+  @for (group of view.groups; track group.slug) {
+    <section class="group" [attr.aria-labelledby]="view.current ? null : 'category-' + group.slug">
+      @if (!view.current) {
+        <h2 class="group__head" [id]="'category-' + group.slug">
+          <span class="group__icon" aria-hidden="true"><tx-icon [name]="group.icon" /></span>
+          <a class="group__link" [routerLink]="group.path">{{ group.heading }}</a>
+          <span class="group__count">{{ group.components.length }}</span>
+        </h2>
+      }
+      <div class="cards">
+        @for (component of group.components; track component.name) {
+          <a class="card" [routerLink]="'/components/' + component.name">
+            <span class="card__title">{{ component.title }} <tx-icon class="card__arrow" name="arrow-right" aria-hidden="true" /></span>
+            <span class="card__text">{{ component.summary }}</span>
+          </a>
+        }
+      </div>
+    </section>
+  }
+
+  @if (view.current) {
+    <h2>More Angular components</h2>
+    <div class="others">
+      @for (category of categories; track category.slug) {
+        @if (category.slug !== view.current.slug) {
+          <a class="other" [routerLink]="category.path">
+            <tx-icon [name]="category.icon" aria-hidden="true" />
+            {{ category.name }}
+            <span class="other__count">{{ category.components.length }}</span>
+          </a>
+        }
+      }
+    </div>
+  }
+} @else {
+  <h1>Not found</h1>
+  <p class="lead">There is no component category called "{{ category() }}". <a routerLink="/components">See every component</a>.</p>
+}

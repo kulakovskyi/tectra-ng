@@ -5,6 +5,7 @@ import { TxIcon } from '@tectra-ng/icons';
 import { TxTabItem, TxTabValue, TxTabs } from '@tectra-ng/ui/tabs';
 import { DocsClipboard } from '../../doc-ui/copy/clipboard.service';
 import { DocsCopyIcon } from '../../doc-ui/copy/copy-icon';
+import { categoryPath } from '../../data/categories.data';
 import { DOC_TABS } from '../../data/doc-tabs.data';
 import { DocComponent, DocTab } from '../../types/doc-component.interface';
 import { A11yTab } from './tabs/a11y-tab/a11y-tab';
@@ -24,6 +25,7 @@ export default class ComponentDocPage {
   name = input.required<string>();
 
   readonly doc = input<DocComponent | null>(null);
+  readonly categoryPath = categoryPath;
   readonly docTabs = computed<TxTabItem[]>(() =>
     DOC_TABS.map((tab) => ({ value: tab.id, label: tab.label, badge: tab.id === 'features' ? this.doc()?.examples.length : undefined })),
   );

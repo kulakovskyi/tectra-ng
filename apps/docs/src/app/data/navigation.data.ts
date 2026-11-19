@@ -29,6 +29,7 @@ export const DOC_NAVIGATION: DocNavSection[] = [
         links: [
           { label: 'Introduction', path: '/docs' },
           { label: 'Installation', path: '/getting-started' },
+          { label: 'All components', path: '/components' },
           { label: 'Theming', path: '/theming' },
           { label: 'Icons', path: '/icons' },
         ],

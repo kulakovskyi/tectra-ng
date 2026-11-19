@@ -61,7 +61,7 @@
 }
 
 html {
-  scroll-padding-top: 116px;
+  scroll-padding-top: var(--docs-header-height);
   scrollbar-gutter: stable;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;

@@ -4,4 +4,4 @@ examples: severity, label, variants, icons, brands, icon-only, ripple, loading, 
 ---
 # Button
 
-Triggers an action. Put `txButton` on a native `button` or `a`.
+Triggers an action. `txButton` goes on a native `button` or a link (`a`), so the native behaviour stays.

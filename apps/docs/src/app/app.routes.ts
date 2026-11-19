@@ -14,6 +14,8 @@ export const routes: Routes = [
       { path: 'icons', loadComponent: () => import('./pages/icons/icons.page') },
       { path: 'core/overlay', loadComponent: () => import('./pages/core-overlay/core-overlay.page') },
       { path: 'core/locale', loadComponent: () => import('./pages/core-locale/core-locale.page') },
+      { path: 'components', loadComponent: () => import('./pages/category/category.page') },
+      { path: 'categories/:category', loadComponent: () => import('./pages/category/category.page') },
       {
         path: 'components/:name',
         loadComponent: () => import('./pages/component-doc/component-doc.page'),

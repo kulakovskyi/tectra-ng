@@ -38,7 +38,7 @@ interface ClosingShape {
         <p class="closing__lead">One install. Every component, block and token at one version.</p>
         <div class="closing__actions">
           <a txButton rounded size="large" routerLink="/getting-started">Get started</a>
-          <a class="closing__more" routerLink="/components/button">See every component <tx-icon name="angle-right" /></a>
+          <a class="closing__more" routerLink="/components">See every component <tx-icon name="angle-right" /></a>
         </div>
       </div>
     </section>

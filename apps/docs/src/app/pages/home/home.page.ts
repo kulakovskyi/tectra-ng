@@ -12,6 +12,7 @@ import { DocsCopyButton } from '../../doc-ui/copy/copy-button';
 import { CodeBlock } from '../../doc-ui/code-block/code-block';
 import { HOME_ROLES } from '../../data/home.data';
 import { INTRO_PACKAGES, INTRO_PRINCIPLES, INTRO_START, INTRO_STEPS } from '../../data/intro.data';
+import { categoryPath } from '../../data/categories.data';
 import { CATEGORY_ICONS } from '../../data/navigation.data';
 
 const CATEGORY_PREVIEW = 4;
@@ -38,7 +39,7 @@ export default class HomePage {
         name: category,
         icon: CATEGORY_ICONS[category] ?? 'box',
         count: items.length,
-        first: items[0].name,
+        path: categoryPath(category),
         preview: items.slice(0, CATEGORY_PREVIEW).map((item) => ({ name: item.name, title: item.title })),
         more: Math.max(items.length - CATEGORY_PREVIEW, 0),
       };

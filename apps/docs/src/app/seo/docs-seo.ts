@@ -3,6 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { ActivatedRouteSnapshot, RouterStateSnapshot, TitleStrategy } from '@angular/router';
 import { TECTRA_VERSION } from '../../generated/version';
+import { categoryPath, findCategory } from '../data/categories.data';
 import { DESCRIPTION_LENGTH, PAGE_META, REPOSITORY_URL, SITE_IMAGE, SITE_NAME, SITE_URL, componentMeta } from '../data/seo.data';
 import { DocComponent } from '../types/doc-component.interface';
 import { DocBreadcrumb, DocPageMeta } from '../types/seo.interface';
@@ -32,8 +33,20 @@ export class DocsSeo extends TitleStrategy {
     const route = deepest(snapshot.root);
     const path = snapshot.url.split(/[?#]/)[0] || '/';
     const doc = route.data['doc'] as DocComponent | null | undefined;
-    const page = doc ? componentMeta(doc.title, doc.summary) : PAGE_META[path];
-    if (page) {
+    const category = path.startsWith('/categories/') ? findCategory(route.params['category']) : undefined;
+    if (doc) {
+      this.apply(path, componentMeta(doc.title, doc.summary), [
+        { name: 'Components', path: '/components' },
+        { name: doc.category, path: categoryPath(doc.category) },
+        { name: doc.title, path },
+      ]);
+    } else if (category) {
+      this.apply(path, { name: category.name, title: category.title, description: category.description }, [
+        { name: 'Components', path: '/components' },
+        { name: category.name, path },
+      ]);
+    } else if (PAGE_META[path]) {
+      const page = PAGE_META[path];
       this.apply(path, page, path === '/' || path === '/docs' ? [] : [{ name: page.name, path }]);
     } else {
       this.apply(path, NOT_FOUND, [], false);
