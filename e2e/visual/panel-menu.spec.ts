@@ -88,6 +88,39 @@ test.describe('panel menu', () => {
     const badge = sidebar.locator('.tx-panel-menu__badge').first();
     await expect(badge).toHaveText('99+');
     await expect(badge).toHaveCSS('color', 'rgb(255, 255, 255)');
+    const value = await badge.evaluate((element) => {
+      const box = element.getBoundingClientRect();
+      const text = (element.querySelector('.tx-panel-menu__badge-value') as HTMLElement).getBoundingClientRect();
+      return {
+        offset: Math.abs(text.top + text.height / 2 - (box.top + box.height / 2)),
+        trimmed: text.height < parseFloat(getComputedStyle(element).fontSize) * 0.8,
+      };
+    });
+    expect(value.offset).toBeLessThanOrEqual(0.5);
+    expect(value.trimmed).toBe(true);
+  });
+
+  test('sidebar truncates a long nested label inside the menu', async ({ page }) => {
+    await page.goto('/components/panel-menu');
+    const sidebar = example(page, 'Sidebar').locator('tx-panel-menu');
+    await sidebar.getByRole('treeitem', { name: 'Projects' }).click();
+    const website = sidebar.getByRole('treeitem', { name: 'Website', exact: true });
+    await expect(website).toBeVisible();
+    const sizes = await website.evaluate((item) => {
+      const label = item.querySelector('.tx-panel-menu__label') as HTMLElement;
+      const text = [...label.childNodes].find((node) => node.nodeType === Node.TEXT_NODE) as Text;
+      text.data = 'Payment purpose settings for every connected workspace account';
+      const menu = item.closest('tx-panel-menu') as HTMLElement;
+      return {
+        item: item.getBoundingClientRect().right,
+        menu: menu.getBoundingClientRect().right,
+        label: [label.scrollWidth, label.clientWidth],
+        collapse: (item.closest('.tx-panel-menu__collapse') as HTMLElement).scrollWidth - menu.clientWidth,
+      };
+    });
+    expect(sizes.item).toBeLessThanOrEqual(sizes.menu);
+    expect(sizes.label[0]).toBeGreaterThan(sizes.label[1]);
+    expect(sizes.collapse).toBeLessThanOrEqual(0);
   });
 
   test('sidebar switches the text of the active item without a colour transition', async ({ page }) => {

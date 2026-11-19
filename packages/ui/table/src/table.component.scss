@@ -352,6 +352,7 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
+  overflow: clip;
 }
 
 .tx-table__card-field,
@@ -359,7 +360,12 @@
   display: flex;
   align-items: center;
   min-width: 0;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
+}
+
+.tx-table__card-title > * {
+  min-width: 0;
+  max-width: 100%;
 }
 
 .tx-table__card-field {

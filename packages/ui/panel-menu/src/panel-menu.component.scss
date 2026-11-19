@@ -55,6 +55,11 @@
   justify-content: center;
 }
 
+.tx-panel-menu__badge-value {
+  display: block;
+  text-box: trim-both cap alphabetic;
+}
+
 .tx-panel-menu__submenu-icon--spacer {
   width: 1em;
   height: 1em;
@@ -62,6 +67,7 @@
 
 .tx-panel-menu__collapse {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: 0fr;
   overflow: hidden;
 }
@@ -71,6 +77,7 @@
 }
 
 .tx-panel-menu__collapse-inner {
+  min-width: 0;
   min-height: 0;
 }
 

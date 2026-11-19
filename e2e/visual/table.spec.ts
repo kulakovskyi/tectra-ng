@@ -120,6 +120,33 @@ test('rows become cards below 64rem', async ({ page }) => {
   await expect(card.locator('.tx-table__card-label')).toHaveText(['Client', 'City', 'Amount', 'Status']);
 });
 
+test('a card keeps long and unwrapped content inside', async ({ page }) => {
+  await page.setViewportSize({ width: 800, height: 900 });
+  const frame = example(page, 'Basic');
+  const card = frame.locator('.tx-table__card').first();
+  await expect(card.locator('.tx-table__card-title')).toHaveText('INV-1042');
+  const sizes = await card.evaluate((element) => {
+    const url = 'https://example.com/invoices/2026/very-long-path-without-any-spaces-to-break/INV-1042';
+    const title = element.querySelector('.tx-table__card-title') as HTMLElement;
+    const text = [...title.childNodes].find((node) => node.nodeType === Node.TEXT_NODE) as Text;
+    text.data = url;
+    const nowrap = document.createElement('span');
+    nowrap.style.whiteSpace = 'nowrap';
+    nowrap.textContent = url;
+    (element.querySelector('.tx-table__card-value') as HTMLElement).appendChild(nowrap);
+    const cards = element.closest('.tx-table__cards') as HTMLElement;
+    cards.style.overflow = 'auto';
+    const range = document.createRange();
+    range.selectNodeContents(text);
+    return {
+      title: range.getBoundingClientRect().right - element.getBoundingClientRect().right,
+      cards: cards.scrollWidth - cards.clientWidth,
+    };
+  });
+  expect(sizes.title).toBeLessThanOrEqual(0);
+  expect(sizes.cards).toBeLessThanOrEqual(0);
+});
+
 test('rows are selected with the arrow keys and Space', async ({ page }) => {
   const frame = example(page, 'Row selection');
   const rows = frame.locator('tbody tr');
