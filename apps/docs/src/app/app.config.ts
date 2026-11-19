@@ -1,3 +1,4 @@
+import { ViewportScroller } from '@angular/common';
 import { ApplicationConfig, inject, provideAppInitializer, provideZonelessChangeDetection } from '@angular/core';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideRouter, Router, TitleStrategy, withComponentInputBinding, withInMemoryScrolling, withViewTransitions } from '@angular/router';
@@ -9,7 +10,7 @@ import { provideTectra } from '@tectra-ng/core/config';
 import { Tectra } from '@tectra-ng/themes';
 import { routes } from './app.routes';
 import { skipViewTransitionsWhileHidden } from './hidden-view-transitions';
-import { scrollToTopOnPageChange, snapshotPath } from './page-scroll';
+import { DocsViewportScroller, scrollToTopOnPageChange, snapshotPath } from './page-scroll';
 import { DOCS_THEME_STORAGE_KEY, DOCS_THEME_STYLES, DocsThemeSettings } from './layout/theme-settings';
 import { DocsSeo } from './seo/docs-seo';
 
@@ -32,6 +33,7 @@ export const appConfig: ApplicationConfig = {
         },
       }),
     ),
+    { provide: ViewportScroller, useClass: DocsViewportScroller },
     { provide: TitleStrategy, useExisting: DocsSeo },
     provideTectra({ preset: Tectra, ripple: true, storageKey: DOCS_THEME_STORAGE_KEY, styles: DOCS_THEME_STYLES }),
     provideTxIcons(TX_ICONS),

@@ -38,6 +38,7 @@ export class FeaturesTab {
     effect(() => {
       this.components();
       this.activeId.set(this.doc().examples[0]?.id ?? null);
+      this.scheduleActiveUpdate();
     });
     inject(DestroyRef).onDestroy(() => this.frame && this.document.defaultView?.cancelAnimationFrame(this.frame));
   }

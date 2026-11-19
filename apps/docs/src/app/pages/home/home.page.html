@@ -35,7 +35,7 @@
 <div class="categories">
   @for (category of categories; track category.name) {
     <div class="category">
-      <a class="category__head" [routerLink]="'/components/' + category.first">
+      <a class="category__head" [routerLink]="category.path">
         <span class="category__icon"><tx-icon [name]="category.icon" /></span>
         <span class="category__name">{{ category.name }}</span>
         <span class="category__count">{{ category.count }}</span>
@@ -45,7 +45,7 @@
           <a class="category__link" [routerLink]="'/components/' + item.name">{{ item.title }}</a>
         }
         @if (category.more) {
-          <span class="category__more">+{{ category.more }} more</span>
+          <a class="category__link category__more" [routerLink]="category.path">+{{ category.more }} more</a>
         }
       </div>
     </div>

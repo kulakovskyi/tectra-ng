@@ -1,5 +1,5 @@
-import { ViewportScroller } from '@angular/common';
-import { inject } from '@angular/core';
+import { DOCUMENT, isPlatformBrowser, ViewportScroller } from '@angular/common';
+import { inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 
@@ -42,4 +42,41 @@ export function scrollToTopOnPageChange(): void {
     }
     path = next;
   });
+}
+
+@Injectable()
+export class DocsViewportScroller implements ViewportScroller {
+  private document = inject(DOCUMENT);
+  private window = isPlatformBrowser(inject(PLATFORM_ID)) ? this.document.defaultView : null;
+
+  setOffset(): void {
+    return;
+  }
+
+  getScrollPosition(): [number, number] {
+    return this.window ? [this.window.scrollX, this.window.scrollY] : [0, 0];
+  }
+
+  scrollToPosition(position: [number, number], options?: ScrollOptions): void {
+    this.window?.scrollTo({ ...options, left: position[0], top: position[1] });
+  }
+
+  scrollToAnchor(anchor: string, options?: ScrollOptions): void {
+    if (!this.window) {
+      return;
+    }
+    const target = this.document.getElementById(anchor) ?? this.document.getElementsByName(anchor)[0];
+    target?.scrollIntoView({ ...options, block: 'start', inline: 'nearest' });
+    target?.focus({ preventScroll: true });
+  }
+
+  setHistoryScrollRestoration(scrollRestoration: 'auto' | 'manual'): void {
+    try {
+      if (this.window) {
+        this.window.history.scrollRestoration = scrollRestoration;
+      }
+    } catch {
+      return;
+    }
+  }
 }

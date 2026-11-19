@@ -42,6 +42,12 @@ export class DocsLayout {
   );
 
   isMenuOpen = signal(false);
+
+  isSection(sections: readonly string[]): boolean {
+    const url = this.currentUrl();
+    return sections.some((section) => url.startsWith(section));
+  }
+
   toggleMode(event: MouseEvent): void {
     const root = this.document.documentElement;
     const reduceMotion = this.document.defaultView?.matchMedia('(prefers-reduced-motion: reduce)').matches;

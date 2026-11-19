@@ -8,8 +8,8 @@
       @for (link of headerLinks; track link.path) {
         <a
           class="header__link"
-          [class.header__link--active]="currentUrl().startsWith(link.section)"
-          [attr.aria-current]="currentUrl().startsWith(link.section) ? 'page' : null"
+          [class.header__link--active]="isSection(link.sections)"
+          [attr.aria-current]="isSection(link.sections) ? 'page' : null"
           [routerLink]="link.path"
           >{{ link.label }}</a
         >

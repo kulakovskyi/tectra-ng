@@ -33,10 +33,25 @@
     &:hover {
       color: var(--tx-text-primary);
     }
+
+    &:focus-visible {
+      border-radius: 4px;
+      outline: 2px solid var(--tx-focus-ring-color);
+      outline-offset: 2px;
+    }
   }
 
-  span {
+  a:last-child {
     color: var(--tx-primary-base);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 3px;
+    transition: text-decoration-color 0.15s;
+
+    &:hover {
+      color: var(--tx-primary-base);
+      text-decoration-color: currentColor;
+    }
   }
 }
 

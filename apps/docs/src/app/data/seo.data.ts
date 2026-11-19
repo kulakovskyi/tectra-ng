@@ -38,6 +38,11 @@ export const PAGE_META: Record<string, DocPageMeta> = {
     title: 'Angular overlay: popups, menus and panels — tectra',
     description: 'TxOverlay opens a template or component next to any element: 12 placements with flip, enter and leave motion, scroll strategies, focus return and sticky header insets.',
   },
+  '/components': {
+    name: 'Components',
+    title: `Angular components: ${DOC_COMPONENTS.length} UI components on signals — tectra`,
+    description: `All ${DOC_COMPONENTS.length} Angular components of the tectra UI kit: forms, data table, charts, dialogs, menus, page blocks and utilities — standalone, on signals, themable and accessible.`,
+  },
   '/core/locale': {
     name: 'Locale',
     title: 'Locale and i18n for Angular components — tectra',
@@ -45,8 +50,13 @@ export const PAGE_META: Record<string, DocPageMeta> = {
   },
 };
 
+const continueSentence = (text: string): string => {
+  const word = text.split(' ')[0];
+  return /^[A-Z]/.test(word) && word.slice(1) === word.slice(1).toLowerCase() ? text[0].toLowerCase() + text.slice(1) : text;
+};
+
 export const componentMeta = (title: string, summary: string): DocPageMeta => ({
   name: title,
   title: `Angular ${title} component — tectra UI kit`,
-  description: summary,
+  description: `Angular ${title} component: ${continueSentence(summary)}`,
 });

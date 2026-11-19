@@ -18,6 +18,7 @@ const pages = [
   { title: 'tectra', path: '/', text: 'What tectra is: the kit at a glance' },
   { title: 'Introduction', path: '/docs', text: 'A tour of the components' },
   { title: 'Installation', path: '/getting-started', text: 'npm packages, provideTectra, first component' },
+  { title: 'All components', path: '/components', text: 'every component by category, with a link to each category page' },
   { title: 'Theming', path: '/theming', text: 'design tokens, presets, light and dark mode, theme designer' },
   { title: 'Icons', path: '/icons', text: 'the icon set and TxIcon' },
   { title: 'Overlay', path: '/core/overlay', text: 'TxOverlay: placements, motion, scroll strategies, focus' },

@@ -1,10 +1,10 @@
 @if (doc(); as doc) {
   <header class="doc-head">
-    <div class="doc-head__crumbs">
-      <a routerLink="/components/button">Components</a>
-      <tx-icon [name]="'angle-right'" />
-      <span>{{ doc.category }}</span>
-    </div>
+    <nav class="doc-head__crumbs" aria-label="Breadcrumb">
+      <a routerLink="/components">Components</a>
+      <tx-icon [name]="'angle-right'" aria-hidden="true" />
+      <a [routerLink]="categoryPath(doc.category)">{{ doc.category }}</a>
+    </nav>
     <h1 class="doc-head__title">{{ doc.title }}</h1>
     <div class="doc-head__lead" [innerHTML]="doc.descriptionHtml"></div>
     <button type="button" class="import" [attr.aria-label]="'Copy import: ' + importLine()" (click)="copyImport()">

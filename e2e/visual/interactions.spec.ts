@@ -29,10 +29,18 @@ test('example anchors stay on the page and put the example in the address', asyn
   await expect(page.locator('main h1').first()).toHaveText('Code editor');
   await page.locator('.toc__link', { hasText: 'Search' }).click();
   await expect(page).toHaveURL(/\/components\/code-editor#search$/);
-  await expect.poll(() => page.locator('#search').evaluate((element) => Math.round(element.getBoundingClientRect().top))).toBeLessThan(450);
+  await expect.poll(() => page.locator('#search').evaluate((element) => Math.round(element.getBoundingClientRect().top))).toBe(116);
+  await expect(page.locator('.toc__link', { hasText: 'Search' })).toHaveAttribute('aria-current', 'location');
   expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
   await page.reload();
   await expect(page.locator('main h1').first()).toHaveText('Code editor');
+});
+
+test('a link with an example anchor opens the page at that example below the header', async ({ page }) => {
+  await page.goto('/components/code-editor#search');
+  await expect(page.locator('main h1').first()).toHaveText('Code editor');
+  await expect.poll(() => page.locator('#search').evaluate((element) => Math.round(element.getBoundingClientRect().top))).toBe(116);
+  await expect(page.locator('.toc__link', { hasText: 'Search' })).toHaveAttribute('aria-current', 'location');
 });
 
 test('example code opens without moving the preview', async ({ page }) => {
@@ -744,6 +752,33 @@ test('sidebar searches, collapses groups and keeps the current page in view', as
   await expect(search).toHaveValue('');
   await sidebar.getByRole('button', { name: /Form/ }).click();
   await expect(sidebar.getByRole('link', { name: 'Checkbox' })).toBeVisible();
+});
+
+test('category pages link every component and are reached from the breadcrumbs', async ({ page }) => {
+  await page.goto('/components/sankey-chart');
+  const crumbs = page.getByRole('navigation', { name: 'Breadcrumb' });
+  await crumbs.getByRole('link', { name: 'Charts' }).click();
+  await expect(page).toHaveURL(/\/categories\/charts$/);
+  await expect(page.locator('main h1')).toHaveText('Angular charts');
+  await expect(page).toHaveTitle(/^Angular charts/);
+  await page.locator('main').getByRole('link', { name: /^Sankey Diagram/ }).click();
+  await expect(page).toHaveURL(/\/components\/sankey-chart$/);
+  await page.getByRole('navigation', { name: 'Breadcrumb' }).getByRole('link', { name: 'Components' }).click();
+  await expect(page).toHaveURL(/\/components$/);
+  await expect(page.locator('main h1')).toHaveText('Angular components');
+  await expect(page.locator('main .card')).toHaveCount(await page.locator('docs-sidebar .docs-nav__link[href^="/components/"]').count());
+});
+
+test('typing in the sidebar search keeps the page where it was scrolled', async ({ page }) => {
+  await page.goto('/components/table');
+  await expect(page.locator('docs-example-frame').first()).toBeVisible();
+  await page.evaluate(() => window.scrollTo(0, 3000));
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(3000);
+  const search = page.getByRole('navigation', { name: 'Documentation' }).getByRole('searchbox', { name: 'Search docs' });
+  await search.focus();
+  await search.pressSequentially('button');
+  await expect(search).toHaveValue('button');
+  expect(await page.evaluate(() => window.scrollY)).toBe(3000);
 });
 
 test.describe('with motion', () => {
